@@ -5,7 +5,7 @@ import TradeCard from '../components/trade/TradeCard';
 
 function Trade() {
     return (
-        <Grid paddingX="8" width="full" templateColumns="repeat(12, 1fr)" gap="7">
+        <Grid paddingX="8" width="full" templateColumns="repeat(12, 1fr)" gap="0">
             <GridItem w="100%" colSpan={8} h="10">
                 <TradeChart />
             </GridItem>
