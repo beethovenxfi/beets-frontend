@@ -1,14 +1,7 @@
-import { Box } from "@chakra-ui/react";
-import Image from "next/image";
-
-import LogoFull from "~/assets/logo/logo-full.svg";
+import { Box } from '@chakra-ui/react';
 
 function Navbar() {
-  return (
-    <Box width="full" padding="4">
-      <Image src={LogoFull} alt="Logo" />
-    </Box>
-  );
+    return <Box width="full"></Box>;
 }
 
 export default Navbar;

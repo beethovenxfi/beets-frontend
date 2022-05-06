@@ -1,0 +1,41 @@
+query GetSorSwaps($input: GqlSorGetSwapsInput!) {
+    sorGetSwaps(input: $input) {
+        tokenIn
+        tokenOut
+        swapAmount
+        tokenAddresses
+        swaps {
+            poolId
+            amount
+            userData
+            assetInIndex
+            assetOutIndex
+        }
+        returnAmount
+        returnAmountFromSwaps
+        returnAmountConsideringFees
+        swapAmount
+        swapAmountForSwaps
+        routes {
+            tokenIn
+            tokenOut
+            tokenInAmount
+            tokenOutAmount
+            share
+            hops {
+                poolId
+                tokenIn
+                tokenOut
+                tokenInAmount
+                tokenOutAmount
+            }
+        }
+    }
+}
+
+query GetTokenPrices {
+    tokenPriceGetCurrentPrices {
+        price
+        address
+    }
+}
