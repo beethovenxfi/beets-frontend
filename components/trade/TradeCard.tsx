@@ -1,18 +1,24 @@
-import { Box } from "@chakra-ui/react";
+import { Box, Heading, VStack } from "@chakra-ui/react";
+import TokenInput from "../inputs/TokenInput";
 
 function TradeCard() {
   return (
     <Box
-      bg="#0F0F22"
+      bg="#19193B"
       border="2px"
       borderColor="beets.green.800"
       width="full"
-      height="96"
-      shadow="2xl"
+      height="xl"
+      // shadow="2xl"
       rounded="xl"
       padding="4"
     >
-      Trade Card
+      <VStack spacing="4">
+        <Heading color="gray.300" size="md">
+          I want to trade
+        </Heading>
+        <TokenInput />
+      </VStack>
     </Box>
   );
 }
