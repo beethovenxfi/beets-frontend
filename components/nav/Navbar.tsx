@@ -1,11 +1,7 @@
-import { Box } from "@chakra-ui/react";
+import { Box } from '@chakra-ui/react';
 
 function Navbar() {
-    return (
-        <Box width="full">
-
-        </Box>
-    )
+    return <Box width="full"></Box>;
 }
 
 export default Navbar;
