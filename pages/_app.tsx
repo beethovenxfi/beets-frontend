@@ -5,7 +5,7 @@ import type { AppProps } from 'next/app';
 import { client } from '../apollo/client';
 import { ApolloProvider } from '@apollo/client';
 
-import { Box, ChakraProvider, extendTheme, VStack } from '@chakra-ui/react';
+import { Box, ChakraProvider, extendTheme, VStack, Grid, GridItem } from '@chakra-ui/react';
 
 /** Start charting library setup */
 import ReactEChartsCore from 'echarts-for-react/lib/core';
@@ -77,12 +77,17 @@ function MyApp({ Component, pageProps }: AppProps) {
     return (
         <ApolloProvider client={client}>
             <ChakraProvider theme={theme}>
-                <Box height="full" className="bg">
-                    <Box height="full" className="bg-gradient">
-                        <VStack width="full">
-                            <Navbar />
-                            <Component {...pageProps} />
-                        </VStack>
+                <Box height="full" className="bg" fontFamily='Inter'>
+                    <Box height="full" className="bg-gradient" display="flex" justifyContent="center">
+                        {/* add gutter here */}
+                        <Grid templateColumns="repeat(12, 1fr)" width="1400px" maxWidth="1400px" height='fit-content'>
+                            <GridItem colSpan={12} height="fit-content">
+                                <Navbar />
+                            </GridItem>
+                            <GridItem colSpan={12}>
+                                <Component {...pageProps} />
+                            </GridItem>
+                        </Grid>
                     </Box>
                 </Box>
             </ChakraProvider>
