@@ -29,5 +29,5 @@ a {
 }
 .bg-gradient {
   background: radial-gradient(ellipse at top, #1B1B40 , transparent),
-    radial-gradient(ellipse at bottom, #1B1B40  , transparent);
+    radial-gradient(ellipse at bottom, #205143  , transparent);
 }
