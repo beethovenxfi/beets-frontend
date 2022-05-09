@@ -34,7 +34,7 @@ query GetSorSwaps($input: GqlSorGetSwapsInput!) {
 }
 
 query GetTokenPrices {
-    tokenPriceGetCurrentPrices {
+    tokenGetCurrentPrices {
         price
         address
     }

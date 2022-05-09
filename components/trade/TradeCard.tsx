@@ -7,7 +7,7 @@ function TradeCard() {
     return (
         <Box bg="gray.900" width="full" shadow="lg" rounded="lg" padding="4">
             Trade Card
-            {data?.tokenPriceGetCurrentPrices.slice(0, 10).map((item, index) => (
+            {data?.tokenGetCurrentPrices.slice(0, 10).map((item, index) => (
                 <Container key={index} color={'white'}>
                     {item.address} - {item.price}
                 </Container>
