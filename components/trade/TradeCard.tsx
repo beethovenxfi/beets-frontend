@@ -17,7 +17,7 @@ function TradeCard() {
 
     const theme = useTheme();
     return (
-        <Card title="Market Swap" position="relative" overflow="hidden" height="md" shadow="2xl">
+        <Card title="Market Swap" position="relative" overflow="hidden" height="md" shadow="lg">
             <VStack spacing="2" padding="4" width="full">
                 <Box position="relative" width="full" onClick={toggleTokenSelect}>
                     <TokenInput />

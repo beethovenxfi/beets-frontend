@@ -9,6 +9,7 @@ import {
     VariantLabels,
 } from 'framer-motion';
 import { ReactElement } from 'react';
+import { ChakraBox } from '../animation/chakra';
 
 type Props = {
     title?: string;
@@ -17,10 +18,6 @@ type Props = {
     initial?: boolean | Target | VariantLabels;
     exit?: TargetAndTransition | VariantLabels;
 };
-
-const ChakraBox = chakra(motion.div, {
-    shouldForwardProp: (prop) => isValidMotionProp(prop) || prop === 'children',
-});
 
 export default function Card({ title, children, animate, initial, exit, ...boxProps }: Props & BoxProps) {
     return (
@@ -39,7 +36,7 @@ export default function Card({ title, children, animate, initial, exit, ...boxPr
             {title && (
                 <Box borderBottom="1px" borderColor="beets.gray.400" width="full" padding="4">
                     <Heading color="beets.gray.100" fontWeight="semibold" size="sm">
-                        Market Swap
+                        {title}
                     </Heading>
                 </Box>
             )}
