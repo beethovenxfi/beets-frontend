@@ -6,8 +6,12 @@ import TokenSelect from '../token-select/TokenSelect';
 import { useState } from 'react';
 import { AnimatePresence } from 'framer-motion';
 import Card from '../card/Card';
+import { useReactiveVar } from '@apollo/client';
+import { tradeStateVar } from '~/components/trade/tradeState';
 
 function TradeCard() {
+    const tradeState = useReactiveVar(tradeStateVar);
+
     const { data, loading, error } = useGetTokenPricesQuery();
     const [showTokenSelect, setShowTokenSelect] = useState(false);
 
