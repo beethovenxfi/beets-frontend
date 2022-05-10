@@ -8,3 +8,10 @@ query GetTokens {
         logoURI
     }
 }
+
+query GetTokenPrices {
+    tokenPrices: tokenGetCurrentPrices {
+        price
+        address
+    }
+}
