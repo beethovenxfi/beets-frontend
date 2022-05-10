@@ -10,7 +10,12 @@ import Image from 'next/image';
 import { ChakraBox } from '~/components/animation/chakra';
 import AnimatedChevrons from '~/components/animation/chevron/AnimatedChevrons';
 import Card from '~/components/card/Card';
+import { useGetTokensQuery } from '~/apollo/generated/graphql-codegen-generated';
 function Trade() {
+    const { data, loading, error } = useGetTokensQuery();
+
+    console.log(data?.tokens);
+
     return (
         <Grid paddingX="8" width="full" templateColumns="repeat(12, 1fr)" gap="0">
             <GridItem w="100%" colSpan={8} h="10">
@@ -28,11 +33,11 @@ function Trade() {
                         animate={{ transform: 'scale(100%)' }}
                     >
                         <VStack spacing="4" padding="4">
-                            <AnimatedChevrons delay={.1}  />
+                            <AnimatedChevrons delay={0.1} />
                             <Box>
                                 <Image src={BeetsSmart} width="64px" alt="smart-beets" />
                             </Box>
-                            <AnimatedChevrons color="beets.red.300" delay={.8} />
+                            <AnimatedChevrons color="beets.red.300" delay={0.8} />
                         </VStack>
                     </ChakraBox>
                     <Card title="Swap Preview">

@@ -1,0 +1,10 @@
+query GetTokens {
+    tokens: tokenGetTokens {
+        address
+        name
+        symbol
+        decimals
+        chainId
+        logoURI
+    }
+}
