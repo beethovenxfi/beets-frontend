@@ -1,5 +1,25 @@
 import gql from 'graphql-tag';
 
+export const GetTokens = gql`
+    query GetTokens {
+        tokens: tokenGetTokens {
+            address
+            name
+            symbol
+            decimals
+            chainId
+            logoURI
+        }
+    }
+`;
+export const GetTokenPrices = gql`
+    query GetTokenPrices {
+        tokenPrices: tokenGetCurrentPrices {
+            price
+            address
+        }
+    }
+`;
 export const GetPool = gql`
     query GetPool($id: String!) {
         pool: poolGetPool(id: $id) {
@@ -71,12 +91,25 @@ export const GetPools = gql`
     }
 `;
 export const GetSorSwaps = gql`
-    query GetSorSwaps($input: GqlSorGetSwapsInput!) {
-        sorGetSwaps(input: $input) {
+    query GetSorSwaps(
+        $tokenIn: String!
+        $tokenOut: String!
+        $swapType: GqlSorSwapType!
+        $swapAmount: BigDecimal!
+        $swapOptions: GqlSorSwapOptionsInput!
+    ) {
+        swaps: sorGetSwaps(
+            tokenIn: $tokenIn
+            tokenOut: $tokenOut
+            swapType: $swapType
+            swapAmount: $swapAmount
+            swapOptions: $swapOptions
+        ) {
             tokenIn
             tokenOut
             swapAmount
             tokenAddresses
+            marketSp
             swaps {
                 poolId
                 amount
@@ -103,14 +136,6 @@ export const GetSorSwaps = gql`
                     tokenOutAmount
                 }
             }
-        }
-    }
-`;
-export const GetTokenPrices = gql`
-    query GetTokenPrices {
-        tokenGetCurrentPrices {
-            price
-            address
         }
     }
 `;

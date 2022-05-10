@@ -866,14 +866,6 @@ export interface GqlPoolWithdrawOption {
     tokenOptions: Array<GqlPoolToken>;
 }
 
-export interface GqlSorGetSwapsInput {
-    swapAmount: Scalars['BigDecimal'];
-    swapOptions: GqlSorSwapOptionsInput;
-    swapType: GqlSorSwapType;
-    tokenIn: Scalars['String'];
-    tokenOut: Scalars['String'];
-}
-
 export interface GqlSorGetSwapsResponse {
     __typename: 'GqlSorGetSwapsResponse';
     marketSp: Scalars['String'];
@@ -1093,12 +1085,38 @@ export interface QueryPoolSnapshotsArgs {
 }
 
 export interface QuerySorGetSwapsArgs {
-    input: GqlSorGetSwapsInput;
+    swapAmount: Scalars['BigDecimal'];
+    swapOptions: GqlSorSwapOptionsInput;
+    swapType: GqlSorSwapType;
+    tokenIn: Scalars['String'];
+    tokenOut: Scalars['String'];
 }
 
 export interface QueryTokenGetHistoricalPricesArgs {
     addresses: Array<Scalars['String']>;
 }
+
+export type GetTokensQueryVariables = Exact<{ [key: string]: never }>;
+
+export type GetTokensQuery = {
+    __typename: 'Query';
+    tokens: Array<{
+        __typename: 'GqlToken';
+        address: string;
+        name: string;
+        symbol: string;
+        decimals: number;
+        chainId: number;
+        logoURI?: string | null;
+    }>;
+};
+
+export type GetTokenPricesQueryVariables = Exact<{ [key: string]: never }>;
+
+export type GetTokenPricesQuery = {
+    __typename: 'Query';
+    tokenPrices: Array<{ __typename: 'GqlTokenPrice'; price: number; address: string }>;
+};
 
 export type GetPoolQueryVariables = Exact<{
     id: Scalars['String'];
@@ -1520,17 +1538,22 @@ export type GetPoolsQuery = {
 };
 
 export type GetSorSwapsQueryVariables = Exact<{
-    input: GqlSorGetSwapsInput;
+    tokenIn: Scalars['String'];
+    tokenOut: Scalars['String'];
+    swapType: GqlSorSwapType;
+    swapAmount: Scalars['BigDecimal'];
+    swapOptions: GqlSorSwapOptionsInput;
 }>;
 
 export type GetSorSwapsQuery = {
     __typename: 'Query';
-    sorGetSwaps: {
+    swaps: {
         __typename: 'GqlSorGetSwapsResponse';
         tokenIn: string;
         tokenOut: string;
         swapAmount: string;
         tokenAddresses: Array<string>;
+        marketSp: string;
         returnAmount: string;
         returnAmountFromSwaps?: string | null;
         returnAmountConsideringFees: string;
@@ -1562,13 +1585,86 @@ export type GetSorSwapsQuery = {
     };
 };
 
-export type GetTokenPricesQueryVariables = Exact<{ [key: string]: never }>;
+export const GetTokensDocument = gql`
+    query GetTokens {
+        tokens: tokenGetTokens {
+            address
+            name
+            symbol
+            decimals
+            chainId
+            logoURI
+        }
+    }
+`;
 
-export type GetTokenPricesQuery = {
-    __typename: 'Query';
-    tokenGetCurrentPrices: Array<{ __typename: 'GqlTokenPrice'; price: number; address: string }>;
-};
+/**
+ * __useGetTokensQuery__
+ *
+ * To run a query within a React component, call `useGetTokensQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetTokensQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetTokensQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetTokensQuery(baseOptions?: Apollo.QueryHookOptions<GetTokensQuery, GetTokensQueryVariables>) {
+    const options = { ...defaultOptions, ...baseOptions };
+    return Apollo.useQuery<GetTokensQuery, GetTokensQueryVariables>(GetTokensDocument, options);
+}
+export function useGetTokensLazyQuery(
+    baseOptions?: Apollo.LazyQueryHookOptions<GetTokensQuery, GetTokensQueryVariables>,
+) {
+    const options = { ...defaultOptions, ...baseOptions };
+    return Apollo.useLazyQuery<GetTokensQuery, GetTokensQueryVariables>(GetTokensDocument, options);
+}
+export type GetTokensQueryHookResult = ReturnType<typeof useGetTokensQuery>;
+export type GetTokensLazyQueryHookResult = ReturnType<typeof useGetTokensLazyQuery>;
+export type GetTokensQueryResult = Apollo.QueryResult<GetTokensQuery, GetTokensQueryVariables>;
+export const GetTokenPricesDocument = gql`
+    query GetTokenPrices {
+        tokenPrices: tokenGetCurrentPrices {
+            price
+            address
+        }
+    }
+`;
 
+/**
+ * __useGetTokenPricesQuery__
+ *
+ * To run a query within a React component, call `useGetTokenPricesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetTokenPricesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetTokenPricesQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetTokenPricesQuery(
+    baseOptions?: Apollo.QueryHookOptions<GetTokenPricesQuery, GetTokenPricesQueryVariables>,
+) {
+    const options = { ...defaultOptions, ...baseOptions };
+    return Apollo.useQuery<GetTokenPricesQuery, GetTokenPricesQueryVariables>(GetTokenPricesDocument, options);
+}
+export function useGetTokenPricesLazyQuery(
+    baseOptions?: Apollo.LazyQueryHookOptions<GetTokenPricesQuery, GetTokenPricesQueryVariables>,
+) {
+    const options = { ...defaultOptions, ...baseOptions };
+    return Apollo.useLazyQuery<GetTokenPricesQuery, GetTokenPricesQueryVariables>(GetTokenPricesDocument, options);
+}
+export type GetTokenPricesQueryHookResult = ReturnType<typeof useGetTokenPricesQuery>;
+export type GetTokenPricesLazyQueryHookResult = ReturnType<typeof useGetTokenPricesLazyQuery>;
+export type GetTokenPricesQueryResult = Apollo.QueryResult<GetTokenPricesQuery, GetTokenPricesQueryVariables>;
 export const GetPoolDocument = gql`
     query GetPool($id: String!) {
         pool: poolGetPool(id: $id) {
@@ -1700,12 +1796,25 @@ export type GetPoolsQueryHookResult = ReturnType<typeof useGetPoolsQuery>;
 export type GetPoolsLazyQueryHookResult = ReturnType<typeof useGetPoolsLazyQuery>;
 export type GetPoolsQueryResult = Apollo.QueryResult<GetPoolsQuery, GetPoolsQueryVariables>;
 export const GetSorSwapsDocument = gql`
-    query GetSorSwaps($input: GqlSorGetSwapsInput!) {
-        sorGetSwaps(input: $input) {
+    query GetSorSwaps(
+        $tokenIn: String!
+        $tokenOut: String!
+        $swapType: GqlSorSwapType!
+        $swapAmount: BigDecimal!
+        $swapOptions: GqlSorSwapOptionsInput!
+    ) {
+        swaps: sorGetSwaps(
+            tokenIn: $tokenIn
+            tokenOut: $tokenOut
+            swapType: $swapType
+            swapAmount: $swapAmount
+            swapOptions: $swapOptions
+        ) {
             tokenIn
             tokenOut
             swapAmount
             tokenAddresses
+            marketSp
             swaps {
                 poolId
                 amount
@@ -1748,7 +1857,11 @@ export const GetSorSwapsDocument = gql`
  * @example
  * const { data, loading, error } = useGetSorSwapsQuery({
  *   variables: {
- *      input: // value for 'input'
+ *      tokenIn: // value for 'tokenIn'
+ *      tokenOut: // value for 'tokenOut'
+ *      swapType: // value for 'swapType'
+ *      swapAmount: // value for 'swapAmount'
+ *      swapOptions: // value for 'swapOptions'
  *   },
  * });
  */
@@ -1765,42 +1878,3 @@ export function useGetSorSwapsLazyQuery(
 export type GetSorSwapsQueryHookResult = ReturnType<typeof useGetSorSwapsQuery>;
 export type GetSorSwapsLazyQueryHookResult = ReturnType<typeof useGetSorSwapsLazyQuery>;
 export type GetSorSwapsQueryResult = Apollo.QueryResult<GetSorSwapsQuery, GetSorSwapsQueryVariables>;
-export const GetTokenPricesDocument = gql`
-    query GetTokenPrices {
-        tokenGetCurrentPrices {
-            price
-            address
-        }
-    }
-`;
-
-/**
- * __useGetTokenPricesQuery__
- *
- * To run a query within a React component, call `useGetTokenPricesQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetTokenPricesQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetTokenPricesQuery({
- *   variables: {
- *   },
- * });
- */
-export function useGetTokenPricesQuery(
-    baseOptions?: Apollo.QueryHookOptions<GetTokenPricesQuery, GetTokenPricesQueryVariables>,
-) {
-    const options = { ...defaultOptions, ...baseOptions };
-    return Apollo.useQuery<GetTokenPricesQuery, GetTokenPricesQueryVariables>(GetTokenPricesDocument, options);
-}
-export function useGetTokenPricesLazyQuery(
-    baseOptions?: Apollo.LazyQueryHookOptions<GetTokenPricesQuery, GetTokenPricesQueryVariables>,
-) {
-    const options = { ...defaultOptions, ...baseOptions };
-    return Apollo.useLazyQuery<GetTokenPricesQuery, GetTokenPricesQueryVariables>(GetTokenPricesDocument, options);
-}
-export type GetTokenPricesQueryHookResult = ReturnType<typeof useGetTokenPricesQuery>;
-export type GetTokenPricesLazyQueryHookResult = ReturnType<typeof useGetTokenPricesLazyQuery>;
-export type GetTokenPricesQueryResult = Apollo.QueryResult<GetTokenPricesQuery, GetTokenPricesQueryVariables>;

@@ -808,14 +808,6 @@ type GqlPoolWithdrawOption {
     tokenOptions: [GqlPoolToken!]!
 }
 
-input GqlSorGetSwapsInput {
-    swapAmount: BigDecimal!
-    swapOptions: GqlSorSwapOptionsInput!
-    swapType: GqlSorSwapType!
-    tokenIn: String!
-    tokenOut: String!
-}
-
 type GqlSorGetSwapsResponse {
     marketSp: String!
     returnAmount: BigDecimal!
@@ -978,7 +970,13 @@ type Query {
     portfolioGetUserPortfolio: GqlUserPortfolioData!
     portfolioGetUserPortfolioHistory: [GqlUserPortfolioData!]!
     portfolioGetUserPortfolioHistoryAdmin: [GqlUserPortfolioData!]!
-    sorGetSwaps(input: GqlSorGetSwapsInput!): GqlSorGetSwapsResponse!
+    sorGetSwaps(
+        swapAmount: BigDecimal!
+        swapOptions: GqlSorSwapOptionsInput!
+        swapType: GqlSorSwapType!
+        tokenIn: String!
+        tokenOut: String!
+    ): GqlSorGetSwapsResponse!
     tokenGetCurrentPrices: [GqlTokenPrice!]!
     tokenGetHistoricalPrices(addresses: [String!]!): [GqlHistoricalTokenPrice!]!
     tokenGetTokens: [GqlToken!]!

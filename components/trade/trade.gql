@@ -1,9 +1,22 @@
-query GetSorSwaps($input: GqlSorGetSwapsInput!) {
-    swaps: sorGetSwaps(input: $input) {
+query GetSorSwaps(
+    $tokenIn: String!
+    $tokenOut: String!
+    $swapType: GqlSorSwapType!
+    $swapAmount: BigDecimal!
+    $swapOptions: GqlSorSwapOptionsInput!
+) {
+    swaps: sorGetSwaps(
+        tokenIn: $tokenIn
+        tokenOut: $tokenOut
+        swapType: $swapType
+        swapAmount: $swapAmount
+        swapOptions: $swapOptions
+    ) {
         tokenIn
         tokenOut
         swapAmount
         tokenAddresses
+        marketSp
         swaps {
             poolId
             amount

@@ -1,18 +1,15 @@
-import { Box, Text, Container, Heading, VStack, useTheme, Flex, Button } from '@chakra-ui/react';
-import { useGetTokenPricesQuery } from '../../apollo/generated/graphql-codegen-generated';
+import { Box, Button, useTheme, VStack } from '@chakra-ui/react';
 import TokenInput from '../inputs/TokenInput';
 import { ChevronsDown } from 'react-feather';
 import TokenSelect from '../token-select/TokenSelect';
 import { useState } from 'react';
 import { AnimatePresence } from 'framer-motion';
 import Card from '../card/Card';
-import { useReactiveVar } from '@apollo/client';
-import { tradeStateVar } from '~/components/trade/tradeState';
+import { useGetSwaps } from '~/components/trade/tradeState';
 
 function TradeCard() {
-    const tradeState = useReactiveVar(tradeStateVar);
+    const { tradeState, loadSwaps, loadingSwaps, error, networkStatus } = useGetSwaps();
 
-    const { data, loading, error } = useGetTokenPricesQuery();
     const [showTokenSelect, setShowTokenSelect] = useState(false);
 
     const toggleTokenSelect = () => {
