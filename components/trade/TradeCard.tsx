@@ -17,20 +17,20 @@ function TradeCard() {
 
     const theme = useTheme();
     return (
-        <Card title="Market Swap" position="relative" overflow="hidden" height="md" shadow="lg">
+        <Card title="Market Swap" position="relative" height="md" shadow="lg">
             <VStack spacing="2" padding="4" width="full">
                 <Box position="relative" width="full" onClick={toggleTokenSelect}>
-                    <TokenInput />
+                    <TokenInput label="Sell" />
                     <Button
                         justifyContent="center"
                         backgroundColor="beets.gray.600"
                         alignItems="center"
-                        rounded="full"
+                        rounded="lg"
                         border="4px"
                         padding="1"
-                        borderColor="beets.gray.400"
+                        borderColor="beets.gray.500"
                         position="absolute"
-                        bottom="-20px"
+                        bottom="-37px"
                         left="calc(50% - 20px)"
                         zIndex="2"
                         role="group"
@@ -56,7 +56,7 @@ function TradeCard() {
                         </Box>
                     </Button>
                 </Box>
-                <TokenInput />
+                <TokenInput label="Buy" />
             </VStack>
             <AnimatePresence>{showTokenSelect && <TokenSelect />}</AnimatePresence>
         </Card>
