@@ -1,14 +1,12 @@
-import { Container, Grid, GridItem, VStack } from '@chakra-ui/react';
+import { Box, Container, Grid, GridItem, VStack } from '@chakra-ui/react';
 import Navbar from '../components/nav/Navbar';
 import PoolList from '../components/pools/PoolList';
 
 function Pools() {
     return (
-        <VStack spacing="16" marginX="32">
+        <VStack spacing="16">
             <Navbar />
-            <Container width={'100%'}>
-                <PoolList />
-            </Container>
+            <PoolList />
         </VStack>
     );
 }

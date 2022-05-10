@@ -18,7 +18,7 @@ function PoolList() {
     const pools = data?.poolGetPools;
 
     return (
-        <Container bg="gray.900" width="full" shadow="lg" rounded="lg" padding="4" mb={12}>
+        <Container bg="gray.900" shadow="lg" rounded="lg" padding="4" mb={12} maxW="7xl">
             <Flex mb={4}>
                 <Box flex={2.5} mr={2}>
                     <Select
