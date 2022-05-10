@@ -1,11 +1,11 @@
 import { Box, Button, useTheme, VStack } from '@chakra-ui/react';
-import TokenInput from '../inputs/TokenInput';
+import TokenInput from '../../components/inputs/TokenInput';
 import { ChevronsDown } from 'react-feather';
-import TokenSelect from '../token-select/TokenSelect';
+import TokenSelect from '../../components/token-select/TokenSelect';
 import { useState } from 'react';
 import { AnimatePresence } from 'framer-motion';
-import Card from '../card/Card';
-import { useGetSwaps } from '~/components/trade/tradeState';
+import Card from '../../components/card/Card';
+import { useGetSwaps } from '~/page-components/trade/tradeState';
 
 function TradeCard() {
     const { tradeState, loadSwaps, loadingSwaps, error, networkStatus } = useGetSwaps();

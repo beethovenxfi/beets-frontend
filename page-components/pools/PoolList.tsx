@@ -1,21 +1,11 @@
-import { Box, Button, Container, Flex, Heading, Select, Spinner, Stack } from '@chakra-ui/react';
-import {
-    GqlPoolFilterType,
-    GqlPoolOrderBy,
-    GqlPoolOrderDirection,
-    useGetPoolsQuery,
-} from '../../apollo/generated/graphql-codegen-generated';
-import { NetworkStatus, useReactiveVar } from '@apollo/client';
-import { poolListStateVar } from './poolListState';
-import Link from 'next/link';
+import { Box, Button, Container, Flex, Select, Spinner } from '@chakra-ui/react';
+import { GqlPoolFilterType, GqlPoolOrderBy, GqlPoolOrderDirection } from '~/apollo/generated/graphql-codegen-generated';
+import { NetworkStatus } from '@apollo/client';
+import { usePoolList } from './usePoolList';
+import PoolListItem from '~/page-components/pools/PoolListItem';
 
 function PoolList() {
-    const poolListState = useReactiveVar(poolListStateVar);
-    const { data, loading, error, fetchMore, networkStatus, refetch } = useGetPoolsQuery({
-        notifyOnNetworkStatusChange: true,
-        variables: poolListState,
-    });
-    const pools = data?.poolGetPools;
+    const { pools, refetch, loading, error, fetchMore, networkStatus, state } = usePoolList();
 
     return (
         <Container bg="gray.900" shadow="lg" rounded="lg" padding="4" mb={12} maxW="7xl">
@@ -25,10 +15,8 @@ function PoolList() {
                         placeholder="Order by"
                         color={'white'}
                         onChange={(e) => {
-                            poolListState.orderBy = e.target.value
-                                ? (e.target.value as GqlPoolOrderBy)
-                                : 'totalLiquidity';
-                            refetch(poolListState);
+                            state.orderBy = e.target.value ? (e.target.value as GqlPoolOrderBy) : 'totalLiquidity';
+                            refetch();
                         }}
                     >
                         <option value="totalLiquidity">Total Liquidity</option>
@@ -41,10 +29,8 @@ function PoolList() {
                         placeholder="Order"
                         color={'white'}
                         onChange={(e) => {
-                            poolListState.orderDirection = e.target.value
-                                ? (e.target.value as GqlPoolOrderDirection)
-                                : 'desc';
-                            refetch(poolListState);
+                            state.orderDirection = e.target.value ? (e.target.value as GqlPoolOrderDirection) : 'desc';
+                            refetch();
                         }}
                     >
                         <option value="asc">Ascending</option>
@@ -57,13 +43,13 @@ function PoolList() {
                     placeholder="Pool type"
                     color={'white'}
                     onChange={(e) => {
-                        poolListState.where = {
-                            ...poolListState.where,
+                        state.where = {
+                            ...state.where,
                             poolTypeIn: e.target.value
                                 ? [e.target.value as GqlPoolFilterType]
                                 : ['WEIGHTED', 'STABLE', 'PHANTOM_STABLE'],
                         };
-                        refetch(poolListState);
+                        refetch();
                     }}
                 >
                     <option value="WEIGHTED">Weighted</option>
@@ -77,22 +63,7 @@ function PoolList() {
                     <Spinner size="xl" color={'white'} />
                 </Flex>
             ) : pools ? (
-                pools.map((pool, index) => (
-                    <Link key={index} href={`/pool/${pool.id}`}>
-                        <Box color={'white'} bg={'black'} mb={2} px={2} py={2}>
-                            <Heading mb={2} size={'md'}>
-                                {pool.name}
-                            </Heading>
-                            liquidity: {pool.dynamicData.totalLiquidity}
-                            <br />
-                            fees24h: {pool.dynamicData.fees24h}
-                            <br />
-                            volume24h: {pool.dynamicData.volume24h}
-                            <br />
-                            apr: {(parseFloat(pool.dynamicData.apr.total) * 100).toFixed(2)}%
-                        </Box>
-                    </Link>
-                ))
+                pools.map((pool, index) => <PoolListItem key={index} pool={pool} />)
             ) : null}
 
             <Button

@@ -21,6 +21,7 @@ query GetPools(
                 hasRewardApr
                 thirdPartyApr
                 nativeRewardApr
+                swapApr
                 total
                 items {
                     title
@@ -32,5 +33,45 @@ query GetPools(
                 }
             }
         }
+        allTokens {
+            address
+            isNested
+            isPhantomBpt
+        }
+    }
+}
+
+fragment GqlPoolBase on GqlPoolBase {
+    id
+    address
+    name
+    symbol
+    createTime
+    dynamicData {
+        totalLiquidity
+        totalShares
+        fees24h
+        swapFee
+        volume24h
+        apr {
+            hasRewardApr
+            thirdPartyApr
+            nativeRewardApr
+            swapApr
+            total
+            items {
+                title
+                apr
+                subItems {
+                    title
+                    apr
+                }
+            }
+        }
+    }
+    allTokens {
+        address
+        isNested
+        isPhantomBpt
     }
 }

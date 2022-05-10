@@ -476,7 +476,7 @@ type GqlPoolAprSubItem {
 
 interface GqlPoolBase {
     address: Bytes!
-    allTokens: [GqlToken!]!
+    allTokens: [GqlPoolTokenExpanded!]!
     createTime: Int!
     dynamicData: GqlPoolDynamicData!
     factory: Bytes
@@ -501,7 +501,7 @@ type GqlPoolDynamicData {
 
 type GqlPoolElement implements GqlPoolBase {
     address: Bytes!
-    allTokens: [GqlToken!]!
+    allTokens: [GqlPoolTokenExpanded!]!
     baseToken: Bytes!
     createTime: Int!
     dynamicData: GqlPoolDynamicData!
@@ -558,7 +558,7 @@ type GqlPoolInvestOption {
 
 type GqlPoolLinear implements GqlPoolBase {
     address: Bytes!
-    allTokens: [GqlToken!]!
+    allTokens: [GqlPoolTokenExpanded!]!
     createTime: Int!
     dynamicData: GqlPoolDynamicData!
     factory: Bytes
@@ -629,7 +629,7 @@ type GqlPoolLinearPoolWrappedToken {
 
 type GqlPoolLiquidityBootstrapping implements GqlPoolBase {
     address: Bytes!
-    allTokens: [GqlToken!]!
+    allTokens: [GqlPoolTokenExpanded!]!
     createTime: Int!
     dynamicData: GqlPoolDynamicData!
     factory: Bytes
@@ -665,7 +665,7 @@ enum GqlPoolOrderDirection {
 
 type GqlPoolPhantomStable implements GqlPoolBase {
     address: Bytes!
-    allTokens: [GqlToken!]!
+    allTokens: [GqlPoolTokenExpanded!]!
     amp: BigInt!
     createTime: Int!
     dynamicData: GqlPoolDynamicData!
@@ -696,7 +696,7 @@ type GqlPoolPhantomStableNested {
 
 type GqlPoolStable implements GqlPoolBase {
     address: Bytes!
-    allTokens: [GqlToken!]!
+    allTokens: [GqlPoolTokenExpanded!]!
     amp: BigInt!
     createTime: Int!
     dynamicData: GqlPoolDynamicData!
@@ -741,6 +741,15 @@ interface GqlPoolTokenBase {
     weight: BigDecimal
 }
 
+type GqlPoolTokenExpanded {
+    address: String!
+    decimals: Int!
+    isNested: Boolean!
+    isPhantomBpt: Boolean!
+    name: String!
+    symbol: String!
+}
+
 type GqlPoolTokenLinear implements GqlPoolTokenBase {
     address: String!
     balance: BigDecimal!
@@ -782,7 +791,7 @@ union GqlPoolUnion =
 
 type GqlPoolWeighted implements GqlPoolBase {
     address: Bytes!
-    allTokens: [GqlToken!]!
+    allTokens: [GqlPoolTokenExpanded!]!
     createTime: Int!
     dynamicData: GqlPoolDynamicData!
     factory: Bytes

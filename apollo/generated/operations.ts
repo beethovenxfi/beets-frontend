@@ -1,5 +1,52 @@
 import gql from 'graphql-tag';
-
+export const GqlPoolBase = gql`
+    fragment GqlPoolBase on GqlPoolBase {
+        id
+        address
+        name
+        symbol
+        createTime
+        dynamicData {
+            totalLiquidity
+            totalShares
+            fees24h
+            swapFee
+            volume24h
+            apr {
+                hasRewardApr
+                thirdPartyApr
+                nativeRewardApr
+                swapApr
+                total
+                items {
+                    title
+                    apr
+                    subItems {
+                        title
+                        apr
+                    }
+                }
+            }
+        }
+        allTokens {
+            address
+            isNested
+            isPhantomBpt
+        }
+    }
+`;
+export const GetAppData = gql`
+    query GetAppData {
+        tokenGetTokens {
+            address
+            name
+            symbol
+            decimals
+            chainId
+            logoURI
+        }
+    }
+`;
 export const GetTokens = gql`
     query GetTokens {
         tokens: tokenGetTokens {
@@ -76,6 +123,7 @@ export const GetPools = gql`
                     hasRewardApr
                     thirdPartyApr
                     nativeRewardApr
+                    swapApr
                     total
                     items {
                         title
@@ -86,6 +134,11 @@ export const GetPools = gql`
                         }
                     }
                 }
+            }
+            allTokens {
+                address
+                isNested
+                isPhantomBpt
             }
         }
     }

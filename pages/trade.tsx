@@ -1,7 +1,7 @@
 import { Grid, GridItem, VStack, Box } from '@chakra-ui/react';
 import TradeChart from '~/components/charts/TradeChart';
 import Navbar from '../components/nav/Navbar';
-import TradeCard from '../components/trade/TradeCard';
+import TradeCard from '../page-components/trade/TradeCard';
 
 import BeetsSmart from '~/assets/icons/beetx-smarts.svg';
 import Chevron3 from '~/assets/icons/chevron_down3.svg';

@@ -529,7 +529,7 @@ export interface GqlPoolAprSubItem {
 
 export interface GqlPoolBase {
     address: Scalars['Bytes'];
-    allTokens: Array<GqlToken>;
+    allTokens: Array<GqlPoolTokenExpanded>;
     createTime: Scalars['Int'];
     dynamicData: GqlPoolDynamicData;
     factory?: Maybe<Scalars['Bytes']>;
@@ -556,7 +556,7 @@ export interface GqlPoolDynamicData {
 export interface GqlPoolElement extends GqlPoolBase {
     __typename: 'GqlPoolElement';
     address: Scalars['Bytes'];
-    allTokens: Array<GqlToken>;
+    allTokens: Array<GqlPoolTokenExpanded>;
     baseToken: Scalars['Bytes'];
     createTime: Scalars['Int'];
     dynamicData: GqlPoolDynamicData;
@@ -613,7 +613,7 @@ export interface GqlPoolInvestOption {
 export interface GqlPoolLinear extends GqlPoolBase {
     __typename: 'GqlPoolLinear';
     address: Scalars['Bytes'];
-    allTokens: Array<GqlToken>;
+    allTokens: Array<GqlPoolTokenExpanded>;
     createTime: Scalars['Int'];
     dynamicData: GqlPoolDynamicData;
     factory?: Maybe<Scalars['Bytes']>;
@@ -689,7 +689,7 @@ export interface GqlPoolLinearPoolWrappedToken {
 export interface GqlPoolLiquidityBootstrapping extends GqlPoolBase {
     __typename: 'GqlPoolLiquidityBootstrapping';
     address: Scalars['Bytes'];
-    allTokens: Array<GqlToken>;
+    allTokens: Array<GqlPoolTokenExpanded>;
     createTime: Scalars['Int'];
     dynamicData: GqlPoolDynamicData;
     factory?: Maybe<Scalars['Bytes']>;
@@ -714,7 +714,7 @@ export type GqlPoolOrderDirection = 'asc' | 'desc';
 export interface GqlPoolPhantomStable extends GqlPoolBase {
     __typename: 'GqlPoolPhantomStable';
     address: Scalars['Bytes'];
-    allTokens: Array<GqlToken>;
+    allTokens: Array<GqlPoolTokenExpanded>;
     amp: Scalars['BigInt'];
     createTime: Scalars['Int'];
     dynamicData: GqlPoolDynamicData;
@@ -747,7 +747,7 @@ export interface GqlPoolPhantomStableNested {
 export interface GqlPoolStable extends GqlPoolBase {
     __typename: 'GqlPoolStable';
     address: Scalars['Bytes'];
-    allTokens: Array<GqlToken>;
+    allTokens: Array<GqlPoolTokenExpanded>;
     amp: Scalars['BigInt'];
     createTime: Scalars['Int'];
     dynamicData: GqlPoolDynamicData;
@@ -794,6 +794,16 @@ export interface GqlPoolTokenBase {
     weight?: Maybe<Scalars['BigDecimal']>;
 }
 
+export interface GqlPoolTokenExpanded {
+    __typename: 'GqlPoolTokenExpanded';
+    address: Scalars['String'];
+    decimals: Scalars['Int'];
+    isNested: Scalars['Boolean'];
+    isPhantomBpt: Scalars['Boolean'];
+    name: Scalars['String'];
+    symbol: Scalars['String'];
+}
+
 export interface GqlPoolTokenLinear extends GqlPoolTokenBase {
     __typename: 'GqlPoolTokenLinear';
     address: Scalars['String'];
@@ -838,7 +848,7 @@ export type GqlPoolUnion =
 export interface GqlPoolWeighted extends GqlPoolBase {
     __typename: 'GqlPoolWeighted';
     address: Scalars['Bytes'];
-    allTokens: Array<GqlToken>;
+    allTokens: Array<GqlPoolTokenExpanded>;
     createTime: Scalars['Int'];
     dynamicData: GqlPoolDynamicData;
     factory?: Maybe<Scalars['Bytes']>;
@@ -1095,6 +1105,21 @@ export interface QuerySorGetSwapsArgs {
 export interface QueryTokenGetHistoricalPricesArgs {
     addresses: Array<Scalars['String']>;
 }
+
+export type GetAppDataQueryVariables = Exact<{ [key: string]: never }>;
+
+export type GetAppDataQuery = {
+    __typename: 'Query';
+    tokenGetTokens: Array<{
+        __typename: 'GqlToken';
+        address: string;
+        name: string;
+        symbol: string;
+        decimals: number;
+        chainId: number;
+        logoURI?: string | null;
+    }>;
+};
 
 export type GetTokensQueryVariables = Exact<{ [key: string]: never }>;
 
@@ -1355,6 +1380,7 @@ export type GetPoolsQuery = {
                       hasRewardApr: boolean;
                       thirdPartyApr: string;
                       nativeRewardApr: string;
+                      swapApr: string;
                       total: string;
                       items: Array<{
                           __typename: 'GqlBalancePoolAprItem';
@@ -1368,6 +1394,12 @@ export type GetPoolsQuery = {
                       }>;
                   };
               };
+              allTokens: Array<{
+                  __typename: 'GqlPoolTokenExpanded';
+                  address: string;
+                  isNested: boolean;
+                  isPhantomBpt: boolean;
+              }>;
           }
         | {
               __typename: 'GqlPoolLinear';
@@ -1388,6 +1420,7 @@ export type GetPoolsQuery = {
                       hasRewardApr: boolean;
                       thirdPartyApr: string;
                       nativeRewardApr: string;
+                      swapApr: string;
                       total: string;
                       items: Array<{
                           __typename: 'GqlBalancePoolAprItem';
@@ -1401,6 +1434,12 @@ export type GetPoolsQuery = {
                       }>;
                   };
               };
+              allTokens: Array<{
+                  __typename: 'GqlPoolTokenExpanded';
+                  address: string;
+                  isNested: boolean;
+                  isPhantomBpt: boolean;
+              }>;
           }
         | {
               __typename: 'GqlPoolLiquidityBootstrapping';
@@ -1421,6 +1460,7 @@ export type GetPoolsQuery = {
                       hasRewardApr: boolean;
                       thirdPartyApr: string;
                       nativeRewardApr: string;
+                      swapApr: string;
                       total: string;
                       items: Array<{
                           __typename: 'GqlBalancePoolAprItem';
@@ -1434,6 +1474,12 @@ export type GetPoolsQuery = {
                       }>;
                   };
               };
+              allTokens: Array<{
+                  __typename: 'GqlPoolTokenExpanded';
+                  address: string;
+                  isNested: boolean;
+                  isPhantomBpt: boolean;
+              }>;
           }
         | {
               __typename: 'GqlPoolPhantomStable';
@@ -1454,6 +1500,7 @@ export type GetPoolsQuery = {
                       hasRewardApr: boolean;
                       thirdPartyApr: string;
                       nativeRewardApr: string;
+                      swapApr: string;
                       total: string;
                       items: Array<{
                           __typename: 'GqlBalancePoolAprItem';
@@ -1467,6 +1514,12 @@ export type GetPoolsQuery = {
                       }>;
                   };
               };
+              allTokens: Array<{
+                  __typename: 'GqlPoolTokenExpanded';
+                  address: string;
+                  isNested: boolean;
+                  isPhantomBpt: boolean;
+              }>;
           }
         | {
               __typename: 'GqlPoolStable';
@@ -1487,6 +1540,7 @@ export type GetPoolsQuery = {
                       hasRewardApr: boolean;
                       thirdPartyApr: string;
                       nativeRewardApr: string;
+                      swapApr: string;
                       total: string;
                       items: Array<{
                           __typename: 'GqlBalancePoolAprItem';
@@ -1500,6 +1554,12 @@ export type GetPoolsQuery = {
                       }>;
                   };
               };
+              allTokens: Array<{
+                  __typename: 'GqlPoolTokenExpanded';
+                  address: string;
+                  isNested: boolean;
+                  isPhantomBpt: boolean;
+              }>;
           }
         | {
               __typename: 'GqlPoolWeighted';
@@ -1520,6 +1580,7 @@ export type GetPoolsQuery = {
                       hasRewardApr: boolean;
                       thirdPartyApr: string;
                       nativeRewardApr: string;
+                      swapApr: string;
                       total: string;
                       items: Array<{
                           __typename: 'GqlBalancePoolAprItem';
@@ -1533,9 +1594,215 @@ export type GetPoolsQuery = {
                       }>;
                   };
               };
+              allTokens: Array<{
+                  __typename: 'GqlPoolTokenExpanded';
+                  address: string;
+                  isNested: boolean;
+                  isPhantomBpt: boolean;
+              }>;
           }
     >;
 };
+
+type GqlPoolBase_GqlPoolElement_Fragment = {
+    __typename: 'GqlPoolElement';
+    id: string;
+    address: string;
+    name: string;
+    symbol: string;
+    createTime: number;
+    dynamicData: {
+        __typename: 'GqlPoolDynamicData';
+        totalLiquidity: string;
+        totalShares: string;
+        fees24h: string;
+        swapFee: string;
+        volume24h: string;
+        apr: {
+            __typename: 'GqlPoolApr';
+            hasRewardApr: boolean;
+            thirdPartyApr: string;
+            nativeRewardApr: string;
+            swapApr: string;
+            total: string;
+            items: Array<{
+                __typename: 'GqlBalancePoolAprItem';
+                title: string;
+                apr: string;
+                subItems?: Array<{ __typename: 'GqlBalancePoolAprSubItem'; title: string; apr: string }> | null;
+            }>;
+        };
+    };
+    allTokens: Array<{ __typename: 'GqlPoolTokenExpanded'; address: string; isNested: boolean; isPhantomBpt: boolean }>;
+};
+
+type GqlPoolBase_GqlPoolLinear_Fragment = {
+    __typename: 'GqlPoolLinear';
+    id: string;
+    address: string;
+    name: string;
+    symbol: string;
+    createTime: number;
+    dynamicData: {
+        __typename: 'GqlPoolDynamicData';
+        totalLiquidity: string;
+        totalShares: string;
+        fees24h: string;
+        swapFee: string;
+        volume24h: string;
+        apr: {
+            __typename: 'GqlPoolApr';
+            hasRewardApr: boolean;
+            thirdPartyApr: string;
+            nativeRewardApr: string;
+            swapApr: string;
+            total: string;
+            items: Array<{
+                __typename: 'GqlBalancePoolAprItem';
+                title: string;
+                apr: string;
+                subItems?: Array<{ __typename: 'GqlBalancePoolAprSubItem'; title: string; apr: string }> | null;
+            }>;
+        };
+    };
+    allTokens: Array<{ __typename: 'GqlPoolTokenExpanded'; address: string; isNested: boolean; isPhantomBpt: boolean }>;
+};
+
+type GqlPoolBase_GqlPoolLiquidityBootstrapping_Fragment = {
+    __typename: 'GqlPoolLiquidityBootstrapping';
+    id: string;
+    address: string;
+    name: string;
+    symbol: string;
+    createTime: number;
+    dynamicData: {
+        __typename: 'GqlPoolDynamicData';
+        totalLiquidity: string;
+        totalShares: string;
+        fees24h: string;
+        swapFee: string;
+        volume24h: string;
+        apr: {
+            __typename: 'GqlPoolApr';
+            hasRewardApr: boolean;
+            thirdPartyApr: string;
+            nativeRewardApr: string;
+            swapApr: string;
+            total: string;
+            items: Array<{
+                __typename: 'GqlBalancePoolAprItem';
+                title: string;
+                apr: string;
+                subItems?: Array<{ __typename: 'GqlBalancePoolAprSubItem'; title: string; apr: string }> | null;
+            }>;
+        };
+    };
+    allTokens: Array<{ __typename: 'GqlPoolTokenExpanded'; address: string; isNested: boolean; isPhantomBpt: boolean }>;
+};
+
+type GqlPoolBase_GqlPoolPhantomStable_Fragment = {
+    __typename: 'GqlPoolPhantomStable';
+    id: string;
+    address: string;
+    name: string;
+    symbol: string;
+    createTime: number;
+    dynamicData: {
+        __typename: 'GqlPoolDynamicData';
+        totalLiquidity: string;
+        totalShares: string;
+        fees24h: string;
+        swapFee: string;
+        volume24h: string;
+        apr: {
+            __typename: 'GqlPoolApr';
+            hasRewardApr: boolean;
+            thirdPartyApr: string;
+            nativeRewardApr: string;
+            swapApr: string;
+            total: string;
+            items: Array<{
+                __typename: 'GqlBalancePoolAprItem';
+                title: string;
+                apr: string;
+                subItems?: Array<{ __typename: 'GqlBalancePoolAprSubItem'; title: string; apr: string }> | null;
+            }>;
+        };
+    };
+    allTokens: Array<{ __typename: 'GqlPoolTokenExpanded'; address: string; isNested: boolean; isPhantomBpt: boolean }>;
+};
+
+type GqlPoolBase_GqlPoolStable_Fragment = {
+    __typename: 'GqlPoolStable';
+    id: string;
+    address: string;
+    name: string;
+    symbol: string;
+    createTime: number;
+    dynamicData: {
+        __typename: 'GqlPoolDynamicData';
+        totalLiquidity: string;
+        totalShares: string;
+        fees24h: string;
+        swapFee: string;
+        volume24h: string;
+        apr: {
+            __typename: 'GqlPoolApr';
+            hasRewardApr: boolean;
+            thirdPartyApr: string;
+            nativeRewardApr: string;
+            swapApr: string;
+            total: string;
+            items: Array<{
+                __typename: 'GqlBalancePoolAprItem';
+                title: string;
+                apr: string;
+                subItems?: Array<{ __typename: 'GqlBalancePoolAprSubItem'; title: string; apr: string }> | null;
+            }>;
+        };
+    };
+    allTokens: Array<{ __typename: 'GqlPoolTokenExpanded'; address: string; isNested: boolean; isPhantomBpt: boolean }>;
+};
+
+type GqlPoolBase_GqlPoolWeighted_Fragment = {
+    __typename: 'GqlPoolWeighted';
+    id: string;
+    address: string;
+    name: string;
+    symbol: string;
+    createTime: number;
+    dynamicData: {
+        __typename: 'GqlPoolDynamicData';
+        totalLiquidity: string;
+        totalShares: string;
+        fees24h: string;
+        swapFee: string;
+        volume24h: string;
+        apr: {
+            __typename: 'GqlPoolApr';
+            hasRewardApr: boolean;
+            thirdPartyApr: string;
+            nativeRewardApr: string;
+            swapApr: string;
+            total: string;
+            items: Array<{
+                __typename: 'GqlBalancePoolAprItem';
+                title: string;
+                apr: string;
+                subItems?: Array<{ __typename: 'GqlBalancePoolAprSubItem'; title: string; apr: string }> | null;
+            }>;
+        };
+    };
+    allTokens: Array<{ __typename: 'GqlPoolTokenExpanded'; address: string; isNested: boolean; isPhantomBpt: boolean }>;
+};
+
+export type GqlPoolBaseFragment =
+    | GqlPoolBase_GqlPoolElement_Fragment
+    | GqlPoolBase_GqlPoolLinear_Fragment
+    | GqlPoolBase_GqlPoolLiquidityBootstrapping_Fragment
+    | GqlPoolBase_GqlPoolPhantomStable_Fragment
+    | GqlPoolBase_GqlPoolStable_Fragment
+    | GqlPoolBase_GqlPoolWeighted_Fragment;
 
 export type GetSorSwapsQueryVariables = Exact<{
     tokenIn: Scalars['String'];
@@ -1585,6 +1852,83 @@ export type GetSorSwapsQuery = {
     };
 };
 
+export const GqlPoolBaseFragmentDoc = gql`
+    fragment GqlPoolBase on GqlPoolBase {
+        id
+        address
+        name
+        symbol
+        createTime
+        dynamicData {
+            totalLiquidity
+            totalShares
+            fees24h
+            swapFee
+            volume24h
+            apr {
+                hasRewardApr
+                thirdPartyApr
+                nativeRewardApr
+                swapApr
+                total
+                items {
+                    title
+                    apr
+                    subItems {
+                        title
+                        apr
+                    }
+                }
+            }
+        }
+        allTokens {
+            address
+            isNested
+            isPhantomBpt
+        }
+    }
+`;
+export const GetAppDataDocument = gql`
+    query GetAppData {
+        tokenGetTokens {
+            address
+            name
+            symbol
+            decimals
+            chainId
+            logoURI
+        }
+    }
+`;
+
+/**
+ * __useGetAppDataQuery__
+ *
+ * To run a query within a React component, call `useGetAppDataQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAppDataQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAppDataQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetAppDataQuery(baseOptions?: Apollo.QueryHookOptions<GetAppDataQuery, GetAppDataQueryVariables>) {
+    const options = { ...defaultOptions, ...baseOptions };
+    return Apollo.useQuery<GetAppDataQuery, GetAppDataQueryVariables>(GetAppDataDocument, options);
+}
+export function useGetAppDataLazyQuery(
+    baseOptions?: Apollo.LazyQueryHookOptions<GetAppDataQuery, GetAppDataQueryVariables>,
+) {
+    const options = { ...defaultOptions, ...baseOptions };
+    return Apollo.useLazyQuery<GetAppDataQuery, GetAppDataQueryVariables>(GetAppDataDocument, options);
+}
+export type GetAppDataQueryHookResult = ReturnType<typeof useGetAppDataQuery>;
+export type GetAppDataLazyQueryHookResult = ReturnType<typeof useGetAppDataLazyQuery>;
+export type GetAppDataQueryResult = Apollo.QueryResult<GetAppDataQuery, GetAppDataQueryVariables>;
 export const GetTokensDocument = gql`
     query GetTokens {
         tokens: tokenGetTokens {
@@ -1749,6 +2093,7 @@ export const GetPoolsDocument = gql`
                     hasRewardApr
                     thirdPartyApr
                     nativeRewardApr
+                    swapApr
                     total
                     items {
                         title
@@ -1759,6 +2104,11 @@ export const GetPoolsDocument = gql`
                         }
                     }
                 }
+            }
+            allTokens {
+                address
+                isNested
+                isPhantomBpt
             }
         }
     }

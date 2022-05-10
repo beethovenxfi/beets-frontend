@@ -10,16 +10,12 @@ const PoolId = () => {
     const pool = data?.pool;
 
     return (
-        <VStack spacing="16" marginX="32">
-            <Navbar />
-
-            <Container bg="gray.900" color={'white'} width="full" shadow="lg" rounded="lg" padding="4" mb={12}>
-                {pool?.name}
-                <br />
-                {pool?.symbol}
-                <br />
-            </Container>
-        </VStack>
+        <Container bg="gray.900" color={'white'} width="full" shadow="lg" rounded="lg" padding="4" mb={12}>
+            {pool?.name}
+            <br />
+            {pool?.symbol}
+            <br />
+        </Container>
     );
 };
 

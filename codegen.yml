@@ -2,6 +2,7 @@ schema: ${NEXT_PUBLIC_BACKEND_URL}
 documents:
   - 'pages/**/*.gql'
   - 'components/**/*.gql'
+  - 'page-components/**/*.gql'
 hooks:
   afterAllFileWrite:
     - 'prettier --write'

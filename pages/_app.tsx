@@ -71,16 +71,18 @@ echarts.use([
 
 import FantomTheme from '~/styles/themes/fantom.json';
 import Navbar from '~/components/nav/Navbar';
+import { GlobalRenderer } from '~/components/global/GlobalRenderer';
 
 function MyApp({ Component, pageProps }: AppProps) {
     const theme = extendTheme(FantomTheme);
     return (
         <ApolloProvider client={client}>
             <ChakraProvider theme={theme}>
-                <Box height="full" className="bg" fontFamily='Inter'>
+                <GlobalRenderer />
+                <Box height="full" className="bg" fontFamily="Inter">
                     <Box height="full" className="bg-gradient" display="flex" justifyContent="center">
                         {/* add gutter here */}
-                        <Grid templateColumns="repeat(12, 1fr)" width="1400px" maxWidth="1400px" height='fit-content'>
+                        <Grid templateColumns="repeat(12, 1fr)" width="1400px" maxWidth="1400px" height="fit-content">
                             <GridItem colSpan={12} height="fit-content">
                                 <Navbar />
                             </GridItem>
