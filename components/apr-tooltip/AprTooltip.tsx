@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import { GqlPoolApr } from '~/apollo/generated/graphql-codegen-generated';
 import {
     Popover,
