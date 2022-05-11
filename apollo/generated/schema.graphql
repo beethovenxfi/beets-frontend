@@ -652,6 +652,7 @@ enum GqlPoolNestingType {
 }
 
 enum GqlPoolOrderBy {
+    apr
     fees24h
     totalLiquidity
     totalShares
@@ -970,6 +971,7 @@ type Query {
         orderBy: GqlPoolOrderBy
         orderDirection: GqlPoolOrderDirection
         skip: Int
+        textSearch: String
         where: GqlPoolFilter
     ): [GqlPoolBase!]!
     poolSnapshots(poolId: ID!): [GqlBalancerPoolSnapshot!]!

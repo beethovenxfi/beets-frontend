@@ -1,7 +1,7 @@
 import { makeVar, useReactiveVar } from '@apollo/client';
 import { GetPoolsQueryVariables, useGetPoolsQuery } from '~/apollo/generated/graphql-codegen-generated';
 
-const poolListStateVar = makeVar<GetPoolsQueryVariables>({
+export const DEFAULT_POOL_LIST_QUERY_VARS: GetPoolsQueryVariables = {
     first: 10,
     skip: 0,
     orderBy: 'totalLiquidity',
@@ -11,7 +11,9 @@ const poolListStateVar = makeVar<GetPoolsQueryVariables>({
         poolTypeNotIn: ['UNKNOWN', 'LIQUIDITY_BOOTSTRAPPING'],
         poolTypeIn: ['WEIGHTED', 'STABLE', 'PHANTOM_STABLE'],
     },
-});
+};
+
+const poolListStateVar = makeVar<GetPoolsQueryVariables>(DEFAULT_POOL_LIST_QUERY_VARS);
 
 export function usePoolList() {
     const state = useReactiveVar(poolListStateVar);

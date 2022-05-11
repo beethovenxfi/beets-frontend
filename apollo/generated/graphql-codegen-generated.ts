@@ -707,7 +707,7 @@ export type GqlPoolNestedUnion = GqlPoolLinearNested | GqlPoolPhantomStableNeste
 
 export type GqlPoolNestingType = 'HAS_ONLY_PHANTOM_BPT' | 'HAS_SOME_PHANTOM_BPT' | 'NO_NESTING';
 
-export type GqlPoolOrderBy = 'fees24h' | 'totalLiquidity' | 'totalShares' | 'volume24h';
+export type GqlPoolOrderBy = 'apr' | 'fees24h' | 'totalLiquidity' | 'totalShares' | 'volume24h';
 
 export type GqlPoolOrderDirection = 'asc' | 'desc';
 
@@ -1087,6 +1087,7 @@ export interface QueryPoolGetPoolsArgs {
     orderBy?: InputMaybe<GqlPoolOrderBy>;
     orderDirection?: InputMaybe<GqlPoolOrderDirection>;
     skip?: InputMaybe<Scalars['Int']>;
+    textSearch?: InputMaybe<Scalars['String']>;
     where?: InputMaybe<GqlPoolFilter>;
 }
 
