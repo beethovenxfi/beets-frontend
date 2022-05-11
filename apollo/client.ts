@@ -14,9 +14,15 @@ function createApolloClient() {
         link: new HttpLink({ uri: process.env.NEXT_PUBLIC_BACKEND_URL }),
         cache: new InMemoryCache({
             typePolicies: {
+                GqlToken: {
+                    keyFields: ['address'],
+                },
+                GqlTokenPrice: {
+                    keyFields: ['address'],
+                },
                 Query: {
                     fields: {
-                        allPosts: concatPagination(),
+                        poolGetPools: concatPagination(),
                     },
                 },
             },

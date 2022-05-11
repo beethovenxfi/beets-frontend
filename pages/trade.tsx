@@ -10,7 +10,7 @@ import { ChakraBox } from '~/components/animation/chakra';
 import AnimatedChevrons from '~/components/animation/chevron/AnimatedChevrons';
 import Card from '~/components/card/Card';
 import { useGetTokensQuery } from '~/apollo/generated/graphql-codegen-generated';
-import TradeCard from '~/page-components/trade/TradeCard';
+import TradeCard from '../page-components/trade/TradeCard';
 
 function Trade() {
     const { data, loading, error } = useGetTokensQuery();

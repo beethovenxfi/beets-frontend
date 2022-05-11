@@ -35,18 +35,6 @@ export const GqlPoolBase = gql`
         }
     }
 `;
-export const GetAppData = gql`
-    query GetAppData {
-        tokenGetTokens {
-            address
-            name
-            symbol
-            decimals
-            chainId
-            logoURI
-        }
-    }
-`;
 export const GetTokens = gql`
     query GetTokens {
         tokens: tokenGetTokens {

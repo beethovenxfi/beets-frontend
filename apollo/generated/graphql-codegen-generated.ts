@@ -1107,21 +1107,6 @@ export interface QueryTokenGetHistoricalPricesArgs {
     addresses: Array<Scalars['String']>;
 }
 
-export type GetAppDataQueryVariables = Exact<{ [key: string]: never }>;
-
-export type GetAppDataQuery = {
-    __typename: 'Query';
-    tokenGetTokens: Array<{
-        __typename: 'GqlToken';
-        address: string;
-        name: string;
-        symbol: string;
-        decimals: number;
-        chainId: number;
-        logoURI?: string | null;
-    }>;
-};
-
 export type GetTokensQueryVariables = Exact<{ [key: string]: never }>;
 
 export type GetTokensQuery = {
@@ -1889,47 +1874,6 @@ export const GqlPoolBaseFragmentDoc = gql`
         }
     }
 `;
-export const GetAppDataDocument = gql`
-    query GetAppData {
-        tokenGetTokens {
-            address
-            name
-            symbol
-            decimals
-            chainId
-            logoURI
-        }
-    }
-`;
-
-/**
- * __useGetAppDataQuery__
- *
- * To run a query within a React component, call `useGetAppDataQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetAppDataQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetAppDataQuery({
- *   variables: {
- *   },
- * });
- */
-export function useGetAppDataQuery(baseOptions?: Apollo.QueryHookOptions<GetAppDataQuery, GetAppDataQueryVariables>) {
-    const options = { ...defaultOptions, ...baseOptions };
-    return Apollo.useQuery<GetAppDataQuery, GetAppDataQueryVariables>(GetAppDataDocument, options);
-}
-export function useGetAppDataLazyQuery(
-    baseOptions?: Apollo.LazyQueryHookOptions<GetAppDataQuery, GetAppDataQueryVariables>,
-) {
-    const options = { ...defaultOptions, ...baseOptions };
-    return Apollo.useLazyQuery<GetAppDataQuery, GetAppDataQueryVariables>(GetAppDataDocument, options);
-}
-export type GetAppDataQueryHookResult = ReturnType<typeof useGetAppDataQuery>;
-export type GetAppDataLazyQueryHookResult = ReturnType<typeof useGetAppDataLazyQuery>;
-export type GetAppDataQueryResult = Apollo.QueryResult<GetAppDataQuery, GetAppDataQueryVariables>;
 export const GetTokensDocument = gql`
     query GetTokens {
         tokens: tokenGetTokens {

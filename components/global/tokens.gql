@@ -1,14 +1,3 @@
-query GetAppData {
-    tokenGetTokens {
-        address
-        name
-        symbol
-        decimals
-        chainId
-        logoURI
-    }
-}
-
 query GetTokens {
     tokens: tokenGetTokens {
         address
