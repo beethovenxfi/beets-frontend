@@ -1,15 +1,14 @@
-import { Box, Button, useTheme, VStack } from '@chakra-ui/react';
-import TokenInput from '../../components/inputs/TokenInput';
+import { Box, Text, Container, Heading, VStack, useTheme, Flex, Button } from '@chakra-ui/react';
 import { ChevronsDown } from 'react-feather';
-import TokenSelect from '../../components/token-select/TokenSelect';
 import { useState } from 'react';
 import { AnimatePresence } from 'framer-motion';
-import Card from '../../components/card/Card';
-import { useGetSwaps } from '~/page-components/trade/tradeState';
+import TokenSelect from '~/components/token-select/TokenSelect';
+import { useGetTokenPricesQuery } from '~/apollo/generated/graphql-codegen-generated';
+import TokenInput from '~/components/inputs/TokenInput';
+import Card from '~/components/card/Card';
 
 function TradeCard() {
-    const { tradeState, loadSwaps, loadingSwaps, error, networkStatus } = useGetSwaps();
-
+    const { data, loading, error } = useGetTokenPricesQuery();
     const [showTokenSelect, setShowTokenSelect] = useState(false);
 
     const toggleTokenSelect = () => {
@@ -18,20 +17,20 @@ function TradeCard() {
 
     const theme = useTheme();
     return (
-        <Card title="Market Swap" position="relative" overflow="hidden" height="md" shadow="lg">
+        <Card title="Market Swap" position="relative" height="md" shadow="lg">
             <VStack spacing="2" padding="4" width="full">
                 <Box position="relative" width="full" onClick={toggleTokenSelect}>
-                    <TokenInput />
+                    <TokenInput label="Sell" />
                     <Button
                         justifyContent="center"
                         backgroundColor="beets.gray.600"
                         alignItems="center"
-                        rounded="full"
+                        rounded="lg"
                         border="4px"
                         padding="1"
-                        borderColor="beets.gray.400"
+                        borderColor="beets.gray.500"
                         position="absolute"
-                        bottom="-20px"
+                        bottom="-37px"
                         left="calc(50% - 20px)"
                         zIndex="2"
                         role="group"
@@ -57,7 +56,7 @@ function TradeCard() {
                         </Box>
                     </Button>
                 </Box>
-                <TokenInput />
+                <TokenInput label="Buy" />
             </VStack>
             <AnimatePresence>{showTokenSelect && <TokenSelect />}</AnimatePresence>
         </Card>
