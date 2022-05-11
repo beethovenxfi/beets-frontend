@@ -1,0 +1,30 @@
+query GetPool($id: String!) {
+    pool: poolGetPool(id: $id) {
+        id
+        address
+        name
+        symbol
+        createTime
+        dynamicData {
+            totalLiquidity
+            totalShares
+            fees24h
+            swapFee
+            volume24h
+            apr {
+                hasRewardApr
+                thirdPartyApr
+                nativeRewardApr
+                total
+                items {
+                    title
+                    apr
+                    subItems {
+                        title
+                        apr
+                    }
+                }
+            }
+        }
+    }
+}

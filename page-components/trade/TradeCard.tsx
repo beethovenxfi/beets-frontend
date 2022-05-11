@@ -1,11 +1,11 @@
 import { Box, Text, Container, Heading, VStack, useTheme, Flex, Button } from '@chakra-ui/react';
-import { useGetTokenPricesQuery } from '../../apollo/generated/graphql-codegen-generated';
-import TokenInput from '../inputs/TokenInput';
 import { ChevronsDown } from 'react-feather';
-import TokenSelect from '../token-select/TokenSelect';
 import { useState } from 'react';
 import { AnimatePresence } from 'framer-motion';
-import Card from '../card/Card';
+import TokenSelect from '~/components/token-select/TokenSelect';
+import { useGetTokenPricesQuery } from '~/apollo/generated/graphql-codegen-generated';
+import TokenInput from '~/components/inputs/TokenInput';
+import Card from '~/components/card/Card';
 
 function TradeCard() {
     const { data, loading, error } = useGetTokenPricesQuery();

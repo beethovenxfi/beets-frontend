@@ -1,7 +1,6 @@
 import { Grid, GridItem, VStack, Box } from '@chakra-ui/react';
 import TradeChart from '~/components/charts/TradeChart';
 import Navbar from '../components/nav/Navbar';
-import TradeCard from '../components/trade/TradeCard';
 
 import BeetsSmart from '~/assets/icons/beetx-smarts.svg';
 import Chevron3 from '~/assets/icons/chevron_down3.svg';
@@ -10,6 +9,9 @@ import Image from 'next/image';
 import { ChakraBox } from '~/components/animation/chakra';
 import AnimatedChevrons from '~/components/animation/chevron/AnimatedChevrons';
 import Card from '~/components/card/Card';
+import { useGetTokensQuery } from '~/apollo/generated/graphql-codegen-generated';
+import TradeCard from '~/page-components/trade/TradeCard';
+
 function Trade() {
     const { data, loading, error } = useGetTokensQuery();
 
@@ -39,7 +41,6 @@ function Trade() {
                             <AnimatedChevrons color="beets.red.300" delay={.8} />
                         </VStack>
                     </ChakraBox> */}
-               
                 </VStack>
             </GridItem>
         </Grid>
