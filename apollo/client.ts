@@ -3,6 +3,7 @@ import { ApolloClient, HttpLink, InMemoryCache } from '@apollo/client';
 import { concatPagination } from '@apollo/client/utilities';
 import merge from 'deepmerge';
 import isEqual from 'lodash/isEqual';
+import { GetAppGlobalData } from '~/apollo/generated/operations';
 
 export const APOLLO_STATE_PROP_NAME = '__APOLLO_STATE__';
 
@@ -31,7 +32,7 @@ function createApolloClient() {
     });
 }
 
-export function initializeApollo(initialState: any = null) {
+export function initializeApolloClient(initialState: any = null) {
     const _apolloClient = apolloClient ?? createApolloClient();
 
     // If your page has Next.js data fetching methods that use Apollo Client, the initial state
@@ -60,15 +61,33 @@ export function initializeApollo(initialState: any = null) {
     return _apolloClient;
 }
 
-export function addApolloState(client: ApolloClient<any>, pageProps: any) {
-    if (pageProps?.props) {
-        pageProps.props[APOLLO_STATE_PROP_NAME] = client.cache.extract();
+export async function loadApolloState({
+    client,
+    props = {},
+    pageSetup,
+    revalidate = 1,
+}: {
+    client: ApolloClient<any>;
+    props?: any;
+    pageSetup?: () => Promise<void>;
+    revalidate?: number;
+}) {
+    await client.query({ query: GetAppGlobalData });
+
+    if (pageSetup) {
+        await pageSetup();
     }
 
-    return pageProps;
+    return {
+        props: {
+            ...props,
+            [APOLLO_STATE_PROP_NAME]: client.cache.extract(),
+        },
+        revalidate,
+    };
 }
 
 export function useApollo(pageProps: any) {
     const state = pageProps[APOLLO_STATE_PROP_NAME];
-    return useMemo(() => initializeApollo(state), [state]);
+    return useMemo(() => initializeApolloClient(state), [state]);
 }

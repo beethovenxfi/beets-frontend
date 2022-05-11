@@ -1107,6 +1107,22 @@ export interface QueryTokenGetHistoricalPricesArgs {
     addresses: Array<Scalars['String']>;
 }
 
+export type GetAppGlobalDataQueryVariables = Exact<{ [key: string]: never }>;
+
+export type GetAppGlobalDataQuery = {
+    __typename: 'Query';
+    tokenGetTokens: Array<{
+        __typename: 'GqlToken';
+        address: string;
+        name: string;
+        symbol: string;
+        decimals: number;
+        chainId: number;
+        logoURI?: string | null;
+    }>;
+    tokenGetCurrentPrices: Array<{ __typename: 'GqlTokenPrice'; price: number; address: string }>;
+};
+
 export type GetTokensQueryVariables = Exact<{ [key: string]: never }>;
 
 export type GetTokensQuery = {
@@ -1874,6 +1890,56 @@ export const GqlPoolBaseFragmentDoc = gql`
         }
     }
 `;
+export const GetAppGlobalDataDocument = gql`
+    query GetAppGlobalData {
+        tokenGetTokens {
+            address
+            name
+            symbol
+            decimals
+            chainId
+            logoURI
+        }
+        tokenGetCurrentPrices {
+            price
+            address
+        }
+    }
+`;
+
+/**
+ * __useGetAppGlobalDataQuery__
+ *
+ * To run a query within a React component, call `useGetAppGlobalDataQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAppGlobalDataQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAppGlobalDataQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetAppGlobalDataQuery(
+    baseOptions?: Apollo.QueryHookOptions<GetAppGlobalDataQuery, GetAppGlobalDataQueryVariables>,
+) {
+    const options = { ...defaultOptions, ...baseOptions };
+    return Apollo.useQuery<GetAppGlobalDataQuery, GetAppGlobalDataQueryVariables>(GetAppGlobalDataDocument, options);
+}
+export function useGetAppGlobalDataLazyQuery(
+    baseOptions?: Apollo.LazyQueryHookOptions<GetAppGlobalDataQuery, GetAppGlobalDataQueryVariables>,
+) {
+    const options = { ...defaultOptions, ...baseOptions };
+    return Apollo.useLazyQuery<GetAppGlobalDataQuery, GetAppGlobalDataQueryVariables>(
+        GetAppGlobalDataDocument,
+        options,
+    );
+}
+export type GetAppGlobalDataQueryHookResult = ReturnType<typeof useGetAppGlobalDataQuery>;
+export type GetAppGlobalDataLazyQueryHookResult = ReturnType<typeof useGetAppGlobalDataLazyQuery>;
+export type GetAppGlobalDataQueryResult = Apollo.QueryResult<GetAppGlobalDataQuery, GetAppGlobalDataQueryVariables>;
 export const GetTokensDocument = gql`
     query GetTokens {
         tokens: tokenGetTokens {

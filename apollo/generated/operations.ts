@@ -35,6 +35,22 @@ export const GqlPoolBase = gql`
         }
     }
 `;
+export const GetAppGlobalData = gql`
+    query GetAppGlobalData {
+        tokenGetTokens {
+            address
+            name
+            symbol
+            decimals
+            chainId
+            logoURI
+        }
+        tokenGetCurrentPrices {
+            price
+            address
+        }
+    }
+`;
 export const GetTokens = gql`
     query GetTokens {
         tokens: tokenGetTokens {

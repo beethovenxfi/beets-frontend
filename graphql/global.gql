@@ -1,3 +1,18 @@
+query GetAppGlobalData {
+    tokenGetTokens {
+        address
+        name
+        symbol
+        decimals
+        chainId
+        logoURI
+    }
+    tokenGetCurrentPrices {
+        price
+        address
+    }
+}
+
 query GetTokens {
     tokens: tokenGetTokens {
         address
