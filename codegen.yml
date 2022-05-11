@@ -3,6 +3,7 @@ documents:
   - 'pages/**/*.gql'
   - 'components/**/*.gql'
   - 'page-components/**/*.gql'
+  - 'graphql/**/*.gql'
 hooks:
   afterAllFileWrite:
     - 'prettier --write'

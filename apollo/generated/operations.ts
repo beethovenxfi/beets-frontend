@@ -35,8 +35,8 @@ export const GqlPoolBase = gql`
         }
     }
 `;
-export const GetAppData = gql`
-    query GetAppData {
+export const GetAppGlobalData = gql`
+    query GetAppGlobalData {
         tokenGetTokens {
             address
             name
@@ -44,6 +44,10 @@ export const GetAppData = gql`
             decimals
             chainId
             logoURI
+        }
+        tokenGetCurrentPrices {
+            price
+            address
         }
     }
 `;

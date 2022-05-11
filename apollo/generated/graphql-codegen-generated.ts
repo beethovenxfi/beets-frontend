@@ -1107,9 +1107,9 @@ export interface QueryTokenGetHistoricalPricesArgs {
     addresses: Array<Scalars['String']>;
 }
 
-export type GetAppDataQueryVariables = Exact<{ [key: string]: never }>;
+export type GetAppGlobalDataQueryVariables = Exact<{ [key: string]: never }>;
 
-export type GetAppDataQuery = {
+export type GetAppGlobalDataQuery = {
     __typename: 'Query';
     tokenGetTokens: Array<{
         __typename: 'GqlToken';
@@ -1120,6 +1120,7 @@ export type GetAppDataQuery = {
         chainId: number;
         logoURI?: string | null;
     }>;
+    tokenGetCurrentPrices: Array<{ __typename: 'GqlTokenPrice'; price: number; address: string }>;
 };
 
 export type GetTokensQueryVariables = Exact<{ [key: string]: never }>;
@@ -1889,8 +1890,8 @@ export const GqlPoolBaseFragmentDoc = gql`
         }
     }
 `;
-export const GetAppDataDocument = gql`
-    query GetAppData {
+export const GetAppGlobalDataDocument = gql`
+    query GetAppGlobalData {
         tokenGetTokens {
             address
             name
@@ -1899,37 +1900,46 @@ export const GetAppDataDocument = gql`
             chainId
             logoURI
         }
+        tokenGetCurrentPrices {
+            price
+            address
+        }
     }
 `;
 
 /**
- * __useGetAppDataQuery__
+ * __useGetAppGlobalDataQuery__
  *
- * To run a query within a React component, call `useGetAppDataQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetAppDataQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useGetAppGlobalDataQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAppGlobalDataQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useGetAppDataQuery({
+ * const { data, loading, error } = useGetAppGlobalDataQuery({
  *   variables: {
  *   },
  * });
  */
-export function useGetAppDataQuery(baseOptions?: Apollo.QueryHookOptions<GetAppDataQuery, GetAppDataQueryVariables>) {
-    const options = { ...defaultOptions, ...baseOptions };
-    return Apollo.useQuery<GetAppDataQuery, GetAppDataQueryVariables>(GetAppDataDocument, options);
-}
-export function useGetAppDataLazyQuery(
-    baseOptions?: Apollo.LazyQueryHookOptions<GetAppDataQuery, GetAppDataQueryVariables>,
+export function useGetAppGlobalDataQuery(
+    baseOptions?: Apollo.QueryHookOptions<GetAppGlobalDataQuery, GetAppGlobalDataQueryVariables>,
 ) {
     const options = { ...defaultOptions, ...baseOptions };
-    return Apollo.useLazyQuery<GetAppDataQuery, GetAppDataQueryVariables>(GetAppDataDocument, options);
+    return Apollo.useQuery<GetAppGlobalDataQuery, GetAppGlobalDataQueryVariables>(GetAppGlobalDataDocument, options);
 }
-export type GetAppDataQueryHookResult = ReturnType<typeof useGetAppDataQuery>;
-export type GetAppDataLazyQueryHookResult = ReturnType<typeof useGetAppDataLazyQuery>;
-export type GetAppDataQueryResult = Apollo.QueryResult<GetAppDataQuery, GetAppDataQueryVariables>;
+export function useGetAppGlobalDataLazyQuery(
+    baseOptions?: Apollo.LazyQueryHookOptions<GetAppGlobalDataQuery, GetAppGlobalDataQueryVariables>,
+) {
+    const options = { ...defaultOptions, ...baseOptions };
+    return Apollo.useLazyQuery<GetAppGlobalDataQuery, GetAppGlobalDataQueryVariables>(
+        GetAppGlobalDataDocument,
+        options,
+    );
+}
+export type GetAppGlobalDataQueryHookResult = ReturnType<typeof useGetAppGlobalDataQuery>;
+export type GetAppGlobalDataLazyQueryHookResult = ReturnType<typeof useGetAppGlobalDataLazyQuery>;
+export type GetAppGlobalDataQueryResult = Apollo.QueryResult<GetAppGlobalDataQuery, GetAppGlobalDataQueryVariables>;
 export const GetTokensDocument = gql`
     query GetTokens {
         tokens: tokenGetTokens {

@@ -1,4 +1,4 @@
-query GetAppData {
+query GetAppGlobalData {
     tokenGetTokens {
         address
         name
@@ -6,6 +6,10 @@ query GetAppData {
         decimals
         chainId
         logoURI
+    }
+    tokenGetCurrentPrices {
+        price
+        address
     }
 }
 

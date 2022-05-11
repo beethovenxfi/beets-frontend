@@ -1,7 +1,7 @@
 import { GqlToken, useGetTokensQuery } from '~/apollo/generated/graphql-codegen-generated';
 
 export function useGetTokens() {
-    const { data } = useGetTokensQuery({ fetchPolicy: 'cache-only' });
+    const { data } = useGetTokensQuery({ fetchPolicy: 'cache-first' });
     const tokens = data?.tokens || [];
 
     function getToken(address: string): GqlToken | null {
