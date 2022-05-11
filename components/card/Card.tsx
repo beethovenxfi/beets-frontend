@@ -4,6 +4,7 @@ import {
     AnimationControls,
     isValidMotionProp,
     motion,
+    MotionProps,
     Target,
     TargetAndTransition,
     VariantLabels,
@@ -14,15 +15,12 @@ import { ChakraBox } from '../animation/chakra';
 type Props = {
     title?: string;
     children?: ReactElement | ReactElement[];
-    animate?: AnimationControls | TargetAndTransition | VariantLabels | boolean;
-    initial?: boolean | Target | VariantLabels;
-    exit?: TargetAndTransition | VariantLabels;
 };
 
-export default function Card({ title, children, animate, initial, exit, ...boxProps }: Props & BoxProps) {
+export default function Card({ title, children, animate, initial, exit, ...boxProps }: Props & BoxProps & MotionProps) {
     return (
         <ChakraBox
-            {...boxProps as any}
+            {...(boxProps as any)}
             animate={animate}
             initial={initial}
             exit={exit}
