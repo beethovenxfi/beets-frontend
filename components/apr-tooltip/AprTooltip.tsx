@@ -27,7 +27,7 @@ interface Props {
 function AprTooltip({ data }: Props) {
     return (
         <Popover trigger="hover">
-            <Flex>
+            <Flex justifyContent={'end'}>
                 <Text fontWeight={'semibold'} mr={1}>
                     {numeral(data.total).format('0.00%')}
                 </Text>

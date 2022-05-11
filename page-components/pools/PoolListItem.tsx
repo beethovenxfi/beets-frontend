@@ -35,7 +35,7 @@ export default function PoolListItem({ pool }: Props) {
                     <br />
                     {numeral(pool.dynamicData.volume24h).format('$0,0')}
                 </Box>
-                <Box w={100} textAlign={'end'}>
+                <Box w={100}>
                     <AprTooltip data={pool.dynamicData.apr} />
                 </Box>
             </Flex>
