@@ -26,13 +26,9 @@ export default function PoolListItem({ pool }: Props) {
                     />
                 </Box>
                 <Box w={200} textAlign={'center'}>
-                    TVL
-                    <br />
                     {numeral(pool.dynamicData.totalLiquidity).format('$0,0')}
                 </Box>
                 <Box w={200} textAlign={'center'}>
-                    Volume
-                    <br />
                     {numeral(pool.dynamicData.volume24h).format('$0,0')}
                 </Box>
                 <Box w={100}>
