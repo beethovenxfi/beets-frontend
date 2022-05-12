@@ -6,7 +6,7 @@ import BeetsSmart from '~/assets/icons/beetx-smarts.svg';
 import Chevron3 from '~/assets/icons/chevron_down3.svg';
 
 import Image from 'next/image';
-import { ChakraBox } from '~/components/animation/chakra';
+import { AnimatedBox } from '~/components/animation/chakra';
 import AnimatedChevrons from '~/components/animation/chevron/AnimatedChevrons';
 import Card from '~/components/card/Card';
 import { GetPoolsQuery, GetPoolsQueryVariables, useGetTokensQuery } from '~/apollo/generated/graphql-codegen-generated';
@@ -28,7 +28,7 @@ function Trade() {
             <GridItem w="100%" colSpan={4}>
                 <VStack>
                     <TradeCard />
-                    {/* <ChakraBox
+                    {/* <AnimatedBox
                         display="flex"
                         flexDirection="column"
                         alignItems="center"
@@ -43,7 +43,7 @@ function Trade() {
                             </Box>
                             <AnimatedChevrons color="beets.red.300" delay={.8} />
                         </VStack>
-                    </ChakraBox> */}
+                    </AnimatedBox> */}
                 </VStack>
             </GridItem>
         </Grid>

@@ -75,7 +75,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     return (
         <ApolloProvider client={client}>
             <ChakraProvider theme={theme}>
-                <Box height="full" className="bg" fontFamily="Inter">
+                <Box height="full" className="bg" fontFamily="Inter" overflowX='hidden'>
                     <Box height="full" className="bg-gradient" display="flex" justifyContent="center">
                         {/* add gutter here */}
                         <Grid templateColumns="repeat(12, 1fr)" width="1400px" maxWidth="1400px" height="fit-content">
