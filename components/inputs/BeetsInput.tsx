@@ -11,7 +11,7 @@ export default function BeetsInput({ label, ...inputProps }: InputProps & Props)
             {label && (
                 <Heading
                     position="absolute"
-                    zIndex="tooltip"
+                    zIndex="dropdown"
                     top=".5rem"
                     left=".75rem"
                     fontWeight="normal"
