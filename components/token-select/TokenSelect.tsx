@@ -1,4 +1,4 @@
-import { Button } from '@chakra-ui/button';
+import { Button, ButtonProps } from '@chakra-ui/button';
 import { useBoolean, useMergeRefs } from '@chakra-ui/hooks';
 import { Box, Flex, Heading, HStack, VStack } from '@chakra-ui/layout';
 import { motion } from 'framer-motion';
@@ -9,23 +9,26 @@ import Card from '../card/Card';
 import BeetsInput from '../inputs/BeetsInput';
 import TokenAvatar from '../token-avatar/TokenAvatar';
 import { useVirtual } from 'react-virtual';
+import useCVirtual from 'react-cool-virtual';
 
 type Props = {
-    toggle?: any;
+    onClose?: any;
+    onTokenSelected: (address: string) => void;
 };
 
 type TokenRowProps = GqlToken & { index: number };
 
-const TokenRow = memo(function TokenRow({ symbol, address, index }: TokenRowProps) {
+const TokenRow = memo(function TokenRow({ symbol, address, index, onClick }: TokenRowProps & ButtonProps) {
     return (
         <Button
-            animate={{ opacity: 1, transition: { delay: index * 0.02 } }}
+            animate={{ opacity: 1, transition: { delay: index * 0.01 } }}
             initial={{ opacity: 0 }}
             as={motion.button}
             width="full"
             height="fit-content"
             variant="ghost"
             _hover={{ backgroundColor: 'beets.gray.400' }}
+            onClick={onClick}
         >
             <HStack width="full" paddingY="4">
                 <TokenAvatar address={address} />
@@ -37,13 +40,19 @@ const TokenRow = memo(function TokenRow({ symbol, address, index }: TokenRowProp
     );
 });
 
-export default function TokenSelect({ toggle }: Props) {
+export default function TokenSelect({ onClose, onTokenSelected }: Props) {
     const { tokens } = useGetTokens();
     const [areTokensVisible, setAreTokensVisible] = useBoolean();
     const [searchTerm, setSearchTerm] = useState('');
     const parentRef = useRef();
 
     const handleSearchTermChange = (event: FormEvent<HTMLInputElement>) => setSearchTerm(event.currentTarget.value);
+
+    const handleTokenSelected = (address: string) => () => {
+        setAreTokensVisible.off();
+        onTokenSelected && onTokenSelected(address);
+        onClose();
+    };
 
     // needed so the mounting of the many tokens does not jank
     // the animation, mount them as the animation completes
@@ -67,6 +76,11 @@ export default function TokenSelect({ toggle }: Props) {
         overscan: 8,
     });
 
+    const { outerRef, innerRef, items } = useCVirtual({
+        itemCount: filteredTokens.length, // Provide the total number for the list items
+        itemSize: 80, // The size of each item (default = 50)
+    });
+
     return (
         <Card
             shadow="lg"
@@ -76,7 +90,7 @@ export default function TokenSelect({ toggle }: Props) {
             initial={{ scale: 0.8, height: '400px', opacity: 0, position: 'absolute' }}
             exit={{ scale: 0.9, opacity: 0, transition: { type: 'spring', stiffness: 400, damping: 30 } }}
             onAnimationComplete={onMountAnimationComplete}
-            onClose={toggle}
+            onClose={onClose}
             minHeight="800px"
             position="relative"
         >
@@ -89,11 +103,11 @@ export default function TokenSelect({ toggle }: Props) {
                     label="Search or copy token address"
                 />
             </VStack>
-            <VStack
+            <Box
                 overflowY="auto"
                 padding="4"
                 flexGrow={1}
-                ref={parentRef as any}
+                ref={outerRef}
                 css={{
                     '&::-webkit-scrollbar': {
                         width: '0px !important',
@@ -103,23 +117,19 @@ export default function TokenSelect({ toggle }: Props) {
                     },
                 }}
             >
-                <Box height={`${rowVirtualiser.totalSize}px`} width="full" position="relative">
+                <Box width="full" ref={innerRef}>
                     {areTokensVisible &&
-                        rowVirtualiser.virtualItems.map((virtualRow, i) => (
-                            <Box
-                                position="absolute"
-                                width="full"
-                                top="0"
-                                left="0"
-                                key={virtualRow.index}
-                                height={`${virtualRow.size}px`}
-                                transform={`translateY(${virtualRow.start}px)`}
-                            >
-                                <TokenRow index={i} {...filteredTokens[virtualRow.index]} />
+                        items.map(({ index, size }, i) => (
+                            <Box width="full" key={index} height={`${size}px`}>
+                                <TokenRow
+                                    onClick={handleTokenSelected(filteredTokens[index]?.address)}
+                                    index={i}
+                                    {...filteredTokens[index]}
+                                />
                             </Box>
                         ))}
                 </Box>
-            </VStack>
+            </Box>
             <Box
                 position="absolute"
                 borderBottomLeftRadius="3xl"

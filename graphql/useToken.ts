@@ -5,7 +5,7 @@ export function useGetTokens() {
     const tokens = data?.tokens || [];
 
     function getToken(address: string): GqlToken | null {
-        const token = tokens.find((token) => token.address === address.toLowerCase());
+        const token = tokens.find((token) => token.address === address?.toLowerCase());
 
         return token || null;
     }

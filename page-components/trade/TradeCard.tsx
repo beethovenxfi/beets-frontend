@@ -1,4 +1,5 @@
 import { Box, Text, Container, Heading, VStack, useTheme, Flex, Button } from '@chakra-ui/react';
+import { useBoolean } from '@chakra-ui/hooks';
 import { ChevronsDown } from 'react-feather';
 import { useState } from 'react';
 import { AnimatePresence, useAnimation, motion } from 'framer-motion';
@@ -7,14 +8,21 @@ import { useGetTokenPricesQuery } from '~/apollo/generated/graphql-codegen-gener
 import TokenInput from '~/components/inputs/TokenInput';
 import Card from '~/components/card/Card';
 import BeetsButton from '~/components/button/Button';
+import { useGetSwaps } from './tradeState';
+import { TokenInputSwapButton } from './TokenInputSwapButton';
 
 function TradeCard() {
-    const { data, loading, error } = useGetTokenPricesQuery();
-    const [showTokenSelect, setShowTokenSelect] = useState(false);
+    const theme = useTheme();
     const controls = useAnimation();
+    const { data, loading, error } = useGetTokenPricesQuery();
+    const { tradeState } = useGetSwaps();
 
-    const toggleTokenSelect = async () => {
-        setShowTokenSelect(!showTokenSelect);
+    const [showTokenSelect, setShowTokenSelect] = useBoolean();
+    const [tokenSelectKey, setTokenSelectKey] = useState<'tokenIn' | 'tokenOut'>('tokenIn');
+
+    const toggleTokenSelect = (tokenKey: 'tokenIn' | 'tokenOut') => () => {
+        setShowTokenSelect.toggle();
+        setTokenSelectKey(tokenKey);
         if (!showTokenSelect) {
             controls.set({ position: 'absolute', top: '0', height: 'fit-content' });
             controls.start({
@@ -45,56 +53,31 @@ function TradeCard() {
         }
     };
 
-    console.log('show', showTokenSelect);
-    const theme = useTheme();
     return (
         <Box width="full" position="relative">
             <Card animate={controls} title="Market Swap" position="relative" height="md" shadow="lg" paddingBottom="1">
                 <VStack spacing="2" padding="4" width="full">
                     <Box position="relative" width="full">
-                        <TokenInput toggleTokenSelect={toggleTokenSelect} label="Sell" />
-                        <Button
-                            justifyContent="center"
-                            backgroundColor="beets.gray.600"
-                            alignItems="center"
-                            rounded="full"
-                            border="4px"
-                            padding="1"
-                            borderColor="beets.gray.500"
-                            position="absolute"
-                            bottom="-20px"
-                            left="calc(50% - 20px)"
-                            zIndex="2"
-                            role="group"
-                            _hover={{ borderColor: 'beets.green.500', cursor: 'pointer' }}
-                            _active={{ backgroundColor: 'beets.gray.600' }}
-                        >
-                            <Box
-                                marginTop="1px"
-                                color="beets.gray.200"
-                                css={{
-                                    transform: 'rotate(360deg)',
-                                    transition: 'transform linear .15s',
-                                }}
-                                _groupHover={{
-                                    color: 'beets.green.500',
-                                    cursor: 'pointer',
-                                    transform: 'rotate(180deg)',
-                                    transition: 'all linear .15s',
-                                }}
-                                _groupFocus={{ color: 'beets.green.500', cursor: 'pointer' }}
-                            >
-                                <ChevronsDown size={24} color="currentColor" />
-                            </Box>
-                        </Button>
+                        <TokenInput
+                            address={tradeState.tokenIn}
+                            toggleTokenSelect={toggleTokenSelect('tokenIn')}
+                            label="Sell"
+                        />
+                        <TokenInputSwapButton />
                     </Box>
-                    <TokenInput toggleTokenSelect={toggleTokenSelect} label="Buy" />
+                    <TokenInput
+                        address={tradeState.tokenIn}
+                        toggleTokenSelect={toggleTokenSelect('tokenOut')}
+                        label="Buy"
+                    />
                     <BeetsButton isFullWidth size="lg">
                         Preview
                     </BeetsButton>
                 </VStack>
             </Card>
-            <AnimatePresence>{showTokenSelect && <TokenSelect toggle={toggleTokenSelect} />}</AnimatePresence>
+            <AnimatePresence>
+                {showTokenSelect && <TokenSelect onTokenSelected={() => false} onClose={toggleTokenSelect(tokenSelectKey)} />}
+            </AnimatePresence>
         </Box>
     );
 }

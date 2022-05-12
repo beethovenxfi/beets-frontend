@@ -4,6 +4,7 @@ import BeetsInput from './BeetsInput';
 type Props = {
     label?: string;
     toggleTokenSelect?: () => void;
+    address: string | null;
 };
 
 export default function TokenInput({ label, toggleTokenSelect }: Props) {
