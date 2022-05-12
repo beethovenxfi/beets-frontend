@@ -1,8 +1,8 @@
 import { Button } from '@chakra-ui/button';
 import { useBoolean, useMergeRefs } from '@chakra-ui/hooks';
 import { Box, Flex, Heading, HStack, VStack } from '@chakra-ui/layout';
-import { AnimatePresence, motion } from 'framer-motion';
-import { FormEvent, memo, Ref, RefObject, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { motion } from 'framer-motion';
+import { FormEvent, memo, useCallback, useRef, useState } from 'react';
 import { GqlToken } from '~/apollo/generated/graphql-codegen-generated';
 import { useGetTokens } from '~/graphql/useToken';
 import Card from '../card/Card';
@@ -11,8 +11,7 @@ import TokenAvatar from '../token-avatar/TokenAvatar';
 import { useVirtual } from 'react-virtual';
 
 type Props = {
-    containerRef?: RefObject<HTMLDivElement>;
-    onToggleTokenSelect?: (isVisible: boolean) => void;
+    toggle?: any;
 };
 
 type TokenRowProps = GqlToken & { index: number };
@@ -38,28 +37,18 @@ const TokenRow = memo(function TokenRow({ symbol, address, index }: TokenRowProp
     );
 });
 
-export default function TokenSelect({ containerRef, onToggleTokenSelect }: Props) {
+export default function TokenSelect({ toggle }: Props) {
     const { tokens } = useGetTokens();
     const [areTokensVisible, setAreTokensVisible] = useBoolean();
     const [searchTerm, setSearchTerm] = useState('');
-    const scrollParentRef = useRef();
-    const [showTokenSelect, setShowTokenSelect] = useBoolean();
+    const parentRef = useRef();
 
     const handleSearchTermChange = (event: FormEvent<HTMLInputElement>) => setSearchTerm(event.currentTarget.value);
 
     // needed so the mounting of the many tokens does not jank
     // the animation, mount them as the animation completes
     const onMountAnimationComplete = () => {
-        onToggleTokenSelect && onToggleTokenSelect(true);
-        setTimeout(() => {
-            setAreTokensVisible.on();
-        }, 50);
-    };
-
-    const toggleSelect = () => {
-        setShowTokenSelect.toggle();
-        setAreTokensVisible.off();
-        setSearchTerm('');
+        setAreTokensVisible.on();
     };
 
     const filteredTokens = searchTerm
@@ -73,13 +62,24 @@ export default function TokenSelect({ containerRef, onToggleTokenSelect }: Props
 
     const rowVirtualiser = useVirtual({
         size: filteredTokens.length,
-        parentRef: scrollParentRef,
+        parentRef: parentRef,
         estimateSize: useCallback(() => 80, []),
         overscan: 8,
     });
 
-    const SearchSection = useMemo(
-        () => (
+    return (
+        <Card
+            shadow="lg"
+            title="Choose a token"
+            width="full"
+            animate={{ scale: 1, opacity: 1, transition: { type: 'spring', stiffness: 400, damping: 30 } }}
+            initial={{ scale: 0.8, height: '400px', opacity: 0, position: 'absolute' }}
+            exit={{ scale: 0.9, opacity: 0, transition: { type: 'spring', stiffness: 400, damping: 30 } }}
+            onAnimationComplete={onMountAnimationComplete}
+            onClose={toggle}
+            minHeight="800px"
+            position="relative"
+        >
             <VStack padding="4">
                 <BeetsInput
                     value={searchTerm}
@@ -89,92 +89,46 @@ export default function TokenSelect({ containerRef, onToggleTokenSelect }: Props
                     label="Search or copy token address"
                 />
             </VStack>
-        ),
-        [searchTerm],
-    );
-
-    const boundingRectOfContainer = useMemo(() => {
-        return containerRef?.current?.getBoundingClientRect();
-    }, [containerRef?.current]);
-
-    return (
-        <>
-            <Box
-                onClick={toggleSelect}
-                position="absolute"
-                zIndex="dropdown"
-                right=".75rem"
-                top="50%"
-                transform="translateY(-50%)"
+            <VStack
+                overflowY="auto"
+                padding="4"
+                flexGrow={1}
+                ref={parentRef as any}
+                css={{
+                    '&::-webkit-scrollbar': {
+                        width: '0px !important',
+                    },
+                    '&::-webkit-scrollbar-track': {
+                        width: '0px !important',
+                    },
+                }}
             >
-                <Button backgroundColor="beets.gray.300" _hover={{ backgroundColor: 'beets.green.400' }} />
-            </Box>
-            <AnimatePresence>
-                {showTokenSelect && (
-                    <Card
-                        shadow="lg"
-                        title="Choose a token"
-                        width="full"
-                        animate={{ scale: 1, opacity: 1, transition: { type: 'spring', stiffness: 400, damping: 30 } }}
-                        initial={{
-                            scale: 0.8,
-                            height: '400px',
-                            opacity: 0,
-                            position: 'fixed',
-                            top: boundingRectOfContainer.y,
-                            left: boundingRectOfContainer.x,
-                            width: boundingRectOfContainer.width,
-                        }}
-                        exit={{ scale: 0.9, opacity: 0, transition: { type: 'spring', stiffness: 400, damping: 30 } }}
-                        onAnimationComplete={onMountAnimationComplete}
-                        onClose={toggleSelect}
-                        minHeight="800px"
-                        zIndex="modal"
-                    >
-                        {SearchSection}
-                        <VStack
-                            overflowY="auto"
-                            padding="4"
-                            flexGrow={1}
-                            ref={scrollParentRef as any}
-                            css={{
-                                '&::-webkit-scrollbar': {
-                                    width: '0px !important',
-                                },
-                                '&::-webkit-scrollbar-track': {
-                                    width: '0px !important',
-                                },
-                            }}
-                        >
-                            <Box height={`${rowVirtualiser.totalSize}px`} width="full" position="relative">
-                                {areTokensVisible &&
-                                    rowVirtualiser.virtualItems.map((virtualRow, i) => (
-                                        <Box
-                                            position="absolute"
-                                            width="full"
-                                            top="0"
-                                            left="0"
-                                            key={virtualRow.index}
-                                            height={`${virtualRow.size}px`}
-                                            transform={`translateY(${virtualRow.start}px)`}
-                                        >
-                                            <TokenRow index={i} {...filteredTokens[virtualRow.index]} />
-                                        </Box>
-                                    ))}
+                <Box height={`${rowVirtualiser.totalSize}px`} width="full" position="relative">
+                    {areTokensVisible &&
+                        rowVirtualiser.virtualItems.map((virtualRow, i) => (
+                            <Box
+                                position="absolute"
+                                width="full"
+                                top="0"
+                                left="0"
+                                key={virtualRow.index}
+                                height={`${virtualRow.size}px`}
+                                transform={`translateY(${virtualRow.start}px)`}
+                            >
+                                <TokenRow index={i} {...filteredTokens[virtualRow.index]} />
                             </Box>
-                        </VStack>
-                        <Box
-                            position="absolute"
-                            borderBottomLeftRadius="3xl"
-                            borderBottomRightRadius="3xl"
-                            bottom="0"
-                            height="80px"
-                            width="full"
-                            bgGradient="linear(to-t, blackAlpha.300, rgba(0,0,0,0))"
-                        />
-                    </Card>
-                )}
-            </AnimatePresence>
-        </>
+                        ))}
+                </Box>
+            </VStack>
+            <Box
+                position="absolute"
+                borderBottomLeftRadius="3xl"
+                borderBottomRightRadius="3xl"
+                bottom="0"
+                height="80px"
+                width="full"
+                bgGradient="linear(to-t, blackAlpha.300, rgba(0,0,0,0))"
+            />
+        </Card>
     );
 }
