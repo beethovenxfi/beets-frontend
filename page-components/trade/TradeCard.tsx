@@ -53,6 +53,10 @@ function TradeCard() {
         }
     };
 
+    const handleTokenSelected = (address: string) => {
+        tradeState[tokenSelectKey] = address;
+    }
+
     return (
         <Box width="full" position="relative">
             <Card animate={controls} title="Market Swap" position="relative" height="md" shadow="lg" paddingBottom="1">
@@ -66,7 +70,7 @@ function TradeCard() {
                         <TokenInputSwapButton />
                     </Box>
                     <TokenInput
-                        address={tradeState.tokenIn}
+                        address={tradeState.tokenOut}
                         toggleTokenSelect={toggleTokenSelect('tokenOut')}
                         label="Buy"
                     />
@@ -76,7 +80,7 @@ function TradeCard() {
                 </VStack>
             </Card>
             <AnimatePresence>
-                {showTokenSelect && <TokenSelect onTokenSelected={() => false} onClose={toggleTokenSelect(tokenSelectKey)} />}
+                {showTokenSelect && <TokenSelect onTokenSelected={handleTokenSelected} onClose={toggleTokenSelect(tokenSelectKey)} />}
             </AnimatePresence>
         </Box>
     );

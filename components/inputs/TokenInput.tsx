@@ -1,4 +1,5 @@
 import { Flex, Input, Button, Box, Heading, VStack } from '@chakra-ui/react';
+import TokenAvatar from '../token-avatar/TokenAvatar';
 import BeetsInput from './BeetsInput';
 
 type Props = {
@@ -7,7 +8,7 @@ type Props = {
     address: string | null;
 };
 
-export default function TokenInput({ label, toggleTokenSelect }: Props) {
+export default function TokenInput({ label, toggleTokenSelect, address }: Props) {
     return (
         <VStack width="full" alignItems="flex-start">
             <Box position="relative" width="full">
@@ -17,7 +18,9 @@ export default function TokenInput({ label, toggleTokenSelect }: Props) {
                         onClick={toggleTokenSelect}
                         backgroundColor="beets.gray.300"
                         _hover={{ backgroundColor: 'beets.green.400' }}
-                    ></Button>
+                    >
+                        <TokenAvatar size='xs' address={address || ''} />
+                    </Button>
                 </Box>
             </Box>
         </VStack>
