@@ -1,5 +1,10 @@
 import { makeVar, useReactiveVar } from '@apollo/client';
-import { GetPoolsQueryVariables, useGetPoolsQuery } from '~/apollo/generated/graphql-codegen-generated';
+import {
+    GetPoolsQueryVariables,
+    GqlPoolOrderBy,
+    GqlPoolOrderDirection,
+    useGetPoolsQuery,
+} from '~/apollo/generated/graphql-codegen-generated';
 
 export const DEFAULT_POOL_LIST_QUERY_VARS: GetPoolsQueryVariables = {
     first: 10,
@@ -33,6 +38,29 @@ export function usePoolList() {
         return refetchPools(state);
     }
 
+    async function changeSort(orderBy: GqlPoolOrderBy) {
+        if (state.orderBy === orderBy) {
+            switch (state.orderDirection) {
+                case 'asc':
+                    state.orderDirection = null;
+                    break;
+                case 'desc':
+                    state.orderDirection = 'asc';
+                    break;
+                default:
+                    state.orderDirection = 'desc';
+            }
+        } else {
+            state.orderBy = orderBy;
+            state.orderDirection = 'desc';
+        }
+
+        console.log('order by', state.orderBy);
+        console.log('order direction', state.orderDirection);
+
+        await refetch();
+    }
+
     return {
         state,
         pools: data?.poolGetPools,
@@ -41,5 +69,6 @@ export function usePoolList() {
         fetchMore,
         networkStatus,
         refetch,
+        changeSort,
     };
 }

@@ -1,46 +1,23 @@
-import { Box, Button, Container, Flex, Select, Spinner } from '@chakra-ui/react';
+import { Box, Button, Container, Flex, Heading, Link, Select, Spinner, Text } from '@chakra-ui/react';
 import { GqlPoolFilterType, GqlPoolOrderBy, GqlPoolOrderDirection } from '~/apollo/generated/graphql-codegen-generated';
 import { NetworkStatus } from '@apollo/client';
 import { usePoolList } from './usePoolList';
 import PoolListItem from '~/page-components/pools/PoolListItem';
+import TokenAvatarSet from '~/components/token-avatar/TokenAvatarSet';
+import numeral from 'numeral';
+import AprTooltip from '~/components/apr-tooltip/AprTooltip';
+import { ArrowUp } from 'react-feather';
+import PoolListSortLink from '~/page-components/pools/PoolListSortLink';
 
 function PoolList() {
-    const { pools, refetch, loading, error, fetchMore, networkStatus, state } = usePoolList();
+    const { pools, refetch, loading, error, fetchMore, networkStatus, state, changeSort } = usePoolList();
 
     return (
         <Container bg="gray.900" shadow="lg" rounded="lg" padding="4" mb={12} maxW="7xl">
-            <Flex mb={4}>
-                <Box flex={2.5} mr={2}>
-                    <Select
-                        placeholder="Order by"
-                        color={'white'}
-                        onChange={(e) => {
-                            state.orderBy = e.target.value ? (e.target.value as GqlPoolOrderBy) : 'totalLiquidity';
-                            refetch();
-                        }}
-                    >
-                        <option value="totalLiquidity">Total Liquidity</option>
-                        <option value="fees24h">Fees 24h</option>
-                        <option value="volume24h">Volume 24h</option>
-                    </Select>
-                </Box>
-                <Box flex={1}>
-                    <Select
-                        placeholder="Order"
-                        color={'white'}
-                        onChange={(e) => {
-                            state.orderDirection = e.target.value ? (e.target.value as GqlPoolOrderDirection) : 'desc';
-                            refetch();
-                        }}
-                    >
-                        <option value="asc">Ascending</option>
-                        <option value="desc">Descending</option>
-                    </Select>
-                </Box>
-            </Flex>
             <Box mb={4}>
+                <Text>Pool type</Text>
                 <Select
-                    placeholder="Pool type"
+                    placeholder="All"
                     color={'white'}
                     onChange={(e) => {
                         state.where = {
@@ -58,6 +35,30 @@ function PoolList() {
                 </Select>
             </Box>
 
+            <Flex color={'white'} bg={'black'} mb={2} p={4} cursor="pointer" borderRadius={4} alignItems={'center'}>
+                <Box flex={1}></Box>
+                <Box w={200}>
+                    <PoolListSortLink
+                        title="Pool value"
+                        orderDirection={state.orderBy === 'totalLiquidity' ? state.orderDirection : null}
+                        onClick={() => changeSort('totalLiquidity')}
+                    />
+                </Box>
+                <Box w={200} textAlign={'center'}>
+                    <PoolListSortLink
+                        title="Volume"
+                        orderDirection={state.orderBy === 'volume24h' ? state.orderDirection : null}
+                        onClick={() => changeSort('volume24h')}
+                    />
+                </Box>
+                <Box w={100} textAlign={'center'}>
+                    <PoolListSortLink
+                        title="APR"
+                        orderDirection={state.orderBy === 'apr' ? state.orderDirection : null}
+                        onClick={() => changeSort('apr')}
+                    />
+                </Box>
+            </Flex>
             {networkStatus === NetworkStatus.refetch ? (
                 <Flex justifyContent={'center'} my={4}>
                     <Spinner size="xl" color={'white'} />
