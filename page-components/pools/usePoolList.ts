@@ -12,7 +12,7 @@ export const DEFAULT_POOL_LIST_QUERY_VARS: GetPoolsQueryVariables = {
     first: 10,
     skip: 0,
     orderBy: 'totalLiquidity',
-    orderDirection: 'asc',
+    orderDirection: 'desc',
     where: {
         categoryIn: ['INCENTIVIZED'],
         poolTypeIn: ['WEIGHTED', 'STABLE', 'PHANTOM_STABLE'],
