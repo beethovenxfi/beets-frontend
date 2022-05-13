@@ -10,12 +10,12 @@ export const DEFAULT_POOL_LIST_QUERY_VARS: GetPoolsQueryVariables = {
     first: 10,
     skip: 0,
     orderBy: 'totalLiquidity',
-    orderDirection: 'desc',
+    orderDirection: 'asc',
     where: {
         categoryIn: ['INCENTIVIZED'],
-        poolTypeNotIn: ['UNKNOWN', 'LIQUIDITY_BOOTSTRAPPING'],
         poolTypeIn: ['WEIGHTED', 'STABLE', 'PHANTOM_STABLE'],
     },
+    textSearch: null,
 };
 
 const poolListStateVar = makeVar<GetPoolsQueryVariables>(DEFAULT_POOL_LIST_QUERY_VARS);
@@ -55,9 +55,10 @@ export function usePoolList() {
             state.orderDirection = 'desc';
         }
 
-        console.log('order by', state.orderBy);
-        console.log('order direction', state.orderDirection);
+        await refetch();
+    }
 
+    async function submitSearch() {
         await refetch();
     }
 

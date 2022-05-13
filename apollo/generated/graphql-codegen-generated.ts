@@ -1358,6 +1358,7 @@ export type GetPoolsQueryVariables = Exact<{
     orderBy?: InputMaybe<GqlPoolOrderBy>;
     orderDirection?: InputMaybe<GqlPoolOrderDirection>;
     where?: InputMaybe<GqlPoolFilter>;
+    textSearch?: InputMaybe<Scalars['String']>;
 }>;
 
 export type GetPoolsQuery = {
@@ -2087,8 +2088,16 @@ export const GetPoolsDocument = gql`
         $orderBy: GqlPoolOrderBy
         $orderDirection: GqlPoolOrderDirection
         $where: GqlPoolFilter
+        $textSearch: String
     ) {
-        poolGetPools(first: $first, skip: $skip, orderBy: $orderBy, orderDirection: $orderDirection, where: $where) {
+        poolGetPools(
+            first: $first
+            skip: $skip
+            orderBy: $orderBy
+            orderDirection: $orderDirection
+            where: $where
+            textSearch: $textSearch
+        ) {
             id
             address
             name
@@ -2142,6 +2151,7 @@ export const GetPoolsDocument = gql`
  *      orderBy: // value for 'orderBy'
  *      orderDirection: // value for 'orderDirection'
  *      where: // value for 'where'
+ *      textSearch: // value for 'textSearch'
  *   },
  * });
  */

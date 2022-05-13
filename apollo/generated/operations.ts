@@ -110,8 +110,16 @@ export const GetPools = gql`
         $orderBy: GqlPoolOrderBy
         $orderDirection: GqlPoolOrderDirection
         $where: GqlPoolFilter
+        $textSearch: String
     ) {
-        poolGetPools(first: $first, skip: $skip, orderBy: $orderBy, orderDirection: $orderDirection, where: $where) {
+        poolGetPools(
+            first: $first
+            skip: $skip
+            orderBy: $orderBy
+            orderDirection: $orderDirection
+            where: $where
+            textSearch: $textSearch
+        ) {
             id
             address
             name
