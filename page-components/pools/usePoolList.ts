@@ -5,6 +5,8 @@ import {
     GqlPoolOrderDirection,
     useGetPoolsQuery,
 } from '~/apollo/generated/graphql-codegen-generated';
+import { useBoolean } from '@chakra-ui/hooks';
+import { debounce } from 'lodash';
 
 export const DEFAULT_POOL_LIST_QUERY_VARS: GetPoolsQueryVariables = {
     first: 10,
@@ -22,6 +24,10 @@ const poolListStateVar = makeVar<GetPoolsQueryVariables>(DEFAULT_POOL_LIST_QUERY
 
 export function usePoolList() {
     const state = useReactiveVar(poolListStateVar);
+    const [isSearching, isSearchingToggle] = useBoolean();
+    const [isSorting, isSortingToggle] = useBoolean();
+    const [isTogglingCommunityPools, isTogglingCommunityPoolsToggle] = useBoolean();
+
     const {
         data,
         loading,
@@ -39,6 +45,8 @@ export function usePoolList() {
     }
 
     async function changeSort(orderBy: GqlPoolOrderBy) {
+        isSortingToggle.on();
+
         if (state.orderBy === orderBy) {
             switch (state.orderDirection) {
                 case 'asc':
@@ -56,10 +64,19 @@ export function usePoolList() {
         }
 
         await refetch();
+
+        isSortingToggle.off();
     }
 
-    async function submitSearch() {
+    async function toggleCommunityPools() {
+        isTogglingCommunityPoolsToggle.on();
+        state.where = {
+            ...state.where,
+            categoryIn: state.where?.categoryIn ? null : ['INCENTIVIZED'],
+        };
+
         await refetch();
+        isTogglingCommunityPoolsToggle.off();
     }
 
     return {
@@ -71,5 +88,7 @@ export function usePoolList() {
         networkStatus,
         refetch,
         changeSort,
+        toggleCommunityPools,
+        isTogglingCommunityPools,
     };
 }

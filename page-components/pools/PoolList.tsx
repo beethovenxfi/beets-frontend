@@ -20,7 +20,17 @@ import { debounce } from 'lodash';
 import { useBoolean } from '@chakra-ui/hooks';
 
 function PoolList() {
-    const { pools, refetch, loading, error, fetchMore, networkStatus, state, changeSort } = usePoolList();
+    const {
+        pools,
+        refetch,
+        loading,
+        error,
+        fetchMore,
+        networkStatus,
+        state,
+        toggleCommunityPools,
+        isTogglingCommunityPools,
+    } = usePoolList();
     const [isSearching, { on, off }] = useBoolean();
 
     const submitSearch = debounce(async () => {
@@ -49,21 +59,18 @@ function PoolList() {
                             pr={4}
                             colorScheme="transparent"
                             aria-label="Search for a pool"
-                            icon={<Search />}
+                            icon={<Search color="white" />}
                             isLoading={isSearching}
                         />
                     </InputRightElement>
                 </InputGroup>
             </Box>
             <Flex alignItems="center" py={4}>
-                <Text pr={2}>Show community pools: </Text>
+                <Text pr={2}>Show community pools:</Text>
                 <Switch
-                    onChange={(event) => {
-                        state.where = {
-                            ...state.where,
-                            categoryIn: state.where?.categoryIn ? null : ['INCENTIVIZED'],
-                        };
-                        refetch();
+                    disabled={isTogglingCommunityPools}
+                    onChange={() => {
+                        toggleCommunityPools();
                     }}
                 />
             </Flex>
