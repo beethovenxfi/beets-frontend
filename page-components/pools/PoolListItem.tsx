@@ -12,7 +12,7 @@ interface Props {
 export default function PoolListItem({ pool }: Props) {
     return (
         <Link href={`/pool/${pool.id}`}>
-            <Flex color={'white'} bg={'black'} mb={2} p={4} cursor="pointer" borderRadius={4} alignItems={'center'}>
+            <Flex bg={'black'} mb={2} p={4} cursor="pointer" borderRadius={4} alignItems={'center'}>
                 <Box flex={1}>
                     <Heading mb={2} size={'md'}>
                         {pool.name}

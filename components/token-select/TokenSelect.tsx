@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Button, ButtonProps } from '@chakra-ui/button';
 import { useBoolean, useMergeRefs } from '@chakra-ui/hooks';
 import { Box, Flex, Heading, HStack, VStack } from '@chakra-ui/layout';

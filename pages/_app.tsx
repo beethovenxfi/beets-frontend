@@ -36,6 +36,7 @@ import {
 import { CanvasRenderer } from 'echarts/renderers';
 import FantomTheme from '~/styles/themes/fantom.json';
 import Navbar from '~/components/nav/Navbar';
+import { chakraTheme } from '~/styles/chakraTheme';
 
 echarts.use([
     LineChart,
@@ -69,13 +70,12 @@ echarts.use([
 /** End charting library setup */
 
 function MyApp({ Component, pageProps }: AppProps) {
-    const theme = extendTheme(FantomTheme);
     const client = useApollo(pageProps);
 
     return (
         <ApolloProvider client={client}>
-            <ChakraProvider theme={theme}>
-                <Box height="full" className="bg" fontFamily="Inter" overflowX='hidden'>
+            <ChakraProvider theme={chakraTheme}>
+                <Box height="full" className="bg" fontFamily="Inter" overflowX="hidden">
                     <Box height="full" className="bg-gradient" display="flex" justifyContent="center">
                         {/* add gutter here */}
                         <Grid templateColumns="repeat(12, 1fr)" width="1400px" maxWidth="1400px" height="fit-content">

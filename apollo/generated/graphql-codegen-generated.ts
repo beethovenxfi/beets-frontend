@@ -941,11 +941,11 @@ export interface GqlToken {
 
 export interface GqlTokenDynamicData {
     __typename: 'GqlTokenDynamicData';
-    address: Scalars['String'];
     ath: Scalars['Float'];
     atl: Scalars['Float'];
     fdv: Scalars['String'];
     high24h: Scalars['Float'];
+    id: Scalars['String'];
     low24h: Scalars['Float'];
     marketCap: Scalars['String'];
     price: Scalars['Float'];
@@ -954,6 +954,7 @@ export interface GqlTokenDynamicData {
     priceChangePercent14d: Scalars['Float'];
     priceChangePercent24h: Scalars['Float'];
     priceChangePercent30d: Scalars['Float'];
+    tokenAddress: Scalars['String'];
     updatedAt: Scalars['String'];
 }
 
@@ -1026,6 +1027,7 @@ export interface Mutation {
     refreshLatestBlockCachedKey: Scalars['Boolean'];
     tokenReloadTokenPrices?: Maybe<Scalars['Boolean']>;
     tokenSyncTokenDefinitions: Scalars['String'];
+    tokenSyncTokenDynamicData: Scalars['String'];
 }
 
 export interface MutationCachePortfolioHistoryForDateArgs {
@@ -1388,6 +1390,7 @@ export type GetPoolsQueryVariables = Exact<{
     orderBy?: InputMaybe<GqlPoolOrderBy>;
     orderDirection?: InputMaybe<GqlPoolOrderDirection>;
     where?: InputMaybe<GqlPoolFilter>;
+    textSearch?: InputMaybe<Scalars['String']>;
 }>;
 
 export type GetPoolsQuery = {
@@ -2121,8 +2124,16 @@ export const GetPoolsDocument = gql`
         $orderBy: GqlPoolOrderBy
         $orderDirection: GqlPoolOrderDirection
         $where: GqlPoolFilter
+        $textSearch: String
     ) {
-        poolGetPools(first: $first, skip: $skip, orderBy: $orderBy, orderDirection: $orderDirection, where: $where) {
+        poolGetPools(
+            first: $first
+            skip: $skip
+            orderBy: $orderBy
+            orderDirection: $orderDirection
+            where: $where
+            textSearch: $textSearch
+        ) {
             id
             address
             name
@@ -2176,6 +2187,7 @@ export const GetPoolsDocument = gql`
  *      orderBy: // value for 'orderBy'
  *      orderDirection: // value for 'orderDirection'
  *      where: // value for 'where'
+ *      textSearch: // value for 'textSearch'
  *   },
  * });
  */

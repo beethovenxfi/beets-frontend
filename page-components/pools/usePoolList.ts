@@ -5,6 +5,8 @@ import {
     GqlPoolOrderDirection,
     useGetPoolsQuery,
 } from '~/apollo/generated/graphql-codegen-generated';
+import { useBoolean } from '@chakra-ui/hooks';
+import { debounce } from 'lodash';
 
 export const DEFAULT_POOL_LIST_QUERY_VARS: GetPoolsQueryVariables = {
     first: 10,
@@ -13,15 +15,19 @@ export const DEFAULT_POOL_LIST_QUERY_VARS: GetPoolsQueryVariables = {
     orderDirection: 'desc',
     where: {
         categoryIn: ['INCENTIVIZED'],
-        poolTypeNotIn: ['UNKNOWN', 'LIQUIDITY_BOOTSTRAPPING'],
         poolTypeIn: ['WEIGHTED', 'STABLE', 'PHANTOM_STABLE'],
     },
+    textSearch: null,
 };
 
 const poolListStateVar = makeVar<GetPoolsQueryVariables>(DEFAULT_POOL_LIST_QUERY_VARS);
 
 export function usePoolList() {
     const state = useReactiveVar(poolListStateVar);
+    const [isSearching, isSearchingToggle] = useBoolean();
+    const [isSorting, isSortingToggle] = useBoolean();
+    const [isTogglingCommunityPools, isTogglingCommunityPoolsToggle] = useBoolean();
+
     const {
         data,
         loading,
@@ -39,6 +45,8 @@ export function usePoolList() {
     }
 
     async function changeSort(orderBy: GqlPoolOrderBy) {
+        isSortingToggle.on();
+
         if (state.orderBy === orderBy) {
             switch (state.orderDirection) {
                 case 'asc':
@@ -55,10 +63,20 @@ export function usePoolList() {
             state.orderDirection = 'desc';
         }
 
-        console.log('order by', state.orderBy);
-        console.log('order direction', state.orderDirection);
+        await refetch();
+
+        isSortingToggle.off();
+    }
+
+    async function toggleCommunityPools() {
+        isTogglingCommunityPoolsToggle.on();
+        state.where = {
+            ...state.where,
+            categoryIn: state.where?.categoryIn ? null : ['INCENTIVIZED'],
+        };
 
         await refetch();
+        isTogglingCommunityPoolsToggle.off();
     }
 
     return {
@@ -70,5 +88,7 @@ export function usePoolList() {
         networkStatus,
         refetch,
         changeSort,
+        toggleCommunityPools,
+        isTogglingCommunityPools,
     };
 }

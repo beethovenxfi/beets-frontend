@@ -1,67 +1,84 @@
-import { Box, Button, Container, Flex, Heading, Link, Select, Spinner, Text } from '@chakra-ui/react';
-import { GqlPoolFilterType, GqlPoolOrderBy, GqlPoolOrderDirection } from '~/apollo/generated/graphql-codegen-generated';
+import {
+    Box,
+    Button,
+    Container,
+    Flex,
+    IconButton,
+    Input,
+    InputGroup,
+    InputRightElement,
+    Spinner,
+    Switch,
+    Text,
+} from '@chakra-ui/react';
 import { NetworkStatus } from '@apollo/client';
 import { usePoolList } from './usePoolList';
 import PoolListItem from '~/page-components/pools/PoolListItem';
-import TokenAvatarSet from '~/components/token-avatar/TokenAvatarSet';
-import numeral from 'numeral';
-import AprTooltip from '~/components/apr-tooltip/AprTooltip';
-import { ArrowUp } from 'react-feather';
-import PoolListSortLink from '~/page-components/pools/PoolListSortLink';
+import { Search } from 'react-feather';
+import PoolListSortableHeader from '~/page-components/pools/PoolListSortableHeader';
+import { debounce } from 'lodash';
+import { useBoolean } from '@chakra-ui/hooks';
 
 function PoolList() {
-    const { pools, refetch, loading, error, fetchMore, networkStatus, state, changeSort } = usePoolList();
+    const {
+        pools,
+        refetch,
+        loading,
+        error,
+        fetchMore,
+        networkStatus,
+        state,
+        toggleCommunityPools,
+        isTogglingCommunityPools,
+    } = usePoolList();
+    const [isSearching, { on, off }] = useBoolean();
+
+    const submitSearch = debounce(async () => {
+        await refetch();
+        off();
+    }, 250);
 
     return (
         <Container bg="gray.900" shadow="lg" rounded="lg" padding="4" mb={12} maxW="7xl">
-            <Box mb={4}>
-                <Text>Pool type</Text>
-                <Select
-                    placeholder="All"
-                    color={'white'}
-                    onChange={(e) => {
-                        state.where = {
-                            ...state.where,
-                            poolTypeIn: e.target.value
-                                ? [e.target.value as GqlPoolFilterType]
-                                : ['WEIGHTED', 'STABLE', 'PHANTOM_STABLE'],
-                        };
-                        refetch();
-                    }}
-                >
-                    <option value="WEIGHTED">Weighted</option>
-                    <option value="STABLE">Stable</option>
-                    <option value="PHANTOM_STABLE">Stable Phantom</option>
-                </Select>
-            </Box>
+            <Box pb={4}>
+                <InputGroup size="md">
+                    <Input
+                        type="text"
+                        placeholder="Search..."
+                        onChange={(e) => {
+                            state.textSearch = e.target.value.length > 0 ? e.target.value : null;
+                            if (!isSearching) {
+                                on();
+                            }
 
-            <Flex color={'white'} bg={'black'} mb={2} p={4} cursor="pointer" borderRadius={4} alignItems={'center'}>
-                <Box flex={1}></Box>
-                <Box w={200}>
-                    <PoolListSortLink
-                        title="Pool value"
-                        orderDirection={state.orderBy === 'totalLiquidity' ? state.orderDirection : null}
-                        onClick={() => changeSort('totalLiquidity')}
+                            submitSearch();
+                        }}
                     />
-                </Box>
-                <Box w={200} textAlign={'center'}>
-                    <PoolListSortLink
-                        title="Volume"
-                        orderDirection={state.orderBy === 'volume24h' ? state.orderDirection : null}
-                        onClick={() => changeSort('volume24h')}
-                    />
-                </Box>
-                <Box w={100} textAlign={'center'}>
-                    <PoolListSortLink
-                        title="APR"
-                        orderDirection={state.orderBy === 'apr' ? state.orderDirection : null}
-                        onClick={() => changeSort('apr')}
-                    />
-                </Box>
+                    <InputRightElement>
+                        <IconButton
+                            pr={4}
+                            colorScheme="transparent"
+                            aria-label="Search for a pool"
+                            icon={<Search color="white" />}
+                            isLoading={isSearching}
+                        />
+                    </InputRightElement>
+                </InputGroup>
+            </Box>
+            <Flex alignItems="center" py={4}>
+                <Text pr={2}>Show community pools:</Text>
+                <Switch
+                    disabled={isTogglingCommunityPools}
+                    onChange={() => {
+                        toggleCommunityPools();
+                    }}
+                />
             </Flex>
+
+            <PoolListSortableHeader />
             {networkStatus === NetworkStatus.refetch ? (
                 <Flex justifyContent={'center'} my={4}>
-                    <Spinner size="xl" color={'white'} />
+                    <Spinner size="xl" />
                 </Flex>
             ) : pools ? (
                 pools.map((pool, index) => <PoolListItem key={index} pool={pool} />)

@@ -9,7 +9,8 @@ import TokenInput from '~/components/inputs/TokenInput';
 import Card from '~/components/card/Card';
 import BeetsButton from '~/components/button/Button';
 import { useGetSwaps } from './tradeState';
-import { TokenInputSwapButton } from './TokenInputSwapButton';
+import { TokenInputSwapButton } from '~/page-components/trade/TokenInputSwapButton';
+/*import { TokenInputSwapButton } from './TokenInputSwapButton';*/
 
 function TradeCard() {
     const theme = useTheme();
@@ -55,7 +56,7 @@ function TradeCard() {
 
     const handleTokenSelected = (address: string) => {
         tradeState[tokenSelectKey] = address;
-    }
+    };
 
     return (
         <Box width="full" position="relative">
@@ -80,7 +81,9 @@ function TradeCard() {
                 </VStack>
             </Card>
             <AnimatePresence>
-                {showTokenSelect && <TokenSelect onTokenSelected={handleTokenSelected} onClose={toggleTokenSelect(tokenSelectKey)} />}
+                {showTokenSelect && (
+                    <TokenSelect onTokenSelected={handleTokenSelected} onClose={toggleTokenSelect(tokenSelectKey)} />
+                )}
             </AnimatePresence>
         </Box>
     );
