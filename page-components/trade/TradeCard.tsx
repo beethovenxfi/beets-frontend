@@ -9,6 +9,7 @@ import TokenInput from '~/components/inputs/TokenInput';
 import Card from '~/components/card/Card';
 import BeetsButton from '~/components/button/Button';
 import { useGetSwaps } from './tradeState';
+import { TokenInputSwapButton } from '~/page-components/trade/TokenInputSwapButton';
 /*import { TokenInputSwapButton } from './TokenInputSwapButton';*/
 
 function TradeCard() {
@@ -53,6 +54,10 @@ function TradeCard() {
         }
     };
 
+    const handleTokenSelected = (address: string) => {
+        tradeState[tokenSelectKey] = address;
+    };
+
     return (
         <Box width="full" position="relative">
             <Card animate={controls} title="Market Swap" position="relative" height="md" shadow="lg" paddingBottom="1">
@@ -63,10 +68,10 @@ function TradeCard() {
                             toggleTokenSelect={toggleTokenSelect('tokenIn')}
                             label="Sell"
                         />
-                        {/*<TokenInputSwapButton />*/}
+                        <TokenInputSwapButton />
                     </Box>
                     <TokenInput
-                        address={tradeState.tokenIn}
+                        address={tradeState.tokenOut}
                         toggleTokenSelect={toggleTokenSelect('tokenOut')}
                         label="Buy"
                     />
@@ -77,7 +82,7 @@ function TradeCard() {
             </Card>
             <AnimatePresence>
                 {showTokenSelect && (
-                    <TokenSelect onTokenSelected={() => false} onClose={toggleTokenSelect(tokenSelectKey)} />
+                    <TokenSelect onTokenSelected={handleTokenSelected} onClose={toggleTokenSelect(tokenSelectKey)} />
                 )}
             </AnimatePresence>
         </Box>

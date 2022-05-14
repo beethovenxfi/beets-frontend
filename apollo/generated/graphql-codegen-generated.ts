@@ -934,7 +934,28 @@ export interface GqlToken {
     decimals: Scalars['Int'];
     logoURI?: Maybe<Scalars['String']>;
     name: Scalars['String'];
+    priority: Scalars['Int'];
     symbol: Scalars['String'];
+    tradable: Scalars['Boolean'];
+}
+
+export interface GqlTokenDynamicData {
+    __typename: 'GqlTokenDynamicData';
+    ath: Scalars['Float'];
+    atl: Scalars['Float'];
+    fdv: Scalars['String'];
+    high24h: Scalars['Float'];
+    id: Scalars['String'];
+    low24h: Scalars['Float'];
+    marketCap: Scalars['String'];
+    price: Scalars['Float'];
+    priceChange24h: Scalars['Float'];
+    priceChangePercent7d: Scalars['Float'];
+    priceChangePercent14d: Scalars['Float'];
+    priceChangePercent24h: Scalars['Float'];
+    priceChangePercent30d: Scalars['Float'];
+    tokenAddress: Scalars['String'];
+    updatedAt: Scalars['String'];
 }
 
 export interface GqlTokenPrice {
@@ -994,6 +1015,7 @@ export interface Mutation {
     lgeCreate: GqlLge;
     poolLoadOnChainDataForAllPools: Scalars['String'];
     poolLoadOnChainDataForPoolsWithActiveUpdates: Scalars['String'];
+    poolReloadAllPoolAprs: Scalars['String'];
     poolSyncAllPoolsFromSubgraph: Array<Scalars['String']>;
     poolSyncNewPoolsFromSubgraph: Array<Scalars['String']>;
     poolSyncPoolAllTokensRelationship: Scalars['String'];
@@ -1005,6 +1027,7 @@ export interface Mutation {
     refreshLatestBlockCachedKey: Scalars['Boolean'];
     tokenReloadTokenPrices?: Maybe<Scalars['Boolean']>;
     tokenSyncTokenDefinitions: Scalars['String'];
+    tokenSyncTokenDynamicData: Scalars['String'];
 }
 
 export interface MutationCachePortfolioHistoryForDateArgs {
@@ -1052,6 +1075,7 @@ export interface Query {
     tokenGetCurrentPrices: Array<GqlTokenPrice>;
     tokenGetHistoricalPrices: Array<GqlHistoricalTokenPrice>;
     tokenGetTokens: Array<GqlToken>;
+    tokenGetTokensDynamicData: Scalars['String'];
 }
 
 export interface QueryBalancerGetPoolActivitiesArgs {
@@ -1107,6 +1131,10 @@ export interface QueryTokenGetHistoricalPricesArgs {
     addresses: Array<Scalars['String']>;
 }
 
+export interface QueryTokenGetTokensDynamicDataArgs {
+    addresses: Array<Scalars['String']>;
+}
+
 export type GetAppGlobalDataQueryVariables = Exact<{ [key: string]: never }>;
 
 export type GetAppGlobalDataQuery = {
@@ -1119,6 +1147,8 @@ export type GetAppGlobalDataQuery = {
         decimals: number;
         chainId: number;
         logoURI?: string | null;
+        priority: number;
+        tradable: boolean;
     }>;
     tokenGetCurrentPrices: Array<{ __typename: 'GqlTokenPrice'; price: number; address: string }>;
 };
@@ -1135,6 +1165,8 @@ export type GetTokensQuery = {
         decimals: number;
         chainId: number;
         logoURI?: string | null;
+        priority: number;
+        tradable: boolean;
     }>;
 };
 
@@ -1900,6 +1932,8 @@ export const GetAppGlobalDataDocument = gql`
             decimals
             chainId
             logoURI
+            priority
+            tradable
         }
         tokenGetCurrentPrices {
             price
@@ -1950,6 +1984,8 @@ export const GetTokensDocument = gql`
             decimals
             chainId
             logoURI
+            priority
+            tradable
         }
     }
 `;

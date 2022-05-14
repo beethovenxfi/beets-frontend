@@ -6,6 +6,8 @@ query GetAppGlobalData {
         decimals
         chainId
         logoURI
+        priority
+        tradable
     }
     tokenGetCurrentPrices {
         price
@@ -21,6 +23,8 @@ query GetTokens {
         decimals
         chainId
         logoURI
+        priority
+        tradable
     }
 }
 
