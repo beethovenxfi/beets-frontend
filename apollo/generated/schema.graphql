@@ -874,7 +874,26 @@ type GqlToken {
     decimals: Int!
     logoURI: String
     name: String!
+    priority: Int!
     symbol: String!
+    tradable: Boolean!
+}
+
+type GqlTokenDynamicData {
+    address: String!
+    ath: Float!
+    atl: Float!
+    fdv: String!
+    high24h: Float!
+    low24h: Float!
+    marketCap: String!
+    price: Float!
+    priceChange24h: Float!
+    priceChangePercent7d: Float!
+    priceChangePercent14d: Float!
+    priceChangePercent24h: Float!
+    priceChangePercent30d: Float!
+    updatedAt: String!
 }
 
 type GqlTokenPrice {
@@ -934,6 +953,7 @@ type Mutation {
     lgeCreate(lge: GqlLgeCreateInput!, signature: String!): GqlLge!
     poolLoadOnChainDataForAllPools: String!
     poolLoadOnChainDataForPoolsWithActiveUpdates: String!
+    poolReloadAllPoolAprs: String!
     poolSyncAllPoolsFromSubgraph: [String!]!
     poolSyncNewPoolsFromSubgraph: [String!]!
     poolSyncPoolAllTokensRelationship: String!
@@ -991,4 +1011,5 @@ type Query {
     tokenGetCurrentPrices: [GqlTokenPrice!]!
     tokenGetHistoricalPrices(addresses: [String!]!): [GqlHistoricalTokenPrice!]!
     tokenGetTokens: [GqlToken!]!
+    tokenGetTokensDynamicData(addresses: [String!]!): String!
 }

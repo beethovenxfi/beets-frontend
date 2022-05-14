@@ -44,6 +44,8 @@ export const GetAppGlobalData = gql`
             decimals
             chainId
             logoURI
+            priority
+            tradable
         }
         tokenGetCurrentPrices {
             price
@@ -60,6 +62,8 @@ export const GetTokens = gql`
             decimals
             chainId
             logoURI
+            priority
+            tradable
         }
     }
 `;
