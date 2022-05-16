@@ -1,7 +1,7 @@
 // @ts-nocheck
 import { Button, ButtonProps } from '@chakra-ui/button';
 import { useBoolean, useMergeRefs } from '@chakra-ui/hooks';
-import { Box, Flex, Heading, HStack, VStack } from '@chakra-ui/layout';
+import { Box, Flex, Heading, HStack, Text, VStack } from '@chakra-ui/layout';
 import { motion } from 'framer-motion';
 import { FormEvent, memo, useCallback, useRef, useState } from 'react';
 import { GqlToken } from '~/apollo/generated/graphql-codegen-generated';
@@ -11,6 +11,8 @@ import BeetsInput from '../inputs/BeetsInput';
 import TokenAvatar from '../token-avatar/TokenAvatar';
 import { useVirtual } from 'react-virtual';
 import useCVirtual from 'react-cool-virtual';
+import { sortBy } from 'lodash';
+import numeral from 'numeral';
 
 type Props = {
     onClose?: any;
@@ -20,6 +22,7 @@ type Props = {
 type TokenRowProps = GqlToken & { index: number };
 
 const TokenRow = memo(function TokenRow({ symbol, address, index, onClick }: TokenRowProps & ButtonProps) {
+    const { priceFor } = useGetTokens();
     return (
         <Button
             animate={{ opacity: 1, transition: { delay: index * 0.01 } }}
@@ -31,18 +34,23 @@ const TokenRow = memo(function TokenRow({ symbol, address, index, onClick }: Tok
             _hover={{ backgroundColor: 'beets.gray.400' }}
             onClick={onClick}
         >
-            <HStack width="full" paddingY="4">
-                <TokenAvatar address={address} />
-                <Heading size="md" fontWeight="semibold" color="beets.gray.100">
-                    {symbol}
-                </Heading>
+            <HStack width="full" paddingY="4" justifyContent="space-between">
+                <HStack>
+                    <TokenAvatar address={address} />
+                    <Heading size="md" fontWeight="semibold" color="beets.gray.100">
+                        {symbol}
+                    </Heading>
+                </HStack>
+                <Box marginTop="2px">
+                    <Text color="beets.gray.300">{numeral(priceFor(address)).format('$0,0.00')}</Text>
+                </Box>
             </HStack>
         </Button>
     );
 });
 
 export default function TokenSelect({ onClose, onTokenSelected }: Props) {
-    const { tokens } = useGetTokens();
+    const { tokens, priceFor } = useGetTokens();
     const [areTokensVisible, setAreTokensVisible] = useBoolean();
     const [searchTerm, setSearchTerm] = useState('');
     const parentRef = useRef();
@@ -70,15 +78,10 @@ export default function TokenSelect({ onClose, onTokenSelected }: Props) {
           })
         : tokens;
 
-    const rowVirtualiser = useVirtual({
-        size: filteredTokens.length,
-        parentRef: parentRef,
-        estimateSize: useCallback(() => 80, []),
-        overscan: 8,
-    });
+    const filteredTokensByPrice = sortBy(filteredTokens, ['priority', (token) => priceFor(token.address)]).reverse();
 
     const { outerRef, innerRef, items } = useCVirtual({
-        itemCount: filteredTokens.length, // Provide the total number for the list items
+        itemCount: filteredTokensByPrice.length, // Provide the total number for the list items
         itemSize: 80, // The size of each item (default = 50)
     });
 
@@ -123,9 +126,9 @@ export default function TokenSelect({ onClose, onTokenSelected }: Props) {
                         items.map(({ index, size }, i) => (
                             <Box width="full" key={index} height={`${size}px`}>
                                 <TokenRow
-                                    onClick={handleTokenSelected(filteredTokens[index]?.address)}
+                                    onClick={handleTokenSelected(filteredTokensByPrice[index]?.address)}
                                     index={i}
-                                    {...filteredTokens[index]}
+                                    {...filteredTokensByPrice[index]}
                                 />
                             </Box>
                         ))}

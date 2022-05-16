@@ -11,6 +11,7 @@ export default function BeetsButton({ children, ...buttonOptions }: Props & Butt
         <ChakraButton
             {...buttonOptions}
             bg="beets.green.400"
+            color="beets.gray.500"
             _hover={{
                 backgroundColor: 'beets.green.200',
             }}
