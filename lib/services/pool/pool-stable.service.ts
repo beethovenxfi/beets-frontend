@@ -1,20 +1,13 @@
 import { BigNumber } from 'ethers';
-import { GqlPoolStable, GqlPoolTokenBase } from '~/apollo/generated/graphql-codegen-generated';
+import { GqlPoolStable } from '~/apollo/generated/graphql-codegen-generated';
 import * as SDK from '@georgeroman/balancer-v2-pools';
 import OldBigNumber from 'bignumber.js';
-import {
-    oldBnum,
-    oldBnumDenormAmount,
-    oldBnumFromBnum,
-    oldBnumToBnum,
-    oldBnumZero,
-} from '~/lib/services/pool/lib/old-big-number';
+import { oldBnum, oldBnumDenormAmount, oldBnumToBnum } from '~/lib/services/pool/lib/old-big-number';
 import { AmountHumanReadable, TokenAmountHumanReadable } from '~/lib/services/token/token-types';
 import {
     poolGetProportionalExitAmountsForBptIn,
     poolGetProportionalJoinAmountsForFixedAmount,
     poolGetRequiredToken,
-    poolScaleAmp,
     poolScaleTokenAmounts,
 } from '~/lib/services/pool/lib/pool-util';
 import { stableBPTForTokensZeroPriceImpact } from '@balancer-labs/sdk';
@@ -28,16 +21,20 @@ import {
 } from '~/lib/services/pool/pool-types';
 import { formatFixed } from '@ethersproject/bignumber';
 import { StablePoolEncoder } from '@balancer-labs/balancer-js';
-
-const POOL_DECIMALS = 18;
+import { PoolBaseService } from '~/lib/services/pool/lib/pool-base.service';
 
 /**
  * All stable pool functions except stableBPTForTokensZeroPriceImpact require all balances to be scaled to 18
  */
 export class PoolStableService implements PoolService {
-    constructor(private pool: GqlPoolStable) {}
+    private baseService: PoolBaseService;
+
+    constructor(private pool: GqlPoolStable) {
+        this.baseService = new PoolBaseService(pool);
+    }
 
     public updatePool(pool: GqlPoolStable) {
+        this.baseService.updatePool(pool);
         this.pool = pool;
     }
 
@@ -114,8 +111,8 @@ export class PoolStableService implements PoolService {
             balances,
             this.pool.tokens.map((token) => token.decimals),
             denormAmounts,
-            this.totalSharesScaled.toString(),
-            this.ampScaled.toString(),
+            this.baseService.totalSharesScaled.toString(),
+            this.baseService.ampScaled.toString(),
         );
 
         return BigNumber.from(bptZeroImpact);
@@ -124,11 +121,11 @@ export class PoolStableService implements PoolService {
     public exactTokensInForBPTOut(tokenAmounts: TokenAmountHumanReadable[]): BigNumber {
         try {
             const bptOut = SDK.StableMath._calcBptOutGivenExactTokensIn(
-                this.ampScaled,
-                this.tokenBalancesScaled,
-                this.scaleTokenAmountsTo18(tokenAmounts),
-                this.totalSharesScaled,
-                this.swapFeeScaled,
+                this.baseService.ampScaled,
+                this.baseService.tokenBalancesScaled,
+                this.baseService.scaleTokenAmountsTo18Decimals(tokenAmounts),
+                this.baseService.totalSharesScaled,
+                this.baseService.swapFeeScaled,
             );
 
             return oldBnumToBnum(bptOut);
@@ -141,11 +138,11 @@ export class PoolStableService implements PoolService {
 
     public bptInForExactTokensOut(tokenAmounts: TokenAmountHumanReadable[]): BigNumber {
         const bptIn = SDK.StableMath._calcBptInGivenExactTokensOut(
-            this.ampScaled,
-            this.tokenBalancesScaled,
-            this.scaleTokenAmountsTo18(tokenAmounts),
-            this.totalSharesScaled,
-            this.swapFeeScaled,
+            this.baseService.ampScaled,
+            this.baseService.tokenBalancesScaledTo18Decimals,
+            this.baseService.scaleTokenAmountsTo18Decimals(tokenAmounts),
+            this.baseService.totalSharesScaled,
+            this.baseService.swapFeeScaled,
         );
 
         return oldBnumToBnum(bptIn);
@@ -153,11 +150,11 @@ export class PoolStableService implements PoolService {
 
     public bptInForExactTokenOut(tokenAmountOut: TokenAmountHumanReadable): BigNumber {
         const bptIn = SDK.StableMath._calcBptInGivenExactTokensOut(
-            this.ampScaled,
-            this.tokenBalancesScaled,
-            this.scaleTokenAmountsTo18([tokenAmountOut]),
-            this.totalSharesScaled,
-            this.swapFeeScaled,
+            this.baseService.ampScaled,
+            this.baseService.tokenBalancesScaledTo18Decimals,
+            this.baseService.scaleTokenAmountsTo18Decimals([tokenAmountOut]),
+            this.baseService.totalSharesScaled,
+            this.baseService.swapFeeScaled,
         );
 
         return oldBnumToBnum(bptIn);
@@ -172,73 +169,21 @@ export class PoolStableService implements PoolService {
         const bptAmountScaled = oldBnumDenormAmount(bptAmount);
 
         const tokenAmountOut = SDK.StableMath._calcTokenOutGivenExactBptIn(
-            this.ampScaled,
-            this.tokenBalancesScaled,
+            this.baseService.ampScaled,
+            this.baseService.tokenBalancesScaledTo18Decimals,
             token.index,
             bptAmountScaled,
-            this.totalSharesScaled,
-            this.swapFeeScaled,
+            this.baseService.totalSharesScaled,
+            this.baseService.swapFeeScaled,
         );
 
-        return oldBnumToBnum(this.scaleTokenAmountDown(token, tokenAmountOut, OldBigNumber.ROUND_DOWN));
-    }
-
-    private get totalSharesScaled(): OldBigNumber {
-        return oldBnumDenormAmount(this.pool.dynamicData.totalShares, POOL_DECIMALS);
-    }
-
-    private get swapFeeScaled(): OldBigNumber {
-        return oldBnumDenormAmount(this.pool.dynamicData.swapFee);
-    }
-
-    private get ampScaled(): OldBigNumber {
-        return oldBnumFromBnum(poolScaleAmp(this.pool.amp));
-    }
-
-    private get tokenBalancesScaled(): OldBigNumber[] {
-        return this.pool.tokens.map((token) =>
-            this.scaleTo18AndApplyPriceRate({
-                address: token.address,
-                amount: token.balance,
-            }),
+        const tokenAmountOutScaledDown = this.baseService.scaleTokenAmountDownFrom18Decimals(
+            token,
+            tokenAmountOut,
+            OldBigNumber.ROUND_DOWN,
         );
-    }
 
-    private scaleTo18AndApplyPriceRate(tokenAmount: TokenAmountHumanReadable): OldBigNumber {
-        const token = poolGetRequiredToken(tokenAmount.address, this.pool.tokens);
-
-        const denormAmount = oldBnum(parseUnits(tokenAmount.amount, 18).toString())
-            .times(token.priceRate)
-            .toFixed(0, OldBigNumber.ROUND_UP);
-
-        return oldBnum(denormAmount);
-    }
-
-    private scaleTokenAmountsTo18(tokenAmounts: TokenAmountHumanReadable[]): OldBigNumber[] {
-        return this.pool.tokens.map((poolToken) => {
-            const tokenAmount = tokenAmounts.find((amount) => amount.address === poolToken.address);
-
-            if (!tokenAmount) {
-                return oldBnumZero();
-            }
-
-            return tokenAmount ? this.scaleTo18AndApplyPriceRate(tokenAmount) : oldBnumZero();
-        });
-    }
-
-    private scaleTokenAmountDown(
-        token: GqlPoolTokenBase,
-        tokenAmount18decimals: OldBigNumber,
-        rounding: OldBigNumber.RoundingMode,
-    ): OldBigNumber {
-        const amountAfterPriceRate = oldBnum(tokenAmount18decimals).div(token.priceRate).toString();
-
-        const normalizedAmount = oldBnum(amountAfterPriceRate)
-            .div(parseUnits('1', 18).toString())
-            .toFixed(token.decimals, rounding);
-        const scaledAmount = parseUnits(normalizedAmount, token.decimals);
-
-        return oldBnum(scaledAmount.toString());
+        return oldBnumToBnum(tokenAmountOutScaledDown);
     }
 
     private encodeJoinPool(data: PoolJoinData): string {

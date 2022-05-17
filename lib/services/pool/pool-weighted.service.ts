@@ -1,7 +1,6 @@
 import { BigNumber } from 'ethers';
 import { GqlPoolWeighted } from '~/apollo/generated/graphql-codegen-generated';
 import * as SDK from '@georgeroman/balancer-v2-pools';
-import OldBigNumber from 'bignumber.js';
 import { oldBnum, oldBnumDenormAmount, oldBnumToBnum } from '~/lib/services/pool/lib/old-big-number';
 import { AmountHumanReadable, TokenAmountHumanReadable } from '~/lib/services/token/token-types';
 import {
@@ -22,12 +21,17 @@ import {
 } from '~/lib/services/pool/pool-types';
 import { formatFixed } from '@ethersproject/bignumber';
 import { WeightedPoolEncoder } from '@balancer-labs/balancer-js';
+import { PoolBaseService } from '~/lib/services/pool/lib/pool-base.service';
 
 export class PoolWeightedService implements PoolService {
-    constructor(private pool: GqlPoolWeighted) {}
+    private baseService: PoolBaseService;
+    constructor(private pool: GqlPoolWeighted) {
+        this.baseService = new PoolBaseService(pool);
+    }
 
     public updatePool(pool: GqlPoolWeighted) {
         this.pool = pool;
+        this.baseService.updatePool(pool);
     }
 
     public async joinPoolEncode(data: PoolJoinData): Promise<string> {
@@ -96,9 +100,9 @@ export class PoolWeightedService implements PoolService {
         const denormAmounts = oldBnumPoolScaleTokenAmounts(tokenAmounts, this.pool.tokens);
 
         return weightedBPTForTokensZeroPriceImpact(
-            this.tokenBalancesScaled.map((balance) => oldBnumToBnum(balance)),
+            this.baseService.tokenBalancesScaled.map((balance) => oldBnumToBnum(balance)),
             this.pool.tokens.map((token) => token.decimals),
-            this.tokenWeightsScaled.map((weight) => oldBnumToBnum(weight)),
+            this.baseService.tokenWeightsScaled.map((weight) => oldBnumToBnum(weight)),
             denormAmounts.map((amount) => oldBnumToBnum(amount)),
             parseUnits(this.pool.dynamicData.totalShares),
         );
@@ -106,11 +110,11 @@ export class PoolWeightedService implements PoolService {
 
     public exactTokensInForBPTOut(tokenAmounts: TokenAmountHumanReadable[]): BigNumber {
         const result = SDK.WeightedMath._calcBptOutGivenExactTokensIn(
-            this.tokenBalancesScaled,
-            this.tokenWeightsScaled,
+            this.baseService.tokenBalancesScaled,
+            this.baseService.tokenWeightsScaled,
             oldBnumPoolScaleTokenAmounts(tokenAmounts, this.pool.tokens),
-            this.totalSharesScaled,
-            this.swapFeeScaled,
+            this.baseService.totalSharesScaled,
+            this.baseService.swapFeeScaled,
         );
 
         return BigNumber.from(result.toString());
@@ -118,11 +122,11 @@ export class PoolWeightedService implements PoolService {
 
     public bptInForExactTokensOut(tokenAmounts: TokenAmountHumanReadable[]): BigNumber {
         const result = SDK.WeightedMath._calcBptInGivenExactTokensOut(
-            this.tokenBalancesScaled,
-            this.tokenWeightsScaled,
+            this.baseService.tokenBalancesScaled,
+            this.baseService.tokenWeightsScaled,
             oldBnumPoolScaleTokenAmounts(tokenAmounts, this.pool.tokens),
-            this.totalSharesScaled,
-            this.swapFeeScaled,
+            this.baseService.totalSharesScaled,
+            this.baseService.swapFeeScaled,
         );
 
         return oldBnumToBnum(result);
@@ -138,8 +142,8 @@ export class PoolWeightedService implements PoolService {
             tokenBalance,
             tokenNormalizedWeight,
             amountOut,
-            this.totalSharesScaled,
-            this.swapFeeScaled,
+            this.baseService.totalSharesScaled,
+            this.baseService.swapFeeScaled,
         );
 
         return oldBnumToBnum(result);
@@ -155,27 +159,11 @@ export class PoolWeightedService implements PoolService {
             tokenBalance,
             tokenNormalizedWeight,
             bptAmountIn,
-            this.totalSharesScaled,
-            this.swapFeeScaled,
+            this.baseService.totalSharesScaled,
+            this.baseService.swapFeeScaled,
         );
 
         return oldBnumToBnum(result);
-    }
-
-    private get totalSharesScaled(): OldBigNumber {
-        return oldBnumDenormAmount(this.pool.dynamicData.totalShares);
-    }
-
-    private get swapFeeScaled(): OldBigNumber {
-        return oldBnumDenormAmount(this.pool.dynamicData.swapFee);
-    }
-
-    private get tokenBalancesScaled(): OldBigNumber[] {
-        return this.pool.tokens.map((token) => oldBnumDenormAmount(token.balance, token.decimals));
-    }
-
-    private get tokenWeightsScaled(): OldBigNumber[] {
-        return this.pool.tokens.map((token) => oldBnumDenormAmount(token.weight || '0', 18));
     }
 
     private encodeJoinPool(data: PoolJoinData): string {
