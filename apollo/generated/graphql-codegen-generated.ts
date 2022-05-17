@@ -777,6 +777,7 @@ export interface GqlPoolToken extends GqlPoolTokenBase {
     balance: Scalars['BigDecimal'];
     decimals: Scalars['Int'];
     id: Scalars['ID'];
+    index: Scalars['Int'];
     name: Scalars['String'];
     priceRate: Scalars['BigDecimal'];
     symbol: Scalars['String'];
@@ -788,6 +789,7 @@ export interface GqlPoolTokenBase {
     balance: Scalars['BigDecimal'];
     decimals: Scalars['Int'];
     id: Scalars['ID'];
+    index: Scalars['Int'];
     name: Scalars['String'];
     priceRate: Scalars['BigDecimal'];
     symbol: Scalars['String'];
@@ -810,6 +812,7 @@ export interface GqlPoolTokenLinear extends GqlPoolTokenBase {
     balance: Scalars['BigDecimal'];
     decimals: Scalars['Int'];
     id: Scalars['ID'];
+    index: Scalars['Int'];
     mainTokenBalance: Scalars['BigDecimal'];
     name: Scalars['String'];
     pool: GqlPoolLinearNested;
@@ -826,6 +829,7 @@ export interface GqlPoolTokenPhantomStable extends GqlPoolTokenBase {
     balance: Scalars['BigDecimal'];
     decimals: Scalars['Int'];
     id: Scalars['ID'];
+    index: Scalars['Int'];
     name: Scalars['String'];
     pool: GqlPoolPhantomStableNested;
     priceRate: Scalars['BigDecimal'];
@@ -943,17 +947,17 @@ export interface GqlTokenDynamicData {
     __typename: 'GqlTokenDynamicData';
     ath: Scalars['Float'];
     atl: Scalars['Float'];
-    fdv: Scalars['String'];
+    fdv?: Maybe<Scalars['String']>;
     high24h: Scalars['Float'];
     id: Scalars['String'];
     low24h: Scalars['Float'];
-    marketCap: Scalars['String'];
+    marketCap?: Maybe<Scalars['String']>;
     price: Scalars['Float'];
     priceChange24h: Scalars['Float'];
-    priceChangePercent7d: Scalars['Float'];
-    priceChangePercent14d: Scalars['Float'];
+    priceChangePercent7d?: Maybe<Scalars['Float']>;
+    priceChangePercent14d?: Maybe<Scalars['Float']>;
     priceChangePercent24h: Scalars['Float'];
-    priceChangePercent30d: Scalars['Float'];
+    priceChangePercent30d?: Maybe<Scalars['Float']>;
     tokenAddress: Scalars['String'];
     updatedAt: Scalars['String'];
 }
@@ -1074,8 +1078,9 @@ export interface Query {
     sorGetSwaps: GqlSorGetSwapsResponse;
     tokenGetCurrentPrices: Array<GqlTokenPrice>;
     tokenGetHistoricalPrices: Array<GqlHistoricalTokenPrice>;
+    tokenGetTokenDynamicData?: Maybe<GqlTokenDynamicData>;
     tokenGetTokens: Array<GqlToken>;
-    tokenGetTokensDynamicData: Scalars['String'];
+    tokenGetTokensDynamicData: Array<GqlTokenDynamicData>;
 }
 
 export interface QueryBalancerGetPoolActivitiesArgs {
@@ -1129,6 +1134,10 @@ export interface QuerySorGetSwapsArgs {
 
 export interface QueryTokenGetHistoricalPricesArgs {
     addresses: Array<Scalars['String']>;
+}
+
+export interface QueryTokenGetTokenDynamicDataArgs {
+    address: Scalars['String'];
 }
 
 export interface QueryTokenGetTokensDynamicDataArgs {
