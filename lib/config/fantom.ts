@@ -23,4 +23,7 @@ export const fantomNetworkConfig: NetworkConfig = {
         farmId: '22',
         poolId: '0xcde5a11a4acb4ee4c805352cec57e236bdbc3837000200000000000000000019',
     },
+    balancer: {
+        vault: '0x20dd72Ed959b6147912C2e529F0a0C651c33c9ce',
+    },
 };

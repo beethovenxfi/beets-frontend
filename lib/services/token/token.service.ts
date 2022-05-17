@@ -25,7 +25,7 @@ export default class TokenService {
     public async approveToken(spender: string, token: string): Promise<TransactionResponse> {
         return web3SendTransaction({
             web3: this.provider,
-            contract: token,
+            contractAddress: token,
             abi: ERC20Abi,
             action: 'approve',
             params: [spender, MaxUint256.toString()],

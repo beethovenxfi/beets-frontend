@@ -29,4 +29,7 @@ export interface NetworkConfig {
         farmId: string;
         poolId: string;
     };
+    balancer: {
+        vault: string;
+    };
 }

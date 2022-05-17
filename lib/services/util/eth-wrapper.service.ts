@@ -35,7 +35,7 @@ export class EthWrapperService {
     public async wrapEth(amount: AmountScaled) {
         return web3SendTransaction({
             web3: this.provider,
-            contract: this.wethAddress,
+            contractAddress: this.wethAddress,
             abi: ['function deposit() payable'],
             action: 'deposit',
             params: [],
@@ -46,7 +46,7 @@ export class EthWrapperService {
     public async unwrapEth(amount: AmountScaled) {
         return web3SendTransaction({
             web3: this.provider,
-            contract: this.wethAddress,
+            contractAddress: this.wethAddress,
             abi: ['function withdraw(uint256 wad)'],
             action: 'withdraw',
             params: [amount],

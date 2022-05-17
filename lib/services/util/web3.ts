@@ -21,7 +21,7 @@ interface TransactionError extends Error {
 
 interface Web3TransactionInput {
     web3: Web3Provider | JsonRpcProvider;
-    contract: string;
+    contractAddress: string;
     abi: any[];
     action: string;
     params: any[];
@@ -31,7 +31,7 @@ interface Web3TransactionInput {
 
 export async function web3SendTransaction({
     web3,
-    contract,
+    contractAddress,
     abi,
     action,
     params,
@@ -39,11 +39,11 @@ export async function web3SendTransaction({
     txType = 'EIP1559',
 }: Web3TransactionInput): Promise<TransactionResponse> {
     console.log('Sending transaction');
-    console.log('Contract', contract);
+    console.log('Contract', contractAddress);
     console.log('Action', `"${action}"`);
     console.log('Params', params);
     const signer = web3.getSigner();
-    const contract = new Contract(contract, abi, web3);
+    const contract = new Contract(contractAddress, abi, web3);
     const contractWithSigner = contract.connect(signer);
     const paramsOverrides = { ...overrides };
 
@@ -78,7 +78,7 @@ export async function web3SendTransaction({
             // Sending tx as EIP1559 has failed, retry with legacy tx type
             return web3SendTransaction({
                 web3,
-                contract: contractAddress,
+                contractAddress: contractAddress,
                 abi,
                 action,
                 params,
@@ -87,7 +87,7 @@ export async function web3SendTransaction({
             });
         } else if (error.code === ErrorCode.UNPREDICTABLE_GAS_LIMIT && ENV !== 'development') {
             const sender = await web3.getSigner().getAddress();
-            //logFailedTx(sender, contract, action, params, overrides);
+            //logFailedTx(sender, contractAddress, action, params, overrides);
         }
         return Promise.reject(error);
     }
@@ -95,18 +95,18 @@ export async function web3SendTransaction({
 
 export async function web3CallStatic({
     web3,
-    contract,
+    contractAddress,
     abi,
     action,
     params,
     overrides = {},
 }: Omit<Web3TransactionInput, 'txType'>) {
     console.log('Sending transaction');
-    console.log('Contract', contract);
+    console.log('Contract', contractAddress);
     console.log('Action', `"${action}"`);
     console.log('Params', params);
     const signer = web3.getSigner();
-    const contract = new Contract(contract, abi, web3);
+    const contract = new Contract(contractAddress, abi, web3);
     const contractWithSigner = contract.connect(signer);
     return await contractWithSigner.callStatic[action](...params, overrides);
 }
