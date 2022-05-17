@@ -24,10 +24,11 @@ a {
     height: 100%;
 }
 
-.bg {
-    background: #020205;
+#__next > div {
+    height: 100%;
 }
-.bg-gradient {
-  background: radial-gradient(ellipse at top, #1B1B40 , transparent),
-    radial-gradient(ellipse at bottom, #205143  , transparent);
+
+.bg {
+    background: radial-gradient(ellipse at top, #1B1B40 , transparent),
+      radial-gradient(ellipse at bottom, #205143  , transparent);
 }

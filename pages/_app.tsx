@@ -1,4 +1,6 @@
 import '../styles/globals.css';
+import "@rainbow-me/rainbowkit/styles.css";
+
 import type { AppProps } from 'next/app';
 import { useApollo } from '~/apollo/client';
 import { ApolloProvider } from '@apollo/client';
@@ -37,6 +39,9 @@ import { CanvasRenderer } from 'echarts/renderers';
 import FantomTheme from '~/styles/themes/fantom.json';
 import Navbar from '~/components/nav/Navbar';
 import { chakraTheme } from '~/styles/chakraTheme';
+import { WagmiProvider } from 'wagmi';
+import { wagmiClient, chains } from '~/components/wallet/WalletConnection';
+import { RainbowKitProvider } from '@rainbow-me/rainbowkit';
 
 echarts.use([
     LineChart,
@@ -73,23 +78,32 @@ function MyApp({ Component, pageProps }: AppProps) {
     const client = useApollo(pageProps);
 
     return (
-        <ApolloProvider client={client}>
-            <ChakraProvider theme={chakraTheme}>
-                <Box height="full" className="bg" fontFamily="Inter" overflowX="hidden">
-                    <Box height="full" className="bg-gradient" display="flex" justifyContent="center">
-                        {/* add gutter here */}
-                        <Grid templateColumns="repeat(12, 1fr)" width="1400px" maxWidth="1400px" height="fit-content">
-                            <GridItem colSpan={12} height="fit-content">
-                                <Navbar />
-                            </GridItem>
-                            <GridItem colSpan={12}>
-                                <Component {...pageProps} />
-                            </GridItem>
-                        </Grid>
-                    </Box>
-                </Box>
-            </ChakraProvider>
-        </ApolloProvider>
+        <WagmiProvider client={wagmiClient}>
+            <RainbowKitProvider coolMode chains={chains}>
+                <ApolloProvider client={client}>
+                    <ChakraProvider theme={chakraTheme}>
+                        <Box height="full" className="bg" fontFamily="Inter" overflowX="hidden">
+                            <Box height="full" display="flex" justifyContent="center">
+                                {/* add gutter here */}
+                                <Grid
+                                    templateColumns="repeat(12, 1fr)"
+                                    width="1400px"
+                                    maxWidth="1400px"
+                                    height="fit-content"
+                                >
+                                    <GridItem colSpan={12} height="fit-content">
+                                        <Navbar />
+                                    </GridItem>
+                                    <GridItem colSpan={12} paddingTop='12'>
+                                        <Component {...pageProps} />
+                                    </GridItem>
+                                </Grid>
+                            </Box>
+                        </Box>
+                    </ChakraProvider>
+                </ApolloProvider>
+            </RainbowKitProvider>
+        </WagmiProvider>
     );
 }
 
