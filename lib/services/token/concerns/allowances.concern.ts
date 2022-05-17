@@ -3,7 +3,7 @@ import { getAddress } from '@ethersproject/address';
 import { formatUnits } from '@ethersproject/units';
 import { JsonRpcProvider } from '@ethersproject/providers';
 import { GqlToken } from '~/apollo/generated/graphql-codegen-generated';
-import { multicall } from '~/lib/services/balancer/contract';
+import { multicall } from '~/lib/services/util/multicaller.service';
 import ERC20Abi from '../../../abi/ERC20.json';
 
 // TYPES

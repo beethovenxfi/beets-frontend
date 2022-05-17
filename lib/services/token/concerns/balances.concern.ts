@@ -5,7 +5,7 @@ import { formatUnits } from '@ethersproject/units';
 import { chunk } from 'lodash';
 import { JsonRpcProvider } from '@ethersproject/providers';
 import { GqlToken } from '~/apollo/generated/graphql-codegen-generated';
-import { multicall } from '~/lib/services/balancer/contract';
+import { multicall } from '~/lib/services/util/multicaller.service';
 
 // TYPES
 export type BalanceMap = { [address: string]: string };

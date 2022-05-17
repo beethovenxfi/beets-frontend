@@ -1,6 +1,6 @@
 import ERC20Abi from '../../../abi/ERC20.json';
 import { set } from 'lodash';
-import { Multicaller } from '~/lib/services/balancer/contract';
+import { Multicaller } from '~/lib/services/util/multicaller.service';
 import { JsonRpcProvider } from '@ethersproject/providers';
 import { GqlToken } from '~/apollo/generated/graphql-codegen-generated';
 
