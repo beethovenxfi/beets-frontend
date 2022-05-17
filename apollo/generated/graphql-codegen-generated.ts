@@ -531,6 +531,7 @@ export interface GqlPoolBase {
     address: Scalars['Bytes'];
     allTokens: Array<GqlPoolTokenExpanded>;
     createTime: Scalars['Int'];
+    decimals: Scalars['Int'];
     dynamicData: GqlPoolDynamicData;
     factory?: Maybe<Scalars['Bytes']>;
     id: Scalars['ID'];
@@ -559,6 +560,7 @@ export interface GqlPoolElement extends GqlPoolBase {
     allTokens: Array<GqlPoolTokenExpanded>;
     baseToken: Scalars['Bytes'];
     createTime: Scalars['Int'];
+    decimals: Scalars['Int'];
     dynamicData: GqlPoolDynamicData;
     factory?: Maybe<Scalars['Bytes']>;
     id: Scalars['ID'];
@@ -615,6 +617,7 @@ export interface GqlPoolLinear extends GqlPoolBase {
     address: Scalars['Bytes'];
     allTokens: Array<GqlPoolTokenExpanded>;
     createTime: Scalars['Int'];
+    decimals: Scalars['Int'];
     dynamicData: GqlPoolDynamicData;
     factory?: Maybe<Scalars['Bytes']>;
     id: Scalars['ID'];
@@ -691,6 +694,7 @@ export interface GqlPoolLiquidityBootstrapping extends GqlPoolBase {
     address: Scalars['Bytes'];
     allTokens: Array<GqlPoolTokenExpanded>;
     createTime: Scalars['Int'];
+    decimals: Scalars['Int'];
     dynamicData: GqlPoolDynamicData;
     factory?: Maybe<Scalars['Bytes']>;
     id: Scalars['ID'];
@@ -717,6 +721,7 @@ export interface GqlPoolPhantomStable extends GqlPoolBase {
     allTokens: Array<GqlPoolTokenExpanded>;
     amp: Scalars['BigInt'];
     createTime: Scalars['Int'];
+    decimals: Scalars['Int'];
     dynamicData: GqlPoolDynamicData;
     factory?: Maybe<Scalars['Bytes']>;
     id: Scalars['ID'];
@@ -750,6 +755,7 @@ export interface GqlPoolStable extends GqlPoolBase {
     allTokens: Array<GqlPoolTokenExpanded>;
     amp: Scalars['BigInt'];
     createTime: Scalars['Int'];
+    decimals: Scalars['Int'];
     dynamicData: GqlPoolDynamicData;
     factory?: Maybe<Scalars['Bytes']>;
     id: Scalars['ID'];
@@ -854,6 +860,7 @@ export interface GqlPoolWeighted extends GqlPoolBase {
     address: Scalars['Bytes'];
     allTokens: Array<GqlPoolTokenExpanded>;
     createTime: Scalars['Int'];
+    decimals: Scalars['Int'];
     dynamicData: GqlPoolDynamicData;
     factory?: Maybe<Scalars['Bytes']>;
     id: Scalars['ID'];

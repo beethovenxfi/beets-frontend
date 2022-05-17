@@ -478,6 +478,7 @@ interface GqlPoolBase {
     address: Bytes!
     allTokens: [GqlPoolTokenExpanded!]!
     createTime: Int!
+    decimals: Int!
     dynamicData: GqlPoolDynamicData!
     factory: Bytes
     id: ID!
@@ -504,6 +505,7 @@ type GqlPoolElement implements GqlPoolBase {
     allTokens: [GqlPoolTokenExpanded!]!
     baseToken: Bytes!
     createTime: Int!
+    decimals: Int!
     dynamicData: GqlPoolDynamicData!
     factory: Bytes
     id: ID!
@@ -560,6 +562,7 @@ type GqlPoolLinear implements GqlPoolBase {
     address: Bytes!
     allTokens: [GqlPoolTokenExpanded!]!
     createTime: Int!
+    decimals: Int!
     dynamicData: GqlPoolDynamicData!
     factory: Bytes
     id: ID!
@@ -631,6 +634,7 @@ type GqlPoolLiquidityBootstrapping implements GqlPoolBase {
     address: Bytes!
     allTokens: [GqlPoolTokenExpanded!]!
     createTime: Int!
+    decimals: Int!
     dynamicData: GqlPoolDynamicData!
     factory: Bytes
     id: ID!
@@ -669,6 +673,7 @@ type GqlPoolPhantomStable implements GqlPoolBase {
     allTokens: [GqlPoolTokenExpanded!]!
     amp: BigInt!
     createTime: Int!
+    decimals: Int!
     dynamicData: GqlPoolDynamicData!
     factory: Bytes
     id: ID!
@@ -700,6 +705,7 @@ type GqlPoolStable implements GqlPoolBase {
     allTokens: [GqlPoolTokenExpanded!]!
     amp: BigInt!
     createTime: Int!
+    decimals: Int!
     dynamicData: GqlPoolDynamicData!
     factory: Bytes
     id: ID!
@@ -798,6 +804,7 @@ type GqlPoolWeighted implements GqlPoolBase {
     address: Bytes!
     allTokens: [GqlPoolTokenExpanded!]!
     createTime: Int!
+    decimals: Int!
     dynamicData: GqlPoolDynamicData!
     factory: Bytes
     id: ID!
