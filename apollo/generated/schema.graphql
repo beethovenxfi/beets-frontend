@@ -478,6 +478,7 @@ interface GqlPoolBase {
     address: Bytes!
     allTokens: [GqlPoolTokenExpanded!]!
     createTime: Int!
+    decimals: Int!
     dynamicData: GqlPoolDynamicData!
     factory: Bytes
     id: ID!
@@ -504,6 +505,7 @@ type GqlPoolElement implements GqlPoolBase {
     allTokens: [GqlPoolTokenExpanded!]!
     baseToken: Bytes!
     createTime: Int!
+    decimals: Int!
     dynamicData: GqlPoolDynamicData!
     factory: Bytes
     id: ID!
@@ -560,6 +562,7 @@ type GqlPoolLinear implements GqlPoolBase {
     address: Bytes!
     allTokens: [GqlPoolTokenExpanded!]!
     createTime: Int!
+    decimals: Int!
     dynamicData: GqlPoolDynamicData!
     factory: Bytes
     id: ID!
@@ -631,6 +634,7 @@ type GqlPoolLiquidityBootstrapping implements GqlPoolBase {
     address: Bytes!
     allTokens: [GqlPoolTokenExpanded!]!
     createTime: Int!
+    decimals: Int!
     dynamicData: GqlPoolDynamicData!
     factory: Bytes
     id: ID!
@@ -669,6 +673,7 @@ type GqlPoolPhantomStable implements GqlPoolBase {
     allTokens: [GqlPoolTokenExpanded!]!
     amp: BigInt!
     createTime: Int!
+    decimals: Int!
     dynamicData: GqlPoolDynamicData!
     factory: Bytes
     id: ID!
@@ -700,6 +705,7 @@ type GqlPoolStable implements GqlPoolBase {
     allTokens: [GqlPoolTokenExpanded!]!
     amp: BigInt!
     createTime: Int!
+    decimals: Int!
     dynamicData: GqlPoolDynamicData!
     factory: Bytes
     id: ID!
@@ -725,6 +731,7 @@ type GqlPoolToken implements GqlPoolTokenBase {
     balance: BigDecimal!
     decimals: Int!
     id: ID!
+    index: Int!
     name: String!
     priceRate: BigDecimal!
     symbol: String!
@@ -736,6 +743,7 @@ interface GqlPoolTokenBase {
     balance: BigDecimal!
     decimals: Int!
     id: ID!
+    index: Int!
     name: String!
     priceRate: BigDecimal!
     symbol: String!
@@ -756,6 +764,7 @@ type GqlPoolTokenLinear implements GqlPoolTokenBase {
     balance: BigDecimal!
     decimals: Int!
     id: ID!
+    index: Int!
     mainTokenBalance: BigDecimal!
     name: String!
     pool: GqlPoolLinearNested!
@@ -771,6 +780,7 @@ type GqlPoolTokenPhantomStable implements GqlPoolTokenBase {
     balance: BigDecimal!
     decimals: Int!
     id: ID!
+    index: Int!
     name: String!
     pool: GqlPoolPhantomStableNested!
     priceRate: BigDecimal!
@@ -794,6 +804,7 @@ type GqlPoolWeighted implements GqlPoolBase {
     address: Bytes!
     allTokens: [GqlPoolTokenExpanded!]!
     createTime: Int!
+    decimals: Int!
     dynamicData: GqlPoolDynamicData!
     factory: Bytes
     id: ID!
@@ -882,17 +893,17 @@ type GqlToken {
 type GqlTokenDynamicData {
     ath: Float!
     atl: Float!
-    fdv: String!
+    fdv: String
     high24h: Float!
     id: String!
     low24h: Float!
-    marketCap: String!
+    marketCap: String
     price: Float!
     priceChange24h: Float!
-    priceChangePercent7d: Float!
-    priceChangePercent14d: Float!
+    priceChangePercent7d: Float
+    priceChangePercent14d: Float
     priceChangePercent24h: Float!
-    priceChangePercent30d: Float!
+    priceChangePercent30d: Float
     tokenAddress: String!
     updatedAt: String!
 }
@@ -1012,6 +1023,7 @@ type Query {
     ): GqlSorGetSwapsResponse!
     tokenGetCurrentPrices: [GqlTokenPrice!]!
     tokenGetHistoricalPrices(addresses: [String!]!): [GqlHistoricalTokenPrice!]!
+    tokenGetTokenDynamicData(address: String!): GqlTokenDynamicData
     tokenGetTokens: [GqlToken!]!
-    tokenGetTokensDynamicData(addresses: [String!]!): String!
+    tokenGetTokensDynamicData(addresses: [String!]!): [GqlTokenDynamicData!]!
 }
