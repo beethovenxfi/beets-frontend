@@ -753,6 +753,7 @@ interface GqlPoolTokenBase {
 type GqlPoolTokenExpanded {
     address: String!
     decimals: Int!
+    id: ID!
     isNested: Boolean!
     isPhantomBpt: Boolean!
     name: String!

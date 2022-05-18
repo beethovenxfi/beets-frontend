@@ -196,6 +196,7 @@ export const GetPool = gql`
                 }
             }
             allTokens {
+                id
                 address
                 name
                 symbol

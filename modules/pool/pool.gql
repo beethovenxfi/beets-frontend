@@ -33,6 +33,7 @@ query GetPool($id: String!) {
             }
         }
         allTokens {
+            id
             address
             name
             symbol
