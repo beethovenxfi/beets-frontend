@@ -1,8 +1,9 @@
 import { useGetPoolQuery } from '~/apollo/generated/graphql-codegen-generated';
-import { Box, Container, Heading } from '@chakra-ui/react';
+import { Box, Container, Flex, Heading, Button } from '@chakra-ui/react';
 import PoolHeader from '~/page-components/pool/PoolHeader';
 import PoolStats from '~/page-components/pool/PoolStats';
 import PoolComposition from '~/page-components/pool/PoolComposition';
+import Link from 'next/link';
 
 interface Props {
     poolId: string;
@@ -22,7 +23,21 @@ function PoolDetail({ poolId }: Props) {
 
     return (
         <Container maxW="full">
-            <PoolHeader pool={pool} />
+            <Flex>
+                <Box flex={1}>
+                    <PoolHeader pool={pool} />
+                </Box>
+                <Box>
+                    <Link href={`/pool/${pool.id}/invest`}>
+                        <Button bgColor="green.500" mr={4}>
+                            Invest
+                        </Button>
+                    </Link>
+                    <Link href={`/pool/${pool.id}/withdraw`}>
+                        <Button bgColor="blue.500">Withdraw</Button>
+                    </Link>
+                </Box>
+            </Flex>
             <Box mt={8}>
                 <PoolStats pool={pool} />
             </Box>

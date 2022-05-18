@@ -6,9 +6,10 @@ import { chunk } from 'lodash';
 import { JsonRpcProvider } from '@ethersproject/providers';
 import { GqlToken } from '~/apollo/generated/graphql-codegen-generated';
 import { multicall } from '~/lib/services/util/multicaller.service';
+import { AmountHumanReadable } from '~/lib/services/token/token-types';
 
 // TYPES
-export type BalanceMap = { [address: string]: string };
+export type BalanceMap = Map<string, AmountHumanReadable>;
 
 export class BalancesConcern {
     constructor(
@@ -34,16 +35,14 @@ export class BalancesConcern {
     }
 
     private async fetchBalances(account: string, tokens: GqlToken[]): Promise<BalanceMap> {
-        let addresses = tokens.map((token) => token.address);
-
         try {
-            const balanceMap: BalanceMap = {};
+            const balanceMap: BalanceMap = new Map<string, string>();
 
             // If native asset included in addresses, filter out for
             // multicall, but fetch indpendently and inject.
-            if (addresses.includes(this.nativeAssetAddress)) {
-                addresses = addresses.filter((address) => address !== this.nativeAssetAddress);
-                balanceMap[this.nativeAssetAddress] = await this.fetchNativeBalance(account);
+            if (tokens.find((token) => token.address === this.nativeAssetAddress)) {
+                tokens = tokens.filter((token) => token.address !== this.nativeAssetAddress);
+                balanceMap.set(this.nativeAssetAddress.toLowerCase(), await this.fetchNativeBalance(account));
             }
 
             const balances: BigNumber[] = (
@@ -51,7 +50,7 @@ export class BalancesConcern {
                     this.chainId,
                     this.provider,
                     ERC20Abi,
-                    addresses.map((address) => [address, 'balanceOf', [account]]),
+                    tokens.map((token) => [token.address, 'balanceOf', [account]]),
                 )
             ).map((result) => BigNumber.from(result ?? '0')); // If we fail to read a token's balance, treat it as zero
 
@@ -60,7 +59,10 @@ export class BalancesConcern {
                 ...balanceMap,
             };
         } catch (error) {
-            console.error('Failed to fetch balances for:', addresses);
+            console.error(
+                'Failed to fetch balances for:',
+                tokens.map((token) => token.address),
+            );
             throw error;
         }
     }
@@ -71,8 +73,12 @@ export class BalancesConcern {
     }
 
     private associateBalances(balances: BigNumber[], tokens: GqlToken[]): BalanceMap {
-        return Object.fromEntries(
-            tokens.map((token, i) => [getAddress(token.address), formatUnits(balances[i], token.decimals)]),
-        );
+        const balanceMap: BalanceMap = new Map<string, string>();
+
+        for (let i = 0; i < tokens.length; i++) {
+            balanceMap.set(tokens[i].address, formatUnits(balances[i], tokens[i].decimals));
+        }
+
+        return balanceMap;
     }
 }
