@@ -22,20 +22,26 @@ function PoolComposition({ pool }: Props) {
             <Box bg="gray.900" shadow="lg" rounded="lg" p={4} mt={4}>
                 <Flex alignItems="center" mb={2}>
                     <Box flex={1}>
-                        <Text>Token</Text>
+                        <Text fontSize="lg" fontWeight={'semibold'}>
+                            Token
+                        </Text>
                     </Box>
                     {poolIsWeightedLikePool(pool) ? <Box mr={6}>Weight</Box> : null}
                     <Box w={125} textAlign="end" mr={4}>
-                        Balance
+                        <Text fontSize="lg" fontWeight={'semibold'}>
+                            Balance
+                        </Text>
                     </Box>
                     <Box w={125} textAlign="end">
-                        Value
+                        <Text fontSize="lg" fontWeight={'semibold'}>
+                            Value
+                        </Text>
                     </Box>
                 </Flex>
                 {poolTokens.map((token, index) => {
                     const items = [<PoolCompositionToken token={token} key={index} />];
 
-                    if (token.__typename == 'GqlPoolTokenLinear') {
+                    if (token.__typename === 'GqlPoolTokenLinear') {
                         for (const nestedToken of token.pool.tokens) {
                             items.push(
                                 <PoolCompositionToken
@@ -45,9 +51,7 @@ function PoolComposition({ pool }: Props) {
                                 />,
                             );
                         }
-                    }
-
-                    if (token.__typename == 'GqlPoolTokenPhantomStable') {
+                    } else if (token.__typename === 'GqlPoolTokenPhantomStable') {
                         for (const nestedToken of poolTokensWithoutPhantomBpt(token.pool)) {
                             items.push(
                                 <PoolCompositionToken
@@ -57,7 +61,7 @@ function PoolComposition({ pool }: Props) {
                                 />,
                             );
 
-                            if (nestedToken.__typename == 'GqlPoolTokenLinear') {
+                            if (nestedToken.__typename === 'GqlPoolTokenLinear') {
                                 for (const linearToken of poolTokensWithoutPhantomBpt(nestedToken.pool)) {
                                     items.push(
                                         <PoolCompositionToken
@@ -71,7 +75,7 @@ function PoolComposition({ pool }: Props) {
                         }
                     }
 
-                    return <>{items}</>;
+                    return items;
                 })}
             </Box>
         </>
