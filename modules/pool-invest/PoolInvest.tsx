@@ -1,8 +1,9 @@
 import { Container, Flex, Heading } from '@chakra-ui/react';
 import { usePool } from '~/modules/pool/usePool';
 import { useUserBalances } from '~/modules/global/useUserBalances';
-import { useEffect } from 'react';
-import PoolInvestTokensInWallet from '~/modules/pool-invest/PoolInvestTokensInWallet';
+import PoolTokensInWallet from '~/modules/pool-invest/PoolTokensInWallet';
+import { tokenGetAmountForAddress } from '~/lib/services/token/token-util';
+import PoolMyPoolBalance from '~/modules/pool-invest/PoolMyPoolBalance';
 
 interface Props {
     poolId: string;
@@ -12,7 +13,9 @@ function PoolInvest({ poolId }: Props) {
     const { pool, allTokens, loading, error } = usePool(poolId);
     const { userBalances, loadUserBalances, getUserBalance, loadingUserBalances } = useUserBalances(
         allTokens.map((token) => token.address),
+        allTokens,
     );
+    const userBptBalance = tokenGetAmountForAddress(pool?.address || '', userBalances);
 
     if (!pool) {
         return (
@@ -25,7 +28,8 @@ function PoolInvest({ poolId }: Props) {
     return (
         <Container maxW="full">
             <Flex>
-                <PoolInvestTokensInWallet pool={pool} userBalances={userBalances} />
+                <PoolTokensInWallet pool={pool} userBalances={userBalances} />
+                <PoolMyPoolBalance pool={pool} userBptBalance={userBptBalance} />
             </Flex>
         </Container>
     );

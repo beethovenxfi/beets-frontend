@@ -3,9 +3,8 @@ import { BigNumber, BigNumberish } from '@ethersproject/bignumber';
 import { formatUnits } from '@ethersproject/units';
 import { chunk, flatten } from 'lodash';
 import { JsonRpcProvider } from '@ethersproject/providers';
-import { GqlToken } from '~/apollo/generated/graphql-codegen-generated';
 import { multicall } from '~/lib/services/util/multicaller.service';
-import { TokenAmountHumanReadable } from '~/lib/services/token/token-types';
+import { TokenAmountHumanReadable, TokenBase } from '~/lib/services/token/token-types';
 
 export class BalancesConcern {
     constructor(
@@ -15,7 +14,7 @@ export class BalancesConcern {
         private readonly nativeAssetDecimals: number,
     ) {}
 
-    public async getBalancesForAccount(account: string, tokens: GqlToken[]): Promise<TokenAmountHumanReadable[]> {
+    public async getBalancesForAccount(account: string, tokens: TokenBase[]): Promise<TokenAmountHumanReadable[]> {
         const chunks = chunk(tokens, 1000);
         const multicalls: Promise<any>[] = [];
 
@@ -30,7 +29,7 @@ export class BalancesConcern {
         return flatten(Object.values(validPages));
     }
 
-    private async fetchBalances(account: string, tokens: GqlToken[]): Promise<TokenAmountHumanReadable[]> {
+    private async fetchBalances(account: string, tokens: TokenBase[]): Promise<TokenAmountHumanReadable[]> {
         try {
             const tokenBalances: TokenAmountHumanReadable[] = [];
 
@@ -66,7 +65,7 @@ export class BalancesConcern {
         return formatUnits(balance.toString(), this.nativeAssetDecimals);
     }
 
-    private associateBalances(balances: BigNumber[], tokens: GqlToken[]): TokenAmountHumanReadable[] {
+    private associateBalances(balances: BigNumber[], tokens: TokenBase[]): TokenAmountHumanReadable[] {
         const formatted: TokenAmountHumanReadable[] = [];
 
         for (let i = 0; i < tokens.length; i++) {
