@@ -1,5 +1,5 @@
 import { Flex, Input, Button, Box, Heading, VStack, Text } from '@chakra-ui/react';
-import { useGetTokens } from '~/graphql/useToken';
+import { useGetTokens } from '~/modules/global/useToken';
 import TokenAvatar from '../token-avatar/TokenAvatar';
 import BeetsInput from './BeetsInput';
 
@@ -22,7 +22,7 @@ export default function TokenInput({ label, toggleTokenSelect, address }: Props)
                         _hover={{ backgroundColor: 'beets.green.400', color: 'beets.gray.500' }}
                     >
                         <TokenAvatar size="xs" address={address || ''} />
-                        <Text paddingLeft='2'>{getToken(address || '')?.symbol || ''} </Text>
+                        <Text paddingLeft="2">{getToken(address || '')?.symbol || ''} </Text>
                     </Button>
                 </Box>
             </Box>

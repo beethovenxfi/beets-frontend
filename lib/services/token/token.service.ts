@@ -1,12 +1,17 @@
 import { MetadataConcern } from './concerns/metadata.concern';
-import { BalanceMap, BalancesConcern } from './concerns/balances.concern';
+import { BalancesConcern } from './concerns/balances.concern';
 import { AllowancesConcern, ContractAllowancesMap } from './concerns/allowances.concern';
 import { rpcProviderService } from '~/lib/services/rpc-provider/rpc-provider.service';
 import { networkConfig } from '~/lib/config/network-config';
 import { GqlToken } from '~/apollo/generated/graphql-codegen-generated';
 import { parseUnits } from '@ethersproject/units';
 import { formatFixed } from '@ethersproject/bignumber';
-import { TokenAmountHumanReadable, TokenAmountScaled } from '~/lib/services/token/token-types';
+import {
+    AmountHumanReadable,
+    BalanceMap,
+    TokenAmountHumanReadable,
+    TokenAmountScaled,
+} from '~/lib/services/token/token-types';
 import { JsonRpcProvider, TransactionResponse } from '@ethersproject/providers';
 import { MaxUint256 } from '@ethersproject/constants';
 import { web3SendTransaction } from '~/lib/services/util/web3';
@@ -49,7 +54,7 @@ export default class TokenService {
         return tokens;
     }
 
-    public async getBalancesForAccount(account: string, tokens: GqlToken[]): Promise<BalanceMap> {
+    public async getBalancesForAccount(account: string, tokens: GqlToken[]): Promise<TokenAmountHumanReadable[]> {
         return this.balancesConcern.getBalancesForAccount(account, tokens);
     }
 

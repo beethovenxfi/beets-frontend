@@ -10,10 +10,10 @@ import { AnimatedBox } from '~/components/animation/chakra';
 import AnimatedChevrons from '~/components/animation/chevron/AnimatedChevrons';
 import Card from '~/components/card/Card';
 import { GetPoolsQuery, GetPoolsQueryVariables, useGetTokensQuery } from '~/apollo/generated/graphql-codegen-generated';
-import TradeCard from '../page-components/trade/TradeCard';
+import TradeCard from '../modules/trade/TradeCard';
 import { initializeApolloClient, loadApolloState } from '~/apollo/client';
 import { GetPools } from '~/apollo/generated/operations';
-import { DEFAULT_POOL_LIST_QUERY_VARS } from '~/page-components/pools/usePoolList';
+import { DEFAULT_POOL_LIST_QUERY_VARS } from '~/modules/pools/usePoolList';
 
 function Trade() {
     const { data, loading, error } = useGetTokensQuery();

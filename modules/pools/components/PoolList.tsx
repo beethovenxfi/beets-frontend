@@ -12,10 +12,10 @@ import {
     Text,
 } from '@chakra-ui/react';
 import { NetworkStatus } from '@apollo/client';
-import { usePoolList } from './usePoolList';
-import PoolListItem from '~/page-components/pools/PoolListItem';
+import { usePoolList } from '../usePoolList';
+import PoolListItem from '~/modules/pools/components/PoolListItem';
 import { Search } from 'react-feather';
-import PoolListSortableHeader from '~/page-components/pools/PoolListSortableHeader';
+import PoolListSortableHeader from '~/modules/pools/components/PoolListSortableHeader';
 import { debounce } from 'lodash';
 import { useBoolean } from '@chakra-ui/hooks';
 

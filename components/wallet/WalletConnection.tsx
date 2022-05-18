@@ -38,7 +38,6 @@ const fantomChain = {
     testnet: false,
 };
 
-const ftmProvider = new providers.JsonRpcProvider('https://ftmscan.com/');
 export const { chains, provider } = configureChains(
     [fantomChain],
     [apiProvider.jsonRpc((_) => ({ rpcUrl: 'https://rpc.ftm.tools/' }))],

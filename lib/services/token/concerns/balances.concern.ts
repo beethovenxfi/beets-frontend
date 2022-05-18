@@ -1,14 +1,11 @@
 import ERC20Abi from '../../../abi/ERC20.json';
 import { BigNumber, BigNumberish } from '@ethersproject/bignumber';
-import { getAddress } from '@ethersproject/address';
 import { formatUnits } from '@ethersproject/units';
-import { chunk } from 'lodash';
+import { chunk, flatten } from 'lodash';
 import { JsonRpcProvider } from '@ethersproject/providers';
 import { GqlToken } from '~/apollo/generated/graphql-codegen-generated';
 import { multicall } from '~/lib/services/util/multicaller.service';
-
-// TYPES
-export type BalanceMap = { [address: string]: string };
+import { TokenAmountHumanReadable } from '~/lib/services/token/token-types';
 
 export class BalancesConcern {
     constructor(
@@ -18,7 +15,7 @@ export class BalancesConcern {
         private readonly nativeAssetDecimals: number,
     ) {}
 
-    public async getBalancesForAccount(account: string, tokens: GqlToken[]): Promise<BalanceMap> {
+    public async getBalancesForAccount(account: string, tokens: GqlToken[]): Promise<TokenAmountHumanReadable[]> {
         const chunks = chunk(tokens, 1000);
         const multicalls: Promise<any>[] = [];
 
@@ -27,40 +24,39 @@ export class BalancesConcern {
             multicalls.push(request);
         });
 
-        const paginatedBalances = await Promise.all<BalanceMap>(multicalls);
+        const paginatedBalances = await Promise.all<TokenAmountHumanReadable[]>(multicalls);
         const validPages = paginatedBalances.filter((page) => !(page instanceof Error));
 
-        return validPages.reduce((result, current) => Object.assign(result, current));
+        return flatten(Object.values(validPages));
     }
 
-    private async fetchBalances(account: string, tokens: GqlToken[]): Promise<BalanceMap> {
-        let addresses = tokens.map((token) => token.address);
-
+    private async fetchBalances(account: string, tokens: GqlToken[]): Promise<TokenAmountHumanReadable[]> {
         try {
-            const balanceMap: BalanceMap = {};
+            const tokenBalances: TokenAmountHumanReadable[] = [];
 
-            // If native asset included in addresses, filter out for
-            // multicall, but fetch indpendently and inject.
-            if (addresses.includes(this.nativeAssetAddress)) {
-                addresses = addresses.filter((address) => address !== this.nativeAssetAddress);
-                balanceMap[this.nativeAssetAddress] = await this.fetchNativeBalance(account);
+            if (tokens.find((token) => token.address === this.nativeAssetAddress)) {
+                tokens = tokens.filter((token) => token.address !== this.nativeAssetAddress);
+
+                tokenBalances.push({
+                    address: this.nativeAssetAddress.toLowerCase(),
+                    amount: await this.fetchNativeBalance(account),
+                });
             }
-
             const balances: BigNumber[] = (
                 await multicall<BigNumberish>(
                     this.chainId,
                     this.provider,
                     ERC20Abi,
-                    addresses.map((address) => [address, 'balanceOf', [account]]),
+                    tokens.map((token) => [token.address, 'balanceOf', [account]]),
                 )
             ).map((result) => BigNumber.from(result ?? '0')); // If we fail to read a token's balance, treat it as zero
 
-            return {
-                ...this.associateBalances(balances, tokens),
-                ...balanceMap,
-            };
+            return [...this.associateBalances(balances, tokens), ...tokenBalances];
         } catch (error) {
-            console.error('Failed to fetch balances for:', addresses);
+            console.error(
+                'Failed to fetch balances for:',
+                tokens.map((token) => token.address),
+            );
             throw error;
         }
     }
@@ -70,9 +66,13 @@ export class BalancesConcern {
         return formatUnits(balance.toString(), this.nativeAssetDecimals);
     }
 
-    private associateBalances(balances: BigNumber[], tokens: GqlToken[]): BalanceMap {
-        return Object.fromEntries(
-            tokens.map((token, i) => [getAddress(token.address), formatUnits(balances[i], token.decimals)]),
-        );
+    private associateBalances(balances: BigNumber[], tokens: GqlToken[]): TokenAmountHumanReadable[] {
+        const formatted: TokenAmountHumanReadable[] = [];
+
+        for (let i = 0; i < tokens.length; i++) {
+            formatted.push({ address: tokens[i].address, amount: formatUnits(balances[i], tokens[i].decimals) });
+        }
+
+        return formatted;
     }
 }

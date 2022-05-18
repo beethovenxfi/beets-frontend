@@ -1,6 +1,6 @@
 import { Box, Flex } from '@chakra-ui/react';
-import { usePoolList } from './usePoolList';
-import PoolListSortLink from '~/page-components/pools/PoolListSortLink';
+import { usePoolList } from '../usePoolList';
+import PoolListSortLink from '~/modules/pools/components/PoolListSortLink';
 
 function PoolListSortableHeader() {
     const { state, changeSort } = usePoolList();
