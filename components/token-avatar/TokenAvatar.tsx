@@ -10,7 +10,7 @@ function TokenAvatar({ address, ...rest }: Props) {
     const { getToken } = useGetTokens();
     const token = getToken(address);
 
-    return <Avatar {...rest} src={token?.logoURI || undefined} />;
+    return <Avatar {...rest} src={token?.logoURI || undefined} bg={'transparent'} />;
 }
 
 export default TokenAvatar;

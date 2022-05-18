@@ -2,6 +2,7 @@ import { NetworkConfig } from '~/lib/config/network-config-type';
 
 export const fantomNetworkConfig: NetworkConfig = {
     chainId: '250',
+    etherscanUrl: 'https://ftmscan.com',
     eth: {
         address: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
         symbol: 'FTM',

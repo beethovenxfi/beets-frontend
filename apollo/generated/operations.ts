@@ -1,4 +1,89 @@
 import gql from 'graphql-tag';
+export const GqlPoolToken = gql`
+    fragment GqlPoolToken on GqlPoolToken {
+        id
+        index
+        name
+        symbol
+        balance
+        address
+        priceRate
+        decimals
+        weight
+    }
+`;
+export const GqlPoolTokenLinear = gql`
+    fragment GqlPoolTokenLinear on GqlPoolTokenLinear {
+        id
+        index
+        name
+        symbol
+        balance
+        address
+        priceRate
+        decimals
+        weight
+        mainTokenBalance
+        wrappedTokenBalance
+        totalMainTokenBalance
+        pool {
+            id
+            name
+            symbol
+            address
+            owner
+            factory
+            createTime
+            wrappedIndex
+            mainIndex
+            upperTarget
+            lowerTarget
+            totalShares
+            totalLiquidity
+            tokens {
+                ... on GqlPoolToken {
+                    ...GqlPoolToken
+                }
+            }
+        }
+    }
+    ${GqlPoolToken}
+`;
+export const GqlPoolTokenPhantomStable = gql`
+    fragment GqlPoolTokenPhantomStable on GqlPoolTokenPhantomStable {
+        id
+        index
+        name
+        symbol
+        balance
+        address
+        weight
+        priceRate
+        decimals
+        pool {
+            id
+            name
+            symbol
+            address
+            owner
+            factory
+            createTime
+            totalShares
+            totalLiquidity
+            nestingType
+            tokens {
+                ... on GqlPoolToken {
+                    ...GqlPoolToken
+                }
+                ... on GqlPoolTokenLinear {
+                    ...GqlPoolTokenLinear
+                }
+            }
+        }
+    }
+    ${GqlPoolToken}
+    ${GqlPoolTokenLinear}
+`;
 export const GqlPoolBase = gql`
     fragment GqlPoolBase on GqlPoolBase {
         id
@@ -81,9 +166,14 @@ export const GetPool = gql`
             id
             address
             name
+            owner
+            decimals
+            factory
             symbol
             createTime
             dynamicData {
+                poolId
+                swapEnabled
                 totalLiquidity
                 totalShares
                 fees24h
@@ -93,6 +183,7 @@ export const GetPool = gql`
                     hasRewardApr
                     thirdPartyApr
                     nativeRewardApr
+                    swapApr
                     total
                     items {
                         title
@@ -104,6 +195,123 @@ export const GetPool = gql`
                     }
                 }
             }
+            allTokens {
+                address
+                name
+                symbol
+                decimals
+                isNested
+                isPhantomBpt
+            }
+            investConfig {
+                singleAssetEnabled
+                proportionalEnabled
+                options {
+                    poolTokenIndex
+                    poolTokenAddress
+                    tokenOptions {
+                        ... on GqlPoolToken {
+                            ...GqlPoolToken
+                        }
+                    }
+                }
+            }
+            withdrawConfig {
+                singleAssetEnabled
+                proportionalEnabled
+                options {
+                    poolTokenIndex
+                    poolTokenAddress
+                    tokenOptions {
+                        ... on GqlPoolToken {
+                            ...GqlPoolToken
+                        }
+                    }
+                }
+            }
+            ... on GqlPoolWeighted {
+                nestingType
+                tokens {
+                    ... on GqlPoolToken {
+                        ...GqlPoolToken
+                    }
+                    ... on GqlPoolTokenLinear {
+                        ...GqlPoolTokenLinear
+                    }
+                    ... on GqlPoolTokenPhantomStable {
+                        ...GqlPoolTokenPhantomStable
+                    }
+                }
+            }
+            ... on GqlPoolStable {
+                amp
+                tokens {
+                    ... on GqlPoolToken {
+                        ...GqlPoolToken
+                    }
+                }
+            }
+            ... on GqlPoolElement {
+                unitSeconds
+                principalToken
+                baseToken
+                tokens {
+                    ... on GqlPoolToken {
+                        ...GqlPoolToken
+                    }
+                }
+            }
+            ... on GqlPoolPhantomStable {
+                amp
+                nestingType
+                tokens {
+                    ... on GqlPoolToken {
+                        ...GqlPoolToken
+                    }
+                    ... on GqlPoolTokenLinear {
+                        ...GqlPoolTokenLinear
+                    }
+                    ... on GqlPoolTokenPhantomStable {
+                        ...GqlPoolTokenPhantomStable
+                    }
+                }
+            }
+            ... on GqlPoolLinear {
+                mainIndex
+                wrappedIndex
+                lowerTarget
+                upperTarget
+                tokens {
+                    ... on GqlPoolToken {
+                        ...GqlPoolToken
+                    }
+                }
+            }
+            ... on GqlPoolLiquidityBootstrapping {
+                name
+                nestingType
+                tokens {
+                    ... on GqlPoolToken {
+                        ...GqlPoolToken
+                    }
+                    ... on GqlPoolTokenLinear {
+                        ...GqlPoolTokenLinear
+                    }
+                    ... on GqlPoolTokenPhantomStable {
+                        ...GqlPoolTokenPhantomStable
+                    }
+                }
+            }
+        }
+    }
+    ${GqlPoolToken}
+    ${GqlPoolTokenLinear}
+    ${GqlPoolTokenPhantomStable}
+`;
+export const GetTokenNames = gql`
+    query GetTokenNames {
+        tokens: tokenGetTokens {
+            name
         }
     }
 `;

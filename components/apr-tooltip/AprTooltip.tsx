@@ -16,19 +16,21 @@ import {
     Box,
     Flex,
     Text,
+    TextProps,
 } from '@chakra-ui/react';
 import StarsIcon from '~/components/apr-tooltip/StarsIcon';
 import numeral from 'numeral';
 
 interface Props {
     data: GqlPoolApr;
+    textProps?: TextProps;
 }
 
-function AprTooltip({ data }: Props) {
+function AprTooltip({ data, textProps }: Props) {
     return (
         <Popover trigger="hover">
             <Flex justifyContent={'end'}>
-                <Text fontWeight={'semibold'} mr={1}>
+                <Text fontWeight={'semibold'} mr={1} {...textProps}>
                     {numeral(data.total).format('0.00%')}
                 </Text>
                 <PopoverTrigger>

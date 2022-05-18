@@ -1,5 +1,6 @@
 export interface NetworkConfig {
     chainId: string;
+    etherscanUrl: string;
     eth: {
         address: string;
         symbol: string;

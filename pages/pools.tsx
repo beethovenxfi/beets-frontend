@@ -1,10 +1,18 @@
 import PoolList from '../page-components/pools/PoolList';
 import { initializeApolloClient, loadApolloState } from '~/apollo/client';
 import { GetPools } from '~/apollo/generated/operations';
-import { GetPoolsQuery, GetPoolsQueryVariables } from '~/apollo/generated/graphql-codegen-generated';
+import {
+    GetPoolsQuery,
+    GetPoolsQueryVariables,
+    useGetTokenNamesQuery,
+} from '~/apollo/generated/graphql-codegen-generated';
 import { DEFAULT_POOL_LIST_QUERY_VARS } from '~/page-components/pools/usePoolList';
 
 function Pools() {
+    const { data } = useGetTokenNamesQuery({ pollInterval: 15 });
+
+    data?.tokens[0].name;
+
     return (
         <>
             <PoolList />

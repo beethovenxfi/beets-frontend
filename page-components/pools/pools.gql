@@ -1,3 +1,9 @@
+query GetTokenNames {
+    tokens: tokenGetTokens {
+        name
+    }
+}
+
 query GetPools(
     $first: Int
     $skip: Int
@@ -49,6 +55,7 @@ query GetPools(
     }
 }
 
+#not sure why, but can't expand the fragment in the query above, probably has to do with the interface type
 fragment GqlPoolBase on GqlPoolBase {
     id
     address
