@@ -3,22 +3,16 @@ import { BalancesConcern } from './concerns/balances.concern';
 import { AllowancesConcern, ContractAllowancesMap } from './concerns/allowances.concern';
 import { rpcProviderService } from '~/lib/services/rpc-provider/rpc-provider.service';
 import { networkConfig } from '~/lib/config/network-config';
-import { GqlToken } from '~/apollo/generated/graphql-codegen-generated';
 import { parseUnits } from '@ethersproject/units';
 import { formatFixed } from '@ethersproject/bignumber';
-import {
-    AmountHumanReadable,
-    BalanceMap,
-    TokenAmountHumanReadable,
-    TokenAmountScaled,
-} from '~/lib/services/token/token-types';
+import { TokenAmountHumanReadable, TokenAmountScaled, TokenBase } from '~/lib/services/token/token-types';
 import { JsonRpcProvider, TransactionResponse } from '@ethersproject/providers';
 import { MaxUint256 } from '@ethersproject/constants';
 import { web3SendTransaction } from '~/lib/services/util/web3';
 import ERC20Abi from '../../abi/ERC20.json';
 
 export default class TokenService {
-    private allTokens: Map<string, GqlToken> = new Map<string, GqlToken>();
+    private allTokens: Map<string, TokenBase> = new Map<string, TokenBase>();
 
     constructor(
         private readonly provider: JsonRpcProvider,
@@ -40,13 +34,13 @@ export default class TokenService {
     /**
      * Appends tokens to the set
      */
-    public addTokens(tokens: GqlToken[]) {
+    public addTokens(tokens: TokenBase[]) {
         for (const token of tokens) {
             this.allTokens.set(token.address, token);
         }
     }
 
-    public async loadOnChainTokenData(addresses: string[]): Promise<GqlToken[]> {
+    public async loadOnChainTokenData(addresses: string[]): Promise<TokenBase[]> {
         const tokens = await this.metadataConcern.loadOnChainTokenData(addresses);
 
         this.addTokens(tokens);
@@ -54,14 +48,14 @@ export default class TokenService {
         return tokens;
     }
 
-    public async getBalancesForAccount(account: string, tokens: GqlToken[]): Promise<TokenAmountHumanReadable[]> {
+    public async getBalancesForAccount(account: string, tokens: TokenBase[]): Promise<TokenAmountHumanReadable[]> {
         return this.balancesConcern.getBalancesForAccount(account, tokens);
     }
 
     public async getAllowancesForAccount(
         account: string,
         contractAddresses: string[],
-        tokens: GqlToken[],
+        tokens: TokenBase[],
     ): Promise<ContractAllowancesMap> {
         return this.allowancesConcern.getAllowancesForAccount(account, contractAddresses, tokens);
     }

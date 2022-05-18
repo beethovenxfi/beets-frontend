@@ -2,7 +2,7 @@ import ERC20Abi from '../../../abi/ERC20.json';
 import { set } from 'lodash';
 import { Multicaller } from '~/lib/services/util/multicaller.service';
 import { JsonRpcProvider } from '@ethersproject/providers';
-import { GqlToken } from '~/apollo/generated/graphql-codegen-generated';
+import { TokenBase } from '~/lib/services/token/token-types';
 
 export class MetadataConcern {
     constructor(private readonly provider: JsonRpcProvider, private readonly chainId: string) {}
@@ -10,7 +10,7 @@ export class MetadataConcern {
     /**
      * Perform an onchain multicall to load token data
      */
-    public async loadOnChainTokenData(addresses: string[]): Promise<GqlToken[]> {
+    public async loadOnChainTokenData(addresses: string[]): Promise<TokenBase[]> {
         try {
             const multi = new Multicaller(this.chainId, this.provider, ERC20Abi);
             const metaDict = {};

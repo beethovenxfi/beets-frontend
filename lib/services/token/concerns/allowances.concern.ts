@@ -2,9 +2,9 @@ import { BigNumber, BigNumberish } from '@ethersproject/bignumber';
 import { getAddress } from '@ethersproject/address';
 import { formatUnits } from '@ethersproject/units';
 import { JsonRpcProvider } from '@ethersproject/providers';
-import { GqlToken } from '~/apollo/generated/graphql-codegen-generated';
 import { multicall } from '~/lib/services/util/multicaller.service';
 import ERC20Abi from '../../../abi/ERC20.json';
+import { TokenBase } from '~/lib/services/token/token-types';
 
 // TYPES
 export type AllowanceMap = { [address: string]: string };
@@ -16,7 +16,7 @@ export class AllowancesConcern {
     public async getAllowancesForAccount(
         account: string,
         contractAddresses: string[],
-        tokens: GqlToken[],
+        tokens: TokenBase[],
     ): Promise<ContractAllowancesMap> {
         try {
             const allContractAllowances = await Promise.all(
@@ -33,7 +33,7 @@ export class AllowancesConcern {
         }
     }
 
-    public async getForContract(account: string, contractAddress: string, tokens: GqlToken[]): Promise<AllowanceMap> {
+    public async getForContract(account: string, contractAddress: string, tokens: TokenBase[]): Promise<AllowanceMap> {
         const allowances: BigNumber[] = (
             await multicall<BigNumberish>(
                 this.chainId,

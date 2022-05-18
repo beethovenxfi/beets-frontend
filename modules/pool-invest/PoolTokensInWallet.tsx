@@ -11,7 +11,7 @@ interface Props {
     userBalances: TokenAmountHumanReadable[];
 }
 
-function PoolInvestTokensInWallet({ pool, userBalances }: Props) {
+function PoolTokensInWallet({ pool, userBalances }: Props) {
     const { priceFor } = useGetTokens();
 
     return (
@@ -45,4 +45,4 @@ function PoolInvestTokensInWallet({ pool, userBalances }: Props) {
     );
 }
 
-export default PoolInvestTokensInWallet;
+export default PoolTokensInWallet;

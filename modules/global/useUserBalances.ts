@@ -3,13 +3,15 @@ import { tokenService } from '~/lib/services/token/token.service';
 import { useState } from 'react';
 import { useAccount } from 'wagmi';
 import { useAsyncEffect } from '~/lib/util/custom-hooks';
-import { AmountHumanReadable, TokenAmountHumanReadable } from '~/lib/services/token/token-types';
+import { AmountHumanReadable, TokenAmountHumanReadable, TokenBase } from '~/lib/services/token/token-types';
 import { useBoolean } from '@chakra-ui/hooks';
 
-export function useUserBalances(addresses: string[]) {
-    const { tokens: allTokens } = useGetTokens();
+export function useUserBalances(addresses: string[], additionalTokens?: TokenBase[]) {
+    const { tokens: whitelistedTokens } = useGetTokens();
     const { data: accountData } = useAccount();
-    const tokens = allTokens.filter((token) => addresses.includes(token.address));
+    const tokens = [...whitelistedTokens, ...(additionalTokens || [])].filter((token) =>
+        addresses.includes(token.address),
+    );
     const [userBalances, setUserBalances] = useState<TokenAmountHumanReadable[]>([]);
     const [loadingUserBalances, { on, off }] = useBoolean(false);
 
