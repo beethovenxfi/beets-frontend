@@ -15,7 +15,7 @@ function PoolTokensInWallet({ pool, userBalances }: Props) {
     const { priceFor } = useGetTokens();
 
     return (
-        <Container bg="gray.900" shadow="lg" rounded="lg" padding="4" mb={12} maxW="full">
+        <Container bg="gray.900" shadow="lg" rounded="lg" padding="4" mb={12} maxW="350">
             <Heading fontSize="md" mb={4}>
                 Pool tokens in my wallet
             </Heading>
@@ -27,7 +27,6 @@ function PoolTokensInWallet({ pool, userBalances }: Props) {
 
                             return (
                                 <Flex key={`token-${index}`} mb={2} alignItems="center">
-                                    <TokenAvatar address={tokenOption.address} size="sm" mr={2} />
                                     <Box>
                                         {tokenOption.symbol} - {userBalance}
                                         <br />

@@ -806,6 +806,7 @@ export interface GqlPoolTokenExpanded {
     __typename: 'GqlPoolTokenExpanded';
     address: Scalars['String'];
     decimals: Scalars['Int'];
+    id: Scalars['ID'];
     isNested: Scalars['Boolean'];
     isPhantomBpt: Scalars['Boolean'];
     name: Scalars['String'];
@@ -1255,6 +1256,7 @@ export type GetPoolQuery = {
               };
               allTokens: Array<{
                   __typename: 'GqlPoolTokenExpanded';
+                  id: string;
                   address: string;
                   name: string;
                   symbol: string;
@@ -1363,6 +1365,7 @@ export type GetPoolQuery = {
               };
               allTokens: Array<{
                   __typename: 'GqlPoolTokenExpanded';
+                  id: string;
                   address: string;
                   name: string;
                   symbol: string;
@@ -1595,6 +1598,7 @@ export type GetPoolQuery = {
               };
               allTokens: Array<{
                   __typename: 'GqlPoolTokenExpanded';
+                  id: string;
                   address: string;
                   name: string;
                   symbol: string;
@@ -1828,6 +1832,7 @@ export type GetPoolQuery = {
               };
               allTokens: Array<{
                   __typename: 'GqlPoolTokenExpanded';
+                  id: string;
                   address: string;
                   name: string;
                   symbol: string;
@@ -1933,6 +1938,7 @@ export type GetPoolQuery = {
               };
               allTokens: Array<{
                   __typename: 'GqlPoolTokenExpanded';
+                  id: string;
                   address: string;
                   name: string;
                   symbol: string;
@@ -2165,6 +2171,7 @@ export type GetPoolQuery = {
               };
               allTokens: Array<{
                   __typename: 'GqlPoolTokenExpanded';
+                  id: string;
                   address: string;
                   name: string;
                   symbol: string;
@@ -3157,6 +3164,7 @@ export const GetPoolDocument = gql`
                 }
             }
             allTokens {
+                id
                 address
                 name
                 symbol

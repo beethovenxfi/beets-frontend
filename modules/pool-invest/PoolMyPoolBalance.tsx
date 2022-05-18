@@ -16,7 +16,7 @@ function PoolTokensInWallet({ pool, userBptBalance }: Props) {
     const poolTokens = poolTokensWithoutPhantomBpt(pool);
 
     return (
-        <Container bg="gray.900" shadow="lg" rounded="lg" padding="4" mb={12} maxW="full">
+        <Container bg="gray.900" shadow="lg" rounded="lg" padding="4" mb={12} maxW="350">
             <Heading fontSize="md" mb={4}>
                 My pool balance
             </Heading>
@@ -26,7 +26,6 @@ function PoolTokensInWallet({ pool, userBptBalance }: Props) {
                 return (
                     <Box key={`token-${index}`}>
                         <Flex mb={2} alignItems="center">
-                            <TokenAvatar address={poolToken.address} size="sm" mr={2} />
                             <Box>
                                 {poolToken.symbol} - {userBalance}
                                 <br />

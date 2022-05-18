@@ -21,9 +21,6 @@ function createApolloClient() {
                 GqlTokenPrice: {
                     keyFields: ['address'],
                 },
-                GqlPoolTokenExpanded: {
-                    keyFields: ['address'],
-                },
                 Query: {
                     fields: {
                         poolGetPools: concatPagination(),
