@@ -3,10 +3,10 @@ import { Box, Flex, Heading, Link, Text } from '@chakra-ui/react';
 import TokenAvatar from '~/components/token-avatar/TokenAvatar';
 import { poolIsWeightedLikePool, poolTokensWithoutPhantomBpt } from '~/lib/services/pool/pool-util';
 import { ExternalLink } from 'react-feather';
-import { etherscanGetTokenUrl } from '~/lib/services/util/etherscan';
-import { useGetTokens } from '~/graphql/useToken';
+import { etherscanGetTokenUrl } from '~/lib/util/etherscan';
+import { useGetTokens } from '~/modules/global/useToken';
 import numeral from 'numeral';
-import PoolCompositionToken from '~/page-components/pool/PoolCompositionToken';
+import PoolCompositionToken from '~/modules/pool/PoolCompositionToken';
 
 interface Props {
     pool: GqlPoolUnion;

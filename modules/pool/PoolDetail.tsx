@@ -1,8 +1,8 @@
 import { useGetPoolQuery } from '~/apollo/generated/graphql-codegen-generated';
 import { Box, Container, Flex, Heading, Button } from '@chakra-ui/react';
-import PoolHeader from '~/page-components/pool/PoolHeader';
-import PoolStats from '~/page-components/pool/PoolStats';
-import PoolComposition from '~/page-components/pool/PoolComposition';
+import PoolHeader from '~/modules/pool/PoolHeader';
+import PoolStats from '~/modules/pool/PoolStats';
+import PoolComposition from '~/modules/pool/PoolComposition';
 import Link from 'next/link';
 
 interface Props {

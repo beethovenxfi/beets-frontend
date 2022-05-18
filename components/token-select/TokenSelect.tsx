@@ -5,7 +5,7 @@ import { Box, Flex, Heading, HStack, Text, VStack } from '@chakra-ui/layout';
 import { motion } from 'framer-motion';
 import { FormEvent, memo, useCallback, useRef, useState } from 'react';
 import { GqlToken } from '~/apollo/generated/graphql-codegen-generated';
-import { useGetTokens } from '~/graphql/useToken';
+import { useGetTokens } from '~/modules/global/useToken';
 import Card from '../card/Card';
 import BeetsInput from '../inputs/BeetsInput';
 import TokenAvatar from '../token-avatar/TokenAvatar';

@@ -2,8 +2,8 @@ import { GqlPoolTokenBase } from '~/apollo/generated/graphql-codegen-generated';
 import { Box, Flex, Link } from '@chakra-ui/react';
 import TokenAvatar from '~/components/token-avatar/TokenAvatar';
 import { ExternalLink } from 'react-feather';
-import { etherscanGetTokenUrl } from '~/lib/services/util/etherscan';
-import { useGetTokens } from '~/graphql/useToken';
+import { etherscanGetTokenUrl } from '~/lib/util/etherscan';
+import { useGetTokens } from '~/modules/global/useToken';
 import numeral from 'numeral';
 
 interface Props {

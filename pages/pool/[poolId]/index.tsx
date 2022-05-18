@@ -2,9 +2,9 @@ import { useRouter } from 'next/router';
 import { GetPoolQuery, GetPoolQueryVariables } from '~/apollo/generated/graphql-codegen-generated';
 import { initializeApolloClient, loadApolloState } from '~/apollo/client';
 import { GetPool } from '~/apollo/generated/operations';
-import PoolDetail from '~/page-components/pool/PoolDetail';
+import PoolDetail from '~/modules/pool/PoolDetail';
 
-const Index = () => {
+const Pool = () => {
     const router = useRouter();
     if (router.isFallback) {
         return <div>Rendering fallback...</div>;
@@ -42,4 +42,4 @@ export async function getStaticProps({ params }: { params: { poolId: string } })
     });
 }
 
-export default Index;
+export default Pool;

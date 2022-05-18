@@ -1,6 +1,6 @@
 import { Avatar, useToken } from '@chakra-ui/react';
 import { AvatarProps } from '@chakra-ui/avatar/src/avatar';
-import { useGetTokens } from '~/graphql/useToken';
+import { useGetTokens } from '~/modules/global/useToken';
 
 interface Props extends AvatarProps {
     address: string;

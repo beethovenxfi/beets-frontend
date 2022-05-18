@@ -9,7 +9,7 @@ import TokenInput from '~/components/inputs/TokenInput';
 import Card from '~/components/card/Card';
 import BeetsButton from '~/components/button/Button';
 import { useGetSwaps } from './tradeState';
-import { TokenInputSwapButton } from '~/page-components/trade/TokenInputSwapButton';
+import { TokenInputSwapButton } from '~/modules/trade/TokenInputSwapButton';
 /*import { TokenInputSwapButton } from './TokenInputSwapButton';*/
 
 function TradeCard() {

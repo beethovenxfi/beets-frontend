@@ -1,5 +1,5 @@
 import { networkConfig } from '~/lib/config/network-config';
-import { addressesMatch } from '~/lib/services/util/address';
+import { addressesMatch } from '~/lib/util/address';
 import { rpcProviderService } from '~/lib/services/rpc-provider/rpc-provider.service';
 import { JsonRpcProvider } from '@ethersproject/providers';
 import { web3SendTransaction } from '~/lib/services/util/web3';
