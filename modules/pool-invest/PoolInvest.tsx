@@ -28,7 +28,7 @@ function PoolInvest({ poolId }: Props) {
 
     return (
         <Container maxW="full">
-            <Flex>
+            <Flex alignItems="flex-start">
                 <PoolTokensInWallet pool={pool} userBalances={userBalances} />
                 <PoolInvestForm pool={pool} mx={8} flex={1} userBalances={userBalances} />
                 <PoolMyPoolBalance pool={pool} userBptBalance={userBptBalance} />

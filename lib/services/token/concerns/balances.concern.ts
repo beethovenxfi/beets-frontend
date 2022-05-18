@@ -33,8 +33,8 @@ export class BalancesConcern {
         try {
             const tokenBalances: TokenAmountHumanReadable[] = [];
 
-            if (tokens.find((token) => token.address === this.nativeAssetAddress)) {
-                tokens = tokens.filter((token) => token.address !== this.nativeAssetAddress);
+            if (tokens.find((token) => token.address === this.nativeAssetAddress.toLowerCase())) {
+                tokens = tokens.filter((token) => token.address !== this.nativeAssetAddress.toLowerCase());
 
                 tokenBalances.push({
                     address: this.nativeAssetAddress.toLowerCase(),
