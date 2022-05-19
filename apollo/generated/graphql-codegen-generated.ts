@@ -2417,6 +2417,7 @@ export type GetPoolsQuery = {
               };
               allTokens: Array<{
                   __typename: 'GqlPoolTokenExpanded';
+                  id: string;
                   address: string;
                   isNested: boolean;
                   isPhantomBpt: boolean;
@@ -2457,6 +2458,7 @@ export type GetPoolsQuery = {
               };
               allTokens: Array<{
                   __typename: 'GqlPoolTokenExpanded';
+                  id: string;
                   address: string;
                   isNested: boolean;
                   isPhantomBpt: boolean;
@@ -2497,6 +2499,7 @@ export type GetPoolsQuery = {
               };
               allTokens: Array<{
                   __typename: 'GqlPoolTokenExpanded';
+                  id: string;
                   address: string;
                   isNested: boolean;
                   isPhantomBpt: boolean;
@@ -2537,6 +2540,7 @@ export type GetPoolsQuery = {
               };
               allTokens: Array<{
                   __typename: 'GqlPoolTokenExpanded';
+                  id: string;
                   address: string;
                   isNested: boolean;
                   isPhantomBpt: boolean;
@@ -2577,6 +2581,7 @@ export type GetPoolsQuery = {
               };
               allTokens: Array<{
                   __typename: 'GqlPoolTokenExpanded';
+                  id: string;
                   address: string;
                   isNested: boolean;
                   isPhantomBpt: boolean;
@@ -2617,6 +2622,7 @@ export type GetPoolsQuery = {
               };
               allTokens: Array<{
                   __typename: 'GqlPoolTokenExpanded';
+                  id: string;
                   address: string;
                   isNested: boolean;
                   isPhantomBpt: boolean;
@@ -3388,6 +3394,7 @@ export const GetPoolsDocument = gql`
                 }
             }
             allTokens {
+                id
                 address
                 isNested
                 isPhantomBpt

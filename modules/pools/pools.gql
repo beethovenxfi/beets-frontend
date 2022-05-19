@@ -48,6 +48,7 @@ query GetPools(
             }
         }
         allTokens {
+            id
             address
             isNested
             isPhantomBpt

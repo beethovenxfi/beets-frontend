@@ -361,6 +361,7 @@ export const GetPools = gql`
                 }
             }
             allTokens {
+                id
                 address
                 isNested
                 isPhantomBpt
