@@ -114,6 +114,7 @@ export const GqlPoolBase = gql`
             }
         }
         allTokens {
+            id
             address
             isNested
             isPhantomBpt

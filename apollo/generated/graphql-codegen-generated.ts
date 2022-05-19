@@ -2660,7 +2660,13 @@ type GqlPoolBase_GqlPoolElement_Fragment = {
             }>;
         };
     };
-    allTokens: Array<{ __typename: 'GqlPoolTokenExpanded'; address: string; isNested: boolean; isPhantomBpt: boolean }>;
+    allTokens: Array<{
+        __typename: 'GqlPoolTokenExpanded';
+        id: string;
+        address: string;
+        isNested: boolean;
+        isPhantomBpt: boolean;
+    }>;
 };
 
 type GqlPoolBase_GqlPoolLinear_Fragment = {
@@ -2692,7 +2698,13 @@ type GqlPoolBase_GqlPoolLinear_Fragment = {
             }>;
         };
     };
-    allTokens: Array<{ __typename: 'GqlPoolTokenExpanded'; address: string; isNested: boolean; isPhantomBpt: boolean }>;
+    allTokens: Array<{
+        __typename: 'GqlPoolTokenExpanded';
+        id: string;
+        address: string;
+        isNested: boolean;
+        isPhantomBpt: boolean;
+    }>;
 };
 
 type GqlPoolBase_GqlPoolLiquidityBootstrapping_Fragment = {
@@ -2724,7 +2736,13 @@ type GqlPoolBase_GqlPoolLiquidityBootstrapping_Fragment = {
             }>;
         };
     };
-    allTokens: Array<{ __typename: 'GqlPoolTokenExpanded'; address: string; isNested: boolean; isPhantomBpt: boolean }>;
+    allTokens: Array<{
+        __typename: 'GqlPoolTokenExpanded';
+        id: string;
+        address: string;
+        isNested: boolean;
+        isPhantomBpt: boolean;
+    }>;
 };
 
 type GqlPoolBase_GqlPoolPhantomStable_Fragment = {
@@ -2756,7 +2774,13 @@ type GqlPoolBase_GqlPoolPhantomStable_Fragment = {
             }>;
         };
     };
-    allTokens: Array<{ __typename: 'GqlPoolTokenExpanded'; address: string; isNested: boolean; isPhantomBpt: boolean }>;
+    allTokens: Array<{
+        __typename: 'GqlPoolTokenExpanded';
+        id: string;
+        address: string;
+        isNested: boolean;
+        isPhantomBpt: boolean;
+    }>;
 };
 
 type GqlPoolBase_GqlPoolStable_Fragment = {
@@ -2788,7 +2812,13 @@ type GqlPoolBase_GqlPoolStable_Fragment = {
             }>;
         };
     };
-    allTokens: Array<{ __typename: 'GqlPoolTokenExpanded'; address: string; isNested: boolean; isPhantomBpt: boolean }>;
+    allTokens: Array<{
+        __typename: 'GqlPoolTokenExpanded';
+        id: string;
+        address: string;
+        isNested: boolean;
+        isPhantomBpt: boolean;
+    }>;
 };
 
 type GqlPoolBase_GqlPoolWeighted_Fragment = {
@@ -2820,7 +2850,13 @@ type GqlPoolBase_GqlPoolWeighted_Fragment = {
             }>;
         };
     };
-    allTokens: Array<{ __typename: 'GqlPoolTokenExpanded'; address: string; isNested: boolean; isPhantomBpt: boolean }>;
+    allTokens: Array<{
+        __typename: 'GqlPoolTokenExpanded';
+        id: string;
+        address: string;
+        isNested: boolean;
+        isPhantomBpt: boolean;
+    }>;
 };
 
 export type GqlPoolBaseFragment =
@@ -2994,6 +3030,7 @@ export const GqlPoolBaseFragmentDoc = gql`
             }
         }
         allTokens {
+            id
             address
             isNested
             isPhantomBpt

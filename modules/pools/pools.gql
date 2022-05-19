@@ -86,6 +86,7 @@ fragment GqlPoolBase on GqlPoolBase {
         }
     }
     allTokens {
+        id
         address
         isNested
         isPhantomBpt
