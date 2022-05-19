@@ -27,7 +27,7 @@ interface Props extends ContainerProps {
 
 function PoolInvestForm({ pool, userBalances, ...rest }: Props) {
     const { priceFor } = useGetTokens();
-    const { investState, setInputAmount, getInputAmount, service } = useInvestState(pool);
+    const { investState, setInputAmount, getInputAmount, service, proportionalAmounts } = useInvestState(pool);
 
     return (
         <Container bg="gray.900" shadow="lg" rounded="lg" padding="4" maxW="full" {...rest}>
@@ -51,7 +51,7 @@ function PoolInvestForm({ pool, userBalances, ...rest }: Props) {
                             </InputLeftElement>
                             <Input
                                 type="number"
-                                placeholder={investState.proportionalAmounts[option.poolTokenAddress] || '0.0'}
+                                placeholder={proportionalAmounts[option.poolTokenAddress] || '0.0'}
                                 textAlign="right"
                                 size="lg"
                                 value={investState.inputAmounts[option.poolTokenAddress] || ''}
