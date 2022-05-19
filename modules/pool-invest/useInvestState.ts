@@ -3,6 +3,7 @@ import { AmountHumanReadable, AmountHumanReadableMap } from '~/lib/services/toke
 import { GqlPoolUnion } from '~/apollo/generated/graphql-codegen-generated';
 import { merge, pickBy } from 'lodash';
 import { poolGetServiceForPool } from '~/lib/services/pool/pool-util';
+import { useGetTokens } from '~/modules/global/useToken';
 
 interface InvestState {
     inputAmounts: AmountHumanReadableMap;
@@ -13,9 +14,11 @@ export const investStateVar = makeVar<InvestState>({ inputAmounts: {}, priceImpa
 export const investProportionalAmountsVar = makeVar<AmountHumanReadableMap>({});
 
 export function useInvestState(pool: GqlPoolUnion) {
+    const { priceFor } = useGetTokens();
     const investState = useReactiveVar(investStateVar);
     const proportionalAmounts = useReactiveVar(investProportionalAmountsVar);
     const service = poolGetServiceForPool(pool);
+    const hasProportionalSuggestions = Object.keys(proportionalAmounts).length > 0;
 
     function getInputAmount(tokenAddress: string) {
         return investState.inputAmounts[tokenAddress] || '0';
@@ -50,11 +53,13 @@ export function useInvestState(pool: GqlPoolUnion) {
     }
 
     return {
-        investState,
+        inputAmounts: investState.inputAmounts,
         proportionalAmounts,
+        priceImpact: investState.priceImpact,
         getInputAmount,
         setInputAmount,
         service,
+        hasProportionalSuggestions,
     };
 }
 
