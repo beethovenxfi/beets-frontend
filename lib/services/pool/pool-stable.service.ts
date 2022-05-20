@@ -64,13 +64,16 @@ export class PoolStableService implements PoolService {
         );
     }
 
-    public async joinGetEstimate(tokenAmountsIn: TokenAmountHumanReadable[]): Promise<PoolJoinEstimateOutput> {
+    public async joinGetEstimate(
+        tokenAmountsIn: TokenAmountHumanReadable[],
+        slippage: AmountHumanReadable,
+    ): Promise<PoolJoinEstimateOutput> {
         const bptAmount = this.exactTokensInForBPTOut(tokenAmountsIn);
 
         if (bptAmount.lt(0)) {
             return {
                 priceImpact: 0,
-                bptReceived: '0',
+                minBptReceived: '0',
             };
         }
 
@@ -80,7 +83,7 @@ export class PoolStableService implements PoolService {
 
         return {
             priceImpact: 0,
-            bptReceived: '0',
+            minBptReceived: '0',
         };
     }
 

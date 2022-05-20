@@ -65,18 +65,22 @@ export class PoolWeightedService implements PoolService {
         );
     }
 
-    public async joinGetEstimate(tokenAmountsIn: TokenAmountHumanReadable[]): Promise<PoolJoinEstimateOutput> {
+    public async joinGetEstimate(
+        tokenAmountsIn: TokenAmountHumanReadable[],
+        slippage: AmountHumanReadable,
+    ): Promise<PoolJoinEstimateOutput> {
         const bptAmount = this.exactTokensInForBPTOut(tokenAmountsIn);
 
         if (bptAmount.lt(0)) {
-            return { priceImpact: 0, bptReceived: '0' };
+            return { priceImpact: 0, minBptReceived: '0' };
         }
 
         const bptZeroPriceImpact = this.bptForTokensZeroPriceImpact(tokenAmountsIn);
+        const minBptReceived = bptAmount.minus(bptAmount.times(slippage)).toFixed(0);
 
         return {
             priceImpact: bptAmount.div(bptZeroPriceImpact).minus(1).toNumber(),
-            bptReceived: formatFixed(bptAmount.toString(), 18),
+            minBptReceived: formatFixed(minBptReceived.toString(), 18),
         };
     }
 

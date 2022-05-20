@@ -38,14 +38,17 @@ export class PoolPhantomStableService implements PoolService {
         return '';
     }
 
-    public async joinGetEstimate(tokenAmountsIn: TokenAmountHumanReadable[]): Promise<PoolJoinEstimateOutput> {
+    public async joinGetEstimate(
+        tokenAmountsIn: TokenAmountHumanReadable[],
+        slippage: AmountHumanReadable,
+    ): Promise<PoolJoinEstimateOutput> {
         //TODO: determine the bpt amount received for tokenAmountsIn
         const bptAmount = BigNumber.from(0);
 
         if (bptAmount.lt(0)) {
             return {
                 priceImpact: 0,
-                bptReceived: '0',
+                minBptReceived: '0',
             };
         }
         const bptZeroPriceImpact = this.bptForTokensZeroPriceImpact(tokenAmountsIn);
@@ -54,7 +57,7 @@ export class PoolPhantomStableService implements PoolService {
 
         return {
             priceImpact: 0,
-            bptReceived: '0',
+            minBptReceived: '0',
         };
     }
 

@@ -6,7 +6,10 @@ export interface PoolService {
     joinGetProportionalSuggestionForFixedAmount?(
         fixedAmount: TokenAmountHumanReadable,
     ): Promise<TokenAmountHumanReadable[]>;
-    joinGetEstimate(tokenAmountsIn: TokenAmountHumanReadable[]): Promise<PoolJoinEstimateOutput>;
+    joinGetEstimate(
+        tokenAmountsIn: TokenAmountHumanReadable[],
+        slippage: AmountHumanReadable,
+    ): Promise<PoolJoinEstimateOutput>;
     joinGetContractCallData(data: PoolJoinData): Promise<PoolJoinContractCallData>;
     //TODO: needs functions for num BPT estimation for single or proportional join
 
@@ -28,7 +31,7 @@ interface PoolJoinBase {
 
 export interface PoolJoinEstimateOutput {
     priceImpact: number;
-    bptReceived: string;
+    minBptReceived: string;
 }
 
 export interface PoolJoinInit extends PoolJoinBase {

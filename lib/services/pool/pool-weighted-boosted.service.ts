@@ -25,10 +25,13 @@ export class PoolWeightedBoostedService implements PoolService {
         return '';
     }
 
-    public async joinGetEstimate(tokenAmountsIn: TokenAmountHumanReadable[]): Promise<PoolJoinEstimateOutput> {
+    public async joinGetEstimate(
+        tokenAmountsIn: TokenAmountHumanReadable[],
+        slippage: AmountHumanReadable,
+    ): Promise<PoolJoinEstimateOutput> {
         return {
             priceImpact: 0,
-            bptReceived: '0',
+            minBptReceived: '0',
         };
     }
 

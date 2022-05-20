@@ -8,11 +8,12 @@ import { GqlPoolUnion } from '~/apollo/generated/graphql-codegen-generated';
 import { map, merge, pickBy } from 'lodash';
 import { poolGetServiceForPool } from '~/lib/services/pool/pool-util';
 import { PoolJoinContractCallData } from '~/lib/services/pool/pool-types';
+import { useSlippage } from '~/modules/global/useSlippage';
 
 interface InvestState {
     inputAmounts: AmountHumanReadableMap;
     priceImpact: number;
-    bptReceived: string;
+    minBptReceived: string;
     contractCallData: PoolJoinContractCallData | null;
     tokenAmountsIn: TokenAmountHumanReadable[];
 }
@@ -20,7 +21,7 @@ interface InvestState {
 export const investStateVar = makeVar<InvestState>({
     inputAmounts: {},
     priceImpact: 0,
-    bptReceived: '0',
+    minBptReceived: '0',
     contractCallData: null,
     tokenAmountsIn: [],
 });
@@ -31,6 +32,7 @@ export function useInvestState(pool: GqlPoolUnion) {
     const proportionalAmounts = useReactiveVar(investProportionalAmountsVar);
     const service = poolGetServiceForPool(pool);
     const hasProportionalSuggestions = Object.keys(proportionalAmounts).length > 0;
+    const { slippage } = useSlippage();
 
     async function setInputAmount(tokenAddress: string, amount: AmountHumanReadable) {
         const inputAmounts = { ...investState.inputAmounts, [tokenAddress]: amount };
@@ -61,20 +63,20 @@ export function useInvestState(pool: GqlPoolUnion) {
 
         if (addressesWithValue.length > 0) {
             const tokenAmountsIn = getTokenAmounts(inputAmounts);
-            const { priceImpact, bptReceived } = await service.joinGetEstimate(tokenAmountsIn);
+            const { priceImpact, minBptReceived } = await service.joinGetEstimate(tokenAmountsIn, slippage);
 
             const contractCallData = await service.joinGetContractCallData({
                 kind: 'ExactTokensInForBPTOut',
                 tokenAmountsIn,
                 maxAmountsIn: tokenAmountsIn,
-                minimumBpt: '0',
+                minimumBpt: minBptReceived,
             });
 
             investStateVar({
                 ...investState,
                 inputAmounts,
                 priceImpact,
-                bptReceived,
+                minBptReceived,
                 contractCallData,
                 tokenAmountsIn,
             });
@@ -83,7 +85,7 @@ export function useInvestState(pool: GqlPoolUnion) {
                 ...investState,
                 inputAmounts,
                 priceImpact: 0,
-                bptReceived: '0',
+                minBptReceived: '0',
                 contractCallData: null,
                 tokenAmountsIn: [],
             });
