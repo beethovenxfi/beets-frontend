@@ -3,7 +3,9 @@ import {
     PoolExitBPTInForExactTokensOut,
     PoolExitData,
     PoolExitExactBPTInForOneTokenOut,
+    PoolJoinContractCallData,
     PoolJoinData,
+    PoolJoinEstimateOutput,
     PoolService,
 } from '~/lib/services/pool/pool-types';
 import { AmountHumanReadable, TokenAmountHumanReadable } from '~/lib/services/token/token-types';
@@ -15,16 +17,19 @@ export class PoolWeightedBoostedService implements PoolService {
         this.pool = pool;
     }
 
-    public async joinPoolEncode(data: PoolJoinData): Promise<string> {
-        return '';
+    public async joinGetContractCallData(data: PoolJoinData): Promise<PoolJoinContractCallData> {
+        throw new Error('TODO');
     }
 
     public async exitPoolEncode(data: PoolExitData): Promise<string> {
         return '';
     }
 
-    public async joinEstimatePriceImpact(tokenAmountsIn: TokenAmountHumanReadable[]): Promise<number> {
-        return 0;
+    public async joinGetEstimate(tokenAmountsIn: TokenAmountHumanReadable[]): Promise<PoolJoinEstimateOutput> {
+        return {
+            priceImpact: 0,
+            bptReceived: '0',
+        };
     }
 
     public async exitEstimatePriceImpact(

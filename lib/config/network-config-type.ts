@@ -32,5 +32,6 @@ export interface NetworkConfig {
     };
     balancer: {
         vault: string;
+        batchRelayer: string;
     };
 }

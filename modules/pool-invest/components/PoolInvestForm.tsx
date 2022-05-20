@@ -1,9 +1,10 @@
-import { Button, Container, ContainerProps, Flex, Heading } from '@chakra-ui/react';
+import { Alert, AlertIcon, Button, Container, ContainerProps, Flex, Heading } from '@chakra-ui/react';
 import { GqlPoolUnion } from '~/apollo/generated/graphql-codegen-generated';
 import { Settings } from 'react-feather';
 import { TokenAmountHumanReadable } from '~/lib/services/token/token-types';
-import { useInvestState } from '~/modules/pool-invest/useInvestState';
+import { useInvestState } from '~/modules/pool-invest/lib/useInvestState';
 import { PoolInvestFormTokenInput } from '~/modules/pool-invest/components/PoolInvestFormTokenInput';
+import { useJoinPool } from '~/modules/pool-invest/lib/useJoinPool';
 
 interface Props extends ContainerProps {
     pool: GqlPoolUnion;
@@ -11,7 +12,9 @@ interface Props extends ContainerProps {
 }
 
 function PoolInvestForm({ pool, userBalances, ...rest }: Props) {
-    const { inputAmounts, setInputAmount, proportionalAmounts } = useInvestState(pool);
+    const { inputAmounts, setInputAmount, proportionalAmounts, contractCallData, tokenAmountsIn } =
+        useInvestState(pool);
+    const { joinPool, isSubmitting, submitError } = useJoinPool(pool);
 
     return (
         <Container bg="gray.900" shadow="lg" rounded="lg" padding="4" maxW="full" {...rest}>
@@ -34,9 +37,26 @@ function PoolInvestForm({ pool, userBalances, ...rest }: Props) {
                     mb={4}
                 />
             ))}
-            <Button width="full" bgColor="green.400" mt={4}>
+            <Button
+                width="full"
+                bgColor="green.400"
+                mt={4}
+                disabled={contractCallData === null || isSubmitting}
+                isLoading={isSubmitting}
+                onClick={() => {
+                    if (contractCallData) {
+                        joinPool(contractCallData, tokenAmountsIn);
+                    }
+                }}
+            >
                 Invest
             </Button>
+            {submitError ? (
+                <Alert status="error" mt={4}>
+                    <AlertIcon />
+                    An error occurred: {submitError.message}
+                </Alert>
+            ) : null}
         </Container>
     );
 }

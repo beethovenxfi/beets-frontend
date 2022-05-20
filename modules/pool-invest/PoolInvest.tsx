@@ -1,10 +1,10 @@
 import { Box, Container, Flex, Heading } from '@chakra-ui/react';
 import { usePool } from '~/modules/pool/usePool';
 import { useUserBalances } from '~/modules/global/useUserBalances';
-import PoolTokensInWallet from '~/modules/pool-invest/PoolTokensInWallet';
+import PoolTokensInWallet from '~/modules/pool-invest/components/PoolTokensInWallet';
 import { tokenGetAmountForAddress } from '~/lib/services/token/token-util';
-import PoolMyPoolBalance from '~/modules/pool-invest/PoolMyPoolBalance';
-import PoolInvestForm from '~/modules/pool-invest/PoolInvestForm';
+import PoolMyPoolBalance from '~/modules/pool-invest/components/PoolMyPoolBalance';
+import PoolInvestForm from '~/modules/pool-invest/components/PoolInvestForm';
 
 interface Props {
     poolId: string;

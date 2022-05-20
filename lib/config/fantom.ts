@@ -26,5 +26,6 @@ export const fantomNetworkConfig: NetworkConfig = {
     },
     balancer: {
         vault: '0x20dd72Ed959b6147912C2e529F0a0C651c33c9ce',
+        batchRelayer: '0xC852F984CA3310AFc596adeB17EfcB0542646920',
     },
 };

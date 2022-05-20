@@ -16,7 +16,9 @@ import {
     PoolExitBPTInForExactTokensOut,
     PoolExitData,
     PoolExitExactBPTInForOneTokenOut,
+    PoolJoinContractCallData,
     PoolJoinData,
+    PoolJoinEstimateOutput,
     PoolService,
 } from '~/lib/services/pool/pool-types';
 import { formatFixed } from '@ethersproject/bignumber';
@@ -38,14 +40,8 @@ export class PoolStableService implements PoolService {
         this.pool = pool;
     }
 
-    public async joinPoolEncode(data: PoolJoinData): Promise<string> {
-        if (data.zapIntoMasterchefFarm) {
-            //do a batch relayer join
-        } else {
-            const encoded = this.encodeJoinPool(data);
-        }
-
-        return '';
+    public async joinGetContractCallData(data: PoolJoinData): Promise<PoolJoinContractCallData> {
+        throw new Error('TODO');
     }
 
     public async exitPoolEncode(data: PoolExitData): Promise<string> {
@@ -68,16 +64,24 @@ export class PoolStableService implements PoolService {
         );
     }
 
-    public async joinEstimatePriceImpact(tokenAmountsIn: TokenAmountHumanReadable[]): Promise<number> {
+    public async joinGetEstimate(tokenAmountsIn: TokenAmountHumanReadable[]): Promise<PoolJoinEstimateOutput> {
         const bptAmount = this.exactTokensInForBPTOut(tokenAmountsIn);
 
         if (bptAmount.lt(0)) {
-            return 0;
+            return {
+                priceImpact: 0,
+                bptReceived: '0',
+            };
         }
 
         const bptZeroPriceImpact = this.bptForTokensZeroPriceImpact(tokenAmountsIn);
 
-        return BigNumber.from(1).sub(bptAmount.div(bptZeroPriceImpact)).toNumber();
+        //return BigNumber.from(1).sub(bptAmount.div(bptZeroPriceImpact)).toNumber();
+
+        return {
+            priceImpact: 0,
+            bptReceived: '0',
+        };
     }
 
     public async exitEstimatePriceImpact(

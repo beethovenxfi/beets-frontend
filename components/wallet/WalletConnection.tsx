@@ -1,15 +1,7 @@
-import {
-    apiProvider,
-    configureChains,
-    ConnectButton,
-    getDefaultWallets,
-    RainbowKitProvider,
-    Theme,
-} from '@rainbow-me/rainbowkit';
-import { chain, createClient, WagmiProvider } from 'wagmi';
-import { providers } from 'ethers';
+import { apiProvider, configureChains, ConnectButton, getDefaultWallets } from '@rainbow-me/rainbowkit';
+import { createClient } from 'wagmi';
 import BeetsButton from '../button/Button';
-import { Box, Flex, HStack, Text } from '@chakra-ui/layout';
+import { Box, HStack, Text } from '@chakra-ui/layout';
 import Image from 'next/image';
 import { ChevronDown } from 'react-feather';
 import BeetsSmart from '~/assets/icons/beetx-smarts.svg';

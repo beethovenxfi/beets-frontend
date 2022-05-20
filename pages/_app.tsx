@@ -1,5 +1,5 @@
 import '../styles/globals.css';
-import "@rainbow-me/rainbowkit/styles.css";
+import '@rainbow-me/rainbowkit/styles.css';
 
 import type { AppProps } from 'next/app';
 import { useApollo } from '~/apollo/client';
@@ -42,6 +42,8 @@ import { chakraTheme } from '~/styles/chakraTheme';
 import { WagmiProvider } from 'wagmi';
 import { wagmiClient, chains } from '~/components/wallet/WalletConnection';
 import { RainbowKitProvider } from '@rainbow-me/rainbowkit';
+import { useRouter } from 'next/router';
+import { useEffect } from 'react';
 
 echarts.use([
     LineChart,
@@ -76,6 +78,29 @@ echarts.use([
 
 function MyApp({ Component, pageProps }: AppProps) {
     const client = useApollo(pageProps);
+    const router = useRouter();
+
+    /*useEffect(() => {
+        const handleStart = (url: string) => {
+            console.log(`Loading: ${url}`);
+            // NProgress.start()
+            //setPageChanged(true);
+        };
+        const handleStop = () => {
+            console.log(`end`);
+            //setPageChanged(false);
+        };
+
+        router.events.on('routeChangeStart', handleStart);
+        router.events.on('routeChangeComplete', handleStop);
+        router.events.on('routeChangeError', handleStop);
+
+        return () => {
+            router.events.off('routeChangeStart', handleStart);
+            router.events.off('routeChangeComplete', handleStop);
+            router.events.off('routeChangeError', handleStop);
+        };
+    }, [router]);*/
 
     return (
         <WagmiProvider client={wagmiClient}>
@@ -94,7 +119,7 @@ function MyApp({ Component, pageProps }: AppProps) {
                                     <GridItem colSpan={12} height="fit-content">
                                         <Navbar />
                                     </GridItem>
-                                    <GridItem colSpan={12} paddingTop='12'>
+                                    <GridItem colSpan={12} paddingTop="12">
                                         <Component {...pageProps} />
                                     </GridItem>
                                 </Grid>

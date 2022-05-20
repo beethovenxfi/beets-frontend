@@ -1,33 +1,41 @@
 import { makeVar, useReactiveVar } from '@apollo/client';
-import { AmountHumanReadable, AmountHumanReadableMap } from '~/lib/services/token/token-types';
+import {
+    AmountHumanReadable,
+    AmountHumanReadableMap,
+    TokenAmountHumanReadable,
+} from '~/lib/services/token/token-types';
 import { GqlPoolUnion } from '~/apollo/generated/graphql-codegen-generated';
-import { merge, pickBy } from 'lodash';
+import { map, merge, pickBy } from 'lodash';
 import { poolGetServiceForPool } from '~/lib/services/pool/pool-util';
-import { useGetTokens } from '~/modules/global/useToken';
+import { PoolJoinContractCallData } from '~/lib/services/pool/pool-types';
 
 interface InvestState {
     inputAmounts: AmountHumanReadableMap;
     priceImpact: number;
+    bptReceived: string;
+    contractCallData: PoolJoinContractCallData | null;
+    tokenAmountsIn: TokenAmountHumanReadable[];
 }
 
-export const investStateVar = makeVar<InvestState>({ inputAmounts: {}, priceImpact: 0 });
+export const investStateVar = makeVar<InvestState>({
+    inputAmounts: {},
+    priceImpact: 0,
+    bptReceived: '0',
+    contractCallData: null,
+    tokenAmountsIn: [],
+});
 export const investProportionalAmountsVar = makeVar<AmountHumanReadableMap>({});
 
 export function useInvestState(pool: GqlPoolUnion) {
-    const { priceFor } = useGetTokens();
     const investState = useReactiveVar(investStateVar);
     const proportionalAmounts = useReactiveVar(investProportionalAmountsVar);
     const service = poolGetServiceForPool(pool);
     const hasProportionalSuggestions = Object.keys(proportionalAmounts).length > 0;
 
-    function getInputAmount(tokenAddress: string) {
-        return investState.inputAmounts[tokenAddress] || '0';
-    }
-
     async function setInputAmount(tokenAddress: string, amount: AmountHumanReadable) {
-        investStateVar(merge({ ...investState }, { inputAmounts: { [tokenAddress]: amount } }));
+        const inputAmounts = { ...investState.inputAmounts, [tokenAddress]: amount };
 
-        const inputAmountsWithValue = pickBy(investState.inputAmounts, (amount) => amount !== '');
+        const inputAmountsWithValue = pickBy(inputAmounts, (amount) => amount !== '');
         const addressesWithValue = Object.keys(inputAmountsWithValue);
 
         if (addressesWithValue.length > 0 && service.joinGetProportionalSuggestionForFixedAmount) {
@@ -39,26 +47,56 @@ export function useInvestState(pool: GqlPoolUnion) {
             });
             const proportionalSuggestion = Object.fromEntries(result.map((item) => [item.address, item.amount]));
 
-            if (isProportionalSuggestionValid(investState.inputAmounts, proportionalSuggestion)) {
+            if (isProportionalSuggestionValid(inputAmounts, proportionalSuggestion)) {
                 investProportionalAmountsVar(proportionalSuggestion);
             } else {
                 investProportionalAmountsVar({});
             }
         } else if (
             addressesWithValue.length === 0 ||
-            !isProportionalSuggestionValid(investState.inputAmounts, proportionalAmounts)
+            !isProportionalSuggestionValid(inputAmounts, proportionalAmounts)
         ) {
             investProportionalAmountsVar({});
+        }
+
+        if (addressesWithValue.length > 0) {
+            const tokenAmountsIn = getTokenAmounts(inputAmounts);
+            const { priceImpact, bptReceived } = await service.joinGetEstimate(tokenAmountsIn);
+
+            const contractCallData = await service.joinGetContractCallData({
+                kind: 'ExactTokensInForBPTOut',
+                tokenAmountsIn,
+                maxAmountsIn: tokenAmountsIn,
+                minimumBpt: '0',
+            });
+
+            investStateVar({
+                ...investState,
+                inputAmounts,
+                priceImpact,
+                bptReceived,
+                contractCallData,
+                tokenAmountsIn,
+            });
+        } else {
+            investStateVar({
+                ...investState,
+                inputAmounts,
+                priceImpact: 0,
+                bptReceived: '0',
+                contractCallData: null,
+                tokenAmountsIn: [],
+            });
         }
     }
 
     return {
+        setInputAmount,
         inputAmounts: investState.inputAmounts,
         proportionalAmounts,
         priceImpact: investState.priceImpact,
-        getInputAmount,
-        setInputAmount,
-        service,
+        contractCallData: investState.contractCallData,
+        tokenAmountsIn: investState.tokenAmountsIn,
         hasProportionalSuggestions,
     };
 }
@@ -81,4 +119,11 @@ function isProportionalSuggestionValid(
     }
 
     return true;
+}
+
+function getTokenAmounts(amountMap: AmountHumanReadableMap): TokenAmountHumanReadable[] {
+    return map(
+        pickBy(amountMap, (amount) => amount !== ''),
+        (amount, address) => ({ amount, address }),
+    );
 }
