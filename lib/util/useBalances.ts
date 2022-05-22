@@ -1,5 +1,5 @@
 import { useMultiCall } from '~/lib/util/useMultiCall';
-import { TokenBase } from '~/lib/services/token/token-types';
+import { TokenAmountHumanReadable, TokenBase } from '~/lib/services/token/token-types';
 import ERC20Abi from '../abi/ERC20.json';
 import { AddressZero } from '@ethersproject/constants';
 import { networkConfig } from '~/lib/config/network-config';
@@ -33,7 +33,7 @@ export function useBalances(account: string | null, tokens: TokenBase[]) {
         return Promise.all([ethBalance.refetch, multicall.refetch]);
     }
 
-    const balances = multicall.data
+    const balances: TokenAmountHumanReadable[] = multicall.data
         ? filteredTokens.map((token, index) => {
               return {
                   address: token.address,
@@ -45,13 +45,12 @@ export function useBalances(account: string | null, tokens: TokenBase[]) {
           })
         : [];
 
+    if (containsEth) {
+        balances.push({ address: networkConfig.eth.address.toLowerCase(), amount: ethBalance.data?.formatted || '0' });
+    }
+
     return {
-        data: [
-            ...balances,
-            ...(containsEth
-                ? [{ address: networkConfig.eth.address.toLowerCase(), amount: ethBalance.data?.formatted || '0' }]
-                : []),
-        ],
+        data: balances,
         isLoading: ethBalance.isLoading || multicall.isLoading,
         error: ethBalance.error || multicall.error,
         refetch,

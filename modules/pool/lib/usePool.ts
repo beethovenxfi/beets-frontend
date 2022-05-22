@@ -3,7 +3,7 @@ import { TokenBase } from '~/lib/services/token/token-types';
 import { uniqBy } from 'lodash';
 import { useContext, useEffect } from 'react';
 import { PoolContext } from '~/modules/pool/components/PoolProvider';
-import { poolGetServiceForPool } from '~/lib/services/pool/pool-util';
+import { poolGetServiceForPool, poolGetTokensWithoutPhantomBpt } from '~/lib/services/pool/pool-util';
 import { useEffectOnce } from '~/lib/util/custom-hooks';
 
 export function usePool() {
@@ -46,5 +46,6 @@ export function usePool() {
         allTokens,
         allTokenAddresses: allTokens.map((token) => token.address),
         bpt,
+        poolTokensWithoutPhantomBpt: poolGetTokensWithoutPhantomBpt(pool),
     };
 }

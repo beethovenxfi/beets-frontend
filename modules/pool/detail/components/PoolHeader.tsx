@@ -1,7 +1,7 @@
 import { GqlPoolBase, GqlPoolUnion } from '~/apollo/generated/graphql-codegen-generated';
 import { Box, Flex, Heading, Text } from '@chakra-ui/react';
 import TokenAvatar from '~/components/token-avatar/TokenAvatar';
-import { poolTokensWithoutPhantomBpt } from '~/lib/services/pool/pool-util';
+import { poolGetTokensWithoutPhantomBpt } from '~/lib/services/pool/pool-util';
 import numeral from 'numeral';
 
 interface Props {
@@ -9,7 +9,7 @@ interface Props {
 }
 
 function PoolHeader({ pool }: Props) {
-    const poolTokens = poolTokensWithoutPhantomBpt(pool);
+    const poolTokens = poolGetTokensWithoutPhantomBpt(pool);
 
     return (
         <>

@@ -10,7 +10,7 @@ import { PoolPhantomStableService } from '~/lib/services/pool/pool-phantom-stabl
 import { PoolWeightedService } from '~/lib/services/pool/pool-weighted.service';
 import { PoolWeightedBoostedService } from '~/lib/services/pool/pool-weighted-boosted.service';
 
-export function poolTokensWithoutPhantomBpt(pool: GqlPoolUnion | GqlPoolPhantomStableNested | GqlPoolLinearNested) {
+export function poolGetTokensWithoutPhantomBpt(pool: GqlPoolUnion | GqlPoolPhantomStableNested | GqlPoolLinearNested) {
     return pool.tokens.filter((token) => token.address !== pool.address);
 }
 

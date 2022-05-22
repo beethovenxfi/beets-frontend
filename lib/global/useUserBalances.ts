@@ -1,10 +1,7 @@
 import { useGetTokens } from '~/lib/global/useToken';
-import { tokenService } from '~/lib/services/token/token.service';
-import { useState } from 'react';
+import { useEffect } from 'react';
 import { useAccount } from 'wagmi';
-import { useAsyncEffect } from '~/lib/util/custom-hooks';
-import { AmountHumanReadable, TokenAmountHumanReadable, TokenBase } from '~/lib/services/token/token-types';
-import { useBoolean } from '@chakra-ui/hooks';
+import { AmountHumanReadable, TokenBase } from '~/lib/services/token/token-types';
 import { useBalances } from '~/lib/util/useBalances';
 
 export function useUserBalances(addresses: string[], additionalTokens?: TokenBase[]) {
@@ -19,20 +16,16 @@ export function useUserBalances(addresses: string[], additionalTokens?: TokenBas
         return data?.find((balance) => balance.address === address)?.amount || '0';
     }
 
-    useAsyncEffect(async () => {
-        loadUserBalances().catch();
-    }, [accountData?.address]);
-
-    async function loadUserBalances() {
+    useEffect(() => {
         if (accountData?.address) {
             refetch().catch();
         }
-    }
+    }, [accountData?.address]);
 
     return {
         userBalances: data,
         getUserBalance,
-        loadUserBalances,
-        loadingUserBalances: isLoading,
+        refetch,
+        isLoading,
     };
 }
