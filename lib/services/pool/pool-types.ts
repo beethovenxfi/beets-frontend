@@ -16,11 +16,14 @@ export interface PoolService {
     joinGetContractCallData(data: PoolJoinData): Promise<PoolJoinContractCallData>;
 
     exitGetProportionalWithdrawEstimate(bptIn: AmountHumanReadable): Promise<TokenAmountHumanReadable[]>;
-    exitGetSingleAssetWithdrawEstimate(
+    exitGetSingleAssetWithdrawForBptIn(
         bptIn: AmountHumanReadable,
         tokenOutAddress: string,
-    ): Promise<PoolExitSingleAssetWithdrawEstimateOutput>;
-    exitPoolEncode(data: PoolExitData): Promise<string>;
+    ): Promise<PoolExitSingleAssetWithdrawForBptInOutput>;
+    exitGetBptInForSingleAssetWithdraw(
+        tokenAmount: TokenAmountHumanReadable,
+    ): Promise<PoolExitBptInSingleAssetWithdrawOutput>;
+    exitGetContractCallData(data: PoolExitData): Promise<PoolExitContractCallData>;
 }
 
 export type PoolJoinData =
@@ -39,8 +42,13 @@ export interface PoolJoinEstimateOutput {
     minBptReceived: string;
 }
 
-export interface PoolExitSingleAssetWithdrawEstimateOutput {
+export interface PoolExitSingleAssetWithdrawForBptInOutput {
     tokenAmount: AmountHumanReadable;
+    priceImpact: number;
+}
+
+export interface PoolExitBptInSingleAssetWithdrawOutput {
+    bptIn: AmountHumanReadable;
     priceImpact: number;
 }
 
@@ -71,19 +79,25 @@ export type PoolExitData =
     | PoolExitExactBPTInForTokensOut
     | PoolExitBPTInForExactTokensOut;
 
-export interface PoolExitExactBPTInForOneTokenOut {
+export interface PoolExitBase {
+    slippage: number;
+}
+
+export interface PoolExitExactBPTInForOneTokenOut extends PoolExitBase {
     kind: 'ExactBPTInForOneTokenOut';
     bptAmountIn: AmountHumanReadable;
     tokenOutAddress: string;
     userBptBalance: AmountHumanReadable;
+    amountOut: AmountHumanReadable;
 }
 
-export interface PoolExitExactBPTInForTokensOut {
+export interface PoolExitExactBPTInForTokensOut extends PoolExitBase {
     kind: 'ExactBPTInForTokensOut';
     bptAmountIn: AmountHumanReadable;
+    amountsOut: TokenAmountHumanReadable[];
 }
 
-export interface PoolExitBPTInForExactTokensOut {
+export interface PoolExitBPTInForExactTokensOut extends PoolExitBase {
     kind: 'BPTInForExactTokensOut';
     amountsOut: TokenAmountHumanReadable[];
     maxBPTAmountIn: AmountHumanReadable;
@@ -100,6 +114,24 @@ export interface PoolJoinPoolContractCallData {
 }
 
 export interface PoolJoinBatchSwapContractCallData {
+    type: 'BatchSwap';
+    kind: SwapKind;
+    swaps: BatchSwapStep[];
+    assets: string[];
+    funds: FundManagement;
+    limits: BigNumberish[];
+}
+
+export type PoolExitContractCallData = PoolExitPoolContractCallData | PoolExitBatchSwapContractCallData;
+
+export interface PoolExitPoolContractCallData {
+    type: 'ExitPool';
+    assets: string[];
+    minAmountsOut: BigNumberish[];
+    userData: string;
+}
+
+export interface PoolExitBatchSwapContractCallData {
     type: 'BatchSwap';
     kind: SwapKind;
     swaps: BatchSwapStep[];

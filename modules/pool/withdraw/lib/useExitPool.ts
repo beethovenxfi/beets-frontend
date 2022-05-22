@@ -1,8 +1,7 @@
 import { useSubmitTransaction, vaultContractConfig } from '~/lib/util/useSubmitTransaction';
 import { GqlPoolUnion } from '~/apollo/generated/graphql-codegen-generated';
-import { PoolJoinContractCallData } from '~/lib/services/pool/pool-types';
+import { PoolExitContractCallData } from '~/lib/services/pool/pool-types';
 import { useAccount } from 'wagmi';
-import { TokenAmountHumanReadable } from '~/lib/services/token/token-types';
 import { tokenAmountsConcatenatedString } from '~/lib/services/token/token-util';
 
 export function useExitPool(pool: GqlPoolUnion) {
@@ -13,8 +12,8 @@ export function useExitPool(pool: GqlPoolUnion) {
         toastType: 'EXIT',
     });
 
-    function exitPool(contractCallData: PoolJoinContractCallData, tokenAmountsIn: TokenAmountHumanReadable[]) {
-        if (contractCallData.type === 'JoinPool') {
+    function exitPool(contractCallData: PoolExitContractCallData) {
+        if (contractCallData.type === 'ExitPool') {
             submit({
                 args: [
                     pool.id,
@@ -22,12 +21,12 @@ export function useExitPool(pool: GqlPoolUnion) {
                     accountData?.address,
                     {
                         assets: contractCallData.assets,
-                        maxAmountsIn: contractCallData.maxAmountsIn,
+                        minAmountsOut: contractCallData.minAmountsOut,
                         userData: contractCallData.userData,
-                        fromInternalBalance: false,
+                        toInternalBalance: false,
                     },
                 ],
-                toastText: tokenAmountsConcatenatedString(tokenAmountsIn, pool.allTokens),
+                toastText: tokenAmountsConcatenatedString([], pool.allTokens),
             });
         }
     }

@@ -1,6 +1,6 @@
 import { GqlPoolBase, GqlPoolTokenBase, GqlPoolUnion } from '~/apollo/generated/graphql-codegen-generated';
 import OldBigNumber from 'bignumber.js';
-import { oldBnum, oldBnumDenormAmount, oldBnumFromBnum, oldBnumZero } from '~/lib/services/pool/lib/old-big-number';
+import { oldBnum, oldBnumScaleAmount, oldBnumFromBnum, oldBnumZero } from '~/lib/services/pool/lib/old-big-number';
 import { poolGetRequiredToken, poolScaleAmp } from '~/lib/services/pool/lib/pool-util';
 import { TokenAmountHumanReadable } from '~/lib/services/token/token-types';
 import { parseUnits } from 'ethers/lib/utils';
@@ -13,23 +13,23 @@ export class PoolBaseService {
     }
 
     public get totalSharesScaled(): OldBigNumber {
-        return oldBnumDenormAmount(this.pool.dynamicData.totalShares);
+        return oldBnumScaleAmount(this.pool.dynamicData.totalShares);
     }
 
     public get swapFeeScaled(): OldBigNumber {
-        return oldBnumDenormAmount(this.pool.dynamicData.swapFee);
+        return oldBnumScaleAmount(this.pool.dynamicData.swapFee);
     }
 
     public get tokenBalancesScaled(): OldBigNumber[] {
-        return this.pool.tokens.map((token) => oldBnumDenormAmount(token.balance, token.decimals));
+        return this.pool.tokens.map((token) => oldBnumScaleAmount(token.balance, token.decimals));
     }
 
     public get tokenWeightsScaled(): OldBigNumber[] {
-        return this.pool.tokens.map((token) => oldBnumDenormAmount(token.weight || '0', 18));
+        return this.pool.tokens.map((token) => oldBnumScaleAmount(token.weight || '0', 18));
     }
 
     public get priceRatesScaled(): OldBigNumber[] {
-        return this.pool.tokens.map((token) => oldBnumDenormAmount(token.priceRate, 18));
+        return this.pool.tokens.map((token) => oldBnumScaleAmount(token.priceRate, 18));
     }
 
     public get ampScaled(): OldBigNumber {

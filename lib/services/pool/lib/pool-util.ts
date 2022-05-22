@@ -1,6 +1,6 @@
 import { GqlPoolTokenBase } from '~/apollo/generated/graphql-codegen-generated';
 import { AmountHumanReadable, TokenAmountHumanReadable } from '~/lib/services/token/token-types';
-import { oldBnum, oldBnumDenormAmount, oldBnumZero } from '~/lib/services/pool/lib/old-big-number';
+import { oldBnum, oldBnumScaleAmount, oldBnumZero } from '~/lib/services/pool/lib/old-big-number';
 import OldBigNumber from 'bignumber.js';
 import { BigNumber } from 'ethers';
 import { formatUnits, parseUnits } from '@ethersproject/units';
@@ -17,7 +17,7 @@ export function oldBnumPoolScaleTokenAmounts(
     return poolTokens.map((poolToken) => {
         const amount = tokenAmounts.find((amount) => amount.address === poolToken.address);
 
-        return amount ? oldBnumDenormAmount(amount.amount, poolToken.decimals) : oldBnumZero();
+        return amount ? oldBnumScaleAmount(amount.amount, poolToken.decimals) : oldBnumZero();
     });
 }
 

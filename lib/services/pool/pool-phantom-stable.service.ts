@@ -3,7 +3,7 @@ import {
     PoolExitBPTInForExactTokensOut,
     PoolExitData,
     PoolExitExactBPTInForOneTokenOut,
-    PoolExitSingleAssetWithdrawEstimateOutput,
+    PoolExitSingleAssetWithdrawForBptInOutput,
     PoolJoinContractCallData,
     PoolJoinData,
     PoolJoinEstimateOutput,
@@ -92,7 +92,7 @@ export class PoolPhantomStableService implements PoolService {
     public async exitGetSingleAssetWithdrawEstimate(
         bptIn: AmountHumanReadable,
         tokenOutAddress: string,
-    ): Promise<PoolExitSingleAssetWithdrawEstimateOutput> {
+    ): Promise<PoolExitSingleAssetWithdrawForBptInOutput> {
         return {
             tokenAmount: '0',
             priceImpact: 0,

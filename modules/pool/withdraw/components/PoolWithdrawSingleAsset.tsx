@@ -1,0 +1,82 @@
+import {
+    Box,
+    Container,
+    ContainerProps,
+    Flex,
+    Input,
+    InputGroup,
+    InputLeftElement,
+    Link,
+    Text,
+} from '@chakra-ui/react';
+import TokenAvatar from '~/components/token-avatar/TokenAvatar';
+import { useWithdrawState } from '~/modules/pool/withdraw/lib/useWithdrawState';
+import { usePoolUserBalances } from '~/modules/pool/lib/usePoolUserBalances';
+import { usePool } from '~/modules/pool/lib/usePool';
+import { BoxProps } from '@chakra-ui/layout';
+import { useWithdrawSingleAsset } from '~/modules/pool/withdraw/lib/useWithdrawSingleAsset';
+
+interface Props extends BoxProps {}
+
+export function PoolWithdrawSingleAsset({ ...rest }: Props) {
+    const { allTokens } = usePool();
+    const { singleAssetWithdraw, setSingleAssetWithdrawAmount } = useWithdrawState();
+    const { userBptBalance } = usePoolUserBalances();
+    const { priceImpact, maxAmount } = useWithdrawSingleAsset();
+
+    const withdrawToken = allTokens.find((token) => token.address === singleAssetWithdraw?.address);
+
+    if (!singleAssetWithdraw || !withdrawToken) {
+        return null;
+    }
+
+    //TODO: precision
+    const isValid =
+        singleAssetWithdraw.amount === '' || parseFloat(singleAssetWithdraw.amount) <= parseFloat(maxAmount);
+
+    return (
+        <Box py={4} {...rest}>
+            <InputGroup>
+                <InputLeftElement pointerEvents="none" height="full" justifyContent="flex-start" ml={1}>
+                    <TokenAvatar address={withdrawToken.address} size="xs" mr={2} />
+                    <Text>{withdrawToken.symbol}</Text>
+                </InputLeftElement>
+                <Input
+                    type="number"
+                    placeholder={'0.0'}
+                    textAlign="right"
+                    size="lg"
+                    value={singleAssetWithdraw.amount || ''}
+                    onChange={(e) => {
+                        setSingleAssetWithdrawAmount({
+                            address: withdrawToken.address,
+                            amount: e.target.value,
+                        });
+                    }}
+                    isInvalid={!isValid}
+                />
+            </InputGroup>
+            <Flex>
+                <Box flex={1}>
+                    <Text color="gray.500">
+                        {maxAmount}
+                        {parseFloat(maxAmount) > 0 ? (
+                            <Link
+                                ml={2}
+                                color="green.300"
+                                userSelect="none"
+                                onClick={() => {
+                                    //setInputAmount(option.poolTokenAddress, userBalance);
+                                }}
+                            >
+                                Max
+                            </Link>
+                        ) : null}
+                    </Text>
+                </Box>
+            </Flex>
+            {!isValid ? <Text color="red.500">Exceeds wallet balance</Text> : null}
+            <Box pt={4}>Price impact: {priceImpact}</Box>
+        </Box>
+    );
+}

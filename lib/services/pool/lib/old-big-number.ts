@@ -2,7 +2,7 @@ import OldBigNumber from 'bignumber.js';
 import { parseUnits } from 'ethers/lib/utils';
 import { BigNumber } from 'ethers';
 import { AmountHumanReadable } from '~/lib/services/token/token-types';
-import { BigNumberish } from '@ethersproject/bignumber';
+import { BigNumberish, formatFixed } from '@ethersproject/bignumber';
 
 export function oldBnum(val: string | number | OldBigNumber): OldBigNumber {
     const number = typeof val === 'string' ? val : val ? val.toString() : '0';
@@ -33,8 +33,12 @@ export function oldBnumSum(amounts: string[]): OldBigNumber {
     return amounts.reduce((a, b) => oldBnum(a).plus(b), oldBnum(0));
 }
 
-export function oldBnumDenormAmount(amountHumanReadable: AmountHumanReadable, decimals: number = 18): OldBigNumber {
+export function oldBnumScaleAmount(amountHumanReadable: AmountHumanReadable, decimals: number = 18): OldBigNumber {
     return oldBnum(parseUnits(amountHumanReadable, decimals).toString());
+}
+
+export function oldBnumToHumanReadable(input: OldBigNumber, decimals: number = 18): AmountHumanReadable {
+    return formatFixed(input.toFixed(0).toString(), decimals);
 }
 
 export function oldBnumToBnum(num: OldBigNumber): BigNumber {
@@ -47,4 +51,14 @@ export function oldBnumFromBnum(num: BigNumber): OldBigNumber {
 
 export function oldBnumsToBigNumberish(nums: OldBigNumber[]) {
     return nums.map((num) => num.toString());
+}
+
+export function oldBnumSubtractSlippage(
+    amount: AmountHumanReadable,
+    decimals: number,
+    slippage: number,
+): AmountHumanReadable {
+    const amountScaled = oldBnumScaleAmount(amount, decimals);
+
+    return formatFixed(amountScaled.minus(amountScaled.times(slippage)).toFixed(0), decimals);
 }

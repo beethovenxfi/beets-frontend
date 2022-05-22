@@ -2,23 +2,25 @@ import { GqlPoolUnion } from '~/apollo/generated/graphql-codegen-generated';
 import { Box, Flex, Heading, Slider, SliderFilledTrack, SliderThumb, SliderTrack, Text } from '@chakra-ui/react';
 import numeral from 'numeral';
 import TokenAvatar from '~/components/token-avatar/TokenAvatar';
-import { useGetTokens } from '~/lib/global/useToken';
 import { BoxProps } from '@chakra-ui/layout';
-import { useInvestState } from '~/modules/pool/invest/lib/useInvestState';
+import { useWithdrawState } from '~/modules/pool/withdraw/lib/useWithdrawState';
+import { usePool } from '~/modules/pool/lib/usePool';
+import { useWithdrawProportionalAmounts } from '~/modules/pool/withdraw/lib/useWithdrawProportionalAmounts';
+import { useGetTokens } from '~/lib/global/useToken';
 
-interface Props extends BoxProps {
-    pool: GqlPoolUnion;
-    proportionalPercent: number;
-    setProportionalPercent: (value: number) => void;
-}
+interface Props extends BoxProps {}
 
-export function PoolWithdrawProportional({ pool, setProportionalPercent, proportionalPercent, ...rest }: Props) {
+export function PoolWithdrawProportional({ ...rest }: Props) {
+    const { pool } = usePool();
+    const { setProportionalPercent, proportionalPercent } = useWithdrawState();
+    const { proportionalAmounts } = useWithdrawProportionalAmounts();
     const { priceFor } = useGetTokens();
+
     const withdrawOptions = pool.withdrawConfig.options;
 
     return (
         <Box {...rest}>
-            <Box>
+            <Box mb={2}>
                 <Flex>
                     <Text flex={1} color="gray.500">
                         Proportional withdraw
@@ -42,6 +44,9 @@ export function PoolWithdrawProportional({ pool, setProportionalPercent, proport
                     const tokenOption = option.tokenOptions[0];
                     const poolToken = pool.tokens[option.poolTokenIndex];
                     const last = index === withdrawOptions.length - 1;
+                    const proportionalAmount =
+                        proportionalAmounts.find((tokenAmount) => tokenAmount.address === poolToken.address)?.amount ||
+                        '0';
 
                     return (
                         <Flex key={index} py={4} px={4} borderBottomWidth={last ? 0 : 1} borderBottomColor="gray.700">
@@ -54,10 +59,12 @@ export function PoolWithdrawProportional({ pool, setProportionalPercent, proport
                             </Flex>
                             <Box>
                                 <Heading fontSize="xl" fontWeight="medium">
-                                    1.234
+                                    {proportionalAmount}
                                 </Heading>
                                 <Text textAlign="right" color="gray.500">
-                                    $1.20
+                                    {numeral(parseFloat(proportionalAmount) * priceFor(tokenOption.address)).format(
+                                        '$0,0.00',
+                                    )}
                                 </Text>
                             </Box>
                         </Flex>

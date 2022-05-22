@@ -4,7 +4,7 @@ import * as SDK from '@georgeroman/balancer-v2-pools';
 import OldBigNumber from 'bignumber.js';
 import {
     oldBnum,
-    oldBnumDenormAmount,
+    oldBnumScaleAmount,
     oldBnumFromBnum,
     oldBnumToBnum,
     oldBnumZero,
@@ -22,7 +22,7 @@ import {
     PoolExitBPTInForExactTokensOut,
     PoolExitData,
     PoolExitExactBPTInForOneTokenOut,
-    PoolExitSingleAssetWithdrawEstimateOutput,
+    PoolExitSingleAssetWithdrawForBptInOutput,
     PoolJoinContractCallData,
     PoolJoinData,
     PoolJoinEstimateOutput,
@@ -93,7 +93,7 @@ export class PoolStableService implements PoolService {
     public async exitGetSingleAssetWithdrawEstimate(
         bptIn: AmountHumanReadable,
         tokenOutAddress: string,
-    ): Promise<PoolExitSingleAssetWithdrawEstimateOutput> {
+    ): Promise<PoolExitSingleAssetWithdrawForBptInOutput> {
         /*const bptAmount = parseUnits(input.userBptBalance);
         const token = poolGetRequiredToken(input.tokenOutAddress, this.pool.tokens);
         const tokenAmount = this.exactBPTInForTokenOut(input.userBptBalance, input.tokenOutAddress);
@@ -177,7 +177,7 @@ export class PoolStableService implements PoolService {
         }
 
         const token = poolGetRequiredToken(tokenAddress, this.pool.tokens);
-        const bptAmountScaled = oldBnumDenormAmount(bptAmount);
+        const bptAmountScaled = oldBnumScaleAmount(bptAmount);
 
         const tokenAmountOut = SDK.StableMath._calcTokenOutGivenExactBptIn(
             this.baseService.ampScaled,
