@@ -8,9 +8,17 @@ interface UseMultiCallInput {
     options?: any;
     requireSuccess?: boolean;
     enabled?: boolean;
+    cacheTimeMs?: number;
 }
 
-export function useMultiCall({ abi, calls, options = {}, requireSuccess = false, enabled = true }: UseMultiCallInput) {
+export function useMultiCall({
+    abi,
+    calls,
+    options = {},
+    requireSuccess = false,
+    enabled = true,
+    cacheTimeMs,
+}: UseMultiCallInput) {
     const contractInterface = new Interface(abi);
     const contractRead = useContractRead(
         {
@@ -30,6 +38,7 @@ export function useMultiCall({ abi, calls, options = {}, requireSuccess = false,
                 ]),
                 options,
             ],
+            cacheTime: cacheTimeMs,
         },
     );
 

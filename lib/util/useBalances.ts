@@ -6,6 +6,8 @@ import { networkConfig } from '~/lib/config/network-config';
 import { useBalance } from 'wagmi';
 import { formatFixed } from '@ethersproject/bignumber';
 
+const BALANCE_CACHE_TIME_MS = 15_000;
+
 export function useBalances(account: string | null, tokens: TokenBase[]) {
     const containsEth = !!tokens.find((token) => token.address !== networkConfig.eth.address.toLowerCase());
     const filteredTokens = tokens.filter((token) => token.address !== networkConfig.eth.address.toLowerCase());
@@ -13,6 +15,7 @@ export function useBalances(account: string | null, tokens: TokenBase[]) {
     const ethBalance = useBalance({
         addressOrName: account || '',
         enabled: account !== null && containsEth,
+        cacheTime: BALANCE_CACHE_TIME_MS,
     });
 
     const multicall = useMultiCall({
@@ -23,6 +26,7 @@ export function useBalances(account: string | null, tokens: TokenBase[]) {
             args: [account || AddressZero],
         })),
         enabled: account !== null,
+        cacheTimeMs: BALANCE_CACHE_TIME_MS,
     });
 
     async function refetch() {
