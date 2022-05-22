@@ -11,14 +11,6 @@ function PoolInvest() {
     const { userBalances, loadingUserBalances } = useUserBalances(allTokenAddresses, allTokens);
     const userBptBalance = tokenGetAmountForAddress(pool?.address || '', userBalances);
 
-    if (!pool) {
-        return (
-            <Container maxW="full">
-                <Heading>Loading...</Heading>
-            </Container>
-        );
-    }
-
     return (
         <Container maxW="full">
             <Flex alignItems="flex-start">

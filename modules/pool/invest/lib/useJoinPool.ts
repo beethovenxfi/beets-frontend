@@ -1,4 +1,4 @@
-import { useSubmitTransaction, vaultContractConfig } from '~/lib/global/useSubmitTransaction';
+import { useSubmitTransaction, vaultContractConfig } from '~/lib/util/useSubmitTransaction';
 import { GqlPoolUnion } from '~/apollo/generated/graphql-codegen-generated';
 import { PoolJoinContractCallData } from '~/lib/services/pool/pool-types';
 import { useAccount } from 'wagmi';

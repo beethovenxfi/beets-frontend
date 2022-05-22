@@ -5,6 +5,7 @@ import { useAccount } from 'wagmi';
 import { useAsyncEffect } from '~/lib/util/custom-hooks';
 import { AmountHumanReadable, TokenAmountHumanReadable, TokenBase } from '~/lib/services/token/token-types';
 import { useBoolean } from '@chakra-ui/hooks';
+import { useBalances } from '~/lib/util/useBalances';
 
 export function useUserBalances(addresses: string[], additionalTokens?: TokenBase[]) {
     const { tokens: whitelistedTokens } = useGetTokens();
@@ -12,34 +13,26 @@ export function useUserBalances(addresses: string[], additionalTokens?: TokenBas
     const tokens = [...whitelistedTokens, ...(additionalTokens || [])].filter((token) =>
         addresses.includes(token.address),
     );
-    const [userBalances, setUserBalances] = useState<TokenAmountHumanReadable[]>([]);
-    const [loadingUserBalances, { on, off }] = useBoolean(false);
-
-    useAsyncEffect(async () => {
-        await loadUserBalances();
-    }, [accountData?.address]);
+    const { data, isLoading, refetch } = useBalances(accountData?.address || null, tokens);
 
     function getUserBalance(address: string): AmountHumanReadable {
-        return userBalances.find((balance) => balance.address === address)?.amount || '0';
+        return data?.find((balance) => balance.address === address)?.amount || '0';
     }
+
+    useAsyncEffect(async () => {
+        loadUserBalances().catch();
+    }, [accountData?.address]);
 
     async function loadUserBalances() {
         if (accountData?.address) {
-            try {
-                on();
-
-                const balances = await tokenService.getBalancesForAccount(accountData.address, tokens);
-                setUserBalances(balances);
-            } catch {}
-
-            off();
+            refetch().catch();
         }
     }
 
     return {
-        userBalances,
+        userBalances: data,
         getUserBalance,
         loadUserBalances,
-        loadingUserBalances,
+        loadingUserBalances: isLoading,
     };
 }
