@@ -12,9 +12,8 @@ import {
 import { weightedBPTForTokensZeroPriceImpact } from '@balancer-labs/sdk';
 import { parseUnits } from 'ethers/lib/utils';
 import {
-    PoolExitBPTInForExactTokensOut,
     PoolExitData,
-    PoolExitExactBPTInForOneTokenOut,
+    PoolExitSingleAssetWithdrawEstimateOutput,
     PoolJoinContractCallData,
     PoolJoinData,
     PoolJoinEstimateOutput,
@@ -57,14 +56,6 @@ export class PoolWeightedService implements PoolService {
         return poolGetProportionalJoinAmountsForFixedAmount(fixedAmount, this.pool.tokens);
     }
 
-    public async exitGetProportionalWithdraw(bptInHumanReadable: string): Promise<TokenAmountHumanReadable[]> {
-        return poolGetProportionalExitAmountsForBptIn(
-            bptInHumanReadable,
-            this.pool.tokens,
-            this.pool.dynamicData.totalShares,
-        );
-    }
-
     public async joinGetEstimate(
         tokenAmountsIn: TokenAmountHumanReadable[],
         slippage: AmountHumanReadable,
@@ -84,24 +75,26 @@ export class PoolWeightedService implements PoolService {
         };
     }
 
-    public async exitEstimatePriceImpact(
-        input: PoolExitBPTInForExactTokensOut | PoolExitExactBPTInForOneTokenOut,
-    ): Promise<number> {
-        if (input.kind === 'BPTInForExactTokensOut') {
-            const bptAmount = this.bptInForExactTokensOut(input.amountsOut);
-            const bptZeroPriceImpact = this.bptForTokensZeroPriceImpact(input.amountsOut);
+    public async exitGetProportionalWithdrawEstimate(bptIn: AmountHumanReadable): Promise<TokenAmountHumanReadable[]> {
+        return poolGetProportionalExitAmountsForBptIn(bptIn, this.pool.tokens, this.pool.dynamicData.totalShares);
+    }
 
-            return bptAmount.div(bptZeroPriceImpact).minus(1).toNumber();
-        } else {
-            const bptAmount = oldBnumFromBnum(parseUnits(input.userBptBalance));
-            const token = poolGetRequiredToken(input.tokenOutAddress, this.pool.tokens);
-            const tokenAmount = this.exactBPTInForTokenOut(input.userBptBalance, input.tokenOutAddress);
-            const bptZeroPriceImpact = this.bptForTokensZeroPriceImpact([
-                { address: input.tokenOutAddress, amount: formatFixed(tokenAmount.toString(), token.decimals) },
-            ]);
+    public async exitGetSingleAssetWithdrawEstimate(
+        bptIn: AmountHumanReadable,
+        tokenOutAddress: string,
+    ): Promise<PoolExitSingleAssetWithdrawEstimateOutput> {
+        const bptAmount = oldBnumFromBnum(parseUnits(bptIn));
+        const token = poolGetRequiredToken(tokenOutAddress, this.pool.tokens);
+        const tokenAmount = this.exactBPTInForTokenOut(bptIn, tokenOutAddress);
+        const tokenAmountHumanReadable = formatFixed(tokenAmount.toString(), token.decimals);
+        const bptZeroPriceImpact = this.bptForTokensZeroPriceImpact([
+            { address: tokenOutAddress, amount: tokenAmountHumanReadable },
+        ]);
 
-            return bptAmount.div(bptZeroPriceImpact).minus(1).toNumber();
-        }
+        return {
+            tokenAmount: tokenAmountHumanReadable,
+            priceImpact: bptAmount.div(bptZeroPriceImpact).minus(1).toNumber(),
+        };
     }
 
     public bptForTokensZeroPriceImpact(tokenAmounts: TokenAmountHumanReadable[]): OldBigNumber {

@@ -1,6 +1,6 @@
 import { Avatar, Flex, FlexProps } from '@chakra-ui/react';
 import { AvatarProps } from '@chakra-ui/avatar/src/avatar';
-import { useGetTokens } from '~/modules/global/useToken';
+import { useGetTokens } from '~/lib/global/useToken';
 
 interface Props extends FlexProps {
     addresses: string[];

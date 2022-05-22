@@ -1,21 +1,14 @@
 import { Box, Container, Flex, Heading } from '@chakra-ui/react';
-import { usePool } from '~/modules/pool/usePool';
-import { useUserBalances } from '~/modules/global/useUserBalances';
-import PoolTokensInWallet from '~/modules/pool-invest/components/PoolTokensInWallet';
+import { usePool } from '~/modules/pool/lib/usePool';
+import { useUserBalances } from '~/lib/global/useUserBalances';
+import PoolTokensInWallet from '~/modules/pool/components/PoolTokensInWallet';
 import { tokenGetAmountForAddress } from '~/lib/services/token/token-util';
-import PoolMyPoolBalance from '~/modules/pool-invest/components/PoolMyPoolBalance';
-import PoolInvestForm from '~/modules/pool-invest/components/PoolInvestForm';
+import PoolMyPoolBalance from '~/modules/pool/components/PoolMyPoolBalance';
+import PoolInvestForm from '~/modules/pool/invest/components/PoolInvestForm';
 
-interface Props {
-    poolId: string;
-}
-
-function PoolInvest({ poolId }: Props) {
-    const { pool, allTokens, loading, error } = usePool(poolId);
-    const { userBalances, loadUserBalances, getUserBalance, loadingUserBalances } = useUserBalances(
-        allTokens.map((token) => token.address),
-        allTokens,
-    );
+function PoolInvest() {
+    const { pool, allTokens, allTokenAddresses } = usePool();
+    const { userBalances, loadingUserBalances } = useUserBalances(allTokenAddresses, allTokens);
     const userBptBalance = tokenGetAmountForAddress(pool?.address || '', userBalances);
 
     if (!pool) {

@@ -1,6 +1,6 @@
 import { Box, Container, Flex, Heading } from '@chakra-ui/react';
 import { GqlPoolUnion } from '~/apollo/generated/graphql-codegen-generated';
-import { useGetTokens } from '~/modules/global/useToken';
+import { useGetTokens } from '~/lib/global/useToken';
 import TokenAvatar from '~/components/token-avatar/TokenAvatar';
 import numeral from 'numeral';
 import { poolTokensWithoutPhantomBpt } from '~/lib/services/pool/pool-util';

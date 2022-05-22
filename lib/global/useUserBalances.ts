@@ -1,4 +1,4 @@
-import { useGetTokens } from '~/modules/global/useToken';
+import { useGetTokens } from '~/lib/global/useToken';
 import { tokenService } from '~/lib/services/token/token.service';
 import { useState } from 'react';
 import { useAccount } from 'wagmi';

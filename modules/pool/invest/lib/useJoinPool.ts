@@ -1,8 +1,9 @@
-import { useSubmitTransaction, vaultContractConfig } from '~/modules/global/useSubmitTransaction';
+import { useSubmitTransaction, vaultContractConfig } from '~/lib/global/useSubmitTransaction';
 import { GqlPoolUnion } from '~/apollo/generated/graphql-codegen-generated';
 import { PoolJoinContractCallData } from '~/lib/services/pool/pool-types';
 import { useAccount } from 'wagmi';
 import { TokenAmountHumanReadable } from '~/lib/services/token/token-types';
+import { tokenAmountsConcatenatedString } from '~/lib/services/token/token-util';
 
 export function useJoinPool(pool: GqlPoolUnion) {
     const { data: accountData } = useAccount();
@@ -26,13 +27,7 @@ export function useJoinPool(pool: GqlPoolUnion) {
                         fromInternalBalance: false,
                     },
                 ],
-                toastText: tokenAmountsIn
-                    .map((tokenAmount) => {
-                        const token = pool.allTokens.find((token) => token.address === tokenAmount.address);
-
-                        return `${token?.symbol}: ${tokenAmount.amount}`;
-                    })
-                    .join(', '),
+                toastText: tokenAmountsConcatenatedString(tokenAmountsIn, pool.allTokens),
             });
         }
     }

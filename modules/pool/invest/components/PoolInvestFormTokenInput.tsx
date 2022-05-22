@@ -10,7 +10,7 @@ import {
     Text,
 } from '@chakra-ui/react';
 import { GqlPoolInvestOption } from '~/apollo/generated/graphql-codegen-generated';
-import { useGetTokens } from '~/modules/global/useToken';
+import { useGetTokens } from '~/lib/global/useToken';
 import TokenAvatar from '~/components/token-avatar/TokenAvatar';
 import { AmountHumanReadable, TokenAmountHumanReadable } from '~/lib/services/token/token-types';
 import { tokenGetAmountForAddress } from '~/lib/services/token/token-util';

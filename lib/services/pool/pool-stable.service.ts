@@ -2,7 +2,13 @@ import { BigNumber } from 'ethers';
 import { GqlPoolStable } from '~/apollo/generated/graphql-codegen-generated';
 import * as SDK from '@georgeroman/balancer-v2-pools';
 import OldBigNumber from 'bignumber.js';
-import { oldBnum, oldBnumDenormAmount, oldBnumToBnum } from '~/lib/services/pool/lib/old-big-number';
+import {
+    oldBnum,
+    oldBnumDenormAmount,
+    oldBnumFromBnum,
+    oldBnumToBnum,
+    oldBnumZero,
+} from '~/lib/services/pool/lib/old-big-number';
 import { AmountHumanReadable, TokenAmountHumanReadable } from '~/lib/services/token/token-types';
 import {
     poolGetProportionalExitAmountsForBptIn,
@@ -16,6 +22,7 @@ import {
     PoolExitBPTInForExactTokensOut,
     PoolExitData,
     PoolExitExactBPTInForOneTokenOut,
+    PoolExitSingleAssetWithdrawEstimateOutput,
     PoolJoinContractCallData,
     PoolJoinData,
     PoolJoinEstimateOutput,
@@ -56,14 +63,6 @@ export class PoolStableService implements PoolService {
         return poolGetProportionalJoinAmountsForFixedAmount(fixedAmount, this.pool.tokens);
     }
 
-    public async exitGetProportionalWithdraw(bptInHumanReadable: string): Promise<TokenAmountHumanReadable[]> {
-        return poolGetProportionalExitAmountsForBptIn(
-            bptInHumanReadable,
-            this.pool.tokens,
-            this.pool.dynamicData.totalShares,
-        );
-    }
-
     public async joinGetEstimate(
         tokenAmountsIn: TokenAmountHumanReadable[],
         slippage: AmountHumanReadable,
@@ -87,27 +86,38 @@ export class PoolStableService implements PoolService {
         };
     }
 
-    public async exitEstimatePriceImpact(
-        input: PoolExitBPTInForExactTokensOut | PoolExitExactBPTInForOneTokenOut,
-    ): Promise<number> {
-        if (input.kind === 'BPTInForExactTokensOut') {
-            const bptAmount = this.bptInForExactTokensOut(input.amountsOut);
-            const bptZeroPriceImpact = this.bptForTokensZeroPriceImpact(input.amountsOut);
-
-            return bptAmount.div(bptZeroPriceImpact).sub(1).toNumber();
-        } else {
-            const bptAmount = parseUnits(input.userBptBalance);
-            const token = poolGetRequiredToken(input.tokenOutAddress, this.pool.tokens);
-            const tokenAmount = this.exactBPTInForTokenOut(input.userBptBalance, input.tokenOutAddress);
-            const bptZeroPriceImpact = this.bptForTokensZeroPriceImpact([
-                { address: input.tokenOutAddress, amount: formatFixed(tokenAmount, token.decimals) },
-            ]);
-
-            return bptAmount.div(bptZeroPriceImpact).sub(1).toNumber();
-        }
+    public async exitGetProportionalWithdrawEstimate(bptIn: AmountHumanReadable): Promise<TokenAmountHumanReadable[]> {
+        return poolGetProportionalExitAmountsForBptIn(bptIn, this.pool.tokens, this.pool.dynamicData.totalShares);
     }
 
-    public bptForTokensZeroPriceImpact(tokenAmounts: TokenAmountHumanReadable[]): BigNumber {
+    public async exitGetSingleAssetWithdrawEstimate(
+        bptIn: AmountHumanReadable,
+        tokenOutAddress: string,
+    ): Promise<PoolExitSingleAssetWithdrawEstimateOutput> {
+        /*const bptAmount = parseUnits(input.userBptBalance);
+        const token = poolGetRequiredToken(input.tokenOutAddress, this.pool.tokens);
+        const tokenAmount = this.exactBPTInForTokenOut(input.userBptBalance, input.tokenOutAddress);
+        const bptZeroPriceImpact = this.bptForTokensZeroPriceImpact([
+            { address: input.tokenOutAddress, amount: formatFixed(tokenAmount, token.decimals) },
+        ]);*/
+
+        //return bptAmount.div(bptZeroPriceImpact).sub(1).toNumber();
+
+        const bptAmount = oldBnumFromBnum(parseUnits(bptIn));
+        const token = poolGetRequiredToken(tokenOutAddress, this.pool.tokens);
+        const tokenAmount = this.exactBPTInForTokenOut(bptIn, tokenOutAddress);
+        const tokenAmountHumanReadable = formatFixed(tokenAmount.toString(), token.decimals);
+        const bptZeroPriceImpact = this.bptForTokensZeroPriceImpact([
+            { address: tokenOutAddress, amount: tokenAmountHumanReadable },
+        ]);
+
+        return {
+            tokenAmount: tokenAmountHumanReadable,
+            priceImpact: bptAmount.div(bptZeroPriceImpact).minus(1).toNumber(),
+        };
+    }
+
+    public bptForTokensZeroPriceImpact(tokenAmounts: TokenAmountHumanReadable[]): OldBigNumber {
         const denormAmounts = poolScaleTokenAmounts(tokenAmounts, this.pool.tokens);
 
         // _bptForTokensZeroPriceImpact is the only stable pool function
@@ -122,54 +132,48 @@ export class PoolStableService implements PoolService {
             this.baseService.ampScaled.toString(),
         );
 
-        return BigNumber.from(bptZeroImpact);
+        return oldBnumFromBnum(bptZeroImpact);
     }
 
-    public exactTokensInForBPTOut(tokenAmounts: TokenAmountHumanReadable[]): BigNumber {
+    public exactTokensInForBPTOut(tokenAmounts: TokenAmountHumanReadable[]): OldBigNumber {
         try {
-            const bptOut = SDK.StableMath._calcBptOutGivenExactTokensIn(
+            return SDK.StableMath._calcBptOutGivenExactTokensIn(
                 this.baseService.ampScaled,
                 this.baseService.tokenBalancesScaled,
                 this.baseService.scaleTokenAmountsTo18Decimals(tokenAmounts),
                 this.baseService.totalSharesScaled,
                 this.baseService.swapFeeScaled,
             );
-
-            return oldBnumToBnum(bptOut);
         } catch (error) {
             console.error(error);
 
-            return BigNumber.from(0);
+            return oldBnumZero();
         }
     }
 
-    public bptInForExactTokensOut(tokenAmounts: TokenAmountHumanReadable[]): BigNumber {
-        const bptIn = SDK.StableMath._calcBptInGivenExactTokensOut(
+    public bptInForExactTokensOut(tokenAmounts: TokenAmountHumanReadable[]): OldBigNumber {
+        return SDK.StableMath._calcBptInGivenExactTokensOut(
             this.baseService.ampScaled,
             this.baseService.tokenBalancesScaledTo18Decimals,
             this.baseService.scaleTokenAmountsTo18Decimals(tokenAmounts),
             this.baseService.totalSharesScaled,
             this.baseService.swapFeeScaled,
         );
-
-        return oldBnumToBnum(bptIn);
     }
 
-    public bptInForExactTokenOut(tokenAmountOut: TokenAmountHumanReadable): BigNumber {
-        const bptIn = SDK.StableMath._calcBptInGivenExactTokensOut(
+    public bptInForExactTokenOut(tokenAmountOut: TokenAmountHumanReadable): OldBigNumber {
+        return SDK.StableMath._calcBptInGivenExactTokensOut(
             this.baseService.ampScaled,
             this.baseService.tokenBalancesScaledTo18Decimals,
             this.baseService.scaleTokenAmountsTo18Decimals([tokenAmountOut]),
             this.baseService.totalSharesScaled,
             this.baseService.swapFeeScaled,
         );
-
-        return oldBnumToBnum(bptIn);
     }
 
-    public exactBPTInForTokenOut(bptAmount: AmountHumanReadable, tokenAddress: string): BigNumber {
+    public exactBPTInForTokenOut(bptAmount: AmountHumanReadable, tokenAddress: string): OldBigNumber {
         if (oldBnum(bptAmount).eq(0)) {
-            return BigNumber.from(0);
+            return oldBnumZero();
         }
 
         const token = poolGetRequiredToken(tokenAddress, this.pool.tokens);
@@ -184,13 +188,7 @@ export class PoolStableService implements PoolService {
             this.baseService.swapFeeScaled,
         );
 
-        const tokenAmountOutScaledDown = this.baseService.scaleTokenAmountDownFrom18Decimals(
-            token,
-            tokenAmountOut,
-            OldBigNumber.ROUND_DOWN,
-        );
-
-        return oldBnumToBnum(tokenAmountOutScaledDown);
+        return this.baseService.scaleTokenAmountDownFrom18Decimals(token, tokenAmountOut, OldBigNumber.ROUND_DOWN);
     }
 
     private encodeJoinPool(data: PoolJoinData): string {

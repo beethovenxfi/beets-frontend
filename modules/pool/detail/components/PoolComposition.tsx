@@ -4,9 +4,9 @@ import TokenAvatar from '~/components/token-avatar/TokenAvatar';
 import { poolIsWeightedLikePool, poolTokensWithoutPhantomBpt } from '~/lib/services/pool/pool-util';
 import { ExternalLink } from 'react-feather';
 import { etherscanGetTokenUrl } from '~/lib/util/etherscan';
-import { useGetTokens } from '~/modules/global/useToken';
+import { useGetTokens } from '~/lib/global/useToken';
 import numeral from 'numeral';
-import PoolCompositionToken from '~/modules/pool/PoolCompositionToken';
+import PoolCompositionToken from '~/modules/pool/detail/components/PoolCompositionToken';
 
 interface Props {
     pool: GqlPoolUnion;

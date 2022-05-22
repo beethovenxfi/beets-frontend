@@ -2,9 +2,11 @@ import { Alert, AlertIcon, Button, Container, ContainerProps, Flex, Heading } fr
 import { GqlPoolUnion } from '~/apollo/generated/graphql-codegen-generated';
 import { Settings } from 'react-feather';
 import { TokenAmountHumanReadable } from '~/lib/services/token/token-types';
-import { useInvestState } from '~/modules/pool-invest/lib/useInvestState';
-import { PoolInvestFormTokenInput } from '~/modules/pool-invest/components/PoolInvestFormTokenInput';
-import { useJoinPool } from '~/modules/pool-invest/lib/useJoinPool';
+import { useInvestState } from '~/modules/pool/invest/lib/useInvestState';
+import { PoolInvestFormTokenInput } from '~/modules/pool/invest/components/PoolInvestFormTokenInput';
+import { useJoinPool } from '~/modules/pool/invest/lib/useJoinPool';
+import { useInvestProportionalSuggestions } from '~/modules/pool/invest/lib/useInvestProportionalSuggestions';
+import { useInvestEstimate } from '~/modules/pool/invest/lib/useInvestEstimate';
 
 interface Props extends ContainerProps {
     pool: GqlPoolUnion;
@@ -12,9 +14,10 @@ interface Props extends ContainerProps {
 }
 
 function PoolInvestForm({ pool, userBalances, ...rest }: Props) {
-    const { inputAmounts, setInputAmount, proportionalAmounts, contractCallData, tokenAmountsIn } =
-        useInvestState(pool);
+    const { inputAmounts, setInputAmount } = useInvestState();
     const { joinPool, isSubmitting, submitError } = useJoinPool(pool);
+    const { proportionalAmounts } = useInvestProportionalSuggestions();
+    const { priceImpact, contractCallData, tokenAmountsIn } = useInvestEstimate();
 
     return (
         <Container bg="gray.900" shadow="lg" rounded="lg" padding="4" maxW="full" {...rest}>

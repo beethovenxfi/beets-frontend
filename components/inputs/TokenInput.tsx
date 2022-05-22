@@ -1,5 +1,5 @@
 import { Flex, Input, Button, Box, Heading, VStack, Text } from '@chakra-ui/react';
-import { useGetTokens } from '~/modules/global/useToken';
+import { useGetTokens } from '~/lib/global/useToken';
 import TokenAvatar from '../token-avatar/TokenAvatar';
 import BeetsInput from './BeetsInput';
 

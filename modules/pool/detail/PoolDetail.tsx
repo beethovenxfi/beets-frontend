@@ -1,25 +1,12 @@
-import { useGetPoolQuery } from '~/apollo/generated/graphql-codegen-generated';
-import { Box, Container, Flex, Heading, Button } from '@chakra-ui/react';
-import PoolHeader from '~/modules/pool/PoolHeader';
-import PoolStats from '~/modules/pool/PoolStats';
-import PoolComposition from '~/modules/pool/PoolComposition';
+import { Box, Button, Container, Flex } from '@chakra-ui/react';
+import PoolHeader from '~/modules/pool/detail/components/PoolHeader';
+import PoolStats from '~/modules/pool/detail/components/PoolStats';
+import PoolComposition from '~/modules/pool/detail/components/PoolComposition';
 import Link from 'next/link';
+import { usePool } from '~/modules/pool/lib/usePool';
 
-interface Props {
-    poolId: string;
-}
-
-function PoolDetail({ poolId }: Props) {
-    const { data, loading, error } = useGetPoolQuery({ pollInterval: 30000, variables: { id: poolId as string } });
-    const pool = data?.pool;
-
-    if (!pool) {
-        return (
-            <Container maxW="full">
-                <Heading>Loading...</Heading>
-            </Container>
-        );
-    }
+function PoolDetail() {
+    const { pool } = usePool();
 
     return (
         <Container maxW="full">

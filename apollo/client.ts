@@ -78,6 +78,8 @@ export async function loadApolloState({
         await pageSetup();
     }
 
+    console.log('loadApolloState', props.pool);
+
     return {
         props: {
             ...props,

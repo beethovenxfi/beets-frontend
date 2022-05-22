@@ -3,7 +3,7 @@ import { Box, Flex, Link } from '@chakra-ui/react';
 import TokenAvatar from '~/components/token-avatar/TokenAvatar';
 import { ExternalLink } from 'react-feather';
 import { etherscanGetTokenUrl } from '~/lib/util/etherscan';
-import { useGetTokens } from '~/modules/global/useToken';
+import { useGetTokens } from '~/lib/global/useToken';
 import numeral from 'numeral';
 
 interface Props {

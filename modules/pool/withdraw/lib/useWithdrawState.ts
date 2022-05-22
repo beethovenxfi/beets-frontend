@@ -5,37 +5,47 @@ import {
     TokenAmountHumanReadable,
 } from '~/lib/services/token/token-types';
 import { GqlPoolUnion } from '~/apollo/generated/graphql-codegen-generated';
-import { map, merge, pickBy } from 'lodash';
 import { poolGetServiceForPool } from '~/lib/services/pool/pool-util';
-import { PoolJoinContractCallData } from '~/lib/services/pool/pool-types';
-import { useSlippage } from '~/modules/global/useSlippage';
+import { useSlippage } from '~/lib/global/useSlippage';
 
-interface InvestState {
-    inputAmounts: AmountHumanReadableMap;
+type WithdrawType = 'PROPORTIONAL' | 'SINGLE_ASSET';
+
+interface WithrdawState {
+    type: WithdrawType;
+    singleAsset: string | null;
+    singleAssetAmount: AmountHumanReadable;
+    proportionalPercent: number;
     priceImpact: number;
     minBptReceived: string;
-    contractCallData: PoolJoinContractCallData | null;
-    tokenAmountsIn: TokenAmountHumanReadable[];
+
+    contractCallData: null;
+    tokenAmountsOut: TokenAmountHumanReadable[];
 }
 
-export const investStateVar = makeVar<InvestState>({
-    inputAmounts: {},
+export const withdrawStateVar = makeVar<WithrdawState>({
+    type: 'PROPORTIONAL',
+    singleAsset: null,
+    singleAssetAmount: '0',
+    proportionalPercent: 100,
     priceImpact: 0,
     minBptReceived: '0',
+    tokenAmountsOut: [],
     contractCallData: null,
-    tokenAmountsIn: [],
 });
-export const investProportionalAmountsVar = makeVar<AmountHumanReadableMap>({});
+export const withdrawProportionalAmountsVar = makeVar<AmountHumanReadableMap>({});
 
-export function useInvestState(pool: GqlPoolUnion) {
-    const investState = useReactiveVar(investStateVar);
-    const proportionalAmounts = useReactiveVar(investProportionalAmountsVar);
+export function useWithdrawState(pool: GqlPoolUnion, userBptBalance: AmountHumanReadable) {
+    const withrdawState = useReactiveVar(withdrawStateVar);
+    const proportionalAmounts = useReactiveVar(withdrawProportionalAmountsVar);
     const service = poolGetServiceForPool(pool);
-    const hasProportionalSuggestions = Object.keys(proportionalAmounts).length > 0;
     const { slippage } = useSlippage();
 
-    async function setInputAmount(tokenAddress: string, amount: AmountHumanReadable) {
-        const inputAmounts = { ...investState.inputAmounts, [tokenAddress]: amount };
+    async function setProportionalPercent(value: number) {
+        withdrawStateVar({ ...withrdawState, proportionalPercent: value });
+    }
+
+    /*async function setInputAmount(tokenAddress: string, amount: AmountHumanReadable) {
+        const inputAmounts = { ...withrdawState.inputAmounts, [tokenAddress]: amount };
 
         const inputAmountsWithValue = pickBy(inputAmounts, (amount) => amount !== '');
         const addressesWithValue = Object.keys(inputAmountsWithValue);
@@ -50,15 +60,15 @@ export function useInvestState(pool: GqlPoolUnion) {
             const proportionalSuggestion = Object.fromEntries(result.map((item) => [item.address, item.amount]));
 
             if (isProportionalSuggestionValid(inputAmounts, proportionalSuggestion)) {
-                investProportionalAmountsVar(proportionalSuggestion);
+                withdrawProportionalAmountsVar(proportionalSuggestion);
             } else {
-                investProportionalAmountsVar({});
+                withdrawProportionalAmountsVar({});
             }
         } else if (
             addressesWithValue.length === 0 ||
             !isProportionalSuggestionValid(inputAmounts, proportionalAmounts)
         ) {
-            investProportionalAmountsVar({});
+            withdrawProportionalAmountsVar({});
         }
 
         if (addressesWithValue.length > 0) {
@@ -72,8 +82,8 @@ export function useInvestState(pool: GqlPoolUnion) {
                 minimumBpt: minBptReceived,
             });
 
-            investStateVar({
-                ...investState,
+            withdrawStateVar({
+                ...withrdawState,
                 inputAmounts,
                 priceImpact,
                 minBptReceived,
@@ -81,8 +91,8 @@ export function useInvestState(pool: GqlPoolUnion) {
                 tokenAmountsIn,
             });
         } else {
-            investStateVar({
-                ...investState,
+            withdrawStateVar({
+                ...withrdawState,
                 inputAmounts,
                 priceImpact: 0,
                 minBptReceived: '0',
@@ -90,42 +100,15 @@ export function useInvestState(pool: GqlPoolUnion) {
                 tokenAmountsIn: [],
             });
         }
-    }
+    }*/
 
     return {
-        setInputAmount,
-        inputAmounts: investState.inputAmounts,
+        setProportionalPercent,
+        proportionalPercent: withrdawState.proportionalPercent,
         proportionalAmounts,
-        priceImpact: investState.priceImpact,
-        contractCallData: investState.contractCallData,
-        tokenAmountsIn: investState.tokenAmountsIn,
-        hasProportionalSuggestions,
+        selectedWithdrawType: withrdawState.type,
+        priceImpact: withrdawState.priceImpact,
+        contractCallData: withrdawState.contractCallData,
+        tokenAmountsOut: withrdawState.tokenAmountsOut,
     };
-}
-
-function isProportionalSuggestionValid(
-    inputAmounts: AmountHumanReadableMap,
-    proportionalAmounts: AmountHumanReadableMap,
-) {
-    if (Object.keys(proportionalAmounts).length === 0) {
-        //there is no proportional suggestion
-        return true;
-    }
-
-    const addresses = Object.keys(inputAmounts);
-
-    for (const address of addresses) {
-        if (inputAmounts[address] !== '' && inputAmounts[address] !== proportionalAmounts[address]) {
-            return false;
-        }
-    }
-
-    return true;
-}
-
-function getTokenAmounts(amountMap: AmountHumanReadableMap): TokenAmountHumanReadable[] {
-    return map(
-        pickBy(amountMap, (amount) => amount !== ''),
-        (amount, address) => ({ amount, address }),
-    );
 }

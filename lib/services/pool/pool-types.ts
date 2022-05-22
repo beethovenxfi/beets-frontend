@@ -1,8 +1,11 @@
 import { AmountHumanReadable, TokenAmountHumanReadable } from '~/lib/services/token/token-types';
 import { BigNumberish } from 'ethers';
 import { SwapKind, BatchSwapStep, FundManagement } from '@balancer-labs/balancer-js';
+import { GqlPoolUnion } from '~/apollo/generated/graphql-codegen-generated';
 
 export interface PoolService {
+    updatePool(pool: GqlPoolUnion): void;
+
     joinGetProportionalSuggestionForFixedAmount?(
         fixedAmount: TokenAmountHumanReadable,
     ): Promise<TokenAmountHumanReadable[]>;
@@ -11,10 +14,12 @@ export interface PoolService {
         slippage: AmountHumanReadable,
     ): Promise<PoolJoinEstimateOutput>;
     joinGetContractCallData(data: PoolJoinData): Promise<PoolJoinContractCallData>;
-    //TODO: needs functions for num BPT estimation for single or proportional join
 
-    exitGetProportionalWithdraw(bptInHumanReadable: AmountHumanReadable): Promise<TokenAmountHumanReadable[]>;
-    exitEstimatePriceImpact(input: PoolExitBPTInForExactTokensOut | PoolExitExactBPTInForOneTokenOut): Promise<number>;
+    exitGetProportionalWithdrawEstimate(bptIn: AmountHumanReadable): Promise<TokenAmountHumanReadable[]>;
+    exitGetSingleAssetWithdrawEstimate(
+        bptIn: AmountHumanReadable,
+        tokenOutAddress: string,
+    ): Promise<PoolExitSingleAssetWithdrawEstimateOutput>;
     exitPoolEncode(data: PoolExitData): Promise<string>;
 }
 
@@ -32,6 +37,11 @@ interface PoolJoinBase {
 export interface PoolJoinEstimateOutput {
     priceImpact: number;
     minBptReceived: string;
+}
+
+export interface PoolExitSingleAssetWithdrawEstimateOutput {
+    tokenAmount: AmountHumanReadable;
+    priceImpact: number;
 }
 
 export interface PoolJoinInit extends PoolJoinBase {

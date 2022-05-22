@@ -3,6 +3,7 @@ import {
     PoolExitBPTInForExactTokensOut,
     PoolExitData,
     PoolExitExactBPTInForOneTokenOut,
+    PoolExitSingleAssetWithdrawEstimateOutput,
     PoolJoinContractCallData,
     PoolJoinData,
     PoolJoinEstimateOutput,
@@ -35,21 +36,23 @@ export class PoolWeightedBoostedService implements PoolService {
         };
     }
 
-    public async exitEstimatePriceImpact(
-        input: PoolExitBPTInForExactTokensOut | PoolExitExactBPTInForOneTokenOut,
-    ): Promise<number> {
-        return 0;
-    }
-
     public async joinGetProportionalSuggestionForFixedAmount(
         fixedAmount: TokenAmountHumanReadable,
     ): Promise<TokenAmountHumanReadable[]> {
         return [];
     }
 
-    public async exitGetProportionalWithdraw(
-        bptInHumanReadable: AmountHumanReadable,
-    ): Promise<TokenAmountHumanReadable[]> {
+    public async exitGetSingleAssetWithdrawEstimate(
+        bptIn: AmountHumanReadable,
+        tokenOutAddress: string,
+    ): Promise<PoolExitSingleAssetWithdrawEstimateOutput> {
+        return {
+            tokenAmount: '0',
+            priceImpact: 0,
+        };
+    }
+
+    public async exitGetProportionalWithdrawEstimate(bptIn: AmountHumanReadable): Promise<TokenAmountHumanReadable[]> {
         return [];
     }
 }
