@@ -16,10 +16,17 @@ function PoolHeader() {
                 {pool.name}
             </Heading>
             <Flex mt={4} mb={3}>
-                {poolTokensWithoutPhantomBpt.map((token, index) => (
+                {poolTokensWithoutPhantomBpt.slice(0, 4).map((token, index) => (
                     <PoolTokenPill key={index} token={token} />
                 ))}
             </Flex>
+            {poolTokensWithoutPhantomBpt.length > 4 ? (
+                <Flex mt={4} mb={3}>
+                    {poolTokensWithoutPhantomBpt.slice(4).map((token, index) => (
+                        <PoolTokenPill key={index} token={token} />
+                    ))}
+                </Flex>
+            ) : null}
             <Flex alignItems="flex-end">
                 <AprTooltip
                     data={pool.dynamicData.apr}

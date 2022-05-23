@@ -75,26 +75,32 @@ function PoolList() {
                     }}
                 />
             </Flex>
-            <BeetsBox padding="4" mb={12}>
+            <BeetsBox mb={4}>
                 <PoolListSortableHeader />
                 {networkStatus === NetworkStatus.refetch ? (
                     <Flex justifyContent={'center'} my={4}>
                         <Spinner size="xl" />
                     </Flex>
                 ) : pools ? (
-                    pools.map((pool, index) => <PoolListItem key={index} pool={pool} />)
+                    pools.map((pool, index) => (
+                        <PoolListItem
+                            key={index}
+                            pool={pool}
+                            borderBottomColor="#08061E"
+                            borderBottomWidth={index === pools.length - 1 ? 0 : 1}
+                        />
+                    ))
                 ) : null}
-
-                <Button
-                    colorScheme="blue"
-                    isLoading={loading || networkStatus === NetworkStatus.fetchMore}
-                    onClick={async () => fetchMore({ variables: { skip: pools?.length } })}
-                    w={`100%`}
-                    mt={4}
-                >
-                    Load More
-                </Button>
             </BeetsBox>
+            <Button
+                colorScheme="blue"
+                isLoading={loading || networkStatus === NetworkStatus.fetchMore}
+                onClick={async () => fetchMore({ variables: { skip: pools?.length } })}
+                w={`100%`}
+                mt={4}
+            >
+                Load More
+            </Button>
         </Box>
     );
 }

@@ -5,36 +5,40 @@ import { useGetTokens } from '~/lib/global/useToken';
 interface Props extends FlexProps {
     addresses: string[];
     imageSize?: number;
+    maxAssetsPerLine?: number;
+    width: number;
 }
 
-function TokenAvatarSet({ addresses, imageSize = 32, ...rest }: Props) {
+function TokenAvatarSet({ width, addresses, imageSize = 32, maxAssetsPerLine = 5, ...rest }: Props) {
     const { getToken } = useGetTokens();
-    const numTokens = addresses.length;
 
     function leftOffsetFor(index: number) {
-        //const multiplier = tokenSize === 'md' ? 4 : tokenSize === 'sm' ? 3 : 2;
+        const spacer = (maxAssetsPerLine / addresses.length - 1) * imageSize;
 
-        if (numTokens <= 1) {
-            return 0;
-        }
-
-        return -1 * index * (numTokens * 4);
+        return ((width - imageSize + spacer) / (maxAssetsPerLine - 1)) * index;
     }
 
     return (
-        <Flex {...rest} pos={'relative'}>
-            {addresses.map((address, i) => {
+        <Flex
+            {...rest}
+            position={'relative'}
+            //bgColor="orange"
+            //width={(imageSize - 10) * addresses.length}
+            height={imageSize}
+        >
+            {addresses.slice(0, maxAssetsPerLine).map((address, i) => {
                 const token = getToken(address);
 
                 return (
                     <Avatar
-                        //boxSize={`${imageSize}px`}
-                        size="sm"
+                        boxSize={`${imageSize}px`}
+                        //size="sm"
                         key={i}
                         src={token?.logoURI || undefined}
                         zIndex={20 - i}
                         left={`${leftOffsetFor(i)}px`}
-                        bg={'transparent'}
+                        bg={'#181729'}
+                        position="absolute"
                     />
                 );
             })}
