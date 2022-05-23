@@ -5,8 +5,8 @@ import type { AppProps } from 'next/app';
 import { useApollo } from '~/apollo/client';
 import { ApolloProvider } from '@apollo/client';
 
-import { Box, ChakraProvider, extendTheme, Grid, GridItem } from '@chakra-ui/react';
-
+import { Box, ChakraProvider, Grid, GridItem } from '@chakra-ui/react';
+import { QueryClient, QueryClientProvider } from 'react-query';
 /** Start charting library setup */
 import * as echarts from 'echarts/core';
 
@@ -36,14 +36,14 @@ import {
 } from 'echarts/components';
 
 import { CanvasRenderer } from 'echarts/renderers';
-import FantomTheme from '~/styles/themes/fantom.json';
 import Navbar from '~/components/nav/Navbar';
 import { chakraTheme } from '~/styles/chakraTheme';
 import { WagmiProvider } from 'wagmi';
-import { wagmiClient, chains } from '~/components/wallet/WalletConnection';
+import { chains, wagmiClient } from '~/components/wallet/WalletConnection';
 import { RainbowKitProvider } from '@rainbow-me/rainbowkit';
 import { useRouter } from 'next/router';
-import { useEffect } from 'react';
+
+const queryClient = new QueryClient();
 
 echarts.use([
     LineChart,
@@ -107,24 +107,26 @@ function MyApp({ Component, pageProps }: AppProps) {
             <RainbowKitProvider coolMode chains={chains}>
                 <ApolloProvider client={client}>
                     <ChakraProvider theme={chakraTheme}>
-                        <Box height="full" className="bg" fontFamily="Inter" overflowX="hidden">
-                            <Box height="full" display="flex" justifyContent="center">
-                                {/* add gutter here */}
-                                <Grid
-                                    templateColumns="repeat(12, 1fr)"
-                                    width="1400px"
-                                    maxWidth="1400px"
-                                    height="fit-content"
-                                >
-                                    <GridItem colSpan={12} height="fit-content">
-                                        <Navbar />
-                                    </GridItem>
-                                    <GridItem colSpan={12} paddingTop="12">
-                                        <Component {...pageProps} />
-                                    </GridItem>
-                                </Grid>
+                        <QueryClientProvider client={queryClient}>
+                            <Box height="full" className="bg" fontFamily="Inter" overflowX="hidden">
+                                <Box height="full" display="flex" justifyContent="center">
+                                    {/* add gutter here */}
+                                    <Grid
+                                        templateColumns="repeat(12, 1fr)"
+                                        width="1400px"
+                                        maxWidth="1400px"
+                                        height="fit-content"
+                                    >
+                                        <GridItem colSpan={12} height="fit-content">
+                                            <Navbar />
+                                        </GridItem>
+                                        <GridItem colSpan={12} paddingTop="12">
+                                            <Component {...pageProps} />
+                                        </GridItem>
+                                    </Grid>
+                                </Box>
                             </Box>
-                        </Box>
+                        </QueryClientProvider>
                     </ChakraProvider>
                 </ApolloProvider>
             </RainbowKitProvider>

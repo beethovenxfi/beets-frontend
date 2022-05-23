@@ -63,7 +63,7 @@ export class PoolStableService implements PoolService {
         return poolGetProportionalJoinAmountsForFixedAmount(fixedAmount, this.pool.tokens);
     }
 
-    public async joinGetEstimate(
+    public async joinGetBptOutAndPriceImpactForTokensIn(
         tokenAmountsIn: TokenAmountHumanReadable[],
         slippage: AmountHumanReadable,
     ): Promise<PoolJoinEstimateOutput> {

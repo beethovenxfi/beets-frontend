@@ -12,7 +12,7 @@ export const investStateVar = makeVar<InvestState>({
 export function useInvestState() {
     const investState = useReactiveVar(investStateVar);
 
-    async function setInputAmount(tokenAddress: string, amount: AmountHumanReadable) {
+    function setInputAmount(tokenAddress: string, amount: AmountHumanReadable) {
         investStateVar({
             inputAmounts: {
                 ...investState.inputAmounts,

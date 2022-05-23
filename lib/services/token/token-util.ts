@@ -1,4 +1,5 @@
-import { TokenAmountHumanReadable, TokenBase } from '~/lib/services/token/token-types';
+import { AmountHumanReadableMap, TokenAmountHumanReadable, TokenBase } from '~/lib/services/token/token-types';
+import { map, pickBy } from 'lodash';
 
 export function tokenGetAmountForAddress(
     address: string,
@@ -16,4 +17,11 @@ export function tokenAmountsConcatenatedString(tokenAmounts: TokenAmountHumanRea
             return `${token?.symbol}: ${tokenAmount.amount}`;
         })
         .join(', ');
+}
+
+export function tokenAmountsGetArrayFromMap(amountMap: AmountHumanReadableMap): TokenAmountHumanReadable[] {
+    return map(
+        pickBy(amountMap, (amount) => amount !== ''),
+        (amount, address) => ({ amount, address }),
+    );
 }

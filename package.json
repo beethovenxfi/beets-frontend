@@ -54,7 +54,7 @@
     "react-virtual": "^2.10.4",
     "react-virtual-list": "^2.3.0",
     "typescript": "4.6.4",
-    "wagmi": "^0.3.5"
-  },
-  "dependencies": {}
+    "wagmi": "^0.3.5",
+    "react-query": "^3.39.0"
+  }
 }
