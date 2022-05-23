@@ -25,7 +25,7 @@ export default function BeetsInput({ label, ...inputProps }: InputProps & Props)
                 width="full"
                 minHeight="20"
                 height="full"
-                bg="beets.gray.600"
+                bg="blackAlpha.600"
                 fontSize="2xl"
                 color="beets.gray.100"
                 fontWeight="semibold"
