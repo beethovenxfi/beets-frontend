@@ -70,11 +70,12 @@ export default function Card({
             animate={animate}
             initial={initial}
             exit={exit}
-            borderColor="beets.green.800"
             width="full"
             height="full"
-            rounded="3xl"
-            backgroundColor="beets.base.light.alpha.200"
+            rounded="lg"
+            backgroundColor="whiteAlpha.200"
+            border='1px'
+            borderColor='blackAlpha.400'
             display="flex"
             flexDirection="column"
         >
