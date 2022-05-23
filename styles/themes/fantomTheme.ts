@@ -2,8 +2,46 @@ import { ChakraTheme } from '@chakra-ui/theme';
 
 export const fantomTheme: Partial<ChakraTheme> = {
     fonts: {
-        heading: `Gotham, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif`,
-        body: `Gotham, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif`,
+        heading: `'Gotham', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif`,
+        body: `'Gotham', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif`,
+    },
+    textStyles: {
+        h1: {
+            fontSize: ['3.6rem'],
+            lineHeight: '100%',
+            fontWeight: 'bold',
+            letterSpacing: '-0.1rem',
+        },
+        h2: {
+            fontSize: ['2.7rem'],
+            fontWeight: '300',
+            lineHeight: '100%',
+            letterSpacing: '-0.1rem',
+        },
+        h3: {
+            fontSize: ['1.8rem'],
+            fontWeight: '300',
+            lineHeight: '115%',
+            letterSpacing: '-0.05rem',
+        },
+        h4: {
+            fontSize: ['1.8rem'],
+            fontWeight: '300',
+            lineHeight: '115%',
+            letterSpacing: '-0.05rem',
+        },
+        h5: {
+            fontSize: ['1.2rem'],
+            fontWeight: '300',
+            lineHeight: '115%',
+            letterSpacing: '-0.03rem',
+        },
+        h6: {
+            fontSize: ['1.2rem'],
+            fontWeight: '300',
+            lineHeight: '115%',
+            letterSpacing: '-0.03rem',
+        },
     },
     colors: {
         beets: {

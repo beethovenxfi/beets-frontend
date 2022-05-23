@@ -12,9 +12,9 @@ function PoolHeader() {
 
     return (
         <>
-            <Heading size="2xl" color="#C3C5E9">
+            <Text textStyle="h1" as="h1">
                 {pool.name}
-            </Heading>
+            </Text>
             <Flex mt={4} mb={3}>
                 {poolTokensWithoutPhantomBpt.slice(0, 4).map((token, index) => (
                     <PoolTokenPill key={index} token={token} />
