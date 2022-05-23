@@ -31,7 +31,7 @@ const TokenRow = memo(function TokenRow({ symbol, address, index, onClick }: Tok
             width="full"
             height="fit-content"
             variant="ghost"
-            _hover={{ backgroundColor: 'beets.gray.400' }}
+            _hover={{ backgroundColor: 'blackAlpha.400' }}
             onClick={onClick}
         >
             <HStack width="full" paddingY="4" justifyContent="space-between">
@@ -136,8 +136,8 @@ export default function TokenSelect({ onClose, onTokenSelected }: Props) {
             </Box>
             <Box
                 position="absolute"
-                borderBottomLeftRadius="3xl"
-                borderBottomRightRadius="3xl"
+                borderBottomLeftRadius="lg"
+                borderBottomRightRadius="lg"
                 bottom="0"
                 height="80px"
                 width="full"

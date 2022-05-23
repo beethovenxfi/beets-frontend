@@ -14,10 +14,10 @@ export default function BeetsButton({ children, ...buttonOptions }: Props & Butt
  
             _active={{ backgroundColor: 'beets.green.400' }}
             _focus={{ outline: 'none' }}
-            rounded='2xl'
+            rounded='xl'
             {...buttonOptions}
             _hover={{
-                backgroundColor: 'beets.green.200',
+                transform: 'scale(1.02)',
                 ...buttonOptions._hover
             }}
         >

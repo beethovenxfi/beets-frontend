@@ -15,30 +15,33 @@ export const tradeStateVar = makeVar<TradeState>({
     tokenOut: null,
     swapType: 'EXACT_IN',
     swapAmount: null,
-
     sorResponse: null,
 });
 
 export function useGetSwaps() {
     const tradeState = useReactiveVar(tradeStateVar);
-    const [load, { loading, error, data, networkStatus }] = useGetSorSwapsLazyQuery({});
+    // make sure not to cache as this data needs to be always fresh
+    const [load, { loading, error, data, networkStatus }] = useGetSorSwapsLazyQuery({ fetchPolicy: 'no-cache'});
 
     async function loadSwaps() {
         if (tradeState.tokenIn && tradeState.tokenOut && tradeState.swapAmount) {
             const { data } = await load({
+                fetchPolicy: 'no-cache',
                 variables: {
                     tokenIn: tradeState.tokenIn,
                     tokenOut: tradeState.tokenOut,
                     swapAmount: tradeState.swapAmount,
                     swapType: tradeState.swapType,
                     swapOptions: {
-                        maxPools: 8,
+                        maxPools: 8,    
                     },
                 },
             });
-
-            tradeState.sorResponse = data?.swaps || null;
+            const swaps = data?.swaps || null;
+            tradeState.sorResponse = swaps;
+            return swaps;
         }
+        return null;
     }
 
     return {
