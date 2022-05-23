@@ -42,6 +42,7 @@ import { WagmiProvider } from 'wagmi';
 import { RainbowKitProvider } from '@rainbow-me/rainbowkit';
 import { useRouter } from 'next/router';
 import { networkChainDefinitions, wagmiClient } from '~/lib/global/network';
+import { BeetsFonts } from '~/components/fonts/BeetsFonts';
 
 const queryClient = new QueryClient();
 
@@ -107,6 +108,7 @@ function MyApp({ Component, pageProps }: AppProps) {
             <RainbowKitProvider coolMode chains={networkChainDefinitions}>
                 <ApolloProvider client={client}>
                     <ChakraProvider theme={chakraTheme}>
+                        <BeetsFonts />
                         <QueryClientProvider client={queryClient}>
                             <Box height="full" className="bg" fontFamily="Inter" overflowX="hidden">
                                 <Box height="full" display="flex" justifyContent="center">

@@ -2,7 +2,7 @@
 
 // 1. import `extendTheme` function
 import { extendTheme, ThemeConfig } from '@chakra-ui/react';
-import FantomTheme from '~/styles/themes/fantom.json';
+import { fantomTheme } from '~/styles/themes/fantomTheme';
 
 // 2. Add your color mode config
 const config: ThemeConfig = {
@@ -11,4 +11,4 @@ const config: ThemeConfig = {
 };
 
 // 3. extend the chakraTheme
-export const chakraTheme = extendTheme({ ...FantomTheme, config });
+export const chakraTheme = extendTheme({ ...fantomTheme, config });
