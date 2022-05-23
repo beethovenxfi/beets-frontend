@@ -1,6 +1,6 @@
 import { GqlPoolUnion, useGetTokenPricesQuery } from '~/apollo/generated/graphql-codegen-generated';
 import { Box, Flex, Heading, Link, Text } from '@chakra-ui/react';
-import TokenAvatar from '~/components/token-avatar/TokenAvatar';
+import TokenAvatar from '~/components/token/TokenAvatar';
 import { poolIsWeightedLikePool, poolGetTokensWithoutPhantomBpt } from '~/lib/services/pool/pool-util';
 import { ExternalLink } from 'react-feather';
 import { etherscanGetTokenUrl } from '~/lib/util/etherscan';

@@ -33,4 +33,5 @@ export const fantomNetworkConfig: NetworkConfig = {
         vault: '0x20dd72Ed959b6147912C2e529F0a0C651c33c9ce',
         batchRelayer: '0xC852F984CA3310AFc596adeB17EfcB0542646920',
     },
+    beetsPoolOwnerAddress: '0xcd983793adb846dce4830c22f30c7ef0c864a776',
 };

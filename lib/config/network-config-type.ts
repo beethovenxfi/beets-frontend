@@ -39,4 +39,5 @@ export interface NetworkConfig {
         vault: string;
         batchRelayer: string;
     };
+    beetsPoolOwnerAddress: string;
 }

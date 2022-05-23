@@ -10,7 +10,7 @@ import {
     Text,
 } from '@chakra-ui/react';
 import numeral from 'numeral';
-import TokenAvatar from '~/components/token-avatar/TokenAvatar';
+import TokenAvatar from '~/components/token/TokenAvatar';
 import { BoxProps } from '@chakra-ui/layout';
 import { useWithdrawState } from '~/modules/pool/withdraw/lib/useWithdrawState';
 import { usePool } from '~/modules/pool/lib/usePool';

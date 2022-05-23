@@ -12,7 +12,7 @@ function PoolDetail() {
         <Container maxW="full">
             <Flex>
                 <Box flex={1}>
-                    <PoolHeader pool={pool} />
+                    <PoolHeader />
                 </Box>
                 <Box>
                     <Link href={`/pool/${pool.id}/invest`}>
@@ -25,9 +25,6 @@ function PoolDetail() {
                     </Link>
                 </Box>
             </Flex>
-            <Box mt={8}>
-                <PoolStats pool={pool} />
-            </Box>
             <Box mt={8}>
                 <PoolComposition pool={pool} />
             </Box>

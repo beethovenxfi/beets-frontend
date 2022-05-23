@@ -8,7 +8,7 @@ import { GqlToken } from '~/apollo/generated/graphql-codegen-generated';
 import { useGetTokens } from '~/lib/global/useToken';
 import Card from '../card/Card';
 import BeetsInput from '../inputs/BeetsInput';
-import TokenAvatar from '../token-avatar/TokenAvatar';
+import TokenAvatar from '../token/TokenAvatar';
 import { useVirtual } from 'react-virtual';
 import useCVirtual from 'react-cool-virtual';
 import { sortBy } from 'lodash';

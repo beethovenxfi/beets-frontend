@@ -9,7 +9,7 @@ import {
     Link,
     Text,
 } from '@chakra-ui/react';
-import TokenAvatar from '~/components/token-avatar/TokenAvatar';
+import TokenAvatar from '~/components/token/TokenAvatar';
 import { useWithdrawState } from '~/modules/pool/withdraw/lib/useWithdrawState';
 import { usePoolUserBalances } from '~/modules/pool/lib/usePoolUserBalances';
 import { usePool } from '~/modules/pool/lib/usePool';

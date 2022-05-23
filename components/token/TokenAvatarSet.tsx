@@ -28,12 +28,13 @@ function TokenAvatarSet({ addresses, imageSize = 32, ...rest }: Props) {
 
                 return (
                     <Avatar
-                        boxSize={`${imageSize}px`}
+                        //boxSize={`${imageSize}px`}
+                        size="sm"
                         key={i}
                         src={token?.logoURI || undefined}
                         zIndex={20 - i}
                         left={`${leftOffsetFor(i)}px`}
-                        bg={'black'}
+                        bg={'transparent'}
                     />
                 );
             })}
