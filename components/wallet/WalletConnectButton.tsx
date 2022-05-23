@@ -1,52 +1,11 @@
-import { apiProvider, configureChains, ConnectButton, getDefaultWallets } from '@rainbow-me/rainbowkit';
-import { createClient } from 'wagmi';
+import { ConnectButton } from '@rainbow-me/rainbowkit';
 import BeetsButton from '../button/Button';
 import { Box, HStack, Text } from '@chakra-ui/layout';
 import Image from 'next/image';
 import { ChevronDown } from 'react-feather';
 import BeetsSmart from '~/assets/icons/beetx-smarts.svg';
 
-const fantomChain = {
-    id: 250,
-    name: 'Fantom Opera',
-    nativeCurrency: {
-        name: 'Fantom',
-        symbol: 'FTM',
-        decimals: 18,
-    },
-    rpcUrls: {
-        default: 'https://rpc.ftm.tools/',
-    },
-    blockExplorers: {
-        etherscan: {
-            name: 'FTM Scan',
-            url: 'https://ftmscan.com/',
-        },
-        default: {
-            name: 'FTM Scan',
-            url: 'https://ftmscan.com/',
-        },
-    },
-    testnet: false,
-};
-
-export const { chains, provider } = configureChains(
-    [fantomChain],
-    [apiProvider.jsonRpc((_) => ({ rpcUrl: 'https://rpc.ftm.tools/' }))],
-);
-
-const { connectors } = getDefaultWallets({
-    appName: 'My RainbowKit App',
-    chains,
-});
-
-export const wagmiClient = createClient({
-    autoConnect: true,
-    connectors,
-    provider,
-});
-
-export default function BeetsConnectButton() {
+export default function WalletConnectButton() {
     return (
         <ConnectButton.Custom>
             {({ account, chain, openAccountModal, openChainModal, openConnectModal, mounted }) => {

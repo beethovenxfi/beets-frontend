@@ -39,9 +39,9 @@ import { CanvasRenderer } from 'echarts/renderers';
 import Navbar from '~/components/nav/Navbar';
 import { chakraTheme } from '~/styles/chakraTheme';
 import { WagmiProvider } from 'wagmi';
-import { chains, wagmiClient } from '~/components/wallet/WalletConnection';
 import { RainbowKitProvider } from '@rainbow-me/rainbowkit';
 import { useRouter } from 'next/router';
+import { networkChainDefinitions, wagmiClient } from '~/lib/global/network';
 
 const queryClient = new QueryClient();
 
@@ -104,7 +104,7 @@ function MyApp({ Component, pageProps }: AppProps) {
 
     return (
         <WagmiProvider client={wagmiClient}>
-            <RainbowKitProvider coolMode chains={chains}>
+            <RainbowKitProvider coolMode chains={networkChainDefinitions}>
                 <ApolloProvider client={client}>
                     <ChakraProvider theme={chakraTheme}>
                         <QueryClientProvider client={queryClient}>

@@ -1,9 +1,14 @@
 import { NetworkConfig } from '~/lib/config/network-config-type';
 
 export const fantomNetworkConfig: NetworkConfig = {
+    appName: 'Beethoven X',
     chainId: '250',
+    networkName: 'Fantom Opera',
+    etherscanName: 'FTM Scan',
     etherscanUrl: 'https://ftmscan.com',
+    testnet: false,
     eth: {
+        name: 'Fantom',
         address: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
         symbol: 'FTM',
         decimals: 18,
