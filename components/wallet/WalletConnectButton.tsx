@@ -15,15 +15,13 @@ export default function WalletConnectButton() {
                             if (!mounted || !account || !chain) {
                                 return (
                                     <BeetsButton
-                                        backgroundColor="beets.navy.400"
                                         _hover={{
-                                            backgroundColor: 'beets.navy.300',
+                                            backgroundColor: 'beets.green.300',
                                             transform: 'scale(1.1)',
                                         }}
                                         _active={{
-                                            backgroundColor: 'beets.navy.300',
+                                            backgroundColor: 'beets.green.300',
                                         }}
-                                        color="beets.gray.100"
                                         onClick={openConnectModal}
                                         type="button"
                                     >
@@ -48,7 +46,7 @@ export default function WalletConnectButton() {
                             return (
                                 <HStack>
                                     <BeetsButton
-                                        bg="beets.navy.400"
+                                        bg="transparent"
                                         rounded="xl"
                                         fontSize="md"
                                         onClick={openAccountModal}
@@ -64,9 +62,8 @@ export default function WalletConnectButton() {
                                         }}
                                     >
                                         <HStack width="full" height="full" spacing="1">
-                                            <Box paddingLeft="2">{account.balanceFormatted} FTM</Box>
                                             {/* {account.displayBalance ? ` (${account.displayBalance})` : ''} */}
-                                            <Box>{account.ensAvatar}</Box>
+                                            {/*<Box>{account.ensAvatar}</Box>*/}
                                             <HStack
                                                 justifyContent="center"
                                                 alignItems="center"
