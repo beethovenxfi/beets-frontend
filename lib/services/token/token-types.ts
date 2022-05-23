@@ -21,3 +21,7 @@ export type AmountHumanReadable = string;
 export type AmountScaled = BigNumber;
 
 export type BalanceMap = Map<string, AmountHumanReadable>;
+
+export interface AmountHumanReadableMap {
+    [address: string]: AmountHumanReadable;
+}

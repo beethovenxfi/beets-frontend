@@ -1,6 +1,6 @@
 import { GqlPoolBaseFragment } from '~/apollo/generated/graphql-codegen-generated';
 import { Box, Flex, Heading } from '@chakra-ui/react';
-import TokenAvatarSet from '~/components/token-avatar/TokenAvatarSet';
+import TokenAvatarSet from '~/components/token/TokenAvatarSet';
 import Link from 'next/link';
 import numeral from 'numeral';
 import AprTooltip from '~/components/apr-tooltip/AprTooltip';
@@ -12,7 +12,7 @@ interface Props {
 export default function PoolListItem({ pool }: Props) {
     return (
         <Link href={`/pool/${pool.id}`}>
-            <Flex bg={'black'} mb={2} p={4} cursor="pointer" borderRadius={4} alignItems={'center'}>
+            <Flex mb={2} p={4} cursor="pointer" borderRadius={4} alignItems={'center'}>
                 <Box flex={1}>
                     <Heading mb={2} size={'md'}>
                         {pool.name}

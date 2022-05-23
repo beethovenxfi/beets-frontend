@@ -1,26 +1,23 @@
 import { Box, Container, Flex, Heading } from '@chakra-ui/react';
 import { GqlPoolUnion } from '~/apollo/generated/graphql-codegen-generated';
-import { useGetTokens } from '~/modules/global/useToken';
-import TokenAvatar from '~/components/token-avatar/TokenAvatar';
+import { useGetTokens } from '~/lib/global/useToken';
 import numeral from 'numeral';
-import { poolTokensWithoutPhantomBpt } from '~/lib/services/pool/pool-util';
+import { usePoolUserBalances } from '~/modules/pool/lib/usePoolUserBalances';
+import { usePool } from '~/modules/pool/lib/usePool';
 
-interface Props {
-    pool: GqlPoolUnion;
-    userBptBalance: string;
-}
+interface Props {}
 
-function PoolTokensInWallet({ pool, userBptBalance }: Props) {
+function PoolTokensInWallet({}: Props) {
     const { priceFor } = useGetTokens();
-    const userPercentShare = parseFloat(userBptBalance) / parseFloat(pool.dynamicData.totalShares);
-    const poolTokens = poolTokensWithoutPhantomBpt(pool);
+    const { userPercentShare } = usePoolUserBalances();
+    const { poolTokensWithoutPhantomBpt } = usePool();
 
     return (
         <Container bg="gray.900" shadow="lg" rounded="lg" padding="4" mb={12} maxW="350">
             <Heading fontSize="md" mb={4}>
                 My pool balance
             </Heading>
-            {poolTokens.map((poolToken, index) => {
+            {poolTokensWithoutPhantomBpt.map((poolToken, index) => {
                 const userBalance = parseFloat(poolToken.balance) * userPercentShare;
 
                 return (

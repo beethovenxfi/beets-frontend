@@ -1,9 +1,14 @@
 import { GqlPoolPhantomStable } from '~/apollo/generated/graphql-codegen-generated';
 import {
     PoolExitBPTInForExactTokensOut,
+    PoolExitBptInSingleAssetWithdrawOutput,
+    PoolExitContractCallData,
     PoolExitData,
     PoolExitExactBPTInForOneTokenOut,
+    PoolExitSingleAssetWithdrawForBptInOutput,
+    PoolJoinContractCallData,
     PoolJoinData,
+    PoolJoinEstimateOutput,
     PoolService,
 } from '~/lib/services/pool/pool-types';
 import { AmountHumanReadable, TokenAmountHumanReadable } from '~/lib/services/token/token-types';
@@ -28,24 +33,31 @@ export class PoolPhantomStableService implements PoolService {
         this.baseService.updatePool(pool);
     }
 
-    public async joinPoolEncode(data: PoolJoinData): Promise<string> {
-        return '';
+    public async joinGetContractCallData(data: PoolJoinData): Promise<PoolJoinContractCallData> {
+        throw new Error('TODO');
     }
 
-    public async exitPoolEncode(data: PoolExitData): Promise<string> {
-        return '';
-    }
-
-    public async joinEstimatePriceImpact(tokenAmountsIn: TokenAmountHumanReadable[]): Promise<number> {
+    public async joinGetBptOutAndPriceImpactForTokensIn(
+        tokenAmountsIn: TokenAmountHumanReadable[],
+        slippage: AmountHumanReadable,
+    ): Promise<PoolJoinEstimateOutput> {
         //TODO: determine the bpt amount received for tokenAmountsIn
         const bptAmount = BigNumber.from(0);
 
         if (bptAmount.lt(0)) {
-            return 0;
+            return {
+                priceImpact: 0,
+                minBptReceived: '0',
+            };
         }
         const bptZeroPriceImpact = this.bptForTokensZeroPriceImpact(tokenAmountsIn);
 
-        return BigNumber.from(1).sub(bptAmount.div(bptZeroPriceImpact)).toNumber();
+        //return BigNumber.from(1).sub(bptAmount.div(bptZeroPriceImpact)).toNumber();
+
+        return {
+            priceImpact: 0,
+            minBptReceived: '0',
+        };
     }
 
     public async exitEstimatePriceImpact(
@@ -75,9 +87,24 @@ export class PoolPhantomStableService implements PoolService {
         return [];
     }
 
-    public async exitGetProportionalWithdraw(
-        bptInHumanReadable: AmountHumanReadable,
-    ): Promise<TokenAmountHumanReadable[]> {
+    public async exitGetContractCallData(data: PoolExitData): Promise<PoolExitContractCallData> {
+        throw new Error('TODO: implement');
+    }
+
+    public async exitGetBptInForSingleAssetWithdraw(
+        tokenAmount: TokenAmountHumanReadable,
+    ): Promise<PoolExitBptInSingleAssetWithdrawOutput> {
+        throw new Error('TODO: implement');
+    }
+
+    public async exitGetSingleAssetWithdrawForBptIn(
+        bptIn: AmountHumanReadable,
+        tokenOutAddress: string,
+    ): Promise<PoolExitSingleAssetWithdrawForBptInOutput> {
+        throw new Error('TODO: implement');
+    }
+
+    public async exitGetProportionalWithdrawEstimate(bptIn: AmountHumanReadable): Promise<TokenAmountHumanReadable[]> {
         return [];
     }
 

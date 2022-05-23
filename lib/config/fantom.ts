@@ -1,9 +1,14 @@
 import { NetworkConfig } from '~/lib/config/network-config-type';
 
 export const fantomNetworkConfig: NetworkConfig = {
+    appName: 'Beethoven X',
     chainId: '250',
+    networkName: 'Fantom Opera',
+    etherscanName: 'FTM Scan',
     etherscanUrl: 'https://ftmscan.com',
+    testnet: false,
     eth: {
+        name: 'Fantom',
         address: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
         symbol: 'FTM',
         decimals: 18,
@@ -26,5 +31,7 @@ export const fantomNetworkConfig: NetworkConfig = {
     },
     balancer: {
         vault: '0x20dd72Ed959b6147912C2e529F0a0C651c33c9ce',
+        batchRelayer: '0xC852F984CA3310AFc596adeB17EfcB0542646920',
     },
+    beetsPoolOwnerAddress: '0xcd983793adb846dce4830c22f30c7ef0c864a776',
 };

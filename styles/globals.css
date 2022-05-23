@@ -1,3 +1,23 @@
+:root {
+    /* base color & opacity */
+    --base: 27, 20, 100;
+    --base_100: rgba(var(--base), 1);
+    --base_50: rgba(var(--base), 0.5);
+    --base_20: rgba(var(--base), 0.2);
+    --base_10: rgba(var(--base), 0.1);
+    --base_05: rgba(var(--base), 0.05);
+    --base_0: rgba(var(--base), 0);
+
+    /* base darker & opacity */
+    --base-dk: 8, 6, 31;
+    --base-dk_100: rgba(var(--base-dk), 1);
+    --base-dk_50: rgba(var(--base-dk), 0.5);
+    --base-dk_20: rgba(var(--base-dk), 0.2);
+    --base-dk_10: rgba(var(--base-dk), 0.1);
+    --base-dk_05: rgba(var(--base-dk), 0.05);
+    --base-dk_0: rgba(var(--base-dk), 0);
+}
+
 html,
 body {
     height: 100%;
@@ -6,9 +26,7 @@ body {
     font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans,
         Helvetica Neue, sans-serif;
 
-    background: radial-gradient(ellipse at top, #030622a8, #000004),
-        radial-gradient(ellipse at bottom, #00e59cdb, #000004) !important;
-    background-blend-mode: normal;
+    background-color: var(--base_100) !important;
 }
 
 a {
@@ -29,6 +47,13 @@ a {
 }
 
 .bg {
-    background: radial-gradient(ellipse at top, #1B1B40 , transparent),
-      radial-gradient(ellipse at bottom, #205143  , transparent);
+    background-image: linear-gradient(
+        to right,
+        var(--base-dk_100),
+        var(--base-dk_100) 5%,
+        var(--base-dk_0) 35%,
+        var(--base-dk_0) 65%,
+        var(--base-dk_100) 95%,
+        var(--base-dk_100)
+    );
 }

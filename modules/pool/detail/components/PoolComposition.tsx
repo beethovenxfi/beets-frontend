@@ -1,19 +1,19 @@
 import { GqlPoolUnion, useGetTokenPricesQuery } from '~/apollo/generated/graphql-codegen-generated';
 import { Box, Flex, Heading, Link, Text } from '@chakra-ui/react';
-import TokenAvatar from '~/components/token-avatar/TokenAvatar';
-import { poolIsWeightedLikePool, poolTokensWithoutPhantomBpt } from '~/lib/services/pool/pool-util';
+import TokenAvatar from '~/components/token/TokenAvatar';
+import { poolIsWeightedLikePool, poolGetTokensWithoutPhantomBpt } from '~/lib/services/pool/pool-util';
 import { ExternalLink } from 'react-feather';
 import { etherscanGetTokenUrl } from '~/lib/util/etherscan';
-import { useGetTokens } from '~/modules/global/useToken';
+import { useGetTokens } from '~/lib/global/useToken';
 import numeral from 'numeral';
-import PoolCompositionToken from '~/modules/pool/PoolCompositionToken';
+import PoolCompositionToken from '~/modules/pool/detail/components/PoolCompositionToken';
 
 interface Props {
     pool: GqlPoolUnion;
 }
 
 function PoolComposition({ pool }: Props) {
-    const poolTokens = poolTokensWithoutPhantomBpt(pool);
+    const poolTokens = poolGetTokensWithoutPhantomBpt(pool);
     const { priceFor } = useGetTokens();
 
     return (
@@ -52,7 +52,7 @@ function PoolComposition({ pool }: Props) {
                             );
                         }
                     } else if (token.__typename === 'GqlPoolTokenPhantomStable') {
-                        for (const nestedToken of poolTokensWithoutPhantomBpt(token.pool)) {
+                        for (const nestedToken of poolGetTokensWithoutPhantomBpt(token.pool)) {
                             items.push(
                                 <PoolCompositionToken
                                     token={nestedToken}
@@ -62,7 +62,7 @@ function PoolComposition({ pool }: Props) {
                             );
 
                             if (nestedToken.__typename === 'GqlPoolTokenLinear') {
-                                for (const linearToken of poolTokensWithoutPhantomBpt(nestedToken.pool)) {
+                                for (const linearToken of poolGetTokensWithoutPhantomBpt(nestedToken.pool)) {
                                     items.push(
                                         <PoolCompositionToken
                                             token={linearToken}

@@ -18,6 +18,7 @@ import { Search } from 'react-feather';
 import PoolListSortableHeader from '~/modules/pools/components/PoolListSortableHeader';
 import { debounce } from 'lodash';
 import { useBoolean } from '@chakra-ui/hooks';
+import { BeetsBox } from '~/components/box/BeetsBox';
 
 function PoolList() {
     const {
@@ -39,7 +40,7 @@ function PoolList() {
     }, 250);
 
     return (
-        <Container bg="gray.900" shadow="lg" rounded="lg" padding="4" mb={12} maxW="7xl">
+        <Box>
             <Box pb={4}>
                 <InputGroup size="md">
                     <Input
@@ -74,26 +75,27 @@ function PoolList() {
                     }}
                 />
             </Flex>
+            <BeetsBox padding="4" mb={12}>
+                <PoolListSortableHeader />
+                {networkStatus === NetworkStatus.refetch ? (
+                    <Flex justifyContent={'center'} my={4}>
+                        <Spinner size="xl" />
+                    </Flex>
+                ) : pools ? (
+                    pools.map((pool, index) => <PoolListItem key={index} pool={pool} />)
+                ) : null}
 
-            <PoolListSortableHeader />
-            {networkStatus === NetworkStatus.refetch ? (
-                <Flex justifyContent={'center'} my={4}>
-                    <Spinner size="xl" />
-                </Flex>
-            ) : pools ? (
-                pools.map((pool, index) => <PoolListItem key={index} pool={pool} />)
-            ) : null}
-
-            <Button
-                colorScheme="blue"
-                isLoading={loading || networkStatus === NetworkStatus.fetchMore}
-                onClick={async () => fetchMore({ variables: { skip: pools?.length } })}
-                w={`100%`}
-                mt={4}
-            >
-                Load More
-            </Button>
-        </Container>
+                <Button
+                    colorScheme="blue"
+                    isLoading={loading || networkStatus === NetworkStatus.fetchMore}
+                    onClick={async () => fetchMore({ variables: { skip: pools?.length } })}
+                    w={`100%`}
+                    mt={4}
+                >
+                    Load More
+                </Button>
+            </BeetsBox>
+        </Box>
     );
 }
 

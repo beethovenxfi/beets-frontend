@@ -1,7 +1,12 @@
 export interface NetworkConfig {
+    appName: string;
     chainId: string;
+    networkName: string;
+    etherscanName: string;
     etherscanUrl: string;
+    testnet: boolean;
     eth: {
+        name: string;
         address: string;
         symbol: string;
         decimals: number;
@@ -32,5 +37,7 @@ export interface NetworkConfig {
     };
     balancer: {
         vault: string;
+        batchRelayer: string;
     };
+    beetsPoolOwnerAddress: string;
 }

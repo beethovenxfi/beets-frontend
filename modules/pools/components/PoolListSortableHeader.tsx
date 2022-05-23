@@ -6,8 +6,8 @@ function PoolListSortableHeader() {
     const { state, changeSort } = usePoolList();
 
     return (
-        <Flex bg={'black'} mb={2} p={4} cursor="pointer" borderRadius={4} alignItems={'center'}>
-            <Box flex={1} />
+        <Flex mb={2} px={4} cursor="pointer" borderRadius={4} alignItems={'center'}>
+            <Box flex={1}>Pool</Box>
             <Box w={200}>
                 <PoolListSortLink
                     title="Pool value"
