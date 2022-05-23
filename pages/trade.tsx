@@ -18,8 +18,6 @@ import { DEFAULT_POOL_LIST_QUERY_VARS } from '~/modules/pools/usePoolList';
 function Trade() {
     const { data, loading, error } = useGetTokensQuery();
 
-    console.log('bing', data?.tokens, loading);
-
     return (
         <Grid paddingX="8" width="full" templateColumns="repeat(12, 1fr)" gap="0">
             <GridItem w="100%" colSpan={8} h="10">
