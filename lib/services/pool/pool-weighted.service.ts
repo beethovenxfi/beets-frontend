@@ -43,21 +43,6 @@ export class PoolWeightedService implements PoolService {
         this.baseService.updatePool(pool);
     }
 
-    public async joinGetContractCallData(data: PoolJoinData): Promise<PoolJoinContractCallData> {
-        return {
-            type: 'JoinPool',
-            assets: this.pool.tokens.map((token) => token.address),
-            maxAmountsIn: poolScaleTokenAmounts(data.maxAmountsIn, this.pool.tokens),
-            userData: this.encodeJoinPool(data),
-        };
-    }
-
-    public async exitPoolEncode(data: PoolExitData): Promise<string> {
-        const encoded = this.encodeExitPool(data);
-
-        return '';
-    }
-
     public async joinGetProportionalSuggestionForFixedAmount(
         fixedAmount: TokenAmountHumanReadable,
     ): Promise<TokenAmountHumanReadable[]> {
@@ -80,6 +65,15 @@ export class PoolWeightedService implements PoolService {
         return {
             priceImpact: bptAmount.div(bptZeroPriceImpact).minus(1).toNumber(),
             minBptReceived: formatFixed(minBptReceived.toString(), 18),
+        };
+    }
+
+    public async joinGetContractCallData(data: PoolJoinData): Promise<PoolJoinContractCallData> {
+        return {
+            type: 'JoinPool',
+            assets: this.pool.tokens.map((token) => token.address),
+            maxAmountsIn: poolScaleTokenAmounts(data.maxAmountsIn, this.pool.tokens),
+            userData: this.encodeJoinPool(data),
         };
     }
 

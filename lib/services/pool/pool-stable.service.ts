@@ -1,7 +1,13 @@
 import { GqlPoolStable } from '~/apollo/generated/graphql-codegen-generated';
 import * as SDK from '@georgeroman/balancer-v2-pools';
 import OldBigNumber from 'bignumber.js';
-import { oldBnum, oldBnumFromBnum, oldBnumScaleAmount, oldBnumZero } from '~/lib/services/pool/lib/old-big-number';
+import {
+    oldBnum,
+    oldBnumFromBnum,
+    oldBnumScaleAmount,
+    oldBnumSubtractSlippage,
+    oldBnumZero,
+} from '~/lib/services/pool/lib/old-big-number';
 import { AmountHumanReadable, TokenAmountHumanReadable } from '~/lib/services/token/token-types';
 import {
     poolGetProportionalExitAmountsForBptIn,
@@ -40,16 +46,6 @@ export class PoolStableService implements PoolService {
         this.pool = pool;
     }
 
-    public async joinGetContractCallData(data: PoolJoinData): Promise<PoolJoinContractCallData> {
-        throw new Error('TODO');
-    }
-
-    public async exitPoolEncode(data: PoolExitData): Promise<string> {
-        const encoded = this.encodeExitPool(data);
-
-        return '';
-    }
-
     public async joinGetProportionalSuggestionForFixedAmount(
         fixedAmount: TokenAmountHumanReadable,
     ): Promise<TokenAmountHumanReadable[]> {
@@ -71,11 +67,18 @@ export class PoolStableService implements PoolService {
 
         const bptZeroPriceImpact = this.bptForTokensZeroPriceImpact(tokenAmountsIn);
 
-        //return BigNumber.from(1).sub(bptAmount.div(bptZeroPriceImpact)).toNumber();
-
         return {
-            priceImpact: 0,
-            minBptReceived: '0',
+            priceImpact: oldBnum(1).minus(bptAmount.div(bptZeroPriceImpact)).toNumber(),
+            minBptReceived: formatFixed(bptAmount.toString(), 18),
+        };
+    }
+
+    public async joinGetContractCallData(data: PoolJoinData): Promise<PoolJoinContractCallData> {
+        return {
+            type: 'JoinPool',
+            assets: this.pool.tokens.map((token) => token.address),
+            maxAmountsIn: poolScaleTokenAmounts(data.maxAmountsIn, this.pool.tokens),
+            userData: this.encodeJoinPool(data),
         };
     }
 
@@ -83,36 +86,22 @@ export class PoolStableService implements PoolService {
         return poolGetProportionalExitAmountsForBptIn(bptIn, this.pool.tokens, this.pool.dynamicData.totalShares);
     }
 
-    public async exitGetContractCallData(data: PoolExitData): Promise<PoolExitContractCallData> {
-        throw new Error('TODO: implement');
-    }
-
     public async exitGetBptInForSingleAssetWithdraw(
         tokenAmount: TokenAmountHumanReadable,
     ): Promise<PoolExitBptInSingleAssetWithdrawOutput> {
-        throw new Error('TODO: implement');
+        const bptIn = this.bptInForExactTokenOut(tokenAmount);
+        const bptZeroPriceImpact = this.bptForTokensZeroPriceImpact([tokenAmount]);
+
+        return {
+            bptIn: formatFixed(bptIn.toString(), 18),
+            priceImpact: bptIn.div(bptZeroPriceImpact).minus(1).toNumber(),
+        };
     }
 
     public async exitGetSingleAssetWithdrawForBptIn(
         bptIn: AmountHumanReadable,
         tokenOutAddress: string,
     ): Promise<PoolExitSingleAssetWithdrawForBptInOutput> {
-        throw new Error('TODO: implement');
-    }
-
-    public async exitGetSingleAssetWithdrawEstimate(
-        bptIn: AmountHumanReadable,
-        tokenOutAddress: string,
-    ): Promise<PoolExitSingleAssetWithdrawForBptInOutput> {
-        /*const bptAmount = parseUnits(input.userBptBalance);
-        const token = poolGetRequiredToken(input.tokenOutAddress, this.pool.tokens);
-        const tokenAmount = this.exactBPTInForTokenOut(input.userBptBalance, input.tokenOutAddress);
-        const bptZeroPriceImpact = this.bptForTokensZeroPriceImpact([
-            { address: input.tokenOutAddress, amount: formatFixed(tokenAmount, token.decimals) },
-        ]);*/
-
-        //return bptAmount.div(bptZeroPriceImpact).sub(1).toNumber();
-
         const bptAmount = oldBnumFromBnum(parseUnits(bptIn));
         const token = poolGetRequiredToken(tokenOutAddress, this.pool.tokens);
         const tokenAmount = this.exactBPTInForTokenOut(bptIn, tokenOutAddress);
@@ -125,6 +114,48 @@ export class PoolStableService implements PoolService {
             tokenAmount: tokenAmountHumanReadable,
             priceImpact: bptAmount.div(bptZeroPriceImpact).minus(1).toNumber(),
         };
+    }
+
+    public async exitGetContractCallData(data: PoolExitData): Promise<PoolExitContractCallData> {
+        switch (data.kind) {
+            case 'ExactBPTInForOneTokenOut': {
+                const token = this.pool.tokens.find((token) => token.address === data.tokenOutAddress);
+                const amountMinusSlippage = oldBnumSubtractSlippage(
+                    data.amountOut,
+                    token?.decimals || 18,
+                    data.slippage,
+                );
+
+                return {
+                    type: 'ExitPool',
+                    assets: this.pool.tokens.map((token) => token.address),
+                    minAmountsOut: poolScaleTokenAmounts(
+                        [{ address: data.tokenOutAddress, amount: amountMinusSlippage }],
+                        this.pool.tokens,
+                    ),
+                    userData: this.encodeExitPool(data),
+                };
+            }
+            case 'ExactBPTInForTokensOut': {
+                const minAmountsOut = data.amountsOut.map((amountOut) => {
+                    const token = this.pool.tokens.find((token) => token.address === amountOut.address);
+
+                    return {
+                        address: amountOut.address,
+                        amount: oldBnumSubtractSlippage(amountOut.amount, token?.decimals || 18, data.slippage),
+                    };
+                });
+
+                return {
+                    type: 'ExitPool',
+                    assets: this.pool.tokens.map((token) => token.address),
+                    minAmountsOut: poolScaleTokenAmounts(minAmountsOut, this.pool.tokens),
+                    userData: this.encodeExitPool(data),
+                };
+            }
+        }
+
+        throw new Error('unsupported exit');
     }
 
     public bptForTokensZeroPriceImpact(tokenAmounts: TokenAmountHumanReadable[]): OldBigNumber {
@@ -149,7 +180,7 @@ export class PoolStableService implements PoolService {
         try {
             return SDK.StableMath._calcBptOutGivenExactTokensIn(
                 this.baseService.ampScaled,
-                this.baseService.tokenBalancesScaled,
+                this.baseService.tokenBalancesScaledTo18Decimals,
                 this.baseService.scaleTokenAmountsTo18Decimals(tokenAmounts),
                 this.baseService.totalSharesScaled,
                 this.baseService.swapFeeScaled,
