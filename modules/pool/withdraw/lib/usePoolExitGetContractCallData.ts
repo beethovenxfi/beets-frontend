@@ -12,7 +12,7 @@ export function usePoolExitGetContractCallData() {
     const { type, singleAsset, proportionalPercent } = useReactiveVar(withdrawStateVar);
     const { poolService, pool } = usePool();
     const { userBptBalance } = usePoolUserBalances();
-    const { data: proportionalAmountsOut, error, isError, isLoading } = usePoolExitGetProportionalWithdrawEstimate();
+    const { data: proportionalAmountsOut, error, isLoading } = usePoolExitGetProportionalWithdrawEstimate();
     const { data: singleAssetWithdrawEstimate } = usePoolExitGetBptInForSingleAssetWithdraw();
     const { slippage } = useSlippage();
 
@@ -27,10 +27,6 @@ export function usePoolExitGetContractCallData() {
             singleAssetWithdrawEstimate,
         ],
         () => {
-            if (!proportionalAmountsOut) {
-                console.log('error', isLoading, error);
-            }
-
             if (type === 'PROPORTIONAL' && proportionalAmountsOut) {
                 const userBptRatio = oldBnumToHumanReadable(
                     oldBnumScaleAmount(userBptBalance).times(proportionalPercent / 100),
