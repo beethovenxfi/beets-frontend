@@ -14,15 +14,18 @@ import { useWithdrawState } from '~/modules/pool/withdraw/lib/useWithdrawState';
 import { usePoolUserBalances } from '~/modules/pool/lib/usePoolUserBalances';
 import { usePool } from '~/modules/pool/lib/usePool';
 import { BoxProps } from '@chakra-ui/layout';
-import { useWithdrawSingleAsset } from '~/modules/pool/withdraw/lib/useWithdrawSingleAsset';
+import { usePoolExitGetSingleAssetWithdrawForBptIn } from '~/modules/pool/withdraw/lib/usePoolExitGetSingleAssetWithdrawForBptIn';
+import { usePoolExitGetBptInForSingleAssetWithdraw } from '~/modules/pool/withdraw/lib/usePoolExitGetBptInForSingleAssetWithdraw';
 
 interface Props extends BoxProps {}
 
 export function PoolWithdrawSingleAsset({ ...rest }: Props) {
     const { allTokens } = usePool();
     const { singleAssetWithdraw, setSingleAssetWithdrawAmount } = useWithdrawState();
-    const { userBptBalance } = usePoolUserBalances();
-    const { priceImpact, maxAmount } = useWithdrawSingleAsset();
+    const singleAssetWithdrawForBptIn = usePoolExitGetSingleAssetWithdrawForBptIn();
+    const maxAmount = singleAssetWithdrawForBptIn.data?.tokenAmount || '0';
+    const bptInForSingleAssetWithdraw = usePoolExitGetBptInForSingleAssetWithdraw();
+    const priceImpact = bptInForSingleAssetWithdraw.data?.priceImpact;
 
     const withdrawToken = allTokens.find((token) => token.address === singleAssetWithdraw?.address);
 

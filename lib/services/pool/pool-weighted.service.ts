@@ -127,8 +127,6 @@ export class PoolWeightedService implements PoolService {
                     data.slippage,
                 );
 
-                console.log('data', data);
-
                 return {
                     type: 'ExitPool',
                     assets: this.pool.tokens.map((token) => token.address),

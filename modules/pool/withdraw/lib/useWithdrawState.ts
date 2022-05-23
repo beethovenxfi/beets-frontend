@@ -1,9 +1,5 @@
 import { makeVar, useReactiveVar } from '@apollo/client';
-import {
-    AmountHumanReadable,
-    AmountHumanReadableMap,
-    TokenAmountHumanReadable,
-} from '~/lib/services/token/token-types';
+import { TokenAmountHumanReadable } from '~/lib/services/token/token-types';
 
 type WithdrawType = 'PROPORTIONAL' | 'SINGLE_ASSET';
 
@@ -34,7 +30,7 @@ export function useWithdrawState() {
         withdrawStateVar({
             ...withdrawState,
             type: 'SINGLE_ASSET',
-            singleAsset: { address: tokenAddress, amount: '0' },
+            singleAsset: { address: tokenAddress, amount: '' },
         });
     }
 

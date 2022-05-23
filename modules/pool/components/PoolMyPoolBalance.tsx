@@ -5,10 +5,7 @@ import numeral from 'numeral';
 import { usePoolUserBalances } from '~/modules/pool/lib/usePoolUserBalances';
 import { usePool } from '~/modules/pool/lib/usePool';
 
-interface Props {
-    pool: GqlPoolUnion;
-    userBptBalance: string;
-}
+interface Props {}
 
 function PoolTokensInWallet({}: Props) {
     const { priceFor } = useGetTokens();

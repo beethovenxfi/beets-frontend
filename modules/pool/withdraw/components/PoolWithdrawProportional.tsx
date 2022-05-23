@@ -1,20 +1,31 @@
-import { GqlPoolUnion } from '~/apollo/generated/graphql-codegen-generated';
-import { Box, Flex, Heading, Slider, SliderFilledTrack, SliderThumb, SliderTrack, Text } from '@chakra-ui/react';
+import {
+    Box,
+    Flex,
+    Heading,
+    Skeleton,
+    Slider,
+    SliderFilledTrack,
+    SliderThumb,
+    SliderTrack,
+    Text,
+} from '@chakra-ui/react';
 import numeral from 'numeral';
 import TokenAvatar from '~/components/token-avatar/TokenAvatar';
 import { BoxProps } from '@chakra-ui/layout';
 import { useWithdrawState } from '~/modules/pool/withdraw/lib/useWithdrawState';
 import { usePool } from '~/modules/pool/lib/usePool';
-import { useWithdrawProportionalAmounts } from '~/modules/pool/withdraw/lib/useWithdrawProportionalAmounts';
 import { useGetTokens } from '~/lib/global/useToken';
+import { usePoolExitGetProportionalWithdrawEstimate } from '~/modules/pool/withdraw/lib/usePoolExitGetProportionalWithdrawEstimate';
 
 interface Props extends BoxProps {}
 
 export function PoolWithdrawProportional({ ...rest }: Props) {
     const { pool } = usePool();
     const { setProportionalPercent, proportionalPercent } = useWithdrawState();
-    const { proportionalAmounts } = useWithdrawProportionalAmounts();
     const { priceFor } = useGetTokens();
+
+    const { data, isLoading } = usePoolExitGetProportionalWithdrawEstimate();
+    const proportionalAmounts = data || [];
 
     const withdrawOptions = pool.withdrawConfig.options;
 
@@ -58,14 +69,18 @@ export function PoolWithdrawProportional({ ...rest }: Props) {
                                 </Heading>
                             </Flex>
                             <Box>
-                                <Heading fontSize="xl" fontWeight="medium">
-                                    {proportionalAmount}
-                                </Heading>
-                                <Text textAlign="right" color="gray.500">
-                                    {numeral(parseFloat(proportionalAmount) * priceFor(tokenOption.address)).format(
-                                        '$0,0.00',
-                                    )}
-                                </Text>
+                                <Skeleton isLoaded={!isLoading}>
+                                    <Heading fontSize="xl" fontWeight="medium">
+                                        {proportionalAmount}
+                                    </Heading>
+                                </Skeleton>
+                                <Skeleton isLoaded={!isLoading}>
+                                    <Text textAlign="right" color="gray.500">
+                                        {numeral(parseFloat(proportionalAmount) * priceFor(tokenOption.address)).format(
+                                            '$0,0.00',
+                                        )}
+                                    </Text>
+                                </Skeleton>
                             </Box>
                         </Flex>
                     );
