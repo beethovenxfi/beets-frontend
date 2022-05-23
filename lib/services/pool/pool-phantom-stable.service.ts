@@ -1,6 +1,8 @@
 import { GqlPoolPhantomStable } from '~/apollo/generated/graphql-codegen-generated';
 import {
     PoolExitBPTInForExactTokensOut,
+    PoolExitBptInSingleAssetWithdrawOutput,
+    PoolExitContractCallData,
     PoolExitData,
     PoolExitExactBPTInForOneTokenOut,
     PoolExitSingleAssetWithdrawForBptInOutput,
@@ -33,10 +35,6 @@ export class PoolPhantomStableService implements PoolService {
 
     public async joinGetContractCallData(data: PoolJoinData): Promise<PoolJoinContractCallData> {
         throw new Error('TODO');
-    }
-
-    public async exitPoolEncode(data: PoolExitData): Promise<string> {
-        return '';
     }
 
     public async joinGetBptOutAndPriceImpactForTokensIn(
@@ -89,14 +87,21 @@ export class PoolPhantomStableService implements PoolService {
         return [];
     }
 
-    public async exitGetSingleAssetWithdrawEstimate(
+    public async exitGetContractCallData(data: PoolExitData): Promise<PoolExitContractCallData> {
+        throw new Error('TODO: implement');
+    }
+
+    public async exitGetBptInForSingleAssetWithdraw(
+        tokenAmount: TokenAmountHumanReadable,
+    ): Promise<PoolExitBptInSingleAssetWithdrawOutput> {
+        throw new Error('TODO: implement');
+    }
+
+    public async exitGetSingleAssetWithdrawForBptIn(
         bptIn: AmountHumanReadable,
         tokenOutAddress: string,
     ): Promise<PoolExitSingleAssetWithdrawForBptInOutput> {
-        return {
-            tokenAmount: '0',
-            priceImpact: 0,
-        };
+        throw new Error('TODO: implement');
     }
 
     public async exitGetProportionalWithdrawEstimate(bptIn: AmountHumanReadable): Promise<TokenAmountHumanReadable[]> {

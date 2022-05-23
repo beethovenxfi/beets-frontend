@@ -1,14 +1,7 @@
-import { BigNumber } from 'ethers';
 import { GqlPoolStable } from '~/apollo/generated/graphql-codegen-generated';
 import * as SDK from '@georgeroman/balancer-v2-pools';
 import OldBigNumber from 'bignumber.js';
-import {
-    oldBnum,
-    oldBnumScaleAmount,
-    oldBnumFromBnum,
-    oldBnumToBnum,
-    oldBnumZero,
-} from '~/lib/services/pool/lib/old-big-number';
+import { oldBnum, oldBnumFromBnum, oldBnumScaleAmount, oldBnumZero } from '~/lib/services/pool/lib/old-big-number';
 import { AmountHumanReadable, TokenAmountHumanReadable } from '~/lib/services/token/token-types';
 import {
     poolGetProportionalExitAmountsForBptIn,
@@ -19,9 +12,9 @@ import {
 import { stableBPTForTokensZeroPriceImpact } from '@balancer-labs/sdk';
 import { parseUnits } from 'ethers/lib/utils';
 import {
-    PoolExitBPTInForExactTokensOut,
+    PoolExitBptInSingleAssetWithdrawOutput,
+    PoolExitContractCallData,
     PoolExitData,
-    PoolExitExactBPTInForOneTokenOut,
     PoolExitSingleAssetWithdrawForBptInOutput,
     PoolJoinContractCallData,
     PoolJoinData,
@@ -88,6 +81,23 @@ export class PoolStableService implements PoolService {
 
     public async exitGetProportionalWithdrawEstimate(bptIn: AmountHumanReadable): Promise<TokenAmountHumanReadable[]> {
         return poolGetProportionalExitAmountsForBptIn(bptIn, this.pool.tokens, this.pool.dynamicData.totalShares);
+    }
+
+    public async exitGetContractCallData(data: PoolExitData): Promise<PoolExitContractCallData> {
+        throw new Error('TODO: implement');
+    }
+
+    public async exitGetBptInForSingleAssetWithdraw(
+        tokenAmount: TokenAmountHumanReadable,
+    ): Promise<PoolExitBptInSingleAssetWithdrawOutput> {
+        throw new Error('TODO: implement');
+    }
+
+    public async exitGetSingleAssetWithdrawForBptIn(
+        bptIn: AmountHumanReadable,
+        tokenOutAddress: string,
+    ): Promise<PoolExitSingleAssetWithdrawForBptInOutput> {
+        throw new Error('TODO: implement');
     }
 
     public async exitGetSingleAssetWithdrawEstimate(
