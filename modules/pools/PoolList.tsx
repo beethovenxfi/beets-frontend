@@ -3,12 +3,13 @@ import { NetworkStatus } from '@apollo/client';
 import { usePoolList } from './usePoolList';
 import PoolListItem from '~/modules/pools/components/PoolListItem';
 import { Search } from 'react-feather';
-import PoolListSortableHeader from '~/modules/pools/components/PoolListSortableHeader';
+import PoolListTableHeader from '~/modules/pools/components/PoolListTableHeader';
 import { debounce } from 'lodash';
 import { useBoolean } from '@chakra-ui/hooks';
 import { PaginatedTable } from '~/components/table/PaginatedTable';
 import { PoolListTabs } from '~/modules/pools/components/PoolListTabs';
 import { PoolListSearch } from '~/modules/pools/components/PoolListSearch';
+import { PoolListTop } from '~/modules/pools/components/PoolListTop';
 
 function PoolList() {
     const { pools, refetch, loading, error, networkStatus, state, count, setPageSize } = usePoolList();
@@ -21,15 +22,7 @@ function PoolList() {
 
     return (
         <Box p={4}>
-            <Flex pb={4}>
-                <Box flex={1}>
-                    <PoolListTabs />
-                </Box>
-                <Box>
-                    <PoolListSearch />
-                </Box>
-            </Flex>
-
+            <PoolListTop />
             <PaginatedTable
                 items={pools}
                 currentPage={state.skip / state.first + 1}
@@ -41,7 +34,7 @@ function PoolList() {
                 loading={loading}
                 fetchingMore={networkStatus === NetworkStatus.refetch}
                 onPageSizeChange={setPageSize}
-                renderTableHeader={() => <PoolListSortableHeader />}
+                renderTableHeader={() => <PoolListTableHeader />}
                 renderTableRow={(item, index) => (
                     <PoolListItem
                         key={index}

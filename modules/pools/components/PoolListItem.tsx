@@ -1,4 +1,4 @@
-import { GqlPoolBaseFragment } from '~/apollo/generated/graphql-codegen-generated';
+import { GqlPoolMinimalFragment } from '~/apollo/generated/graphql-codegen-generated';
 import { Box, Flex, Text } from '@chakra-ui/react';
 import TokenAvatarSet from '~/components/token/TokenAvatarSet';
 import Link from 'next/link';
@@ -7,7 +7,7 @@ import AprTooltip from '~/components/apr-tooltip/AprTooltip';
 import { BoxProps } from '@chakra-ui/layout';
 
 interface Props extends BoxProps {
-    pool: GqlPoolBaseFragment;
+    pool: GqlPoolMinimalFragment;
 }
 
 export default function PoolListItem({ pool, ...rest }: Props) {

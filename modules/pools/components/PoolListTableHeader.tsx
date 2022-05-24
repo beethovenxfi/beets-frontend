@@ -2,7 +2,7 @@ import { Box, Flex, Text } from '@chakra-ui/react';
 import { usePoolList } from '../usePoolList';
 import PoolListSortLink from '~/modules/pools/components/PoolListSortLink';
 
-function PoolListSortableHeader() {
+function PoolListTableHeader() {
     const { state, changeSort } = usePoolList();
 
     return (
@@ -45,4 +45,4 @@ function PoolListSortableHeader() {
     );
 }
 
-export default PoolListSortableHeader;
+export default PoolListTableHeader;

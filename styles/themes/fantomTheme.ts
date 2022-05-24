@@ -91,6 +91,9 @@ export const fantomTheme: Partial<ChakraTheme> = {
                 '200': '#757584',
                 '100': '#C1C1D1',
             },
+            box: {
+                '500': 'rgba(255,255,255,0.05)',
+            },
             highlight: {
                 alpha: {
                     '100': 'rgba(0,255,255, 1.0)',
