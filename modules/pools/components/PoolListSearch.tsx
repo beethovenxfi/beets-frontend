@@ -20,6 +20,7 @@ export function PoolListSearch() {
                 placeholder="Search..."
                 onChange={(e) => {
                     state.textSearch = e.target.value.length > 0 ? e.target.value : null;
+                    state.skip = 0;
                     if (!isSearching) {
                         on();
                     }
