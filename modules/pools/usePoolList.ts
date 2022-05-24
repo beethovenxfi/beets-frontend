@@ -71,7 +71,7 @@ export function usePoolList() {
 
     async function setPageSize(pageSize: number) {
         await refetch({
-            ...poolListStateVar,
+            ...state,
             first: pageSize,
             skip: 0,
         });

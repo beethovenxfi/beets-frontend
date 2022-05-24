@@ -1,9 +1,6 @@
 import React from 'react';
 import { Box, BoxProps, Button, Flex, IconButton, Select, Spinner, Text } from '@chakra-ui/react';
-import PoolListItem from '~/modules/pools/components/PoolListItem';
 import { ChevronLeft, ChevronRight } from 'react-feather';
-import PoolListSortableHeader from '~/modules/pools/components/PoolListSortableHeader';
-import { GqlPoolBaseFragment } from '~/apollo/generated/graphql-codegen-generated';
 import Pagination from 'rc-pagination';
 
 interface Props<T> extends BoxProps {
