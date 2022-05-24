@@ -6,9 +6,17 @@ function PoolListSortableHeader() {
     const { state, changeSort } = usePoolList();
 
     return (
-        <Flex px={4} py={4} cursor="pointer" borderRadius={4} alignItems={'center'} bgColor="#100C3A">
+        <Flex
+            px={4}
+            py={4}
+            cursor="pointer"
+            borderTopLeftRadius="md"
+            borderTopRightRadius="md"
+            alignItems={'center'}
+            bgColor="beets.base.800"
+        >
             <Box flex={1}>
-                <Text fontSize="lg" fontWeight="medium" color="#C3C5E9">
+                <Text fontSize="lg" fontWeight="medium" color="beets.gray.100">
                     Pool details
                 </Text>
             </Box>

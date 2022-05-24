@@ -331,13 +331,6 @@ export const GetPool = gql`
     ${GqlPoolTokenLinear}
     ${GqlPoolTokenPhantomStable}
 `;
-export const GetTokenNames = gql`
-    query GetTokenNames {
-        tokens: tokenGetTokens {
-            name
-        }
-    }
-`;
 export const GetPools = gql`
     query GetPools(
         $first: Int
@@ -389,6 +382,14 @@ export const GetPools = gql`
                 isPhantomBpt
             }
         }
+        count: poolGetPoolsCount(
+            first: $first
+            skip: $skip
+            orderBy: $orderBy
+            orderDirection: $orderDirection
+            where: $where
+            textSearch: $textSearch
+        )
     }
 `;
 export const GetSorSwaps = gql`

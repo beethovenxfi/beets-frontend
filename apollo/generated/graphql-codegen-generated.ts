@@ -1076,6 +1076,7 @@ export interface Query {
     poolGet24hData: GqlBalancerPool24h;
     poolGetPool: GqlPoolBase;
     poolGetPools: Array<GqlPoolBase>;
+    poolGetPoolsCount: Scalars['Int'];
     poolSnapshots: Array<GqlBalancerPoolSnapshot>;
     pools: Array<GqlBalancerPool>;
     poolsJSON: Array<Scalars['JSON']>;
@@ -1120,6 +1121,15 @@ export interface QueryPoolGetPoolArgs {
 }
 
 export interface QueryPoolGetPoolsArgs {
+    first?: InputMaybe<Scalars['Int']>;
+    orderBy?: InputMaybe<GqlPoolOrderBy>;
+    orderDirection?: InputMaybe<GqlPoolOrderDirection>;
+    skip?: InputMaybe<Scalars['Int']>;
+    textSearch?: InputMaybe<Scalars['String']>;
+    where?: InputMaybe<GqlPoolFilter>;
+}
+
+export interface QueryPoolGetPoolsCountArgs {
     first?: InputMaybe<Scalars['Int']>;
     orderBy?: InputMaybe<GqlPoolOrderBy>;
     orderDirection?: InputMaybe<GqlPoolOrderDirection>;
@@ -2392,10 +2402,6 @@ export type GqlPoolTokenPhantomStableFragment = {
     };
 };
 
-export type GetTokenNamesQueryVariables = Exact<{ [key: string]: never }>;
-
-export type GetTokenNamesQuery = { __typename: 'Query'; tokens: Array<{ __typename: 'GqlToken'; name: string }> };
-
 export type GetPoolsQueryVariables = Exact<{
     first?: InputMaybe<Scalars['Int']>;
     skip?: InputMaybe<Scalars['Int']>;
@@ -2407,6 +2413,7 @@ export type GetPoolsQueryVariables = Exact<{
 
 export type GetPoolsQuery = {
     __typename: 'Query';
+    count: number;
     poolGetPools: Array<
         | {
               __typename: 'GqlPoolElement';
@@ -3436,44 +3443,6 @@ export function useGetPoolLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<Ge
 export type GetPoolQueryHookResult = ReturnType<typeof useGetPoolQuery>;
 export type GetPoolLazyQueryHookResult = ReturnType<typeof useGetPoolLazyQuery>;
 export type GetPoolQueryResult = Apollo.QueryResult<GetPoolQuery, GetPoolQueryVariables>;
-export const GetTokenNamesDocument = gql`
-    query GetTokenNames {
-        tokens: tokenGetTokens {
-            name
-        }
-    }
-`;
-
-/**
- * __useGetTokenNamesQuery__
- *
- * To run a query within a React component, call `useGetTokenNamesQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetTokenNamesQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetTokenNamesQuery({
- *   variables: {
- *   },
- * });
- */
-export function useGetTokenNamesQuery(
-    baseOptions?: Apollo.QueryHookOptions<GetTokenNamesQuery, GetTokenNamesQueryVariables>,
-) {
-    const options = { ...defaultOptions, ...baseOptions };
-    return Apollo.useQuery<GetTokenNamesQuery, GetTokenNamesQueryVariables>(GetTokenNamesDocument, options);
-}
-export function useGetTokenNamesLazyQuery(
-    baseOptions?: Apollo.LazyQueryHookOptions<GetTokenNamesQuery, GetTokenNamesQueryVariables>,
-) {
-    const options = { ...defaultOptions, ...baseOptions };
-    return Apollo.useLazyQuery<GetTokenNamesQuery, GetTokenNamesQueryVariables>(GetTokenNamesDocument, options);
-}
-export type GetTokenNamesQueryHookResult = ReturnType<typeof useGetTokenNamesQuery>;
-export type GetTokenNamesLazyQueryHookResult = ReturnType<typeof useGetTokenNamesLazyQuery>;
-export type GetTokenNamesQueryResult = Apollo.QueryResult<GetTokenNamesQuery, GetTokenNamesQueryVariables>;
 export const GetPoolsDocument = gql`
     query GetPools(
         $first: Int
@@ -3525,6 +3494,14 @@ export const GetPoolsDocument = gql`
                 isPhantomBpt
             }
         }
+        count: poolGetPoolsCount(
+            first: $first
+            skip: $skip
+            orderBy: $orderBy
+            orderDirection: $orderDirection
+            where: $where
+            textSearch: $textSearch
+        )
     }
 `;
 

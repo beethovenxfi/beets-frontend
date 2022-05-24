@@ -30,3 +30,8 @@ a {
     background: radial-gradient(ellipse at top, rgb(27, 20, 100) 10%, transparent 80%),
         radial-gradient(ellipse at bottom, rgb(27, 20, 100) 10%, transparent 80%);
 }
+
+.rc-pagination {
+    list-style: none;
+    display: flex;
+}

@@ -1,9 +1,3 @@
-query GetTokenNames {
-    tokens: tokenGetTokens {
-        name
-    }
-}
-
 query GetPools(
     $first: Int
     $skip: Int
@@ -54,6 +48,14 @@ query GetPools(
             isPhantomBpt
         }
     }
+    count: poolGetPoolsCount(
+        first: $first
+        skip: $skip
+        orderBy: $orderBy
+        orderDirection: $orderDirection
+        where: $where
+        textSearch: $textSearch
+    )
 }
 
 #not sure why, but can't expand the fragment in the query above, probably has to do with the interface type

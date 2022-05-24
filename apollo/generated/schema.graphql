@@ -1008,6 +1008,14 @@ type Query {
         textSearch: String
         where: GqlPoolFilter
     ): [GqlPoolBase!]!
+    poolGetPoolsCount(
+        first: Int
+        orderBy: GqlPoolOrderBy
+        orderDirection: GqlPoolOrderDirection
+        skip: Int
+        textSearch: String
+        where: GqlPoolFilter
+    ): Int!
     poolSnapshots(poolId: ID!): [GqlBalancerPoolSnapshot!]!
     pools: [GqlBalancerPool!]!
     poolsJSON: [JSON!]!
