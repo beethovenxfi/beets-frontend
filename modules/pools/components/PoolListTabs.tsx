@@ -21,6 +21,7 @@ export function PoolListTabs() {
                             setShowMyInvestments(false);
                             refetch({
                                 ...state,
+                                skip: 0,
                                 where: {
                                     ...state.where,
                                     categoryIn: ['INCENTIVIZED'],
@@ -39,6 +40,7 @@ export function PoolListTabs() {
                             setShowMyInvestments(false);
                             refetch({
                                 ...state,
+                                skip: 0,
                                 where: {
                                     ...state.where,
                                     categoryIn: null,
