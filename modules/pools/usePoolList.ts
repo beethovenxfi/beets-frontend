@@ -1,14 +1,14 @@
 import { makeVar, useReactiveVar } from '@apollo/client';
-import {
-    GetPoolsQueryVariables,
-    GqlPoolOrderBy,
-    GqlPoolOrderDirection,
-    useGetPoolsQuery,
-} from '~/apollo/generated/graphql-codegen-generated';
+import { GetPoolsQueryVariables, GqlPoolOrderBy, useGetPoolsQuery } from '~/apollo/generated/graphql-codegen-generated';
 import { useBoolean } from '@chakra-ui/hooks';
-import { debounce } from 'lodash';
+import { useEffect } from 'react';
 
-export const DEFAULT_POOL_LIST_QUERY_VARS: GetPoolsQueryVariables = {
+interface PoolsQueryVariables extends GetPoolsQueryVariables {
+    first: number;
+    skip: number;
+}
+
+export const DEFAULT_POOL_LIST_QUERY_VARS: PoolsQueryVariables = {
     first: 10,
     skip: 0,
     orderBy: 'totalLiquidity',
@@ -20,19 +20,19 @@ export const DEFAULT_POOL_LIST_QUERY_VARS: GetPoolsQueryVariables = {
     textSearch: null,
 };
 
-const poolListStateVar = makeVar<GetPoolsQueryVariables>(DEFAULT_POOL_LIST_QUERY_VARS);
+const poolListStateVar = makeVar<PoolsQueryVariables>(DEFAULT_POOL_LIST_QUERY_VARS);
+const showMyInvestmentsVar = makeVar(false);
 
 export function usePoolList() {
     const state = useReactiveVar(poolListStateVar);
+    const showMyInvestments = useReactiveVar(showMyInvestmentsVar);
     const [isSearching, isSearchingToggle] = useBoolean();
     const [isSorting, isSortingToggle] = useBoolean();
-    const [isTogglingCommunityPools, isTogglingCommunityPoolsToggle] = useBoolean();
 
     const {
         data,
         loading,
         error,
-        fetchMore,
         networkStatus,
         refetch: refetchPools,
     } = useGetPoolsQuery({
@@ -40,55 +40,58 @@ export function usePoolList() {
         variables: state,
     });
 
-    async function refetch() {
-        return refetchPools(state);
+    useEffect(() => {
+        console.log('on change');
+    }, [state]);
+
+    async function refetch(newState: PoolsQueryVariables) {
+        poolListStateVar(newState);
+
+        return refetchPools(newState);
     }
 
     async function changeSort(orderBy: GqlPoolOrderBy) {
         isSortingToggle.on();
-
         if (state.orderBy === orderBy) {
-            switch (state.orderDirection) {
-                case 'asc':
-                    state.orderDirection = null;
-                    break;
-                case 'desc':
-                    state.orderDirection = 'asc';
-                    break;
-                default:
-                    state.orderDirection = 'desc';
-            }
+            await refetch({
+                ...state,
+                orderDirection:
+                    state.orderDirection === 'asc' ? null : state.orderDirection === 'desc' ? 'asc' : 'desc',
+            });
         } else {
-            state.orderBy = orderBy;
-            state.orderDirection = 'desc';
+            await refetch({
+                ...state,
+                orderBy: orderBy,
+                orderDirection: 'desc',
+            });
         }
-
-        await refetch();
 
         isSortingToggle.off();
     }
 
-    async function toggleCommunityPools() {
-        isTogglingCommunityPoolsToggle.on();
-        state.where = {
-            ...state.where,
-            categoryIn: state.where?.categoryIn ? null : ['INCENTIVIZED'],
-        };
+    async function setPageSize(pageSize: number) {
+        await refetch({
+            ...state,
+            first: pageSize,
+            skip: 0,
+        });
+    }
 
-        await refetch();
-        isTogglingCommunityPoolsToggle.off();
+    function setShowMyInvestments(show: boolean) {
+        showMyInvestmentsVar(show);
     }
 
     return {
         state,
-        pools: data?.poolGetPools,
+        pools: data?.poolGetPools || [],
+        count: data?.count,
         loading,
         error,
-        fetchMore,
         networkStatus,
         refetch,
         changeSort,
-        toggleCommunityPools,
-        isTogglingCommunityPools,
+        setPageSize,
+        showMyInvestments,
+        setShowMyInvestments,
     };
 }

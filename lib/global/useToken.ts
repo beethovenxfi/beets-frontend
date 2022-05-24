@@ -18,7 +18,8 @@ export function useGetTokens() {
     }
 
     return {
-        tokens,
+        tokens: tokens.filter((token) => token.tradable),
+        allTokens: tokens,
         prices,
         priceFor,
         getToken,

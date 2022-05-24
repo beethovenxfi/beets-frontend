@@ -12,14 +12,21 @@ function PoolHeader() {
 
     return (
         <>
-            <Heading size="2xl" color="#C3C5E9">
+            <Text textStyle="h1" as="h1">
                 {pool.name}
-            </Heading>
+            </Text>
             <Flex mt={4} mb={3}>
-                {poolTokensWithoutPhantomBpt.map((token, index) => (
+                {poolTokensWithoutPhantomBpt.slice(0, 4).map((token, index) => (
                     <PoolTokenPill key={index} token={token} />
                 ))}
             </Flex>
+            {poolTokensWithoutPhantomBpt.length > 4 ? (
+                <Flex mt={4} mb={3}>
+                    {poolTokensWithoutPhantomBpt.slice(4).map((token, index) => (
+                        <PoolTokenPill key={index} token={token} />
+                    ))}
+                </Flex>
+            ) : null}
             <Flex alignItems="flex-end">
                 <AprTooltip
                     data={pool.dynamicData.apr}

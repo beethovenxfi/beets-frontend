@@ -1,7 +1,5 @@
 import { Alert, AlertIcon, Button, Container, ContainerProps, Flex, Heading } from '@chakra-ui/react';
-import { GqlPoolUnion } from '~/apollo/generated/graphql-codegen-generated';
 import { Settings } from 'react-feather';
-import { TokenAmountHumanReadable } from '~/lib/services/token/token-types';
 import { useInvestState } from '~/modules/pool/invest/lib/useInvestState';
 import { PoolInvestFormTokenInput } from '~/modules/pool/invest/components/PoolInvestFormTokenInput';
 import { useJoinPool } from '~/modules/pool/invest/lib/useJoinPool';
@@ -9,13 +7,14 @@ import { usePoolJoinGetProportionalSuggestionForFixedAmount } from '~/modules/po
 import { usePoolJoinGetBptOutAndPriceImpactForTokensIn } from '~/modules/pool/invest/lib/usePoolJoinGetBptOutAndPriceImpactForTokensIn';
 import { usePoolJoinGetContractCallData } from '~/modules/pool/invest/lib/usePoolJoinGetContractCallData';
 import { tokenAmountsGetArrayFromMap } from '~/lib/services/token/token-util';
+import { usePool } from '~/modules/pool/lib/usePool';
+import { usePoolUserBalances } from '~/modules/pool/lib/usePoolUserBalances';
 
-interface Props extends ContainerProps {
-    pool: GqlPoolUnion;
-    userBalances: TokenAmountHumanReadable[];
-}
+interface Props extends ContainerProps {}
 
-function PoolInvestForm({ pool, userBalances, ...rest }: Props) {
+function PoolInvestForm({ ...rest }: Props) {
+    const { pool } = usePool();
+    const { userBalances } = usePoolUserBalances();
     const { inputAmounts, setInputAmount } = useInvestState();
     const { joinPool, isSubmitting, submitError } = useJoinPool(pool);
     const tokenAmountsIn = tokenAmountsGetArrayFromMap(inputAmounts);
