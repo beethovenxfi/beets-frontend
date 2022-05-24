@@ -84,8 +84,8 @@ export const GqlPoolTokenPhantomStable = gql`
     ${GqlPoolToken}
     ${GqlPoolTokenLinear}
 `;
-export const GqlPoolBase = gql`
-    fragment GqlPoolBase on GqlPoolBase {
+export const GqlPoolMinimal = gql`
+    fragment GqlPoolMinimal on GqlPoolMinimal {
         id
         address
         name
@@ -348,39 +348,7 @@ export const GetPools = gql`
             where: $where
             textSearch: $textSearch
         ) {
-            id
-            address
-            name
-            symbol
-            createTime
-            dynamicData {
-                totalLiquidity
-                totalShares
-                fees24h
-                swapFee
-                volume24h
-                apr {
-                    hasRewardApr
-                    thirdPartyApr
-                    nativeRewardApr
-                    swapApr
-                    total
-                    items {
-                        title
-                        apr
-                        subItems {
-                            title
-                            apr
-                        }
-                    }
-                }
-            }
-            allTokens {
-                id
-                address
-                isNested
-                isPhantomBpt
-            }
+            ...GqlPoolMinimal
         }
         count: poolGetPoolsCount(
             first: $first
@@ -391,6 +359,7 @@ export const GetPools = gql`
             textSearch: $textSearch
         )
     }
+    ${GqlPoolMinimal}
 `;
 export const GetSorSwaps = gql`
     query GetSorSwaps(

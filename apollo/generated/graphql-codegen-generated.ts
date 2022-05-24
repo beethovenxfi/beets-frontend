@@ -707,6 +707,20 @@ export interface GqlPoolLiquidityBootstrapping extends GqlPoolBase {
     withdrawConfig: GqlPoolWithdrawConfig;
 }
 
+export interface GqlPoolMinimal {
+    __typename: 'GqlPoolMinimal';
+    address: Scalars['Bytes'];
+    allTokens: Array<GqlPoolTokenExpanded>;
+    createTime: Scalars['Int'];
+    decimals: Scalars['Int'];
+    dynamicData: GqlPoolDynamicData;
+    factory?: Maybe<Scalars['Bytes']>;
+    id: Scalars['ID'];
+    name: Scalars['String'];
+    owner?: Maybe<Scalars['Bytes']>;
+    symbol: Scalars['String'];
+}
+
 export type GqlPoolNestedUnion = GqlPoolLinearNested | GqlPoolPhantomStableNested;
 
 export type GqlPoolNestingType = 'HAS_ONLY_PHANTOM_BPT' | 'HAS_SOME_PHANTOM_BPT' | 'NO_NESTING';
@@ -1033,6 +1047,7 @@ export interface Mutation {
     poolSyncPoolAllTokensRelationship: Scalars['String'];
     poolSyncSanityPoolData: Scalars['String'];
     poolSyncSwapsForLast24Hours: Scalars['String'];
+    poolSyncTotalShares: Scalars['String'];
     poolUpdateAprs: Scalars['String'];
     poolUpdateLiquidityValuesForAllPools: Scalars['String'];
     poolUpdateVolumeAndFeeValuesForAllPools: Scalars['String'];
@@ -1075,7 +1090,7 @@ export interface Query {
     pool: GqlBalancerPool;
     poolGet24hData: GqlBalancerPool24h;
     poolGetPool: GqlPoolBase;
-    poolGetPools: Array<GqlPoolBase>;
+    poolGetPools: Array<GqlPoolMinimal>;
     poolGetPoolsCount: Scalars['Int'];
     poolSnapshots: Array<GqlBalancerPoolSnapshot>;
     pools: Array<GqlBalancerPool>;
@@ -2414,258 +2429,47 @@ export type GetPoolsQueryVariables = Exact<{
 export type GetPoolsQuery = {
     __typename: 'Query';
     count: number;
-    poolGetPools: Array<
-        | {
-              __typename: 'GqlPoolElement';
-              id: string;
-              address: string;
-              name: string;
-              symbol: string;
-              createTime: number;
-              dynamicData: {
-                  __typename: 'GqlPoolDynamicData';
-                  totalLiquidity: string;
-                  totalShares: string;
-                  fees24h: string;
-                  swapFee: string;
-                  volume24h: string;
-                  apr: {
-                      __typename: 'GqlPoolApr';
-                      hasRewardApr: boolean;
-                      thirdPartyApr: string;
-                      nativeRewardApr: string;
-                      swapApr: string;
-                      total: string;
-                      items: Array<{
-                          __typename: 'GqlBalancePoolAprItem';
-                          title: string;
-                          apr: string;
-                          subItems?: Array<{
-                              __typename: 'GqlBalancePoolAprSubItem';
-                              title: string;
-                              apr: string;
-                          }> | null;
-                      }>;
-                  };
-              };
-              allTokens: Array<{
-                  __typename: 'GqlPoolTokenExpanded';
-                  id: string;
-                  address: string;
-                  isNested: boolean;
-                  isPhantomBpt: boolean;
-              }>;
-          }
-        | {
-              __typename: 'GqlPoolLinear';
-              id: string;
-              address: string;
-              name: string;
-              symbol: string;
-              createTime: number;
-              dynamicData: {
-                  __typename: 'GqlPoolDynamicData';
-                  totalLiquidity: string;
-                  totalShares: string;
-                  fees24h: string;
-                  swapFee: string;
-                  volume24h: string;
-                  apr: {
-                      __typename: 'GqlPoolApr';
-                      hasRewardApr: boolean;
-                      thirdPartyApr: string;
-                      nativeRewardApr: string;
-                      swapApr: string;
-                      total: string;
-                      items: Array<{
-                          __typename: 'GqlBalancePoolAprItem';
-                          title: string;
-                          apr: string;
-                          subItems?: Array<{
-                              __typename: 'GqlBalancePoolAprSubItem';
-                              title: string;
-                              apr: string;
-                          }> | null;
-                      }>;
-                  };
-              };
-              allTokens: Array<{
-                  __typename: 'GqlPoolTokenExpanded';
-                  id: string;
-                  address: string;
-                  isNested: boolean;
-                  isPhantomBpt: boolean;
-              }>;
-          }
-        | {
-              __typename: 'GqlPoolLiquidityBootstrapping';
-              id: string;
-              address: string;
-              name: string;
-              symbol: string;
-              createTime: number;
-              dynamicData: {
-                  __typename: 'GqlPoolDynamicData';
-                  totalLiquidity: string;
-                  totalShares: string;
-                  fees24h: string;
-                  swapFee: string;
-                  volume24h: string;
-                  apr: {
-                      __typename: 'GqlPoolApr';
-                      hasRewardApr: boolean;
-                      thirdPartyApr: string;
-                      nativeRewardApr: string;
-                      swapApr: string;
-                      total: string;
-                      items: Array<{
-                          __typename: 'GqlBalancePoolAprItem';
-                          title: string;
-                          apr: string;
-                          subItems?: Array<{
-                              __typename: 'GqlBalancePoolAprSubItem';
-                              title: string;
-                              apr: string;
-                          }> | null;
-                      }>;
-                  };
-              };
-              allTokens: Array<{
-                  __typename: 'GqlPoolTokenExpanded';
-                  id: string;
-                  address: string;
-                  isNested: boolean;
-                  isPhantomBpt: boolean;
-              }>;
-          }
-        | {
-              __typename: 'GqlPoolPhantomStable';
-              id: string;
-              address: string;
-              name: string;
-              symbol: string;
-              createTime: number;
-              dynamicData: {
-                  __typename: 'GqlPoolDynamicData';
-                  totalLiquidity: string;
-                  totalShares: string;
-                  fees24h: string;
-                  swapFee: string;
-                  volume24h: string;
-                  apr: {
-                      __typename: 'GqlPoolApr';
-                      hasRewardApr: boolean;
-                      thirdPartyApr: string;
-                      nativeRewardApr: string;
-                      swapApr: string;
-                      total: string;
-                      items: Array<{
-                          __typename: 'GqlBalancePoolAprItem';
-                          title: string;
-                          apr: string;
-                          subItems?: Array<{
-                              __typename: 'GqlBalancePoolAprSubItem';
-                              title: string;
-                              apr: string;
-                          }> | null;
-                      }>;
-                  };
-              };
-              allTokens: Array<{
-                  __typename: 'GqlPoolTokenExpanded';
-                  id: string;
-                  address: string;
-                  isNested: boolean;
-                  isPhantomBpt: boolean;
-              }>;
-          }
-        | {
-              __typename: 'GqlPoolStable';
-              id: string;
-              address: string;
-              name: string;
-              symbol: string;
-              createTime: number;
-              dynamicData: {
-                  __typename: 'GqlPoolDynamicData';
-                  totalLiquidity: string;
-                  totalShares: string;
-                  fees24h: string;
-                  swapFee: string;
-                  volume24h: string;
-                  apr: {
-                      __typename: 'GqlPoolApr';
-                      hasRewardApr: boolean;
-                      thirdPartyApr: string;
-                      nativeRewardApr: string;
-                      swapApr: string;
-                      total: string;
-                      items: Array<{
-                          __typename: 'GqlBalancePoolAprItem';
-                          title: string;
-                          apr: string;
-                          subItems?: Array<{
-                              __typename: 'GqlBalancePoolAprSubItem';
-                              title: string;
-                              apr: string;
-                          }> | null;
-                      }>;
-                  };
-              };
-              allTokens: Array<{
-                  __typename: 'GqlPoolTokenExpanded';
-                  id: string;
-                  address: string;
-                  isNested: boolean;
-                  isPhantomBpt: boolean;
-              }>;
-          }
-        | {
-              __typename: 'GqlPoolWeighted';
-              id: string;
-              address: string;
-              name: string;
-              symbol: string;
-              createTime: number;
-              dynamicData: {
-                  __typename: 'GqlPoolDynamicData';
-                  totalLiquidity: string;
-                  totalShares: string;
-                  fees24h: string;
-                  swapFee: string;
-                  volume24h: string;
-                  apr: {
-                      __typename: 'GqlPoolApr';
-                      hasRewardApr: boolean;
-                      thirdPartyApr: string;
-                      nativeRewardApr: string;
-                      swapApr: string;
-                      total: string;
-                      items: Array<{
-                          __typename: 'GqlBalancePoolAprItem';
-                          title: string;
-                          apr: string;
-                          subItems?: Array<{
-                              __typename: 'GqlBalancePoolAprSubItem';
-                              title: string;
-                              apr: string;
-                          }> | null;
-                      }>;
-                  };
-              };
-              allTokens: Array<{
-                  __typename: 'GqlPoolTokenExpanded';
-                  id: string;
-                  address: string;
-                  isNested: boolean;
-                  isPhantomBpt: boolean;
-              }>;
-          }
-    >;
+    poolGetPools: Array<{
+        __typename: 'GqlPoolMinimal';
+        id: string;
+        address: string;
+        name: string;
+        symbol: string;
+        createTime: number;
+        dynamicData: {
+            __typename: 'GqlPoolDynamicData';
+            totalLiquidity: string;
+            totalShares: string;
+            fees24h: string;
+            swapFee: string;
+            volume24h: string;
+            apr: {
+                __typename: 'GqlPoolApr';
+                hasRewardApr: boolean;
+                thirdPartyApr: string;
+                nativeRewardApr: string;
+                swapApr: string;
+                total: string;
+                items: Array<{
+                    __typename: 'GqlBalancePoolAprItem';
+                    title: string;
+                    apr: string;
+                    subItems?: Array<{ __typename: 'GqlBalancePoolAprSubItem'; title: string; apr: string }> | null;
+                }>;
+            };
+        };
+        allTokens: Array<{
+            __typename: 'GqlPoolTokenExpanded';
+            id: string;
+            address: string;
+            isNested: boolean;
+            isPhantomBpt: boolean;
+        }>;
+    }>;
 };
 
-type GqlPoolBase_GqlPoolElement_Fragment = {
-    __typename: 'GqlPoolElement';
+export type GqlPoolMinimalFragment = {
+    __typename: 'GqlPoolMinimal';
     id: string;
     address: string;
     name: string;
@@ -2701,204 +2505,6 @@ type GqlPoolBase_GqlPoolElement_Fragment = {
         isPhantomBpt: boolean;
     }>;
 };
-
-type GqlPoolBase_GqlPoolLinear_Fragment = {
-    __typename: 'GqlPoolLinear';
-    id: string;
-    address: string;
-    name: string;
-    symbol: string;
-    createTime: number;
-    dynamicData: {
-        __typename: 'GqlPoolDynamicData';
-        totalLiquidity: string;
-        totalShares: string;
-        fees24h: string;
-        swapFee: string;
-        volume24h: string;
-        apr: {
-            __typename: 'GqlPoolApr';
-            hasRewardApr: boolean;
-            thirdPartyApr: string;
-            nativeRewardApr: string;
-            swapApr: string;
-            total: string;
-            items: Array<{
-                __typename: 'GqlBalancePoolAprItem';
-                title: string;
-                apr: string;
-                subItems?: Array<{ __typename: 'GqlBalancePoolAprSubItem'; title: string; apr: string }> | null;
-            }>;
-        };
-    };
-    allTokens: Array<{
-        __typename: 'GqlPoolTokenExpanded';
-        id: string;
-        address: string;
-        isNested: boolean;
-        isPhantomBpt: boolean;
-    }>;
-};
-
-type GqlPoolBase_GqlPoolLiquidityBootstrapping_Fragment = {
-    __typename: 'GqlPoolLiquidityBootstrapping';
-    id: string;
-    address: string;
-    name: string;
-    symbol: string;
-    createTime: number;
-    dynamicData: {
-        __typename: 'GqlPoolDynamicData';
-        totalLiquidity: string;
-        totalShares: string;
-        fees24h: string;
-        swapFee: string;
-        volume24h: string;
-        apr: {
-            __typename: 'GqlPoolApr';
-            hasRewardApr: boolean;
-            thirdPartyApr: string;
-            nativeRewardApr: string;
-            swapApr: string;
-            total: string;
-            items: Array<{
-                __typename: 'GqlBalancePoolAprItem';
-                title: string;
-                apr: string;
-                subItems?: Array<{ __typename: 'GqlBalancePoolAprSubItem'; title: string; apr: string }> | null;
-            }>;
-        };
-    };
-    allTokens: Array<{
-        __typename: 'GqlPoolTokenExpanded';
-        id: string;
-        address: string;
-        isNested: boolean;
-        isPhantomBpt: boolean;
-    }>;
-};
-
-type GqlPoolBase_GqlPoolPhantomStable_Fragment = {
-    __typename: 'GqlPoolPhantomStable';
-    id: string;
-    address: string;
-    name: string;
-    symbol: string;
-    createTime: number;
-    dynamicData: {
-        __typename: 'GqlPoolDynamicData';
-        totalLiquidity: string;
-        totalShares: string;
-        fees24h: string;
-        swapFee: string;
-        volume24h: string;
-        apr: {
-            __typename: 'GqlPoolApr';
-            hasRewardApr: boolean;
-            thirdPartyApr: string;
-            nativeRewardApr: string;
-            swapApr: string;
-            total: string;
-            items: Array<{
-                __typename: 'GqlBalancePoolAprItem';
-                title: string;
-                apr: string;
-                subItems?: Array<{ __typename: 'GqlBalancePoolAprSubItem'; title: string; apr: string }> | null;
-            }>;
-        };
-    };
-    allTokens: Array<{
-        __typename: 'GqlPoolTokenExpanded';
-        id: string;
-        address: string;
-        isNested: boolean;
-        isPhantomBpt: boolean;
-    }>;
-};
-
-type GqlPoolBase_GqlPoolStable_Fragment = {
-    __typename: 'GqlPoolStable';
-    id: string;
-    address: string;
-    name: string;
-    symbol: string;
-    createTime: number;
-    dynamicData: {
-        __typename: 'GqlPoolDynamicData';
-        totalLiquidity: string;
-        totalShares: string;
-        fees24h: string;
-        swapFee: string;
-        volume24h: string;
-        apr: {
-            __typename: 'GqlPoolApr';
-            hasRewardApr: boolean;
-            thirdPartyApr: string;
-            nativeRewardApr: string;
-            swapApr: string;
-            total: string;
-            items: Array<{
-                __typename: 'GqlBalancePoolAprItem';
-                title: string;
-                apr: string;
-                subItems?: Array<{ __typename: 'GqlBalancePoolAprSubItem'; title: string; apr: string }> | null;
-            }>;
-        };
-    };
-    allTokens: Array<{
-        __typename: 'GqlPoolTokenExpanded';
-        id: string;
-        address: string;
-        isNested: boolean;
-        isPhantomBpt: boolean;
-    }>;
-};
-
-type GqlPoolBase_GqlPoolWeighted_Fragment = {
-    __typename: 'GqlPoolWeighted';
-    id: string;
-    address: string;
-    name: string;
-    symbol: string;
-    createTime: number;
-    dynamicData: {
-        __typename: 'GqlPoolDynamicData';
-        totalLiquidity: string;
-        totalShares: string;
-        fees24h: string;
-        swapFee: string;
-        volume24h: string;
-        apr: {
-            __typename: 'GqlPoolApr';
-            hasRewardApr: boolean;
-            thirdPartyApr: string;
-            nativeRewardApr: string;
-            swapApr: string;
-            total: string;
-            items: Array<{
-                __typename: 'GqlBalancePoolAprItem';
-                title: string;
-                apr: string;
-                subItems?: Array<{ __typename: 'GqlBalancePoolAprSubItem'; title: string; apr: string }> | null;
-            }>;
-        };
-    };
-    allTokens: Array<{
-        __typename: 'GqlPoolTokenExpanded';
-        id: string;
-        address: string;
-        isNested: boolean;
-        isPhantomBpt: boolean;
-    }>;
-};
-
-export type GqlPoolBaseFragment =
-    | GqlPoolBase_GqlPoolElement_Fragment
-    | GqlPoolBase_GqlPoolLinear_Fragment
-    | GqlPoolBase_GqlPoolLiquidityBootstrapping_Fragment
-    | GqlPoolBase_GqlPoolPhantomStable_Fragment
-    | GqlPoolBase_GqlPoolStable_Fragment
-    | GqlPoolBase_GqlPoolWeighted_Fragment;
 
 export type GetSorSwapsQueryVariables = Exact<{
     tokenIn: Scalars['String'];
@@ -3033,8 +2639,8 @@ export const GqlPoolTokenPhantomStableFragmentDoc = gql`
     ${GqlPoolTokenFragmentDoc}
     ${GqlPoolTokenLinearFragmentDoc}
 `;
-export const GqlPoolBaseFragmentDoc = gql`
-    fragment GqlPoolBase on GqlPoolBase {
+export const GqlPoolMinimalFragmentDoc = gql`
+    fragment GqlPoolMinimal on GqlPoolMinimal {
         id
         address
         name
@@ -3460,39 +3066,7 @@ export const GetPoolsDocument = gql`
             where: $where
             textSearch: $textSearch
         ) {
-            id
-            address
-            name
-            symbol
-            createTime
-            dynamicData {
-                totalLiquidity
-                totalShares
-                fees24h
-                swapFee
-                volume24h
-                apr {
-                    hasRewardApr
-                    thirdPartyApr
-                    nativeRewardApr
-                    swapApr
-                    total
-                    items {
-                        title
-                        apr
-                        subItems {
-                            title
-                            apr
-                        }
-                    }
-                }
-            }
-            allTokens {
-                id
-                address
-                isNested
-                isPhantomBpt
-            }
+            ...GqlPoolMinimal
         }
         count: poolGetPoolsCount(
             first: $first
@@ -3503,6 +3077,7 @@ export const GetPoolsDocument = gql`
             textSearch: $textSearch
         )
     }
+    ${GqlPoolMinimalFragmentDoc}
 `;
 
 /**

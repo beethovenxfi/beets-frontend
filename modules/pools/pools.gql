@@ -14,39 +14,7 @@ query GetPools(
         where: $where
         textSearch: $textSearch
     ) {
-        id
-        address
-        name
-        symbol
-        createTime
-        dynamicData {
-            totalLiquidity
-            totalShares
-            fees24h
-            swapFee
-            volume24h
-            apr {
-                hasRewardApr
-                thirdPartyApr
-                nativeRewardApr
-                swapApr
-                total
-                items {
-                    title
-                    apr
-                    subItems {
-                        title
-                        apr
-                    }
-                }
-            }
-        }
-        allTokens {
-            id
-            address
-            isNested
-            isPhantomBpt
-        }
+        ...GqlPoolMinimal
     }
     count: poolGetPoolsCount(
         first: $first
@@ -59,7 +27,7 @@ query GetPools(
 }
 
 #not sure why, but can't expand the fragment in the query above, probably has to do with the interface type
-fragment GqlPoolBase on GqlPoolBase {
+fragment GqlPoolMinimal on GqlPoolMinimal {
     id
     address
     name
