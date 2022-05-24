@@ -1194,6 +1194,32 @@ export type GetTokenPricesQuery = {
     tokenPrices: Array<{ __typename: 'GqlTokenPrice'; price: number; address: string }>;
 };
 
+export type GetTokensDynamicDataQueryVariables = Exact<{
+    addresses: Array<Scalars['String']> | Scalars['String'];
+}>;
+
+export type GetTokensDynamicDataQuery = {
+    __typename: 'Query';
+    dynamicData: Array<{
+        __typename: 'GqlTokenDynamicData';
+        ath: number;
+        atl: number;
+        fdv?: string | null;
+        high24h: number;
+        id: string;
+        low24h: number;
+        marketCap?: string | null;
+        price: number;
+        priceChange24h: number;
+        priceChangePercent7d?: number | null;
+        priceChangePercent14d?: number | null;
+        priceChangePercent24h: number;
+        priceChangePercent30d?: number | null;
+        tokenAddress: string;
+        updatedAt: string;
+    }>;
+};
+
 export type GetPoolQueryVariables = Exact<{
     id: Scalars['String'];
 }>;
@@ -3171,6 +3197,68 @@ export function useGetTokenPricesLazyQuery(
 export type GetTokenPricesQueryHookResult = ReturnType<typeof useGetTokenPricesQuery>;
 export type GetTokenPricesLazyQueryHookResult = ReturnType<typeof useGetTokenPricesLazyQuery>;
 export type GetTokenPricesQueryResult = Apollo.QueryResult<GetTokenPricesQuery, GetTokenPricesQueryVariables>;
+export const GetTokensDynamicDataDocument = gql`
+    query GetTokensDynamicData($addresses: [String!]!) {
+        dynamicData: tokenGetTokensDynamicData(addresses: $addresses) {
+            ath
+            atl
+            fdv
+            high24h
+            id
+            low24h
+            marketCap
+            price
+            priceChange24h
+            priceChangePercent7d
+            priceChangePercent14d
+            priceChangePercent24h
+            priceChangePercent30d
+            tokenAddress
+            updatedAt
+        }
+    }
+`;
+
+/**
+ * __useGetTokensDynamicDataQuery__
+ *
+ * To run a query within a React component, call `useGetTokensDynamicDataQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetTokensDynamicDataQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetTokensDynamicDataQuery({
+ *   variables: {
+ *      addresses: // value for 'addresses'
+ *   },
+ * });
+ */
+export function useGetTokensDynamicDataQuery(
+    baseOptions: Apollo.QueryHookOptions<GetTokensDynamicDataQuery, GetTokensDynamicDataQueryVariables>,
+) {
+    const options = { ...defaultOptions, ...baseOptions };
+    return Apollo.useQuery<GetTokensDynamicDataQuery, GetTokensDynamicDataQueryVariables>(
+        GetTokensDynamicDataDocument,
+        options,
+    );
+}
+export function useGetTokensDynamicDataLazyQuery(
+    baseOptions?: Apollo.LazyQueryHookOptions<GetTokensDynamicDataQuery, GetTokensDynamicDataQueryVariables>,
+) {
+    const options = { ...defaultOptions, ...baseOptions };
+    return Apollo.useLazyQuery<GetTokensDynamicDataQuery, GetTokensDynamicDataQueryVariables>(
+        GetTokensDynamicDataDocument,
+        options,
+    );
+}
+export type GetTokensDynamicDataQueryHookResult = ReturnType<typeof useGetTokensDynamicDataQuery>;
+export type GetTokensDynamicDataLazyQueryHookResult = ReturnType<typeof useGetTokensDynamicDataLazyQuery>;
+export type GetTokensDynamicDataQueryResult = Apollo.QueryResult<
+    GetTokensDynamicDataQuery,
+    GetTokensDynamicDataQueryVariables
+>;
 export const GetPoolDocument = gql`
     query GetPool($id: String!) {
         pool: poolGetPool(id: $id) {

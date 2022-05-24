@@ -161,6 +161,27 @@ export const GetTokenPrices = gql`
         }
     }
 `;
+export const GetTokensDynamicData = gql`
+    query GetTokensDynamicData($addresses: [String!]!) {
+        dynamicData: tokenGetTokensDynamicData(addresses: $addresses) {
+            ath
+            atl
+            fdv
+            high24h
+            id
+            low24h
+            marketCap
+            price
+            priceChange24h
+            priceChangePercent7d
+            priceChangePercent14d
+            priceChangePercent24h
+            priceChangePercent30d
+            tokenAddress
+            updatedAt
+        }
+    }
+`;
 export const GetPool = gql`
     query GetPool($id: String!) {
         pool: poolGetPool(id: $id) {
