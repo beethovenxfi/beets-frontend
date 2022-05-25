@@ -522,6 +522,8 @@ type GqlPoolElement implements GqlPoolBase {
 input GqlPoolFilter {
     categoryIn: [GqlPoolFilterCategory!]
     categoryNotIn: [GqlPoolFilterCategory!]
+    filterIn: [String!]
+    filterNotIn: [String!]
     idIn: [String!]
     idNotIn: [String!]
     poolTypeIn: [GqlPoolFilterType!]
@@ -532,6 +534,11 @@ input GqlPoolFilter {
 
 enum GqlPoolFilterCategory {
     INCENTIVIZED
+}
+
+type GqlPoolFilterDefinition {
+    id: ID!
+    title: String!
 }
 
 enum GqlPoolFilterType {
@@ -1014,6 +1021,7 @@ type Query {
     pool(id: String!): GqlBalancerPool!
     poolGet24hData(poolId: ID!): GqlBalancerPool24h!
     poolGetPool(id: String!): GqlPoolBase!
+    poolGetPoolFilters: [GqlPoolFilterDefinition!]!
     poolGetPools(
         first: Int
         orderBy: GqlPoolOrderBy

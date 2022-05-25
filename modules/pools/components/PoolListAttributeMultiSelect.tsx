@@ -27,6 +27,7 @@ export function PoolListAttributeMultiSelect() {
                     </Flex>
                 )}
                 placeholder="Filter by attribute..."
+                onChange={(selected) => {}}
             />
         </Box>
     );

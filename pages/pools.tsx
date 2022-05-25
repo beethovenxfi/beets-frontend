@@ -1,6 +1,6 @@
 import PoolList from '../modules/pools/PoolList';
 import { initializeApolloClient, loadApolloState } from '~/apollo/client';
-import { GetPools } from '~/apollo/generated/operations';
+import { GetPoolFilters, GetPools } from '~/apollo/generated/operations';
 import { GetPoolsQuery, GetPoolsQueryVariables } from '~/apollo/generated/graphql-codegen-generated';
 import { DEFAULT_POOL_LIST_QUERY_VARS } from '~/modules/pools/usePoolList';
 
@@ -22,6 +22,8 @@ export async function getStaticProps() {
                 query: GetPools,
                 variables: DEFAULT_POOL_LIST_QUERY_VARS,
             });
+
+            await client.query({ query: GetPoolFilters });
         },
     });
 }

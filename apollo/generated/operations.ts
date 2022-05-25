@@ -361,6 +361,14 @@ export const GetPools = gql`
     }
     ${GqlPoolMinimal}
 `;
+export const GetPoolFilters = gql`
+    query GetPoolFilters {
+        filters: poolGetPoolFilters {
+            id
+            title
+        }
+    }
+`;
 export const GetSorSwaps = gql`
     query GetSorSwaps(
         $tokenIn: String!

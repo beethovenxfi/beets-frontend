@@ -38,9 +38,10 @@ interface Props<T> {
     options: T[];
     renderOption: (data: T, children: any) => React.ReactNode;
     renderMultiValue: (data: T, children: any) => React.ReactNode;
+    onChange: (newValue: T[]) => void;
 }
 
-export function MultiSelect<T>({ placeholder, options, renderOption, renderMultiValue }: Props<T>) {
+export function MultiSelect<T>({ placeholder, options, renderOption, renderMultiValue, onChange }: Props<T>) {
     const customComponents = {
         Option: ({ children, ...props }: any) => (
             <chakraComponents.Option {...props}>{renderOption(props.data, children)}</chakraComponents.Option>
@@ -62,6 +63,7 @@ export function MultiSelect<T>({ placeholder, options, renderOption, renderMulti
                 chakraStyles={chakraStyles}
                 placeholder={placeholder}
                 components={customComponents}
+                onChange={onChange}
             />
         </Box>
     );

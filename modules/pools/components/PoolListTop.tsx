@@ -3,7 +3,7 @@ import { PoolListTabs } from '~/modules/pools/components/PoolListTabs';
 import { PoolListSearch } from '~/modules/pools/components/PoolListSearch';
 import { Filter } from 'react-feather';
 import { PoolListTokenMultiSelect } from '~/modules/pools/components/PoolListTokenMultiSelect';
-import { PoolListCategoryMultiSelect } from '~/modules/pools/components/PoolListCategoryMultiSelect';
+import { PoolListFilterMultiSelect } from '~/modules/pools/components/PoolListFilterMultiSelect';
 import { PoolListAttributeMultiSelect } from '~/modules/pools/components/PoolListAttributeMultiSelect';
 import { useBoolean } from '@chakra-ui/hooks';
 
@@ -36,10 +36,10 @@ export function PoolListTop() {
                         <PoolListTokenMultiSelect />
                     </Box>
                     <Box flex={1} mx={2}>
-                        <PoolListCategoryMultiSelect />
+                        <PoolListFilterMultiSelect />
                     </Box>
                     <Box flex={1} ml={2}>
-                        <PoolListAttributeMultiSelect />
+                        {/*<PoolListAttributeMultiSelect />*/}
                     </Box>
                 </Flex>
             ) : null}

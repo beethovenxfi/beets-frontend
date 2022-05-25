@@ -1,5 +1,10 @@
 import { makeVar, useReactiveVar } from '@apollo/client';
-import { GetPoolsQueryVariables, GqlPoolOrderBy, useGetPoolsQuery } from '~/apollo/generated/graphql-codegen-generated';
+import {
+    GetPoolsQueryVariables,
+    GqlPoolOrderBy,
+    useGetPoolFiltersQuery,
+    useGetPoolsQuery,
+} from '~/apollo/generated/graphql-codegen-generated';
 import { useBoolean } from '@chakra-ui/hooks';
 import { useEffect } from 'react';
 
@@ -39,6 +44,8 @@ export function usePoolList() {
         notifyOnNetworkStatusChange: true,
         variables: state,
     });
+
+    const { data: poolFilters } = useGetPoolFiltersQuery();
 
     useEffect(() => {
         console.log('on change');
@@ -93,5 +100,6 @@ export function usePoolList() {
         setPageSize,
         showMyInvestments,
         setShowMyInvestments,
+        filters: poolFilters?.filters || [],
     };
 }
