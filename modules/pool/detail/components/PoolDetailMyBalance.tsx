@@ -1,5 +1,5 @@
 import { BeetsBox } from '~/components/box/BeetsBox';
-import { Box, BoxProps, Flex, Text } from '@chakra-ui/react';
+import { Box, BoxProps, Flex, Skeleton, Text } from '@chakra-ui/react';
 import { usePool } from '~/modules/pool/lib/usePool';
 import numeral from 'numeral';
 import TokenAvatar from '~/components/token/TokenAvatar';
@@ -12,7 +12,7 @@ interface Props extends BoxProps {}
 
 export function PoolDetailMyBalance({ ...rest }: Props) {
     const { pool } = usePool();
-    const { data } = usePoolBalanceEstimate();
+    const { data, isLoading } = usePoolBalanceEstimate();
     const { formattedPrice, priceForAmount } = useGetTokens();
     const userPoolBalance = sumBy(data || [], priceForAmount);
 
@@ -22,9 +22,11 @@ export function PoolDetailMyBalance({ ...rest }: Props) {
                 <Text fontSize="xl" fontWeight="bold" flex={1}>
                     My pool balance
                 </Text>
-                <Text fontSize="xl" fontWeight="bold">
-                    {numeral(userPoolBalance).format('$0,0.00')}
-                </Text>
+                <Skeleton isLoaded={!isLoading}>
+                    <Text fontSize="xl" fontWeight="bold">
+                        {numeral(userPoolBalance).format('$0,0.00')}
+                    </Text>
+                </Skeleton>
             </Box>
             <Box p={4} pb={0}>
                 {pool.tokens.map((token, index) => {
@@ -42,12 +44,20 @@ export function PoolDetailMyBalance({ ...rest }: Props) {
                             </Box>
 
                             <Box>
-                                <Text fontSize="xl" textAlign="right">
-                                    {tokenFormatAmount(amount)}
-                                </Text>
-                                <Text textAlign="right" color="beets.gray.200">
-                                    {formattedPrice({ address: token.address, amount })}
-                                </Text>
+                                {isLoading ? (
+                                    <Skeleton height="24px" mb={2} width="20" />
+                                ) : (
+                                    <Text fontSize="xl" textAlign="right">
+                                        {tokenFormatAmount(amount)}
+                                    </Text>
+                                )}
+                                {isLoading ? (
+                                    <Skeleton height="16px" width="20" />
+                                ) : (
+                                    <Text textAlign="right" color="beets.gray.200">
+                                        {formattedPrice({ address: token.address, amount })}
+                                    </Text>
+                                )}
                             </Box>
                         </Flex>
                     );
