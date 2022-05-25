@@ -27,11 +27,6 @@ function PoolDetail() {
                 <Box flex={1} ml={8}>
                     <PoolDetailMyBalance mb={8} />
                     <PoolDetailActions />
-                    <BeetsBox h="2xs" display="flex" justifyContent="center" alignItems="center" mt={8}>
-                        <Text textStyle="h3" fontWeight="bold">
-                            INVEST / WITHDRAW
-                        </Text>
-                    </BeetsBox>
                     <BeetsBox h="3xs" display="flex" justifyContent="center" alignItems="center" mt={8}>
                         <Text textStyle="h3" fontWeight="bold">
                             REWARDS

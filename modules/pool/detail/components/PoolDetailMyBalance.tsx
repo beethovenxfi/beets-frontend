@@ -4,7 +4,7 @@ import { usePool } from '~/modules/pool/lib/usePool';
 import numeral from 'numeral';
 import TokenAvatar from '~/components/token/TokenAvatar';
 import { tokenFormatAmount } from '~/lib/services/token/token-util';
-import { usePoolBalanceEstimate } from '~/modules/pool/detail/lib/usePoolBalanceEstimate';
+import { usePoolUserBalanceEstimate } from '~/modules/pool/detail/lib/usePoolUserBalanceEstimate';
 import { useGetTokens } from '~/lib/global/useToken';
 import { sumBy } from 'lodash';
 
@@ -12,9 +12,8 @@ interface Props extends BoxProps {}
 
 export function PoolDetailMyBalance({ ...rest }: Props) {
     const { pool } = usePool();
-    const { data, isLoading } = usePoolBalanceEstimate();
-    const { formattedPrice, priceForAmount } = useGetTokens();
-    const userPoolBalance = sumBy(data || [], priceForAmount);
+    const { data, isLoading, userPoolBalanceUSD } = usePoolUserBalanceEstimate();
+    const { formattedPrice } = useGetTokens();
 
     return (
         <BeetsBox {...rest}>
@@ -24,7 +23,7 @@ export function PoolDetailMyBalance({ ...rest }: Props) {
                 </Text>
                 <Skeleton isLoaded={!isLoading}>
                     <Text fontSize="xl" fontWeight="bold">
-                        {numeral(userPoolBalance).format('$0,0.00')}
+                        {numeral(userPoolBalanceUSD).format('$0,0.00')}
                     </Text>
                 </Skeleton>
             </Box>
