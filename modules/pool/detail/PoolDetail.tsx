@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { usePool } from '~/modules/pool/lib/usePool';
 import { BeetsBox } from '~/components/box/BeetsBox';
 import PoolDetailChart from '~/modules/pool/detail/components/PoolDetailChart';
+import { PoolDetailMyBalance } from '~/modules/pool/detail/components/PoolDetailMyBalance';
 
 function PoolDetail() {
     const { pool } = usePool();
@@ -33,11 +34,7 @@ function PoolDetail() {
                     <PoolComposition pool={pool} />
                 </Box>
                 <Box flex={1} ml={8}>
-                    <BeetsBox h="2xs" display="flex" justifyContent="center" alignItems="center">
-                        <Text textStyle="h3" fontWeight="bold">
-                            MY BALANCE
-                        </Text>
-                    </BeetsBox>
+                    <PoolDetailMyBalance />
                     <BeetsBox h="2xs" display="flex" justifyContent="center" alignItems="center" mt={8}>
                         <Text textStyle="h3" fontWeight="bold">
                             INVEST / WITHDRAW

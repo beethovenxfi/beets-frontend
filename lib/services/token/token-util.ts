@@ -1,5 +1,11 @@
-import { AmountHumanReadableMap, TokenAmountHumanReadable, TokenBase } from '~/lib/services/token/token-types';
+import {
+    AmountHumanReadable,
+    AmountHumanReadableMap,
+    TokenAmountHumanReadable,
+    TokenBase,
+} from '~/lib/services/token/token-types';
 import { map, pickBy } from 'lodash';
+import numeral from 'numeral';
 
 export function tokenGetAmountForAddress(
     address: string,
@@ -24,4 +30,20 @@ export function tokenAmountsGetArrayFromMap(amountMap: AmountHumanReadableMap): 
         pickBy(amountMap, (amount) => amount !== ''),
         (amount, address) => ({ amount, address }),
     );
+}
+
+export function tokenFormatAmount(amount: AmountHumanReadable) {
+    const amountNum = parseFloat(amount);
+
+    if (amountNum < 1) {
+        return numeral(amount).format('0.[000000]');
+    } else if (amountNum < 10) {
+        return numeral(amount).format('0.[0000]');
+    } else if (amountNum < 100) {
+        return numeral(amount).format('0.[0000]');
+    } else if (amountNum < 1000) {
+        return numeral(amount).format('0,0.[00]');
+    }
+
+    return numeral(amount).format('0,0');
 }
