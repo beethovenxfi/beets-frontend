@@ -9,7 +9,7 @@ type Props = {
     toggleTokenSelect?: () => void;
     address: string | null;
     onChange?: (event: FormEvent<HTMLInputElement>) => void;
-    value?: string;
+    value?: string | null;
 };
 
 export default function TokenInput({ label, toggleTokenSelect, address, onChange, value }: Props) {

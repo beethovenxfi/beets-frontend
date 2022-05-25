@@ -1,4 +1,4 @@
-import { Grid, GridItem, VStack, Box } from '@chakra-ui/react';
+import { Grid, GridItem, VStack, Box, Text } from '@chakra-ui/react';
 import TradeChart from '~/components/charts/TradeChart';
 import Navbar from '../components/nav/Navbar';
 
@@ -14,11 +14,46 @@ import TradeCard from '../modules/trade/TradeCard';
 import { initializeApolloClient, loadApolloState } from '~/apollo/client';
 import { GetPools } from '~/apollo/generated/operations';
 import { DEFAULT_POOL_LIST_QUERY_VARS } from '~/modules/pools/usePoolList';
+import { tradeContextVar, useTrade } from '~/modules/trade/tradeState';
+import { AnimatePresence, useAnimation } from 'framer-motion';
+import TradePreview from '~/modules/trade/TradePreview';
+import { useEffect } from 'react';
 
 function Trade() {
-    const { data, loading, error } = useGetTokensQuery();
+    const { tradeContext } = useTrade();
+    const beetsHeadControls = useAnimation();
+    const tradePreviewControls = useAnimation();
 
-    console.log('bing', data?.tokens, loading);
+    useEffect(() => {
+        if (tradeContext.isPreviewVisible) {
+            setTimeout(() => {
+                beetsHeadControls.start({
+                    opacity: 1,
+                    scale: 1.75,
+                    transition: { type: 'spring', stiffness: 250, damping: 15 },
+                });
+            }, 250);
+            setTimeout(() => {
+                beetsHeadControls.start({
+                    opacity: 0,
+                    scale: 0,
+                });
+            }, 500);
+            setTimeout(() => {
+                tradePreviewControls.start({
+                    opacity: 1,
+                    scale: 1,
+                });
+            }, 700);
+        }
+    }, [tradeContext.isPreviewVisible]);
+
+    const handlePreviewClosed = () => {
+        tradeContextVar({
+            ...tradeContext,
+            isPreviewVisible: false,
+        });
+    };
 
     return (
         <Grid paddingX="8" width="full" templateColumns="repeat(12, 1fr)" gap="0">
@@ -26,24 +61,56 @@ function Trade() {
                 <TradeChart />
             </GridItem>
             <GridItem w="100%" colSpan={4}>
-                <VStack>
-                    <TradeCard />
-                    {/* <AnimatedBox
-                        display="flex"
-                        flexDirection="column"
-                        alignItems="center"
-                        initial={{ transform: 'scale(0)' }}
-                        exit={{ transform: 'scale(0)' }}
-                        animate={{ transform: 'scale(100%)' }}
-                    >
-                        <VStack spacing="4" padding="4">
-                            <AnimatedChevrons delay={.1}  />
-                            <Box>
-                                <Image src={BeetsSmart} width="64px" alt="smart-beets" />
-                            </Box>
-                            <AnimatedChevrons color="beets.red.300" delay={.8} />
-                        </VStack>
-                    </AnimatedBox> */}
+                <VStack w="full" position="relative">
+                    <AnimatePresence>
+                        {!tradeContext.isPreviewVisible && (
+                            <AnimatedBox
+                                w="full"
+                                animate={{ scale: 1, transition: { type: 'spring', stiffness: 250, damping: 15 } }}
+                                transformOrigin="center"
+                                initial={{
+                                    position: 'relative',
+                                    scale: 0.8,
+                                }}
+                                exit={{
+                                    opacity: 0,
+                                    scale: 0.7,
+                                    position: 'absolute',
+                                    top: 0,
+                                    width: 'fit-content',
+                                    transition: { type: 'spring', stiffness: 250, damping: 15 },
+                                }}
+                            >
+                                <TradeCard />
+                            </AnimatedBox>
+                        )}
+                    </AnimatePresence>
+                    <AnimatePresence>
+                        {tradeContext.isPreviewVisible && (
+                            <>
+                                <AnimatedBox
+                                    // animate={{ opacity: 1, scale: 1, transition: { delay: 0.25 } }}
+                                    animate={beetsHeadControls}
+                                    initial={{ opacity: 0, scale: 0 }}
+                                    exit={{ opacity: 0, scale: 0 }}
+                                    position="absolute"
+                                    top="100px"
+                                >
+                                    <VStack alignItems="center">
+                                        <Image src={BeetsSmart} width="64px" alt="smart-beets" />
+                                    </VStack>
+                                </AnimatedBox>
+                                <AnimatedBox
+                                    w="full"
+                                    animate={tradePreviewControls}
+                                    initial={{ opacity: 0, scale: 0.7 }}
+                                    exit={{ opacity: 0, scale: 0.7, position: 'absolute' }}
+                                >
+                                    <TradePreview onClose={handlePreviewClosed} />
+                                </AnimatedBox>
+                            </>
+                        )}
+                    </AnimatePresence>
                 </VStack>
             </GridItem>
         </Grid>
