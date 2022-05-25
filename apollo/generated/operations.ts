@@ -84,8 +84,8 @@ export const GqlPoolTokenPhantomStable = gql`
     ${GqlPoolToken}
     ${GqlPoolTokenLinear}
 `;
-export const GqlPoolBase = gql`
-    fragment GqlPoolBase on GqlPoolBase {
+export const GqlPoolMinimal = gql`
+    fragment GqlPoolMinimal on GqlPoolMinimal {
         id
         address
         name
@@ -158,6 +158,27 @@ export const GetTokenPrices = gql`
         tokenPrices: tokenGetCurrentPrices {
             price
             address
+        }
+    }
+`;
+export const GetTokensDynamicData = gql`
+    query GetTokensDynamicData($addresses: [String!]!) {
+        dynamicData: tokenGetTokensDynamicData(addresses: $addresses) {
+            ath
+            atl
+            fdv
+            high24h
+            id
+            low24h
+            marketCap
+            price
+            priceChange24h
+            priceChangePercent7d
+            priceChangePercent14d
+            priceChangePercent24h
+            priceChangePercent30d
+            tokenAddress
+            updatedAt
         }
     }
 `;
@@ -310,13 +331,6 @@ export const GetPool = gql`
     ${GqlPoolTokenLinear}
     ${GqlPoolTokenPhantomStable}
 `;
-export const GetTokenNames = gql`
-    query GetTokenNames {
-        tokens: tokenGetTokens {
-            name
-        }
-    }
-`;
 export const GetPools = gql`
     query GetPools(
         $first: Int
@@ -334,41 +348,18 @@ export const GetPools = gql`
             where: $where
             textSearch: $textSearch
         ) {
-            id
-            address
-            name
-            symbol
-            createTime
-            dynamicData {
-                totalLiquidity
-                totalShares
-                fees24h
-                swapFee
-                volume24h
-                apr {
-                    hasRewardApr
-                    thirdPartyApr
-                    nativeRewardApr
-                    swapApr
-                    total
-                    items {
-                        title
-                        apr
-                        subItems {
-                            title
-                            apr
-                        }
-                    }
-                }
-            }
-            allTokens {
-                id
-                address
-                isNested
-                isPhantomBpt
-            }
+            ...GqlPoolMinimal
         }
+        count: poolGetPoolsCount(
+            first: $first
+            skip: $skip
+            orderBy: $orderBy
+            orderDirection: $orderDirection
+            where: $where
+            textSearch: $textSearch
+        )
     }
+    ${GqlPoolMinimal}
 `;
 export const GetSorSwaps = gql`
     query GetSorSwaps(

@@ -647,6 +647,19 @@ type GqlPoolLiquidityBootstrapping implements GqlPoolBase {
     withdrawConfig: GqlPoolWithdrawConfig!
 }
 
+type GqlPoolMinimal {
+    address: Bytes!
+    allTokens: [GqlPoolTokenExpanded!]!
+    createTime: Int!
+    decimals: Int!
+    dynamicData: GqlPoolDynamicData!
+    factory: Bytes
+    id: ID!
+    name: String!
+    owner: Bytes
+    symbol: String!
+}
+
 union GqlPoolNestedUnion = GqlPoolLinearNested | GqlPoolPhantomStableNested
 
 enum GqlPoolNestingType {
@@ -972,6 +985,7 @@ type Mutation {
     poolSyncPoolAllTokensRelationship: String!
     poolSyncSanityPoolData: String!
     poolSyncSwapsForLast24Hours: String!
+    poolSyncTotalShares: String!
     poolUpdateAprs: String!
     poolUpdateLiquidityValuesForAllPools: String!
     poolUpdateVolumeAndFeeValuesForAllPools: String!
@@ -1007,7 +1021,15 @@ type Query {
         skip: Int
         textSearch: String
         where: GqlPoolFilter
-    ): [GqlPoolBase!]!
+    ): [GqlPoolMinimal!]!
+    poolGetPoolsCount(
+        first: Int
+        orderBy: GqlPoolOrderBy
+        orderDirection: GqlPoolOrderDirection
+        skip: Int
+        textSearch: String
+        where: GqlPoolFilter
+    ): Int!
     poolSnapshots(poolId: ID!): [GqlBalancerPoolSnapshot!]!
     pools: [GqlBalancerPool!]!
     poolsJSON: [JSON!]!

@@ -1,6 +1,5 @@
 import { useMemo } from 'react';
 import { ApolloClient, HttpLink, InMemoryCache } from '@apollo/client';
-import { concatPagination } from '@apollo/client/utilities';
 import merge from 'deepmerge';
 import isEqual from 'lodash/isEqual';
 import { GetAppGlobalData } from '~/apollo/generated/operations';
@@ -20,11 +19,6 @@ function createApolloClient() {
                 },
                 GqlTokenPrice: {
                     keyFields: ['address'],
-                },
-                Query: {
-                    fields: {
-                        poolGetPools: concatPagination(),
-                    },
                 },
             },
         }),
