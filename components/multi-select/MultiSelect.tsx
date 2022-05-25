@@ -1,5 +1,5 @@
 import { Box } from '@chakra-ui/react';
-import { chakraComponents, ChakraStylesConfig, Select } from 'chakra-react-select';
+import { chakraComponents, ChakraStylesConfig, Select, OnChangeValue } from 'chakra-react-select';
 import React from 'react';
 
 const chakraStyles: ChakraStylesConfig = {
@@ -38,7 +38,7 @@ interface Props<T> {
     options: T[];
     renderOption: (data: T, children: any) => React.ReactNode;
     renderMultiValue: (data: T, children: any) => React.ReactNode;
-    onChange: (newValue: T[]) => void;
+    onChange: (newValue: OnChangeValue<T, true>) => void;
 }
 
 export function MultiSelect<T>({ placeholder, options, renderOption, renderMultiValue, onChange }: Props<T>) {
@@ -63,7 +63,7 @@ export function MultiSelect<T>({ placeholder, options, renderOption, renderMulti
                 chakraStyles={chakraStyles}
                 placeholder={placeholder}
                 components={customComponents}
-                onChange={onChange}
+                onChange={(newValue) => onChange(newValue as T[])}
             />
         </Box>
     );
