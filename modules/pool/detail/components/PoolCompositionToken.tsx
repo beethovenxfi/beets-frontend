@@ -17,8 +17,9 @@ function PoolCompositionToken({ token, last, nestLevel = 0 }: Props) {
     const balance = parseFloat(token.balance);
     const value = balance * priceFor(token.address);
 
+    // bgColor={'beets.gray.300'}
     return (
-        <Flex alignItems="center" mb={last ? 0 : 2} ml={nestLevel * 8}>
+        <Flex pb={last ? 0 : 2} ml={nestLevel * 8}>
             <Box flex={1}>
                 <Link href={etherscanGetTokenUrl(token.address)} isExternal={true} display={'flex'} alignItems="center">
                     <TokenAvatar address={token.address} size={'sm'} />
@@ -30,10 +31,10 @@ function PoolCompositionToken({ token, last, nestLevel = 0 }: Props) {
                 </Link>
             </Box>
             {token.weight ? <Box mr={6}>{numeral(token.weight).format('%')}</Box> : null}
-            <Box w={125} textAlign="end" mr={4}>
+            <Box w={125} textAlign="end" mr={4} color={nestLevel > 0 ? 'beets.gray.200' : undefined}>
                 {numeral(balance).format(balance < 1000 ? '0.[0000]' : '0,0')}
             </Box>
-            <Box w={125} textAlign="end">
+            <Box w={125} textAlign="end" color={nestLevel > 0 ? 'beets.gray.200' : undefined}>
                 {numeral(value).format(value > 100_000 ? '$0,0' : '$0,0.[00]')}
             </Box>
         </Flex>

@@ -9,10 +9,11 @@ import Image from 'next/image';
 
 function PoolHeader() {
     const { pool, poolTokensWithoutPhantomBpt } = usePool();
+    const statColor = 'beets.green.300';
 
     return (
         <>
-            <Text textStyle="h1" as="h1">
+            <Text textStyle="h1" as="h1" fontWeight="bold">
                 {pool.name}
             </Text>
             <Flex mt={4} mb={3}>
@@ -30,26 +31,26 @@ function PoolHeader() {
             <Flex alignItems="flex-end">
                 <AprTooltip
                     data={pool.dynamicData.apr}
-                    textProps={{ fontSize: '3xl', fontWeight: 'bold', color: '#CCFFCC' }}
+                    textProps={{ fontSize: '3xl', fontWeight: 'bold', color: statColor }}
                 />
-                <Text ml={1} mb={1.5} fontWeight="medium" fontSize="lg" color="#C3C5E9">
+                <Text ml={1} mb={1.5} fontWeight="medium" fontSize="lg">
                     APR
                 </Text>
-                <Text fontSize="3xl" color="#CCFFCC" fontWeight="bold" ml={4}>
+                <Text fontSize="3xl" color={statColor} fontWeight="bold" ml={4}>
                     {numeral(pool.dynamicData.totalLiquidity).format('$0,0')}
                 </Text>
-                <Text ml={1} mb={1.5} fontWeight="medium" fontSize="lg" color="#C3C5E9">
+                <Text ml={1} mb={1.5} fontWeight="medium" fontSize="lg">
                     TVL
                 </Text>
-                <Text fontSize="3xl" color="#CCFFCC" fontWeight="bold" ml={4}>
+                <Text fontSize="3xl" color={statColor} fontWeight="bold" ml={4}>
                     {numeral(pool.dynamicData.volume24h).format('$0,0')}
                 </Text>
-                <Text ml={1} mb={1.5} fontWeight="medium" fontSize="lg" color="#C3C5E9">
+                <Text ml={1} mb={1.5} fontWeight="medium" fontSize="lg">
                     24H VOL
                 </Text>
             </Flex>
             <Flex mt={2}>
-                <Text color="#CCFFCC" fontSize="lg" fontWeight="medium">
+                <Text color={statColor} fontSize="lg" fontWeight="medium">
                     {numeral(pool.dynamicData.swapFee).format('0.0[00]%')}
                 </Text>
                 {!pool.owner ? (
