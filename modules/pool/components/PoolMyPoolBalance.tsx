@@ -4,11 +4,12 @@ import { useGetTokens } from '~/lib/global/useToken';
 import numeral from 'numeral';
 import { usePoolUserBalances } from '~/modules/pool/lib/usePoolUserBalances';
 import { usePool } from '~/modules/pool/lib/usePool';
+import { tokenFormatAmount } from '~/lib/services/token/token-util';
 
 interface Props {}
 
 function PoolTokensInWallet({}: Props) {
-    const { priceFor } = useGetTokens();
+    const { formattedPrice } = useGetTokens();
     const { userPercentShare } = usePoolUserBalances();
     const { poolTokensWithoutPhantomBpt } = usePool();
 
@@ -24,9 +25,9 @@ function PoolTokensInWallet({}: Props) {
                     <Box key={`token-${index}`}>
                         <Flex mb={2} alignItems="center">
                             <Box>
-                                {poolToken.symbol} - {userBalance}
+                                {poolToken.symbol} - {tokenFormatAmount(userBalance)}
                                 <br />
-                                {numeral(priceFor(poolToken.address) * userBalance).format('$0,0.00')}
+                                {formattedPrice({ address: poolToken.address, amount: `${userBalance}` })}
                             </Box>
                         </Flex>
                     </Box>

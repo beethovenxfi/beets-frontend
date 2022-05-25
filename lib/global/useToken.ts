@@ -24,7 +24,7 @@ export function useGetTokens() {
     }
 
     function formattedPrice(tokenAmount: TokenAmountHumanReadable): string {
-        return numeral(priceForAmount(tokenAmount)).format('$0.00');
+        return numeral(priceForAmount(tokenAmount)).format('$0,0.00');
     }
 
     return {

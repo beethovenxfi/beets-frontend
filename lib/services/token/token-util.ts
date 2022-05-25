@@ -32,8 +32,8 @@ export function tokenAmountsGetArrayFromMap(amountMap: AmountHumanReadableMap): 
     );
 }
 
-export function tokenFormatAmount(amount: AmountHumanReadable) {
-    const amountNum = parseFloat(amount);
+export function tokenFormatAmount(amount: AmountHumanReadable | number) {
+    const amountNum = typeof amount === 'string' ? parseFloat(amount) : amount;
 
     if (amountNum < 1) {
         return numeral(amount).format('0.[000000]');

@@ -799,6 +799,26 @@ export interface GqlPoolStablePhantomPoolData {
     totalSupply: Scalars['String'];
 }
 
+export interface GqlPoolSwap {
+    __typename: 'GqlPoolSwap';
+    id: Scalars['ID'];
+    poolId: Scalars['String'];
+    timestamp: Scalars['Int'];
+    tokenAmountIn: Scalars['String'];
+    tokenAmountOut: Scalars['String'];
+    tokenIn: Scalars['String'];
+    tokenOut: Scalars['String'];
+    tx: Scalars['String'];
+    userAddress: Scalars['String'];
+    valueUSD: Scalars['Float'];
+}
+
+export interface GqlPoolSwapFilter {
+    poolIdIn?: InputMaybe<Array<Scalars['String']>>;
+    tokenInIn?: InputMaybe<Array<Scalars['String']>>;
+    tokenOutIn?: InputMaybe<Array<Scalars['String']>>;
+}
+
 export interface GqlPoolToken extends GqlPoolTokenBase {
     __typename: 'GqlPoolToken';
     address: Scalars['String'];
@@ -1101,6 +1121,7 @@ export interface Query {
     poolGetPoolFilters: Array<GqlPoolFilterDefinition>;
     poolGetPools: Array<GqlPoolMinimal>;
     poolGetPoolsCount: Scalars['Int'];
+    poolGetSwaps: Array<GqlPoolSwap>;
     poolSnapshots: Array<GqlBalancerPoolSnapshot>;
     pools: Array<GqlBalancerPool>;
     poolsJSON: Array<Scalars['JSON']>;
@@ -1160,6 +1181,12 @@ export interface QueryPoolGetPoolsCountArgs {
     skip?: InputMaybe<Scalars['Int']>;
     textSearch?: InputMaybe<Scalars['String']>;
     where?: InputMaybe<GqlPoolFilter>;
+}
+
+export interface QueryPoolGetSwapsArgs {
+    first?: InputMaybe<Scalars['Int']>;
+    skip?: InputMaybe<Scalars['Int']>;
+    where?: InputMaybe<GqlPoolSwapFilter>;
 }
 
 export interface QueryPoolSnapshotsArgs {

@@ -746,6 +746,25 @@ type GqlPoolStablePhantomPoolData {
     totalSupply: String!
 }
 
+type GqlPoolSwap {
+    id: ID!
+    poolId: String!
+    timestamp: Int!
+    tokenAmountIn: String!
+    tokenAmountOut: String!
+    tokenIn: String!
+    tokenOut: String!
+    tx: String!
+    userAddress: String!
+    valueUSD: Float!
+}
+
+input GqlPoolSwapFilter {
+    poolIdIn: [String!]
+    tokenInIn: [String!]
+    tokenOutIn: [String!]
+}
+
 type GqlPoolToken implements GqlPoolTokenBase {
     address: String!
     balance: BigDecimal!
@@ -1038,6 +1057,7 @@ type Query {
         textSearch: String
         where: GqlPoolFilter
     ): Int!
+    poolGetSwaps(first: Int, skip: Int, where: GqlPoolSwapFilter): [GqlPoolSwap!]!
     poolSnapshots(poolId: ID!): [GqlBalancerPoolSnapshot!]!
     pools: [GqlBalancerPool!]!
     poolsJSON: [JSON!]!

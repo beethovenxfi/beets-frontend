@@ -7,6 +7,7 @@ import { usePool } from '~/modules/pool/lib/usePool';
 import { BeetsBox } from '~/components/box/BeetsBox';
 import PoolDetailChart from '~/modules/pool/detail/components/PoolDetailChart';
 import { PoolDetailMyBalance } from '~/modules/pool/detail/components/PoolDetailMyBalance';
+import { PoolDetailActions } from '~/modules/pool/detail/components/PoolDetailActions';
 
 function PoolDetail() {
     const { pool } = usePool();
@@ -17,16 +18,6 @@ function PoolDetail() {
                 <Box flex={1}>
                     <PoolHeader />
                 </Box>
-                {/*<Box>
-                    <Link href={`/pool/${pool.id}/invest`}>
-                        <Button bgColor="green.500" mr={4}>
-                            Invest
-                        </Button>
-                    </Link>
-                    <Link href={`/pool/${pool.id}/withdraw`}>
-                        <Button bgColor="blue.500">Withdraw</Button>
-                    </Link>
-                </Box>*/}
             </Flex>
             <Flex>
                 <Box flex={2}>
@@ -34,7 +25,8 @@ function PoolDetail() {
                     <PoolComposition pool={pool} />
                 </Box>
                 <Box flex={1} ml={8}>
-                    <PoolDetailMyBalance />
+                    <PoolDetailMyBalance mb={8} />
+                    <PoolDetailActions />
                     <BeetsBox h="2xs" display="flex" justifyContent="center" alignItems="center" mt={8}>
                         <Text textStyle="h3" fontWeight="bold">
                             INVEST / WITHDRAW
