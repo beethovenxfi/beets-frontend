@@ -20,7 +20,7 @@ function Navbar() {
             </Flex>
             <Flex flex={1} alignItems="center">
                 <NavbarLink href={'/trade'} selected={router.asPath === '/trade'} text="Swap" mr={5} />
-                <NavbarLink href={'/pools'} selected={router.asPath === '/pools'} text="Invest" mr={5} />
+                <NavbarLink href={'/pools'} selected={router.asPath.startsWith('/pool')} text="Invest" mr={5} />
                 <NavbarLink href={'/pools'} text="Stake" mr={5} />
                 <NavbarLink href={'/pools'} text="Launch" />
             </Flex>
