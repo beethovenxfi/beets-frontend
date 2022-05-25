@@ -110,7 +110,7 @@ function MyApp({ Component, pageProps }: AppProps) {
                     <ChakraProvider theme={chakraTheme}>
                         <BeetsFonts />
                         <QueryClientProvider client={queryClient}>
-                            <Box height="full" className="bg" fontFamily="Inter" overflowX="hidden">
+                            <Box height="full" className="bg" overflowX="hidden">
                                 <Box height="full" display="flex" justifyContent="center">
                                     {/* add gutter here */}
                                     <Grid
