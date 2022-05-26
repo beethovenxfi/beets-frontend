@@ -137,6 +137,7 @@ export const GetAppGlobalData = gql`
             price
             address
         }
+        beetsGetFbeetsRatio
     }
 `;
 export const GetTokens = gql`
@@ -180,6 +181,11 @@ export const GetTokensDynamicData = gql`
             tokenAddress
             updatedAt
         }
+    }
+`;
+export const GetFbeetsRatio = gql`
+    query GetFbeetsRatio {
+        ratio: beetsGetFbeetsRatio
     }
 `;
 export const GetPool = gql`

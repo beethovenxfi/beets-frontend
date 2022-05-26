@@ -771,6 +771,7 @@ enum GqlPoolStakingRewarderType {
 }
 
 enum GqlPoolStakingType {
+    FRESH_BEETS
     GAUGE
     MASTER_CHEF
 }
@@ -1036,6 +1037,7 @@ type Mutation {
     poolLoadOnChainDataForAllPools: String!
     poolLoadOnChainDataForPoolsWithActiveUpdates: String!
     poolReloadAllPoolAprs: String!
+    poolReloadStakingForAllPools: String!
     poolSyncAllPoolsFromSubgraph: [String!]!
     poolSyncNewPoolsFromSubgraph: [String!]!
     poolSyncPoolAllTokensRelationship: String!
@@ -1056,6 +1058,7 @@ type Query {
     balancerGetTopTradingPairs: [GqlBalancerTradePairSnapshot!]!
     beetsGetBeetsFarms: [GqlBeetsFarm!]!
     beetsGetConfig: GqlBeetsConfig!
+    beetsGetFbeetsRatio: String!
     beetsGetProtocolData: GqlBeetsProtocolData!
     beetsGetUserDataForAllFarms: [GqlBeetsFarmUser!]!
     beetsGetUserDataForFarm(farmId: String!): GqlBeetsFarmUser

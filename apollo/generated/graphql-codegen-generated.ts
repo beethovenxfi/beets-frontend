@@ -823,7 +823,7 @@ export interface GqlPoolStakingRewarder {
 
 export type GqlPoolStakingRewarderType = 'MASTER_CHEF_REWARDER';
 
-export type GqlPoolStakingType = 'GAUGE' | 'MASTER_CHEF';
+export type GqlPoolStakingType = 'FRESH_BEETS' | 'GAUGE' | 'MASTER_CHEF';
 
 export interface GqlPoolSwap {
     __typename: 'GqlPoolSwap';
@@ -1097,6 +1097,7 @@ export interface Mutation {
     poolLoadOnChainDataForAllPools: Scalars['String'];
     poolLoadOnChainDataForPoolsWithActiveUpdates: Scalars['String'];
     poolReloadAllPoolAprs: Scalars['String'];
+    poolReloadStakingForAllPools: Scalars['String'];
     poolSyncAllPoolsFromSubgraph: Array<Scalars['String']>;
     poolSyncNewPoolsFromSubgraph: Array<Scalars['String']>;
     poolSyncPoolAllTokensRelationship: Scalars['String'];
@@ -1131,6 +1132,7 @@ export interface Query {
     balancerGetTopTradingPairs: Array<GqlBalancerTradePairSnapshot>;
     beetsGetBeetsFarms: Array<GqlBeetsFarm>;
     beetsGetConfig: GqlBeetsConfig;
+    beetsGetFbeetsRatio: Scalars['String'];
     beetsGetProtocolData: GqlBeetsProtocolData;
     beetsGetUserDataForAllFarms: Array<GqlBeetsFarmUser>;
     beetsGetUserDataForFarm?: Maybe<GqlBeetsFarmUser>;
@@ -1244,6 +1246,7 @@ export type GetAppGlobalDataQueryVariables = Exact<{ [key: string]: never }>;
 
 export type GetAppGlobalDataQuery = {
     __typename: 'Query';
+    beetsGetFbeetsRatio: string;
     tokenGetTokens: Array<{
         __typename: 'GqlToken';
         address: string;
@@ -1307,6 +1310,10 @@ export type GetTokensDynamicDataQuery = {
         updatedAt: string;
     }>;
 };
+
+export type GetFbeetsRatioQueryVariables = Exact<{ [key: string]: never }>;
+
+export type GetFbeetsRatioQuery = { __typename: 'Query'; ratio: string };
 
 export type GetPoolQueryVariables = Exact<{
     id: Scalars['String'];
@@ -2768,6 +2775,7 @@ export const GetAppGlobalDataDocument = gql`
             price
             address
         }
+        beetsGetFbeetsRatio
     }
 `;
 
@@ -2948,6 +2956,42 @@ export type GetTokensDynamicDataQueryResult = Apollo.QueryResult<
     GetTokensDynamicDataQuery,
     GetTokensDynamicDataQueryVariables
 >;
+export const GetFbeetsRatioDocument = gql`
+    query GetFbeetsRatio {
+        ratio: beetsGetFbeetsRatio
+    }
+`;
+
+/**
+ * __useGetFbeetsRatioQuery__
+ *
+ * To run a query within a React component, call `useGetFbeetsRatioQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetFbeetsRatioQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetFbeetsRatioQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetFbeetsRatioQuery(
+    baseOptions?: Apollo.QueryHookOptions<GetFbeetsRatioQuery, GetFbeetsRatioQueryVariables>,
+) {
+    const options = { ...defaultOptions, ...baseOptions };
+    return Apollo.useQuery<GetFbeetsRatioQuery, GetFbeetsRatioQueryVariables>(GetFbeetsRatioDocument, options);
+}
+export function useGetFbeetsRatioLazyQuery(
+    baseOptions?: Apollo.LazyQueryHookOptions<GetFbeetsRatioQuery, GetFbeetsRatioQueryVariables>,
+) {
+    const options = { ...defaultOptions, ...baseOptions };
+    return Apollo.useLazyQuery<GetFbeetsRatioQuery, GetFbeetsRatioQueryVariables>(GetFbeetsRatioDocument, options);
+}
+export type GetFbeetsRatioQueryHookResult = ReturnType<typeof useGetFbeetsRatioQuery>;
+export type GetFbeetsRatioLazyQueryHookResult = ReturnType<typeof useGetFbeetsRatioLazyQuery>;
+export type GetFbeetsRatioQueryResult = Apollo.QueryResult<GetFbeetsRatioQuery, GetFbeetsRatioQueryVariables>;
 export const GetPoolDocument = gql`
     query GetPool($id: String!) {
         pool: poolGetPool(id: $id) {
