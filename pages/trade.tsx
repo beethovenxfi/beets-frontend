@@ -104,7 +104,7 @@ function Trade() {
                                     w="full"
                                     animate={tradePreviewControls}
                                     initial={{ opacity: 0, scale: 0.7 }}
-                                    exit={{ opacity: 0, scale: 0.7, position: 'absolute' }}
+                                    exit={{ opacity: 0, scale: 0.7, position: 'absolute', transition: { type: 'spring', stiffness: 250, damping: 15 } }}
                                 >
                                     <TradePreview onClose={handlePreviewClosed} />
                                 </AnimatedBox>
