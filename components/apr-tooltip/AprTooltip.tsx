@@ -17,6 +17,7 @@ import {
     Flex,
     Text,
     TextProps,
+    HStack,
 } from '@chakra-ui/react';
 import StarsIcon from '~/components/apr-tooltip/StarsIcon';
 import numeral from 'numeral';
@@ -29,8 +30,8 @@ interface Props {
 function AprTooltip({ data, textProps }: Props) {
     return (
         <Popover trigger="hover">
-            <Flex justifyContent={'end'} alignItems={'center'}>
-                <Text fontWeight={'semibold'} mr={1} {...textProps}>
+            <HStack justifyContent='end' alignItems='center'>
+                <Text fontSize='md' fontWeight={'semibold'} mr={1} {...textProps}>
                     {numeral(data.total).format('0.00%')}
                 </Text>
                 <PopoverTrigger>
@@ -38,7 +39,7 @@ function AprTooltip({ data, textProps }: Props) {
                         <StarsIcon />
                     </a>
                 </PopoverTrigger>
-            </Flex>
+            </HStack>
 
             <PopoverContent bg="black">
                 {data.items.map((item, index) => {

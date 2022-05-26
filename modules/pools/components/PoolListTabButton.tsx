@@ -14,8 +14,10 @@ export function PoolListTabButton({ tabPosition, selected, text, ...rest }: Prop
             borderBottomLeftRadius={tabPosition === 'left' ? 'md' : 'none'}
             borderTopRightRadius={tabPosition === 'right' ? 'md' : 'none'}
             borderBottomRightRadius={tabPosition === 'right' ? 'md' : 'none'}
-            bgColor={selected ? 'beets.green.500' : undefined}
-            _hover={selected ? { bgColor: 'beets.green.500' } : undefined}
+            color={selected ? 'beets.gray.100' : undefined}
+            bgColor={selected ? 'beets.base.300' : 'beets.base.light.alpha.200'}
+            _hover={{ bgColor: selected ? 'beets.base.light.alpha.100' : 'beets.base.light.alpha.100' }}
+            _focus={{ outline: 'none !important' }}
         >
             {text}
         </Button>

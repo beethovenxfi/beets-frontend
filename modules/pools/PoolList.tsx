@@ -41,6 +41,7 @@ function PoolList() {
                         pool={item}
                         borderBottomColor="beets.base.800"
                         borderBottomWidth={index === pools.length - 1 ? 0 : 1}
+                        bg='beets.base.light.alpha.300'
                     />
                 )}
             />
