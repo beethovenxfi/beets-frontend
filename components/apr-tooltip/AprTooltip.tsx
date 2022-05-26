@@ -13,7 +13,7 @@ interface Props {
 }
 
 function AprTooltip({ data, textProps }: Props) {
-    const beetsGray200 = 'beets.gray.200';
+    const color = 'beets.gray.200';
     const formatApr = (apr: number) => numeral(apr).format('0.00%');
     return (
         <Popover trigger="hover">
@@ -30,7 +30,7 @@ function AprTooltip({ data, textProps }: Props) {
 
             <PopoverContent w="fit-content" bg="black">
                 <PopoverHeader bgColor="rgba(255,255,255,0.05)">
-                    <Text color={beetsGray200}>Total APR</Text>
+                    <Text color={color}>Total APR</Text>
                     {formatApr(data.total)}
                 </PopoverHeader>
                 <BeetsBox p="2" fontSize="sm">
@@ -44,12 +44,12 @@ function AprTooltip({ data, textProps }: Props) {
                                     <Flex align={'center'} key={subItemIndex}>
                                         <Box
                                             w="1px"
-                                            bgColor={beetsGray200}
+                                            bgColor={color}
                                             m="0.25rem"
                                             h={subItemIndex === 0 ? '1rem' : '2rem'}
                                             mt={subItemIndex === 0 ? '-0.3rem' : '-1.7rem'}
                                         />
-                                        <Box h="1px" w="0.75rem" bgColor={beetsGray200} mr="0.25rem" ml="-0.25rem" />
+                                        <Box h="1px" w="0.75rem" bgColor={color} mr="0.25rem" ml="-0.25rem" />
                                         <Flex grow>
                                             {formatApr(subItem.apr)} <AprText>{subItem.title}</AprText>
                                         </Flex>
