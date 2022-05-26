@@ -41,6 +41,11 @@ query GetPool($id: String!) {
             isNested
             isPhantomBpt
         }
+        staking {
+            id
+            type
+            address
+        }
         investConfig {
             singleAssetEnabled
             proportionalEnabled

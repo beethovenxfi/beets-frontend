@@ -40,4 +40,5 @@ export interface NetworkConfig {
         batchRelayer: string;
     };
     beetsPoolOwnerAddress: string;
+    masterChefContractAddress: string;
 }

@@ -1,12 +1,12 @@
 import { Box, Container, Flex, Heading } from '@chakra-ui/react';
 import { useGetTokens } from '~/lib/global/useToken';
 import { tokenFormatAmount, tokenGetAmountForAddress } from '~/lib/services/token/token-util';
-import { usePoolUserBalances } from '~/modules/pool/lib/usePoolUserBalances';
+import { usePoolUserPoolTokenBalances } from '~/modules/pool/lib/usePoolUserPoolTokenBalances';
 import { usePool } from '~/modules/pool/lib/usePool';
 
 function PoolTokensInWallet() {
     const { formattedPrice } = useGetTokens();
-    const { userBalances } = usePoolUserBalances();
+    const { userPoolTokenBalances } = usePoolUserPoolTokenBalances();
     const { pool } = usePool();
 
     return (
@@ -18,7 +18,7 @@ function PoolTokensInWallet() {
                 return (
                     <Box key={index}>
                         {option.tokenOptions.map((tokenOption, index) => {
-                            const userBalance = tokenGetAmountForAddress(tokenOption.address, userBalances);
+                            const userBalance = tokenGetAmountForAddress(tokenOption.address, userPoolTokenBalances);
 
                             return (
                                 <Flex key={`token-${index}`} mb={2} alignItems="center">

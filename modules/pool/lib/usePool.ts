@@ -47,5 +47,6 @@ export function usePool() {
         allTokenAddresses: allTokens.map((token) => token.address),
         bpt,
         poolTokensWithoutPhantomBpt: poolGetTokensWithoutPhantomBpt(pool),
+        totalApr: parseFloat(pool.dynamicData.apr.total),
     };
 }

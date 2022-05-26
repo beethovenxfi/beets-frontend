@@ -10,7 +10,7 @@ export function useUserBalances(addresses: string[], additionalTokens?: TokenBas
     const tokens = [...whitelistedTokens, ...(additionalTokens || [])].filter((token) =>
         addresses.includes(token.address),
     );
-    const { data, isLoading, refetch } = useBalances(accountData?.address || null, tokens);
+    const { data, isLoading, refetch, isError, error } = useBalances(accountData?.address || null, tokens);
 
     function getUserBalance(address: string): AmountHumanReadable {
         return data?.find((balance) => balance.address === address)?.amount || '0';
@@ -27,5 +27,7 @@ export function useUserBalances(addresses: string[], additionalTokens?: TokenBas
         getUserBalance,
         refetch,
         isLoading,
+        isError,
+        error,
     };
 }

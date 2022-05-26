@@ -52,6 +52,7 @@ export function useBalances(account: string | null, tokens: TokenBase[]) {
     return {
         data: balances,
         isLoading: ethBalance.isLoading || multicall.isLoading,
+        isError: ethBalance.isError || multicall.isError,
         error: ethBalance.error || multicall.error,
         refetch,
     };

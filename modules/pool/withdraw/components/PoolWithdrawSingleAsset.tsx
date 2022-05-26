@@ -11,7 +11,7 @@ import {
 } from '@chakra-ui/react';
 import TokenAvatar from '~/components/token/TokenAvatar';
 import { useWithdrawState } from '~/modules/pool/withdraw/lib/useWithdrawState';
-import { usePoolUserBalances } from '~/modules/pool/lib/usePoolUserBalances';
+import { usePoolUserPoolTokenBalances } from '~/modules/pool/lib/usePoolUserPoolTokenBalances';
 import { usePool } from '~/modules/pool/lib/usePool';
 import { BoxProps } from '@chakra-ui/layout';
 import { usePoolExitGetSingleAssetWithdrawForBptIn } from '~/modules/pool/withdraw/lib/usePoolExitGetSingleAssetWithdrawForBptIn';

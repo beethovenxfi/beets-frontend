@@ -50,7 +50,7 @@ function PoolHeader() {
                 </Text>
             </Flex>
             <Flex mt={2}>
-                <Text color={statColor} fontSize="lg" fontWeight="medium">
+                <Text color={statColor} fontSize="lg" fontWeight="bold">
                     {numeral(pool.dynamicData.swapFee).format('0.0[00]%')}
                 </Text>
                 {!pool.owner ? (

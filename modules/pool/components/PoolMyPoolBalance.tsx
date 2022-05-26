@@ -2,24 +2,25 @@ import { Box, Container, Flex, Heading } from '@chakra-ui/react';
 import { GqlPoolUnion } from '~/apollo/generated/graphql-codegen-generated';
 import { useGetTokens } from '~/lib/global/useToken';
 import numeral from 'numeral';
-import { usePoolUserBalances } from '~/modules/pool/lib/usePoolUserBalances';
+import { usePoolUserPoolTokenBalances } from '~/modules/pool/lib/usePoolUserPoolTokenBalances';
 import { usePool } from '~/modules/pool/lib/usePool';
 import { tokenFormatAmount } from '~/lib/services/token/token-util';
+import { usePoolUserDepositBalance } from '~/modules/pool/lib/usePoolUserDepositBalance';
 
 interface Props {}
 
 function PoolTokensInWallet({}: Props) {
     const { formattedPrice } = useGetTokens();
-    const { userPercentShare } = usePoolUserBalances();
-    const { poolTokensWithoutPhantomBpt } = usePool();
+    const { data } = usePoolUserDepositBalance();
+    const { pool } = usePool();
 
     return (
         <Container bg="gray.900" shadow="lg" rounded="lg" padding="4" mb={12} maxW="350">
             <Heading fontSize="md" mb={4}>
                 My pool balance
             </Heading>
-            {poolTokensWithoutPhantomBpt.map((poolToken, index) => {
-                const userBalance = parseFloat(poolToken.balance) * userPercentShare;
+            {pool.tokens.map((poolToken, index) => {
+                const userBalance = data?.find((balance) => balance.address === poolToken.address)?.amount || '0';
 
                 return (
                     <Box key={`token-${index}`}>

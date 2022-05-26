@@ -9,9 +9,14 @@ import PoolDetailChart from '~/modules/pool/detail/components/PoolDetailChart';
 import { PoolDetailMyBalance } from '~/modules/pool/detail/components/PoolDetailMyBalance';
 import { PoolDetailActions } from '~/modules/pool/detail/components/PoolDetailActions';
 import { PoolDetailMyRewards } from '~/modules/pool/detail/components/PoolDetailMyRewards';
+import { usePoolUserPoolTokenBalances } from '~/modules/pool/lib/usePoolUserPoolTokenBalances';
+import { usePoolUserStakedBalance } from '~/modules/pool/lib/usePoolUserStakedBalance';
 
 function PoolDetail() {
     const { pool } = usePool();
+    const { userTotalBptBalance, isLoading, hasBpt } = usePoolUserPoolTokenBalances();
+
+    console.log('has bpt', hasBpt, userTotalBptBalance);
 
     return (
         <Container maxW="full">
@@ -26,9 +31,9 @@ function PoolDetail() {
                     <PoolComposition pool={pool} />
                 </Box>
                 <Box flex={1} ml={8}>
-                    <PoolDetailMyBalance mb={8} />
-                    <PoolDetailActions mb={8} />
-                    <PoolDetailMyRewards />
+                    {hasBpt || isLoading ? <PoolDetailMyBalance mb={8} /> : null}
+                    {hasBpt || isLoading ? <PoolDetailMyRewards mb={8} /> : null}
+                    <PoolDetailActions />
                 </Box>
             </Flex>
         </Container>

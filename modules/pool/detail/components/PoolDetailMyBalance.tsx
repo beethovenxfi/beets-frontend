@@ -4,15 +4,18 @@ import { usePool } from '~/modules/pool/lib/usePool';
 import numeral from 'numeral';
 import TokenAvatar from '~/components/token/TokenAvatar';
 import { tokenFormatAmount } from '~/lib/services/token/token-util';
-import { usePoolUserBalanceEstimate } from '~/modules/pool/detail/lib/usePoolUserBalanceEstimate';
+import { usePoolUserDepositBalance } from '~/modules/pool/lib/usePoolUserDepositBalance';
 import { useGetTokens } from '~/lib/global/useToken';
 import { sumBy } from 'lodash';
+import { Feather } from 'react-feather';
+import { usePoolUserPoolTokenBalances } from '~/modules/pool/lib/usePoolUserPoolTokenBalances';
 
 interface Props extends BoxProps {}
 
 export function PoolDetailMyBalance({ ...rest }: Props) {
     const { pool } = usePool();
-    const { data, isLoading, userPoolBalanceUSD } = usePoolUserBalanceEstimate();
+    const { userStakedBptBalance, userWalletBptBalance } = usePoolUserPoolTokenBalances();
+    const { data, isLoading, userPoolBalanceUSD } = usePoolUserDepositBalance();
     const { formattedPrice } = useGetTokens();
 
     return (
@@ -62,6 +65,18 @@ export function PoolDetailMyBalance({ ...rest }: Props) {
                     );
                 })}
             </Box>
+            {/*<Box p={4}>
+                {pool.staking ? (
+                    <Text color="beets.gray.200">
+                        You have {isLoading ? '-' : tokenFormatAmount(userStakedBptBalance || '0')} BPT staked in the
+                        farm and {isLoading ? '-' : tokenFormatAmount(userWalletBptBalance || '0')} BPT in your wallet.
+                    </Text>
+                ) : (
+                    <Text color="beets.gray.200">
+                        You have {isLoading ? '-' : tokenFormatAmount(userWalletBptBalance || '0')} BPT in your wallet.
+                    </Text>
+                )}
+            </Box>*/}
         </BeetsBox>
     );
 }

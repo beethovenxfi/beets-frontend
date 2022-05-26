@@ -4,7 +4,7 @@ import { usePool } from '~/modules/pool/lib/usePool';
 import numeral from 'numeral';
 import TokenAvatar from '~/components/token/TokenAvatar';
 import { tokenFormatAmount } from '~/lib/services/token/token-util';
-import { usePoolUserBalanceEstimate } from '~/modules/pool/detail/lib/usePoolUserBalanceEstimate';
+import { usePoolUserDepositBalance } from '~/modules/pool/lib/usePoolUserDepositBalance';
 import { useGetTokens } from '~/lib/global/useToken';
 import { sumBy } from 'lodash';
 import BeetsButton from '~/components/button/Button';
@@ -13,7 +13,7 @@ interface Props extends BoxProps {}
 
 export function PoolDetailMyRewards({ ...rest }: Props) {
     const { pool } = usePool();
-    const { data, isLoading, userPoolBalanceUSD } = usePoolUserBalanceEstimate();
+    const { data, isLoading, userPoolBalanceUSD } = usePoolUserDepositBalance();
     const { formattedPrice } = useGetTokens();
 
     return (
@@ -37,7 +37,6 @@ export function PoolDetailMyRewards({ ...rest }: Props) {
                             <TokenAvatar address={token.address} size="sm" mr={4} mt={1} />
                             <Box flex={1}>
                                 <Text fontSize="xl" flex={1}>
-                                    {token.weight ? `${numeral(token.weight).format('%')} ` : null}
                                     {token.symbol}
                                 </Text>
                                 <Text color="beets.gray.200">{token.name}</Text>

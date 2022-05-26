@@ -47,10 +47,6 @@ export function usePoolList() {
 
     const { data: poolFilters } = useGetPoolFiltersQuery();
 
-    useEffect(() => {
-        console.log('on change');
-    }, [state]);
-
     async function refetch(newState: PoolsQueryVariables) {
         poolListStateVar(newState);
 

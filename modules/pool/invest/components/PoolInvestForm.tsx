@@ -8,13 +8,13 @@ import { usePoolJoinGetBptOutAndPriceImpactForTokensIn } from '~/modules/pool/in
 import { usePoolJoinGetContractCallData } from '~/modules/pool/invest/lib/usePoolJoinGetContractCallData';
 import { tokenAmountsGetArrayFromMap } from '~/lib/services/token/token-util';
 import { usePool } from '~/modules/pool/lib/usePool';
-import { usePoolUserBalances } from '~/modules/pool/lib/usePoolUserBalances';
+import { usePoolUserPoolTokenBalances } from '~/modules/pool/lib/usePoolUserPoolTokenBalances';
 
 interface Props extends ContainerProps {}
 
 function PoolInvestForm({ ...rest }: Props) {
     const { pool } = usePool();
-    const { userBalances } = usePoolUserBalances();
+    const { userPoolTokenBalances } = usePoolUserPoolTokenBalances();
     const { inputAmounts, setInputAmount } = useInvestState();
     const { joinPool, isSubmitting, submitError } = useJoinPool(pool);
     const tokenAmountsIn = tokenAmountsGetArrayFromMap(inputAmounts);
@@ -33,7 +33,7 @@ function PoolInvestForm({ ...rest }: Props) {
             {pool.investConfig.options.map((option, index) => (
                 <PoolInvestFormTokenInput
                     key={index}
-                    userBalances={userBalances}
+                    userBalances={userPoolTokenBalances}
                     option={option}
                     setInputAmount={(address, amount) => {
                         setInputAmount(address, amount);

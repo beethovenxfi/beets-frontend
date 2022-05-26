@@ -226,6 +226,11 @@ export const GetPool = gql`
                 isNested
                 isPhantomBpt
             }
+            staking {
+                id
+                type
+                address
+            }
             investConfig {
                 singleAssetEnabled
                 proportionalEnabled

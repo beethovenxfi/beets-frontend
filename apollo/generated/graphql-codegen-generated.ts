@@ -538,6 +538,7 @@ export interface GqlPoolBase {
     investConfig: GqlPoolInvestConfig;
     name: Scalars['String'];
     owner?: Maybe<Scalars['Bytes']>;
+    staking?: Maybe<GqlPoolStaking>;
     symbol: Scalars['String'];
     withdrawConfig: GqlPoolWithdrawConfig;
 }
@@ -568,6 +569,7 @@ export interface GqlPoolElement extends GqlPoolBase {
     name: Scalars['String'];
     owner: Scalars['Bytes'];
     principalToken: Scalars['Bytes'];
+    staking?: Maybe<GqlPoolStaking>;
     symbol: Scalars['String'];
     tokens: Array<GqlPoolToken>;
     unitSeconds: Scalars['BigInt'];
@@ -634,6 +636,7 @@ export interface GqlPoolLinear extends GqlPoolBase {
     mainIndex: Scalars['Int'];
     name: Scalars['String'];
     owner: Scalars['Bytes'];
+    staking?: Maybe<GqlPoolStaking>;
     symbol: Scalars['String'];
     tokens: Array<GqlPoolToken>;
     upperTarget: Scalars['BigInt'];
@@ -710,6 +713,7 @@ export interface GqlPoolLiquidityBootstrapping extends GqlPoolBase {
     name: Scalars['String'];
     nestingType: GqlPoolNestingType;
     owner: Scalars['Bytes'];
+    staking?: Maybe<GqlPoolStaking>;
     symbol: Scalars['String'];
     tokens: Array<GqlPoolTokenUnion>;
     withdrawConfig: GqlPoolWithdrawConfig;
@@ -726,6 +730,7 @@ export interface GqlPoolMinimal {
     id: Scalars['ID'];
     name: Scalars['String'];
     owner?: Maybe<Scalars['Bytes']>;
+    staking?: Maybe<GqlPoolStaking>;
     symbol: Scalars['String'];
 }
 
@@ -751,6 +756,7 @@ export interface GqlPoolPhantomStable extends GqlPoolBase {
     name: Scalars['String'];
     nestingType: GqlPoolNestingType;
     owner: Scalars['Bytes'];
+    staking?: Maybe<GqlPoolStaking>;
     symbol: Scalars['String'];
     tokens: Array<GqlPoolTokenUnion>;
     withdrawConfig: GqlPoolWithdrawConfig;
@@ -784,6 +790,7 @@ export interface GqlPoolStable extends GqlPoolBase {
     investConfig: GqlPoolInvestConfig;
     name: Scalars['String'];
     owner: Scalars['Bytes'];
+    staking?: Maybe<GqlPoolStaking>;
     symbol: Scalars['String'];
     tokens: Array<GqlPoolToken>;
     withdrawConfig: GqlPoolWithdrawConfig;
@@ -798,6 +805,25 @@ export interface GqlPoolStablePhantomPoolData {
     tokens: Array<GqlPoolToken>;
     totalSupply: Scalars['String'];
 }
+
+export interface GqlPoolStaking {
+    __typename: 'GqlPoolStaking';
+    address: Scalars['String'];
+    id: Scalars['ID'];
+    rewarders?: Maybe<Array<GqlPoolStakingRewarder>>;
+    type: GqlPoolStakingType;
+}
+
+export interface GqlPoolStakingRewarder {
+    __typename: 'GqlPoolStakingRewarder';
+    address: Scalars['String'];
+    id: Scalars['ID'];
+    type: GqlPoolStakingRewarderType;
+}
+
+export type GqlPoolStakingRewarderType = 'MASTER_CHEF_REWARDER';
+
+export type GqlPoolStakingType = 'GAUGE' | 'MASTER_CHEF';
 
 export interface GqlPoolSwap {
     __typename: 'GqlPoolSwap';
@@ -911,6 +937,7 @@ export interface GqlPoolWeighted extends GqlPoolBase {
     name: Scalars['String'];
     nestingType: GqlPoolNestingType;
     owner: Scalars['Bytes'];
+    staking?: Maybe<GqlPoolStaking>;
     symbol: Scalars['String'];
     tokens: Array<GqlPoolTokenUnion>;
     withdrawConfig: GqlPoolWithdrawConfig;
@@ -1351,6 +1378,7 @@ export type GetPoolQuery = {
                   isNested: boolean;
                   isPhantomBpt: boolean;
               }>;
+              staking?: { __typename: 'GqlPoolStaking'; id: string; type: GqlPoolStakingType; address: string } | null;
               investConfig: {
                   __typename: 'GqlPoolInvestConfig';
                   singleAssetEnabled: boolean;
@@ -1460,6 +1488,7 @@ export type GetPoolQuery = {
                   isNested: boolean;
                   isPhantomBpt: boolean;
               }>;
+              staking?: { __typename: 'GqlPoolStaking'; id: string; type: GqlPoolStakingType; address: string } | null;
               investConfig: {
                   __typename: 'GqlPoolInvestConfig';
                   singleAssetEnabled: boolean;
@@ -1693,6 +1722,7 @@ export type GetPoolQuery = {
                   isNested: boolean;
                   isPhantomBpt: boolean;
               }>;
+              staking?: { __typename: 'GqlPoolStaking'; id: string; type: GqlPoolStakingType; address: string } | null;
               investConfig: {
                   __typename: 'GqlPoolInvestConfig';
                   singleAssetEnabled: boolean;
@@ -1927,6 +1957,7 @@ export type GetPoolQuery = {
                   isNested: boolean;
                   isPhantomBpt: boolean;
               }>;
+              staking?: { __typename: 'GqlPoolStaking'; id: string; type: GqlPoolStakingType; address: string } | null;
               investConfig: {
                   __typename: 'GqlPoolInvestConfig';
                   singleAssetEnabled: boolean;
@@ -2033,6 +2064,7 @@ export type GetPoolQuery = {
                   isNested: boolean;
                   isPhantomBpt: boolean;
               }>;
+              staking?: { __typename: 'GqlPoolStaking'; id: string; type: GqlPoolStakingType; address: string } | null;
               investConfig: {
                   __typename: 'GqlPoolInvestConfig';
                   singleAssetEnabled: boolean;
@@ -2266,6 +2298,7 @@ export type GetPoolQuery = {
                   isNested: boolean;
                   isPhantomBpt: boolean;
               }>;
+              staking?: { __typename: 'GqlPoolStaking'; id: string; type: GqlPoolStakingType; address: string } | null;
               investConfig: {
                   __typename: 'GqlPoolInvestConfig';
                   singleAssetEnabled: boolean;
@@ -2958,6 +2991,11 @@ export const GetPoolDocument = gql`
                 decimals
                 isNested
                 isPhantomBpt
+            }
+            staking {
+                id
+                type
+                address
             }
             investConfig {
                 singleAssetEnabled
