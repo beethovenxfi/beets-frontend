@@ -34,7 +34,7 @@ export function PaginatedTable({
     return (
         <Box {...rest}>
             {renderTableHeader()}
-            <Box mb={4} bgColor="beets.base.700" borderBottomLeftRadius="md" borderBottomRightRadius="md">
+            <Box mb={4} borderBottomLeftRadius="md" borderBottomRightRadius="md" overflow="hidden" shadow='lg'>
                 {loading && items.length === 0 ? (
                     <Flex justifyContent={'center'} py={32}>
                         <Spinner size="xl" />

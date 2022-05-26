@@ -10,8 +10,8 @@ interface Props extends LinkProps {
 export default function PoolListSortLink({ title, orderDirection, ...rest }: Props) {
     return (
         <Link color={orderDirection ? 'beets.green.500' : 'beets.gray.100'} {...rest} userSelect="none">
-            <Flex justifyContent="center" alignItems="center">
-                <Text mr={orderDirection ? 0.5 : 0} fontSize="lg" fontWeight="medium">
+            <Flex justifyContent="flex-end" alignItems="center">
+                <Text mr={orderDirection ? 0.5 : 0} fontSize="md" fontWeight="medium">
                     {title}
                 </Text>
                 {orderDirection === 'asc' ? <ArrowUp size={20} /> : null}

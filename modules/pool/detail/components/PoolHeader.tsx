@@ -39,7 +39,7 @@ function PoolHeader() {
                 <Text fontSize="3xl" color={statColor} fontWeight="bold" ml={4}>
                     {numeral(pool.dynamicData.totalLiquidity).format('$0,0')}
                 </Text>
-                <Text ml={1} mb={1.5} fontWeight="medium" fontSize="lg">
+                <Text ml={1} mb={1.5} fontWeight="medium" fontSize="lg" align='right'>
                     TVL
                 </Text>
                 <Text fontSize="3xl" color={statColor} fontWeight="bold" ml={4}>

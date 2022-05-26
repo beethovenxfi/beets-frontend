@@ -13,10 +13,10 @@ function PoolListTableHeader() {
             borderTopLeftRadius="md"
             borderTopRightRadius="md"
             alignItems={'center'}
-            bgColor="beets.base.800"
-        >
+            bgColor="beets.base.light.alpha.200"
+    >
             <Box flex={1}>
-                <Text fontSize="lg" fontWeight="medium" color="beets.gray.100">
+                <Text fontSize="md" fontWeight="medium" color="beets.gray.100">
                     Pool details
                 </Text>
             </Box>
@@ -34,7 +34,7 @@ function PoolListTableHeader() {
                     onClick={() => changeSort('volume24h')}
                 />
             </Box>
-            <Box w={100} textAlign={'center'}>
+            <Box w={200} textAlign={'center'}>
                 <PoolListSortLink
                     title="APR"
                     orderDirection={state.orderBy === 'apr' ? state.orderDirection : null}
