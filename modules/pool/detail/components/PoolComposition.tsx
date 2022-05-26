@@ -56,7 +56,7 @@ function PoolComposition({ pool }: Props) {
                         {poolTokens.map((token, index) => {
                             const items = [<PoolCompositionToken token={token} key={index} />];
 
-                            /*if (token.__typename === 'GqlPoolTokenLinear') {
+                            if (token.__typename === 'GqlPoolTokenLinear') {
                                 for (const nestedToken of token.pool.tokens) {
                                     items.push(
                                         <PoolCompositionToken
@@ -88,7 +88,7 @@ function PoolComposition({ pool }: Props) {
                                         }
                                     }
                                 }
-                            }*/
+                            }
 
                             return (
                                 <Box pb={index === poolTokens.length - 1 ? 0 : 4} key={index}>
