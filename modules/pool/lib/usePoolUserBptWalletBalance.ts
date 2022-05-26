@@ -4,10 +4,8 @@ import { useGetFbeetsRatioQuery } from '~/apollo/generated/graphql-codegen-gener
 import { useUserBalances } from '~/lib/global/useUserBalances';
 import { parseUnits } from 'ethers/lib/utils';
 import { tokenGetAmountForAddress } from '~/lib/services/token/token-util';
-import { oldBnumScaleAmount, oldBnumToBnum } from '~/lib/services/pool/lib/old-big-number';
-import { BigNumber } from 'ethers';
+import { oldBnumScaleAmount } from '~/lib/services/pool/lib/old-big-number';
 import { TokenAmountHumanReadable } from '~/lib/services/token/token-types';
-import { formatFixed } from '@ethersproject/bignumber';
 
 export function usePoolUserBptWalletBalance(userBalances: TokenAmountHumanReadable[]) {
     const { pool } = usePool();

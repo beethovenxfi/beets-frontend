@@ -10,7 +10,7 @@ import { usePoolUserPoolTokenBalances } from '~/modules/pool/lib/usePoolUserPool
 
 function PoolDetail() {
     const { pool } = usePool();
-    const { userTotalBptBalance, isLoading, hasBpt } = usePoolUserPoolTokenBalances();
+    const { isLoading, hasBpt } = usePoolUserPoolTokenBalances();
 
     return (
         <Container maxW="full">
