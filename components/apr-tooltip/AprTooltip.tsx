@@ -27,8 +27,8 @@ function AprTooltip({ data, textProps }: Props) {
     const formatApr = (apr: number) => numeral(apr).format('0.00%');
     return (
         <Popover trigger="hover">
-            <HStack justify={'end'} align={'center'}>
-                <Text fontSize="md" fontWeight={'semibold'} mr={1} {...textProps}>
+            <HStack justify="end" align="center">
+                <Text fontSize="md" fontWeight="semibold" mr={1} {...textProps}>
                     {formatApr(data.total)}
                 </Text>
                 <PopoverTrigger>
@@ -51,7 +51,7 @@ function AprTooltip({ data, textProps }: Props) {
                                     {formatApr(item.apr)} <AprText>{item.title}</AprText>
                                 </Flex>
                                 {item.subItems?.map((subItem, subItemIndex) => (
-                                    <Flex align={'center'} key={subItemIndex}>
+                                    <Flex align="center" key={subItemIndex}>
                                         <Box
                                             w="1px"
                                             bgColor={color}
