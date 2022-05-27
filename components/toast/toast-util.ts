@@ -1,4 +1,4 @@
-export type ToastTransactionType = 'SWAP' | 'JOIN' | 'EXIT';
+export type ToastTransactionType = 'SWAP' | 'JOIN' | 'EXIT' | 'HARVEST';
 export type ToastTransactionStatus = 'PENDING' | 'CONFIRMED' | 'ERROR';
 
 export function toastGetTransactionStatusHeadline(type: ToastTransactionType, status: ToastTransactionStatus) {
@@ -37,6 +37,18 @@ export function toastGetTransactionStatusHeadline(type: ToastTransactionType, st
             case 'ERROR':
                 //return i18next.t('Toast - Headline - Trade error', 'Trade error');
                 return 'Trade error';
+        }
+    } else if (type === 'HARVEST') {
+        switch (status) {
+            case 'PENDING':
+                //return i18next.t('Toast - Headline - Trade pending', 'Trade pending');
+                return 'Harvest pending';
+            case 'CONFIRMED':
+                //return i18next.t('Toast - Headline - Trade confirmed', 'Trade confirmed');
+                return 'Harvest confirmed';
+            case 'ERROR':
+                //return i18next.t('Toast - Headline - Trade error', 'Trade error');
+                return 'Harvest error';
         }
     }
 
