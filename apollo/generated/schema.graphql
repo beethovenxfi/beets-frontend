@@ -755,19 +755,22 @@ type GqlPoolStablePhantomPoolData {
 
 type GqlPoolStaking {
     address: String!
+    farm: GqlPoolStakingMasterChefFarm
     id: ID!
-    rewarders: [GqlPoolStakingRewarder!]
     type: GqlPoolStakingType!
 }
 
-type GqlPoolStakingRewarder {
-    address: String!
+type GqlPoolStakingMasterChefFarm {
+    beetsPerBlock: String!
     id: ID!
-    type: GqlPoolStakingRewarderType!
+    rewarders: [GqlPoolStakingMasterChefFarmRewarder!]
 }
 
-enum GqlPoolStakingRewarderType {
-    MASTER_CHEF_REWARDER
+type GqlPoolStakingMasterChefFarmRewarder {
+    address: String!
+    id: ID!
+    rewardPerSecond: String!
+    tokenAddress: String!
 }
 
 enum GqlPoolStakingType {

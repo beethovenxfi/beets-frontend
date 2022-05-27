@@ -28,6 +28,10 @@ export class Multicaller {
         this.paths = [];
         return obj;
     }
+
+    public get numCalls(): number {
+        return this.calls.length;
+    }
 }
 
 export async function multicall<T>(

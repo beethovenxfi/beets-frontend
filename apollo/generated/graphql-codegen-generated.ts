@@ -809,19 +809,25 @@ export interface GqlPoolStablePhantomPoolData {
 export interface GqlPoolStaking {
     __typename: 'GqlPoolStaking';
     address: Scalars['String'];
+    farm?: Maybe<GqlPoolStakingMasterChefFarm>;
     id: Scalars['ID'];
-    rewarders?: Maybe<Array<GqlPoolStakingRewarder>>;
     type: GqlPoolStakingType;
 }
 
-export interface GqlPoolStakingRewarder {
-    __typename: 'GqlPoolStakingRewarder';
-    address: Scalars['String'];
+export interface GqlPoolStakingMasterChefFarm {
+    __typename: 'GqlPoolStakingMasterChefFarm';
+    beetsPerBlock: Scalars['String'];
     id: Scalars['ID'];
-    type: GqlPoolStakingRewarderType;
+    rewarders?: Maybe<Array<GqlPoolStakingMasterChefFarmRewarder>>;
 }
 
-export type GqlPoolStakingRewarderType = 'MASTER_CHEF_REWARDER';
+export interface GqlPoolStakingMasterChefFarmRewarder {
+    __typename: 'GqlPoolStakingMasterChefFarmRewarder';
+    address: Scalars['String'];
+    id: Scalars['ID'];
+    rewardPerSecond: Scalars['String'];
+    tokenAddress: Scalars['String'];
+}
 
 export type GqlPoolStakingType = 'FRESH_BEETS' | 'GAUGE' | 'MASTER_CHEF';
 
@@ -1385,7 +1391,24 @@ export type GetPoolQuery = {
                   isNested: boolean;
                   isPhantomBpt: boolean;
               }>;
-              staking?: { __typename: 'GqlPoolStaking'; id: string; type: GqlPoolStakingType; address: string } | null;
+              staking?: {
+                  __typename: 'GqlPoolStaking';
+                  id: string;
+                  type: GqlPoolStakingType;
+                  address: string;
+                  farm?: {
+                      __typename: 'GqlPoolStakingMasterChefFarm';
+                      id: string;
+                      beetsPerBlock: string;
+                      rewarders?: Array<{
+                          __typename: 'GqlPoolStakingMasterChefFarmRewarder';
+                          id: string;
+                          address: string;
+                          tokenAddress: string;
+                          rewardPerSecond: string;
+                      }> | null;
+                  } | null;
+              } | null;
               investConfig: {
                   __typename: 'GqlPoolInvestConfig';
                   singleAssetEnabled: boolean;
@@ -1495,7 +1518,24 @@ export type GetPoolQuery = {
                   isNested: boolean;
                   isPhantomBpt: boolean;
               }>;
-              staking?: { __typename: 'GqlPoolStaking'; id: string; type: GqlPoolStakingType; address: string } | null;
+              staking?: {
+                  __typename: 'GqlPoolStaking';
+                  id: string;
+                  type: GqlPoolStakingType;
+                  address: string;
+                  farm?: {
+                      __typename: 'GqlPoolStakingMasterChefFarm';
+                      id: string;
+                      beetsPerBlock: string;
+                      rewarders?: Array<{
+                          __typename: 'GqlPoolStakingMasterChefFarmRewarder';
+                          id: string;
+                          address: string;
+                          tokenAddress: string;
+                          rewardPerSecond: string;
+                      }> | null;
+                  } | null;
+              } | null;
               investConfig: {
                   __typename: 'GqlPoolInvestConfig';
                   singleAssetEnabled: boolean;
@@ -1729,7 +1769,24 @@ export type GetPoolQuery = {
                   isNested: boolean;
                   isPhantomBpt: boolean;
               }>;
-              staking?: { __typename: 'GqlPoolStaking'; id: string; type: GqlPoolStakingType; address: string } | null;
+              staking?: {
+                  __typename: 'GqlPoolStaking';
+                  id: string;
+                  type: GqlPoolStakingType;
+                  address: string;
+                  farm?: {
+                      __typename: 'GqlPoolStakingMasterChefFarm';
+                      id: string;
+                      beetsPerBlock: string;
+                      rewarders?: Array<{
+                          __typename: 'GqlPoolStakingMasterChefFarmRewarder';
+                          id: string;
+                          address: string;
+                          tokenAddress: string;
+                          rewardPerSecond: string;
+                      }> | null;
+                  } | null;
+              } | null;
               investConfig: {
                   __typename: 'GqlPoolInvestConfig';
                   singleAssetEnabled: boolean;
@@ -1964,7 +2021,24 @@ export type GetPoolQuery = {
                   isNested: boolean;
                   isPhantomBpt: boolean;
               }>;
-              staking?: { __typename: 'GqlPoolStaking'; id: string; type: GqlPoolStakingType; address: string } | null;
+              staking?: {
+                  __typename: 'GqlPoolStaking';
+                  id: string;
+                  type: GqlPoolStakingType;
+                  address: string;
+                  farm?: {
+                      __typename: 'GqlPoolStakingMasterChefFarm';
+                      id: string;
+                      beetsPerBlock: string;
+                      rewarders?: Array<{
+                          __typename: 'GqlPoolStakingMasterChefFarmRewarder';
+                          id: string;
+                          address: string;
+                          tokenAddress: string;
+                          rewardPerSecond: string;
+                      }> | null;
+                  } | null;
+              } | null;
               investConfig: {
                   __typename: 'GqlPoolInvestConfig';
                   singleAssetEnabled: boolean;
@@ -2071,7 +2145,24 @@ export type GetPoolQuery = {
                   isNested: boolean;
                   isPhantomBpt: boolean;
               }>;
-              staking?: { __typename: 'GqlPoolStaking'; id: string; type: GqlPoolStakingType; address: string } | null;
+              staking?: {
+                  __typename: 'GqlPoolStaking';
+                  id: string;
+                  type: GqlPoolStakingType;
+                  address: string;
+                  farm?: {
+                      __typename: 'GqlPoolStakingMasterChefFarm';
+                      id: string;
+                      beetsPerBlock: string;
+                      rewarders?: Array<{
+                          __typename: 'GqlPoolStakingMasterChefFarmRewarder';
+                          id: string;
+                          address: string;
+                          tokenAddress: string;
+                          rewardPerSecond: string;
+                      }> | null;
+                  } | null;
+              } | null;
               investConfig: {
                   __typename: 'GqlPoolInvestConfig';
                   singleAssetEnabled: boolean;
@@ -2305,7 +2396,24 @@ export type GetPoolQuery = {
                   isNested: boolean;
                   isPhantomBpt: boolean;
               }>;
-              staking?: { __typename: 'GqlPoolStaking'; id: string; type: GqlPoolStakingType; address: string } | null;
+              staking?: {
+                  __typename: 'GqlPoolStaking';
+                  id: string;
+                  type: GqlPoolStakingType;
+                  address: string;
+                  farm?: {
+                      __typename: 'GqlPoolStakingMasterChefFarm';
+                      id: string;
+                      beetsPerBlock: string;
+                      rewarders?: Array<{
+                          __typename: 'GqlPoolStakingMasterChefFarmRewarder';
+                          id: string;
+                          address: string;
+                          tokenAddress: string;
+                          rewardPerSecond: string;
+                      }> | null;
+                  } | null;
+              } | null;
               investConfig: {
                   __typename: 'GqlPoolInvestConfig';
                   singleAssetEnabled: boolean;
@@ -3040,6 +3148,16 @@ export const GetPoolDocument = gql`
                 id
                 type
                 address
+                farm {
+                    id
+                    beetsPerBlock
+                    rewarders {
+                        id
+                        address
+                        tokenAddress
+                        rewardPerSecond
+                    }
+                }
             }
             investConfig {
                 singleAssetEnabled

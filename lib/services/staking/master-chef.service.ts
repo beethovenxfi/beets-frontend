@@ -6,10 +6,11 @@ import BeethovenxMasterChefAbi from '~/lib/abi/BeethovenxMasterChef.json';
 import TimeBasedRewarderAbi from '~/lib/abi/TimeBasedRewarder.json';
 import { BigNumber } from 'ethers';
 import { formatFixed } from '@ethersproject/bignumber';
-import { forEach, map } from 'lodash';
+import { forEach } from 'lodash';
 import { Multicaller } from '~/lib/services/util/multicaller.service';
+import { GqlPoolStakingMasterChefFarm } from '~/apollo/generated/graphql-codegen-generated';
 
-interface PendingRewardAmount {
+interface MasterChefFarmPendingRewardAmount {
     farmId: string;
     address: string;
     amount: AmountHumanReadable;
@@ -19,6 +20,11 @@ interface MasterchefRewarder {
     farmId: string;
     address: string;
 }
+
+const mergedAbi = Object.values(
+    // Remove duplicate entries using their names
+    Object.fromEntries([...BeethovenxMasterChefAbi, ...TimeBasedRewarderAbi].map((row) => [row.name, row])),
+);
 
 export class MasterChefService {
     constructor(
@@ -42,7 +48,7 @@ export class MasterChefService {
         return formatFixed(response.amount, 18);
     }
 
-    public async getPendingBeetsForFarm({
+    /*public async getPendingBeetsForFarm({
         farmId,
         user,
         provider,
@@ -65,7 +71,7 @@ export class MasterChefService {
         farmIds: string[];
         user: string;
         provider: BaseProvider;
-    }): Promise<PendingRewardAmount[]> {
+    }): Promise<MasterChefFarmPendingRewardAmount[]> {
         const masterChefMultiCaller = new Multicaller(this.chainId, provider, BeethovenxMasterChefAbi);
 
         for (const farmId of farmIds) {
@@ -82,45 +88,81 @@ export class MasterChefService {
             farmId,
             amount: formatFixed(item.pendingBeets, 18),
         }));
-    }
+    }*/
 
     public async getPendingRewards({
-        rewarders,
+        farms,
         userAddress,
         tokens,
         provider,
     }: {
-        rewarders: MasterchefRewarder[];
+        farms: GqlPoolStakingMasterChefFarm[];
         userAddress: string;
         tokens: TokenBase[];
         provider: BaseProvider;
-    }): Promise<PendingRewardAmount[]> {
-        const rewarderMulticaller = new Multicaller(this.chainId, provider, TimeBasedRewarderAbi);
+    }): Promise<MasterChefFarmPendingRewardAmount[]> {
+        const multicaller = new Multicaller(this.chainId, provider, mergedAbi);
 
-        for (const rewarder of rewarders) {
-            rewarderMulticaller.call(`${rewarder.farmId}`, rewarder.address, 'pendingTokens', [
-                rewarder.farmId,
-                userAddress,
-                0,
-            ]);
+        for (const farm of farms) {
+            if (parseFloat(farm.beetsPerBlock) > 0) {
+                multicaller.call(`${farm.id}.pendingBeets`, this.masterChefContractAddress, 'pendingBeets', [
+                    farm.id,
+                    userAddress,
+                ]);
+            }
+
+            const rewardersWithRewards = (farm.rewarders || []).filter(
+                (rewarder) => parseFloat(rewarder.rewardPerSecond) > 0,
+            );
+
+            if (rewardersWithRewards.length > 0) {
+                //a farm will only ever have one rewarder, but the rewarder can have many tokens
+                multicaller.call(`${farm.id}.pendingRewards`, rewardersWithRewards[0].address, 'pendingTokens', [
+                    farm.id,
+                    userAddress,
+                    0,
+                ]);
+            }
+        }
+
+        if (multicaller.numCalls === 0) {
+            return [];
         }
 
         const result: {
-            [farmId: string]: { rewardTokens: string[]; rewardAmounts: BigNumber[] };
-        } = await rewarderMulticaller.execute({});
+            [farmId: string]: {
+                pendingBeets?: BigNumber;
+                pendingRewards?: {
+                    rewardTokens: string[];
+                    rewardAmounts: BigNumber[];
+                };
+            };
+        } = await multicaller.execute({});
 
-        const pendingRewardAmounts: PendingRewardAmount[] = [];
+        const pendingRewardAmounts: MasterChefFarmPendingRewardAmount[] = [];
 
-        forEach(result, (item, farmId) => {
-            for (let i = 0; i < item.rewardTokens.length; i++) {
-                if (item.rewardAmounts[i].gt(0)) {
-                    const token = tokens.find((token) => token.address === item.rewardTokens[i].toLowerCase());
+        forEach(result, ({ pendingRewards, pendingBeets }, farmId) => {
+            if (pendingBeets && pendingBeets.gt(0)) {
+                pendingRewardAmounts.push({
+                    address: this.beetsAddress,
+                    amount: formatFixed(pendingBeets, 18),
+                    farmId,
+                });
+            }
 
-                    pendingRewardAmounts.push({
-                        address: item.rewardTokens[i],
-                        amount: formatFixed(item.rewardAmounts[i], token?.decimals || 18),
-                        farmId,
-                    });
+            if (pendingRewards) {
+                for (let i = 0; i < pendingRewards.rewardTokens.length; i++) {
+                    if (pendingRewards.rewardAmounts[i].gt(0)) {
+                        const token = tokens.find(
+                            (token) => token.address === pendingRewards.rewardTokens[i].toLowerCase(),
+                        );
+
+                        pendingRewardAmounts.push({
+                            address: pendingRewards.rewardTokens[i],
+                            amount: formatFixed(pendingRewards.rewardAmounts[i], token?.decimals || 18),
+                            farmId,
+                        });
+                    }
                 }
             }
         });

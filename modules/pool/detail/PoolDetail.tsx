@@ -7,10 +7,26 @@ import { PoolDetailMyBalance } from '~/modules/pool/detail/components/PoolDetail
 import { PoolDetailActions } from '~/modules/pool/detail/components/PoolDetailActions';
 import { PoolDetailMyRewards } from '~/modules/pool/detail/components/PoolDetailMyRewards';
 import { usePoolUserPoolTokenBalances } from '~/modules/pool/lib/usePoolUserPoolTokenBalances';
+import { useAsyncEffect } from '~/lib/util/custom-hooks';
+import { masterChefService } from '~/lib/services/staking/master-chef.service';
+import { useGetTokens } from '~/lib/global/useToken';
+import { useProvider } from 'wagmi';
 
 function PoolDetail() {
     const { pool } = usePool();
     const { isLoading, hasBpt } = usePoolUserPoolTokenBalances();
+
+    const { tokens } = useGetTokens();
+    const provider = useProvider();
+
+    useAsyncEffect(async () => {
+        await masterChefService.getPendingRewards({
+            userAddress: '0x4fbe899d37fb7514adf2f41B0630E018Ec275a0C',
+            farms: pool.staking?.farm ? [pool.staking.farm] : [],
+            tokens,
+            provider,
+        });
+    }, []);
 
     return (
         <Container maxW="full">
@@ -26,7 +42,7 @@ function PoolDetail() {
                 </Box>
                 <Box flex={1} ml={8}>
                     {hasBpt || isLoading ? <PoolDetailMyBalance mb={8} /> : null}
-                    {hasBpt || isLoading ? <PoolDetailMyRewards mb={8} /> : null}
+                    {(hasBpt && pool.staking) || isLoading ? <PoolDetailMyRewards mb={8} /> : null}
                     <PoolDetailActions />
                 </Box>
             </Flex>
