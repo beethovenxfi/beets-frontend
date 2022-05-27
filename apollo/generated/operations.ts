@@ -352,6 +352,37 @@ export const GetPool = gql`
     ${GqlPoolTokenLinear}
     ${GqlPoolTokenPhantomStable}
 `;
+export const GetPoolSwaps = gql`
+    query GetPoolSwaps($first: Int, $skip: Int, $where: GqlPoolSwapFilter) {
+        swaps: poolGetSwaps(first: $first, skip: $skip, where: $where) {
+            id
+            poolId
+            timestamp
+            tokenAmountIn
+            tokenAmountOut
+            tokenIn
+            tokenOut
+            tx
+            userAddress
+            valueUSD
+        }
+    }
+`;
+export const GetPoolJoinExits = gql`
+    query GetPoolJoinExits($first: Int, $skip: Int, $poolId: String!) {
+        joinExits: poolGetJoinExits(first: $first, skip: $skip, where: { poolIdIn: [$poolId] }) {
+            id
+            timestamp
+            tx
+            type
+            valueUSD
+            amounts {
+                address
+                amount
+            }
+        }
+    }
+`;
 export const GetPools = gql`
     query GetPools(
         $first: Int

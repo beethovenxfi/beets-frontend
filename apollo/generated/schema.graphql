@@ -567,6 +567,32 @@ type GqlPoolInvestOption {
     tokenOptions: [GqlPoolToken!]!
 }
 
+type GqlPoolJoinExit {
+    amounts: [GqlPoolJoinExitAmount!]!
+    id: ID!
+    poolId: String!
+    sender: String!
+    timestamp: Int!
+    tx: String!
+    type: GqlPoolJoinExitType!
+    userAddress: String!
+    valueUSD: String!
+}
+
+type GqlPoolJoinExitAmount {
+    address: String!
+    amount: String!
+}
+
+input GqlPoolJoinExitFilter {
+    poolIdIn: [String!]
+}
+
+enum GqlPoolJoinExitType {
+    Exit
+    Join
+}
+
 type GqlPoolLinear implements GqlPoolBase {
     address: Bytes!
     allTokens: [GqlPoolTokenExpanded!]!
@@ -1075,6 +1101,7 @@ type Query {
     lges: [GqlLge!]!
     pool(id: String!): GqlBalancerPool!
     poolGet24hData(poolId: ID!): GqlBalancerPool24h!
+    poolGetJoinExits(first: Int, skip: Int, where: GqlPoolJoinExitFilter): [GqlPoolJoinExit!]!
     poolGetPool(id: String!): GqlPoolBase!
     poolGetPoolFilters: [GqlPoolFilterDefinition!]!
     poolGetPools(

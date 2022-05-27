@@ -11,6 +11,7 @@ import { useAsyncEffect } from '~/lib/util/custom-hooks';
 import { masterChefService } from '~/lib/services/staking/master-chef.service';
 import { useGetTokens } from '~/lib/global/useToken';
 import { useProvider } from 'wagmi';
+import { PoolDetailTransactions } from '~/modules/pool/detail/components/PoolDetailTransactions';
 
 function PoolDetail() {
     const { pool } = usePool();
@@ -39,6 +40,7 @@ function PoolDetail() {
                 <Box flex={2}>
                     <PoolDetailChart mb={8} />
                     <PoolComposition pool={pool} />
+                    <PoolDetailTransactions mt={8} />
                 </Box>
                 <Box flex={1} ml={8}>
                     {hasBpt || isLoading ? <PoolDetailMyBalance mb={8} /> : null}

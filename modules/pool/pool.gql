@@ -236,3 +236,32 @@ fragment GqlPoolTokenPhantomStable on GqlPoolTokenPhantomStable {
         }
     }
 }
+
+query GetPoolSwaps($first: Int, $skip: Int, $where: GqlPoolSwapFilter) {
+    swaps: poolGetSwaps(first: $first, skip: $skip, where: $where) {
+        id
+        poolId
+        timestamp
+        tokenAmountIn
+        tokenAmountOut
+        tokenIn
+        tokenOut
+        tx
+        userAddress
+        valueUSD
+    }
+}
+
+query GetPoolJoinExits($first: Int, $skip: Int, $poolId: String!) {
+    joinExits: poolGetJoinExits(first: $first, skip: $skip, where: { poolIdIn: [$poolId] }) {
+        id
+        timestamp
+        tx
+        type
+        valueUSD
+        amounts {
+            address
+            amount
+        }
+    }
+}

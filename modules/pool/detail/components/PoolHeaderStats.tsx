@@ -7,7 +7,7 @@ interface Props {
     pool: GqlPoolUnion;
 }
 
-function PoolStats({ pool }: Props) {
+function PoolHeaderStats({ pool }: Props) {
     return (
         <>
             <Flex>
@@ -40,4 +40,4 @@ function PoolStats({ pool }: Props) {
     );
 }
 
-export default PoolStats;
+export default PoolHeaderStats;

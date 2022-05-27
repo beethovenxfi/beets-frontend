@@ -27,11 +27,11 @@ export default function PoolListItem({ pool, ...rest }: Props) {
                     <Flex flex={1}>
                         <Text fontSize="md">{pool.name}</Text>
                     </Flex>
-                    <Box w={200} textAlign='right'>
-                        <Text fontSize='md'>{numeral(pool.dynamicData.totalLiquidity).format('$0,0')}</Text>
+                    <Box w={200} textAlign="right">
+                        <Text fontSize="md">{numeral(pool.dynamicData.totalLiquidity).format('$0,0')}</Text>
                     </Box>
-                    <Box w={200} textAlign='right'>
-                        <Text fontSize='md'>{numeral(pool.dynamicData.volume24h).format('$0,0')}</Text>
+                    <Box w={200} textAlign="right">
+                        <Text fontSize="md">{numeral(pool.dynamicData.volume24h).format('$0,0')}</Text>
                     </Box>
                     <Box w={200}>
                         <AprTooltip data={pool.dynamicData.apr} textProps={{ fontWeight: 'normal' }} />
