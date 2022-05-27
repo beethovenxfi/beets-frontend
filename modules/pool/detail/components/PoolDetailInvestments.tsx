@@ -63,6 +63,7 @@ export function PoolDetailInvestments() {
                                     amount={tokenAmount.amount}
                                     address={tokenAmount.address}
                                     mb={2}
+                                    mr={2}
                                 />
                             ))}
                     </Box>
