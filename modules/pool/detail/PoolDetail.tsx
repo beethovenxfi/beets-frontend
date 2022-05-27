@@ -1,22 +1,16 @@
-import { Box, Button, Container, Flex, Text } from '@chakra-ui/react';
+import { Box, Container, Flex } from '@chakra-ui/react';
 import PoolHeader from '~/modules/pool/detail/components/PoolHeader';
-import PoolStats from '~/modules/pool/detail/components/PoolStats';
 import PoolComposition from '~/modules/pool/detail/components/PoolComposition';
-import Link from 'next/link';
 import { usePool } from '~/modules/pool/lib/usePool';
-import { BeetsBox } from '~/components/box/BeetsBox';
 import PoolDetailChart from '~/modules/pool/detail/components/PoolDetailChart';
 import { PoolDetailMyBalance } from '~/modules/pool/detail/components/PoolDetailMyBalance';
 import { PoolDetailActions } from '~/modules/pool/detail/components/PoolDetailActions';
 import { PoolDetailMyRewards } from '~/modules/pool/detail/components/PoolDetailMyRewards';
 import { usePoolUserPoolTokenBalances } from '~/modules/pool/lib/usePoolUserPoolTokenBalances';
-import { usePoolUserStakedBalance } from '~/modules/pool/lib/usePoolUserStakedBalance';
 
 function PoolDetail() {
     const { pool } = usePool();
-    const { userTotalBptBalance, isLoading, hasBpt } = usePoolUserPoolTokenBalances();
-
-    console.log('has bpt', hasBpt, userTotalBptBalance);
+    const { isLoading, hasBpt } = usePoolUserPoolTokenBalances();
 
     return (
         <Container maxW="full">

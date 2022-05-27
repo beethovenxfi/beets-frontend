@@ -1,7 +1,17 @@
 // @ts-nocheck
 
 import { GqlPoolApr } from '~/apollo/generated/graphql-codegen-generated';
-import { Popover, PopoverTrigger, PopoverContent, PopoverHeader, Box, Flex, Text, TextProps } from '@chakra-ui/react';
+import {
+    Popover,
+    PopoverTrigger,
+    PopoverContent,
+    PopoverHeader,
+    Box,
+    Flex,
+    Text,
+    TextProps,
+    HStack,
+} from '@chakra-ui/react';
 import StarsIcon from '~/components/apr-tooltip/StarsIcon';
 import numeral from 'numeral';
 import { BeetsBox } from '~/components/box/BeetsBox';
@@ -17,8 +27,8 @@ function AprTooltip({ data, textProps }: Props) {
     const formatApr = (apr: number) => numeral(apr).format('0.00%');
     return (
         <Popover trigger="hover">
-            <Flex justify={'end'} align={'center'}>
-                <Text fontWeight={'semibold'} mr={1} {...textProps}>
+            <HStack justify={'end'} align={'center'}>
+                <Text fontSize="md" fontWeight={'semibold'} mr={1} {...textProps}>
                     {formatApr(data.total)}
                 </Text>
                 <PopoverTrigger>
@@ -26,7 +36,7 @@ function AprTooltip({ data, textProps }: Props) {
                         <StarsIcon />
                     </a>
                 </PopoverTrigger>
-            </Flex>
+            </HStack>
 
             <PopoverContent w="fit-content" bg="black">
                 <PopoverHeader bgColor="rgba(255,255,255,0.05)">

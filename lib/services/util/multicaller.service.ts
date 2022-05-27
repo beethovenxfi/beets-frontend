@@ -1,5 +1,5 @@
 import set from 'lodash/set';
-import { JsonRpcProvider } from '@ethersproject/providers';
+import { BaseProvider } from '@ethersproject/providers';
 import { Contract } from '@ethersproject/contracts';
 import { Interface } from '@ethersproject/abi';
 import { networkConfig } from '~/lib/config/network-config';
@@ -10,7 +10,7 @@ export class Multicaller {
 
     constructor(
         private readonly network: string,
-        private readonly provider: JsonRpcProvider,
+        private readonly provider: BaseProvider,
         private readonly abi: any[],
         private readonly options: any = {},
     ) {}
@@ -32,7 +32,7 @@ export class Multicaller {
 
 export async function multicall<T>(
     network: string,
-    provider: JsonRpcProvider,
+    provider: BaseProvider,
     abi: any[],
     calls: any[],
     options: any = {},

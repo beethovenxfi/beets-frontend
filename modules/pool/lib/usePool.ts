@@ -5,6 +5,7 @@ import { useContext, useEffect } from 'react';
 import { PoolContext } from '~/modules/pool/components/PoolProvider';
 import { poolGetServiceForPool, poolGetTokensWithoutPhantomBpt } from '~/lib/services/pool/pool-util';
 import { useEffectOnce } from '~/lib/util/custom-hooks';
+import { networkConfig } from '~/lib/config/network-config';
 
 export function usePool() {
     //we force cast here because the pool will never be null
