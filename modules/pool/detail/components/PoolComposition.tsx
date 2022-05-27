@@ -1,5 +1,5 @@
 import { GqlPoolUnion, useGetTokenPricesQuery } from '~/apollo/generated/graphql-codegen-generated';
-import { Box, Flex, Heading, Link, Text } from '@chakra-ui/react';
+import { Box, Flex, FlexProps, Heading, Link, Text } from '@chakra-ui/react';
 import TokenAvatar from '~/components/token/TokenAvatar';
 import { poolIsWeightedLikePool, poolGetTokensWithoutPhantomBpt } from '~/lib/services/pool/pool-util';
 import { ExternalLink } from 'react-feather';
@@ -12,6 +12,40 @@ import { PoolCompositionChart } from '~/modules/pool/detail/components/PoolCompo
 
 interface Props {
     pool: GqlPoolUnion;
+}
+
+interface BreakDownProps extends FlexProps {
+    index: number;
+    key: string;
+    nestLevel: number;
+    isLast?: boolean;
+}
+
+function BreakDown(props: BreakDownProps) {
+    return (
+        <Flex ml="0.75rem" align="center" key={props.key}>
+            {props.nestLevel === 2 && !props.isLast && (
+                <Box
+                    w="1px"
+                    bgColor="beets.gray.200"
+                    m="0.25rem"
+                    h={props.index === 0 ? '3rem' : '2.5rem'}
+                    mt="-2rem"
+                />
+            )}
+            <Box
+                w="1px"
+                bgColor="beets.gray.200"
+                m="0.25rem"
+                h={props.index === 0 ? '1.25rem' : '2.5rem'}
+                mt={props.index === 0 ? '-1rem' : '-2.25rem'}
+                ml={props.isLast ? 10 : props.nestLevel === 2 ? 8 : ''}
+            />
+            <Box h="1px" w="0.75rem" bgColor="beets.gray.200" mr="0.5rem" ml="-0.25rem" />
+
+            {props.children}
+        </Flex>
+    );
 }
 
 function PoolComposition({ pool }: Props) {
@@ -31,63 +65,80 @@ function PoolComposition({ pool }: Props) {
                     <Box flex={1.8}>
                         <Flex alignItems="center" mb={2}>
                             <Box flex={1}>
-                                <Text fontSize="lg" fontWeight={'semibold'}>
+                                <Text fontSize="lg" fontWeight="semibold">
                                     Token
                                 </Text>
                             </Box>
                             {poolIsWeightedLikePool(pool) ? (
                                 <Box w={125} textAlign="end" mr={4}>
-                                    <Text fontSize="lg" fontWeight={'semibold'}>
+                                    <Text fontSize="lg" fontWeight="semibold">
                                         Weight
                                     </Text>
                                 </Box>
                             ) : null}
                             <Box w={125} textAlign="end" mr={4}>
-                                <Text fontSize="lg" fontWeight={'semibold'}>
+                                <Text fontSize="lg" fontWeight="semibold">
                                     Balance
                                 </Text>
                             </Box>
                             <Box w={125} textAlign="end">
-                                <Text fontSize="lg" fontWeight={'semibold'}>
+                                <Text fontSize="lg" fontWeight="semibold">
                                     Value
                                 </Text>
                             </Box>
                         </Flex>
                         {poolTokens.map((token, index) => {
-                            const items = [<PoolCompositionToken token={token} key={index} />];
+                            const items = [
+                                <Flex align="center" key={index}>
+                                    <PoolCompositionToken token={token} />
+                                </Flex>,
+                            ];
 
                             if (token.__typename === 'GqlPoolTokenLinear') {
-                                for (const nestedToken of token.pool.tokens) {
+                                token.pool.tokens.forEach((nestedToken, index) => {
+                                    const nestLevel = 1;
                                     items.push(
-                                        <PoolCompositionToken
-                                            token={nestedToken}
+                                        <BreakDown
+                                            index={index}
                                             key={`${token.pool.id}${nestedToken.address}`}
-                                            nestLevel={1}
-                                        />,
+                                            nestLevel={nestLevel}
+                                        >
+                                            <PoolCompositionToken token={nestedToken} nestLevel={nestLevel} />
+                                        </BreakDown>,
                                     );
-                                }
+                                });
                             } else if (token.__typename === 'GqlPoolTokenPhantomStable') {
-                                for (const nestedToken of poolGetTokensWithoutPhantomBpt(token.pool)) {
+                                const poolTokens = poolGetTokensWithoutPhantomBpt(token.pool);
+                                poolTokens.forEach((nestedToken, index) => {
+                                    const nestLevel = 1;
+                                    const isLast = poolTokens.length === index + 1;
                                     items.push(
-                                        <PoolCompositionToken
-                                            token={nestedToken}
+                                        <BreakDown
+                                            index={index}
                                             key={`${token.pool.id}${nestedToken.address}`}
-                                            nestLevel={1}
-                                        />,
+                                            nestLevel={nestLevel}
+                                        >
+                                            <PoolCompositionToken token={nestedToken} nestLevel={nestLevel} />
+                                        </BreakDown>,
                                     );
 
                                     if (nestedToken.__typename === 'GqlPoolTokenLinear') {
-                                        for (const linearToken of poolGetTokensWithoutPhantomBpt(nestedToken.pool)) {
+                                        const nestedPoolTokens = poolGetTokensWithoutPhantomBpt(nestedToken.pool);
+                                        nestedPoolTokens.forEach((linearToken, index) => {
+                                            const nestLevel = 2;
                                             items.push(
-                                                <PoolCompositionToken
-                                                    token={linearToken}
+                                                <BreakDown
+                                                    index={index}
                                                     key={`${token.pool.id}${linearToken.address}`}
-                                                    nestLevel={2}
-                                                />,
+                                                    nestLevel={nestLevel}
+                                                    isLast={isLast}
+                                                >
+                                                    <PoolCompositionToken token={linearToken} nestLevel={nestLevel} />
+                                                </BreakDown>,
                                             );
-                                        }
+                                        });
                                     }
-                                }
+                                });
                             }
 
                             return (
