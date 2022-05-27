@@ -6,12 +6,15 @@ import { ArrowRight, ExternalLink } from 'react-feather';
 import { numberFormatUSDValue } from '~/lib/util/number-formats';
 import { etherscanGetTxUrl } from '~/lib/util/etherscan';
 import { formatDistanceToNow } from 'date-fns';
+import BeetsButton from '~/components/button/Button';
+import { NetworkStatus } from '@apollo/client';
 
 export function PoolDetailSwaps() {
     const { pool } = usePool();
-    const { data } = useGetPoolSwapsQuery({
+    const { data, fetchMore, networkStatus } = useGetPoolSwapsQuery({
         variables: { where: { poolIdIn: [pool.id] } },
         pollInterval: 7500,
+        notifyOnNetworkStatusChange: true,
     });
     const swaps = data?.swaps || [];
 
@@ -68,6 +71,17 @@ export function PoolDetailSwaps() {
                     </Box>
                 </Flex>
             ))}
+            <Flex p={4} pt={0}>
+                <BeetsButton
+                    isLoading={networkStatus === NetworkStatus.fetchMore}
+                    onClick={() => {
+                        fetchMore({ variables: { skip: swaps.length } }).catch();
+                    }}
+                    flex={1}
+                >
+                    Load more
+                </BeetsButton>
+            </Flex>
         </Box>
     );
 }

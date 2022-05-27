@@ -3,6 +3,7 @@ import { ApolloClient, HttpLink, InMemoryCache } from '@apollo/client';
 import merge from 'deepmerge';
 import isEqual from 'lodash/isEqual';
 import { GetAppGlobalData } from '~/apollo/generated/operations';
+import { concatPagination } from '@apollo/client/utilities';
 
 export const APOLLO_STATE_PROP_NAME = '__APOLLO_STATE__';
 
@@ -19,6 +20,12 @@ function createApolloClient() {
                 },
                 GqlTokenPrice: {
                     keyFields: ['address'],
+                },
+                Query: {
+                    fields: {
+                        poolGetJoinExits: concatPagination(),
+                        poolGetSwaps: concatPagination(),
+                    },
                 },
             },
         }),

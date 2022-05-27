@@ -6,12 +6,19 @@ import { numberFormatUSDValue } from '~/lib/util/number-formats';
 import { etherscanGetTxUrl } from '~/lib/util/etherscan';
 import { formatDistanceToNow } from 'date-fns';
 import { TokenAmountPill } from '~/components/token/TokenAmountPill';
+import { useState } from 'react';
+import BeetsButton from '~/components/button/Button';
+import { NetworkStatus } from '@apollo/client';
+
+const PAGE_SIZE = 10;
 
 export function PoolDetailInvestments() {
+    const [skip, setSkip] = useState(0);
     const { pool } = usePool();
-    const { data } = useGetPoolJoinExitsQuery({
-        variables: { poolId: pool.id },
+    const { data, fetchMore, networkStatus } = useGetPoolJoinExitsQuery({
+        variables: { poolId: pool.id, skip },
         pollInterval: 7500,
+        notifyOnNetworkStatusChange: true,
     });
     const joinExits = data?.joinExits || [];
 
@@ -75,6 +82,17 @@ export function PoolDetailInvestments() {
                     </Box>
                 </Flex>
             ))}
+            <Flex p={4} pt={0}>
+                <BeetsButton
+                    isLoading={networkStatus === NetworkStatus.fetchMore}
+                    onClick={() => {
+                        fetchMore({ variables: { skip: joinExits.length } }).catch();
+                    }}
+                    flex={1}
+                >
+                    Load more
+                </BeetsButton>
+            </Flex>
         </Box>
     );
 }
