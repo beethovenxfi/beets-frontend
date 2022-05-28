@@ -1,5 +1,5 @@
 import { GqlPoolUnion, useGetTokenPricesQuery } from '~/apollo/generated/graphql-codegen-generated';
-import { Box, Flex, FlexProps, Heading, Switch, Text, FormLabel } from '@chakra-ui/react';
+import { Collapse, Box, Flex, FlexProps, Heading, Switch, Text, FormLabel } from '@chakra-ui/react';
 import TokenAvatar from '~/components/token/TokenAvatar';
 import { poolIsWeightedLikePool, poolGetTokensWithoutPhantomBpt } from '~/lib/services/pool/pool-util';
 import { ExternalLink } from 'react-feather';
@@ -20,32 +20,32 @@ interface BreakDownProps extends FlexProps {
     key: string;
     nestLevel: number;
     isLast?: boolean;
+    show: boolean;
 }
 
 function BreakDown(props: BreakDownProps) {
     return (
-        <Flex ml="0.75rem" align="center" key={props.key}>
-            {props.nestLevel === 2 && !props.isLast && (
+        <Collapse
+            in={props.show}
+            animateOpacity
+            transition={{ enter: { duration: 0.5, timingFunction: 'ease-in-out' } }}
+        >
+            <Flex ml="0.75rem" align="center" key={props.key}>
+                {props.nestLevel === 2 && !props.isLast && (
+                    <Box w="1px" bgColor="beets.gray.200" h="4.5rem" mt="-2rem" />
+                )}
                 <Box
                     w="1px"
                     bgColor="beets.gray.200"
-                    m="0.25rem"
-                    h={props.index === 0 ? '3rem' : '2.5rem'}
-                    mt="-2rem"
+                    h={props.index === 0 ? '3.5rem' : '2rem'}
+                    mt={props.index === 0 ? '-1rem' : '-2.5rem'}
+                    ml={props.isLast ? 10 : props.nestLevel === 2 ? 8 : ''}
                 />
-            )}
-            <Box
-                w="1px"
-                bgColor="beets.gray.200"
-                m="0.25rem"
-                h={props.index === 0 ? '1.25rem' : '2.5rem'}
-                mt={props.index === 0 ? '-1rem' : '-2.25rem'}
-                ml={props.isLast ? 10 : props.nestLevel === 2 ? 8 : ''}
-            />
-            <Box h="1px" w="0.75rem" bgColor="beets.gray.200" mr="0.5rem" ml="-0.25rem" />
+                <Box h="1px" w="0.75rem" bgColor="beets.gray.200" mr="0.5rem" mt="-0.5rem" />
 
-            {props.children}
-        </Flex>
+                {props.children}
+            </Flex>
+        </Collapse>
     );
 }
 
@@ -118,15 +118,14 @@ function PoolComposition({ pool }: Props) {
                                     const nestLevel = 1;
                                     items.push(
                                         <>
-                                            {show && (
-                                                <BreakDown
-                                                    index={index}
-                                                    key={`${token.pool.id}${nestedToken.address}`}
-                                                    nestLevel={nestLevel}
-                                                >
-                                                    <PoolCompositionToken token={nestedToken} nestLevel={nestLevel} />
-                                                </BreakDown>
-                                            )}
+                                            <BreakDown
+                                                show={show}
+                                                index={index}
+                                                key={`${token.pool.id}${nestedToken.address}`}
+                                                nestLevel={nestLevel}
+                                            >
+                                                <PoolCompositionToken token={nestedToken} nestLevel={nestLevel} />
+                                            </BreakDown>
                                         </>,
                                     );
                                 });
@@ -137,15 +136,14 @@ function PoolComposition({ pool }: Props) {
                                     const isLast = poolTokens.length === index + 1;
                                     items.push(
                                         <>
-                                            {show && (
-                                                <BreakDown
-                                                    index={index}
-                                                    key={`${token.pool.id}${nestedToken.address}`}
-                                                    nestLevel={nestLevel}
-                                                >
-                                                    <PoolCompositionToken token={nestedToken} nestLevel={nestLevel} />
-                                                </BreakDown>
-                                            )}
+                                            <BreakDown
+                                                show={show}
+                                                index={index}
+                                                key={`${token.pool.id}${nestedToken.address}`}
+                                                nestLevel={nestLevel}
+                                            >
+                                                <PoolCompositionToken token={nestedToken} nestLevel={nestLevel} />
+                                            </BreakDown>
                                         </>,
                                     );
 
@@ -155,19 +153,18 @@ function PoolComposition({ pool }: Props) {
                                             const nestLevel = 2;
                                             items.push(
                                                 <>
-                                                    {show && (
-                                                        <BreakDown
-                                                            index={index}
-                                                            key={`${token.pool.id}${linearToken.address}`}
+                                                    <BreakDown
+                                                        show={show}
+                                                        index={index}
+                                                        key={`${token.pool.id}${linearToken.address}`}
+                                                        nestLevel={nestLevel}
+                                                        isLast={isLast}
+                                                    >
+                                                        <PoolCompositionToken
+                                                            token={linearToken}
                                                             nestLevel={nestLevel}
-                                                            isLast={isLast}
-                                                        >
-                                                            <PoolCompositionToken
-                                                                token={linearToken}
-                                                                nestLevel={nestLevel}
-                                                            />
-                                                        </BreakDown>
-                                                    )}
+                                                        />
+                                                    </BreakDown>
                                                 </>,
                                             );
                                         });
