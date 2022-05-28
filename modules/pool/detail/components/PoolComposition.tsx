@@ -57,6 +57,10 @@ function PoolComposition({ pool }: Props) {
         setShow((val) => toggleVal);
     };
 
+    const linearType = 'GqlPoolTokenLinear';
+    const phantomStableType = 'GqlPoolTokenPhantomStable';
+    const hasNestedTokens = poolTokens.some((token) => [linearType, phantomStableType].includes(token.__typename));
+
     return (
         <>
             <BeetsBox p={4} mt={4}>
@@ -73,6 +77,7 @@ function PoolComposition({ pool }: Props) {
                             onChange={(event) => {
                                 toggle(event.target.checked);
                             }}
+                            isDisabled={!hasNestedTokens}
                         />
                     </Flex>
                 </Flex>
@@ -112,7 +117,7 @@ function PoolComposition({ pool }: Props) {
                                 </Flex>,
                             ];
 
-                            if (token.__typename === 'GqlPoolTokenLinear') {
+                            if (token.__typename === linearType) {
                                 token.pool.tokens.forEach((nestedToken, index) => {
                                     const nestLevel = 1;
                                     items.push(
@@ -128,7 +133,7 @@ function PoolComposition({ pool }: Props) {
                                         </>,
                                     );
                                 });
-                            } else if (token.__typename === 'GqlPoolTokenPhantomStable') {
+                            } else if (token.__typename === phantomStableType) {
                                 const poolTokens = poolGetTokensWithoutPhantomBpt(token.pool);
                                 poolTokens.forEach((nestedToken, index) => {
                                     const nestLevel = 1;
@@ -146,7 +151,7 @@ function PoolComposition({ pool }: Props) {
                                         </>,
                                     );
 
-                                    if (nestedToken.__typename === 'GqlPoolTokenLinear') {
+                                    if (nestedToken.__typename === linearType) {
                                         const nestedPoolTokens = poolGetTokensWithoutPhantomBpt(nestedToken.pool);
                                         nestedPoolTokens.forEach((linearToken, index) => {
                                             const nestLevel = 2;
