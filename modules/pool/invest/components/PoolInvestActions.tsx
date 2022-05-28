@@ -1,48 +1,51 @@
-import {
-    Accordion,
-    AccordionButton,
-    AccordionIcon,
-    AccordionItem,
-    AccordionPanel,
-    Box,
-    Heading,
-    Text,
-} from '@chakra-ui/react';
+import { Accordion, AccordionButton, AccordionIcon, AccordionItem, AccordionPanel, Box } from '@chakra-ui/react';
 import PoolInvestForm from '~/modules/pool/invest/components/PoolInvestForm';
 import { PoolInvestStakeForm } from '~/modules/pool/invest/components/PoolInvestStakeForm';
 import { BeetsBoxHeader } from '~/components/box/BeetsBoxHeader';
 import { BeetsBox } from '~/components/box/BeetsBox';
+import { usePoolUserPoolTokenBalances } from '~/modules/pool/lib/usePoolUserPoolTokenBalances';
 
 function PoolInvestActions() {
+    const { hasBptInWallet } = usePoolUserPoolTokenBalances();
+
     return (
-        <Accordion flex={1} mx={8} defaultIndex={0}>
+        <Accordion flex={1} mx={8} defaultIndex={hasBptInWallet ? 1 : 0}>
             <AccordionItem border="none">
-                <BeetsBoxHeader px={1} py={2} borderBottomWidth="1">
-                    <AccordionButton>
+                <AccordionButton p={0}>
+                    <BeetsBoxHeader px={4} py={4} flex={1} borderRadius={0}>
                         <Box flex="1" textAlign="left" textStyle="h4">
                             1. Invest in pool
                         </Box>
                         <AccordionIcon />
-                    </AccordionButton>
-                </BeetsBoxHeader>
+                    </BeetsBoxHeader>
+                </AccordionButton>
                 <AccordionPanel p={0}>
-                    <BeetsBox borderRadius={0} p={4} pb={6}>
+                    <BeetsBox borderRadius={0} px={4} py={6}>
                         <PoolInvestForm />
                     </BeetsBox>
                 </AccordionPanel>
             </AccordionItem>
 
-            <AccordionItem border="none">
-                <BeetsBoxHeader px={1} py={2} borderRadius={0} borderBottomLeftRadius="md" borderBottomRightRadius="md">
-                    <AccordionButton>
+            <AccordionItem border="none" isDisabled={!hasBptInWallet}>
+                <AccordionButton p={0}>
+                    <BeetsBoxHeader
+                        px={4}
+                        py={4}
+                        borderRadius={0}
+                        borderTopWidth={1}
+                        borderTopColor="beets.gray.300"
+                        flex={1}
+                    >
                         <Box flex="1" textAlign="left" textStyle="h4">
-                            2. Stake in Farm
+                            2. Deposit BPT in Farm
                         </Box>
                         <AccordionIcon />
-                    </AccordionButton>
-                </BeetsBoxHeader>
-                <AccordionPanel pb={4}>
-                    <PoolInvestStakeForm />
+                    </BeetsBoxHeader>
+                </AccordionButton>
+                <AccordionPanel p={0} pb={4}>
+                    <BeetsBox borderRadius={0} px={4} py={6}>
+                        <PoolInvestStakeForm />
+                    </BeetsBox>
                 </AccordionPanel>
             </AccordionItem>
         </Accordion>

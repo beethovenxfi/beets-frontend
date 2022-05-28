@@ -9,6 +9,7 @@ import { usePoolJoinGetContractCallData } from '~/modules/pool/invest/lib/usePoo
 import { tokenAmountsGetArrayFromMap } from '~/lib/services/token/token-util';
 import { usePool } from '~/modules/pool/lib/usePool';
 import { usePoolUserPoolTokenBalances } from '~/modules/pool/lib/usePoolUserPoolTokenBalances';
+import BeetsButton from '~/components/button/Button';
 
 interface Props extends ContainerProps {}
 
@@ -24,10 +25,7 @@ function PoolInvestForm({ ...rest }: Props) {
 
     return (
         <Box {...rest}>
-            {/*<Flex>
-                <Heading fontSize="2xl" mb={4} flex={1}>
-                    Invest in pool
-                </Heading>
+            {/*<Flex justifyContent="flex-end" mb={4}>
                 <Settings />
             </Flex>*/}
             {pool.investConfig.options.map((option, index) => (
@@ -44,7 +42,7 @@ function PoolInvestForm({ ...rest }: Props) {
                     p={0}
                 />
             ))}
-            <Button
+            <BeetsButton
                 width="full"
                 bgColor="green.400"
                 mt={4}
@@ -57,7 +55,7 @@ function PoolInvestForm({ ...rest }: Props) {
                 }}
             >
                 Invest
-            </Button>
+            </BeetsButton>
             {submitError ? (
                 <Alert status="error" mt={4}>
                     <AlertIcon />
