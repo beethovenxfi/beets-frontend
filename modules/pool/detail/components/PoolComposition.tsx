@@ -27,8 +27,7 @@ function BreakDown(props: BreakDownProps) {
     return (
         <Collapse
             in={props.show}
-            animateOpacity
-            transition={{ enter: { duration: 0.5, timingFunction: 'ease-in-out' } }}
+            transition={{ enter: { duration: 0.5, ease: 'easeIn' }, exit: { duration: 0.4, ease: 'easeOut' } }}
         >
             <Flex ml="0.75rem" align="center" key={props.key}>
                 {props.nestLevel === 2 && !props.isLast && (
