@@ -121,16 +121,14 @@ function PoolComposition({ pool }: Props) {
                                 token.pool.tokens.forEach((nestedToken, index) => {
                                     const nestLevel = 1;
                                     items.push(
-                                        <>
-                                            <BreakDown
-                                                show={show}
-                                                index={index}
-                                                key={`${token.pool.id}${nestedToken.address}`}
-                                                nestLevel={nestLevel}
-                                            >
-                                                <PoolCompositionToken token={nestedToken} nestLevel={nestLevel} />
-                                            </BreakDown>
-                                        </>,
+                                        <BreakDown
+                                            show={show}
+                                            index={index}
+                                            key={`${token.pool.id}${nestedToken.address}`}
+                                            nestLevel={nestLevel}
+                                        >
+                                            <PoolCompositionToken token={nestedToken} nestLevel={nestLevel} />
+                                        </BreakDown>,
                                     );
                                 });
                             } else if (token.__typename === phantomStableType) {
@@ -139,16 +137,14 @@ function PoolComposition({ pool }: Props) {
                                     const nestLevel = 1;
                                     const isLast = poolTokens.length === index + 1;
                                     items.push(
-                                        <>
-                                            <BreakDown
-                                                show={show}
-                                                index={index}
-                                                key={`${token.pool.id}${nestedToken.address}`}
-                                                nestLevel={nestLevel}
-                                            >
-                                                <PoolCompositionToken token={nestedToken} nestLevel={nestLevel} />
-                                            </BreakDown>
-                                        </>,
+                                        <BreakDown
+                                            show={show}
+                                            index={index}
+                                            key={`${token.pool.id}${nestedToken.address}`}
+                                            nestLevel={nestLevel}
+                                        >
+                                            <PoolCompositionToken token={nestedToken} nestLevel={nestLevel} />
+                                        </BreakDown>,
                                     );
 
                                     if (nestedToken.__typename === linearType) {
@@ -156,20 +152,15 @@ function PoolComposition({ pool }: Props) {
                                         nestedPoolTokens.forEach((linearToken, index) => {
                                             const nestLevel = 2;
                                             items.push(
-                                                <>
-                                                    <BreakDown
-                                                        show={show}
-                                                        index={index}
-                                                        key={`${token.pool.id}${linearToken.address}`}
-                                                        nestLevel={nestLevel}
-                                                        isLast={isLast}
-                                                    >
-                                                        <PoolCompositionToken
-                                                            token={linearToken}
-                                                            nestLevel={nestLevel}
-                                                        />
-                                                    </BreakDown>
-                                                </>,
+                                                <BreakDown
+                                                    show={show}
+                                                    index={index}
+                                                    key={`${token.pool.id}${linearToken.address}`}
+                                                    nestLevel={nestLevel}
+                                                    isLast={isLast}
+                                                >
+                                                    <PoolCompositionToken token={linearToken} nestLevel={nestLevel} />
+                                                </BreakDown>,
                                             );
                                         });
                                     }
