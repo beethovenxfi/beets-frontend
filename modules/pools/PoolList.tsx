@@ -39,7 +39,7 @@ function PoolList() {
                     <PoolListItem
                         key={index}
                         pool={item}
-                        borderBottomColor="beets.base.800"
+                        borderBottomColor="beets.base.500"
                         borderBottomWidth={index === pools.length - 1 ? 0 : 1}
                         bg='beets.base.light.alpha.300'
                     />

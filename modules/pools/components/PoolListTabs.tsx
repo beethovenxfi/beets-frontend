@@ -1,4 +1,4 @@
-import { Box, Flex } from '@chakra-ui/react';
+import { Box, Flex, HStack } from '@chakra-ui/react';
 import { usePoolList } from '~/modules/pools/usePoolList';
 import { PoolListTabButton } from '~/modules/pools/components/PoolListTabButton';
 import { useAccount } from 'wagmi';
@@ -11,7 +11,7 @@ export function PoolListTabs() {
 
     return (
         <Box>
-            <Flex>
+            <HStack spacing='2'>
                 <PoolListTabButton
                     tabPosition="left"
                     text="Incentivized pools"
@@ -61,7 +61,7 @@ export function PoolListTabs() {
                         }
                     }}
                 />
-            </Flex>
+            </HStack>
         </Box>
     );
 }
