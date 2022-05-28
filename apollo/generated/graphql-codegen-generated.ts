@@ -631,7 +631,6 @@ export interface GqlPoolJoinExit {
     timestamp: Scalars['Int'];
     tx: Scalars['String'];
     type: GqlPoolJoinExitType;
-    userAddress: Scalars['String'];
     valueUSD: Scalars['String'];
 }
 

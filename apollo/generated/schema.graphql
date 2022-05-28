@@ -575,7 +575,6 @@ type GqlPoolJoinExit {
     timestamp: Int!
     tx: String!
     type: GqlPoolJoinExitType!
-    userAddress: String!
     valueUSD: String!
 }
 
