@@ -24,24 +24,22 @@ interface BreakDownProps extends FlexProps {
 }
 
 function BreakDown(props: BreakDownProps) {
+    const bgColor = 'beets.gray.200';
     return (
         <Collapse
             in={props.show}
             transition={{ enter: { duration: 0.5, ease: 'easeIn' }, exit: { duration: 0.4, ease: 'easeOut' } }}
         >
             <Flex ml="0.75rem" align="center" key={props.key}>
-                {props.nestLevel === 2 && !props.isLast && (
-                    <Box w="1px" bgColor="beets.gray.200" h="4.5rem" mt="-2rem" />
-                )}
+                {props.nestLevel === 2 && !props.isLast && <Box w="1px" bgColor={bgColor} h="4.5rem" mt="-2rem" />}
                 <Box
                     w="1px"
-                    bgColor="beets.gray.200"
+                    bgColor={bgColor}
                     h={props.index === 0 ? '3.5rem' : '2rem'}
                     mt={props.index === 0 ? '-1rem' : '-2.5rem'}
                     ml={props.isLast ? 10 : props.nestLevel === 2 ? 8 : ''}
                 />
-                <Box h="1px" w="0.75rem" bgColor="beets.gray.200" mr="0.5rem" mt="-0.5rem" />
-
+                <Box h="1px" w="0.75rem" bgColor={bgColor} mr="0.5rem" mt="-0.5rem" />
                 {props.children}
             </Flex>
         </Collapse>
