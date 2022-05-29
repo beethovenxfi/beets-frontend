@@ -7,6 +7,7 @@ import { useEffect } from 'react';
 import { tokenFormatAmount } from '~/lib/services/token/token-util';
 import { useMasterChefDepositIntoFarm } from '~/lib/global/useMasterChefDepositIntoFarm';
 import { VerticalStepsPreviewModal } from '~/components/preview-modal/VerticalStepsPreviewModal';
+import { usePoolUserPoolTokenBalances } from '~/modules/pool/lib/usePoolUserPoolTokenBalances';
 
 interface Props extends BoxProps {
     amountIsValid: boolean;
@@ -15,6 +16,7 @@ interface Props extends BoxProps {
 
 export function PoolInvestStakePreviewModal({ amount, amountIsValid, ...rest }: Props) {
     const { pool } = usePool();
+    const poolUserPoolTokenBalances = usePoolUserPoolTokenBalances();
     const { hasApprovalToStakeAmount, isLoading, refetch, isRefetching } = usePoolUserStakingAllowance();
     const hasApproval = amount ? hasApprovalToStakeAmount(amount) : false;
 
@@ -26,6 +28,12 @@ export function PoolInvestStakePreviewModal({ amount, amountIsValid, ...rest }: 
             refetch();
         }
     }, [approveToken.isConfirmed]);
+
+    useEffect(() => {
+        if (masterChefDepositIntoFarm.isConfirmed) {
+            poolUserPoolTokenBalances.refetch();
+        }
+    }, [masterChefDepositIntoFarm.isConfirmed]);
 
     return (
         <Box {...rest}>

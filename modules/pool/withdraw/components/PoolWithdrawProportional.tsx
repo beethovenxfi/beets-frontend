@@ -51,7 +51,7 @@ export function PoolWithdrawProportional({ ...rest }: Props) {
                     <SliderThumb />
                 </Slider>
             </Box>
-            <Box bgColor="gray.800" borderRadius="md">
+            <Box bgColor="beets.base.800" borderRadius="md">
                 {withdrawOptions.map((option, index) => {
                     const tokenOption = option.tokenOptions[0];
                     const poolToken = pool.tokens[option.poolTokenIndex];
