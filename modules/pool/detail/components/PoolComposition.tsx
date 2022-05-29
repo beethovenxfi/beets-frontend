@@ -1,14 +1,15 @@
+import { Box, Collapse, Flex, FlexProps, FormLabel, Heading, Switch, Text } from '@chakra-ui/react';
 import { GqlPoolUnion, useGetTokenPricesQuery } from '~/apollo/generated/graphql-codegen-generated';
-import { Collapse, Box, Flex, FlexProps, Heading, Switch, Text, FormLabel } from '@chakra-ui/react';
-import TokenAvatar from '~/components/token/TokenAvatar';
-import { poolIsWeightedLikePool, poolGetTokensWithoutPhantomBpt } from '~/lib/services/pool/pool-util';
-import { ExternalLink } from 'react-feather';
-import { etherscanGetTokenUrl } from '~/lib/util/etherscan';
-import { useGetTokens } from '~/lib/global/useToken';
-import numeral from 'numeral';
-import PoolCompositionToken from '~/modules/pool/detail/components/PoolCompositionToken';
+import { poolGetTokensWithoutPhantomBpt, poolIsWeightedLikePool } from '~/lib/services/pool/pool-util';
+
 import { BeetsBox } from '~/components/box/BeetsBox';
+import { ExternalLink } from 'react-feather';
 import { PoolCompositionChart } from '~/modules/pool/detail/components/PoolCompositionChart';
+import PoolCompositionToken from '~/modules/pool/detail/components/PoolCompositionToken';
+import TokenAvatar from '~/components/token/TokenAvatar';
+import { etherscanGetTokenUrl } from '~/lib/util/etherscan';
+import numeral from 'numeral';
+import { useGetTokens } from '~/lib/global/useToken';
 import { useState } from 'react';
 
 interface Props {
@@ -66,18 +67,19 @@ function PoolComposition({ pool }: Props) {
                     <Heading size="md" pb={8}>
                         Pool composition
                     </Heading>
-                    <Flex>
-                        <FormLabel htmlFor="nested-tokens" mb="0">
-                            Show nested tokens?
-                        </FormLabel>
-                        <Switch
-                            id="nested-tokens"
-                            onChange={(event) => {
-                                toggle(event.target.checked);
-                            }}
-                            isDisabled={!hasNestedTokens}
-                        />
-                    </Flex>
+                    {hasNestedTokens && (
+                        <Flex>
+                            <FormLabel htmlFor="nested-tokens" mb="0">
+                                Show nested tokens?
+                            </FormLabel>
+                            <Switch
+                                id="nested-tokens"
+                                onChange={(event) => {
+                                    toggle(event.target.checked);
+                                }}
+                            />
+                        </Flex>
+                    )}
                 </Flex>
                 <Flex>
                     <Box flex={1} alignItems="stretch">
