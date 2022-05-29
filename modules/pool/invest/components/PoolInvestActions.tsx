@@ -12,13 +12,13 @@ function PoolInvestActions() {
 
     if (!pool.staking) {
         return (
-            <Box flex={1} mx={8}>
-                <BeetsBoxHeader px={4} py={4} flex={1}>
+            <Box flex="1" mx="8">
+                <BeetsBoxHeader px="4" py="4" flex="1">
                     <Box flex="1" textAlign="left" textStyle="h4">
                         Invest in pool
                     </Box>
                 </BeetsBoxHeader>
-                <Box px={4} py={6} bg="beets.base.light.alpha.300">
+                <Box px="4" py="6" bg="beets.base.light.alpha.300">
                     <PoolInvestForm />
                 </Box>
             </Box>
@@ -26,19 +26,19 @@ function PoolInvestActions() {
     }
 
     return (
-        <Box flex={1} mx={8}>
+        <Box flex="1" mx="8">
             <Accordion defaultIndex={hasBptInWallet ? 1 : 0}>
                 <AccordionItem border="none">
-                    <AccordionButton p={0}>
-                        <BeetsBoxHeader px={4} py={4} flex={1}>
+                    <AccordionButton p="0">
+                        <BeetsBoxHeader px="4" py="4" flex="1">
                             <Box flex="1" textAlign="left" textStyle="h4">
                                 1. Invest in pool
                             </Box>
                             <AccordionIcon />
                         </BeetsBoxHeader>
                     </AccordionButton>
-                    <AccordionPanel p={0}>
-                        <Box px={4} py={6} bg="beets.base.light.alpha.300">
+                    <AccordionPanel p="0">
+                        <Box px="4" py="6" bg="beets.base.light.alpha.300">
                             <PoolInvestForm />
                         </Box>
                     </AccordionPanel>
@@ -47,14 +47,14 @@ function PoolInvestActions() {
                 <AccordionItem border="none" isDisabled={!hasBptInWallet}>
                     {({ isExpanded }) => (
                         <>
-                            <AccordionButton p={0}>
+                            <AccordionButton p="0">
                                 <BeetsBoxHeader
-                                    px={4}
-                                    py={4}
-                                    borderRadius={0}
-                                    borderTopWidth={1}
+                                    px="4"
+                                    py="4"
+                                    borderRadius="0"
+                                    borderTopWidth="1"
                                     borderTopColor="beets.gray.300"
-                                    flex={1}
+                                    flex="1"
                                     borderBottomRightRadius={isExpanded ? 'none' : 'md'}
                                     borderBottomLeftRadius={isExpanded ? 'none' : 'md'}
                                 >
@@ -64,12 +64,12 @@ function PoolInvestActions() {
                                     <AccordionIcon />
                                 </BeetsBoxHeader>
                             </AccordionButton>
-                            <AccordionPanel p={0} pb={4}>
+                            <AccordionPanel p="0" pb="4">
                                 <BeetsBox
-                                    borderTopLeftRadius={0}
-                                    borderTopRightRadius={0}
-                                    px={4}
-                                    py={6}
+                                    borderTopLeftRadius="0"
+                                    borderTopRightRadius="0"
+                                    px="4"
+                                    py="6"
                                     bg="beets.base.light.alpha.300"
                                 >
                                     <PoolInvestStakeForm />
