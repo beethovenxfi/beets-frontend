@@ -13,7 +13,7 @@ export function useMasterChefDepositIntoFarm() {
             contractInterface: BeethovenxMasterChefAbi,
         },
         functionName: 'deposit',
-        toastType: 'HARVEST',
+        toastType: 'STAKE',
     });
 
     function stake(farmId: string, amount: AmountHumanReadable) {

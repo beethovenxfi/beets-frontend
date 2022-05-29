@@ -40,7 +40,7 @@ export function tokenFormatAmount(amount: AmountHumanReadable | number) {
     } else if (amountNum < 1) {
         return numeral(amount).format('0.[000000]');
     } else if (amountNum < 10) {
-        return numeral(amount).format('0.[0000]');
+        return numeral(amount).format('0.0[000]');
     } else if (amountNum < 100) {
         return numeral(amount).format('0.[0000]');
     } else if (amountNum < 1000) {

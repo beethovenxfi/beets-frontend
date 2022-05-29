@@ -13,8 +13,8 @@ export function numberFormatUSDValue(value: string | number) {
 export function numberLimitInputToNumDecimals(value: string, decimals = 18) {
     const split = value.split('.');
 
-    if (split[1] && split[1].length > 18) {
-        return `${split[0]}.${split[1].slice(0, 18)}`;
+    if (split[1] && split[1].length > decimals) {
+        return `${split[0]}.${split[1].slice(0, decimals)}`;
     }
 
     return value;

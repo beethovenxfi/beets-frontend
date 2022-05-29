@@ -11,6 +11,8 @@ import { useAllowances } from '~/lib/util/useAllowances';
 import { useAccount } from 'wagmi';
 import { networkConfig } from '~/lib/config/network-config';
 import { useApproveToken } from '~/lib/util/useApproveToken';
+import { AddressZero } from '@ethersproject/constants';
+import { PoolInvestStakePreviewModal } from '~/modules/pool/invest/components/PoolInvestStakePreviewModal';
 
 export function PoolInvestStakeForm() {
     const { pool } = usePool();
@@ -78,25 +80,7 @@ export function PoolInvestStakeForm() {
             </Flex>
             {!isValid ? <Text color="red.500">Exceeds wallet balance</Text> : null}
 
-            <TransactionActionsStepper
-                mt={8}
-                activeStep={activeStep}
-                steps={[
-                    {
-                        infoText: 'Some info text...',
-                        buttonText: 'Approve BPT',
-                        onClick: () => approve(networkConfig.masterChefContractAddress),
-                        loading: isApprovalSubmitting,
-                    },
-                    {
-                        infoText: 'Some info text...',
-                        buttonText: 'Deposit BPT',
-                        onClick: () => stake(pool.staking?.id || '', amount),
-                        loading: isSubmitting,
-                        disabled: isValid,
-                    },
-                ]}
-            />
+            <PoolInvestStakePreviewModal mt={8} amount={amount} amountIsValid={isValid} />
         </Box>
     );
 }
