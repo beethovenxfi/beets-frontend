@@ -4,12 +4,29 @@ import { PoolInvestStakeForm } from '~/modules/pool/invest/components/PoolInvest
 import { BeetsBoxHeader } from '~/components/box/BeetsBoxHeader';
 import { BeetsBox } from '~/components/box/BeetsBox';
 import { usePoolUserPoolTokenBalances } from '~/modules/pool/lib/usePoolUserPoolTokenBalances';
+import { usePool } from '~/modules/pool/lib/usePool';
 
 function PoolInvestActions() {
+    const { pool } = usePool();
     const { hasBptInWallet } = usePoolUserPoolTokenBalances();
 
+    if (!pool.staking) {
+        return (
+            <Box flex={1} mx={8}>
+                <BeetsBoxHeader px={4} py={4} flex={1}>
+                    <Box flex="1" textAlign="left" textStyle="h4">
+                        Invest in pool
+                    </Box>
+                </BeetsBoxHeader>
+                <Box px={4} py={6} bg="beets.base.light.alpha.300">
+                    <PoolInvestForm />
+                </Box>
+            </Box>
+        );
+    }
+
     return (
-        <Box flex={1} mx={8} borderRadius="md">
+        <Box flex={1} mx={8}>
             <Accordion defaultIndex={hasBptInWallet ? 1 : 0}>
                 <AccordionItem border="none">
                     <AccordionButton p={0}>
