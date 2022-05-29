@@ -9,13 +9,14 @@ import { usePoolUserPendingRewards } from '~/modules/pool/lib/usePoolUserPending
 import { usePoolUserHarvestPendingRewards } from '~/modules/pool/lib/usePoolUserHarvestPendingRewards';
 import { useEffect } from 'react';
 import { numberFormatUSDValue } from '~/lib/util/number-formats';
+import { BeetsSubmitTransactionButton } from '~/components/button/BeetsSubmitTransactionButton';
 
 interface Props extends BoxProps {}
 
 export function PoolDetailMyRewards({ ...rest }: Props) {
     const { formattedPrice, getToken } = useGetTokens();
     const { pendingRewards, pendingRewardsTotalUSD, isLoading, refetch } = usePoolUserPendingRewards();
-    const { harvest, isSubmitting, isConfirmed } = usePoolUserHarvestPendingRewards();
+    const { harvest, isSubmitting, isConfirmed, isPending } = usePoolUserHarvestPendingRewards();
 
     useEffect(() => {
         if (isConfirmed) {
@@ -72,14 +73,14 @@ export function PoolDetailMyRewards({ ...rest }: Props) {
                 )}
             </Box>
             <Flex p={4} pt={2}>
-                <BeetsButton
-                    flex={1}
+                <BeetsSubmitTransactionButton
+                    isSubmitting={isSubmitting}
+                    isPending={isPending}
                     onClick={() => harvest()}
-                    isLoading={isSubmitting}
-                    disabled={pendingRewardsTotalUSD === 0 || isSubmitting}
+                    width="full"
                 >
                     Harvest rewards
-                </BeetsButton>
+                </BeetsSubmitTransactionButton>
             </Flex>
         </BeetsBox>
     );
