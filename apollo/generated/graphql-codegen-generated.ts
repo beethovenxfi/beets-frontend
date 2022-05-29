@@ -2669,6 +2669,7 @@ export type GetPoolJoinExitsQuery = {
         timestamp: number;
         tx: string;
         type: GqlPoolJoinExitType;
+        poolId: string;
         valueUSD: string;
         amounts: Array<{ __typename: 'GqlPoolJoinExitAmount'; address: string; amount: string }>;
     }>;
@@ -3422,6 +3423,7 @@ export const GetPoolJoinExitsDocument = gql`
             timestamp
             tx
             type
+            poolId
             valueUSD
             amounts {
                 address

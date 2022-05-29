@@ -375,6 +375,7 @@ export const GetPoolJoinExits = gql`
             timestamp
             tx
             type
+            poolId
             valueUSD
             amounts {
                 address

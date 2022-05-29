@@ -15,15 +15,17 @@ const PAGE_SIZE = 10;
 export function PoolDetailInvestments() {
     const [skip, setSkip] = useState(0);
     const { pool } = usePool();
-    const { data, fetchMore, networkStatus, refetch } = useGetPoolJoinExitsQuery({
+    const { data, fetchMore, networkStatus, refetch, loading } = useGetPoolJoinExitsQuery({
         variables: { poolId: pool.id, skip },
         pollInterval: 7500,
         notifyOnNetworkStatusChange: true,
     });
-    const joinExits = data?.joinExits || [];
+    const joinExits = data?.joinExits && networkStatus !== NetworkStatus.refetch ? data.joinExits : [];
 
     useEffect(() => {
-        refetch();
+        if (joinExits.filter((item) => item.poolId !== pool.id).length > 0) {
+            refetch();
+        }
     });
 
     return (

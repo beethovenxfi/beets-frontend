@@ -258,6 +258,7 @@ query GetPoolJoinExits($first: Int, $skip: Int, $poolId: String!) {
         timestamp
         tx
         type
+        poolId
         valueUSD
         amounts {
             address
