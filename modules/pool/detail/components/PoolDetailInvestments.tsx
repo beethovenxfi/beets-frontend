@@ -6,7 +6,7 @@ import { numberFormatUSDValue } from '~/lib/util/number-formats';
 import { etherscanGetTxUrl } from '~/lib/util/etherscan';
 import { formatDistanceToNow } from 'date-fns';
 import { TokenAmountPill } from '~/components/token/TokenAmountPill';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import BeetsButton from '~/components/button/Button';
 import { NetworkStatus } from '@apollo/client';
 
@@ -15,12 +15,16 @@ const PAGE_SIZE = 10;
 export function PoolDetailInvestments() {
     const [skip, setSkip] = useState(0);
     const { pool } = usePool();
-    const { data, fetchMore, networkStatus } = useGetPoolJoinExitsQuery({
+    const { data, fetchMore, networkStatus, refetch } = useGetPoolJoinExitsQuery({
         variables: { poolId: pool.id, skip },
         pollInterval: 7500,
         notifyOnNetworkStatusChange: true,
     });
     const joinExits = data?.joinExits || [];
+
+    useEffect(() => {
+        refetch();
+    });
 
     return (
         <Box>
