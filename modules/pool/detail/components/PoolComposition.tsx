@@ -82,23 +82,23 @@ function PoolComposition({ pool }: Props) {
                     )}
                 </Flex>
                 <Flex>
-                    <Box flex={1} alignItems="stretch">
+                    <Box flex={1} justifySelf="start">
                         <PoolCompositionChart />
                     </Box>
-                    <Box flex={1.8}>
+                    <Box>
                         <Flex alignItems="center" mb={2}>
-                            <Box flex={1}>
+                            <Box w={125}>
                                 <Text fontSize="lg" fontWeight="semibold">
                                     Token
                                 </Text>
                             </Box>
-                            {poolIsWeightedLikePool(pool) ? (
+                            {/* {poolIsWeightedLikePool(pool) ? (
                                 <Box w={125} textAlign="end" mr={4}>
                                     <Text fontSize="lg" fontWeight="semibold">
                                         Weight
                                     </Text>
                                 </Box>
-                            ) : null}
+                            ) : null} */}
                             <Box w={125} textAlign="end" mr={4}>
                                 <Text fontSize="lg" fontWeight="semibold">
                                     Balance
