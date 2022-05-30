@@ -1,11 +1,19 @@
 import ReactECharts from 'echarts-for-react';
-import { Box } from '@chakra-ui/layout';
-import { useTheme } from '@chakra-ui/react';
+import { useGetTokens } from '~/lib/global/useToken';
 import { usePool } from '~/modules/pool/lib/usePool';
 
 export function PoolCompositionChart() {
     const { pool } = usePool();
-    const theme = useTheme();
+    const { priceFor } = useGetTokens();
+
+    const data = pool.tokens.map((token) => {
+        return {
+            value: token.weight
+                ? parseFloat(token.weight)
+                : (parseFloat(token.balance) * priceFor(token.address)) / parseFloat(pool.dynamicData.totalLiquidity),
+            name: token.symbol,
+        };
+    });
 
     const option = {
         backgroundColor: 'transparent',
