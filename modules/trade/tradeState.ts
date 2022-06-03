@@ -1,5 +1,6 @@
 import { makeVar, useReactiveVar } from '@apollo/client';
 import { GqlSorGetSwapsResponse, useGetSorSwapsLazyQuery } from '~/apollo/generated/graphql-codegen-generated';
+import { networkConfig } from '~/lib/config/network-config';
 
 interface TradeState {
     tokenIn: string | null;
@@ -11,8 +12,8 @@ interface TradeState {
 }
 
 export const tradeStateVar = makeVar<TradeState>({
-    tokenIn: null,
-    tokenOut: null,
+    tokenIn: networkConfig.defaultTokenIn,
+    tokenOut: networkConfig.defaultTokenOut,
     swapType: 'EXACT_IN',
     swapAmount: null,
     sorResponse: null,
@@ -21,7 +22,7 @@ export const tradeStateVar = makeVar<TradeState>({
 export function useGetSwaps() {
     const tradeState = useReactiveVar(tradeStateVar);
     // make sure not to cache as this data needs to be always fresh
-    const [load, { loading, error, data, networkStatus }] = useGetSorSwapsLazyQuery({ fetchPolicy: 'no-cache'});
+    const [load, { loading, error, data, networkStatus }] = useGetSorSwapsLazyQuery({ fetchPolicy: 'no-cache' });
 
     async function loadSwaps() {
         if (tradeState.tokenIn && tradeState.tokenOut && tradeState.swapAmount) {
@@ -33,7 +34,7 @@ export function useGetSwaps() {
                     swapAmount: tradeState.swapAmount,
                     swapType: tradeState.swapType,
                     swapOptions: {
-                        maxPools: 8,    
+                        maxPools: 8,
                     },
                 },
             });

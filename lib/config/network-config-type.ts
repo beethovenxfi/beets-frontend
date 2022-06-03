@@ -41,4 +41,6 @@ export interface NetworkConfig {
     };
     beetsPoolOwnerAddress: string;
     masterChefContractAddress: string;
+    defaultTokenIn: string;
+    defaultTokenOut: string;
 }
