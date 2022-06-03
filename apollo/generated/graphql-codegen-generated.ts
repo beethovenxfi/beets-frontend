@@ -658,6 +658,12 @@ export type GqlPoolUnion =
     | GqlPoolStable
     | GqlPoolWeighted;
 
+export interface GqlPoolUserSwapVolume {
+    __typename: 'GqlPoolUserSwapVolume';
+    swapVolumeUSD: Scalars['BigDecimal'];
+    userAddress: Scalars['String'];
+}
+
 export interface GqlPoolWeighted extends GqlPoolBase {
     __typename: 'GqlPoolWeighted';
     address: Scalars['Bytes'];
@@ -810,6 +816,12 @@ export interface GqlUserPortfolioData {
     totalValue: Scalars['GqlBigNumber'];
 }
 
+export interface GqlUserSwapVolumeFilter {
+    poolIdIn?: InputMaybe<Array<Scalars['String']>>;
+    tokenInIn?: InputMaybe<Array<Scalars['String']>>;
+    tokenOutIn?: InputMaybe<Array<Scalars['String']>>;
+}
+
 export interface GqlUserTokenData {
     __typename: 'GqlUserTokenData';
     address: Scalars['String'];
@@ -878,6 +890,7 @@ export interface Query {
     poolGetPools: Array<GqlPoolMinimal>;
     poolGetPoolsCount: Scalars['Int'];
     poolGetSwaps: Array<GqlPoolSwap>;
+    poolGetUserSwapVolume: Array<GqlPoolUserSwapVolume>;
     portfolioGetUserPortfolio: GqlUserPortfolioData;
     portfolioGetUserPortfolioHistory: Array<GqlUserPortfolioData>;
     portfolioGetUserPortfolioHistoryAdmin: Array<GqlUserPortfolioData>;
@@ -931,6 +944,12 @@ export interface QueryPoolGetSwapsArgs {
     first?: InputMaybe<Scalars['Int']>;
     skip?: InputMaybe<Scalars['Int']>;
     where?: InputMaybe<GqlPoolSwapFilter>;
+}
+
+export interface QueryPoolGetUserSwapVolumeArgs {
+    first?: InputMaybe<Scalars['Int']>;
+    skip?: InputMaybe<Scalars['Int']>;
+    where?: InputMaybe<GqlUserSwapVolumeFilter>;
 }
 
 export interface QuerySorGetSwapsArgs {

@@ -625,6 +625,11 @@ union GqlPoolUnion =
     | GqlPoolStable
     | GqlPoolWeighted
 
+type GqlPoolUserSwapVolume {
+    swapVolumeUSD: BigDecimal!
+    userAddress: String!
+}
+
 type GqlPoolWeighted implements GqlPoolBase {
     address: Bytes!
     allTokens: [GqlPoolTokenExpanded!]!
@@ -768,6 +773,12 @@ type GqlUserPortfolioData {
     totalValue: GqlBigNumber!
 }
 
+input GqlUserSwapVolumeFilter {
+    poolIdIn: [String!]
+    tokenInIn: [String!]
+    tokenOutIn: [String!]
+}
+
 type GqlUserTokenData {
     address: String!
     balance: GqlBigNumber!
@@ -839,6 +850,7 @@ type Query {
         where: GqlPoolFilter
     ): Int!
     poolGetSwaps(first: Int, skip: Int, where: GqlPoolSwapFilter): [GqlPoolSwap!]!
+    poolGetUserSwapVolume(first: Int, skip: Int, where: GqlUserSwapVolumeFilter): [GqlPoolUserSwapVolume!]!
     portfolioGetUserPortfolio: GqlUserPortfolioData!
     portfolioGetUserPortfolioHistory: [GqlUserPortfolioData!]!
     portfolioGetUserPortfolioHistoryAdmin: [GqlUserPortfolioData!]!
