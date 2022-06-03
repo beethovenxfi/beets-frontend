@@ -52,7 +52,6 @@ function useTradeCard() {
             isPreviewVisible: false,
         });
 
-        setIsFetching.on();
         const trade = await _loadSwaps(type, amount);
         const resultAmount = trade?.returnAmount || '0';
         const resultAmountFixed = resultAmount ? oldBnumToFixed(resultAmount, 6) : '';
@@ -71,18 +70,21 @@ function useTradeCard() {
 
     const handleSellAmountChanged = async (event: FormEvent<HTMLInputElement>) => {
         const amount = event.currentTarget.value;
+        setIsFetching.on();
         dFetchTrade('EXACT_IN', amount);
         setSellAmount(amount);
     };
 
     const handleBuyAmountChanged = async (event: FormEvent<HTMLInputElement>) => {
         const amount = event.currentTarget.value;
+        setIsFetching.on();
         dFetchTrade('EXACT_OUT', amount);
         setBuyAmount(amount);
     };
 
     const handleTokenSelected = (address: string) => {
         tradeState[tokenSelectKey] = address;
+        setIsFetching.on();
         dFetchTrade('EXACT_IN', sellAmount);
     };
 
