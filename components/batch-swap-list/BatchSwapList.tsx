@@ -40,16 +40,10 @@ export function BatchSwapList() {
                             <Flex flex={1} alignItems="center" justifyContent="space-between">
                                 <TokenAmountPill address={batchSwap.tokenIn} amount={batchSwap.tokenAmountIn} />
                                 {batchSwap.swaps.map((swap, index) => (
-                                    <NextLink href={`/pool/${swap.poolId}`} passHref key={index}>
-                                        <Link>
-                                            <BeetsBox p={2} cursor="pointer">
-                                                <TokenAvatarSet
-                                                    width={120}
-                                                    addresses={swap.poolTokens}
-                                                    imageSize={24}
-                                                />
-                                            </BeetsBox>
-                                        </Link>
+                                    <NextLink href={`/pool/${swap.poolId}`} key={index}>
+                                        <BeetsBox p={2} cursor="pointer">
+                                            <TokenAvatarSet width={120} addresses={swap.poolTokens} imageSize={24} />
+                                        </BeetsBox>
                                     </NextLink>
                                 ))}
                                 <TokenAmountPill address={batchSwap.tokenOut} amount={batchSwap.tokenAmountOut} />
