@@ -39,7 +39,8 @@ export function useGetSwaps() {
                 },
             });
             const swaps = data?.swaps || null;
-            tradeState.sorResponse = swaps;
+            tradeStateVar({ ...tradeState, sorResponse: swaps });
+
             return swaps;
         }
         return null;

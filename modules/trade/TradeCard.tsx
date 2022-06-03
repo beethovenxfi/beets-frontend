@@ -13,6 +13,7 @@ import { TokenInputSwapButton } from '~/modules/trade/TokenInputSwapButton';
 import { useGetTokens } from '~/lib/global/useToken';
 import { useDebouncedCallback } from 'use-debounce';
 import { formatUnits } from '@ethersproject/units';
+import { oldBnum, oldBnumToFixed } from '~/lib/services/pool/lib/old-big-number';
 
 function useTradeCard() {
     const { data, loading, error } = useGetTokenPricesQuery();
@@ -41,12 +42,13 @@ function useTradeCard() {
 
         setIsFetching.on();
         const trade = await _loadSwaps();
-        const resultAmount = trade?.returnAmount || '0';
+        const resultAmount = trade?.returnAmount || '';
+        const resultAmountFixed = resultAmount ? oldBnumToFixed(resultAmount, 6) : '';
 
         if (type === 'EXACT_IN') {
-            setBuyAmount(resultAmount);
+            setBuyAmount(resultAmountFixed);
         } else {
-            setSellAmount(resultAmount);
+            setSellAmount(resultAmountFixed);
         }
         setIsFetching.off();
     };

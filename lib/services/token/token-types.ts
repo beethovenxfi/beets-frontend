@@ -19,6 +19,7 @@ export interface TokenBase {
 
 export type AmountHumanReadable = string;
 export type AmountScaled = BigNumber;
+export type AmountScaledString = string;
 
 export type BalanceMap = Map<string, AmountHumanReadable>;
 
