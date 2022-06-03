@@ -37,17 +37,16 @@ export function PoolDetailInvestments() {
                 borderTopLeftRadius="md"
                 borderTopRightRadius="md"
                 mb={4}
+                fontSize="md"
+                fontWeight="medium"
+                color="beets.gray.100"
             >
-                <Box fontSize="md" fontWeight="medium" color="beets.gray.100" width={135}>
-                    Action
-                </Box>
-                <Box flex={1} fontSize="md" fontWeight="medium" color="beets.gray.100">
-                    Details
-                </Box>
-                <Box fontSize="md" fontWeight="medium" color="beets.gray.100" textAlign="right" w={150}>
+                <Box width={135}>Action</Box>
+                <Box flex={1}>Details</Box>
+                <Box textAlign="right" w={150}>
                     Value
                 </Box>
-                <Box fontSize="md" fontWeight="medium" color="beets.gray.100" textAlign="right" w={200}>
+                <Box textAlign="right" w={200}>
                     Time
                 </Box>
             </Flex>

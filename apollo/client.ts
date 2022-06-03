@@ -25,6 +25,7 @@ function createApolloClient() {
                     fields: {
                         poolGetJoinExits: concatPagination(),
                         poolGetSwaps: concatPagination(),
+                        poolGetBatchSwaps: concatPagination(),
                     },
                 },
             },

@@ -61,5 +61,8 @@
         "typescript": "4.6.4",
         "use-debounce": "^8.0.1",
         "wagmi": "^0.3.5"
+    },
+    "dependencies": {
+        "react-jazzicon": "^1.0.3"
     }
 }

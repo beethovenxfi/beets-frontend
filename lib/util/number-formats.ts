@@ -7,6 +7,10 @@ export function numberFormatUSDValue(value: string | number) {
         return '$0.00';
     }
 
+    if (valueNum > 10000) {
+        numeral(valueNum).format('$0,0');
+    }
+
     return numeral(valueNum).format('$0,0.00');
 }
 

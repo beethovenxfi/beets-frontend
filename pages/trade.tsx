@@ -14,6 +14,7 @@ import TradeCard from '../modules/trade/TradeCard';
 import { initializeApolloClient, loadApolloState } from '~/apollo/client';
 import { GetPools } from '~/apollo/generated/operations';
 import { DEFAULT_POOL_LIST_QUERY_VARS } from '~/modules/pools/usePoolList';
+import { BatchSwapList } from '~/components/batch-swap-list/BatchSwapList';
 
 function Trade() {
     const { data, loading, error } = useGetTokensQuery();
@@ -22,6 +23,7 @@ function Trade() {
         <Grid paddingX="8" width="full" templateColumns="repeat(12, 1fr)" gap="0">
             <GridItem w="100%" colSpan={8} h="10">
                 <TradeChart />
+                <BatchSwapList />
             </GridItem>
             <GridItem w="100%" colSpan={4}>
                 <VStack>

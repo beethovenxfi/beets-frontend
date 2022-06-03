@@ -121,6 +121,34 @@ export const GqlPoolMinimal = gql`
         }
     }
 `;
+export const GetPoolBatchSwaps = gql`
+    query GetPoolBatchSwaps($first: Int, $skip: Int, $where: GqlPoolSwapFilter) {
+        batchSwaps: poolGetBatchSwaps(first: $first, skip: $skip, where: $where) {
+            id
+            timestamp
+            tokenAmountIn
+            tokenAmountOut
+            tokenIn
+            tokenOut
+            tokenInPrice
+            tokenOutPrice
+            tx
+            userAddress
+            valueUSD
+            swaps {
+                id
+                timestamp
+                tokenAmountIn
+                tokenAmountOut
+                tokenIn
+                tokenOut
+                valueUSD
+                poolTokens
+                poolId
+            }
+        }
+    }
+`;
 export const GetAppGlobalData = gql`
     query GetAppGlobalData {
         tokenGetTokens {
@@ -186,6 +214,20 @@ export const GetTokensDynamicData = gql`
 export const GetFbeetsRatio = gql`
     query GetFbeetsRatio {
         ratio: beetsGetFbeetsRatio
+    }
+`;
+export const GetProtocolData = gql`
+    query GetProtocolData {
+        protocolData: beetsGetProtocolData {
+            totalLiquidity
+            swapFee24h
+            swapVolume24h
+            marketCap
+            circulatingSupply
+            poolCount
+            beetsPrice
+            fbeetsPrice
+        }
     }
 `;
 export const GetPool = gql`

@@ -13,15 +13,6 @@ type FbeetsApr {
     apr: Float!
 }
 
-type GqlBalancePoolApr {
-    beetsApr: BigDecimal!
-    hasRewardApr: Boolean!
-    items: [GqlBalancePoolAprItem!]!
-    swapApr: BigDecimal!
-    thirdPartyApr: BigDecimal!
-    total: BigDecimal!
-}
-
 type GqlBalancePoolAprItem {
     apr: BigDecimal!
     subItems: [GqlBalancePoolAprSubItem!]
@@ -31,195 +22,6 @@ type GqlBalancePoolAprItem {
 type GqlBalancePoolAprSubItem {
     apr: BigDecimal!
     title: String!
-}
-
-input GqlBalancerGetPoolActivitiesInput {
-    first: Int!
-    poolId: ID!
-    sender: String
-    skip: Int!
-}
-
-type GqlBalancerPool {
-    address: Bytes!
-    amp: BigInt
-    apr: GqlBalancePoolApr!
-    baseToken: Bytes
-    composition: GqlBalancerPoolComposition!
-    createTime: Int!
-    expiryTime: BigInt
-    factory: Bytes
-    farm: GqlBeetsFarm
-    farmTotalLiquidity: BigDecimal!
-    fees24h: BigDecimal!
-    holdersCount: BigInt!
-    id: ID!
-    isNewPool: Boolean
-    linearPools: [GqlBalancerPoolLinearPoolData!]
-    lowerTarget: String
-    mainIndex: Int
-    mainTokens: [String!]
-    name: String
-    owner: Bytes
-    poolType: String
-    principalToken: Bytes
-    stablePhantomPools: [GqlBalancerPoolStablePhantomPoolData!]
-    swapEnabled: Boolean!
-    swapFee: BigDecimal!
-    swapsCount: BigInt!
-    symbol: String!
-    tokenRates: [String!]
-    tokens: [GqlBalancerPoolToken!]!
-    tokensList: [Bytes!]!
-    totalLiquidity: BigDecimal!
-    totalShares: BigDecimal!
-    totalSwapFee: BigDecimal!
-    totalSwapVolume: BigDecimal!
-    totalWeight: BigDecimal
-    unitSeconds: BigInt
-    upperTarget: String
-    volume24h: BigDecimal!
-    wrappedIndex: Int
-}
-
-type GqlBalancerPool24h {
-    address: Bytes!
-    id: ID!
-    liquidityChange24h: BigDecimal!
-    swapFees24h: BigDecimal!
-    swapVolume24h: BigDecimal!
-    totalLiquidity: BigDecimal!
-    totalShares: BigDecimal!
-    totalSwapFee: BigDecimal!
-    totalSwapVolume: BigDecimal!
-}
-
-type GqlBalancerPoolActivity {
-    amounts: [BigDecimal!]!
-    id: ID!
-    poolId: String!
-    sender: Bytes!
-    timestamp: Int!
-    tx: Bytes!
-    type: GqlBalancerPoolActivityType!
-    valueUSD: BigDecimal!
-}
-
-enum GqlBalancerPoolActivityType {
-    Exit
-    Join
-}
-
-type GqlBalancerPoolComposition {
-    tokens: [GqlBalancerPoolCompositionToken!]!
-}
-
-type GqlBalancerPoolCompositionToken {
-    address: String!
-    balance: BigDecimal!
-    decimals: Int!
-    nestedTokens: [GqlBalancerPoolCompositionToken!]
-    symbol: String!
-    valueUSD: BigDecimal!
-    weight: BigDecimal
-}
-
-type GqlBalancerPoolLinearPoolData {
-    address: String!
-    balance: String!
-    id: ID!
-    mainToken: GqlBalancerPoolLinearPoolMainToken!
-    mainTokenTotalBalance: String!
-    poolToken: String!
-    priceRate: String!
-    symbol: String!
-    totalSupply: String!
-    unwrappedTokenAddress: String!
-    wrappedToken: GqlBalancerPoolLinearPoolWrappedToken!
-}
-
-type GqlBalancerPoolLinearPoolMainToken {
-    address: String!
-    balance: String!
-    decimals: Int!
-    index: Int!
-    name: String!
-    symbol: String!
-    totalSupply: String!
-}
-
-type GqlBalancerPoolLinearPoolWrappedToken {
-    address: String!
-    balance: String!
-    decimals: Int!
-    index: Int!
-    name: String!
-    priceRate: String!
-    symbol: String!
-    totalSupply: String!
-}
-
-type GqlBalancerPoolSnapshot {
-    id: ID!
-    liquidityChange24h: BigDecimal!
-    poolId: ID!
-    swapFees24h: BigDecimal!
-    swapVolume24h: BigDecimal!
-    timestamp: Int!
-    tokens: [GqlBalancerPoolToken!]!
-    totalLiquidity: BigDecimal!
-    totalShares: BigDecimal!
-    totalSwapFee: BigDecimal!
-    totalSwapVolume: BigDecimal!
-}
-
-type GqlBalancerPoolStablePhantomPoolData {
-    address: String!
-    balance: String!
-    id: ID!
-    symbol: String!
-    tokens: [GqlBalancerPoolToken!]!
-    totalSupply: String!
-}
-
-type GqlBalancerPoolToken {
-    address: String!
-    balance: BigDecimal!
-    decimals: Int!
-    id: ID!
-    isBpt: Boolean
-    isPhantomBpt: Boolean
-    name: String!
-    priceRate: BigDecimal!
-    symbol: String!
-    weight: BigDecimal
-}
-
-type GqlBalancerTokenLatestPrice {
-    asset: Bytes!
-    block: BigInt!
-    id: ID!
-    price: BigDecimal!
-    priceUSD: BigDecimal!
-    pricingAsset: Bytes!
-}
-
-type GqlBalancerTradePair {
-    token0: GqlBalancerTradePairToken!
-    token1: GqlBalancerTradePairToken!
-}
-
-type GqlBalancerTradePairSnapshot {
-    id: ID!
-    pair: GqlBalancerTradePair!
-    timestamp: Int!
-    totalSwapFee: BigDecimal!
-    totalSwapVolume: BigDecimal!
-}
-
-type GqlBalancerTradePairToken {
-    address: String!
-    symbol: String!
 }
 
 type GqlBeetsConfig {
@@ -256,48 +58,6 @@ type GqlBeetsConfigPoolFilterItem {
     title: String!
 }
 
-type GqlBeetsFarm {
-    allocPoint: Int!
-    block: BigInt!
-    hasBeetsRewards: Boolean!
-    id: ID!
-    lastRewardBlock: BigInt!
-    masterChef: GqlBeetsMasterChef!
-    pair: Bytes!
-    rewardTokens: [GqlBeetsFarmRewardToken!]!
-    rewarder: GqlBeetsRewarder
-    slpBalance: BigInt!
-    timestamp: BigInt!
-    userCount: BigInt!
-}
-
-type GqlBeetsFarmRewardToken {
-    address: String!
-    decimals: Int!
-    isBeets: Boolean
-    rewardPerDay: BigDecimal!
-    rewardPerSecond: BigDecimal!
-    symbol: String!
-    tokenPrice: BigDecimal!
-}
-
-type GqlBeetsFarmUser {
-    address: Bytes!
-    amount: BigInt!
-    beetsHarvested: BigInt!
-    farmId: ID!
-    id: ID!
-    pair: Bytes!
-    rewardDebt: BigInt!
-    timestamp: BigInt!
-}
-
-type GqlBeetsMasterChef {
-    beetsPerBlock: BigInt!
-    id: ID!
-    totalAllocPoint: Int!
-}
-
 type GqlBeetsProtocolData {
     beetsPrice: BigDecimal!
     circulatingSupply: BigDecimal!
@@ -309,73 +69,6 @@ type GqlBeetsProtocolData {
     totalLiquidity: BigDecimal!
     totalSwapFee: BigDecimal!
     totalSwapVolume: BigDecimal!
-}
-
-type GqlBeetsRewarder {
-    id: ID!
-    rewardPerSecond: BigInt!
-    rewardToken: Bytes!
-    tokens: [GqlBeetsRewarderToken!]!
-}
-
-type GqlBeetsRewarderToken {
-    decimals: Int!
-    rewardPerSecond: BigInt!
-    symbol: String!
-    token: Bytes!
-    tokenPrice: Float!
-}
-
-type GqlBeetsUserPendingAllFarmRewards {
-    farmIds: [String!]!
-    farms: [GqlBeetsUserPendingFarmRewards!]!
-    numFarms: BigInt!
-    tokens: [GqlBeetsUserPendingRewardsToken!]!
-    totalBalanceUSD: BigDecimal!
-}
-
-type GqlBeetsUserPendingFarmRewards {
-    balanceUSD: BigDecimal!
-    farmId: String!
-    tokens: [GqlBeetsUserPendingRewardsToken!]!
-}
-
-type GqlBeetsUserPendingRewards {
-    farm: GqlBeetsUserPendingAllFarmRewards!
-}
-
-type GqlBeetsUserPendingRewardsToken {
-    address: Bytes!
-    balance: BigDecimal!
-    balanceUSD: BigDecimal!
-    symbol: String!
-}
-
-type GqlBeetsUserPoolData {
-    averageApr: BigDecimal!
-    averageFarmApr: BigDecimal!
-    pools: [GqlBeetsUserPoolPoolData!]!
-    totalBalanceUSD: BigDecimal!
-    totalFarmBalanceUSD: BigDecimal!
-}
-
-type GqlBeetsUserPoolPoolData {
-    balance: BigDecimal!
-    balanceScaled: BigInt!
-    balanceUSD: BigDecimal!
-    farmBalanceUSD: BigDecimal!
-    hasUnstakedBpt: Boolean
-    mainTokens: [GqlBeetsUserPoolTokenData!]
-    poolId: String!
-    tokens: [GqlBeetsUserPoolTokenData!]!
-}
-
-type GqlBeetsUserPoolTokenData {
-    address: String!
-    balance: String!
-    balanceUSD: BigDecimal!
-    farmBalanceUSD: BigDecimal!
-    symbol: String!
 }
 
 scalar GqlBigNumber
@@ -488,6 +181,40 @@ interface GqlPoolBase {
     staking: GqlPoolStaking
     symbol: String!
     withdrawConfig: GqlPoolWithdrawConfig!
+}
+
+type GqlPoolBatchSwap {
+    id: ID!
+    swaps: [GqlPoolBatchSwapSwap!]!
+    timestamp: Int!
+    tokenAmountIn: String!
+    tokenAmountOut: String!
+    tokenIn: String!
+    tokenInPrice: Float!
+    tokenOut: String!
+    tokenOutPrice: Float!
+    tx: String!
+    userAddress: String!
+    valueUSD: Float!
+}
+
+type GqlPoolBatchSwapPool {
+    id: ID!
+    tokens: [String!]!
+}
+
+type GqlPoolBatchSwapSwap {
+    id: ID!
+    poolId: String!
+    poolTokens: [String!]!
+    timestamp: Int!
+    tokenAmountIn: String!
+    tokenAmountOut: String!
+    tokenIn: String!
+    tokenOut: String!
+    tx: String!
+    userAddress: String!
+    valueUSD: Float!
 }
 
 type GqlPoolDynamicData {
@@ -1082,24 +809,15 @@ type Mutation {
 }
 
 type Query {
-    balancerGetPoolActivities(input: GqlBalancerGetPoolActivitiesInput!): [GqlBalancerPoolActivity!]!
-    balancerGetTopTradingPairs: [GqlBalancerTradePairSnapshot!]!
-    beetsGetBeetsFarms: [GqlBeetsFarm!]!
     beetsGetConfig: GqlBeetsConfig!
     beetsGetFbeetsRatio: String!
     beetsGetProtocolData: GqlBeetsProtocolData!
-    beetsGetUserDataForAllFarms: [GqlBeetsFarmUser!]!
-    beetsGetUserDataForFarm(farmId: String!): GqlBeetsFarmUser
-    beetsGetUserPendingRewards: GqlBeetsUserPendingRewards!
-    beetsGetUserPoolData: GqlBeetsUserPoolData!
     blocksGetAverageBlockTime: Float!
     fbeetsGetApr: FbeetsApr!
     gnosisIsUserMultisigWallet: Boolean
-    latestPrice(id: ID!): GqlBalancerTokenLatestPrice
     lge(id: ID!): GqlLge!
     lges: [GqlLge!]!
-    pool(id: String!): GqlBalancerPool!
-    poolGet24hData(poolId: ID!): GqlBalancerPool24h!
+    poolGetBatchSwaps(first: Int, skip: Int, where: GqlPoolSwapFilter): [GqlPoolBatchSwap!]!
     poolGetJoinExits(first: Int, skip: Int, where: GqlPoolJoinExitFilter): [GqlPoolJoinExit!]!
     poolGetPool(id: String!): GqlPoolBase!
     poolGetPoolFilters: [GqlPoolFilterDefinition!]!
@@ -1120,10 +838,6 @@ type Query {
         where: GqlPoolFilter
     ): Int!
     poolGetSwaps(first: Int, skip: Int, where: GqlPoolSwapFilter): [GqlPoolSwap!]!
-    poolSnapshots(poolId: ID!): [GqlBalancerPoolSnapshot!]!
-    pools: [GqlBalancerPool!]!
-    poolsJSON: [JSON!]!
-    poolsPastPools: [GqlBalancerPool!]!
     portfolioGetUserPortfolio: GqlUserPortfolioData!
     portfolioGetUserPortfolioHistory: [GqlUserPortfolioData!]!
     portfolioGetUserPortfolioHistoryAdmin: [GqlUserPortfolioData!]!
