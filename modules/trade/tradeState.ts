@@ -1,5 +1,6 @@
 import { makeVar, useReactiveVar } from '@apollo/client';
 import { GqlSorGetSwapsResponse, useGetSorSwapsLazyQuery } from '~/apollo/generated/graphql-codegen-generated';
+import { networkConfig } from '~/lib/config/network-config';
 
 type TradeState = {
     tokenIn: string | null;
@@ -14,8 +15,8 @@ type TradeContext = {
 };
 
 export const tradeStateVar = makeVar<TradeState>({
-    tokenIn: null,
-    tokenOut: null,
+    tokenIn: networkConfig.defaultTokenIn,
+    tokenOut: networkConfig.defaultTokenOut,
     swapType: 'EXACT_IN',
     swapAmount: null,
     sorResponse: null,

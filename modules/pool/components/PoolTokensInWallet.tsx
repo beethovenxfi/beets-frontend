@@ -1,13 +1,12 @@
 import { Box, Container, Flex, Heading } from '@chakra-ui/react';
 import { useGetTokens } from '~/lib/global/useToken';
-import { tokenGetAmountForAddress } from '~/lib/services/token/token-util';
-import numeral from 'numeral';
-import { usePoolUserBalances } from '~/modules/pool/lib/usePoolUserBalances';
+import { tokenFormatAmount, tokenGetAmountForAddress } from '~/lib/services/token/token-util';
+import { usePoolUserPoolTokenBalances } from '~/modules/pool/lib/usePoolUserPoolTokenBalances';
 import { usePool } from '~/modules/pool/lib/usePool';
 
 function PoolTokensInWallet() {
-    const { priceFor } = useGetTokens();
-    const { userBalances } = usePoolUserBalances();
+    const { formattedPrice } = useGetTokens();
+    const { userPoolTokenBalances } = usePoolUserPoolTokenBalances();
     const { pool } = usePool();
 
     return (
@@ -19,16 +18,14 @@ function PoolTokensInWallet() {
                 return (
                     <Box key={index}>
                         {option.tokenOptions.map((tokenOption, index) => {
-                            const userBalance = tokenGetAmountForAddress(tokenOption.address, userBalances);
+                            const userBalance = tokenGetAmountForAddress(tokenOption.address, userPoolTokenBalances);
 
                             return (
                                 <Flex key={`token-${index}`} mb={2} alignItems="center">
                                     <Box>
-                                        {tokenOption.symbol} - {userBalance}
+                                        {tokenOption.symbol} - {tokenFormatAmount(userBalance)}
                                         <br />
-                                        {numeral(priceFor(tokenOption.address) * parseFloat(userBalance)).format(
-                                            '$0,0.00',
-                                        )}
+                                        {formattedPrice({ address: tokenOption.address, amount: userBalance })}
                                     </Box>
                                 </Flex>
                             );

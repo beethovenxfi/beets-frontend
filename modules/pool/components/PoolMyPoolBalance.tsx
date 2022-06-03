@@ -2,31 +2,33 @@ import { Box, Container, Flex, Heading } from '@chakra-ui/react';
 import { GqlPoolUnion } from '~/apollo/generated/graphql-codegen-generated';
 import { useGetTokens } from '~/lib/global/useToken';
 import numeral from 'numeral';
-import { usePoolUserBalances } from '~/modules/pool/lib/usePoolUserBalances';
+import { usePoolUserPoolTokenBalances } from '~/modules/pool/lib/usePoolUserPoolTokenBalances';
 import { usePool } from '~/modules/pool/lib/usePool';
+import { tokenFormatAmount } from '~/lib/services/token/token-util';
+import { usePoolUserDepositBalance } from '~/modules/pool/lib/usePoolUserDepositBalance';
 
 interface Props {}
 
 function PoolTokensInWallet({}: Props) {
-    const { priceFor } = useGetTokens();
-    const { userPercentShare } = usePoolUserBalances();
-    const { poolTokensWithoutPhantomBpt } = usePool();
+    const { formattedPrice } = useGetTokens();
+    const { data } = usePoolUserDepositBalance();
+    const { pool } = usePool();
 
     return (
         <Container bg="gray.900" shadow="lg" rounded="lg" padding="4" mb={12} maxW="350">
             <Heading fontSize="md" mb={4}>
                 My pool balance
             </Heading>
-            {poolTokensWithoutPhantomBpt.map((poolToken, index) => {
-                const userBalance = parseFloat(poolToken.balance) * userPercentShare;
+            {pool.tokens.map((poolToken, index) => {
+                const userBalance = data?.find((balance) => balance.address === poolToken.address)?.amount || '0';
 
                 return (
                     <Box key={`token-${index}`}>
                         <Flex mb={2} alignItems="center">
                             <Box>
-                                {poolToken.symbol} - {userBalance}
+                                {poolToken.symbol} - {tokenFormatAmount(userBalance)}
                                 <br />
-                                {numeral(priceFor(poolToken.address) * userBalance).format('$0,0.00')}
+                                {formattedPrice({ address: poolToken.address, amount: `${userBalance}` })}
                             </Box>
                         </Flex>
                     </Box>

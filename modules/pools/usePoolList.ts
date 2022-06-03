@@ -1,5 +1,10 @@
 import { makeVar, useReactiveVar } from '@apollo/client';
-import { GetPoolsQueryVariables, GqlPoolOrderBy, useGetPoolsQuery } from '~/apollo/generated/graphql-codegen-generated';
+import {
+    GetPoolsQueryVariables,
+    GqlPoolOrderBy,
+    useGetPoolFiltersQuery,
+    useGetPoolsQuery,
+} from '~/apollo/generated/graphql-codegen-generated';
 import { useBoolean } from '@chakra-ui/hooks';
 import { useEffect } from 'react';
 
@@ -9,7 +14,7 @@ interface PoolsQueryVariables extends GetPoolsQueryVariables {
 }
 
 export const DEFAULT_POOL_LIST_QUERY_VARS: PoolsQueryVariables = {
-    first: 10,
+    first: 20,
     skip: 0,
     orderBy: 'totalLiquidity',
     orderDirection: 'desc',
@@ -40,9 +45,7 @@ export function usePoolList() {
         variables: state,
     });
 
-    useEffect(() => {
-        console.log('on change');
-    }, [state]);
+    const { data: poolFilters } = useGetPoolFiltersQuery();
 
     async function refetch(newState: PoolsQueryVariables) {
         poolListStateVar(newState);
@@ -93,5 +96,6 @@ export function usePoolList() {
         setPageSize,
         showMyInvestments,
         setShowMyInvestments,
+        filters: poolFilters?.filters || [],
     };
 }

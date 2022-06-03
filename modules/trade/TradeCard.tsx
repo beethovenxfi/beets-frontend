@@ -14,6 +14,7 @@ import { useGetTokens } from '~/lib/global/useToken';
 import { useDebouncedCallback } from 'use-debounce';
 import { formatUnits } from '@ethersproject/units';
 import { useReactiveVar } from '@apollo/client';
+import { oldBnumToFixed } from '~/lib/services/pool/lib/old-big-number';
 
 function useTradeCard() {
     const { data, loading, error } = useGetTokenPricesQuery();
@@ -53,12 +54,13 @@ function useTradeCard() {
 
         setIsFetching.on();
         const trade = await _loadSwaps(type, amount);
-        const resultAmount = formatUnits(trade?.returnAmount || 0, getToken(tradeState.tokenOut || '')?.decimals);
+        const resultAmount = trade?.returnAmount || '0';
+        const resultAmountFixed = resultAmount ? oldBnumToFixed(resultAmount, 6) : '';
 
         if (type === 'EXACT_IN') {
-            setBuyAmount(resultAmount);
+            setBuyAmount(resultAmountFixed);
         } else {
-            setSellAmount(resultAmount);
+            setSellAmount(resultAmountFixed);
         }
         setIsFetching.off();
     };

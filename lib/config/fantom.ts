@@ -34,4 +34,7 @@ export const fantomNetworkConfig: NetworkConfig = {
         batchRelayer: '0xC852F984CA3310AFc596adeB17EfcB0542646920',
     },
     beetsPoolOwnerAddress: '0xcd983793adb846dce4830c22f30c7ef0c864a776',
+    masterChefContractAddress: '0x8166994d9ebBe5829EC86Bd81258149B87faCfd3',
+    defaultTokenIn: '0x04068da6c83afcfa0e13ba15a6696662335d5b75',
+    defaultTokenOut: '0x21be370d5312f44cb42ce377bc9b8a0cef1a4c83',
 };

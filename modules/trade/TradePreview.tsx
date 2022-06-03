@@ -1,13 +1,10 @@
 import { Box, HStack, Text, VStack } from '@chakra-ui/layout';
-import { formatUnits } from '@ethersproject/units';
-import { ArrowRightCircle, ChevronDown, ChevronRight, ChevronsDown } from 'react-feather';
+import { ChevronsDown } from 'react-feather';
 import BeetsButton from '~/components/button/Button';
 import Card from '~/components/card/Card';
 import TokenAvatar from '~/components/token/TokenAvatar';
 import { useGetTokens } from '~/lib/global/useToken';
-import TradeCard from './TradeCard';
-import { tradeContextVar, useTrade } from './tradeState';
-import numeral from 'numeral';
+import { useTrade } from './tradeState';
 
 type Props = {
     onClose: () => void;
@@ -16,9 +13,7 @@ export default function TradePreview({ onClose }: Props) {
     const { tradeState } = useTrade();
     const { getToken } = useGetTokens();
 
-    let formattedOutAmount = numeral(
-        formatUnits(tradeState.sorResponse?.returnAmount || '0', getToken(tradeState.tokenOut || '')?.decimals),
-    ).format('0,0.00000000000');
+    const formattedOutAmount = tradeState.sorResponse?.returnAmount || '0';
 
     return (
         <Card

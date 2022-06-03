@@ -2,6 +2,8 @@ import React from 'react';
 import { Box, BoxProps, Button, Flex, IconButton, Select, Spinner, Text } from '@chakra-ui/react';
 import { ChevronLeft, ChevronRight } from 'react-feather';
 import Pagination from 'rc-pagination';
+import { AnimatePresence } from 'framer-motion';
+import { AnimatedBox } from '../animation/chakra';
 
 interface Props<T> extends BoxProps {
     items: T[];
@@ -31,17 +33,26 @@ export function PaginatedTable({
     renderTableHeader,
     ...rest
 }: Props<any>) {
+    const isLoadingRows = loading && items.length === 0;
     return (
         <Box {...rest}>
             {renderTableHeader()}
-            <Box mb={4} bgColor="beets.base.700" borderBottomLeftRadius="md" borderBottomRightRadius="md">
-                {loading && items.length === 0 ? (
+            <Box mb={4} borderBottomLeftRadius="md" borderBottomRightRadius="md" overflow="hidden" shadow="lg">
+                {isLoadingRows && (
                     <Flex justifyContent={'center'} py={32}>
                         <Spinner size="xl" />
                     </Flex>
-                ) : items.length > 0 ? (
-                    items.map((item, index) => renderTableRow(item, index))
-                ) : null}
+                )}
+                {!isLoadingRows &&
+                    items.map((item, index) => (
+                        <AnimatedBox
+                            animate={{ opacity: 1, transition: { delay: index * 0.02 } }}
+                            initial={{ opacity: 0 }}
+                            key={`${item.id}-${index}`}
+                        >
+                            {renderTableRow(item, index)}
+                        </AnimatedBox>
+                    ))}
             </Box>
             <Flex>
                 <Flex flex={1} alignItems="center" justifyContent="flex-start">
@@ -54,9 +65,9 @@ export function PaginatedTable({
                                         onPageSizeChange(parseInt(event.target.value));
                                     }}
                                 >
-                                    <option value="10">10</option>
-                                    <option value="25">25</option>
+                                    <option value="20">20</option>
                                     <option value="50">50</option>
+                                    <option value="100">100</option>
                                 </Select>
                             </Box>
                             <Text ml={2}>per page</Text>

@@ -1,4 +1,4 @@
-export type ToastTransactionType = 'SWAP' | 'JOIN' | 'EXIT';
+export type ToastTransactionType = 'SWAP' | 'JOIN' | 'EXIT' | 'HARVEST' | 'STAKE' | 'UNSTAKE' | 'APPROVE';
 export type ToastTransactionStatus = 'PENDING' | 'CONFIRMED' | 'ERROR';
 
 export function toastGetTransactionStatusHeadline(type: ToastTransactionType, status: ToastTransactionStatus) {
@@ -37,6 +37,54 @@ export function toastGetTransactionStatusHeadline(type: ToastTransactionType, st
             case 'ERROR':
                 //return i18next.t('Toast - Headline - Trade error', 'Trade error');
                 return 'Trade error';
+        }
+    } else if (type === 'HARVEST') {
+        switch (status) {
+            case 'PENDING':
+                //return i18next.t('Toast - Headline - Trade pending', 'Trade pending');
+                return 'Harvest pending';
+            case 'CONFIRMED':
+                //return i18next.t('Toast - Headline - Trade confirmed', 'Trade confirmed');
+                return 'Harvest confirmed';
+            case 'ERROR':
+                //return i18next.t('Toast - Headline - Trade error', 'Trade error');
+                return 'Harvest error';
+        }
+    } else if (type === 'STAKE') {
+        switch (status) {
+            case 'PENDING':
+                //return i18next.t('Toast - Headline - Trade pending', 'Trade pending');
+                return 'Stake pending';
+            case 'CONFIRMED':
+                //return i18next.t('Toast - Headline - Trade confirmed', 'Trade confirmed');
+                return 'Stake confirmed';
+            case 'ERROR':
+                //return i18next.t('Toast - Headline - Trade error', 'Trade error');
+                return 'Stake error';
+        }
+    } else if (type === 'UNSTAKE') {
+        switch (status) {
+            case 'PENDING':
+                //return i18next.t('Toast - Headline - Trade pending', 'Trade pending');
+                return 'Unstake pending';
+            case 'CONFIRMED':
+                //return i18next.t('Toast - Headline - Trade confirmed', 'Trade confirmed');
+                return 'Unstake confirmed';
+            case 'ERROR':
+                //return i18next.t('Toast - Headline - Trade error', 'Trade error');
+                return 'Unstake error';
+        }
+    } else if (type === 'APPROVE') {
+        switch (status) {
+            case 'PENDING':
+                //return i18next.t('Toast - Headline - Trade pending', 'Trade pending');
+                return 'Approve pending';
+            case 'CONFIRMED':
+                //return i18next.t('Toast - Headline - Trade confirmed', 'Trade confirmed');
+                return 'Approve confirmed';
+            case 'ERROR':
+                //return i18next.t('Toast - Headline - Trade error', 'Trade error');
+                return 'Approve error';
         }
     }
 

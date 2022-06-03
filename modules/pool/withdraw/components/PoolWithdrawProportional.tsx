@@ -16,13 +16,14 @@ import { useWithdrawState } from '~/modules/pool/withdraw/lib/useWithdrawState';
 import { usePool } from '~/modules/pool/lib/usePool';
 import { useGetTokens } from '~/lib/global/useToken';
 import { usePoolExitGetProportionalWithdrawEstimate } from '~/modules/pool/withdraw/lib/usePoolExitGetProportionalWithdrawEstimate';
+import { tokenFormatAmount } from '~/lib/services/token/token-util';
 
 interface Props extends BoxProps {}
 
 export function PoolWithdrawProportional({ ...rest }: Props) {
     const { pool } = usePool();
     const { setProportionalPercent, proportionalPercent } = useWithdrawState();
-    const { priceFor } = useGetTokens();
+    const { formattedPrice } = useGetTokens();
 
     const { data, isLoading } = usePoolExitGetProportionalWithdrawEstimate();
     const proportionalAmounts = data || [];
@@ -50,7 +51,7 @@ export function PoolWithdrawProportional({ ...rest }: Props) {
                     <SliderThumb />
                 </Slider>
             </Box>
-            <Box bgColor="gray.800" borderRadius="md">
+            <Box bgColor="beets.base.800" borderRadius="md">
                 {withdrawOptions.map((option, index) => {
                     const tokenOption = option.tokenOptions[0];
                     const poolToken = pool.tokens[option.poolTokenIndex];
@@ -71,14 +72,12 @@ export function PoolWithdrawProportional({ ...rest }: Props) {
                             <Box>
                                 <Skeleton isLoaded={!isLoading}>
                                     <Heading fontSize="xl" fontWeight="medium">
-                                        {proportionalAmount}
+                                        {tokenFormatAmount(proportionalAmount)}
                                     </Heading>
                                 </Skeleton>
                                 <Skeleton isLoaded={!isLoading}>
                                     <Text textAlign="right" color="gray.500">
-                                        {numeral(parseFloat(proportionalAmount) * priceFor(tokenOption.address)).format(
-                                            '$0,0.00',
-                                        )}
+                                        {formattedPrice({ address: tokenOption.address, amount: proportionalAmount })}
                                     </Text>
                                 </Skeleton>
                             </Box>

@@ -5,13 +5,13 @@ import { withdrawStateVar } from '~/modules/pool/withdraw/lib/useWithdrawState';
 import { usePoolExitGetProportionalWithdrawEstimate } from '~/modules/pool/withdraw/lib/usePoolExitGetProportionalWithdrawEstimate';
 import { usePoolExitGetBptInForSingleAssetWithdraw } from '~/modules/pool/withdraw/lib/usePoolExitGetBptInForSingleAssetWithdraw';
 import { oldBnumScaleAmount, oldBnumToHumanReadable } from '~/lib/services/pool/lib/old-big-number';
-import { usePoolUserBalances } from '~/modules/pool/lib/usePoolUserBalances';
+import { usePoolUserPoolTokenBalances } from '~/modules/pool/lib/usePoolUserPoolTokenBalances';
 import { useSlippage } from '~/lib/global/useSlippage';
 
 export function usePoolExitGetContractCallData() {
     const { type, singleAsset, proportionalPercent } = useReactiveVar(withdrawStateVar);
     const { poolService, pool } = usePool();
-    const { userBptBalance } = usePoolUserBalances();
+    const { userTotalBptBalance } = usePoolUserPoolTokenBalances();
     const { data: proportionalAmountsOut, error, isLoading } = usePoolExitGetProportionalWithdrawEstimate();
     const { data: singleAssetWithdrawEstimate } = usePoolExitGetBptInForSingleAssetWithdraw();
     const { slippage } = useSlippage();
@@ -29,7 +29,7 @@ export function usePoolExitGetContractCallData() {
         () => {
             if (type === 'PROPORTIONAL' && proportionalAmountsOut) {
                 const userBptRatio = oldBnumToHumanReadable(
-                    oldBnumScaleAmount(userBptBalance).times(proportionalPercent / 100),
+                    oldBnumScaleAmount(userTotalBptBalance).times(proportionalPercent / 100),
                 );
 
                 return poolService.exitGetContractCallData({
@@ -48,7 +48,7 @@ export function usePoolExitGetContractCallData() {
                     kind: 'ExactBPTInForOneTokenOut',
                     bptAmountIn: singleAssetWithdrawEstimate.bptIn,
                     tokenOutAddress: singleAsset.address,
-                    userBptBalance,
+                    userBptBalance: userTotalBptBalance,
                     slippage: parseFloat(slippage),
                     amountOut: singleAsset.amount,
                 });

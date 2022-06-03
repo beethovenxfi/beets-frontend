@@ -1,23 +1,17 @@
-import { Grid, GridItem, VStack, Box, Text } from '@chakra-ui/react';
+import { Grid, GridItem, VStack } from '@chakra-ui/react';
 import TradeChart from '~/components/charts/TradeChart';
-import Navbar from '../components/nav/Navbar';
 
 import BeetsSmart from '~/assets/icons/beetx-smarts.svg';
-import Chevron3 from '~/assets/icons/chevron_down3.svg';
 
 import Image from 'next/image';
 import { AnimatedBox } from '~/components/animation/chakra';
-import AnimatedChevrons from '~/components/animation/chevron/AnimatedChevrons';
-import Card from '~/components/card/Card';
-import { GetPoolsQuery, GetPoolsQueryVariables, useGetTokensQuery } from '~/apollo/generated/graphql-codegen-generated';
 import TradeCard from '../modules/trade/TradeCard';
 import { initializeApolloClient, loadApolloState } from '~/apollo/client';
-import { GetPools } from '~/apollo/generated/operations';
-import { DEFAULT_POOL_LIST_QUERY_VARS } from '~/modules/pools/usePoolList';
 import { tradeContextVar, useTrade } from '~/modules/trade/tradeState';
 import { AnimatePresence, useAnimation } from 'framer-motion';
 import TradePreview from '~/modules/trade/TradePreview';
 import { useEffect } from 'react';
+import { BatchSwapList } from '~/components/batch-swap-list/BatchSwapList';
 
 function Trade() {
     const { tradeContext } = useTrade();
@@ -59,6 +53,7 @@ function Trade() {
         <Grid paddingX="8" width="full" templateColumns="repeat(12, 1fr)" gap="0">
             <GridItem w="100%" colSpan={8} h="10">
                 <TradeChart />
+                <BatchSwapList />
             </GridItem>
             <GridItem w="100%" colSpan={4}>
                 <VStack w="full" position="relative">
@@ -104,7 +99,12 @@ function Trade() {
                                     w="full"
                                     animate={tradePreviewControls}
                                     initial={{ opacity: 0, scale: 0.7 }}
-                                    exit={{ opacity: 0, scale: 0.7, position: 'absolute', transition: { type: 'spring', stiffness: 250, damping: 15 } }}
+                                    exit={{
+                                        opacity: 0,
+                                        scale: 0.7,
+                                        position: 'absolute',
+                                        transition: { type: 'spring', stiffness: 250, damping: 15 },
+                                    }}
                                 >
                                     <TradePreview onClose={handlePreviewClosed} />
                                 </AnimatedBox>

@@ -104,5 +104,6 @@ export function useSubmitTransaction({ contractConfig, functionName, writeConfig
         isConfirmed: waitForTransaction.isSuccess,
         isFailed: waitForTransaction.isError,
         error: waitForTransaction.error,
+        reset: contractWrite.reset,
     };
 }

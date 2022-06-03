@@ -43,6 +43,7 @@ import { RainbowKitProvider } from '@rainbow-me/rainbowkit';
 import { useRouter } from 'next/router';
 import { networkChainDefinitions, wagmiClient } from '~/lib/global/network';
 import { BeetsFonts } from '~/components/fonts/BeetsFonts';
+import { SubNavBar } from '~/components/nav/SubNavBar';
 
 const queryClient = new QueryClient();
 
@@ -110,7 +111,7 @@ function MyApp({ Component, pageProps }: AppProps) {
                     <ChakraProvider theme={chakraTheme}>
                         <BeetsFonts />
                         <QueryClientProvider client={queryClient}>
-                            <Box height="full" className="bg" fontFamily="Inter" overflowX="hidden">
+                            <Box height="full" className="bg" overflowX="hidden">
                                 <Box height="full" display="flex" justifyContent="center">
                                     {/* add gutter here */}
                                     <Grid
@@ -121,6 +122,7 @@ function MyApp({ Component, pageProps }: AppProps) {
                                     >
                                         <GridItem colSpan={12} height="fit-content">
                                             <Navbar />
+                                            <SubNavBar />
                                         </GridItem>
                                         <GridItem colSpan={12} paddingTop="12">
                                             <Component {...pageProps} />

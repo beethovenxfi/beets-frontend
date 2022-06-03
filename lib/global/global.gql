@@ -13,6 +13,7 @@ query GetAppGlobalData {
         price
         address
     }
+    beetsGetFbeetsRatio
 }
 
 query GetTokens {
@@ -52,5 +53,22 @@ query GetTokensDynamicData($addresses: [String!]!) {
         priceChangePercent30d
         tokenAddress
         updatedAt
+    }
+}
+
+query GetFbeetsRatio {
+    ratio: beetsGetFbeetsRatio
+}
+
+query GetProtocolData {
+    protocolData: beetsGetProtocolData {
+        totalLiquidity
+        swapFee24h
+        swapVolume24h
+        marketCap
+        circulatingSupply
+        poolCount
+        beetsPrice
+        fbeetsPrice
     }
 }
