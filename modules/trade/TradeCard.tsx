@@ -90,7 +90,6 @@ function useTradeCard() {
 
     const handleTokensSwitched = () => {
         const sellTokenBeforeSwitch = tradeState.tokenIn;
-        const sellAmountBeforeSwitch = sellAmount;
 
         tradeState.tokenIn = tradeState.tokenOut;
         tradeState.tokenOut = sellTokenBeforeSwitch;
