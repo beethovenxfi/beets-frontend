@@ -1,11 +1,15 @@
 import { makeVar, useReactiveVar } from '@apollo/client';
-import { GqlSorGetSwapsResponse, useGetSorSwapsLazyQuery } from '~/apollo/generated/graphql-codegen-generated';
+import {
+    GqlSorGetSwapsResponse,
+    GqlSorSwapType,
+    useGetSorSwapsLazyQuery,
+} from '~/apollo/generated/graphql-codegen-generated';
 import { networkConfig } from '~/lib/config/network-config';
 
 type TradeState = {
     tokenIn: string | null;
     tokenOut: string | null;
-    swapType: 'EXACT_IN' | 'EXACT_OUT';
+    swapType: GqlSorSwapType;
     swapAmount: string | null;
     sorResponse: GqlSorGetSwapsResponse | null;
 };
@@ -35,7 +39,7 @@ export function useTrade() {
     // make sure not to cache as this data needs to be always fresh
     const [load, { loading, error, data, networkStatus }] = useGetSorSwapsLazyQuery({ fetchPolicy: 'no-cache' });
 
-    async function loadSwaps(type?: 'EXACT_IN' | 'EXACT_OUT', amount?: string) {
+    async function loadSwaps(type: GqlSorSwapType, amount: string) {
         if (
             !tradeState.tokenIn ||
             !tradeState.tokenOut ||
@@ -44,13 +48,14 @@ export function useTrade() {
         ) {
             return null;
         }
+
         const { data } = await load({
             fetchPolicy: 'no-cache',
             variables: {
                 tokenIn: tradeState.tokenIn,
                 tokenOut: tradeState.tokenOut,
-                swapAmount: amount || tradeState.swapAmount || '0',
-                swapType: type || tradeState.swapType,
+                swapAmount: amount || '0',
+                swapType: type,
                 swapOptions: {
                     maxPools: 8,
                 },

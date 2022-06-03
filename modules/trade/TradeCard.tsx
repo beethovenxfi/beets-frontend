@@ -4,7 +4,7 @@ import { ChevronsDown } from 'react-feather';
 import { FormEvent, useEffect, useState } from 'react';
 import { AnimatePresence, useAnimation, motion } from 'framer-motion';
 import TokenSelect from '~/components/token-select/TokenSelect';
-import { useGetTokenPricesQuery } from '~/apollo/generated/graphql-codegen-generated';
+import { GqlSorSwapType, useGetTokenPricesQuery } from '~/apollo/generated/graphql-codegen-generated';
 import TokenInput from '~/components/inputs/TokenInput';
 import Card from '~/components/card/Card';
 import BeetsButton from '~/components/button/Button';
@@ -40,7 +40,7 @@ function useTradeCard() {
         });
     }, []);
 
-    const fetchTrade = async (type: 'EXACT_IN' | 'EXACT_OUT', amount: string) => {
+    const fetchTrade = async (type: GqlSorSwapType, amount: string) => {
         tradeStateVar({
             ...tradeState,
             swapType: type,
