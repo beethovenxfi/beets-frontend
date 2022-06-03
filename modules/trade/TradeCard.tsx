@@ -83,6 +83,7 @@ function useTradeCard() {
 
     const handleTokenSelected = (address: string) => {
         tradeState[tokenSelectKey] = address;
+        dFetchTrade('EXACT_IN', sellAmount);
     };
 
     const handleTokensSwitched = () => {
@@ -175,7 +176,7 @@ function TradeCard() {
 
     return (
         <Box width="full" position="relative">
-            <Card animate={controls} title="Market swap" position="relative" height="md" shadow="lg">
+            <Card animate={controls} title="Swap" position="relative" height="md" shadow="lg">
                 <VStack spacing="2" padding="4" width="full">
                     <Box position="relative" width="full">
                         <TokenInput
