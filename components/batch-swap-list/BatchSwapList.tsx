@@ -1,8 +1,7 @@
 import { useGetPoolBatchSwapsQuery } from '~/apollo/generated/graphql-codegen-generated';
-import { Box, Flex, Text } from '@chakra-ui/react';
+import { Box, Flex, Link, Text } from '@chakra-ui/react';
 import { TokenAmountPill } from '~/components/token/TokenAmountPill';
 import TokenAvatarSet from '~/components/token/TokenAvatarSet';
-import NextLink from 'next/link';
 import { formatDistanceToNow } from 'date-fns';
 import { BeetsBox } from '~/components/box/BeetsBox';
 import { numberFormatUSDValue } from '~/lib/util/number-formats';
@@ -10,9 +9,10 @@ import { NetworkStatus } from '@apollo/client';
 import BeetsButton from '~/components/button/Button';
 import numeral from 'numeral';
 import { useGetTokens } from '~/lib/global/useToken';
+import { NextLink } from '~/components/link/NextLink';
 
 export function BatchSwapList() {
-    const { priceFor, formattedPrice, prices, priceForAmount } = useGetTokens();
+    const { priceForAmount } = useGetTokens();
     const { data, fetchMore, networkStatus, loading } = useGetPoolBatchSwapsQuery({
         variables: { first: 5, skip: 0 },
         notifyOnNetworkStatusChange: true,
@@ -40,8 +40,8 @@ export function BatchSwapList() {
                             <Flex flex={1} alignItems="center" justifyContent="space-between">
                                 <TokenAmountPill address={batchSwap.tokenIn} amount={batchSwap.tokenAmountIn} />
                                 {batchSwap.swaps.map((swap, index) => (
-                                    <>
-                                        <NextLink href={`/pool/${swap.poolId}`} passHref>
+                                    <NextLink href={`/pool/${swap.poolId}`} passHref key={index}>
+                                        <Link>
                                             <BeetsBox p={2} cursor="pointer">
                                                 <TokenAvatarSet
                                                     width={120}
@@ -49,8 +49,8 @@ export function BatchSwapList() {
                                                     imageSize={24}
                                                 />
                                             </BeetsBox>
-                                        </NextLink>
-                                    </>
+                                        </Link>
+                                    </NextLink>
                                 ))}
                                 <TokenAmountPill address={batchSwap.tokenOut} amount={batchSwap.tokenAmountOut} />
                             </Flex>
