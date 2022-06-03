@@ -41,7 +41,7 @@ function useTradeCard() {
 
         setIsFetching.on();
         const trade = await _loadSwaps();
-        const resultAmount = formatUnits(trade?.returnAmount || 0, getToken(tradeState.tokenIn || '')?.decimals);
+        const resultAmount = trade?.returnAmount || '0';
 
         if (type === 'EXACT_IN') {
             setBuyAmount(resultAmount);

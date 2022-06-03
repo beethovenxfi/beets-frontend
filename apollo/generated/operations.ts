@@ -492,6 +492,7 @@ export const GetSorSwaps = gql`
                 assetOutIndex
             }
             returnAmount
+            returnAmountScaled
             returnAmountFromSwaps
             returnAmountConsideringFees
             swapAmount

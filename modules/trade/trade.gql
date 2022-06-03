@@ -25,6 +25,7 @@ query GetSorSwaps(
             assetOutIndex
         }
         returnAmount
+        returnAmountScaled
         returnAmountFromSwaps
         returnAmountConsideringFees
         swapAmount

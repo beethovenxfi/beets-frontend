@@ -697,6 +697,7 @@ export interface GqlSorGetSwapsResponse {
     returnAmount: Scalars['BigDecimal'];
     returnAmountConsideringFees: Scalars['BigDecimal'];
     returnAmountFromSwaps?: Maybe<Scalars['BigDecimal']>;
+    returnAmountScaled: Scalars['BigDecimal'];
     routes: Array<GqlSorSwapRoute>;
     swapAmount: Scalars['BigDecimal'];
     swapAmountForSwaps?: Maybe<Scalars['BigDecimal']>;
@@ -2515,6 +2516,7 @@ export type GetSorSwapsQuery = {
         tokenAddresses: Array<string>;
         marketSp: string;
         returnAmount: string;
+        returnAmountScaled: string;
         returnAmountFromSwaps?: string | null;
         returnAmountConsideringFees: string;
         swapAmountForSwaps?: string | null;
@@ -3435,6 +3437,7 @@ export const GetSorSwapsDocument = gql`
                 assetOutIndex
             }
             returnAmount
+            returnAmountScaled
             returnAmountFromSwaps
             returnAmountConsideringFees
             swapAmount

@@ -660,6 +660,7 @@ type GqlSorGetSwapsResponse {
     returnAmount: BigDecimal!
     returnAmountConsideringFees: BigDecimal!
     returnAmountFromSwaps: BigDecimal
+    returnAmountScaled: BigDecimal!
     routes: [GqlSorSwapRoute!]!
     swapAmount: BigDecimal!
     swapAmountForSwaps: BigDecimal
