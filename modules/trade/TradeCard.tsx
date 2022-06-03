@@ -25,8 +25,8 @@ function useTradeCard() {
     const [isFetching, setIsFetching] = useBoolean();
     const [tokenSelectKey, setTokenSelectKey] = useState<'tokenIn' | 'tokenOut'>('tokenIn');
 
-    const [sellAmount, setSellAmount] = useState('0');
-    const [buyAmount, setBuyAmount] = useState('0');
+    const [sellAmount, setSellAmount] = useState('');
+    const [buyAmount, setBuyAmount] = useState('');
 
     const isLoadingOrFetching = loading || isFetching;
 
@@ -156,7 +156,7 @@ function TradeCard() {
 
     return (
         <Box width="full" position="relative">
-            <Card animate={controls} title="Market Swap" position="relative" height="md" shadow="lg">
+            <Card animate={controls} title="Swap" position="relative" height="md" shadow="lg">
                 <VStack spacing="2" padding="4" width="full">
                     <Box position="relative" width="full">
                         <TokenInput
