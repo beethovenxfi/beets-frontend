@@ -12,9 +12,10 @@ import { AnimatePresence, useAnimation } from 'framer-motion';
 import TradePreview from '~/modules/trade/components/TradePreview';
 import { useEffect } from 'react';
 import { BatchSwapList } from '~/components/batch-swap-list/BatchSwapList';
+import { TradeRoutePreview } from '~/modules/trade/components/TradeRoutePreview';
 
 function Trade() {
-    const { tradeContext } = useTrade();
+    const { tradeContext, swaps } = useTrade();
     const beetsHeadControls = useAnimation();
     const tradePreviewControls = useAnimation();
 
@@ -52,6 +53,7 @@ function Trade() {
     return (
         <Grid paddingX="8" width="full" templateColumns="repeat(12, 1fr)" gap="12">
             <GridItem w="100%" colSpan={8} h="10">
+                {/*swaps ? <TradeRoutePreview swaps={swaps} /> : null*/}
                 <TradeChart />
                 <Box mt="12">
                     <BatchSwapList />

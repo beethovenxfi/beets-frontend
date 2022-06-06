@@ -676,7 +676,9 @@ type GqlSorGetSwapsResponse {
     swaps: [GqlSorSwap!]!
     tokenAddresses: [String!]!
     tokenIn: String!
+    tokenInAmount: AmountHumanReadable!
     tokenOut: String!
+    tokenOutAmount: AmountHumanReadable!
 }
 
 type GqlSorSwap {
@@ -703,6 +705,7 @@ type GqlSorSwapRoute {
 }
 
 type GqlSorSwapRouteHop {
+    pool: GqlPoolMinimal!
     poolId: String!
     tokenIn: String!
     tokenInAmount: BigDecimal!

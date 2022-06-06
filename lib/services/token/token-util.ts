@@ -49,3 +49,7 @@ export function tokenFormatAmount(amount: AmountHumanReadable | number) {
 
     return numeral(amount).format('0,0');
 }
+
+export function tokenFormatAmountPrecise(amount: AmountHumanReadable | number) {
+    return numeral(amount).format('0,0.[000000000000]');
+}

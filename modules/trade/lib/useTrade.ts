@@ -1,6 +1,7 @@
 import { makeVar, useReactiveVar } from '@apollo/client';
 import {
     GqlSorGetSwapsResponse,
+    GqlSorGetSwapsResponseFragment,
     GqlSorSwapType,
     useGetSorSwapsLazyQuery,
 } from '~/apollo/generated/graphql-codegen-generated';
@@ -11,7 +12,7 @@ type TradeState = {
     tokenOut: string | null;
     swapType: GqlSorSwapType;
     swapAmount: string | null;
-    sorResponse: GqlSorGetSwapsResponse | null;
+    sorResponse: GqlSorGetSwapsResponseFragment | null;
 };
 
 type TradeContext = {
@@ -70,10 +71,18 @@ export function useTrade() {
         return swaps;
     }
 
+    function clearSwaps() {
+        tradeStateVar({
+            ...tradeState,
+            sorResponse: null,
+        });
+    }
+
     return {
         loadSwaps,
+        clearSwaps,
         tradeState,
-        swaps: data?.swaps || null,
+        swaps: tradeState.sorResponse,
         loadingSwaps: loading,
         error,
         networkStatus,

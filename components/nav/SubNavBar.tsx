@@ -20,10 +20,6 @@ import { networkConfig } from '~/lib/config/network-config';
 import OptimismLogo from '~/assets/images/optimism.svg';
 import FantomLogo from '~/assets/images/fantom-logo.png';
 
-const Card = forwardRef<BoxProps, 'div'>((props, ref) => (
-    <Box px="4" py="5" rounded="sm" shadow="lg" ref={ref} {...props} />
-));
-
 export function SubNavBar() {
     const router = useRouter();
     const { data, error } = useGetProtocolDataQuery();

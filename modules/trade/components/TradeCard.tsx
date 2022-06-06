@@ -23,7 +23,7 @@ interface TradeCardState {
 }
 
 function useTradeCard() {
-    const { tradeState, loadSwaps: _loadSwaps, loadingSwaps, tradeContext } = useTrade();
+    const { tradeState, loadSwaps: _loadSwaps, loadingSwaps, tradeContext, clearSwaps } = useTrade();
     const { tokens, getToken } = useGetTokens();
 
     // refetching the swaps may not always trigger the query loading state,
@@ -81,6 +81,7 @@ function useTradeCard() {
             setSellAmount(amount);
             setBuyAmount('');
             setIsFetching.off();
+            clearSwaps();
         } else {
             setIsFetching.on();
             dFetchTrade('EXACT_IN', amount);
@@ -96,6 +97,7 @@ function useTradeCard() {
             setBuyAmount(amount);
             setSellAmount('');
             setIsFetching.off();
+            clearSwaps();
         } else {
             setIsFetching.on();
             dFetchTrade('EXACT_OUT', amount);

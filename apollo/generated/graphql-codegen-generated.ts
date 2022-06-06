@@ -14,7 +14,7 @@ export interface Scalars {
     Boolean: boolean;
     Int: number;
     Float: number;
-    AmountHumanReadable: any;
+    AmountHumanReadable: string;
     BigDecimal: string;
     BigInt: string;
     Bytes: string;
@@ -713,7 +713,9 @@ export interface GqlSorGetSwapsResponse {
     swaps: Array<GqlSorSwap>;
     tokenAddresses: Array<Scalars['String']>;
     tokenIn: Scalars['String'];
+    tokenInAmount: Scalars['AmountHumanReadable'];
     tokenOut: Scalars['String'];
+    tokenOutAmount: Scalars['AmountHumanReadable'];
 }
 
 export interface GqlSorSwap {
@@ -743,6 +745,7 @@ export interface GqlSorSwapRoute {
 
 export interface GqlSorSwapRouteHop {
     __typename: 'GqlSorSwapRouteHop';
+    pool: GqlPoolMinimal;
     poolId: Scalars['String'];
     tokenIn: Scalars['String'];
     tokenInAmount: Scalars['BigDecimal'];
@@ -2547,16 +2550,18 @@ export type GetSorSwapsQuery = {
         __typename: 'GqlSorGetSwapsResponse';
         tokenIn: string;
         tokenOut: string;
-        swapAmount: any;
+        swapAmount: string;
         tokenAddresses: Array<string>;
         swapType: GqlSorSwapType;
         marketSp: string;
-        returnAmount: any;
+        returnAmount: string;
         returnAmountScaled: string;
         returnAmountFromSwaps?: string | null;
         returnAmountConsideringFees: string;
         swapAmountScaled: string;
         swapAmountForSwaps?: string | null;
+        tokenInAmount: string;
+        tokenOutAmount: string;
         swaps: Array<{
             __typename: 'GqlSorSwap';
             poolId: string;
@@ -2579,9 +2584,77 @@ export type GetSorSwapsQuery = {
                 tokenOut: string;
                 tokenInAmount: string;
                 tokenOutAmount: string;
+                pool: {
+                    __typename: 'GqlPoolMinimal';
+                    id: string;
+                    name: string;
+                    symbol: string;
+                    dynamicData: { __typename: 'GqlPoolDynamicData'; totalLiquidity: string };
+                    allTokens: Array<{
+                        __typename: 'GqlPoolTokenExpanded';
+                        address: string;
+                        isNested: boolean;
+                        isPhantomBpt: boolean;
+                    }>;
+                };
             }>;
         }>;
     };
+};
+
+export type GqlSorGetSwapsResponseFragment = {
+    __typename: 'GqlSorGetSwapsResponse';
+    tokenIn: string;
+    tokenOut: string;
+    swapAmount: string;
+    tokenAddresses: Array<string>;
+    swapType: GqlSorSwapType;
+    marketSp: string;
+    returnAmount: string;
+    returnAmountScaled: string;
+    returnAmountFromSwaps?: string | null;
+    returnAmountConsideringFees: string;
+    swapAmountScaled: string;
+    swapAmountForSwaps?: string | null;
+    tokenInAmount: string;
+    tokenOutAmount: string;
+    swaps: Array<{
+        __typename: 'GqlSorSwap';
+        poolId: string;
+        amount: string;
+        userData: string;
+        assetInIndex: number;
+        assetOutIndex: number;
+    }>;
+    routes: Array<{
+        __typename: 'GqlSorSwapRoute';
+        tokenIn: string;
+        tokenOut: string;
+        tokenInAmount: string;
+        tokenOutAmount: string;
+        share: number;
+        hops: Array<{
+            __typename: 'GqlSorSwapRouteHop';
+            poolId: string;
+            tokenIn: string;
+            tokenOut: string;
+            tokenInAmount: string;
+            tokenOutAmount: string;
+            pool: {
+                __typename: 'GqlPoolMinimal';
+                id: string;
+                name: string;
+                symbol: string;
+                dynamicData: { __typename: 'GqlPoolDynamicData'; totalLiquidity: string };
+                allTokens: Array<{
+                    __typename: 'GqlPoolTokenExpanded';
+                    address: string;
+                    isNested: boolean;
+                    isPhantomBpt: boolean;
+                }>;
+            };
+        }>;
+    }>;
 };
 
 export const GqlPoolTokenFragmentDoc = gql`
@@ -2703,6 +2776,59 @@ export const GqlPoolMinimalFragmentDoc = gql`
             address
             isNested
             isPhantomBpt
+        }
+    }
+`;
+export const GqlSorGetSwapsResponseFragmentDoc = gql`
+    fragment GqlSorGetSwapsResponse on GqlSorGetSwapsResponse {
+        tokenIn
+        tokenOut
+        swapAmount
+        tokenAddresses
+        swapType
+        marketSp
+        swaps {
+            poolId
+            amount
+            userData
+            assetInIndex
+            assetOutIndex
+        }
+        returnAmount
+        returnAmountScaled
+        returnAmountFromSwaps
+        returnAmountConsideringFees
+        swapAmount
+        swapAmountScaled
+        swapAmountForSwaps
+        tokenInAmount
+        tokenOutAmount
+        routes {
+            tokenIn
+            tokenOut
+            tokenInAmount
+            tokenOutAmount
+            share
+            hops {
+                poolId
+                pool {
+                    id
+                    name
+                    symbol
+                    dynamicData {
+                        totalLiquidity
+                    }
+                    allTokens {
+                        address
+                        isNested
+                        isPhantomBpt
+                    }
+                }
+                tokenIn
+                tokenOut
+                tokenInAmount
+                tokenOutAmount
+            }
         }
     }
 `;
@@ -3513,42 +3639,10 @@ export const GetSorSwapsDocument = gql`
             swapAmount: $swapAmount
             swapOptions: $swapOptions
         ) {
-            tokenIn
-            tokenOut
-            swapAmount
-            tokenAddresses
-            swapType
-            marketSp
-            swaps {
-                poolId
-                amount
-                userData
-                assetInIndex
-                assetOutIndex
-            }
-            returnAmount
-            returnAmountScaled
-            returnAmountFromSwaps
-            returnAmountConsideringFees
-            swapAmount
-            swapAmountScaled
-            swapAmountForSwaps
-            routes {
-                tokenIn
-                tokenOut
-                tokenInAmount
-                tokenOutAmount
-                share
-                hops {
-                    poolId
-                    tokenIn
-                    tokenOut
-                    tokenInAmount
-                    tokenOutAmount
-                }
-            }
+            ...GqlSorGetSwapsResponse
         }
     }
+    ${GqlSorGetSwapsResponseFragmentDoc}
 `;
 
 /**
