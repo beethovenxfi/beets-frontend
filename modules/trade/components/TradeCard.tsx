@@ -8,8 +8,8 @@ import { GqlSorSwapType, useGetTokenPricesQuery } from '~/apollo/generated/graph
 import TokenInput from '~/components/inputs/TokenInput';
 import Card from '~/components/card/Card';
 import BeetsButton from '~/components/button/Button';
-import { tradeContextVar, tradeStateVar, useTrade } from './tradeState';
-import { TokenInputSwapButton } from '~/modules/trade/TokenInputSwapButton';
+import { tradeContextVar, tradeStateVar, useTrade } from '../hooks/useTrade';
+import { TokenInputSwapButton } from '~/modules/trade/components/TokenInputSwapButton';
 import { useGetTokens } from '~/lib/global/useToken';
 import { useDebouncedCallback } from 'use-debounce';
 import { formatUnits } from '@ethersproject/units';

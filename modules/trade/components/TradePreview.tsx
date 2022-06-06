@@ -4,8 +4,8 @@ import BeetsButton from '~/components/button/Button';
 import Card from '~/components/card/Card';
 import TokenAvatar from '~/components/token/TokenAvatar';
 import { useGetTokens } from '~/lib/global/useToken';
-import { useTrade } from './tradeState';
-import { useBatchSwap } from '~/modules/trade/useBatchSwap';
+import { useTrade } from '../hooks/useTrade';
+import { useBatchSwap } from '~/modules/trade/hooks/useBatchSwap';
 import { BeetsSubmitTransactionButton } from '~/components/button/BeetsSubmitTransactionButton';
 
 type Props = {

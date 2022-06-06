@@ -2555,6 +2555,7 @@ export type GetSorSwapsQuery = {
         returnAmountScaled: string;
         returnAmountFromSwaps?: string | null;
         returnAmountConsideringFees: string;
+        swapAmountScaled: string;
         swapAmountForSwaps?: string | null;
         swaps: Array<{
             __typename: 'GqlSorSwap';
@@ -3530,6 +3531,7 @@ export const GetSorSwapsDocument = gql`
             returnAmountFromSwaps
             returnAmountConsideringFees
             swapAmount
+            swapAmountScaled
             swapAmountForSwaps
             routes {
                 tokenIn

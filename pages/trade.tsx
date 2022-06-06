@@ -5,11 +5,11 @@ import BeetsSmart from '~/assets/icons/beetx-smarts.svg';
 
 import Image from 'next/image';
 import { AnimatedBox } from '~/components/animation/chakra';
-import TradeCard from '../modules/trade/TradeCard';
+import TradeCard from '../modules/trade/components/TradeCard';
 import { initializeApolloClient, loadApolloState } from '~/apollo/client';
-import { tradeContextVar, useTrade } from '~/modules/trade/tradeState';
+import { tradeContextVar, useTrade } from '~/modules/trade/hooks/useTrade';
 import { AnimatePresence, useAnimation } from 'framer-motion';
-import TradePreview from '~/modules/trade/TradePreview';
+import TradePreview from '~/modules/trade/components/TradePreview';
 import { useEffect } from 'react';
 import { BatchSwapList } from '~/components/batch-swap-list/BatchSwapList';
 

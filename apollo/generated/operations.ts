@@ -508,6 +508,7 @@ export const GetSorSwaps = gql`
             returnAmountFromSwaps
             returnAmountConsideringFees
             swapAmount
+            swapAmountScaled
             swapAmountForSwaps
             routes {
                 tokenIn

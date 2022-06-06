@@ -30,6 +30,7 @@ query GetSorSwaps(
         returnAmountFromSwaps
         returnAmountConsideringFees
         swapAmount
+        swapAmountScaled
         swapAmountForSwaps
         routes {
             tokenIn
