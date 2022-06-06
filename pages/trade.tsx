@@ -7,7 +7,7 @@ import Image from 'next/image';
 import { AnimatedBox } from '~/components/animation/chakra';
 import TradeCard from '../modules/trade/components/TradeCard';
 import { initializeApolloClient, loadApolloState } from '~/apollo/client';
-import { tradeContextVar, useTrade } from '~/modules/trade/hooks/useTrade';
+import { tradeContextVar, useTrade } from '~/modules/trade/lib/useTrade';
 import { AnimatePresence, useAnimation } from 'framer-motion';
 import TradePreview from '~/modules/trade/components/TradePreview';
 import { useEffect } from 'react';
