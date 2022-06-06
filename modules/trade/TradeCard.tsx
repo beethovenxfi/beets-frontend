@@ -23,7 +23,6 @@ interface TradeCardState {
 }
 
 function useTradeCard() {
-    const { data, loading, error } = useGetTokenPricesQuery();
     const { tradeState, loadSwaps: _loadSwaps, loadingSwaps, tradeContext } = useTrade();
     const { tokens, getToken } = useGetTokens();
 
@@ -36,13 +35,13 @@ function useTradeCard() {
     const [sellAmount, setSellAmount] = useState<string>('');
     const [buyAmount, setBuyAmount] = useState<string>('');
 
-    const isLoadingOrFetching = loading || isFetching;
+    const isLoadingOrFetching = loadingSwaps || isFetching;
 
     useEffect(() => {
         tradeStateVar({
             ...tradeState,
-            tokenIn: tradeState.tokenIn || tokens[0].address,
-            tokenOut: tradeState.tokenOut || tokens[1].address,
+            tokenIn: tradeState.tokenIn,
+            tokenOut: tradeState.tokenOut,
         });
     }, []);
 
@@ -82,12 +81,11 @@ function useTradeCard() {
             setSellAmount(amount);
             setBuyAmount('');
             setIsFetching.off();
-            return;
+        } else {
+            setIsFetching.on();
+            dFetchTrade('EXACT_IN', amount);
+            setSellAmount(amount);
         }
-
-        setIsFetching.on();
-        dFetchTrade('EXACT_IN', amount);
-        setSellAmount(amount);
     };
 
     const handleBuyAmountChanged = async (event: FormEvent<HTMLInputElement>) => {
@@ -98,12 +96,11 @@ function useTradeCard() {
             setBuyAmount(amount);
             setSellAmount('');
             setIsFetching.off();
-            return;
+        } else {
+            setIsFetching.on();
+            dFetchTrade('EXACT_OUT', amount);
+            setBuyAmount(amount);
         }
-
-        setIsFetching.on();
-        dFetchTrade('EXACT_OUT', amount);
-        setBuyAmount(amount);
     };
 
     const handleTokenSelected = (address: string) => {

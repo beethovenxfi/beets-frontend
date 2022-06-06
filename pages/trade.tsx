@@ -1,4 +1,4 @@
-import { Grid, GridItem, VStack } from '@chakra-ui/react';
+import { Box, Grid, GridItem, VStack } from '@chakra-ui/react';
 import TradeChart from '~/components/charts/TradeChart';
 
 import BeetsSmart from '~/assets/icons/beetx-smarts.svg';
@@ -50,10 +50,12 @@ function Trade() {
     };
 
     return (
-        <Grid paddingX="8" width="full" templateColumns="repeat(12, 1fr)" gap="0">
+        <Grid paddingX="8" width="full" templateColumns="repeat(12, 1fr)" gap="12">
             <GridItem w="100%" colSpan={8} h="10">
                 <TradeChart />
-                <BatchSwapList />
+                <Box mt="12">
+                    <BatchSwapList />
+                </Box>
             </GridItem>
             <GridItem w="100%" colSpan={4}>
                 <VStack w="full" position="relative">
