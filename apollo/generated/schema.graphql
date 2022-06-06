@@ -1,3 +1,5 @@
+scalar AmountHumanReadable
+
 scalar BigDecimal
 
 scalar BigInt
@@ -662,13 +664,15 @@ type GqlPoolWithdrawOption {
 
 type GqlSorGetSwapsResponse {
     marketSp: String!
-    returnAmount: BigDecimal!
+    returnAmount: AmountHumanReadable!
     returnAmountConsideringFees: BigDecimal!
     returnAmountFromSwaps: BigDecimal
     returnAmountScaled: BigDecimal!
     routes: [GqlSorSwapRoute!]!
-    swapAmount: BigDecimal!
+    swapAmount: AmountHumanReadable!
     swapAmountForSwaps: BigDecimal
+    swapAmountScaled: BigDecimal!
+    swapType: GqlSorSwapType!
     swaps: [GqlSorSwap!]!
     tokenAddresses: [String!]!
     tokenIn: String!

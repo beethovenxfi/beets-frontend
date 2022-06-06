@@ -17,7 +17,14 @@ export default function TokenInput({ label, toggleTokenSelect, address, onChange
     return (
         <VStack width="full" alignItems="flex-start">
             <Box position="relative" width="full">
-                <BeetsInput value={value || ''} onChange={onChange} placeholder="0" type="number" label={label} />
+                <BeetsInput
+                    min={0}
+                    value={value || ''}
+                    onChange={onChange}
+                    placeholder="0"
+                    type="number"
+                    label={label}
+                />
                 <Box position="absolute" zIndex="toast" right=".75rem" top="50%" transform="translateY(-50%)">
                     <Button
                         onClick={toggleTokenSelect}

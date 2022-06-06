@@ -1,9 +1,5 @@
-query TokenGetHistoricalPrices(
-    $addresses: String!
-) {
-    historicalPrices: tokenGetHistoricalPrices(
-        addresses: $addresses
-    ) {
+query TokenGetHistoricalPrices($addresses: [String!]!) {
+    historicalPrices: tokenGetHistoricalPrices(addresses: $addresses) {
         address
         prices {
             price

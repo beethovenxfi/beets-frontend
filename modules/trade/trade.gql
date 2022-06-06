@@ -16,6 +16,7 @@ query GetSorSwaps(
         tokenOut
         swapAmount
         tokenAddresses
+        swapType
         marketSp
         swaps {
             poolId

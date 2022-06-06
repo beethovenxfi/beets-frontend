@@ -11,8 +11,18 @@ export function useGetTokens() {
     const prices = keyBy(pricesResponse?.tokenPrices || [], 'address');
 
     function getToken(address: string): GqlToken | null {
-        const token = tokens.find((token) => token.address === address?.toLowerCase());
+        const token = tokens.find((token) => token.address === address.toLowerCase());
         return token || null;
+    }
+
+    function getRequiredToken(address: string): GqlToken {
+        const token = getToken(address);
+
+        if (!token) {
+            throw new Error(`Missing token definition for ${address}`);
+        }
+
+        return token;
     }
 
     function priceFor(address: string): number {
@@ -39,6 +49,7 @@ export function useGetTokens() {
         prices,
         priceFor,
         getToken,
+        getRequiredToken,
         formattedPrice,
         priceForAmount,
     };

@@ -5,6 +5,8 @@ import Card from '~/components/card/Card';
 import TokenAvatar from '~/components/token/TokenAvatar';
 import { useGetTokens } from '~/lib/global/useToken';
 import { useTrade } from './tradeState';
+import { useBatchSwap } from '~/modules/trade/useBatchSwap';
+import { BeetsSubmitTransactionButton } from '~/components/button/BeetsSubmitTransactionButton';
 
 type Props = {
     onClose: () => void;
@@ -12,6 +14,7 @@ type Props = {
 export default function TradePreview({ onClose }: Props) {
     const { tradeState } = useTrade();
     const { getToken } = useGetTokens();
+    const { batchSwap, isSubmitting, isPending } = useBatchSwap();
 
     const formattedOutAmount = tradeState.sorResponse?.returnAmount || '0';
 
@@ -29,7 +32,7 @@ export default function TradePreview({ onClose }: Props) {
                         <HStack
                             justifyContent="space-between"
                             w="full"
-                            background="blackAlpha.400"
+                            bgColor="blackAlpha.400"
                             padding="2"
                             paddingRight="4"
                             rounded="lg"
@@ -60,7 +63,7 @@ export default function TradePreview({ onClose }: Props) {
                         <HStack
                             justifyContent="space-between"
                             w="full"
-                            background="blackAlpha.400"
+                            bgColor="blackAlpha.400"
                             padding="2"
                             paddingRight="4"
                             rounded="lg"
@@ -73,9 +76,17 @@ export default function TradePreview({ onClose }: Props) {
                         </HStack>
                     </VStack>
                 </VStack>
-                <BeetsButton marginTop="4" size="lg" isFullWidth>
+                <BeetsSubmitTransactionButton
+                    marginTop="4"
+                    isSubmitting={isSubmitting}
+                    isPending={isPending}
+                    isDisabled={!tradeState.sorResponse}
+                    onClick={() => batchSwap(tradeState.sorResponse!)}
+                    isFullWidth
+                    size="lg"
+                >
                     Swap
-                </BeetsButton>
+                </BeetsSubmitTransactionButton>
             </Box>
         </Card>
     );

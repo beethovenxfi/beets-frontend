@@ -16,6 +16,12 @@ import { formatUnits } from '@ethersproject/units';
 import { useReactiveVar } from '@apollo/client';
 import { oldBnumToFixed } from '~/lib/services/pool/lib/old-big-number';
 
+interface TradeCardState {
+    buyAmount: string;
+    sellAmount: string;
+    isFetching: boolean;
+}
+
 function useTradeCard() {
     const { data, loading, error } = useGetTokenPricesQuery();
     const { tradeState, loadSwaps: _loadSwaps, loadingSwaps, tradeContext } = useTrade();
@@ -70,6 +76,15 @@ function useTradeCard() {
 
     const handleSellAmountChanged = async (event: FormEvent<HTMLInputElement>) => {
         const amount = event.currentTarget.value;
+
+        if (amount === '' || parseFloat(amount) === 0) {
+            dFetchTrade.cancel();
+            setSellAmount(amount);
+            setBuyAmount('');
+            setIsFetching.off();
+            return;
+        }
+
         setIsFetching.on();
         dFetchTrade('EXACT_IN', amount);
         setSellAmount(amount);
@@ -77,6 +92,15 @@ function useTradeCard() {
 
     const handleBuyAmountChanged = async (event: FormEvent<HTMLInputElement>) => {
         const amount = event.currentTarget.value;
+
+        if (amount === '' || parseFloat(amount) === 0) {
+            dFetchTrade.cancel();
+            setBuyAmount(amount);
+            setSellAmount('');
+            setIsFetching.off();
+            return;
+        }
+
         setIsFetching.on();
         dFetchTrade('EXACT_OUT', amount);
         setBuyAmount(amount);

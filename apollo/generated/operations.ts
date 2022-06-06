@@ -464,6 +464,17 @@ export const GetPoolFilters = gql`
         }
     }
 `;
+export const TokenGetHistoricalPrices = gql`
+    query TokenGetHistoricalPrices($addresses: [String!]!) {
+        historicalPrices: tokenGetHistoricalPrices(addresses: $addresses) {
+            address
+            prices {
+                price
+                timestamp
+            }
+        }
+    }
+`;
 export const GetSorSwaps = gql`
     query GetSorSwaps(
         $tokenIn: String!
@@ -483,6 +494,7 @@ export const GetSorSwaps = gql`
             tokenOut
             swapAmount
             tokenAddresses
+            swapType
             marketSp
             swaps {
                 poolId

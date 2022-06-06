@@ -14,6 +14,7 @@ export interface Scalars {
     Boolean: boolean;
     Int: number;
     Float: number;
+    AmountHumanReadable: any;
     BigDecimal: string;
     BigInt: string;
     Bytes: string;
@@ -700,13 +701,15 @@ export interface GqlPoolWithdrawOption {
 export interface GqlSorGetSwapsResponse {
     __typename: 'GqlSorGetSwapsResponse';
     marketSp: Scalars['String'];
-    returnAmount: Scalars['BigDecimal'];
+    returnAmount: Scalars['AmountHumanReadable'];
     returnAmountConsideringFees: Scalars['BigDecimal'];
     returnAmountFromSwaps?: Maybe<Scalars['BigDecimal']>;
     returnAmountScaled: Scalars['BigDecimal'];
     routes: Array<GqlSorSwapRoute>;
-    swapAmount: Scalars['BigDecimal'];
+    swapAmount: Scalars['AmountHumanReadable'];
     swapAmountForSwaps?: Maybe<Scalars['BigDecimal']>;
+    swapAmountScaled: Scalars['BigDecimal'];
+    swapType: GqlSorSwapType;
     swaps: Array<GqlSorSwap>;
     tokenAddresses: Array<Scalars['String']>;
     tokenIn: Scalars['String'];
@@ -2517,6 +2520,19 @@ export type GqlPoolMinimalFragment = {
     }>;
 };
 
+export type TokenGetHistoricalPricesQueryVariables = Exact<{
+    addresses: Array<Scalars['String']> | Scalars['String'];
+}>;
+
+export type TokenGetHistoricalPricesQuery = {
+    __typename: 'Query';
+    historicalPrices: Array<{
+        __typename: 'GqlHistoricalTokenPrice';
+        address: string;
+        prices: Array<{ __typename: 'GqlHistoricalTokenPriceEntry'; price: number; timestamp: string }>;
+    }>;
+};
+
 export type GetSorSwapsQueryVariables = Exact<{
     tokenIn: Scalars['String'];
     tokenOut: Scalars['String'];
@@ -2531,10 +2547,11 @@ export type GetSorSwapsQuery = {
         __typename: 'GqlSorGetSwapsResponse';
         tokenIn: string;
         tokenOut: string;
-        swapAmount: string;
+        swapAmount: any;
         tokenAddresses: Array<string>;
+        swapType: GqlSorSwapType;
         marketSp: string;
-        returnAmount: string;
+        returnAmount: any;
         returnAmountScaled: string;
         returnAmountFromSwaps?: string | null;
         returnAmountConsideringFees: string;
@@ -3428,6 +3445,58 @@ export function useGetPoolFiltersLazyQuery(
 export type GetPoolFiltersQueryHookResult = ReturnType<typeof useGetPoolFiltersQuery>;
 export type GetPoolFiltersLazyQueryHookResult = ReturnType<typeof useGetPoolFiltersLazyQuery>;
 export type GetPoolFiltersQueryResult = Apollo.QueryResult<GetPoolFiltersQuery, GetPoolFiltersQueryVariables>;
+export const TokenGetHistoricalPricesDocument = gql`
+    query TokenGetHistoricalPrices($addresses: [String!]!) {
+        historicalPrices: tokenGetHistoricalPrices(addresses: $addresses) {
+            address
+            prices {
+                price
+                timestamp
+            }
+        }
+    }
+`;
+
+/**
+ * __useTokenGetHistoricalPricesQuery__
+ *
+ * To run a query within a React component, call `useTokenGetHistoricalPricesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useTokenGetHistoricalPricesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useTokenGetHistoricalPricesQuery({
+ *   variables: {
+ *      addresses: // value for 'addresses'
+ *   },
+ * });
+ */
+export function useTokenGetHistoricalPricesQuery(
+    baseOptions: Apollo.QueryHookOptions<TokenGetHistoricalPricesQuery, TokenGetHistoricalPricesQueryVariables>,
+) {
+    const options = { ...defaultOptions, ...baseOptions };
+    return Apollo.useQuery<TokenGetHistoricalPricesQuery, TokenGetHistoricalPricesQueryVariables>(
+        TokenGetHistoricalPricesDocument,
+        options,
+    );
+}
+export function useTokenGetHistoricalPricesLazyQuery(
+    baseOptions?: Apollo.LazyQueryHookOptions<TokenGetHistoricalPricesQuery, TokenGetHistoricalPricesQueryVariables>,
+) {
+    const options = { ...defaultOptions, ...baseOptions };
+    return Apollo.useLazyQuery<TokenGetHistoricalPricesQuery, TokenGetHistoricalPricesQueryVariables>(
+        TokenGetHistoricalPricesDocument,
+        options,
+    );
+}
+export type TokenGetHistoricalPricesQueryHookResult = ReturnType<typeof useTokenGetHistoricalPricesQuery>;
+export type TokenGetHistoricalPricesLazyQueryHookResult = ReturnType<typeof useTokenGetHistoricalPricesLazyQuery>;
+export type TokenGetHistoricalPricesQueryResult = Apollo.QueryResult<
+    TokenGetHistoricalPricesQuery,
+    TokenGetHistoricalPricesQueryVariables
+>;
 export const GetSorSwapsDocument = gql`
     query GetSorSwaps(
         $tokenIn: String!
@@ -3447,6 +3516,7 @@ export const GetSorSwapsDocument = gql`
             tokenOut
             swapAmount
             tokenAddresses
+            swapType
             marketSp
             swaps {
                 poolId
