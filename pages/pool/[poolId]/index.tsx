@@ -5,6 +5,7 @@ import { GetFbeetsRatio, GetPool } from '~/apollo/generated/operations';
 import PoolDetail from '~/modules/pool/detail/PoolDetail';
 import { PoolProvider } from '~/modules/pool/components/PoolProvider';
 import { networkConfig } from '~/lib/config/network-config';
+import { Box } from '@chakra-ui/layout';
 
 interface Props {
     pool: GqlPoolUnion;
@@ -17,9 +18,11 @@ const Pool = ({ pool }: Props) => {
     }
 
     return (
-        <PoolProvider pool={pool}>
-            <PoolDetail />
-        </PoolProvider>
+        <Box marginX='20'>
+            <PoolProvider pool={pool}>
+                <PoolDetail />
+            </PoolProvider>
+        </Box>
     );
 };
 

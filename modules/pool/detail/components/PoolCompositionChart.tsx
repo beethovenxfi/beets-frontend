@@ -1,68 +1,59 @@
 import ReactECharts from 'echarts-for-react';
-import { Box } from '@chakra-ui/layout';
+import { Box, VStack } from '@chakra-ui/layout';
 import { useTheme } from '@chakra-ui/react';
 import { usePool } from '~/modules/pool/lib/usePool';
+import { useState } from 'react';
 
 export function PoolCompositionChart() {
     const { pool } = usePool();
     const theme = useTheme();
+    const [hoveredToken, setHoveredToken] = useState();
 
+    const chartData = pool.tokens.map((token) => ({ value: token.weight, name: token.symbol }));
     const option = {
-        backgroundColor: 'transparent',
         tooltip: {
             trigger: 'item',
-        },
-        visualMap: {
             show: false,
-            min: 80,
-            max: 600,
-            inRange: {
-                colorLightness: [0, 1],
-            },
+        },
+        legend: {
+            show: false,
         },
         series: [
             {
-                name: 'Token',
+                name: 'Access From',
                 type: 'pie',
-                radius: '100%',
-                center: ['50%', '50%'],
-                height: '100%',
-                data: [
-                    { value: 335, name: 'Direct' },
-                    { value: 310, name: 'Email' },
-                    { value: 274, name: 'Union Ads' },
-                    { value: 235, name: 'Video Ads' },
-                    { value: 400, name: 'Search Engine' },
-                ].sort(function (a, b) {
-                    return a.value - b.value;
-                }),
+                radius: ['40%', '70%'],
+                avoidLabelOverlap: false,
+                itemStyle: {
+                    borderRadius: 10,
+                    borderColor: '#100A49',
+                    borderWidth: 2,
+                },
                 roseType: 'radius',
                 label: {
-                    position: 'inside',
-                    fontWeight: 'bold',
-                    color: '#FFFFFF',
+                    show: false,
+                    position: 'center',
                 },
-                /*labelLine: {
-                    lineStyle: {
-                        color: 'rgba(255, 255, 255, 0.3)',
-                    },
-                    smooth: 0.2,
-                    length: 10,
-                    length2: 20,
-                },*/
-                itemStyle: {
-                    color: theme.colors.beets.navy['400'],
-                    //shadowBlur: 200,
-                    //shadowColor: 'rgba(0, 0, 0, 0.2)',
+                color: [
+                    'rgba(0,255,255, 1.0)',
+                    'rgba(0,255,255, 0.8)',
+                    'rgba(0,255,255, 0.6)',
+                    'rgba(0,255,255, 0.4)',
+                    'rgba(0,255,255, 0.2)',
+                ],
+                labelLine: {
+                    show: false,
                 },
-                animationType: 'scale',
-                animationEasing: 'elasticOut',
-                animationDelay: function (idx: number) {
-                    return Math.random() * 200;
-                },
+                data: chartData,
             },
         ],
     };
 
-    return <ReactECharts option={option} style={{ height: '275px' }} />;
+    return (
+        <VStack>
+            <Box width="full">
+                <ReactECharts option={option} style={{ height: '150px' }} />
+            </Box>
+        </VStack>
+    );
 }

@@ -13,7 +13,7 @@ function PoolListTableHeader() {
             borderTopLeftRadius="md"
             borderTopRightRadius="md"
             alignItems={'center'}
-            bgColor="beets.base.light.alpha.200"
+            bgColor="rgba(255,255,255,0.08)"
             borderBottom="2px"
             borderColor="beets.base.500"
         >

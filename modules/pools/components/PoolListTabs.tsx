@@ -1,67 +1,61 @@
-import { Box, Flex, HStack } from '@chakra-ui/react';
+import { Box, Flex, HStack, Tabs, Tab, TabList, useTab, Button } from '@chakra-ui/react';
 import { usePoolList } from '~/modules/pools/usePoolList';
-import { PoolListTabButton } from '~/modules/pools/components/PoolListTabButton';
 import { useAccount } from 'wagmi';
+import BeetsTab from '~/components/tabs/BeetsTab';
+import { forwardRef } from 'react';
 
 export function PoolListTabs() {
     const { data: accountData } = useAccount();
     const connected = !!accountData?.address;
-    const { state, refetch, setShowMyInvestments, showMyInvestments } = usePoolList();
+    const { state, refetch: refreshPoolList, setShowMyInvestments, showMyInvestments } = usePoolList();
     const categoryIn = state.where?.categoryIn;
 
-    return (
-        <Box>
-            <HStack spacing='2'>
-                <PoolListTabButton
-                    tabPosition="left"
-                    text="Incentivized pools"
-                    selected={!showMyInvestments && !!categoryIn?.includes('INCENTIVIZED')}
-                    onClick={() => {
-                        if (!categoryIn?.includes('INCENTIVIZED') || showMyInvestments) {
-                            setShowMyInvestments(false);
-                            refetch({
-                                ...state,
-                                skip: 0,
-                                where: {
-                                    ...state.where,
-                                    categoryIn: ['INCENTIVIZED'],
-                                    categoryNotIn: null,
-                                },
-                            });
-                        }
-                    }}
-                />
-                <PoolListTabButton
-                    tabPosition="middle"
-                    text="Community pools"
-                    selected={!showMyInvestments && !categoryIn?.includes('INCENTIVIZED')}
-                    onClick={() => {
-                        if (categoryIn?.includes('INCENTIVIZED') || showMyInvestments) {
-                            setShowMyInvestments(false);
-                            refetch({
-                                ...state,
-                                skip: 0,
-                                where: {
-                                    ...state.where,
-                                    categoryIn: null,
-                                    categoryNotIn: ['INCENTIVIZED'],
-                                },
-                            });
-                        }
-                    }}
-                />
+    const tabs = [
+        {
+            text: 'Incentivized pools',
+            id: 'incentivized',
+        },
+        {
+            text: 'Community pools',
+            id: 'community',
+        },
+        {
+            text: 'My investments',
+            id: 'my-investments',
+        },
+    ];
 
-                <PoolListTabButton
-                    tabPosition="right"
-                    text="My investments"
-                    selected={showMyInvestments}
-                    onClick={() => {
-                        if (!showMyInvestments) {
-                            setShowMyInvestments(true);
-                        }
-                    }}
-                />
-            </HStack>
-        </Box>
+    const handleTabChanged = (tab: any) => {
+        const categoryNotIn: any = tab.id === 'community' ? ['INCENTIVIZED'] : null;
+        const categoryIn: any = tab.id === 'incentivized' ? ['INCENTIVIZED'] : null;
+
+        if (['incentivized', 'community'].includes(tab.id)) {
+            setShowMyInvestments(false);
+            refreshPoolList({
+                ...state,
+                skip: 0,
+                where: {
+                    ...state.where,
+                    categoryIn,
+                    categoryNotIn,
+                },
+            });
+        } else {
+            if (!showMyInvestments) {
+                setShowMyInvestments(true);
+            }
+        }
+    };
+
+    return (
+        <Tabs variant="soft-rounded" display="flex">
+            <TabList>
+                <HStack spacing='2'>
+                    {tabs.map((tab) => (
+                        <BeetsTab key={tab.id}>{tab.text}</BeetsTab>
+                    ))}
+                </HStack>
+            </TabList>
+        </Tabs>
     );
 }
