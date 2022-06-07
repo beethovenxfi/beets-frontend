@@ -16,6 +16,7 @@ import {
     Td,
     TableCaption,
     TableContainer,
+    Collapse,
     Progress,
 } from '@chakra-ui/react';
 import TokenAvatar from '~/components/token/TokenAvatar';
@@ -28,6 +29,7 @@ import PoolCompositionToken from '~/modules/pool/detail/components/PoolCompositi
 import { BeetsBox } from '~/components/box/BeetsBox';
 import { PoolCompositionChart } from '~/modules/pool/detail/components/PoolCompositionChart';
 import Card from '~/components/card/Card';
+import { useState } from 'react';
 interface Props {
     pool: GqlPoolUnion;
 }
