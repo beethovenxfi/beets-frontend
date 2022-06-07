@@ -23,12 +23,19 @@ export function usePoolUserPoolTokenBalances() {
         priceForAmount({ address: token.address, amount: getUserBalance(token.address) }),
     );
 
+    function refetch() {
+        userBalancesQuery.refetch();
+        userStakedBalanceQuery.refetch();
+    }
+
     return {
         ...userBalances,
         isLoading: userBalancesQuery.isLoading || userStakedBalanceQuery.isLoading,
+        isRefetching: userBalancesQuery.isRefetching || userStakedBalanceQuery.isRefetching,
         isError: userBalancesQuery.isError || userStakedBalanceQuery.isError,
         error: userBalancesQuery.error || userStakedBalanceQuery.error,
         userPoolTokenBalances: userBalances,
+        refetch,
 
         userTotalBptBalance: formatFixed(userWalletBptBalance.add(userStakedBptBalanceScaled), 18),
         userWalletBptBalance: formatFixed(userWalletBptBalance, 18),

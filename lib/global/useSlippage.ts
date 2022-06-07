@@ -6,6 +6,7 @@ const slippageVar = makeVar<AmountHumanReadable>('0.005');
 
 export function useSlippage() {
     const slippage = useReactiveVar(slippageVar);
+    const slippageDifference = 1 - parseFloat(slippage);
 
     function setSlippage(amount: AmountHumanReadable) {
         slippageVar(amount);
@@ -13,6 +14,7 @@ export function useSlippage() {
 
     return {
         slippage,
+        slippageDifference,
         setSlippage,
     };
 }

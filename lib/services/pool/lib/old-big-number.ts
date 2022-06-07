@@ -1,7 +1,7 @@
 import OldBigNumber from 'bignumber.js';
 import { parseUnits } from 'ethers/lib/utils';
 import { BigNumber } from 'ethers';
-import { AmountHumanReadable } from '~/lib/services/token/token-types';
+import { AmountHumanReadable, AmountScaled, AmountScaledString } from '~/lib/services/token/token-types';
 import { BigNumberish, formatFixed } from '@ethersproject/bignumber';
 
 export function oldBnum(val: string | number | OldBigNumber): OldBigNumber {
@@ -61,4 +61,10 @@ export function oldBnumSubtractSlippage(
     const amountScaled = oldBnumScaleAmount(amount, decimals);
 
     return formatFixed(amountScaled.minus(amountScaled.times(slippage)).toFixed(0), decimals);
+}
+
+export function oldBnumToFixed(amount: AmountHumanReadable, decimals: number): AmountHumanReadable {
+    const bnum = oldBnum(amount).toFixed(decimals, OldBigNumber.ROUND_DOWN);
+
+    return bnum.toString();
 }

@@ -43,6 +43,7 @@ import { RainbowKitProvider } from '@rainbow-me/rainbowkit';
 import { useRouter } from 'next/router';
 import { networkChainDefinitions, wagmiClient } from '~/lib/global/network';
 import { BeetsFonts } from '~/components/fonts/BeetsFonts';
+import { SubNavBar } from '~/components/nav/SubNavBar';
 
 const queryClient = new QueryClient();
 
@@ -121,6 +122,7 @@ function MyApp({ Component, pageProps }: AppProps) {
                                     >
                                         <GridItem colSpan={12} height="fit-content">
                                             <Navbar />
+                                            <SubNavBar />
                                         </GridItem>
                                         <GridItem colSpan={12} paddingTop="12">
                                             <Component {...pageProps} />

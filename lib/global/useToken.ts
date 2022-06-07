@@ -2,6 +2,7 @@ import { GqlToken, useGetTokenPricesQuery, useGetTokensQuery } from '~/apollo/ge
 import { keyBy } from 'lodash';
 import { TokenAmountHumanReadable } from '~/lib/services/token/token-types';
 import numeral from 'numeral';
+import { networkConfig } from '~/lib/config/network-config';
 
 export function useGetTokens() {
     const { data: tokensResponse } = useGetTokensQuery({ fetchPolicy: 'cache-first' });
@@ -11,8 +12,27 @@ export function useGetTokens() {
     const prices = keyBy(pricesResponse?.tokenPrices || [], 'address');
 
     function getToken(address: string): GqlToken | null {
-        const token = tokens.find((token) => token.address === address?.toLowerCase());
+        const token = tokens.find((token) => token.address === address.toLowerCase());
         return token || null;
+    }
+
+    function getRequiredToken(address: string): GqlToken {
+        const token = getToken(address);
+
+        if (!token) {
+            return {
+                __typename: 'GqlToken',
+                symbol: 'NONE',
+                name: 'Missing',
+                decimals: 18,
+                address,
+                chainId: parseInt(networkConfig.chainId),
+                priority: 0,
+                tradable: false,
+            };
+        }
+
+        return token;
     }
 
     function priceFor(address: string): number {
@@ -39,6 +59,7 @@ export function useGetTokens() {
         prices,
         priceFor,
         getToken,
+        getRequiredToken,
         formattedPrice,
         priceForAmount,
     };

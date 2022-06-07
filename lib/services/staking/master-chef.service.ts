@@ -48,48 +48,6 @@ export class MasterChefService {
         return formatFixed(response.amount, 18);
     }
 
-    /*public async getPendingBeetsForFarm({
-        farmId,
-        user,
-        provider,
-    }: {
-        farmId: string;
-        user: string;
-        provider: BaseProvider;
-    }): Promise<AmountHumanReadable> {
-        const contract = new Contract(this.masterChefContractAddress, BeethovenxMasterChefAbi, provider);
-        const pendingBeets = await contract.pendingBeets(farmId, user);
-
-        return formatFixed(pendingBeets, 18);
-    }
-
-    public async getPendingBeetsForFarms({
-        farmIds,
-        user,
-        provider,
-    }: {
-        farmIds: string[];
-        user: string;
-        provider: BaseProvider;
-    }): Promise<MasterChefFarmPendingRewardAmount[]> {
-        const masterChefMultiCaller = new Multicaller(this.chainId, provider, BeethovenxMasterChefAbi);
-
-        for (const farmId of farmIds) {
-            masterChefMultiCaller.call(`${farmId}.pendingBeets`, this.masterChefContractAddress, 'pendingBeets', [
-                farmId,
-                user,
-            ]);
-        }
-
-        const result = await masterChefMultiCaller.execute();
-
-        return map(result, (item, farmId) => ({
-            address: this.beetsAddress,
-            farmId,
-            amount: formatFixed(item.pendingBeets, 18),
-        }));
-    }*/
-
     public async getPendingRewards({
         farms,
         userAddress,

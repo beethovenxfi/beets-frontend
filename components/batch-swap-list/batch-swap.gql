@@ -1,0 +1,26 @@
+query GetPoolBatchSwaps($first: Int, $skip: Int, $where: GqlPoolSwapFilter) {
+    batchSwaps: poolGetBatchSwaps(first: $first, skip: $skip, where: $where) {
+        id
+        timestamp
+        tokenAmountIn
+        tokenAmountOut
+        tokenIn
+        tokenOut
+        tokenInPrice
+        tokenOutPrice
+        tx
+        userAddress
+        valueUSD
+        swaps {
+            id
+            timestamp
+            tokenAmountIn
+            tokenAmountOut
+            tokenIn
+            tokenOut
+            valueUSD
+            poolTokens
+            poolId
+        }
+    }
+}

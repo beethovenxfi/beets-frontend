@@ -1,0 +1,69 @@
+query GetSorSwaps(
+    $tokenIn: String!
+    $tokenOut: String!
+    $swapType: GqlSorSwapType!
+    $swapAmount: BigDecimal!
+    $swapOptions: GqlSorSwapOptionsInput!
+) {
+    swaps: sorGetSwaps(
+        tokenIn: $tokenIn
+        tokenOut: $tokenOut
+        swapType: $swapType
+        swapAmount: $swapAmount
+        swapOptions: $swapOptions
+    ) {
+        ...GqlSorGetSwapsResponse
+    }
+}
+
+fragment GqlSorGetSwapsResponse on GqlSorGetSwapsResponse {
+    tokenIn
+    tokenOut
+    swapAmount
+    tokenAddresses
+    swapType
+    marketSp
+    swaps {
+        poolId
+        amount
+        userData
+        assetInIndex
+        assetOutIndex
+    }
+    returnAmount
+    returnAmountScaled
+    returnAmountFromSwaps
+    returnAmountConsideringFees
+    swapAmount
+    swapAmountScaled
+    swapAmountForSwaps
+    tokenInAmount
+    tokenOutAmount
+    routes {
+        tokenIn
+        tokenOut
+        tokenInAmount
+        tokenOutAmount
+        share
+        hops {
+            poolId
+            pool {
+                id
+                name
+                symbol
+                dynamicData {
+                    totalLiquidity
+                }
+                allTokens {
+                    address
+                    isNested
+                    isPhantomBpt
+                }
+            }
+            tokenIn
+            tokenOut
+            tokenInAmount
+            tokenOutAmount
+        }
+    }
+}

@@ -6,7 +6,7 @@ import { numberFormatUSDValue } from '~/lib/util/number-formats';
 import { etherscanGetTxUrl } from '~/lib/util/etherscan';
 import { formatDistanceToNow } from 'date-fns';
 import { TokenAmountPill } from '~/components/token/TokenAmountPill';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import BeetsButton from '~/components/button/Button';
 import { NetworkStatus } from '@apollo/client';
 
@@ -15,12 +15,18 @@ const PAGE_SIZE = 10;
 export function PoolDetailInvestments() {
     const [skip, setSkip] = useState(0);
     const { pool } = usePool();
-    const { data, fetchMore, networkStatus } = useGetPoolJoinExitsQuery({
+    const { data, fetchMore, networkStatus, refetch, loading } = useGetPoolJoinExitsQuery({
         variables: { poolId: pool.id, skip },
         pollInterval: 7500,
         notifyOnNetworkStatusChange: true,
     });
-    const joinExits = data?.joinExits || [];
+    const joinExits = data?.joinExits && networkStatus !== NetworkStatus.refetch ? data.joinExits : [];
+
+    useEffect(() => {
+        if (joinExits.filter((item) => item.poolId !== pool.id).length > 0) {
+            refetch();
+        }
+    });
 
     return (
         <Box>
@@ -31,17 +37,16 @@ export function PoolDetailInvestments() {
                 borderTopLeftRadius="md"
                 borderTopRightRadius="md"
                 mb={4}
+                fontSize="md"
+                fontWeight="medium"
+                color="beets.gray.100"
             >
-                <Box fontSize="md" fontWeight="medium" color="beets.gray.100" width={135}>
-                    Action
-                </Box>
-                <Box flex={1} fontSize="md" fontWeight="medium" color="beets.gray.100">
-                    Details
-                </Box>
-                <Box fontSize="md" fontWeight="medium" color="beets.gray.100" textAlign="right" w={150}>
+                <Box width={135}>Action</Box>
+                <Box flex={1}>Details</Box>
+                <Box textAlign="right" w={150}>
                     Value
                 </Box>
-                <Box fontSize="md" fontWeight="medium" color="beets.gray.100" textAlign="right" w={200}>
+                <Box textAlign="right" w={200}>
                     Time
                 </Box>
             </Flex>
