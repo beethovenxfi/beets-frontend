@@ -1,5 +1,5 @@
-import { Box, Grid, GridItem, VStack } from '@chakra-ui/react';
-import TradeChart from '~/components/charts/TradeChart';
+import { Box, Flex, Grid, GridItem, Text, VStack } from '@chakra-ui/react';
+import { TokenPriceLineChart } from '~/components/charts/TokenPriceLineChart';
 
 import BeetsSmart from '~/assets/icons/beetx-smarts.svg';
 
@@ -7,17 +7,37 @@ import Image from 'next/image';
 import { AnimatedBox } from '~/components/animation/chakra';
 import TradeCard from '../modules/trade/components/TradeCard';
 import { initializeApolloClient, loadApolloState } from '~/apollo/client';
-import { tradeContextVar, useTrade } from '~/modules/trade/lib/useTrade';
+import { useTrade } from '~/modules/trade/lib/useTrade';
 import { AnimatePresence, useAnimation } from 'framer-motion';
 import TradePreview from '~/modules/trade/components/TradePreview';
 import { useEffect } from 'react';
 import { BatchSwapList } from '~/components/batch-swap-list/BatchSwapList';
-import { TradeRoutePreview } from '~/modules/trade/components/TradeRoutePreview';
+import { TradeChart } from '~/modules/trade/components/TradeChart';
+import { useGetTradeSelectedTokenDataQuery } from '~/apollo/generated/graphql-codegen-generated';
+import { useTradeData } from '~/modules/trade/lib/useTradeData';
+import { useGetTokens } from '~/lib/global/useToken';
+import { TradeTokenDataCard } from '~/modules/trade/components/TradeTokenDataCard';
+import { numberFormatUSDValue } from '~/lib/util/number-formats';
+import { tokenFormatAmount } from '~/lib/services/token/token-util';
+import { useTradeChart } from '~/modules/trade/lib/useTradeChart';
+import numeral from 'numeral';
 
 function Trade() {
-    const { tradeContext, swaps } = useTrade();
+    const { tradeContext, swaps, setPreviewVisible, tradeState } = useTrade();
     const beetsHeadControls = useAnimation();
     const tradePreviewControls = useAnimation();
+    const { tokens, getToken, priceFor } = useGetTokens();
+    const {
+        tokenInData,
+        tokenOutData,
+        tokenInDynamicData,
+        tokenOutDynamicData,
+        loading,
+        tokenOut,
+        tokenIn,
+        currentRatio,
+    } = useTradeData();
+    const { startingRatio, range } = useTradeChart();
 
     useEffect(() => {
         if (tradeContext.isPreviewVisible) {
@@ -44,17 +64,62 @@ function Trade() {
     }, [tradeContext.isPreviewVisible]);
 
     const handlePreviewClosed = () => {
-        tradeContextVar({
-            ...tradeContext,
-            isPreviewVisible: false,
-        });
+        setPreviewVisible(false);
     };
+
+    const percentChange = startingRatio ? (currentRatio - startingRatio) / startingRatio : null;
 
     return (
         <Grid paddingX="8" width="full" templateColumns="repeat(12, 1fr)" gap="12">
             <GridItem w="100%" colSpan={8} h="10">
+                <Text textStyle="h3" mb="0.5">
+                    {tokenOut?.symbol}
+                    <Text fontSize="lg" as="span" mx="1" color="beets.gray.100">
+                        /
+                    </Text>
+                    <Text fontSize="lg" as="span">
+                        {tokenIn?.symbol}
+                    </Text>
+                </Text>
+                <Text textStyle="h1">
+                    {tokenFormatAmount(currentRatio)}
+                    <Text as="span" fontSize="3xl" fontWeight="light">
+                        {' '}
+                        {tokenIn?.symbol}
+                    </Text>
+                </Text>
+                {percentChange !== null ? (
+                    <Text>
+                        <Text as="span" color={percentChange < 0 ? 'beets.red.300' : 'beets.green.500'}>
+                            {numeral(percentChange).format('+0.[00]%')}
+                        </Text>{' '}
+                        in the past {range === 'SEVEN_DAY' ? 'week' : 'month'}
+                    </Text>
+                ) : null}
+
                 {/*swaps ? <TradeRoutePreview swaps={swaps} /> : null*/}
                 <TradeChart />
+                <Flex my="4">
+                    {tokenIn ? (
+                        <TradeTokenDataCard
+                            token={tokenIn}
+                            price={priceFor(tokenIn.address)}
+                            data={tokenInData}
+                            dynamicData={tokenInDynamicData}
+                            flex={1}
+                            mr="4"
+                        />
+                    ) : null}
+                    {tokenOut ? (
+                        <TradeTokenDataCard
+                            token={tokenOut}
+                            price={priceFor(tokenOut.address)}
+                            data={tokenOutData}
+                            dynamicData={tokenOutDynamicData}
+                            flex={1}
+                        />
+                    ) : null}
+                </Flex>
                 <Box mt="12">
                     <BatchSwapList />
                 </Box>

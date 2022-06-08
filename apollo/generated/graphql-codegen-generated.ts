@@ -767,6 +767,29 @@ export interface GqlToken {
     tradable: Scalars['Boolean'];
 }
 
+export interface GqlTokenCandlestickChartDataItem {
+    __typename: 'GqlTokenCandlestickChartDataItem';
+    close: Scalars['AmountHumanReadable'];
+    high: Scalars['AmountHumanReadable'];
+    id: Scalars['ID'];
+    low: Scalars['AmountHumanReadable'];
+    open: Scalars['AmountHumanReadable'];
+    timestamp: Scalars['Int'];
+}
+
+export type GqlTokenChartDataRange = 'SEVEN_DAY' | 'THIRTY_DAY';
+
+export interface GqlTokenData {
+    __typename: 'GqlTokenData';
+    description?: Maybe<Scalars['String']>;
+    discordUrl?: Maybe<Scalars['String']>;
+    id: Scalars['ID'];
+    telegramUrl?: Maybe<Scalars['String']>;
+    tokenAddress: Scalars['String'];
+    twitterUsername?: Maybe<Scalars['String']>;
+    websiteUrl?: Maybe<Scalars['String']>;
+}
+
 export interface GqlTokenDynamicData {
     __typename: 'GqlTokenDynamicData';
     ath: Scalars['Float'];
@@ -790,6 +813,13 @@ export interface GqlTokenPrice {
     __typename: 'GqlTokenPrice';
     address: Scalars['String'];
     price: Scalars['Float'];
+}
+
+export interface GqlTokenPriceChartDataItem {
+    __typename: 'GqlTokenPriceChartDataItem';
+    id: Scalars['ID'];
+    price: Scalars['AmountHumanReadable'];
+    timestamp: Scalars['Int'];
 }
 
 export interface GqlUserPoolData {
@@ -861,6 +891,7 @@ export interface Mutation {
     poolUpdateLiquidityValuesForAllPools: Scalars['String'];
     poolUpdateVolumeAndFeeValuesForAllPools: Scalars['String'];
     refreshLatestBlockCachedKey: Scalars['Boolean'];
+    tokenInitChartData: Scalars['String'];
     tokenReloadTokenPrices?: Maybe<Scalars['Boolean']>;
     tokenSyncTokenDefinitions: Scalars['String'];
     tokenSyncTokenDynamicData: Scalars['String'];
@@ -877,6 +908,10 @@ export interface MutationClearCacheAtBlockArgs {
 export interface MutationLgeCreateArgs {
     lge: GqlLgeCreateInput;
     signature: Scalars['String'];
+}
+
+export interface MutationTokenInitChartDataArgs {
+    tokenAddress: Scalars['String'];
 }
 
 export interface Query {
@@ -901,8 +936,12 @@ export interface Query {
     portfolioGetUserPortfolioHistory: Array<GqlUserPortfolioData>;
     portfolioGetUserPortfolioHistoryAdmin: Array<GqlUserPortfolioData>;
     sorGetSwaps: GqlSorGetSwapsResponse;
+    tokenGetCandlestickChartData: Array<GqlTokenCandlestickChartDataItem>;
     tokenGetCurrentPrices: Array<GqlTokenPrice>;
     tokenGetHistoricalPrices: Array<GqlHistoricalTokenPrice>;
+    tokenGetPriceChartData: Array<GqlTokenPriceChartDataItem>;
+    tokenGetRelativePriceChartData: Array<GqlTokenPriceChartDataItem>;
+    tokenGetTokenData?: Maybe<GqlTokenData>;
     tokenGetTokenDynamicData?: Maybe<GqlTokenDynamicData>;
     tokenGetTokens: Array<GqlToken>;
     tokenGetTokensDynamicData: Array<GqlTokenDynamicData>;
@@ -966,8 +1005,28 @@ export interface QuerySorGetSwapsArgs {
     tokenOut: Scalars['String'];
 }
 
+export interface QueryTokenGetCandlestickChartDataArgs {
+    address: Scalars['String'];
+    range: GqlTokenChartDataRange;
+}
+
 export interface QueryTokenGetHistoricalPricesArgs {
     addresses: Array<Scalars['String']>;
+}
+
+export interface QueryTokenGetPriceChartDataArgs {
+    address: Scalars['String'];
+    range: GqlTokenChartDataRange;
+}
+
+export interface QueryTokenGetRelativePriceChartDataArgs {
+    range: GqlTokenChartDataRange;
+    tokenIn: Scalars['String'];
+    tokenOut: Scalars['String'];
+}
+
+export interface QueryTokenGetTokenDataArgs {
+    address: Scalars['String'];
 }
 
 export interface QueryTokenGetTokenDynamicDataArgs {
@@ -2523,17 +2582,25 @@ export type GqlPoolMinimalFragment = {
     }>;
 };
 
-export type TokenGetHistoricalPricesQueryVariables = Exact<{
-    addresses: Array<Scalars['String']> | Scalars['String'];
+export type GetTokenRelativePriceChartDataQueryVariables = Exact<{
+    tokenIn: Scalars['String'];
+    tokenOut: Scalars['String'];
+    range: GqlTokenChartDataRange;
 }>;
 
-export type TokenGetHistoricalPricesQuery = {
+export type GetTokenRelativePriceChartDataQuery = {
     __typename: 'Query';
-    historicalPrices: Array<{
-        __typename: 'GqlHistoricalTokenPrice';
-        address: string;
-        prices: Array<{ __typename: 'GqlHistoricalTokenPriceEntry'; price: number; timestamp: string }>;
-    }>;
+    prices: Array<{ __typename: 'GqlTokenPriceChartDataItem'; id: string; price: string; timestamp: number }>;
+};
+
+export type GetTokenPriceChartDataQueryVariables = Exact<{
+    address: Scalars['String'];
+    range: GqlTokenChartDataRange;
+}>;
+
+export type GetTokenPriceChartDataQuery = {
+    __typename: 'Query';
+    prices: Array<{ __typename: 'GqlTokenPriceChartDataItem'; id: string; price: string; timestamp: number }>;
 };
 
 export type GetSorSwapsQueryVariables = Exact<{
@@ -2655,6 +2722,137 @@ export type GqlSorGetSwapsResponseFragment = {
             };
         }>;
     }>;
+};
+
+export type GqlSorSwapRouteFragment = {
+    __typename: 'GqlSorSwapRoute';
+    tokenIn: string;
+    tokenOut: string;
+    tokenInAmount: string;
+    tokenOutAmount: string;
+    share: number;
+    hops: Array<{
+        __typename: 'GqlSorSwapRouteHop';
+        poolId: string;
+        tokenIn: string;
+        tokenOut: string;
+        tokenInAmount: string;
+        tokenOutAmount: string;
+        pool: {
+            __typename: 'GqlPoolMinimal';
+            id: string;
+            name: string;
+            symbol: string;
+            dynamicData: { __typename: 'GqlPoolDynamicData'; totalLiquidity: string };
+            allTokens: Array<{
+                __typename: 'GqlPoolTokenExpanded';
+                address: string;
+                isNested: boolean;
+                isPhantomBpt: boolean;
+            }>;
+        };
+    }>;
+};
+
+export type GqlSorSwapRouteHopFragment = {
+    __typename: 'GqlSorSwapRouteHop';
+    poolId: string;
+    tokenIn: string;
+    tokenOut: string;
+    tokenInAmount: string;
+    tokenOutAmount: string;
+    pool: {
+        __typename: 'GqlPoolMinimal';
+        id: string;
+        name: string;
+        symbol: string;
+        dynamicData: { __typename: 'GqlPoolDynamicData'; totalLiquidity: string };
+        allTokens: Array<{
+            __typename: 'GqlPoolTokenExpanded';
+            address: string;
+            isNested: boolean;
+            isPhantomBpt: boolean;
+        }>;
+    };
+};
+
+export type GetTradeSelectedTokenDataQueryVariables = Exact<{
+    tokenIn: Scalars['String'];
+    tokenOut: Scalars['String'];
+}>;
+
+export type GetTradeSelectedTokenDataQuery = {
+    __typename: 'Query';
+    tokenInData?: {
+        __typename: 'GqlTokenData';
+        id: string;
+        tokenAddress: string;
+        description?: string | null;
+        discordUrl?: string | null;
+        telegramUrl?: string | null;
+        twitterUsername?: string | null;
+    } | null;
+    tokenOutData?: {
+        __typename: 'GqlTokenData';
+        id: string;
+        tokenAddress: string;
+        description?: string | null;
+        discordUrl?: string | null;
+        telegramUrl?: string | null;
+        twitterUsername?: string | null;
+    } | null;
+    tokenInDynamicData?: {
+        __typename: 'GqlTokenDynamicData';
+        id: string;
+        tokenAddress: string;
+        ath: number;
+        atl: number;
+        marketCap?: string | null;
+        fdv?: string | null;
+        priceChange24h: number;
+        priceChangePercent24h: number;
+        priceChangePercent7d?: number | null;
+        priceChangePercent14d?: number | null;
+        priceChangePercent30d?: number | null;
+        high24h: number;
+        low24h: number;
+        updatedAt: string;
+    } | null;
+    tokenOutDynamicData?: {
+        __typename: 'GqlTokenDynamicData';
+        id: string;
+        tokenAddress: string;
+        ath: number;
+        atl: number;
+        marketCap?: string | null;
+        fdv?: string | null;
+        priceChange24h: number;
+        priceChangePercent24h: number;
+        priceChangePercent7d?: number | null;
+        priceChangePercent14d?: number | null;
+        priceChangePercent30d?: number | null;
+        high24h: number;
+        low24h: number;
+        updatedAt: string;
+    } | null;
+};
+
+export type GqlTokenDynamicDataFragment = {
+    __typename: 'GqlTokenDynamicData';
+    id: string;
+    tokenAddress: string;
+    ath: number;
+    atl: number;
+    marketCap?: string | null;
+    fdv?: string | null;
+    priceChange24h: number;
+    priceChangePercent24h: number;
+    priceChangePercent7d?: number | null;
+    priceChangePercent14d?: number | null;
+    priceChangePercent30d?: number | null;
+    high24h: number;
+    low24h: number;
+    updatedAt: string;
 };
 
 export const GqlPoolTokenFragmentDoc = gql`
@@ -2779,6 +2977,41 @@ export const GqlPoolMinimalFragmentDoc = gql`
         }
     }
 `;
+export const GqlSorSwapRouteHopFragmentDoc = gql`
+    fragment GqlSorSwapRouteHop on GqlSorSwapRouteHop {
+        poolId
+        pool {
+            id
+            name
+            symbol
+            dynamicData {
+                totalLiquidity
+            }
+            allTokens {
+                address
+                isNested
+                isPhantomBpt
+            }
+        }
+        tokenIn
+        tokenOut
+        tokenInAmount
+        tokenOutAmount
+    }
+`;
+export const GqlSorSwapRouteFragmentDoc = gql`
+    fragment GqlSorSwapRoute on GqlSorSwapRoute {
+        tokenIn
+        tokenOut
+        tokenInAmount
+        tokenOutAmount
+        share
+        hops {
+            ...GqlSorSwapRouteHop
+        }
+    }
+    ${GqlSorSwapRouteHopFragmentDoc}
+`;
 export const GqlSorGetSwapsResponseFragmentDoc = gql`
     fragment GqlSorGetSwapsResponse on GqlSorGetSwapsResponse {
         tokenIn
@@ -2804,32 +3037,27 @@ export const GqlSorGetSwapsResponseFragmentDoc = gql`
         tokenInAmount
         tokenOutAmount
         routes {
-            tokenIn
-            tokenOut
-            tokenInAmount
-            tokenOutAmount
-            share
-            hops {
-                poolId
-                pool {
-                    id
-                    name
-                    symbol
-                    dynamicData {
-                        totalLiquidity
-                    }
-                    allTokens {
-                        address
-                        isNested
-                        isPhantomBpt
-                    }
-                }
-                tokenIn
-                tokenOut
-                tokenInAmount
-                tokenOutAmount
-            }
+            ...GqlSorSwapRoute
         }
+    }
+    ${GqlSorSwapRouteFragmentDoc}
+`;
+export const GqlTokenDynamicDataFragmentDoc = gql`
+    fragment GqlTokenDynamicData on GqlTokenDynamicData {
+        id
+        tokenAddress
+        ath
+        atl
+        marketCap
+        fdv
+        priceChange24h
+        priceChangePercent24h
+        priceChangePercent7d
+        priceChangePercent14d
+        priceChangePercent30d
+        high24h
+        low24h
+        updatedAt
     }
 `;
 export const GetPoolBatchSwapsDocument = gql`
@@ -3572,57 +3800,116 @@ export function useGetPoolFiltersLazyQuery(
 export type GetPoolFiltersQueryHookResult = ReturnType<typeof useGetPoolFiltersQuery>;
 export type GetPoolFiltersLazyQueryHookResult = ReturnType<typeof useGetPoolFiltersLazyQuery>;
 export type GetPoolFiltersQueryResult = Apollo.QueryResult<GetPoolFiltersQuery, GetPoolFiltersQueryVariables>;
-export const TokenGetHistoricalPricesDocument = gql`
-    query TokenGetHistoricalPrices($addresses: [String!]!) {
-        historicalPrices: tokenGetHistoricalPrices(addresses: $addresses) {
-            address
-            prices {
-                price
-                timestamp
-            }
+export const GetTokenRelativePriceChartDataDocument = gql`
+    query GetTokenRelativePriceChartData($tokenIn: String!, $tokenOut: String!, $range: GqlTokenChartDataRange!) {
+        prices: tokenGetRelativePriceChartData(tokenIn: $tokenIn, tokenOut: $tokenOut, range: $range) {
+            id
+            price
+            timestamp
         }
     }
 `;
 
 /**
- * __useTokenGetHistoricalPricesQuery__
+ * __useGetTokenRelativePriceChartDataQuery__
  *
- * To run a query within a React component, call `useTokenGetHistoricalPricesQuery` and pass it any options that fit your needs.
- * When your component renders, `useTokenGetHistoricalPricesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useGetTokenRelativePriceChartDataQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetTokenRelativePriceChartDataQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useTokenGetHistoricalPricesQuery({
+ * const { data, loading, error } = useGetTokenRelativePriceChartDataQuery({
  *   variables: {
- *      addresses: // value for 'addresses'
+ *      tokenIn: // value for 'tokenIn'
+ *      tokenOut: // value for 'tokenOut'
+ *      range: // value for 'range'
  *   },
  * });
  */
-export function useTokenGetHistoricalPricesQuery(
-    baseOptions: Apollo.QueryHookOptions<TokenGetHistoricalPricesQuery, TokenGetHistoricalPricesQueryVariables>,
+export function useGetTokenRelativePriceChartDataQuery(
+    baseOptions: Apollo.QueryHookOptions<
+        GetTokenRelativePriceChartDataQuery,
+        GetTokenRelativePriceChartDataQueryVariables
+    >,
 ) {
     const options = { ...defaultOptions, ...baseOptions };
-    return Apollo.useQuery<TokenGetHistoricalPricesQuery, TokenGetHistoricalPricesQueryVariables>(
-        TokenGetHistoricalPricesDocument,
+    return Apollo.useQuery<GetTokenRelativePriceChartDataQuery, GetTokenRelativePriceChartDataQueryVariables>(
+        GetTokenRelativePriceChartDataDocument,
         options,
     );
 }
-export function useTokenGetHistoricalPricesLazyQuery(
-    baseOptions?: Apollo.LazyQueryHookOptions<TokenGetHistoricalPricesQuery, TokenGetHistoricalPricesQueryVariables>,
+export function useGetTokenRelativePriceChartDataLazyQuery(
+    baseOptions?: Apollo.LazyQueryHookOptions<
+        GetTokenRelativePriceChartDataQuery,
+        GetTokenRelativePriceChartDataQueryVariables
+    >,
 ) {
     const options = { ...defaultOptions, ...baseOptions };
-    return Apollo.useLazyQuery<TokenGetHistoricalPricesQuery, TokenGetHistoricalPricesQueryVariables>(
-        TokenGetHistoricalPricesDocument,
+    return Apollo.useLazyQuery<GetTokenRelativePriceChartDataQuery, GetTokenRelativePriceChartDataQueryVariables>(
+        GetTokenRelativePriceChartDataDocument,
         options,
     );
 }
-export type TokenGetHistoricalPricesQueryHookResult = ReturnType<typeof useTokenGetHistoricalPricesQuery>;
-export type TokenGetHistoricalPricesLazyQueryHookResult = ReturnType<typeof useTokenGetHistoricalPricesLazyQuery>;
-export type TokenGetHistoricalPricesQueryResult = Apollo.QueryResult<
-    TokenGetHistoricalPricesQuery,
-    TokenGetHistoricalPricesQueryVariables
+export type GetTokenRelativePriceChartDataQueryHookResult = ReturnType<typeof useGetTokenRelativePriceChartDataQuery>;
+export type GetTokenRelativePriceChartDataLazyQueryHookResult = ReturnType<
+    typeof useGetTokenRelativePriceChartDataLazyQuery
+>;
+export type GetTokenRelativePriceChartDataQueryResult = Apollo.QueryResult<
+    GetTokenRelativePriceChartDataQuery,
+    GetTokenRelativePriceChartDataQueryVariables
+>;
+export const GetTokenPriceChartDataDocument = gql`
+    query GetTokenPriceChartData($address: String!, $range: GqlTokenChartDataRange!) {
+        prices: tokenGetPriceChartData(address: $address, range: $range) {
+            id
+            price
+            timestamp
+        }
+    }
+`;
+
+/**
+ * __useGetTokenPriceChartDataQuery__
+ *
+ * To run a query within a React component, call `useGetTokenPriceChartDataQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetTokenPriceChartDataQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetTokenPriceChartDataQuery({
+ *   variables: {
+ *      address: // value for 'address'
+ *      range: // value for 'range'
+ *   },
+ * });
+ */
+export function useGetTokenPriceChartDataQuery(
+    baseOptions: Apollo.QueryHookOptions<GetTokenPriceChartDataQuery, GetTokenPriceChartDataQueryVariables>,
+) {
+    const options = { ...defaultOptions, ...baseOptions };
+    return Apollo.useQuery<GetTokenPriceChartDataQuery, GetTokenPriceChartDataQueryVariables>(
+        GetTokenPriceChartDataDocument,
+        options,
+    );
+}
+export function useGetTokenPriceChartDataLazyQuery(
+    baseOptions?: Apollo.LazyQueryHookOptions<GetTokenPriceChartDataQuery, GetTokenPriceChartDataQueryVariables>,
+) {
+    const options = { ...defaultOptions, ...baseOptions };
+    return Apollo.useLazyQuery<GetTokenPriceChartDataQuery, GetTokenPriceChartDataQueryVariables>(
+        GetTokenPriceChartDataDocument,
+        options,
+    );
+}
+export type GetTokenPriceChartDataQueryHookResult = ReturnType<typeof useGetTokenPriceChartDataQuery>;
+export type GetTokenPriceChartDataLazyQueryHookResult = ReturnType<typeof useGetTokenPriceChartDataLazyQuery>;
+export type GetTokenPriceChartDataQueryResult = Apollo.QueryResult<
+    GetTokenPriceChartDataQuery,
+    GetTokenPriceChartDataQueryVariables
 >;
 export const GetSorSwapsDocument = gql`
     query GetSorSwaps(
@@ -3678,3 +3965,72 @@ export function useGetSorSwapsLazyQuery(
 export type GetSorSwapsQueryHookResult = ReturnType<typeof useGetSorSwapsQuery>;
 export type GetSorSwapsLazyQueryHookResult = ReturnType<typeof useGetSorSwapsLazyQuery>;
 export type GetSorSwapsQueryResult = Apollo.QueryResult<GetSorSwapsQuery, GetSorSwapsQueryVariables>;
+export const GetTradeSelectedTokenDataDocument = gql`
+    query GetTradeSelectedTokenData($tokenIn: String!, $tokenOut: String!) {
+        tokenInData: tokenGetTokenData(address: $tokenIn) {
+            id
+            tokenAddress
+            description
+            discordUrl
+            telegramUrl
+            twitterUsername
+        }
+        tokenOutData: tokenGetTokenData(address: $tokenOut) {
+            id
+            tokenAddress
+            description
+            discordUrl
+            telegramUrl
+            twitterUsername
+        }
+        tokenInDynamicData: tokenGetTokenDynamicData(address: $tokenIn) {
+            ...GqlTokenDynamicData
+        }
+        tokenOutDynamicData: tokenGetTokenDynamicData(address: $tokenOut) {
+            ...GqlTokenDynamicData
+        }
+    }
+    ${GqlTokenDynamicDataFragmentDoc}
+`;
+
+/**
+ * __useGetTradeSelectedTokenDataQuery__
+ *
+ * To run a query within a React component, call `useGetTradeSelectedTokenDataQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetTradeSelectedTokenDataQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetTradeSelectedTokenDataQuery({
+ *   variables: {
+ *      tokenIn: // value for 'tokenIn'
+ *      tokenOut: // value for 'tokenOut'
+ *   },
+ * });
+ */
+export function useGetTradeSelectedTokenDataQuery(
+    baseOptions: Apollo.QueryHookOptions<GetTradeSelectedTokenDataQuery, GetTradeSelectedTokenDataQueryVariables>,
+) {
+    const options = { ...defaultOptions, ...baseOptions };
+    return Apollo.useQuery<GetTradeSelectedTokenDataQuery, GetTradeSelectedTokenDataQueryVariables>(
+        GetTradeSelectedTokenDataDocument,
+        options,
+    );
+}
+export function useGetTradeSelectedTokenDataLazyQuery(
+    baseOptions?: Apollo.LazyQueryHookOptions<GetTradeSelectedTokenDataQuery, GetTradeSelectedTokenDataQueryVariables>,
+) {
+    const options = { ...defaultOptions, ...baseOptions };
+    return Apollo.useLazyQuery<GetTradeSelectedTokenDataQuery, GetTradeSelectedTokenDataQueryVariables>(
+        GetTradeSelectedTokenDataDocument,
+        options,
+    );
+}
+export type GetTradeSelectedTokenDataQueryHookResult = ReturnType<typeof useGetTradeSelectedTokenDataQuery>;
+export type GetTradeSelectedTokenDataLazyQueryHookResult = ReturnType<typeof useGetTradeSelectedTokenDataLazyQuery>;
+export type GetTradeSelectedTokenDataQueryResult = Apollo.QueryResult<
+    GetTradeSelectedTokenDataQuery,
+    GetTradeSelectedTokenDataQueryVariables
+>;

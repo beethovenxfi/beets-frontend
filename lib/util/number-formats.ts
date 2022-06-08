@@ -3,9 +3,7 @@ import numeral from 'numeral';
 export function numberFormatUSDValue(value: string | number) {
     const valueNum = typeof value === 'string' ? parseFloat(value) : value;
 
-    if (valueNum < 0.01) {
-        return '$0.00';
-    } else if (valueNum < 1) {
+    if (valueNum < 1) {
         return numeral(valueNum).format('$0.00[00]');
     } else if (valueNum > 10000) {
         return numeral(valueNum).format('$0,0');

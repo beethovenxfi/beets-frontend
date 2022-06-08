@@ -36,7 +36,7 @@ const TokenRow = memo(function TokenRow({ symbol, address, index, onClick }: Tok
         >
             <HStack width="full" paddingY="4" justifyContent="space-between">
                 <HStack>
-                    <TokenAvatar address={address} />
+                    <TokenAvatar address={address} size="sm" />
                     <Heading size="md" fontWeight="semibold" color="beets.gray.100">
                         {symbol}
                     </Heading>

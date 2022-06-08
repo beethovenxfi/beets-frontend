@@ -1,29 +1,28 @@
-import { Box, Text, Container, Heading, VStack, useTheme, Flex, Button } from '@chakra-ui/react';
+import { Box, VStack } from '@chakra-ui/react';
 import { useBoolean } from '@chakra-ui/hooks';
-import { ChevronsDown } from 'react-feather';
 import { FormEvent, useEffect, useState } from 'react';
-import { AnimatePresence, useAnimation, motion } from 'framer-motion';
+import { AnimatePresence, useAnimation } from 'framer-motion';
 import TokenSelect from '~/components/token-select/TokenSelect';
-import { GqlSorSwapType, useGetTokenPricesQuery } from '~/apollo/generated/graphql-codegen-generated';
+import { GqlSorSwapType } from '~/apollo/generated/graphql-codegen-generated';
 import TokenInput from '~/components/inputs/TokenInput';
 import Card from '~/components/card/Card';
 import BeetsButton from '~/components/button/Button';
-import { tradeContextVar, tradeStateVar, useTrade } from '../lib/useTrade';
+import { useTrade } from '../lib/useTrade';
 import { TokenInputSwapButton } from '~/modules/trade/components/TokenInputSwapButton';
 import { useGetTokens } from '~/lib/global/useToken';
 import { useDebouncedCallback } from 'use-debounce';
-import { formatUnits } from '@ethersproject/units';
-import { useReactiveVar } from '@apollo/client';
 import { oldBnumToFixed } from '~/lib/services/pool/lib/old-big-number';
 
-interface TradeCardState {
-    buyAmount: string;
-    sellAmount: string;
-    isFetching: boolean;
-}
-
 function useTradeCard() {
-    const { tradeState, loadSwaps: _loadSwaps, loadingSwaps, tradeContext, clearSwaps } = useTrade();
+    const {
+        tradeState,
+        loadSwaps: _loadSwaps,
+        loadingSwaps,
+        tradeContext,
+        setPreviewVisible,
+        clearSwaps,
+        setTradeConfig,
+    } = useTrade();
     const { tokens, getToken } = useGetTokens();
 
     // refetching the swaps may not always trigger the query loading state,
@@ -38,24 +37,12 @@ function useTradeCard() {
     const isLoadingOrFetching = loadingSwaps || isFetching;
 
     useEffect(() => {
-        tradeStateVar({
-            ...tradeState,
-            tokenIn: tradeState.tokenIn,
-            tokenOut: tradeState.tokenOut,
-        });
+        //TODO: load token in/out from url if passed in
     }, []);
 
     const fetchTrade = async (type: GqlSorSwapType, amount: string) => {
-        tradeStateVar({
-            ...tradeState,
-            swapType: type,
-            swapAmount: amount,
-        });
-
-        tradeContextVar({
-            ...tradeContext,
-            isPreviewVisible: false,
-        });
+        setTradeConfig(type, amount);
+        setPreviewVisible(false);
 
         const trade = await _loadSwaps(type, amount);
         const resultAmount = trade?.returnAmount || '0';
@@ -122,10 +109,7 @@ function useTradeCard() {
     };
 
     const handleReviewClicked = () => {
-        tradeContextVar({
-            ...tradeContext,
-            isPreviewVisible: true,
-        });
+        setPreviewVisible(true);
     };
 
     return {

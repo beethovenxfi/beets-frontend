@@ -8,8 +8,8 @@ import {
 import { networkConfig } from '~/lib/config/network-config';
 
 type TradeState = {
-    tokenIn: string | null;
-    tokenOut: string | null;
+    tokenIn: string;
+    tokenOut: string;
     swapType: GqlSorSwapType;
     swapAmount: string | null;
     sorResponse: GqlSorGetSwapsResponseFragment | null;
@@ -19,7 +19,7 @@ type TradeContext = {
     isPreviewVisible: boolean;
 };
 
-export const tradeStateVar = makeVar<TradeState>({
+const tradeStateVar = makeVar<TradeState>({
     tokenIn: networkConfig.defaultTokenIn,
     tokenOut: networkConfig.defaultTokenOut,
     swapType: 'EXACT_IN',
@@ -27,7 +27,7 @@ export const tradeStateVar = makeVar<TradeState>({
     sorResponse: null,
 });
 
-export const tradeContextVar = makeVar<TradeContext>({
+const tradeContextVar = makeVar<TradeContext>({
     isPreviewVisible: false,
 });
 
@@ -78,6 +78,21 @@ export function useTrade() {
         });
     }
 
+    function setTradeConfig(type: GqlSorSwapType, amount: string) {
+        tradeStateVar({
+            ...tradeState,
+            swapType: type,
+            swapAmount: amount,
+        });
+    }
+
+    function setPreviewVisible(visible: boolean) {
+        tradeContextVar({
+            ...tradeContext,
+            isPreviewVisible: visible,
+        });
+    }
+
     return {
         loadSwaps,
         clearSwaps,
@@ -87,5 +102,7 @@ export function useTrade() {
         error,
         networkStatus,
         tradeContext,
+        setTradeConfig,
+        setPreviewVisible,
     };
 }

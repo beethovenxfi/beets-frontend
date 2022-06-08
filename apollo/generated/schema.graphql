@@ -729,6 +729,30 @@ type GqlToken {
     tradable: Boolean!
 }
 
+type GqlTokenCandlestickChartDataItem {
+    close: AmountHumanReadable!
+    high: AmountHumanReadable!
+    id: ID!
+    low: AmountHumanReadable!
+    open: AmountHumanReadable!
+    timestamp: Int!
+}
+
+enum GqlTokenChartDataRange {
+    SEVEN_DAY
+    THIRTY_DAY
+}
+
+type GqlTokenData {
+    description: String
+    discordUrl: String
+    id: ID!
+    telegramUrl: String
+    tokenAddress: String!
+    twitterUsername: String
+    websiteUrl: String
+}
+
 type GqlTokenDynamicData {
     ath: Float!
     atl: Float!
@@ -750,6 +774,12 @@ type GqlTokenDynamicData {
 type GqlTokenPrice {
     address: String!
     price: Float!
+}
+
+type GqlTokenPriceChartDataItem {
+    id: ID!
+    price: AmountHumanReadable!
+    timestamp: Int!
 }
 
 type GqlUserPoolData {
@@ -822,6 +852,7 @@ type Mutation {
     poolUpdateLiquidityValuesForAllPools: String!
     poolUpdateVolumeAndFeeValuesForAllPools: String!
     refreshLatestBlockCachedKey: Boolean!
+    tokenInitChartData(tokenAddress: String!): String!
     tokenReloadTokenPrices: Boolean
     tokenSyncTokenDefinitions: String!
     tokenSyncTokenDynamicData: String!
@@ -868,8 +899,16 @@ type Query {
         tokenIn: String!
         tokenOut: String!
     ): GqlSorGetSwapsResponse!
+    tokenGetCandlestickChartData(address: String!, range: GqlTokenChartDataRange!): [GqlTokenCandlestickChartDataItem!]!
     tokenGetCurrentPrices: [GqlTokenPrice!]!
     tokenGetHistoricalPrices(addresses: [String!]!): [GqlHistoricalTokenPrice!]!
+    tokenGetPriceChartData(address: String!, range: GqlTokenChartDataRange!): [GqlTokenPriceChartDataItem!]!
+    tokenGetRelativePriceChartData(
+        range: GqlTokenChartDataRange!
+        tokenIn: String!
+        tokenOut: String!
+    ): [GqlTokenPriceChartDataItem!]!
+    tokenGetTokenData(address: String!): GqlTokenData
     tokenGetTokenDynamicData(address: String!): GqlTokenDynamicData
     tokenGetTokens: [GqlToken!]!
     tokenGetTokensDynamicData(addresses: [String!]!): [GqlTokenDynamicData!]!

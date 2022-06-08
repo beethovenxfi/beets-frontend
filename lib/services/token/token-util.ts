@@ -35,7 +35,7 @@ export function tokenAmountsGetArrayFromMap(amountMap: AmountHumanReadableMap): 
 export function tokenFormatAmount(amount: AmountHumanReadable | number) {
     const amountNum = typeof amount === 'string' ? parseFloat(amount) : amount;
 
-    if (amountNum < 0.000001) {
+    if (amountNum < 0.000001 && amountNum >= 0) {
         return '0.00';
     } else if (amountNum < 1) {
         return numeral(amount).format('0.[000000]');
