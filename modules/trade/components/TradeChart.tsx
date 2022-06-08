@@ -3,10 +3,8 @@ import { useTradeChart } from '~/modules/trade/lib/useTradeChart';
 import { NetworkStatus } from '@apollo/client';
 import { Box, Flex, HStack, Link, Skeleton } from '@chakra-ui/react';
 import { useTradeData } from '~/modules/trade/lib/useTradeData';
-import { useTrade } from '~/modules/trade/lib/useTrade';
 
 export function TradeChart() {
-    const { reactiveTradeState } = useTrade();
     const { setRange, range, data, loading, networkStatus } = useTradeChart();
     const { tokenOut, tokenIn } = useTradeData();
 
