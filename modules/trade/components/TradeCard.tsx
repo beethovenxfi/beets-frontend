@@ -1,4 +1,4 @@
-import { Box, LinkOverlay, Text, VStack } from '@chakra-ui/react';
+import { Box, LinkOverlay, Skeleton, Text, VStack } from '@chakra-ui/react';
 import { useBoolean } from '@chakra-ui/hooks';
 import { FormEvent, useEffect, useState } from 'react';
 import { AnimatePresence, useAnimation } from 'framer-motion';
@@ -13,6 +13,7 @@ import { useDebouncedCallback } from 'use-debounce';
 import { oldBnumToFixed } from '~/lib/services/pool/lib/old-big-number';
 import { useTradeUserBalances } from '~/modules/trade/lib/useTradeUserBalances';
 import { tokenFormatAmountPrecise, tokenGetAmountForAddress } from '~/lib/services/token/token-util';
+import { useAccount } from 'wagmi';
 
 function useTradeCard() {
     const {
@@ -134,6 +135,7 @@ function TradeCard() {
     const controls = useAnimation();
     const [showTokenSelect, setShowTokenSelect] = useBoolean();
 
+    const { data: accountData } = useAccount();
     const { userBalances } = useTradeUserBalances();
     const {
         sellAmount,
@@ -187,6 +189,7 @@ function TradeCard() {
 
     const userTokenInBalance = tokenGetAmountForAddress(tokenIn, userBalances);
     const userTokenOutBalance = tokenGetAmountForAddress(tokenOut, userBalances);
+    console.log('user balances', userBalances);
 
     return (
         <Box width="full" position="relative">
@@ -194,12 +197,13 @@ function TradeCard() {
                 <VStack spacing="2" padding="4" width="full">
                     <Box position="relative" width="full">
                         <TokenInput
-                            //label="Sell"
+                            label="Sell"
                             address={tokenIn}
                             toggleTokenSelect={toggleTokenSelect('tokenIn')}
                             onChange={handleSellAmountChanged}
                             value={sellAmount}
-                            below={
+                        >
+                            {/*<Box>
                                 <LinkOverlay
                                     onClick={() =>
                                         handleSellAmountChanged({ currentTarget: { value: userTokenInBalance } })
@@ -208,23 +212,34 @@ function TradeCard() {
                                 >
                                     <Box fontSize="sm" color="beets.gray.200">
                                         Balance:{' '}
-                                        {tokenFormatAmountPrecise(tokenGetAmountForAddress(tokenIn, userBalances), 4)}{' '}
+                                        {accountData ? (
+                                            tokenFormatAmountPrecise(tokenGetAmountForAddress(tokenIn, userBalances), 4)
+                                        ) : (
+                                            <Skeleton height="2" />
+                                        )}{' '}
                                         <Text as="span" color="beets.green.500">
                                             Max
                                         </Text>
                                     </Box>
                                 </LinkOverlay>
-                            }
-                        />
+                            </Box>*/}
+                            <Box fontSize="sm" color="beets.gray.200">
+                                Balance: 0
+                                <Text as="span" color="beets.green.500">
+                                    Max
+                                </Text>
+                            </Box>
+                        </TokenInput>
                         <TokenInputSwapButton onSwap={handleTokensSwitched} isLoading={isLoadingOrFetching} />
                     </Box>
                     <TokenInput
-                        //label="Buy"
+                        label="Buy"
                         address={tokenOut}
                         toggleTokenSelect={toggleTokenSelect('tokenOut')}
                         onChange={handleBuyAmountChanged}
                         value={buyAmount}
-                        below={
+                    >
+                        {/*<Box>
                             <LinkOverlay
                                 onClick={() =>
                                     handleBuyAmountChanged({ currentTarget: { value: userTokenOutBalance } })
@@ -236,8 +251,11 @@ function TradeCard() {
                                     {tokenFormatAmountPrecise(tokenGetAmountForAddress(tokenOut, userBalances), 4)}{' '}
                                 </Box>
                             </LinkOverlay>
-                        }
-                    />
+                        </Box>*/}
+                        <Box fontSize="sm" color="beets.gray.200">
+                            Balance: 0
+                        </Box>
+                    </TokenInput>
                     <Box width="full" paddingTop="2">
                         <BeetsButton disabled={isReviewDisabled} onClick={handleReviewClicked} isFullWidth size="lg">
                             Review Swap

@@ -1,16 +1,14 @@
 import { Input, InputProps } from '@chakra-ui/input';
 import { Box, Heading } from '@chakra-ui/layout';
-import { ReactNode } from 'react';
 
 type Props = {
     label?: string;
-    below?: ReactNode;
 };
 
-export default function BeetsInput({ label, below, ...inputProps }: InputProps & Props) {
+export default function BeetsInput({ label, children, ...inputProps }: InputProps & Props) {
     return (
-        <Box position="relative" width="full">
-            {label && !below && (
+        <Box position="relative" width="full" bg="blackAlpha.600" borderRadius="md">
+            {label && (
                 <Heading
                     position="absolute"
                     zIndex="dropdown"
@@ -27,14 +25,13 @@ export default function BeetsInput({ label, below, ...inputProps }: InputProps &
                 width="full"
                 minHeight="20"
                 height="full"
-                bg="blackAlpha.600"
                 fontSize="2xl"
                 color="beets.gray.100"
                 fontWeight="semibold"
                 borderColor="transparent"
                 border="2px"
-                paddingTop={below ? '0' : '5'}
-                paddingBottom={below ? '6' : '0'}
+                bgColor="transparent"
+                paddingTop="5"
                 _hover={{
                     borderColor: 'beets.gray.200',
                 }}
@@ -43,11 +40,7 @@ export default function BeetsInput({ label, below, ...inputProps }: InputProps &
                 }}
                 {...inputProps}
             />
-            {below && (
-                <Box position="absolute" bottom=".8rem" left="1.2rem" zIndex="2">
-                    {below}
-                </Box>
-            )}
+            {children}
         </Box>
     );
 }

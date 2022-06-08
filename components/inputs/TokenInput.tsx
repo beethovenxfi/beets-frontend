@@ -11,22 +11,17 @@ type Props = {
     address: string | null;
     onChange?: (event: FormEvent<HTMLInputElement>) => void;
     value?: string | null;
+    children?: any;
 };
 
-export default function TokenInput({ label, below, toggleTokenSelect, address, onChange, value }: Props) {
+export default function TokenInput({ label, children, toggleTokenSelect, address, onChange, value }: Props) {
     const { getToken } = useGetTokens();
     return (
         <VStack width="full" alignItems="flex-start">
             <Box position="relative" width="full">
-                <BeetsInput
-                    min={0}
-                    value={value || ''}
-                    onChange={onChange}
-                    placeholder="0"
-                    type="number"
-                    label={label}
-                    below={below}
-                />
+                <BeetsInput min={0} value={value || ''} onChange={onChange} placeholder="0" type="number" label={label}>
+                    {children}
+                </BeetsInput>
                 <Box position="absolute" zIndex="toast" right=".75rem" top="50%" transform="translateY(-50%)">
                     <Button
                         onClick={toggleTokenSelect}
