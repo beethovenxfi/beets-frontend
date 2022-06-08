@@ -72,16 +72,13 @@ function Trade() {
     return (
         <Grid paddingX="8" width="full" templateColumns="repeat(12, 1fr)" gap="12">
             <GridItem w="100%" colSpan={8} h="10">
-                <Text textStyle="h3" mb="0.5">
-                    {tokenOut?.symbol}
-                    <Text fontSize="lg" as="span" mx="1" color="beets.gray.100">
-                        /
-                    </Text>
-                    <Text fontSize="lg" as="span">
-                        {tokenIn?.symbol}
-                    </Text>
-                </Text>
                 <Text textStyle="h1">
+                    1
+                    <Text as="span" fontSize="3xl" fontWeight="light">
+                        {' '}
+                        {tokenOut?.symbol}
+                        {' / '}
+                    </Text>
                     {tokenFormatAmount(currentRatio)}
                     <Text as="span" fontSize="3xl" fontWeight="light">
                         {' '}
@@ -98,7 +95,10 @@ function Trade() {
                 ) : null}
 
                 {/*swaps ? <TradeRoutePreview swaps={swaps} /> : null*/}
-                <TradeChart />
+                <Box mt="4">
+                    <TradeChart />
+                </Box>
+
                 <Flex my="4">
                     {tokenIn ? (
                         <TradeTokenDataCard

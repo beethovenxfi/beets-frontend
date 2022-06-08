@@ -94,8 +94,11 @@ function useTradeCard() {
 
     const handleTokenSelected = (address: string) => {
         tradeState[tokenSelectKey] = address;
-        setIsFetching.on();
-        dFetchTrade('EXACT_IN', sellAmount);
+
+        if (parseFloat(sellAmount || '0') > 0) {
+            setIsFetching.on();
+            dFetchTrade('EXACT_IN', sellAmount);
+        }
     };
 
     const handleTokensSwitched = () => {

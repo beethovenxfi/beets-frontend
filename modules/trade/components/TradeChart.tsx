@@ -12,7 +12,7 @@ export function TradeChart() {
 
     if (loading && !data) {
         //loading and no data
-        return <Skeleton height="md" />;
+        return <Skeleton height="3xs" />;
     }
 
     if (loading || networkStatus === NetworkStatus.refetch) {
@@ -25,7 +25,7 @@ export function TradeChart() {
 
     if (!tokenIn || !tokenOut) {
         //tokens not yet populated
-        return <Skeleton height="md" />;
+        return <Skeleton height="3xs" />;
     }
 
     const sevenDaySelected = range === 'SEVEN_DAY';
@@ -33,9 +33,10 @@ export function TradeChart() {
 
     return (
         <Box>
-            <Box height="3xs" position="relative">
+            <Box height="3xs">
                 <TokenPriceLineChart prices={data?.prices || []} tokenIn={tokenIn} tokenOut={tokenOut} />
             </Box>
+            {/*<Skeleton height="3xs" />*/}
             <Flex mt="2">
                 <Box flex={1} />
                 <HStack>

@@ -1,34 +1,32 @@
-import {
-    GqlTokenData,
-    GqlTokenDynamicData,
-    GqlTokenDynamicDataFragment,
-} from '~/apollo/generated/graphql-codegen-generated';
+import { GqlTokenData, GqlTokenDynamicDataFragment } from '~/apollo/generated/graphql-codegen-generated';
 import { TokenBase } from '~/lib/services/token/token-types';
 import { BeetsBox } from '~/components/box/BeetsBox';
 import {
     Box,
     BoxProps,
     Flex,
-    Text,
     HStack,
     Link,
-    useTheme,
-    useDisclosure,
-    ModalOverlay,
-    ModalBody,
-    ModalHeader,
-    ModalContent,
-    ModalFooter,
-    ModalCloseButton,
     Modal,
+    ModalBody,
+    ModalCloseButton,
+    ModalContent,
+    ModalHeader,
+    ModalOverlay,
+    Text,
+    useDisclosure,
+    useTheme,
 } from '@chakra-ui/react';
 import TokenAvatar from '~/components/token/TokenAvatar';
 import { useBoolean } from '@chakra-ui/hooks';
-import { AnimatePresence } from 'framer-motion';
 import { numberFormatUSDValue } from '~/lib/util/number-formats';
 import numeral from 'numeral';
-import { ChevronDown, ChevronUp } from 'react-feather';
-import { useRef, useState } from 'react';
+import { IconDiscord } from '~/components/icons/IconDiscord';
+import { Feather, Globe, MessageCircle, Mic } from 'react-feather';
+import { IconTelegram } from '~/components/icons/IconTelegram';
+import { IconTwitter } from '~/components/icons/IconTwitter';
+import { IconMedium } from '~/components/icons/IconMedium';
+import { Message } from 'postcss';
 
 interface Props extends BoxProps {
     token: TokenBase;
@@ -75,19 +73,25 @@ export function TradeTokenDataCard({ token, price, data, dynamicData, ...rest }:
                         </Box>
                     ) : null}
                 </Flex>
-                <Box mt="4">
-                    {data?.description ? (
+                {data?.description ? (
+                    <Box mt="4">
                         <Text
                             noOfLines={showFullText ? undefined : 3}
-                            dangerouslySetInnerHTML={{ __html: data?.description }}
+                            dangerouslySetInnerHTML={{ __html: data.description }}
                         />
-                    ) : null}
-                    <Box mt="1">
-                        <Link color="beets.highlight.alpha.100" textDecoration="underline" onClick={onOpen}>
-                            Read more
-                        </Link>
+                        <Box mt="1">
+                            <Link color="beets.highlight.alpha.100" textDecoration="underline" onClick={onOpen}>
+                                Read more
+                            </Link>
+                        </Box>
                     </Box>
-                </Box>
+                ) : null}
+                <HStack mt="8">
+                    <Globe />
+                    <Feather />
+                    <MessageCircle />
+                    <Mic />
+                </HStack>
             </BeetsBox>
             {data?.description ? (
                 <Modal onClose={onClose} isOpen={isOpen} scrollBehavior="inside">
