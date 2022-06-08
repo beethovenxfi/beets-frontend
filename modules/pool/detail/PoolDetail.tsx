@@ -1,4 +1,4 @@
-import { Box, Container, Flex } from '@chakra-ui/react';
+import { Box, Container, Flex, VStack, HStack } from '@chakra-ui/react';
 import PoolHeader from '~/modules/pool/detail/components/PoolHeader';
 import PoolComposition from '~/modules/pool/detail/components/PoolComposition';
 import { usePool } from '~/modules/pool/lib/usePool';
@@ -12,6 +12,7 @@ import { masterChefService } from '~/lib/services/staking/master-chef.service';
 import { useGetTokens } from '~/lib/global/useToken';
 import { useProvider } from 'wagmi';
 import { PoolDetailTransactions } from '~/modules/pool/detail/components/PoolDetailTransactions';
+import PoolMetrics from './components/PoolMetrics';
 
 function PoolDetail() {
     const { pool } = usePool();
@@ -31,25 +32,28 @@ function PoolDetail() {
 
     return (
         <Container maxW="full">
-            <Flex mb={8}>
-                <Box flex={1}>
-                    <PoolHeader />
-                </Box>
-            </Flex>
-            <Flex mb={12}>
-                <Box flex={2}>
-                    <PoolDetailChart mb={8} />
-                    <PoolComposition pool={pool} />
-                    <PoolDetailTransactions mt={8} />
-                </Box>
-                <Box flex={1} ml={8}>
-                    {hasBpt || isLoading ? <PoolDetailMyBalance mb={8} /> : null}
-                    {(hasBpt && pool.staking) || isLoading ? <PoolDetailMyRewards mb={8} /> : null}
-                    <PoolDetailActions />
-                </Box>
-            </Flex>
+            <PoolHeader />
+            <HStack spacing='3' height="md">
+                <PoolMetrics />
+                <PoolDetailChart />
+            </HStack>
+            <PoolComposition pool={pool} />
+            <PoolDetailTransactions mt={8} />
         </Container>
     );
 }
 
+// <Flex mb={12}>
+// <Box flex={2}>
+
+//     {/* <PoolDetailChart mb={8} /> */}
+//     <PoolComposition pool={pool} />
+//     <PoolDetailTransactions mt={8} />
+// </Box>
+// <Box flex={1} ml={8}>
+//     {hasBpt || isLoading ? <PoolDetailMyBalance mb={8} /> : null}
+//     {(hasBpt && pool.staking) || isLoading ? <PoolDetailMyRewards mb={8} /> : null}
+//     <PoolDetailActions />
+// </Box>
+// </Flex>
 export default PoolDetail;

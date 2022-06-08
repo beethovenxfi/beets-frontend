@@ -20,17 +20,21 @@ import { AprText } from '~/components/apr-tooltip/AprText';
 interface Props {
     data: GqlPoolApr;
     textProps?: TextProps;
+    onlySparkles?: boolean;
 }
 
-function AprTooltip({ data, textProps }: Props) {
+function AprTooltip({ data, textProps, onlySparkles }: Props) {
     const color = 'beets.gray.200';
     const formatApr = (apr: number) => numeral(apr).format('0.00%');
     return (
         <Popover trigger="hover">
             <HStack justify="end" align="center">
-                <Text fontSize="md" fontWeight="semibold" mr={1} {...textProps}>
-                    {formatApr(data.total)}
-                </Text>
+                {
+                    !onlySparkles &&
+                    <Text fontSize="md" fontWeight="semibold" mr={1} {...textProps}>
+                        {formatApr(data.total)}
+                    </Text>
+                }
                 <PopoverTrigger>
                     <a>
                         <StarsIcon />

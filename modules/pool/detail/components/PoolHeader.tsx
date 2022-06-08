@@ -1,4 +1,4 @@
-import { Box, Flex, Heading, Text } from '@chakra-ui/react';
+import { Box, Flex, Heading, Text, HStack, VStack, Badge } from '@chakra-ui/react';
 import numeral from 'numeral';
 import { PoolTokenPill } from '~/components/token/PoolTokenPill';
 import { usePool } from '~/modules/pool/lib/usePool';
@@ -9,66 +9,45 @@ import Image from 'next/image';
 
 function PoolHeader() {
     const { pool, poolTokensWithoutPhantomBpt } = usePool();
-    const statColor = 'beets.green.300';
 
+    const swapFeeType = !pool.owner ? 'Static' : 'Dynamic';
     return (
-        <>
-            <Text textStyle="h1" as="h1" fontWeight="bold">
-                {pool.name}
-            </Text>
-            <Flex mt={4} mb={3}>
-                {poolTokensWithoutPhantomBpt.slice(0, 4).map((token, index) => (
-                    <PoolTokenPill key={index} token={token} />
-                ))}
-            </Flex>
-            {poolTokensWithoutPhantomBpt.length > 4 ? (
-                <Flex mt={4} mb={3}>
-                    {poolTokensWithoutPhantomBpt.slice(4).map((token, index) => (
-                        <PoolTokenPill key={index} token={token} />
-                    ))}
-                </Flex>
-            ) : null}
-            <Flex alignItems="flex-end">
-                <AprTooltip
-                    data={pool.dynamicData.apr}
-                    textProps={{ fontSize: '3xl', fontWeight: 'bold', color: statColor }}
-                />
-                <Text ml={1} mb={1.5} fontWeight="medium" fontSize="lg">
-                    APR
-                </Text>
-                <Text fontSize="3xl" color={statColor} fontWeight="bold" ml={4}>
-                    {numeral(pool.dynamicData.totalLiquidity).format('$0,0')}
-                </Text>
-                <Text ml={1} mb={1.5} fontWeight="medium" fontSize="lg" align="right">
-                    TVL
-                </Text>
-                <Text fontSize="3xl" color={statColor} fontWeight="bold" ml={4}>
-                    {numeral(pool.dynamicData.volume24h).format('$0,0')}
-                </Text>
-                <Text ml={1} mb={1.5} fontWeight="medium" fontSize="lg">
-                    24H VOL
-                </Text>
-            </Flex>
-            <Flex mt={2}>
-                <Text color={statColor} fontSize="lg" fontWeight="bold">
-                    {numeral(pool.dynamicData.swapFee).format('0.0[00]%')}
-                </Text>
-                {!pool.owner ? (
-                    <Text fontSize="lg" fontWeight="medium">
-                        &nbsp;static swap fee
+        <VStack width="full" spacing="8" alignItems="flex-start">
+            <VStack width='full' alignItems='flex-start'>
+                <HStack>
+                    <Text textStyle="h3" as="h3" fontWeight="bold">
+                        {pool.name}
                     </Text>
-                ) : (
-                    <Text fontSize="lg" fontWeight="medium">
-                        &nbsp;dynamic swap fee
-                    </Text>
-                )}
-                {pool.owner === networkConfig.beetsPoolOwnerAddress ? (
-                    <Box ml={1}>
-                        <Image src={PoolOwnerImage} width={24} height={24} />
-                    </Box>
-                ) : null}
-            </Flex>
-        </>
+                    <HStack spacing="2">
+                        {poolTokensWithoutPhantomBpt.map((token, index) => (
+                            <PoolTokenPill key={index} token={token} />
+                        ))}
+                    </HStack>
+                </HStack>
+                <HStack
+                    paddingX="3"
+                    paddingY="2"
+                    bg="whiteAlpha.200"
+                    spacing="2"
+                    fontSize="md"
+                    rounded="full"
+                    color="beets.base.50"
+                    justifyContent="center"
+                    fontWeight="semibold"
+                >
+                    <HStack>
+                        <Flex alignItems="center">
+                            <Image src={PoolOwnerImage} width={24} height={24} alt="Pool Owner Image" />
+                        </Flex>
+                        <HStack spacing="1">
+                            <Text>{numeral(pool.dynamicData.swapFee).format('0.0[00]%')}</Text>
+                            <Text>{swapFeeType} Fee</Text>
+                        </HStack>
+                    </HStack>
+                </HStack>
+            </VStack>
+            <Flex mt={2}>{pool.owner === networkConfig.beetsPoolOwnerAddress ? <Box ml={1}></Box> : null}</Flex>
+        </VStack>
     );
 }
 

@@ -27,11 +27,51 @@ a {
 }
 
 .bg {
-background: radial-gradient(ellipse at top, rgba(18,14,68, 1.0) 10%, transparent 80%),
-        radial-gradient(ellipse at bottom, rgba(18,14,68, 1.0) 10%, transparent 80%);
+    background: radial-gradient(ellipse at top, rgba(18, 14, 68, 1) 10%, transparent 80%),
+        radial-gradient(ellipse at bottom, rgba(18, 14, 68, 1) 10%, transparent 80%);
 }
 
 .rc-pagination {
     list-style: none;
     display: flex;
+}
+
+.apr-stripes {
+    background: linear-gradient(
+        45deg,
+        #01F3AF 25%,
+        #0D936D 25%,
+        #0D936D 50%,
+        #01F3AF 50%,
+        #01F3AF 75%,
+        #0D936D 75%,
+        #0D936D 100%
+    );
+    background-size: 1em 1em;
+    background-repeat: repeat;
+    color: transparent;
+    font-size: 2.5rem;
+    font-weight: 900;
+    background-clip: text;
+
+    animation: move 15s infinite linear;
+    -webkit-animation: move 15s infinite linear;
+}
+
+@-webkit-keyframes move {
+    0% {
+        background-position: 0% 50%;
+    }
+    100% {
+        background-position: 110% 50%;
+    }
+}
+
+@keyframes move {
+    0% {
+        background-position: 0% 50%;
+    }
+    100% {
+        background-position: 110% 50%;
+    }
 }

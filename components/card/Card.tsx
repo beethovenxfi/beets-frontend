@@ -66,7 +66,6 @@ export default function Card({
     );
     return (
         <AnimatedBox
-            {...(boxProps as any)}
             animate={animate}
             initial={initial}
             exit={exit}
@@ -78,6 +77,7 @@ export default function Card({
             borderColor='blackAlpha.400'
             display="flex"
             flexDirection="column"
+            {...(boxProps as any)}
         >
             {title && TitleSection}
             {children}
