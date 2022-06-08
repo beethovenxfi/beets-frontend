@@ -11,6 +11,7 @@ import { useTrade } from '../lib/useTrade';
 import { TokenInputSwapButton } from '~/modules/trade/components/TokenInputSwapButton';
 import { useDebouncedCallback } from 'use-debounce';
 import { oldBnumToFixed } from '~/lib/services/pool/lib/old-big-number';
+import { useTradeUserBalances } from '~/modules/trade/lib/useTradeUserBalances';
 
 function useTradeCard() {
     const {
@@ -132,6 +133,7 @@ function TradeCard() {
     const controls = useAnimation();
     const [showTokenSelect, setShowTokenSelect] = useBoolean();
 
+    const { userBalances } = useTradeUserBalances();
     const {
         sellAmount,
         buyAmount,
@@ -212,7 +214,11 @@ function TradeCard() {
             </Card>
             <AnimatePresence>
                 {showTokenSelect && (
-                    <TokenSelect onTokenSelected={handleTokenSelected} onClose={toggleTokenSelect(tokenSelectKey)} />
+                    <TokenSelect
+                        userBalances={userBalances}
+                        onTokenSelected={handleTokenSelected}
+                        onClose={toggleTokenSelect(tokenSelectKey)}
+                    />
                 )}
             </AnimatePresence>
         </Box>

@@ -556,15 +556,6 @@ export const GetTokenRelativePriceChartData = gql`
         }
     }
 `;
-export const GetTokenPriceChartData = gql`
-    query GetTokenPriceChartData($address: String!, $range: GqlTokenChartDataRange!) {
-        prices: tokenGetPriceChartData(address: $address, range: $range) {
-            id
-            price
-            timestamp
-        }
-    }
-`;
 export const GetSorSwaps = gql`
     query GetSorSwaps(
         $tokenIn: String!

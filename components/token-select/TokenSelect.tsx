@@ -1,59 +1,25 @@
-// @ts-nocheck
-import { Button, ButtonProps } from '@chakra-ui/button';
-import { useBoolean, useMergeRefs } from '@chakra-ui/hooks';
-import { Box, Flex, Heading, HStack, Text, VStack } from '@chakra-ui/layout';
-import { motion } from 'framer-motion';
-import { FormEvent, memo, useCallback, useRef, useState } from 'react';
-import { GqlToken } from '~/apollo/generated/graphql-codegen-generated';
+import { useBoolean } from '@chakra-ui/hooks';
+import { Box, VStack } from '@chakra-ui/layout';
+import { FormEvent, useState } from 'react';
 import { useGetTokens } from '~/lib/global/useToken';
 import Card from '../card/Card';
 import BeetsInput from '../inputs/BeetsInput';
-import TokenAvatar from '../token/TokenAvatar';
-import { useVirtual } from 'react-virtual';
 import useCVirtual from 'react-cool-virtual';
-import { sortBy } from 'lodash';
-import numeral from 'numeral';
+import { orderBy, sortBy } from 'lodash';
+import { TokenRow } from '~/components/token-select/TokenRow';
+import { TokenAmountHumanReadable } from '~/lib/services/token/token-types';
+import { tokenFindTokenAmountForAddress, tokenGetAmountForAddress } from '~/lib/services/token/token-util';
 
 type Props = {
     onClose?: any;
     onTokenSelected: (address: string) => void;
+    userBalances: TokenAmountHumanReadable[];
 };
 
-type TokenRowProps = GqlToken & { index: number };
-
-const TokenRow = memo(function TokenRow({ symbol, address, index, onClick }: TokenRowProps & ButtonProps) {
-    const { priceFor } = useGetTokens();
-    return (
-        <Button
-            animate={{ opacity: 1, transition: { delay: index * 0.01 } }}
-            initial={{ opacity: 0 }}
-            as={motion.button}
-            width="full"
-            height="fit-content"
-            variant="ghost"
-            _hover={{ backgroundColor: 'blackAlpha.400' }}
-            onClick={onClick}
-        >
-            <HStack width="full" paddingY="4" justifyContent="space-between">
-                <HStack>
-                    <TokenAvatar address={address} size="sm" />
-                    <Heading size="md" fontWeight="semibold" color="beets.gray.100">
-                        {symbol}
-                    </Heading>
-                </HStack>
-                <Box marginTop="2px">
-                    <Text color="beets.gray.300">{numeral(priceFor(address)).format('$0,0.00')}</Text>
-                </Box>
-            </HStack>
-        </Button>
-    );
-});
-
-export default function TokenSelect({ onClose, onTokenSelected }: Props) {
-    const { tokens, priceFor } = useGetTokens();
+export default function TokenSelect({ onClose, onTokenSelected, userBalances }: Props) {
+    const { tokens, priceForAmount } = useGetTokens();
     const [areTokensVisible, setAreTokensVisible] = useBoolean();
     const [searchTerm, setSearchTerm] = useState('');
-    const parentRef = useRef();
 
     const handleSearchTermChange = (event: FormEvent<HTMLInputElement>) => setSearchTerm(event.currentTarget.value);
 
@@ -78,7 +44,17 @@ export default function TokenSelect({ onClose, onTokenSelected }: Props) {
           })
         : tokens;
 
-    const filteredTokensByPrice = sortBy(filteredTokens, ['priority', (token) => priceFor(token.address)]).reverse();
+    const filteredTokensByPrice = orderBy(
+        filteredTokens,
+        [
+            (token) => {
+                const userBalance = tokenFindTokenAmountForAddress(token.address, userBalances);
+                return priceForAmount(userBalance);
+            },
+            'priority',
+        ],
+        ['desc', 'desc'],
+    );
 
     const { outerRef, innerRef, items } = useCVirtual({
         itemCount: filteredTokensByPrice.length, // Provide the total number for the list items
@@ -111,6 +87,7 @@ export default function TokenSelect({ onClose, onTokenSelected }: Props) {
                 overflowY="auto"
                 padding="4"
                 flexGrow={1}
+                // @ts-ignore
                 ref={outerRef}
                 css={{
                     '&::-webkit-scrollbar': {
@@ -121,17 +98,30 @@ export default function TokenSelect({ onClose, onTokenSelected }: Props) {
                     },
                 }}
             >
-                <Box width="full" ref={innerRef}>
+                <Box
+                    width="full"
+                    // @ts-ignore
+                    ref={innerRef}
+                >
                     {areTokensVisible &&
-                        items.map(({ index, size }, i) => (
-                            <Box width="full" key={index} height={`${size}px`}>
-                                <TokenRow
-                                    onClick={handleTokenSelected(filteredTokensByPrice[index]?.address)}
-                                    index={i}
-                                    {...filteredTokensByPrice[index]}
-                                />
-                            </Box>
-                        ))}
+                        items.map(({ index, size }, i) => {
+                            const userBalance = tokenFindTokenAmountForAddress(
+                                filteredTokensByPrice[index].address,
+                                userBalances,
+                            );
+
+                            return (
+                                <Box width="full" key={index} height={`${size}px`}>
+                                    <TokenRow
+                                        onClick={handleTokenSelected(filteredTokensByPrice[index]?.address)}
+                                        index={i}
+                                        {...filteredTokensByPrice[index]}
+                                        userBalance={userBalance.amount}
+                                        userBalanceUSD={priceForAmount(userBalance)}
+                                    />
+                                </Box>
+                            );
+                        })}
                 </Box>
             </Box>
             <Box

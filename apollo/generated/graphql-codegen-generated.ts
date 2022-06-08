@@ -2593,16 +2593,6 @@ export type GetTokenRelativePriceChartDataQuery = {
     prices: Array<{ __typename: 'GqlTokenPriceChartDataItem'; id: string; price: string; timestamp: number }>;
 };
 
-export type GetTokenPriceChartDataQueryVariables = Exact<{
-    address: Scalars['String'];
-    range: GqlTokenChartDataRange;
-}>;
-
-export type GetTokenPriceChartDataQuery = {
-    __typename: 'Query';
-    prices: Array<{ __typename: 'GqlTokenPriceChartDataItem'; id: string; price: string; timestamp: number }>;
-};
-
 export type GetSorSwapsQueryVariables = Exact<{
     tokenIn: Scalars['String'];
     tokenOut: Scalars['String'];
@@ -3859,57 +3849,6 @@ export type GetTokenRelativePriceChartDataLazyQueryHookResult = ReturnType<
 export type GetTokenRelativePriceChartDataQueryResult = Apollo.QueryResult<
     GetTokenRelativePriceChartDataQuery,
     GetTokenRelativePriceChartDataQueryVariables
->;
-export const GetTokenPriceChartDataDocument = gql`
-    query GetTokenPriceChartData($address: String!, $range: GqlTokenChartDataRange!) {
-        prices: tokenGetPriceChartData(address: $address, range: $range) {
-            id
-            price
-            timestamp
-        }
-    }
-`;
-
-/**
- * __useGetTokenPriceChartDataQuery__
- *
- * To run a query within a React component, call `useGetTokenPriceChartDataQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetTokenPriceChartDataQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetTokenPriceChartDataQuery({
- *   variables: {
- *      address: // value for 'address'
- *      range: // value for 'range'
- *   },
- * });
- */
-export function useGetTokenPriceChartDataQuery(
-    baseOptions: Apollo.QueryHookOptions<GetTokenPriceChartDataQuery, GetTokenPriceChartDataQueryVariables>,
-) {
-    const options = { ...defaultOptions, ...baseOptions };
-    return Apollo.useQuery<GetTokenPriceChartDataQuery, GetTokenPriceChartDataQueryVariables>(
-        GetTokenPriceChartDataDocument,
-        options,
-    );
-}
-export function useGetTokenPriceChartDataLazyQuery(
-    baseOptions?: Apollo.LazyQueryHookOptions<GetTokenPriceChartDataQuery, GetTokenPriceChartDataQueryVariables>,
-) {
-    const options = { ...defaultOptions, ...baseOptions };
-    return Apollo.useLazyQuery<GetTokenPriceChartDataQuery, GetTokenPriceChartDataQueryVariables>(
-        GetTokenPriceChartDataDocument,
-        options,
-    );
-}
-export type GetTokenPriceChartDataQueryHookResult = ReturnType<typeof useGetTokenPriceChartDataQuery>;
-export type GetTokenPriceChartDataLazyQueryHookResult = ReturnType<typeof useGetTokenPriceChartDataLazyQuery>;
-export type GetTokenPriceChartDataQueryResult = Apollo.QueryResult<
-    GetTokenPriceChartDataQuery,
-    GetTokenPriceChartDataQueryVariables
 >;
 export const GetSorSwapsDocument = gql`
     query GetSorSwaps(

@@ -5,11 +5,3 @@ query GetTokenRelativePriceChartData($tokenIn: String!, $tokenOut: String!, $ran
         timestamp
     }
 }
-
-query GetTokenPriceChartData($address: String!, $range: GqlTokenChartDataRange!) {
-    prices: tokenGetPriceChartData(address: $address, range: $range) {
-        id
-        price
-        timestamp
-    }
-}
