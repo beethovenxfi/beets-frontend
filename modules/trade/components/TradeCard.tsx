@@ -9,21 +9,20 @@ import Card from '~/components/card/Card';
 import BeetsButton from '~/components/button/Button';
 import { useTrade } from '../lib/useTrade';
 import { TokenInputSwapButton } from '~/modules/trade/components/TokenInputSwapButton';
-import { useGetTokens } from '~/lib/global/useToken';
 import { useDebouncedCallback } from 'use-debounce';
 import { oldBnumToFixed } from '~/lib/services/pool/lib/old-big-number';
 
 function useTradeCard() {
     const {
-        tradeState,
+        reactiveTradeState,
         loadSwaps: _loadSwaps,
         loadingSwaps,
-        tradeContext,
         setPreviewVisible,
         clearSwaps,
         setTradeConfig,
+        getLatestState,
+        setTokens,
     } = useTrade();
-    const { tokens, getToken } = useGetTokens();
 
     // refetching the swaps may not always trigger the query loading state,
     // so we use a fallback flag to make sure that we always have some loading
@@ -93,7 +92,7 @@ function useTradeCard() {
     };
 
     const handleTokenSelected = (address: string) => {
-        tradeState[tokenSelectKey] = address;
+        setTokens({ [tokenSelectKey]: address });
 
         if (parseFloat(sellAmount || '0') > 0) {
             setIsFetching.on();
@@ -102,11 +101,9 @@ function useTradeCard() {
     };
 
     const handleTokensSwitched = () => {
-        const sellTokenBeforeSwitch = tradeState.tokenIn;
+        const state = getLatestState();
 
-        tradeState.tokenIn = tradeState.tokenOut;
-        tradeState.tokenOut = sellTokenBeforeSwitch;
-
+        setTokens({ tokenIn: state.tokenOut, tokenOut: state.tokenIn });
         setBuyAmount(sellAmount);
         setSellAmount(buyAmount);
     };
@@ -116,8 +113,8 @@ function useTradeCard() {
     };
 
     return {
-        tokenIn: tradeState.tokenIn,
-        tokenOut: tradeState.tokenOut,
+        tokenIn: reactiveTradeState.tokenIn,
+        tokenOut: reactiveTradeState.tokenOut,
         tokenSelectKey,
         sellAmount,
         buyAmount,

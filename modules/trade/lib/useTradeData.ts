@@ -5,19 +5,19 @@ import { useGetTokens } from '~/lib/global/useToken';
 
 export function useTradeData() {
     const { getToken, priceFor } = useGetTokens();
-    const { tradeState } = useTrade();
-    const tokenIn = getToken(tradeState.tokenIn);
-    const tokenOut = getToken(tradeState.tokenOut);
-    const currentRatio = priceFor(tradeState.tokenOut) / priceFor(tradeState.tokenIn);
+    const { reactiveTradeState } = useTrade();
+    const tokenIn = getToken(reactiveTradeState.tokenIn);
+    const tokenOut = getToken(reactiveTradeState.tokenOut);
+    const currentRatio = priceFor(reactiveTradeState.tokenOut) / priceFor(reactiveTradeState.tokenIn);
 
     const query = useGetTradeSelectedTokenDataQuery({
-        variables: { tokenIn: tradeState.tokenIn, tokenOut: tradeState.tokenOut },
+        variables: { tokenIn: reactiveTradeState.tokenIn, tokenOut: reactiveTradeState.tokenOut },
         notifyOnNetworkStatusChange: true,
     });
 
     useEffect(() => {
-        query.refetch({ tokenIn: tradeState.tokenIn, tokenOut: tradeState.tokenOut });
-    }, [tradeState.tokenIn, tradeState.tokenOut]);
+        query.refetch({ tokenIn: reactiveTradeState.tokenIn, tokenOut: reactiveTradeState.tokenOut });
+    }, [reactiveTradeState.tokenIn, reactiveTradeState.tokenOut]);
 
     return {
         ...query,

@@ -13,19 +13,7 @@ import { TradePageHeader } from '~/modules/trade/components/TradePageHeader';
 
 function Trade() {
     const { priceFor } = useGetTokens();
-    const {
-        tokenInData,
-        tokenOutData,
-        tokenInDynamicData,
-        tokenOutDynamicData,
-        loading,
-        tokenOut,
-        tokenIn,
-        currentRatio,
-    } = useTradeData();
-    const { startingRatio, range } = useTradeChart();
-
-    const percentChange = startingRatio ? (currentRatio - startingRatio) / startingRatio : null;
+    const { tokenInData, tokenOutData, tokenInDynamicData, tokenOutDynamicData, tokenOut, tokenIn } = useTradeData();
 
     return (
         <Grid paddingX="8" width="full" templateColumns="repeat(12, 1fr)" gap="12">

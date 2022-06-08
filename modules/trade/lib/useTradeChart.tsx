@@ -9,11 +9,11 @@ import { useEffect } from 'react';
 const tradeChartRangeVar = makeVar<GqlTokenChartDataRange>('SEVEN_DAY');
 
 export function useTradeChart() {
-    const { tradeState } = useTrade();
+    const { reactiveTradeState } = useTrade();
     const range = useReactiveVar(tradeChartRangeVar);
 
     const query = useGetTokenRelativePriceChartDataQuery({
-        variables: { tokenIn: tradeState.tokenIn, tokenOut: tradeState.tokenOut, range },
+        variables: { tokenIn: reactiveTradeState.tokenIn, tokenOut: reactiveTradeState.tokenOut, range },
         notifyOnNetworkStatusChange: true,
     });
 
@@ -22,8 +22,8 @@ export function useTradeChart() {
     }
 
     useEffect(() => {
-        query.refetch({ tokenIn: tradeState.tokenIn, tokenOut: tradeState.tokenOut, range });
-    }, [range, tradeState.tokenIn, tradeState.tokenOut]);
+        query.refetch({ tokenIn: reactiveTradeState.tokenIn, tokenOut: reactiveTradeState.tokenOut, range });
+    }, [range, reactiveTradeState.tokenIn, reactiveTradeState.tokenOut]);
 
     return {
         ...query,

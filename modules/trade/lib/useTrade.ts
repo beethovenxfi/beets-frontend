@@ -33,7 +33,7 @@ const tradeContextVar = makeVar<TradeContext>({
 
 export function useTrade() {
     // swap related data
-    const tradeState = useReactiveVar(tradeStateVar);
+    const reactiveTradeState = useReactiveVar(tradeStateVar);
     // overarching trade context
 
     const tradeContext = useReactiveVar(tradeContextVar);
@@ -41,20 +41,17 @@ export function useTrade() {
     const [load, { loading, error, data, networkStatus }] = useGetSorSwapsLazyQuery({ fetchPolicy: 'no-cache' });
 
     async function loadSwaps(type: GqlSorSwapType, amount: string) {
-        if (
-            !tradeState.tokenIn ||
-            !tradeState.tokenOut ||
-            (!tradeState.swapType && !type) ||
-            (!tradeState.swapAmount && !amount)
-        ) {
+        const state = getLatestState();
+
+        if (!state.tokenIn || !state.tokenOut || (!state.swapType && !type) || (!state.swapAmount && !amount)) {
             return null;
         }
 
         const { data } = await load({
             fetchPolicy: 'no-cache',
             variables: {
-                tokenIn: tradeState.tokenIn,
-                tokenOut: tradeState.tokenOut,
+                tokenIn: state.tokenIn,
+                tokenOut: state.tokenOut,
                 swapAmount: amount || '0',
                 swapType: type,
                 swapOptions: {
@@ -63,24 +60,21 @@ export function useTrade() {
             },
         });
         const swaps = data?.swaps || null;
-        tradeStateVar({
-            ...tradeState,
-            swapAmount: amount || tradeState.swapAmount || '0',
-            sorResponse: swaps,
-        });
+        tradeStateVar({ ...state, swapAmount: amount || '0', sorResponse: swaps });
+
         return swaps;
     }
 
     function clearSwaps() {
         tradeStateVar({
-            ...tradeState,
+            ...tradeStateVar(),
             sorResponse: null,
         });
     }
 
     function setTradeConfig(type: GqlSorSwapType, amount: string) {
         tradeStateVar({
-            ...tradeState,
+            ...tradeStateVar(),
             swapType: type,
             swapAmount: amount,
         });
@@ -93,16 +87,29 @@ export function useTrade() {
         });
     }
 
+    function setTokens(input: { tokenIn?: string; tokenOut?: string }) {
+        tradeStateVar({
+            ...tradeStateVar(),
+            ...input,
+        });
+    }
+
+    function getLatestState(): TradeState {
+        return tradeStateVar();
+    }
+
     return {
         loadSwaps,
         clearSwaps,
-        tradeState,
-        swaps: tradeState.sorResponse,
+        reactiveTradeState,
+        swaps: reactiveTradeState.sorResponse,
         loadingSwaps: loading,
         error,
         networkStatus,
         tradeContext,
         setTradeConfig,
         setPreviewVisible,
+        setTokens,
+        getLatestState,
     };
 }
