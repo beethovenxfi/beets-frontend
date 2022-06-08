@@ -18,6 +18,7 @@ import {
     TableContainer,
     Collapse,
     Progress,
+    FlexProps,
 } from '@chakra-ui/react';
 import TokenAvatar from '~/components/token/TokenAvatar';
 import { poolIsWeightedLikePool, poolGetTokensWithoutPhantomBpt } from '~/lib/services/pool/pool-util';
@@ -138,8 +139,8 @@ function PoolComposition({ pool }: Props) {
                                         {token.name}
                                     </Text>
                                 </Td>
-                                <Td borderBottom="0" p="2" marginBottom="4" width='300px'>
-                                    <Progress width='80%' rounded="lg" value={parseFloat(token.weight || '0') * 100} />
+                                <Td borderBottom="0" p="2" marginBottom="4" width="300px">
+                                    <Progress width="80%" rounded="lg" value={parseFloat(token.weight || '0') * 100} />
                                 </Td>
                                 <Td borderBottom="0" p="2" marginBottom="4">
                                     <Text fontSize="sm" color="beets.base.50">

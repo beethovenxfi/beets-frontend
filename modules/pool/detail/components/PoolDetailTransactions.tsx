@@ -52,10 +52,7 @@ function PoolTransactionHeader() {
     );
 }
 
-type Props = {
-    swaps: GqlPoolSwap[];
-    investActions: GqlPoolJoinExit[];
-};
+type Props = {};
 
 export function PoolDetailTransactions({ ...rest }: Props & BoxProps) {
     const [skip, setSkip] = useState(0);
@@ -121,6 +118,9 @@ export function PoolDetailTransactions({ ...rest }: Props & BoxProps) {
                         onPageChange={(page) => {
                             // refetch({ ...state, skip: state.first * (page - 1) });
                         }}
+                        currentPage={0}
+                        onPageSizeChange={() => {}}
+                        count={transactions.length}
                         loading={false}
                         fetchingMore={false}
                         // onPageSizeChange={setPageSize}

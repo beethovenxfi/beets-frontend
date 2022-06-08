@@ -1,5 +1,10 @@
 import { useSubmitTransaction, vaultContractConfig } from '~/lib/util/useSubmitTransaction';
-import { GqlPoolUnion, GqlSorGetSwapsResponse, GqlSorSwapType } from '~/apollo/generated/graphql-codegen-generated';
+import {
+    GqlPoolUnion,
+    GqlSorGetSwapsResponse,
+    GqlSorGetSwapsResponseFragment,
+    GqlSorSwapType,
+} from '~/apollo/generated/graphql-codegen-generated';
 import { PoolExitContractCallData } from '~/lib/services/pool/pool-types';
 import { useAccount } from 'wagmi';
 import { tokenAmountsConcatenatedString } from '~/lib/services/token/token-util';
@@ -28,7 +33,7 @@ export function useBatchSwap() {
         tokenOut,
         swapAmount,
         returnAmount,
-    }: GqlSorGetSwapsResponse) {
+    }: GqlSorGetSwapsResponseFragment) {
         //TODO: make sure manually added tokens end up in the tokens array or this will throw
         const tokenInDefinition = getRequiredToken(tokenIn);
         const tokenOutDefinition = getRequiredToken(tokenOut);
