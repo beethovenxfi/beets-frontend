@@ -21,11 +21,11 @@ function Trade() {
                 <TradePageHeader />
 
                 {/*swaps ? <TradeRoutePreview swaps={swaps} /> : null*/}
-                <Box mt="4">
+                <Box mt="8">
                     <TradeChart />
                 </Box>
 
-                <Flex my="4">
+                <Flex mt="12" mb="8">
                     {tokenIn ? (
                         <TradeTokenDataCard
                             token={tokenIn}

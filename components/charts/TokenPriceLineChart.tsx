@@ -6,8 +6,8 @@ import { GqlTokenPriceChartDataItem } from '~/apollo/generated/graphql-codegen-g
 import { TokenBase } from '~/lib/services/token/token-types';
 
 interface Props {
-    tokenIn: TokenBase;
-    tokenOut: TokenBase;
+    tokenIn: TokenBase | null;
+    tokenOut: TokenBase | null;
     prices: GqlTokenPriceChartDataItem[];
 }
 
@@ -64,7 +64,7 @@ export function TokenPriceLineChart({ tokenIn, tokenOut, prices }: Props) {
                 {
                     type: 'line',
                     smooth: true,
-                    name: `${tokenOut.symbol}/${tokenIn.symbol}`,
+                    name: `${tokenOut?.symbol}/${tokenIn?.symbol}`,
                     showSymbol: false,
                     data: prices.map((item) => [item.timestamp * 1000, item.price]),
                     itemStyle: {
