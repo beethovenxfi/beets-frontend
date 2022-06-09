@@ -5,7 +5,5 @@ export function useUserTokenBalances() {
     const { tokens } = useGetTokens();
     const tokenAddresses = tokens.map((token) => token.address);
 
-    //TODO: add functionality for user imported tokens
-
     return useUserBalances(tokenAddresses);
 }

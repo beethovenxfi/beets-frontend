@@ -4,7 +4,6 @@ import {
     useGetTokenRelativePriceChartDataQuery,
 } from '~/apollo/generated/graphql-codegen-generated';
 import { useTrade } from '~/modules/trade/lib/useTrade';
-import { useAsyncEffect } from '~/lib/util/custom-hooks';
 import { useEffect } from 'react';
 
 const tradeChartRangeVar = makeVar<GqlTokenChartDataRange>('SEVEN_DAY');
@@ -34,6 +33,6 @@ export function useTradeChart() {
         ...query,
         range,
         setRange,
-        startingRatio: query.data ? parseFloat(query.data.prices[0].price) : undefined,
+        startingRatio: query.data && query.data.prices[0] ? parseFloat(query.data.prices[0].price) : undefined,
     };
 }

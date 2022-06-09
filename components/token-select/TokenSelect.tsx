@@ -5,24 +5,50 @@ import { useGetTokens } from '~/lib/global/useToken';
 import Card from '../card/Card';
 import BeetsInput from '../inputs/BeetsInput';
 import useCVirtual from 'react-cool-virtual';
-import { orderBy, sortBy } from 'lodash';
+import { orderBy } from 'lodash';
 import { TokenRow } from '~/components/token-select/TokenRow';
-import { TokenAmountHumanReadable } from '~/lib/services/token/token-types';
-import { tokenFindTokenAmountForAddress, tokenGetAmountForAddress } from '~/lib/services/token/token-util';
+import { tokenFindTokenAmountForAddress } from '~/lib/services/token/token-util';
+import { useUserTokenBalances } from '~/lib/global/useUserTokenBalances';
+import { isAddress } from 'ethers/lib/utils';
+import { useUserImportedTokens } from '~/lib/global/useUserImportedTokens';
+import { TokenImportRow } from '~/components/token-select/TokenImportRow';
+import { TokenImportAlertDialog } from '~/components/token-select/TokenImportAlertDialog';
+import { Link, useDisclosure } from '@chakra-ui/react';
 
 type Props = {
     onClose?: any;
     onTokenSelected: (address: string) => void;
-    userBalances: TokenAmountHumanReadable[];
-    userBalancesLoading: boolean;
 };
 
-export default function TokenSelect({ onClose, onTokenSelected, userBalances, userBalancesLoading }: Props) {
-    const { tokens, priceForAmount } = useGetTokens();
+export default function TokenSelect({ onClose, onTokenSelected }: Props) {
+    const importDialogDisclosure = useDisclosure();
+    const { tokens, priceForAmount, getTradableToken } = useGetTokens();
     const [areTokensVisible, setAreTokensVisible] = useBoolean();
     const [searchTerm, setSearchTerm] = useState('');
+    const { userBalances, isLoading: userBalancesLoading } = useUserTokenBalances();
+    const {
+        loadToken,
+        removeToken,
+        removeAllUserImportedTokens,
+        clearTokenImport,
+        isLoading,
+        tokenToImport,
+        addressToLoad,
+        importToken,
+    } = useUserImportedTokens();
 
-    const handleSearchTermChange = (event: FormEvent<HTMLInputElement>) => setSearchTerm(event.currentTarget.value);
+    const handleSearchTermChange = (event: FormEvent<HTMLInputElement>) => {
+        const value = event.currentTarget.value;
+        setSearchTerm(value);
+
+        removeAllUserImportedTokens();
+
+        if (isAddress(value) && !getTradableToken(value)) {
+            loadToken(event.currentTarget.value);
+        } else if (addressToLoad || tokenToImport) {
+            clearTokenImport();
+        }
+    };
 
     const handleTokenSelected = (address: string) => () => {
         setAreTokensVisible.off();
@@ -36,7 +62,9 @@ export default function TokenSelect({ onClose, onTokenSelected, userBalances, us
         setAreTokensVisible.on();
     };
 
-    const filteredTokens = searchTerm
+    const filteredTokens = tokenToImport
+        ? [tokenToImport]
+        : searchTerm
         ? tokens.filter((token) => {
               return (
                   token.address.toLowerCase() === searchTerm.toLowerCase() ||
@@ -106,21 +134,33 @@ export default function TokenSelect({ onClose, onTokenSelected, userBalances, us
                 >
                     {areTokensVisible &&
                         items.map(({ index, size }, i) => {
-                            const userBalance = tokenFindTokenAmountForAddress(
-                                filteredTokensByPrice[index].address,
-                                userBalances,
-                            );
+                            const token = filteredTokensByPrice[index];
+
+                            if (!token) {
+                                return null;
+                            }
+
+                            const userBalance = tokenFindTokenAmountForAddress(token.address, userBalances);
 
                             return (
                                 <Box width="full" key={index} height={`${size}px`}>
-                                    <TokenRow
-                                        onClick={handleTokenSelected(filteredTokensByPrice[index]?.address)}
-                                        index={i}
-                                        {...filteredTokensByPrice[index]}
-                                        userBalance={userBalance.amount}
-                                        userBalanceUSD={priceForAmount(userBalance)}
-                                        loading={userBalancesLoading}
-                                    />
+                                    {token.address === tokenToImport?.address ? (
+                                        <TokenImportRow
+                                            index={i}
+                                            {...tokenToImport}
+                                            onClick={importDialogDisclosure.onOpen}
+                                        />
+                                    ) : (
+                                        <TokenRow
+                                            //this is here because of virtualization of the list.
+                                            onClick={handleTokenSelected(filteredTokensByPrice[index]?.address)}
+                                            index={i}
+                                            {...token}
+                                            userBalance={userBalance.amount}
+                                            userBalanceUSD={priceForAmount(userBalance)}
+                                            loading={userBalancesLoading}
+                                        />
+                                    )}
                                 </Box>
                             );
                         })}
@@ -134,6 +174,14 @@ export default function TokenSelect({ onClose, onTokenSelected, userBalances, us
                 height="80px"
                 width="full"
                 bgGradient="linear(to-t, blackAlpha.300, rgba(0,0,0,0))"
+            />
+            <TokenImportAlertDialog
+                onImport={() => {
+                    importToken();
+                    importDialogDisclosure.onClose();
+                }}
+                onClose={importDialogDisclosure.onClose}
+                isOpen={importDialogDisclosure.isOpen}
             />
         </Card>
     );

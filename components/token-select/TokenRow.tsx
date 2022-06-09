@@ -1,15 +1,14 @@
-import { GqlToken } from '~/apollo/generated/graphql-codegen-generated';
 import { memo } from 'react';
 import { Button, ButtonProps } from '@chakra-ui/button';
 import { motion } from 'framer-motion';
 import { Box, Heading, HStack, Text } from '@chakra-ui/layout';
 import TokenAvatar from '~/components/token/TokenAvatar';
-import { AmountHumanReadable } from '~/lib/services/token/token-types';
+import { AmountHumanReadable, TokenBase } from '~/lib/services/token/token-types';
 import { tokenFormatAmountPrecise } from '~/lib/services/token/token-util';
 import { numberFormatUSDValue } from '~/lib/util/number-formats';
 import { Skeleton } from '@chakra-ui/react';
 
-type TokenRowProps = GqlToken & {
+type TokenRowProps = TokenBase & {
     index: number;
     userBalance: AmountHumanReadable;
     userBalanceUSD: number;

@@ -217,12 +217,7 @@ function TradeCard() {
             </Card>
             <AnimatePresence>
                 {showTokenSelect && (
-                    <TokenSelect
-                        userBalances={userBalances}
-                        userBalancesLoading={userBalancesLoading}
-                        onTokenSelected={handleTokenSelected}
-                        onClose={toggleTokenSelect(tokenSelectKey)}
-                    />
+                    <TokenSelect onTokenSelected={handleTokenSelected} onClose={toggleTokenSelect(tokenSelectKey)} />
                 )}
             </AnimatePresence>
         </Box>

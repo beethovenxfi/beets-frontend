@@ -3,16 +3,23 @@ import { keyBy } from 'lodash';
 import { TokenAmountHumanReadable } from '~/lib/services/token/token-types';
 import numeral from 'numeral';
 import { networkConfig } from '~/lib/config/network-config';
+import { useUserImportedTokens } from '~/lib/global/useUserImportedTokens';
 
 export function useGetTokens() {
     const { data: tokensResponse } = useGetTokensQuery({ fetchPolicy: 'cache-first' });
     const { data: pricesResponse } = useGetTokenPricesQuery({ pollInterval: 30000, fetchPolicy: 'cache-first' });
+    const { userImportedTokens } = useUserImportedTokens();
 
-    const tokens = tokensResponse?.tokens || [];
+    const tokens = [...(tokensResponse?.tokens || []), ...userImportedTokens];
     const prices = keyBy(pricesResponse?.tokenPrices || [], 'address');
 
     function getToken(address: string): GqlToken | null {
         const token = tokens.find((token) => token.address === address.toLowerCase());
+        return token || null;
+    }
+
+    function getTradableToken(address: string): GqlToken | null {
+        const token = tokens.find((token) => token.address === address.toLowerCase() && token.tradable);
         return token || null;
     }
 
@@ -59,6 +66,7 @@ export function useGetTokens() {
         prices,
         priceFor,
         getToken,
+        getTradableToken,
         getRequiredToken,
         formattedPrice,
         priceForAmount,
