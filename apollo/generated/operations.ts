@@ -121,6 +121,41 @@ export const GqlPoolMinimal = gql`
         }
     }
 `;
+export const GqlSorSwapRouteHop = gql`
+    fragment GqlSorSwapRouteHop on GqlSorSwapRouteHop {
+        poolId
+        pool {
+            id
+            name
+            symbol
+            dynamicData {
+                totalLiquidity
+            }
+            allTokens {
+                address
+                isNested
+                isPhantomBpt
+            }
+        }
+        tokenIn
+        tokenOut
+        tokenInAmount
+        tokenOutAmount
+    }
+`;
+export const GqlSorSwapRoute = gql`
+    fragment GqlSorSwapRoute on GqlSorSwapRoute {
+        tokenIn
+        tokenOut
+        tokenInAmount
+        tokenOutAmount
+        share
+        hops {
+            ...GqlSorSwapRouteHop
+        }
+    }
+    ${GqlSorSwapRouteHop}
+`;
 export const GqlSorGetSwapsResponse = gql`
     fragment GqlSorGetSwapsResponse on GqlSorGetSwapsResponse {
         tokenIn
@@ -146,32 +181,27 @@ export const GqlSorGetSwapsResponse = gql`
         tokenInAmount
         tokenOutAmount
         routes {
-            tokenIn
-            tokenOut
-            tokenInAmount
-            tokenOutAmount
-            share
-            hops {
-                poolId
-                pool {
-                    id
-                    name
-                    symbol
-                    dynamicData {
-                        totalLiquidity
-                    }
-                    allTokens {
-                        address
-                        isNested
-                        isPhantomBpt
-                    }
-                }
-                tokenIn
-                tokenOut
-                tokenInAmount
-                tokenOutAmount
-            }
+            ...GqlSorSwapRoute
         }
+    }
+    ${GqlSorSwapRoute}
+`;
+export const GqlTokenDynamicData = gql`
+    fragment GqlTokenDynamicData on GqlTokenDynamicData {
+        id
+        tokenAddress
+        ath
+        atl
+        marketCap
+        fdv
+        priceChange24h
+        priceChangePercent24h
+        priceChangePercent7d
+        priceChangePercent14d
+        priceChangePercent30d
+        high24h
+        low24h
+        updatedAt
     }
 `;
 export const GetPoolBatchSwaps = gql`
@@ -517,14 +547,12 @@ export const GetPoolFilters = gql`
         }
     }
 `;
-export const TokenGetHistoricalPrices = gql`
-    query TokenGetHistoricalPrices($addresses: [String!]!) {
-        historicalPrices: tokenGetHistoricalPrices(addresses: $addresses) {
-            address
-            prices {
-                price
-                timestamp
-            }
+export const GetTokenRelativePriceChartData = gql`
+    query GetTokenRelativePriceChartData($tokenIn: String!, $tokenOut: String!, $range: GqlTokenChartDataRange!) {
+        prices: tokenGetRelativePriceChartData(tokenIn: $tokenIn, tokenOut: $tokenOut, range: $range) {
+            id
+            price
+            timestamp
         }
     }
 `;
@@ -547,4 +575,31 @@ export const GetSorSwaps = gql`
         }
     }
     ${GqlSorGetSwapsResponse}
+`;
+export const GetTradeSelectedTokenData = gql`
+    query GetTradeSelectedTokenData($tokenIn: String!, $tokenOut: String!) {
+        tokenInData: tokenGetTokenData(address: $tokenIn) {
+            id
+            tokenAddress
+            description
+            discordUrl
+            telegramUrl
+            twitterUsername
+        }
+        tokenOutData: tokenGetTokenData(address: $tokenOut) {
+            id
+            tokenAddress
+            description
+            discordUrl
+            telegramUrl
+            twitterUsername
+        }
+        tokenInDynamicData: tokenGetTokenDynamicData(address: $tokenIn) {
+            ...GqlTokenDynamicData
+        }
+        tokenOutDynamicData: tokenGetTokenDynamicData(address: $tokenOut) {
+            ...GqlTokenDynamicData
+        }
+    }
+    ${GqlTokenDynamicData}
 `;

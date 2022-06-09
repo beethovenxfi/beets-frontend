@@ -4,7 +4,7 @@ import { useContractRead } from 'wagmi';
 
 interface UseMultiCallInput {
     abi: any[];
-    calls: { address: string; functionName: string; args: any[] }[];
+    calls: { address: string; functionName: string; args?: any[] }[];
     options?: any;
     requireSuccess?: boolean;
     enabled?: boolean;

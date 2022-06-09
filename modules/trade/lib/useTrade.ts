@@ -8,8 +8,8 @@ import {
 import { networkConfig } from '~/lib/config/network-config';
 
 type TradeState = {
-    tokenIn: string | null;
-    tokenOut: string | null;
+    tokenIn: string;
+    tokenOut: string;
     swapType: GqlSorSwapType;
     swapAmount: string | null;
     sorResponse: GqlSorGetSwapsResponseFragment | null;
@@ -19,7 +19,7 @@ type TradeContext = {
     isPreviewVisible: boolean;
 };
 
-export const tradeStateVar = makeVar<TradeState>({
+const tradeStateVar = makeVar<TradeState>({
     tokenIn: networkConfig.defaultTokenIn,
     tokenOut: networkConfig.defaultTokenOut,
     swapType: 'EXACT_IN',
@@ -27,13 +27,13 @@ export const tradeStateVar = makeVar<TradeState>({
     sorResponse: null,
 });
 
-export const tradeContextVar = makeVar<TradeContext>({
+const tradeContextVar = makeVar<TradeContext>({
     isPreviewVisible: false,
 });
 
 export function useTrade() {
     // swap related data
-    const tradeState = useReactiveVar(tradeStateVar);
+    const reactiveTradeState = useReactiveVar(tradeStateVar);
     // overarching trade context
 
     const tradeContext = useReactiveVar(tradeContextVar);
@@ -41,20 +41,17 @@ export function useTrade() {
     const [load, { loading, error, data, networkStatus }] = useGetSorSwapsLazyQuery({ fetchPolicy: 'no-cache' });
 
     async function loadSwaps(type: GqlSorSwapType, amount: string) {
-        if (
-            !tradeState.tokenIn ||
-            !tradeState.tokenOut ||
-            (!tradeState.swapType && !type) ||
-            (!tradeState.swapAmount && !amount)
-        ) {
+        const state = getLatestState();
+
+        if (!state.tokenIn || !state.tokenOut || (!state.swapType && !type) || (!state.swapAmount && !amount)) {
             return null;
         }
 
         const { data } = await load({
             fetchPolicy: 'no-cache',
             variables: {
-                tokenIn: tradeState.tokenIn,
-                tokenOut: tradeState.tokenOut,
+                tokenIn: state.tokenIn,
+                tokenOut: state.tokenOut,
                 swapAmount: amount || '0',
                 swapType: type,
                 swapOptions: {
@@ -63,29 +60,56 @@ export function useTrade() {
             },
         });
         const swaps = data?.swaps || null;
-        tradeStateVar({
-            ...tradeState,
-            swapAmount: amount || tradeState.swapAmount || '0',
-            sorResponse: swaps,
-        });
+        tradeStateVar({ ...state, swapAmount: amount || '0', sorResponse: swaps });
+
         return swaps;
     }
 
     function clearSwaps() {
         tradeStateVar({
-            ...tradeState,
+            ...tradeStateVar(),
             sorResponse: null,
         });
+    }
+
+    function setTradeConfig(type: GqlSorSwapType, amount: string) {
+        tradeStateVar({
+            ...tradeStateVar(),
+            swapType: type,
+            swapAmount: amount,
+        });
+    }
+
+    function setPreviewVisible(visible: boolean) {
+        tradeContextVar({
+            ...tradeContext,
+            isPreviewVisible: visible,
+        });
+    }
+
+    function setTokens(input: { tokenIn?: string; tokenOut?: string }) {
+        tradeStateVar({
+            ...tradeStateVar(),
+            ...input,
+        });
+    }
+
+    function getLatestState(): TradeState {
+        return tradeStateVar();
     }
 
     return {
         loadSwaps,
         clearSwaps,
-        tradeState,
-        swaps: tradeState.sorResponse,
+        reactiveTradeState,
+        swaps: reactiveTradeState.sorResponse,
         loadingSwaps: loading,
         error,
         networkStatus,
         tradeContext,
+        setTradeConfig,
+        setPreviewVisible,
+        setTokens,
+        getLatestState,
     };
 }

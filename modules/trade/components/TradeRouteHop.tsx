@@ -1,5 +1,5 @@
 import { Box, BoxProps, Flex } from '@chakra-ui/react';
-import { GqlSorSwapRouteHop } from '~/apollo/generated/graphql-codegen-generated';
+import { GqlSorSwapRouteHopFragment } from '~/apollo/generated/graphql-codegen-generated';
 import { BeetsBox } from '~/components/box/BeetsBox';
 import { useGetTokens } from '~/lib/global/useToken';
 import { TokenAmountPill } from '~/components/token/TokenAmountPill';
@@ -14,7 +14,7 @@ import FantomLogo from '~/assets/images/fantom-logo.png';
 import TokenAvatar from '~/components/token/TokenAvatar';
 
 interface Props extends BoxProps {
-    hop: GqlSorSwapRouteHop;
+    hop: GqlSorSwapRouteHopFragment;
 }
 
 export function TradeRouteHop({ hop, ...rest }: Props) {

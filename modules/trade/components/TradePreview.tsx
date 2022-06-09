@@ -12,11 +12,11 @@ type Props = {
     onClose: () => void;
 };
 export default function TradePreview({ onClose }: Props) {
-    const { tradeState } = useTrade();
+    const { reactiveTradeState } = useTrade();
     const { getToken } = useGetTokens();
     const { batchSwap, isSubmitting, isPending } = useBatchSwap();
 
-    const formattedOutAmount = tradeState.sorResponse?.returnAmount || '0';
+    const formattedOutAmount = reactiveTradeState.sorResponse?.returnAmount || '0';
 
     return (
         <Card
@@ -39,10 +39,10 @@ export default function TradePreview({ onClose }: Props) {
                             position="relative"
                         >
                             <HStack>
-                                <TokenAvatar address={tradeState.tokenIn || ''} />
-                                <Text color="beets.gray.100">{getToken(tradeState.tokenIn || '')?.symbol}</Text>
+                                <TokenAvatar address={reactiveTradeState.tokenIn || ''} />
+                                <Text color="beets.gray.100">{getToken(reactiveTradeState.tokenIn || '')?.symbol}</Text>
                             </HStack>
-                            <Text>{tradeState.swapAmount}</Text>
+                            <Text>{reactiveTradeState.swapAmount}</Text>
                             <Box
                                 justifyContent="center"
                                 backgroundColor="beets.gray.600"
@@ -69,8 +69,10 @@ export default function TradePreview({ onClose }: Props) {
                             rounded="lg"
                         >
                             <HStack>
-                                <TokenAvatar address={tradeState.tokenOut || ''} />
-                                <Text color="beets.gray.100">{getToken(tradeState.tokenOut || '')?.symbol}</Text>
+                                <TokenAvatar address={reactiveTradeState.tokenOut || ''} />
+                                <Text color="beets.gray.100">
+                                    {getToken(reactiveTradeState.tokenOut || '')?.symbol}
+                                </Text>
                             </HStack>
                             <Text>{formattedOutAmount}</Text>
                         </HStack>
@@ -80,8 +82,8 @@ export default function TradePreview({ onClose }: Props) {
                     marginTop="4"
                     isSubmitting={isSubmitting}
                     isPending={isPending}
-                    isDisabled={!tradeState.sorResponse}
-                    onClick={() => batchSwap(tradeState.sorResponse!)}
+                    isDisabled={!reactiveTradeState.sorResponse}
+                    onClick={() => batchSwap(reactiveTradeState.sorResponse!)}
                     isFullWidth
                     size="lg"
                 >

@@ -4,7 +4,7 @@ import { forwardRef } from 'react';
 import { Eye } from 'react-feather';
 import { AnimatedBox } from '~/components/animation/chakra';
 
-const BeetsTab = forwardRef((props, ref: any) => {
+const BeetsTab = forwardRef((props: { children: any }, ref: any) => {
     const tabProps = useTab({ ...props, ref });
     const isSelected = !!tabProps['aria-selected'];
     const styles = useMultiStyleConfig('Tabs', tabProps);

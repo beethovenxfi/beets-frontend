@@ -1,18 +1,17 @@
-import { Box } from '@chakra-ui/layout';
 import { EChartsOption } from 'echarts';
 import ReactECharts from 'echarts-for-react';
 import { useMemo } from 'react';
 
-import rawData from './randomdata.json';
+import { GqlTokenPriceChartDataItem } from '~/apollo/generated/graphql-codegen-generated';
+import { TokenBase } from '~/lib/services/token/token-types';
 
-function TradeChart() {
-    const dates = rawData.map(function (item) {
-        return item[0];
-    });
-    const data = rawData.map(function (item) {
-        return [+item[1], +item[2], +item[5], +item[6]];
-    });
+interface Props {
+    tokenIn: TokenBase | null;
+    tokenOut: TokenBase | null;
+    prices: GqlTokenPriceChartDataItem[];
+}
 
+export function TokenPriceLineChart({ tokenIn, tokenOut, prices }: Props) {
     const option = useMemo<EChartsOption>(
         () => ({
             tooltip: {
@@ -36,55 +35,49 @@ function TradeChart() {
                 },
             },
             xAxis: {
-                type: 'category',
-                data: dates,
+                show: false,
+                type: 'time',
                 axisLine: { lineStyle: { color: '#8392A5' } },
+                offset: 0,
+                /*axisLabel: {
+                    fontSize: 14,
+                    formatter: (value: number) => format(value * 1000, 'MMM. dd'),
+                },*/
             },
             yAxis: {
+                show: false,
                 scale: true,
                 axisLine: { lineStyle: { color: '#8392A5' } },
                 splitLine: { show: false },
+                offset: 0,
             },
-            /*grid: {
-                bottom: 80,
-            },*/
             width: '100%',
+            height: '100%',
             grid: {
                 left: 0,
                 right: 0,
-                top: '2%',
+                top: 0,
                 bottom: 0,
-                containLabel: true,
+                containLabel: false,
             },
-            dataZoom: [
-                {
-                    type: 'inside',
-                    start: 40,
-                    end: 60,
-                },
-            ],
             series: [
                 {
-                    type: 'candlestick',
-                    name: 'Day',
-                    data: data,
+                    type: 'line',
+                    smooth: true,
+                    name: `${tokenOut?.symbol}/${tokenIn?.symbol}`,
+                    showSymbol: false,
+                    data: prices.map((item) => [item.timestamp * 1000, item.price]),
                     itemStyle: {
-                        color: '#FD1050',
-                        color0: '#0CF49B',
-                        borderColor: '#FD1050',
-                        borderColor0: '#0CF49B',
+                        color: '#0CF49B',
+                        color0: '#FD1050',
+                        borderColor: '#0CF49B',
+                        borderColor0: '#FD1050',
                     },
                 },
             ],
         }),
-        [],
+        [tokenIn, tokenOut, prices],
     );
 
-    return (
-        <Box height="md">
-            <ReactECharts option={option} style={{ height: '100%' }} />
-        </Box>
-    );
+    return <ReactECharts option={option} style={{ height: '100%' }} />;
 }
-
-export default TradeChart;

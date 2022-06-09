@@ -5,9 +5,9 @@ type Props = {
     label?: string;
 };
 
-export default function BeetsInput({ label, ...inputProps }: InputProps & Props) {
+export default function BeetsInput({ label, children, ...inputProps }: InputProps & Props) {
     return (
-        <Box position="relative" width="full">
+        <Box position="relative" width="full" bg="blackAlpha.600" borderRadius="md">
             {label && (
                 <Heading
                     position="absolute"
@@ -25,21 +25,22 @@ export default function BeetsInput({ label, ...inputProps }: InputProps & Props)
                 width="full"
                 minHeight="20"
                 height="full"
-                bg="blackAlpha.600"
                 fontSize="2xl"
                 color="beets.gray.100"
                 fontWeight="semibold"
                 borderColor="transparent"
                 border="2px"
+                bgColor="transparent"
                 paddingTop="5"
                 _hover={{
                     borderColor: 'beets.gray.200',
                 }}
                 _placeholder={{
-                    color: 'beets.gray.400'
+                    color: 'beets.gray.400',
                 }}
                 {...inputProps}
             />
+            {children}
         </Box>
     );
 }

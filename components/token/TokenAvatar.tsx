@@ -1,15 +1,16 @@
-import { Avatar } from '@chakra-ui/react';
+import { Avatar, useTheme } from '@chakra-ui/react';
 import { AvatarProps } from '@chakra-ui/avatar/src/avatar';
 import { useGetTokens } from '~/lib/global/useToken';
 import Jazzicon, { jsNumberForAddress } from 'react-jazzicon';
+import { AddressZero } from '@ethersproject/constants';
 
 interface Props extends AvatarProps {
-    address: string;
+    address?: string | null;
 }
 
 function TokenAvatar({ address, size, ...rest }: Props) {
     const { getToken } = useGetTokens();
-    const token = getToken(address);
+    const token = address ? getToken(address) : null;
 
     return (
         <Avatar
@@ -17,7 +18,12 @@ function TokenAvatar({ address, size, ...rest }: Props) {
             size={size}
             src={token?.logoURI || undefined}
             bg={'transparent'}
-            icon={<Jazzicon seed={jsNumberForAddress(address)} />}
+            icon={
+                <Jazzicon
+                    seed={jsNumberForAddress(address || AddressZero)}
+                    paperStyles={{ width: '100%', height: '100%' }}
+                />
+            }
         />
     );
 }
