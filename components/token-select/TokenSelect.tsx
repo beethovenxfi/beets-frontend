@@ -14,9 +14,10 @@ type Props = {
     onClose?: any;
     onTokenSelected: (address: string) => void;
     userBalances: TokenAmountHumanReadable[];
+    userBalancesLoading: boolean;
 };
 
-export default function TokenSelect({ onClose, onTokenSelected, userBalances }: Props) {
+export default function TokenSelect({ onClose, onTokenSelected, userBalances, userBalancesLoading }: Props) {
     const { tokens, priceForAmount } = useGetTokens();
     const [areTokensVisible, setAreTokensVisible] = useBoolean();
     const [searchTerm, setSearchTerm] = useState('');
@@ -118,6 +119,7 @@ export default function TokenSelect({ onClose, onTokenSelected, userBalances }: 
                                         {...filteredTokensByPrice[index]}
                                         userBalance={userBalance.amount}
                                         userBalanceUSD={priceForAmount(userBalance)}
+                                        loading={userBalancesLoading}
                                     />
                                 </Box>
                             );

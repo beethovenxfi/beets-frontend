@@ -7,8 +7,14 @@ import TokenAvatar from '~/components/token/TokenAvatar';
 import { AmountHumanReadable } from '~/lib/services/token/token-types';
 import { tokenFormatAmountPrecise } from '~/lib/services/token/token-util';
 import { numberFormatUSDValue } from '~/lib/util/number-formats';
+import { Skeleton } from '@chakra-ui/react';
 
-type TokenRowProps = GqlToken & { index: number; userBalance: AmountHumanReadable; userBalanceUSD: number };
+type TokenRowProps = GqlToken & {
+    index: number;
+    userBalance: AmountHumanReadable;
+    userBalanceUSD: number;
+    loading: boolean;
+};
 
 export const TokenRow = memo(function TokenRow({
     symbol,
@@ -17,6 +23,7 @@ export const TokenRow = memo(function TokenRow({
     onClick,
     userBalance,
     userBalanceUSD,
+    loading,
 }: TokenRowProps & ButtonProps) {
     const hasBalance = parseFloat(userBalance) > 0;
 
@@ -39,12 +46,21 @@ export const TokenRow = memo(function TokenRow({
                     </Heading>
                 </HStack>
                 <Box marginTop="2px" display="flex" flexDirection="column">
-                    <Text color="beets.gray.100" textAlign="right">
-                        {hasBalance ? tokenFormatAmountPrecise(userBalance, 4) : '-'}
-                    </Text>
-                    <Text color="beets.gray.300" textAlign="right">
-                        {userBalanceUSD > 0 ? numberFormatUSDValue(userBalanceUSD) : '-'}
-                    </Text>
+                    {loading ? (
+                        <>
+                            <Skeleton width="12" height="3" mb="1" />
+                            <Skeleton width="12" height="3" />
+                        </>
+                    ) : (
+                        <>
+                            <Text color="beets.gray.100" textAlign="right">
+                                {hasBalance ? tokenFormatAmountPrecise(userBalance, 4) : '-'}
+                            </Text>
+                            <Text color="beets.gray.300" textAlign="right">
+                                {userBalanceUSD > 0 ? numberFormatUSDValue(userBalanceUSD) : '-'}
+                            </Text>
+                        </>
+                    )}
                 </Box>
             </HStack>
         </Button>

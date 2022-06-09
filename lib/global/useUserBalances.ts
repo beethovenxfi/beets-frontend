@@ -1,35 +1,33 @@
 import { useGetTokens } from '~/lib/global/useToken';
 import { useEffect } from 'react';
-import { useAccount } from 'wagmi';
 import { AmountHumanReadable, TokenBase } from '~/lib/services/token/token-types';
 import { useBalances } from '~/lib/util/useBalances';
+import { useUserAccount } from '~/lib/global/useUserAccount';
 
 export function useUserBalances(addresses: string[], additionalTokens?: TokenBase[]) {
     const { tokens: whitelistedTokens } = useGetTokens();
-    const { data: accountData } = useAccount();
+    const { userAddress, isLoading: isUserAccountLoading } = useUserAccount();
+
     const tokens = [...whitelistedTokens, ...(additionalTokens || [])].filter((token) =>
         addresses.includes(token.address),
     );
-    const { data, isLoading, refetch, isError, error, isRefetching } = useBalances(
-        accountData?.address || null,
-        tokens,
-    );
+    const { data, isLoading, refetch, isError, error, isRefetching } = useBalances(userAddress || null, tokens);
 
     function getUserBalance(address: string): AmountHumanReadable {
         return data?.find((balance) => balance.address === address)?.amount || '0';
     }
 
     useEffect(() => {
-        if (accountData?.address) {
+        if (userAddress) {
             refetch().catch();
         }
-    }, [accountData?.address]);
+    }, [userAddress]);
 
     return {
         userBalances: data,
         getUserBalance,
         refetch,
-        isLoading,
+        isLoading: isLoading || isUserAccountLoading,
         isError,
         error,
         isRefetching,

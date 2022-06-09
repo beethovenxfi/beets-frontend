@@ -1,26 +1,57 @@
-import { Flex, Input, Button, Box, Heading, VStack, Text, Link } from '@chakra-ui/react';
-import { FormEvent, ReactNode } from 'react';
+import { Box, Button, Link, Skeleton, Text, VStack } from '@chakra-ui/react';
+import { FormEvent } from 'react';
 import { useGetTokens } from '~/lib/global/useToken';
 import TokenAvatar from '../token/TokenAvatar';
 import BeetsInput from './BeetsInput';
+import { tokenFormatAmountPrecise, tokenGetAmountForAddress } from '~/lib/services/token/token-util';
+import { AmountHumanReadable } from '~/lib/services/token/token-types';
+import { useUserTokenBalances } from '~/lib/global/useUserTokenBalances';
+import { useUserAccount } from '~/lib/global/useUserAccount';
 
 type Props = {
     label?: string;
-    below?: ReactNode;
     toggleTokenSelect?: () => void;
     address: string | null;
-    onChange?: (event: FormEvent<HTMLInputElement>) => void;
+    onChange?: (event: { currentTarget: { value: string } }) => void;
     value?: string | null;
-    children?: any;
+    showBalance?: boolean;
 };
 
-export default function TokenInput({ label, children, toggleTokenSelect, address, onChange, value }: Props) {
+export default function TokenInput({ label, toggleTokenSelect, address, onChange, value, showBalance = true }: Props) {
     const { getToken } = useGetTokens();
+    const { userAddress, isConnected } = useUserAccount();
+    const { userBalances, isLoading } = useUserTokenBalances();
+    const userBalance = address ? tokenGetAmountForAddress(address, userBalances) : '0';
+
     return (
         <VStack width="full" alignItems="flex-start">
             <Box position="relative" width="full">
                 <BeetsInput min={0} value={value || ''} onChange={onChange} placeholder="0" type="number" label={label}>
-                    {children}
+                    {showBalance ? (
+                        <Box>
+                            <Link
+                                onClick={() => {
+                                    if (onChange) {
+                                        onChange({ currentTarget: { value: userBalance } });
+                                    }
+                                }}
+                                cursor="pointer"
+                                _hover={{ textDecoration: 'none' }}
+                            >
+                                <Box fontSize="sm" color="beets.gray.200">
+                                    Balance:{' '}
+                                    {isLoading ? (
+                                        <Skeleton />
+                                    ) : userBalance ? (
+                                        tokenFormatAmountPrecise(userBalance)
+                                    ) : null}
+                                    <Text as="span" color="beets.green.500">
+                                        Max
+                                    </Text>
+                                </Box>
+                            </Link>
+                        </Box>
+                    ) : null}
                 </BeetsInput>
                 <Box position="absolute" zIndex="toast" right=".75rem" top="50%" transform="translateY(-50%)">
                     <Button
