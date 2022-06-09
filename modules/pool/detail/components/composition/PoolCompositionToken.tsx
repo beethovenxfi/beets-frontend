@@ -17,7 +17,6 @@ function PoolCompositionToken({ token, last, nestLevel = 0 }: Props) {
     const balance = parseFloat(token.balance);
     const value = balance * priceFor(token.address);
 
-    // bgColor={'beets.gray.300'}
     return (
         <Flex pb={last ? 0 : 2} w="100%">
             <Box flex={1} minW={200}>

@@ -2,7 +2,7 @@ import { useRouter } from 'next/router';
 import { GetPoolQuery, GetPoolQueryVariables, GqlPoolUnion } from '~/apollo/generated/graphql-codegen-generated';
 import { initializeApolloClient, loadApolloState } from '~/apollo/client';
 import { GetFbeetsRatio, GetPool } from '~/apollo/generated/operations';
-import PoolDetail from '~/modules/pool/detail/PoolDetail';
+import Pool from '~/modules/pool/detail/Pool';
 import { PoolProvider } from '~/modules/pool/components/PoolProvider';
 import { networkConfig } from '~/lib/config/network-config';
 import { Box } from '@chakra-ui/layout';
@@ -11,7 +11,7 @@ interface Props {
     pool: GqlPoolUnion;
 }
 
-const Pool = ({ pool }: Props) => {
+const PoolPage = ({ pool }: Props) => {
     const router = useRouter();
     if (router.isFallback) {
         return <div>Rendering fallback...</div>;
@@ -20,7 +20,7 @@ const Pool = ({ pool }: Props) => {
     return (
         <Box marginX='20'>
             <PoolProvider pool={pool}>
-                <PoolDetail />
+                <Pool />
             </PoolProvider>
         </Box>
     );
@@ -51,4 +51,4 @@ export async function getStaticProps({ params }: { params: { poolId: string } })
     });
 }
 
-export default Pool;
+export default PoolPage;

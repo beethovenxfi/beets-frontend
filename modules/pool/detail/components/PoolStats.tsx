@@ -6,7 +6,7 @@ import numeral from 'numeral';
 import { PoolTokenPill } from '~/components/token/PoolTokenPill';
 import AprTooltip from '~/components/apr-tooltip/AprTooltip';
 
-export default function PoolMetrics() {
+export default function PoolStats() {
     const { pool, poolTokensWithoutPhantomBpt } = usePool();
 
     return (

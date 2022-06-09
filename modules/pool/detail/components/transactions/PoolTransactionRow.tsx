@@ -69,7 +69,7 @@ function PoolTransactionAction(props: PoolTransaction) {
     );
 }
 
-function PoolDetail(props: PoolTransaction) {
+function Pool(props: PoolTransaction) {
     const isInvestAction = [PoolTransactionType.Join, PoolTransactionType.Exit].includes(props.type);
     return (
         <HStack spacing="2" alignItems="center">
@@ -110,13 +110,13 @@ export default function PoolTransactionItem({ transaction, ...rest }: Props) {
         return numeral(transaction.transaction.valueUSD).format('$0,0.000');
     };
     return (
-        <Box {...rest}>
+        <Box bg='rgba(255,255,255,0.05)' {...rest}>
             <Flex px="4" py="4" cursor="pointer" alignItems={'center'} fontSize="lg" _hover={{ bg: '#100C3A' }}>
                 <Box width="200px">
                     <PoolTransactionAction {...transaction} />
                 </Box>
                 <Box flex={1} textAlign="left">
-                    <PoolDetail {...transaction} />
+                    <Pool {...transaction} />
                 </Box>
                 <Box w="200px" textAlign="right">
                     <Text fontSize="md">{getFormattedValue()}</Text>

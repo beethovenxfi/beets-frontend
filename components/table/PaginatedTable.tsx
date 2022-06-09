@@ -4,19 +4,22 @@ import { ChevronLeft, ChevronRight } from 'react-feather';
 import Pagination from 'rc-pagination';
 import { AnimatePresence } from 'framer-motion';
 import { AnimatedBox } from '../animation/chakra';
+import BeetsButton from '../button/Button';
 
 interface Props<T> extends BoxProps {
     items: T[];
-    currentPage: number;
-    pageSize: number;
-    count: number;
+    currentPage?: number;
+    pageSize?: number;
+    count?: number;
     loading: boolean;
     fetchingMore: boolean;
     hidePageSizeChange?: boolean;
-    onPageChange: (page: number) => void;
-    onPageSizeChange: (pageSize: number) => void;
+    onPageChange?: (page: number) => void;
+    onPageSizeChange?: (pageSize: number) => void;
     renderTableHeader: () => React.ReactNode;
     renderTableRow: (item: T, index: number) => React.ReactNode;
+    onFetchMore?: () => void;
+    isInfinite?: boolean;
 }
 
 export function PaginatedTable({
@@ -31,6 +34,8 @@ export function PaginatedTable({
     pageSize,
     renderTableRow,
     renderTableHeader,
+    isInfinite,
+    onFetchMore,
     ...rest
 }: Props<any>) {
     const isLoadingRows = loading && items.length === 0;
@@ -54,66 +59,73 @@ export function PaginatedTable({
                         </AnimatedBox>
                     ))}
             </Box>
-            <Flex>
-                <Flex flex={1} alignItems="center" justifyContent="flex-start">
-                    {hidePageSizeChange ? null : (
-                        <>
-                            <Box>
-                                <Select
-                                    value={pageSize}
-                                    onChange={(event) => {
-                                        onPageSizeChange(parseInt(event.target.value));
-                                    }}
-                                >
-                                    <option value="20">20</option>
-                                    <option value="50">50</option>
-                                    <option value="100">100</option>
-                                </Select>
-                            </Box>
-                            <Text ml={2}>per page</Text>
-                        </>
-                    )}
+            {!isInfinite && (
+                <Flex>
+                    <Flex flex={1} alignItems="center" justifyContent="flex-start">
+                        {hidePageSizeChange ? null : (
+                            <>
+                                <Box>
+                                    <Select
+                                        value={pageSize}
+                                        onChange={(event) => {
+                                            onPageSizeChange && onPageSizeChange(parseInt(event.target.value));
+                                        }}
+                                    >
+                                        <option value="20">20</option>
+                                        <option value="50">50</option>
+                                        <option value="100">100</option>
+                                    </Select>
+                                </Box>
+                                <Text ml={2}>per page</Text>
+                            </>
+                        )}
+                    </Flex>
+                    <Pagination
+                        onChange={onPageChange}
+                        defaultCurrent={1}
+                        total={count}
+                        pageSize={pageSize}
+                        itemRender={(pageNumber, type, element) => {
+                            if (type === 'prev') {
+                                return (
+                                    <IconButton
+                                        aria-label="previous"
+                                        icon={<ChevronLeft />}
+                                        borderTopRightRadius={0}
+                                        borderBottomRightRadius={0}
+                                    />
+                                );
+                            } else if (type === 'next') {
+                                return (
+                                    <IconButton
+                                        aria-label="next"
+                                        icon={<ChevronRight />}
+                                        borderTopLeftRadius={0}
+                                        borderBottomLeftRadius={0}
+                                    />
+                                );
+                            } else if (type === 'jump-prev') {
+                                return <Button borderRadius={0}>...</Button>;
+                            } else if (type === 'jump-next') {
+                                return <Button borderRadius={0}>...</Button>;
+                            }
+
+                            const selected = pageNumber === currentPage;
+
+                            return (
+                                <Button borderRadius={0} color={selected ? 'beets.highlight.alpha.100' : undefined}>
+                                    {element}
+                                </Button>
+                            );
+                        }}
+                    />
                 </Flex>
-                <Pagination
-                    onChange={onPageChange}
-                    defaultCurrent={1}
-                    total={count}
-                    pageSize={pageSize}
-                    itemRender={(pageNumber, type, element) => {
-                        if (type === 'prev') {
-                            return (
-                                <IconButton
-                                    aria-label="previous"
-                                    icon={<ChevronLeft />}
-                                    borderTopRightRadius={0}
-                                    borderBottomRightRadius={0}
-                                />
-                            );
-                        } else if (type === 'next') {
-                            return (
-                                <IconButton
-                                    aria-label="next"
-                                    icon={<ChevronRight />}
-                                    borderTopLeftRadius={0}
-                                    borderBottomLeftRadius={0}
-                                />
-                            );
-                        } else if (type === 'jump-prev') {
-                            return <Button borderRadius={0}>...</Button>;
-                        } else if (type === 'jump-next') {
-                            return <Button borderRadius={0}>...</Button>;
-                        }
-
-                        const selected = pageNumber === currentPage;
-
-                        return (
-                            <Button borderRadius={0} color={selected ? 'beets.highlight.alpha.100' : undefined}>
-                                {element}
-                            </Button>
-                        );
-                    }}
-                />
-            </Flex>
+            )}
+            {isInfinite && (
+                <Flex justifyContent='center' width='full'>
+                    <BeetsButton isLoading={fetchingMore} onClick={onFetchMore}>Load More</BeetsButton>
+                </Flex>
+            )}
         </Box>
     );
 }
