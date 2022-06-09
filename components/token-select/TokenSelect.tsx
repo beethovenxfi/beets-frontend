@@ -41,8 +41,6 @@ export default function TokenSelect({ onClose, onTokenSelected }: Props) {
         const value = event.currentTarget.value;
         setSearchTerm(value);
 
-        removeAllUserImportedTokens();
-
         if (isAddress(value) && !getTradableToken(value)) {
             loadToken(event.currentTarget.value);
         } else if (addressToLoad || tokenToImport) {
