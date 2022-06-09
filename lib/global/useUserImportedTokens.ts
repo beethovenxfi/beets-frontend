@@ -72,9 +72,10 @@ export function useUserImportedTokens() {
     }
 
     function removeToken(address: string) {
-        const importedTokens = userImportedTokensVar();
+        const filtered = userImportedTokensVar().filter((token) => token.address !== address.toLowerCase());
 
-        userImportedTokensVar(importedTokens.filter((token) => token.address === address.toLowerCase()));
+        userImportedTokensVar(filtered);
+        localStorage.setItem(USER_IMPORTED_CACHE_KEY, JSON.stringify(filtered));
     }
 
     function removeAllUserImportedTokens() {

@@ -1,5 +1,3 @@
-import { useBoolean } from '@chakra-ui/hooks';
-import { Box, VStack } from '@chakra-ui/layout';
 import { FormEvent, useState } from 'react';
 import { useGetTokens } from '~/lib/global/useToken';
 import Card from '../card/Card';
@@ -11,9 +9,10 @@ import { tokenFindTokenAmountForAddress } from '~/lib/services/token/token-util'
 import { useUserTokenBalances } from '~/lib/global/useUserTokenBalances';
 import { isAddress } from 'ethers/lib/utils';
 import { useUserImportedTokens } from '~/lib/global/useUserImportedTokens';
-import { TokenImportRow } from '~/components/token-select/TokenImportRow';
+import { TokenActionRow } from '~/components/token-select/TokenActionRow';
 import { TokenImportAlertDialog } from '~/components/token-select/TokenImportAlertDialog';
-import { Link, useDisclosure } from '@chakra-ui/react';
+import { Link, useDisclosure, Text, Box, VStack, useBoolean } from '@chakra-ui/react';
+import { ChevronRight } from 'react-feather';
 
 type Props = {
     onClose?: any;
@@ -26,6 +25,8 @@ export default function TokenSelect({ onClose, onTokenSelected }: Props) {
     const [areTokensVisible, setAreTokensVisible] = useBoolean();
     const [searchTerm, setSearchTerm] = useState('');
     const { userBalances, isLoading: userBalancesLoading } = useUserTokenBalances();
+    const [showImportedTokenList, setShowImportedTokenList] = useState(false);
+
     const {
         loadToken,
         removeToken,
@@ -35,6 +36,7 @@ export default function TokenSelect({ onClose, onTokenSelected }: Props) {
         tokenToImport,
         addressToLoad,
         importToken,
+        userImportedTokens,
     } = useUserImportedTokens();
 
     const handleSearchTermChange = (event: FormEvent<HTMLInputElement>) => {
@@ -62,6 +64,8 @@ export default function TokenSelect({ onClose, onTokenSelected }: Props) {
 
     const filteredTokens = tokenToImport
         ? [tokenToImport]
+        : showImportedTokenList
+        ? userImportedTokens
         : searchTerm
         ? tokens.filter((token) => {
               return (
@@ -91,7 +95,7 @@ export default function TokenSelect({ onClose, onTokenSelected }: Props) {
     return (
         <Card
             shadow="lg"
-            title="Choose a token"
+            title={showImportedTokenList ? 'My token list' : 'Choose a token'}
             width="full"
             animate={{ scale: 1, opacity: 1, transition: { type: 'spring', stiffness: 400, damping: 30 } }}
             initial={{ scale: 0.8, height: '400px', opacity: 0, position: 'absolute' }}
@@ -139,14 +143,20 @@ export default function TokenSelect({ onClose, onTokenSelected }: Props) {
                             }
 
                             const userBalance = tokenFindTokenAmountForAddress(token.address, userBalances);
+                            const isImportToken = token.address === tokenToImport?.address;
 
                             return (
                                 <Box width="full" key={index} height={`${size}px`}>
-                                    {token.address === tokenToImport?.address ? (
-                                        <TokenImportRow
+                                    {isImportToken || showImportedTokenList ? (
+                                        <TokenActionRow
                                             index={i}
-                                            {...tokenToImport}
-                                            onClick={importDialogDisclosure.onOpen}
+                                            {...token}
+                                            onClick={
+                                                isImportToken
+                                                    ? importDialogDisclosure.onOpen
+                                                    : () => removeToken(token.address)
+                                            }
+                                            action={isImportToken ? 'import' : 'remove'}
                                         />
                                     ) : (
                                         <TokenRow
@@ -164,6 +174,14 @@ export default function TokenSelect({ onClose, onTokenSelected }: Props) {
                         })}
                 </Box>
             </Box>
+            {!showImportedTokenList ? (
+                <Box p="4">
+                    <Link display="flex" onClick={() => setShowImportedTokenList(true)}>
+                        <Text>Edit my token list</Text>
+                        <ChevronRight />
+                    </Link>
+                </Box>
+            ) : null}
             <Box
                 position="absolute"
                 borderBottomLeftRadius="lg"
@@ -172,6 +190,7 @@ export default function TokenSelect({ onClose, onTokenSelected }: Props) {
                 height="80px"
                 width="full"
                 bgGradient="linear(to-t, blackAlpha.300, rgba(0,0,0,0))"
+                pointerEvents="none"
             />
             <TokenImportAlertDialog
                 onImport={() => {

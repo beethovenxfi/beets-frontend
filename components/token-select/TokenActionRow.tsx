@@ -8,9 +8,16 @@ import BeetsButton from '~/components/button/Button';
 
 type TokenRowProps = TokenBase & {
     index: number;
+    action: 'import' | 'remove';
 };
 
-export const TokenImportRow = memo(function TokenRow({ symbol, address, index, onClick }: TokenRowProps & ButtonProps) {
+export const TokenActionRow = memo(function TokenRow({
+    symbol,
+    address,
+    index,
+    onClick,
+    action,
+}: TokenRowProps & ButtonProps) {
     return (
         <Button
             animate={{ opacity: 1, transition: { delay: index * 0.01 } }}
@@ -28,7 +35,7 @@ export const TokenImportRow = memo(function TokenRow({ symbol, address, index, o
                     </Heading>
                 </HStack>
                 <Box>
-                    <BeetsButton onClick={onClick}>Add</BeetsButton>
+                    <BeetsButton onClick={onClick}>{action === 'import' ? 'Add' : 'Remove'}</BeetsButton>
                 </Box>
             </HStack>
         </Button>
