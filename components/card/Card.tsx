@@ -18,7 +18,7 @@ type Props = {
     title?: string;
     children?: ReactNode | ReactNode[];
     onClose?: () => void;
-    topRight: ReactNode | ReactNode[];
+    topRight?: ReactNode | ReactNode[];
 };
 
 export default function Card({
