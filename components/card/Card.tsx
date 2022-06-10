@@ -18,6 +18,7 @@ type Props = {
     title?: string;
     children?: ReactNode | ReactNode[];
     onClose?: () => void;
+    topRight: ReactNode | ReactNode[];
 };
 
 export default function Card({
@@ -27,6 +28,7 @@ export default function Card({
     animate,
     initial,
     exit,
+    topRight,
     ...boxProps
 }: Props & BoxProps & MotionProps) {
     const TitleSection = useMemo(
@@ -60,9 +62,10 @@ export default function Card({
                         <X size={24} />
                     </Button>
                 )}
+                {topRight}
             </Flex>
         ),
-        [title, onClose],
+        [title, onClose, topRight],
     );
     return (
         <AnimatedBox
@@ -73,8 +76,8 @@ export default function Card({
             height="full"
             rounded="lg"
             backgroundColor="whiteAlpha.200"
-            border='1px'
-            borderColor='blackAlpha.400'
+            border="1px"
+            borderColor="blackAlpha.400"
             display="flex"
             flexDirection="column"
             {...(boxProps as any)}

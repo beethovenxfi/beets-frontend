@@ -1,4 +1,4 @@
-import { Box, VStack } from '@chakra-ui/react';
+import { Box, Link, VStack } from '@chakra-ui/react';
 import { useBoolean } from '@chakra-ui/hooks';
 import { useEffect, useState } from 'react';
 import { AnimatePresence, useAnimation } from 'framer-motion';
@@ -14,6 +14,8 @@ import { oldBnumToFixed } from '~/lib/services/pool/lib/old-big-number';
 import { useUserTokenBalances } from '~/lib/global/useUserTokenBalances';
 import { TradeCardSwapBreakdown } from '~/modules/trade/components/TradeCardSwapBreakdown';
 import { NetworkStatus } from '@apollo/client';
+import { RefreshCcw, X } from 'react-feather';
+import { Button } from '@chakra-ui/button';
 
 function useTradeCard() {
     const {
@@ -116,9 +118,19 @@ function useTradeCard() {
         setPreviewVisible(true);
     };
 
+    function refetchTrade() {
+        const state = getLatestState();
+
+        if (state.swapAmount) {
+            setIsFetching.on();
+            fetchTrade(state.swapType, state.swapAmount);
+        }
+    }
+
     return {
         tokenIn: reactiveTradeState.tokenIn,
         tokenOut: reactiveTradeState.tokenOut,
+        sorResponse: reactiveTradeState.sorResponse,
         tokenSelectKey,
         sellAmount,
         buyAmount,
@@ -129,6 +141,7 @@ function useTradeCard() {
         handleBuyAmountChanged,
         handleTokensSwitched,
         handleReviewClicked,
+        refetchTrade,
     };
 }
 
@@ -150,6 +163,8 @@ function TradeCard() {
         handleSellAmountChanged,
         handleTokensSwitched,
         handleReviewClicked,
+        refetchTrade,
+        sorResponse,
     } = useTradeCard();
 
     const isReviewDisabled = parseFloat(sellAmount || '0') === 0.0 || parseFloat(buyAmount || '0') === 0.0;
@@ -189,7 +204,31 @@ function TradeCard() {
 
     return (
         <Box width="full" position="relative">
-            <Card animate={controls} title="Swap" position="relative" shadow="lg">
+            <Card
+                animate={controls}
+                title="Swap"
+                position="relative"
+                shadow="lg"
+                topRight={
+                    sorResponse ? (
+                        <Button
+                            position="absolute"
+                            height="fit-content"
+                            borderRadius="full"
+                            variant="ghost"
+                            color="beets.gray.200"
+                            _hover={{ color: 'beets.highlight.alpha.100' }}
+                            _active={{ backgroundColor: 'beets.gray.300' }}
+                            _focus={{ outline: 'none' }}
+                            padding="2"
+                            right=".5rem"
+                            onClick={() => refetchTrade()}
+                        >
+                            <RefreshCcw size={24} />
+                        </Button>
+                    ) : null
+                }
+            >
                 <VStack spacing="2" padding="4" width="full">
                     <Box position="relative" width="full">
                         <TokenInput
