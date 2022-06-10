@@ -1,9 +1,7 @@
 import { Divider, HStack, Text, VStack, Badge } from '@chakra-ui/layout';
 import Card from '~/components/card/Card';
 import { usePool } from '../../lib/usePool';
-import { PoolCompositionChart } from './PoolCompositionChart';
 import numeral from 'numeral';
-import { PoolTokenPill } from '~/components/token/PoolTokenPill';
 import AprTooltip from '~/components/apr-tooltip/AprTooltip';
 
 export default function PoolStats() {
