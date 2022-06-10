@@ -10,8 +10,7 @@ import { tokenFormatAmountPrecise } from '~/lib/services/token/token-util';
 import { TradeCardSwapBreakdown } from '~/modules/trade/components/TradeCardSwapBreakdown';
 import { useSlippage } from '~/lib/global/useSlippage';
 import numeral from 'numeral';
-import { useTradeData } from '~/modules/trade/lib/useTradeData';
-import { Alert, AlertDescription, AlertIcon, AlertTitle, Checkbox, CloseButton, Flex } from '@chakra-ui/react';
+import { Alert, AlertDescription, AlertIcon, AlertTitle, Checkbox, Flex } from '@chakra-ui/react';
 import { oldBnum } from '~/lib/services/pool/lib/old-big-number';
 import { useState } from 'react';
 
