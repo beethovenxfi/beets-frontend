@@ -58,7 +58,7 @@ export function tokenFormatAmount(amount: AmountHumanReadable | number) {
     return numeral(amount).format('0,0');
 }
 
-export function tokenFormatAmountPrecise(amount: AmountHumanReadable | number, precision: 4 | 12 = 12) {
+export function tokenFormatAmountPrecise(amount: AmountHumanReadable | number, precision: 4 | 6 | 12 = 12) {
     const amountNum = typeof amount === 'string' ? parseFloat(amount) : amount;
 
     if (precision === 4) {
@@ -67,6 +67,12 @@ export function tokenFormatAmountPrecise(amount: AmountHumanReadable | number, p
         }
 
         return numeral(amount).format('0,0.[0000]');
+    } else if (precision === 6) {
+        if (amountNum < 0.000001) {
+            return '< 0.000001';
+        }
+
+        return numeral(amount).format('0,0.[000000]');
     }
 
     return numeral(amount).format('0,0.[000000000000]');

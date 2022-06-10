@@ -50,12 +50,12 @@ export function TradeCardSwapBreakdown({}: Props) {
                             </HStack>
                         </Link>
                         <Box>
-                            1 {tokenOut.symbol} = {tokenFormatAmount(swapInfo.effectivePrice)} {tokenIn.symbol}
+                            1 {tokenIn.symbol} = {tokenFormatAmount(swapInfo.effectivePriceReversed)} {tokenOut.symbol}
                         </Box>
                     </Flex>
                     {rateExpanded ? (
                         <Box textAlign="right">
-                            1 {tokenIn.symbol} = {tokenFormatAmount(swapInfo.effectivePriceReversed)} {tokenOut.symbol}
+                            1 {tokenOut.symbol} = {tokenFormatAmount(swapInfo.effectivePrice)} {tokenIn.symbol}
                         </Box>
                     ) : null}
                     <Flex justifyContent="flex-end" color={diff >= 0 ? 'beets.green.500' : undefined}>
