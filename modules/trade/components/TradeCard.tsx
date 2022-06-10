@@ -1,6 +1,6 @@
-import { Box, Link, LinkOverlay, Skeleton, Text, VStack } from '@chakra-ui/react';
+import { Box, VStack } from '@chakra-ui/react';
 import { useBoolean } from '@chakra-ui/hooks';
-import { FormEvent, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { AnimatePresence, useAnimation } from 'framer-motion';
 import TokenSelect from '~/components/token-select/TokenSelect';
 import { GqlSorSwapType } from '~/apollo/generated/graphql-codegen-generated';
@@ -12,11 +12,8 @@ import { TokenInputSwapButton } from '~/modules/trade/components/TokenInputSwapB
 import { useDebouncedCallback } from 'use-debounce';
 import { oldBnumToFixed } from '~/lib/services/pool/lib/old-big-number';
 import { useUserTokenBalances } from '~/lib/global/useUserTokenBalances';
-import { tokenFormatAmountPrecise, tokenGetAmountForAddress } from '~/lib/services/token/token-util';
-import { useAccount } from 'wagmi';
-import { useUserAccount } from '~/lib/global/useUserAccount';
 import { TradeCardSwapBreakdown } from '~/modules/trade/components/TradeCardSwapBreakdown';
-import { useTradeData } from '~/modules/trade/lib/useTradeData';
+import { NetworkStatus } from '@apollo/client';
 
 function useTradeCard() {
     const {
@@ -28,6 +25,7 @@ function useTradeCard() {
         setTradeConfig,
         getLatestState,
         setTokens,
+        networkStatus,
     } = useTrade();
 
     // refetching the swaps may not always trigger the query loading state,
@@ -39,7 +37,7 @@ function useTradeCard() {
     const [sellAmount, setSellAmount] = useState<string>('');
     const [buyAmount, setBuyAmount] = useState<string>('');
 
-    const isLoadingOrFetching = loadingSwaps || isFetching;
+    const isLoadingOrFetching = loadingSwaps || isFetching || networkStatus === NetworkStatus.refetch;
 
     useEffect(() => {
         //TODO: load token in/out from url if passed in

@@ -38,7 +38,11 @@ export function useTrade() {
 
     const tradeContext = useReactiveVar(tradeContextVar);
     // make sure not to cache as this data needs to be always fresh
-    const [load, { loading, error, data, networkStatus }] = useGetSorSwapsLazyQuery({ fetchPolicy: 'no-cache' });
+    const [load, { loading, error, data, networkStatus }] = useGetSorSwapsLazyQuery({
+        fetchPolicy: 'no-cache',
+        pollInterval: 7500,
+        notifyOnNetworkStatusChange: true,
+    });
 
     async function loadSwaps(type: GqlSorSwapType, amount: string) {
         const state = getLatestState();
