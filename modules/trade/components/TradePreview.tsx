@@ -137,8 +137,7 @@ export default function TradePreview({ onClose }: Props) {
                         <Box>
                             <AlertTitle>High price impact</AlertTitle>
                             <AlertDescription>
-                                This trade is significantly moving the market price. Verify that the quote is in line
-                                with the market rate.
+                                This trade is significantly moving the market rate.
                                 <Flex mt="2">
                                     <Checkbox
                                         isChecked={highPiAccepted}
