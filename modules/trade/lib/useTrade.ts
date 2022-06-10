@@ -40,7 +40,7 @@ export function useTrade() {
     // make sure not to cache as this data needs to be always fresh
     const [load, { loading, error, data, networkStatus }] = useGetSorSwapsLazyQuery({
         fetchPolicy: 'no-cache',
-        pollInterval: 7500,
+        pollInterval: 15000,
         notifyOnNetworkStatusChange: true,
     });
 
