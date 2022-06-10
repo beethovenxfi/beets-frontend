@@ -39,6 +39,9 @@ fragment GqlSorGetSwapsResponse on GqlSorGetSwapsResponse {
     swapAmountForSwaps
     tokenInAmount
     tokenOutAmount
+    effectivePrice
+    effectivePriceReversed
+    priceImpact
     routes {
         ...GqlSorSwapRoute
     }

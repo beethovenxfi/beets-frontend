@@ -700,7 +700,10 @@ export interface GqlPoolWithdrawOption {
 
 export interface GqlSorGetSwapsResponse {
     __typename: 'GqlSorGetSwapsResponse';
+    effectivePrice: Scalars['AmountHumanReadable'];
+    effectivePriceReversed: Scalars['AmountHumanReadable'];
     marketSp: Scalars['String'];
+    priceImpact: Scalars['AmountHumanReadable'];
     returnAmount: Scalars['AmountHumanReadable'];
     returnAmountConsideringFees: Scalars['BigDecimal'];
     returnAmountFromSwaps?: Maybe<Scalars['BigDecimal']>;
@@ -2619,6 +2622,9 @@ export type GetSorSwapsQuery = {
         swapAmountForSwaps?: string | null;
         tokenInAmount: string;
         tokenOutAmount: string;
+        effectivePrice: string;
+        effectivePriceReversed: string;
+        priceImpact: string;
         swaps: Array<{
             __typename: 'GqlSorSwap';
             poolId: string;
@@ -2675,6 +2681,9 @@ export type GqlSorGetSwapsResponseFragment = {
     swapAmountForSwaps?: string | null;
     tokenInAmount: string;
     tokenOutAmount: string;
+    effectivePrice: string;
+    effectivePriceReversed: string;
+    priceImpact: string;
     swaps: Array<{
         __typename: 'GqlSorSwap';
         poolId: string;
@@ -3026,6 +3035,9 @@ export const GqlSorGetSwapsResponseFragmentDoc = gql`
         swapAmountForSwaps
         tokenInAmount
         tokenOutAmount
+        effectivePrice
+        effectivePriceReversed
+        priceImpact
         routes {
             ...GqlSorSwapRoute
         }

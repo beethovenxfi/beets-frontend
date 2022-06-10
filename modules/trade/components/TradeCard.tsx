@@ -15,6 +15,8 @@ import { useUserTokenBalances } from '~/lib/global/useUserTokenBalances';
 import { tokenFormatAmountPrecise, tokenGetAmountForAddress } from '~/lib/services/token/token-util';
 import { useAccount } from 'wagmi';
 import { useUserAccount } from '~/lib/global/useUserAccount';
+import { TradeCardSwapBreakdown } from '~/modules/trade/components/TradeCardSwapBreakdown';
+import { useTradeData } from '~/modules/trade/lib/useTradeData';
 
 function useTradeCard() {
     const {
@@ -189,7 +191,7 @@ function TradeCard() {
 
     return (
         <Box width="full" position="relative">
-            <Card animate={controls} title="Swap" position="relative" height="md" shadow="lg">
+            <Card animate={controls} title="Swap" position="relative" shadow="lg">
                 <VStack spacing="2" padding="4" width="full">
                     <Box position="relative" width="full">
                         <TokenInput
@@ -213,6 +215,7 @@ function TradeCard() {
                             Review Swap
                         </BeetsButton>
                     </Box>
+                    <TradeCardSwapBreakdown />
                 </VStack>
             </Card>
             <AnimatePresence>

@@ -663,7 +663,10 @@ type GqlPoolWithdrawOption {
 }
 
 type GqlSorGetSwapsResponse {
+    effectivePrice: AmountHumanReadable!
+    effectivePriceReversed: AmountHumanReadable!
     marketSp: String!
+    priceImpact: AmountHumanReadable!
     returnAmount: AmountHumanReadable!
     returnAmountConsideringFees: BigDecimal!
     returnAmountFromSwaps: BigDecimal

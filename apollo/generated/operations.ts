@@ -180,6 +180,9 @@ export const GqlSorGetSwapsResponse = gql`
         swapAmountForSwaps
         tokenInAmount
         tokenOutAmount
+        effectivePrice
+        effectivePriceReversed
+        priceImpact
         routes {
             ...GqlSorSwapRoute
         }
