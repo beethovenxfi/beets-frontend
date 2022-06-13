@@ -13,9 +13,9 @@ export function NavbarLink({ href, selected, text, ...rest }: Props) {
             <Link href={href}>
                 <Text
                     fontSize="lg"
-                    color={selected ? 'beets.highlight.alpha.100' : 'beets.gray.100'}
+                    color={selected ? 'beets.cyan' : 'gray.100'}
                     cursor="pointer"
-                    _hover={{ color: 'beets.highlight.alpha.100' }}
+                    _hover={{ color: 'beets.cyan' }}
                 >
                     {text}
                 </Text>

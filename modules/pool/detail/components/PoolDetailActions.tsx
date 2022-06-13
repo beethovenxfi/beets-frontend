@@ -20,13 +20,7 @@ export function PoolDetailActions({ ...rest }: Props) {
                     </BeetsButton>
                 </NextLink>
                 <NextLink href={`/pool/${pool.id}/withdraw`} passHref>
-                    <BeetsButton
-                        flex={1}
-                        bg="beets.navy.400"
-                        _active={{ backgroundColor: 'beets.navy.400' }}
-                        color="white"
-                        ml={2}
-                    >
+                    <BeetsButton flex={1} bg="blue.400" _active={{ backgroundColor: 'blue.600' }} color="white" ml={2}>
                         Withdraw
                     </BeetsButton>
                 </NextLink>

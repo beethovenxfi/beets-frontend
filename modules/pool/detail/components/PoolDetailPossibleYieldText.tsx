@@ -18,15 +18,15 @@ export function PoolDetailPossibleYieldText() {
         <>
             <Text fontSize="xl" fontWeight="bold" flex={1} textAlign="center">
                 At{' '}
-                <Text fontSize="3xl" display="inline" color="beets.green.300" as="span">
+                <Text fontSize="3xl" display="inline" color="beets.green" as="span">
                     {` ${numeral(totalApr).format('0.00%')} `}
                 </Text>{' '}
                 APR, you could earn
-                <Text fontSize="3xl" display="inline" color="beets.green.300" as="span">
+                <Text fontSize="3xl" display="inline" color="beets.green" as="span">
                     {` ${numeral(weeklyYield).format('0.00%')} `}
                 </Text>
                 or approx
-                <Text fontSize="3xl" display="inline" color="beets.green.300" as="span">
+                <Text fontSize="3xl" display="inline" color="beets.green" as="span">
                     {isLoading ? ' -- ' : ` ${numeral(weeklyYieldUSD).format('$0,0.00')} `}
                 </Text>
                 in the next week
@@ -34,7 +34,7 @@ export function PoolDetailPossibleYieldText() {
                     <>
                         {' '}
                         if you invest
-                        <Text fontSize="3xl" display="inline" color="beets.green.300" as="span">
+                        <Text fontSize="3xl" display="inline" color="beets.green" as="span">
                             {isLoading ? ' -- ' : ` ${numeral(DEFAULT_AMOUNT).format('$0,0')}`}
                         </Text>{' '}
                         into this pool.
@@ -44,7 +44,7 @@ export function PoolDetailPossibleYieldText() {
                 )}
             </Text>
             <Flex justifyContent="center" mt={4}>
-                <Link textDecoration="underline" color="beets.green.400">
+                <Link textDecoration="underline" color="beets.green">
                     Show detailed breakdown
                 </Link>
             </Flex>

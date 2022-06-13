@@ -38,14 +38,14 @@ export default function TokenInput({ label, toggleTokenSelect, address, onChange
                                 cursor="pointer"
                                 _hover={{ textDecoration: 'none' }}
                             >
-                                <Box fontSize="sm" color="beets.gray.200">
+                                <Box fontSize="sm" color="gray.200">
                                     Balance:{' '}
                                     {isLoading ? (
                                         <Skeleton />
                                     ) : userBalance ? (
                                         tokenFormatAmountPrecise(userBalance)
                                     ) : null}
-                                    <Text as="span" color="beets.green.500">
+                                    <Text as="span" color="beets.green">
                                         Max
                                     </Text>
                                 </Box>
@@ -56,8 +56,8 @@ export default function TokenInput({ label, toggleTokenSelect, address, onChange
                 <Box position="absolute" zIndex="toast" right=".75rem" top="50%" transform="translateY(-50%)">
                     <Button
                         onClick={toggleTokenSelect}
-                        backgroundColor="beets.base.light.alpha.200"
-                        _hover={{ backgroundColor: 'beets.green.400', color: 'beets.gray.500' }}
+                        backgroundColor="beets.lightAlpha.200"
+                        _hover={{ backgroundColor: 'beets.green', color: 'gray.500' }}
                         px="2"
                     >
                         <TokenAvatar size="xs" address={address || ''} />

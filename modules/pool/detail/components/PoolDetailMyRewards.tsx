@@ -55,14 +55,14 @@ export function PoolDetailMyRewards({ ...rest }: Props) {
                                         <Text fontSize="xl" flex={1}>
                                             {token.symbol}
                                         </Text>
-                                        <Text color="beets.gray.200">{token.name}</Text>
+                                        <Text color="gray.200">{token.name}</Text>
                                     </Box>
 
                                     <Box>
                                         <Text fontSize="xl" textAlign="right">
                                             {tokenFormatAmount(pendingReward.amount)}
                                         </Text>
-                                        <Text textAlign="right" color="beets.gray.200">
+                                        <Text textAlign="right" color="gray.200">
                                             {formattedPrice(pendingReward)}
                                         </Text>
                                     </Box>

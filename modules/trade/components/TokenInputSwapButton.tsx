@@ -14,36 +14,36 @@ export function TokenInputSwapButton({ isLoading, onSwap }: Props) {
     return (
         <Button
             justifyContent="center"
-            backgroundColor="beets.gray.600"
+            backgroundColor="gray.600"
             alignItems="center"
             rounded="full"
             border="4px"
             padding="1"
-            borderColor="beets.gray.500"
+            borderColor="gray.500"
             position="absolute"
             bottom="-20px"
             left="calc(50% - 20px)"
             zIndex="2"
             role="group"
-            _hover={{ borderColor: 'beets.green.500', cursor: 'pointer' }}
-            _active={{ backgroundColor: 'beets.gray.600' }}
+            _hover={{ borderColor: 'beets.green', cursor: 'pointer' }}
+            _active={{ backgroundColor: 'gray.600' }}
             onClick={onSwap}
         >
             <AnimatePresence>
                 <Box
                     marginTop="1px"
-                    color="beets.gray.200"
+                    color="gray.200"
                     css={{
                         transform: 'rotate(360deg)',
                         transition: 'transform linear .15s',
                     }}
                     _groupHover={{
-                        color: 'beets.green.500',
+                        color: 'beets.green',
                         cursor: 'pointer',
                         transform: 'rotate(180deg)',
                         transition: 'all linear .15s',
                     }}
-                    _groupFocus={{ color: 'beets.green.500', cursor: 'pointer' }}
+                    _groupFocus={{ color: 'beets.green', cursor: 'pointer' }}
                 >
                     {!isLoading && (
                         <AnimatedBox
@@ -66,7 +66,7 @@ export function TokenInputSwapButton({ isLoading, onSwap }: Props) {
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
                         >
-                            <Spinner color="beets.highlight.alpha.100" size="sm" />
+                            <Spinner color="beets.cyan" size="sm" />
                         </AnimatedBox>
                     )}
                 </Box>

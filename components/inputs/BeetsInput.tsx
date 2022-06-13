@@ -15,7 +15,7 @@ export default function BeetsInput({ label, children, ...inputProps }: InputProp
                     top=".5rem"
                     left=".75rem"
                     fontWeight="normal"
-                    color="beets.gray.200"
+                    color="gray.200"
                     size="xs"
                 >
                     {label}
@@ -26,17 +26,17 @@ export default function BeetsInput({ label, children, ...inputProps }: InputProp
                 minHeight="20"
                 height="full"
                 fontSize="2xl"
-                color="beets.gray.100"
+                color="gray.100"
                 fontWeight="semibold"
                 borderColor="transparent"
                 border="2px"
                 bgColor="transparent"
                 paddingTop="5"
                 _hover={{
-                    borderColor: 'beets.gray.200',
+                    borderColor: 'gray.200',
                 }}
                 _placeholder={{
-                    color: 'beets.gray.400',
+                    color: 'gray.400',
                 }}
                 {...inputProps}
             />

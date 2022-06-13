@@ -14,9 +14,9 @@ const BeetsTab = forwardRef((props: { children: any }, ref: any) => {
             {...tabProps}
             fontSize="sm"
             rounded="full"
-            color={isSelected ? 'beets.gray.100' : 'white'}
-            bgColor={isSelected ? 'beets.base.300' : 'beets.base.light.alpha.200'}
-            _hover={{ bgColor: isSelected ? 'beets.base.light.alpha.100' : 'beets.base.light.alpha.100' }}
+            color={isSelected ? 'gray.100' : 'white'}
+            bgColor={isSelected ? 'beets.base.300' : 'beets.lightAlpha.200'}
+            _hover={{ bgColor: 'beets.light' }}
             _focus={{ outline: 'none !important' }}
         >
             <HStack>

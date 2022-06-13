@@ -36,13 +36,13 @@ export default function Card({
             <Flex
                 justifyContent="space-between"
                 borderBottom="1px"
-                borderColor="beets.gray.400"
+                borderColor="gray.400"
                 width="full"
                 padding="4"
                 alignItems="center"
                 position="relative"
             >
-                <Heading color="beets.gray.100" fontWeight="semibold" size="sm">
+                <Heading color="gray.100" fontWeight="semibold" size="sm">
                     {title}
                 </Heading>
                 {onClose && (
@@ -52,9 +52,9 @@ export default function Card({
                         onClick={onClose}
                         borderRadius="full"
                         variant="ghost"
-                        color="beets.gray.200"
+                        color="gray.200"
                         _hover={{ color: 'beets.red.300' }}
-                        _active={{ backgroundColor: 'beets.gray.300' }}
+                        _active={{ backgroundColor: 'gray.300' }}
                         _focus={{ outline: 'none' }}
                         padding="2"
                         right=".5rem"

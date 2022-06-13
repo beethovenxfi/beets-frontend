@@ -85,13 +85,13 @@ export function VerticalStepsPreviewModal({
                                 <HStack
                                     key={index}
                                     borderWidth={1}
-                                    borderColor="beets.gray.400"
+                                    borderColor="gray.400"
                                     p={3}
                                     borderRadius="md"
                                     mb={4}
                                 >
                                     <Circle
-                                        borderColor={step.complete ? 'beets.green.500' : 'beets.gray.400'}
+                                        borderColor={step.complete ? 'beets.green' : 'gray.400'}
                                         borderWidth={1}
                                         size="36px"
                                     >

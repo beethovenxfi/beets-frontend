@@ -16,11 +16,11 @@ export default function WalletConnectButton() {
                                 return (
                                     <BeetsButton
                                         _hover={{
-                                            backgroundColor: 'beets.green.300',
+                                            backgroundColor: 'beets.green',
                                             transform: 'scale(1.1)',
                                         }}
                                         _active={{
-                                            backgroundColor: 'beets.green.300',
+                                            backgroundColor: 'beets.green',
                                         }}
                                         onClick={openConnectModal}
                                         type="button"
@@ -52,7 +52,7 @@ export default function WalletConnectButton() {
                                         onClick={openAccountModal}
                                         paddingX="none"
                                         padding="3px"
-                                        color="beets.gray.100"
+                                        color="gray.100"
                                         _hover={{
                                             backgroundColor: 'none',
                                             transform: 'scale(1.05)',
@@ -70,7 +70,7 @@ export default function WalletConnectButton() {
                                                 padding="2"
                                                 height="full"
                                                 rounded="10px"
-                                                bg="beets.navy.700"
+                                                bg="blue.700"
                                                 width="full"
                                             >
                                                 <Image src={BeetsSmart} width="24" alt="your-profile" />

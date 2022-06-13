@@ -51,7 +51,7 @@ export function TradeRouteHop({ hop, ...rest }: Props) {
                             rateComparePercent > 0.05
                                 ? 'orange.500'
                                 : rateComparePercent < 0.01
-                                ? 'beets.green.500'
+                                ? 'green.500'
                                 : undefined
                         }
                     >

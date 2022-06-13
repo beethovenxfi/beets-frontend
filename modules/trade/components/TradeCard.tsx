@@ -231,9 +231,9 @@ function TradeCard() {
                             height="fit-content"
                             borderRadius="full"
                             variant="ghost"
-                            color="beets.gray.200"
-                            _hover={{ color: 'beets.highlight.alpha.100' }}
-                            _active={{ backgroundColor: 'beets.gray.300' }}
+                            color="gray.200"
+                            _hover={{ color: 'beets.cyan' }}
+                            _active={{ backgroundColor: 'gray.300' }}
                             _focus={{ outline: 'none' }}
                             padding="2"
                             right=".5rem"

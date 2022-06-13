@@ -33,7 +33,7 @@ export function TradeCardSwapBreakdown({}: Props) {
     return (
         <AnimatePresence>
             <Box w="full" pt="4">
-                <Box borderTopWidth={1} borderTopColor="beets.gray.300" borderTopStyle="dashed" pt="4">
+                <Box borderTopWidth={1} borderTopColor="gray.300" borderTopStyle="dashed" pt="4">
                     <Flex alignItems="center" mb="2">
                         <Box flex="1">Price impact</Box>
                         <Box color={hasNoticablePriceImpact ? 'beets.red.300' : undefined}>
@@ -44,7 +44,7 @@ export function TradeCardSwapBreakdown({}: Props) {
                         <Link flex="1" onClick={toggle} userSelect="none">
                             <HStack spacing="0" position="relative">
                                 <Text>Rate</Text>
-                                <Box pt="1" color="beets.highlight.alpha.100">
+                                <Box pt="1" color="beets.cyan">
                                     {rateExpanded ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
                                 </Box>
                             </HStack>
@@ -58,7 +58,7 @@ export function TradeCardSwapBreakdown({}: Props) {
                             1 {tokenOut.symbol} = {tokenFormatAmount(swapInfo.effectivePrice)} {tokenIn.symbol}
                         </Box>
                     ) : null}
-                    <Flex justifyContent="flex-end" color={diff >= 0 ? 'beets.green.500' : undefined}>
+                    <Flex justifyContent="flex-end" color={diff >= 0 ? 'green.500' : undefined}>
                         <HStack>
                             <Text mr="1">
                                 {diff >= 0

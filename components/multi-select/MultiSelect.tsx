@@ -21,7 +21,7 @@ const chakraStyles: ChakraStylesConfig = {
     }),
     multiValue: (provided, state) => ({
         ...provided,
-        background: 'beets.box.500',
+        background: 'box.500',
     }),
     multiValueLabel: (provided, state) => ({
         ...provided,

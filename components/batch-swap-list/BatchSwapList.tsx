@@ -30,12 +30,7 @@ export function BatchSwapList() {
                 const arb = batchSwap.tokenOutPrice / tokenOutSwapPrice - 1;
 
                 return (
-                    <BeetsBox
-                        key={batchSwap.id}
-                        mb={4}
-                        p={4}
-                        bgColor={arb < 0 ? 'beets.red.alpha.400' : 'beets.green.alpha.400'}
-                    >
+                    <BeetsBox key={batchSwap.id} mb={4} p={4} bgColor={arb < 0 ? 'red.800' : 'green.800'}>
                         <Flex alignItems="center">
                             <Flex flex={1} alignItems="center" justifyContent="space-between">
                                 <TokenAmountPill address={batchSwap.tokenIn} amount={batchSwap.tokenAmountIn} />
@@ -63,7 +58,7 @@ export function BatchSwapList() {
                         <Text mt={4}>token swap price: {numeral(tokenOutSwapPrice).format('$0,0.00[000]')}</Text>
                         <Text>token price (external): {numeral(batchSwap.tokenOutPrice).format('$0,0.00[000]')}</Text>
                         {batchSwap.tokenOutPrice ? (
-                            <Text color={arb < 0 ? 'beets.red.300' : 'beets.green.500'}>
+                            <Text color={arb < 0 ? 'red.500' : 'green.500'}>
                                 rate: {numeral(arb).format('%0.[000]')}
                             </Text>
                         ) : null}

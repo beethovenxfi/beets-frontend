@@ -28,7 +28,7 @@ export function BeetsAccordion({ items, defaultIndex, ...rest }: Props) {
                         {items[0].headline}
                     </Box>
                 </BeetsBoxHeader>
-                <Box px="4" py="6" bg="beets.base.light.alpha.300">
+                <Box px="4" py="6" bg="beets.lightAlpha.300">
                     {items[0].content}
                 </Box>
             </Box>
@@ -56,7 +56,7 @@ export function BeetsAccordion({ items, defaultIndex, ...rest }: Props) {
                                             index === items.length - 1 && !isExpanded ? 'md' : 'none'
                                         }
                                         borderTopWidth={index !== 0 ? 1 : 0}
-                                        borderTopColor="beets.gray.300"
+                                        borderTopColor="gray.300"
                                     >
                                         <Box flex="1" textAlign="left" textStyle="h4">
                                             {index + 1}. {item.headline}
@@ -65,7 +65,7 @@ export function BeetsAccordion({ items, defaultIndex, ...rest }: Props) {
                                     </BeetsBoxHeader>
                                 </AccordionButton>
                                 <AccordionPanel p="0">
-                                    <Box px="4" py="6" bg="beets.base.light.alpha.300">
+                                    <Box px="4" py="6" bg="beets.lightAlpha.300">
                                         {item.content}
                                     </Box>
                                 </AccordionPanel>

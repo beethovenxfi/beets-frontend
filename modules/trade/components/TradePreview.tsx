@@ -78,12 +78,12 @@ export default function TradePreview({ onClose }: Props) {
                         >
                             <HStack>
                                 <TokenAvatar address={tokenIn.address} size="sm" />
-                                <Text color="beets.gray.100">{tokenIn.symbol}</Text>
+                                <Text color="gray.100">{tokenIn.symbol}</Text>
                             </HStack>
                             <Text>{tokenFormatAmountPrecise(swapInfo.tokenInAmount, 12)}</Text>
                             <Box
                                 justifyContent="center"
-                                backgroundColor="beets.gray.600"
+                                backgroundColor="gray.600"
                                 alignItems="center"
                                 rounded="full"
                                 border="4px"
@@ -93,7 +93,7 @@ export default function TradePreview({ onClose }: Props) {
                                 bottom="-20px"
                                 left="calc(50% - 20px)"
                                 zIndex="2"
-                                color="beets.green.alpha.100"
+                                color="beets.green"
                             >
                                 <ChevronsDown size={24} />
                             </Box>
@@ -108,7 +108,7 @@ export default function TradePreview({ onClose }: Props) {
                         >
                             <HStack>
                                 <TokenAvatar address={tokenOut.address} size="sm" />
-                                <Text color="beets.gray.100">{tokenOut.symbol}</Text>
+                                <Text color="gray.100">{tokenOut.symbol}</Text>
                             </HStack>
                             <Text>{tokenFormatAmountPrecise(swapInfo.tokenOutAmount, 12)}</Text>
                         </HStack>

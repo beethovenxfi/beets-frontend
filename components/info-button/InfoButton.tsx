@@ -23,7 +23,7 @@ interface Props {
 }
 
 export function InfoButton({ data, textProps }: Props) {
-    const color = 'beets.gray.200';
+    const color = 'gray.200';
     const formatApr = (apr: number) => numeral(apr).format('0.00%');
 
     return (

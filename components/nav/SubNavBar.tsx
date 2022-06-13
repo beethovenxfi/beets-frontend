@@ -43,13 +43,7 @@ export function SubNavBar() {
 
                     <PopoverContent w="fit-content" bg="black">
                         <BeetsBox bg="beets.base.900">
-                            <Box
-                                px="4"
-                                py="2"
-                                fontWeight="bold"
-                                borderBottomWidth={1}
-                                borderBottomColor="beets.gray.400"
-                            >
+                            <Box px="4" py="2" fontWeight="bold" borderBottomWidth={1} borderBottomColor="gray.400">
                                 Select a network
                             </Box>
                             <Box>
@@ -77,15 +71,15 @@ export function SubNavBar() {
                 </Popover>
 
                 <HStack mr={5}>
-                    <Text color="beets.gray.200">TVL:</Text>
+                    <Text color="gray.200">TVL:</Text>
                     <Text fontWeight="semibold">{numeral(protocolData?.totalLiquidity || '0').format('$0.00a')}</Text>
                 </HStack>
                 <HStack mr={5}>
-                    <Text color="beets.gray.200">Volume (24h):</Text>
+                    <Text color="gray.200">Volume (24h):</Text>
                     <Text fontWeight="semibold">{numeral(protocolData?.swapVolume24h || '0').format('$0.00a')}</Text>
                 </HStack>
                 <HStack mr={6}>
-                    <Text color="beets.gray.200">Fees (24h):</Text>
+                    <Text color="gray.200">Fees (24h):</Text>
                     <Text fontWeight="semibold">{numeral(protocolData?.swapFee24h || '0').format('$0.00a')}</Text>
                 </HStack>
                 <HStack>

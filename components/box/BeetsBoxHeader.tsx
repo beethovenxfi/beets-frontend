@@ -8,7 +8,7 @@ export function BeetsBoxHeader(props: BoxProps) {
             borderTopLeftRadius="md"
             borderTopRightRadius="md"
             alignItems={'center'}
-            bgColor="beets.base.light.alpha.200"
+            bgColor="beets.lightAlpha.200"
             {...props}
         />
     );

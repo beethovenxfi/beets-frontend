@@ -24,17 +24,16 @@ interface Props {
 }
 
 function AprTooltip({ data, textProps, onlySparkles }: Props) {
-    const color = 'beets.gray.200';
+    const color = 'gray.200';
     const formatApr = (apr: number) => numeral(apr).format('0.00%');
     return (
         <Popover trigger="hover">
             <HStack justify="end" align="center">
-                {
-                    !onlySparkles &&
+                {!onlySparkles && (
                     <Text fontSize="md" fontWeight="semibold" mr={1} {...textProps}>
                         {formatApr(data.total)}
                     </Text>
-                }
+                )}
                 <PopoverTrigger>
                     <a>
                         <StarsIcon />

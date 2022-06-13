@@ -30,10 +30,10 @@ function PoolCompositionToken({ token, last, nestLevel = 0 }: Props) {
                 </Link>
             </Box>
             {token.weight ? <Box mr={4}>{numeral(token.weight).format('%')}</Box> : <Spacer />}
-            <Box w={125} textAlign="end" mr={4} color={nestLevel > 0 ? 'beets.gray.200' : undefined}>
+            <Box w={125} textAlign="end" mr={4} color={nestLevel > 0 ? 'gray.200' : undefined}>
                 {numeral(balance).format(balance < 1000 ? '0.[0000]' : '0,0')}
             </Box>
-            <Box w={125} textAlign="end" color={nestLevel > 0 ? 'beets.gray.200' : undefined}>
+            <Box w={125} textAlign="end" color={nestLevel > 0 ? 'gray.200' : undefined}>
                 {numeral(value).format(value > 100_000 ? '$0,0' : '$0,0.[00]')}
             </Box>
         </Flex>

@@ -113,7 +113,7 @@ export function PaginatedTable({
                             const selected = pageNumber === currentPage;
 
                             return (
-                                <Button borderRadius={0} color={selected ? 'beets.highlight.alpha.100' : undefined}>
+                                <Button borderRadius={0} color={selected ? 'beets.cyan' : undefined}>
                                     {element}
                                 </Button>
                             );
@@ -122,8 +122,10 @@ export function PaginatedTable({
                 </Flex>
             )}
             {isInfinite && (
-                <Flex justifyContent='center' width='full'>
-                    <BeetsButton isLoading={fetchingMore} onClick={onFetchMore}>Load More</BeetsButton>
+                <Flex justifyContent="center" width="full">
+                    <BeetsButton isLoading={fetchingMore} onClick={onFetchMore}>
+                        Load More
+                    </BeetsButton>
                 </Flex>
             )}
         </Box>

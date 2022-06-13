@@ -58,9 +58,7 @@ export function TradeTokenDataCard({ token, price, data, dynamicData, ...rest }:
                             {dynamicData ? (
                                 <Flex justifyContent="flex-end" alignItems="center">
                                     <Text
-                                        color={
-                                            dynamicData.priceChangePercent24h < 0 ? 'beets.red.300' : 'beets.green.500'
-                                        }
+                                        color={dynamicData.priceChangePercent24h < 0 ? 'red.500' : 'green.500'}
                                         fontSize="sm"
                                     >
                                         {numeral(dynamicData.priceChangePercent24h / 100).format('+0.[0]%')}
@@ -80,7 +78,7 @@ export function TradeTokenDataCard({ token, price, data, dynamicData, ...rest }:
                             dangerouslySetInnerHTML={{ __html: data.description }}
                         />
                         <Box mt="1">
-                            <Link color="beets.highlight.alpha.100" textDecoration="underline" onClick={onOpen}>
+                            <Link color="beets.cyan" textDecoration="underline" onClick={onOpen}>
                                 Read more
                             </Link>
                         </Box>

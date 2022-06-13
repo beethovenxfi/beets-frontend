@@ -50,13 +50,13 @@ function PoolTransactionAction(props: PoolTransaction) {
 
     const getColor = () => {
         if (props.type === PoolTransactionType.Join) {
-            return 'beets.green.400';
+            return 'beets.green';
         }
         if (props.type === PoolTransactionType.Exit) {
-            return 'beets.red.300';
+            return 'beets.red';
         }
         if (props.type === PoolTransactionType.Swap) {
-            return 'beets.green.400';
+            return 'beets.green';
         }
     };
     return (
@@ -110,7 +110,7 @@ export default function PoolTransactionItem({ transaction, ...rest }: Props) {
         return numeral(transaction.transaction.valueUSD).format('$0,0.000');
     };
     return (
-        <Box bg='rgba(255,255,255,0.05)' {...rest}>
+        <Box bg="rgba(255,255,255,0.05)" {...rest}>
             <Flex px="4" py="4" cursor="pointer" alignItems={'center'} fontSize="lg" _hover={{ bg: '#100C3A' }}>
                 <Box width="200px">
                     <PoolTransactionAction {...transaction} />
@@ -122,7 +122,7 @@ export default function PoolTransactionItem({ transaction, ...rest }: Props) {
                     <Text fontSize="md">{getFormattedValue()}</Text>
                 </Box>
                 <Box w="200px" textAlign="right">
-                    <HStack width='full' justifyContent='flex-end'>
+                    <HStack width="full" justifyContent="flex-end">
                         <Text fontSize="md">
                             {formatDistanceToNow(new Date(transaction.transaction.timestamp * 1000), {
                                 addSuffix: true,

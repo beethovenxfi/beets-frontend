@@ -10,7 +10,7 @@ interface Props extends ButtonProps {
 export default function PoolListSortLink({ title, orderDirection, ...rest }: Props) {
     return (
         <Button
-            _hover={{ backgroundColor: 'transparent', color: 'beets.highlight.alpha.100' }}
+            _hover={{ backgroundColor: 'transparent', color: 'beets.cyan' }}
             _focus={{ outline: 'none' }}
             _active={{ backgroundColor: 'transparent' }}
             padding="0"

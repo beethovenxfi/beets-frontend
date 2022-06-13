@@ -6,7 +6,7 @@ type Props = {
     color?: string;
 };
 
-export default function AnimatedChevrons({ delay = 0, color = 'beets.green.400' }: Props) {
+export default function AnimatedChevrons({ delay = 0, color = 'beets.green' }: Props) {
     return (
         <Box color={color}>
             <motion.svg

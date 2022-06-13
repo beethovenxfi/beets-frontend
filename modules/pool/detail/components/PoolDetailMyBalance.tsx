@@ -42,7 +42,7 @@ export function PoolDetailMyBalance({ ...rest }: Props) {
                                     {token.weight ? `${numeral(token.weight).format('%')} ` : null}
                                     {token.symbol}
                                 </Text>
-                                <Text color="beets.gray.200">{token.name}</Text>
+                                <Text color="gray.200">{token.name}</Text>
                             </Box>
 
                             <Box>
@@ -56,7 +56,7 @@ export function PoolDetailMyBalance({ ...rest }: Props) {
                                 {isLoading ? (
                                     <Skeleton height="16px" width="20" />
                                 ) : (
-                                    <Text textAlign="right" color="beets.gray.200">
+                                    <Text textAlign="right" color="gray.200">
                                         {formattedPrice({ address: token.address, amount })}
                                     </Text>
                                 )}
@@ -67,12 +67,12 @@ export function PoolDetailMyBalance({ ...rest }: Props) {
             </Box>
             {/*<Box p={4}>
                 {pool.staking ? (
-                    <Text color="beets.gray.200">
+                    <Text color="gray.200">
                         You have {isLoading ? '-' : tokenFormatAmount(userStakedBptBalance || '0')} BPT staked in the
                         farm and {isLoading ? '-' : tokenFormatAmount(userWalletBptBalance || '0')} BPT in your wallet.
                     </Text>
                 ) : (
-                    <Text color="beets.gray.200">
+                    <Text color="gray.200">
                         You have {isLoading ? '-' : tokenFormatAmount(userWalletBptBalance || '0')} BPT in your wallet.
                     </Text>
                 )}

@@ -26,7 +26,7 @@ export function TradePageHeader() {
             </Text>
             {percentChange !== null ? (
                 <Text>
-                    <Text as="span" color={percentChange < 0 ? 'beets.red.300' : 'beets.green.500'}>
+                    <Text as="span" color={percentChange < 0 ? 'beets.red' : 'beets.green'}>
                         {numeral(percentChange).format('+0.[00]%')}
                     </Text>{' '}
                     in the past {range === 'SEVEN_DAY' ? 'week' : 'month'}

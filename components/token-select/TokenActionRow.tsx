@@ -30,7 +30,7 @@ export const TokenActionRow = memo(function TokenRow({
             <HStack width="full" paddingY="4" justifyContent="space-between">
                 <HStack>
                     <TokenAvatar address={address} size="sm" />
-                    <Heading size="md" fontWeight="semibold" color="beets.gray.100">
+                    <Heading size="md" fontWeight="semibold" color="gray.100">
                         {symbol}
                     </Heading>
                 </HStack>

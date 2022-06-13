@@ -41,7 +41,7 @@ export function TradeChart() {
                     <Link
                         mr="2"
                         userSelect="none"
-                        color={!sevenDaySelected ? 'beets.gray.200' : undefined}
+                        color={!sevenDaySelected ? 'gray.200' : undefined}
                         textDecoration={sevenDaySelected ? 'underline' : undefined}
                         fontWeight="bold"
                         onClick={() => {
@@ -54,7 +54,7 @@ export function TradeChart() {
                     </Link>
                     <Link
                         userSelect="none"
-                        color={!thirtyDaySelected ? 'beets.gray.200' : undefined}
+                        color={!thirtyDaySelected ? 'gray.200' : undefined}
                         textDecoration={thirtyDaySelected ? 'underline' : undefined}
                         fontWeight="bold"
                         onClick={() => {

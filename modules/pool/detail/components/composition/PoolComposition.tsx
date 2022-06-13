@@ -35,7 +35,7 @@ interface BreakDownProps extends FlexProps {
 }
 
 function BreakDown(props: BreakDownProps) {
-    const bgColor = 'beets.gray.200';
+    const bgColor = 'gray.200';
     return (
         <Collapse
             in={props.show}

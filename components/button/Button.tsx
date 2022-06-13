@@ -9,16 +9,15 @@ type Props = {
 export default function BeetsButton({ children, ...buttonOptions }: Props & ButtonOptions & ButtonProps) {
     return (
         <ChakraButton
-            bg="beets.green.400"
-            color="beets.gray.500"
- 
-            _active={{ backgroundColor: 'beets.green.400' }}
+            bg="beets.green"
+            color="gray.500"
+            _active={{ backgroundColor: 'beets.green' }}
             _focus={{ outline: 'none' }}
-            rounded='xl'
+            rounded="xl"
             {...buttonOptions}
             _hover={{
                 transform: 'scale(1.02)',
-                ...buttonOptions._hover
+                ...buttonOptions._hover,
             }}
         >
             {children}
