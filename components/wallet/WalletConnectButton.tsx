@@ -1,11 +1,14 @@
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import BeetsButton from '../button/Button';
-import { Box, HStack, Text } from '@chakra-ui/layout';
+import { Box, HStack, Text, Spinner, Button } from '@chakra-ui/react';
 import Image from 'next/image';
-import { ChevronDown } from 'react-feather';
 import BeetsSmart from '~/assets/icons/beetx-smarts.svg';
+import { useReactiveVar } from '@apollo/client';
+import { txPendingVar } from '~/lib/util/useSubmitTransaction';
 
 export default function WalletConnectButton() {
+    const txPending = useReactiveVar(txPendingVar);
+
     return (
         <ConnectButton.Custom>
             {({ account, chain, openAccountModal, openChainModal, openConnectModal, mounted }) => {
@@ -46,8 +49,7 @@ export default function WalletConnectButton() {
                             return (
                                 <HStack>
                                     <BeetsButton
-                                        bg="transparent"
-                                        rounded="xl"
+                                        rounded="md"
                                         fontSize="md"
                                         onClick={openAccountModal}
                                         paddingX="none"
@@ -60,6 +62,7 @@ export default function WalletConnectButton() {
                                         _active={{
                                             backgroundColor: 'none',
                                         }}
+                                        bg="beets.lightAlpha.200"
                                     >
                                         <HStack width="full" height="full" spacing="1">
                                             {/* {account.displayBalance ? ` (${account.displayBalance})` : ''} */}
@@ -67,15 +70,17 @@ export default function WalletConnectButton() {
                                             <HStack
                                                 justifyContent="center"
                                                 alignItems="center"
-                                                padding="2"
-                                                height="full"
+                                                px="2"
+                                                height="40px"
                                                 rounded="10px"
-                                                bg="blue.700"
                                                 width="full"
                                             >
-                                                <Image src={BeetsSmart} width="24" alt="your-profile" />
+                                                {txPending ? (
+                                                    <Spinner color="beets.green" />
+                                                ) : (
+                                                    <Image src={BeetsSmart} width="24" alt="your-profile" />
+                                                )}
                                                 <Text>{account.displayName}</Text>
-                                                <ChevronDown />
                                             </HStack>
                                         </HStack>
                                     </BeetsButton>

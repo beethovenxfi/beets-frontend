@@ -9,6 +9,8 @@ import { Vault__factory } from '@balancer-labs/typechain';
 import batchRelayerAbi from '~/lib/abi/BatchRelayer.json';
 import { UseWaitForTransactionConfig } from 'wagmi/dist/declarations/src/hooks/transactions/useWaitForTransaction';
 import { useRef } from 'react';
+import { useAddRecentTransaction } from '@rainbow-me/rainbowkit';
+import { makeVar } from '@apollo/client';
 
 interface Props {
     contractConfig: Omit<WriteContractArgs, 'signerOrProvider'>;
@@ -28,11 +30,14 @@ export const batchRelayerContractConfig = {
     contractInterface: batchRelayerAbi,
 };
 
+export const txPendingVar = makeVar(false);
+
 export function useSubmitTransaction({ contractConfig, functionName, writeConfig, toastType, waitForConfig }: Props) {
     const signer = useSigner();
     const toast = useToast();
     const pendingToastIdRef = useRef<ToastId | undefined>();
     const toastText = useRef<string>('');
+    const addRecentTransaction = useAddRecentTransaction();
 
     const contractWrite = useContractWrite(
         {
@@ -48,6 +53,14 @@ export function useSubmitTransaction({ contractConfig, functionName, writeConfig
                     render: () => <TransactionStatusToast type={toastType} status="PENDING" text={toastText.current} />,
                     duration: null,
                 });
+
+                //TODO: need a better message here
+                addRecentTransaction({
+                    hash: data.hash,
+                    description: toastText.current,
+                });
+
+                txPendingVar(true);
 
                 if (writeConfig?.onSuccess) {
                     return writeConfig.onSuccess(data, variables, context);
@@ -65,6 +78,7 @@ export function useSubmitTransaction({ contractConfig, functionName, writeConfig
                 toast.close(pendingToastIdRef.current);
             }
 
+            txPendingVar(false);
             toast({
                 position: 'bottom-left',
                 render: () => (
