@@ -16,7 +16,7 @@ export function NavbarAdditionalLinksMenu() {
                     ...
                 </Box>
             </MenuButton>
-            <MenuList>
+            <MenuList bgColor="beets.base.800" borderColor="gray.400" shadow="lg">
                 {networkConfig.additionalLinks.map((link, index) => (
                     <MenuItem
                         as="a"
