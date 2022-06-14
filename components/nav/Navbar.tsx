@@ -7,6 +7,7 @@ import { NavbarLink } from '~/components/nav/NavbarLink';
 import { useRouter } from 'next/router';
 import { MotionValue, useTransform, motion } from 'framer-motion';
 import { NavbarAdditionalLinksMenu } from '~/components/nav/NavbarAdditionalLinksMenu';
+import { useEffect, useState } from 'react';
 
 interface Props {
     scrollY: MotionValue<number>;
@@ -15,9 +16,15 @@ interface Props {
 function Navbar({ scrollY }: Props) {
     const router = useRouter();
     const opacity = useTransform(scrollY, [0, 32], [0, 1]);
-    const scale = useTransform(scrollY, [0, 32], [1, 0.8]);
-    const x = useTransform(scrollY, [0, 32], [0, -12]);
-    const linksX = useTransform(scrollY, [0, 32], [0, -34]);
+    const [minimized, setMinimized] = useState(false);
+
+    scrollY.onChange((latest) => {
+        if (latest > 16 && !minimized) {
+            setMinimized(true);
+        } else if (latest <= 16 && minimized) {
+            setMinimized(false);
+        }
+    });
 
     return (
         <Box width="full" position="sticky" top="0" zIndex="10000">
@@ -27,14 +34,28 @@ function Navbar({ scrollY }: Props) {
                         <Box width="full" height="full" bg="beets.base.800" shadow="lg" />
                     </motion.div>
                     <Flex alignItems="center" mr={8}>
-                        <motion.div style={{ scale, display: 'flex', alignItems: 'center', x }}>
+                        <motion.div
+                            animate={{ x: minimized ? -12 : 0, scale: minimized ? 0.8 : 1 }}
+                            style={{ display: 'flex', alignItems: 'center' }}
+                            transition={{
+                                x: { type: 'keyframes' },
+                                scale: { type: 'keyframes' },
+                                //default: { duration: 2 },
+                            }}
+                        >
                             <Image src={LogoFull} alt="Beethoven X" style={{ width: '144px', minWidth: '144px' }} />
                         </motion.div>
                         {/*<Box>
                     <Image src={PoweredByBalancer} alt="Powered by Balancer V2" />
                 </Box>*/}
                     </Flex>
-                    <motion.div style={{ flex: 1, zIndex: 1, x: linksX }}>
+                    <motion.div
+                        animate={{ x: minimized ? -34 : 0 }}
+                        style={{ flex: 1, zIndex: 1 }}
+                        transition={{
+                            x: { type: 'keyframes' },
+                        }}
+                    >
                         <Flex alignItems="center">
                             <NavbarLink href={'/trade'} selected={router.asPath === '/trade'} text="Swap" mr={5} />
                             <NavbarLink
