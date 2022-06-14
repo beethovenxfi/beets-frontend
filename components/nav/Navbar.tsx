@@ -32,7 +32,7 @@ function Navbar({ scrollY }: Props) {
     });
 
     return (
-        <Box width="full" position="sticky" top="0" zIndex="2">
+        <Box width="full" position="sticky" top="0" zIndex="3">
             <motion.div style={{ width: '100%' }}>
                 <Flex px="4" py="0" alignItems="center">
                     <motion.div style={{ opacity, position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}>
