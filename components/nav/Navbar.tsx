@@ -15,27 +15,43 @@ interface Props {
 function Navbar({ scrollY }: Props) {
     const router = useRouter();
     const opacity = useTransform(scrollY, [0, 32], [0, 1]);
+    const scale = useTransform(scrollY, [0, 32], [1, 0.8]);
+    const x = useTransform(scrollY, [0, 32], [0, -12]);
+    const linksX = useTransform(scrollY, [0, 32], [0, -34]);
 
     return (
-        <Flex px="4" py="3" width="full" position="sticky" top="0" zIndex="10000">
-            <motion.div style={{ opacity, position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}>
-                <Box width="full" height="full" bg="beets.base.800" shadow="sm" />
-            </motion.div>
-            <Flex alignItems="center" mr={8}>
-                <Image src={LogoFull} alt="Beethoven X" style={{ width: '144px', minWidth: '144px' }} />
-                {/*<Box>
+        <Box width="full" position="sticky" top="0" zIndex="10000">
+            <motion.div style={{ width: '100%' }}>
+                <Flex px="4" py="0" alignItems="center">
+                    <motion.div style={{ opacity, position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}>
+                        <Box width="full" height="full" bg="beets.base.800" shadow="lg" />
+                    </motion.div>
+                    <Flex alignItems="center" mr={8}>
+                        <motion.div style={{ scale, display: 'flex', alignItems: 'center', x }}>
+                            <Image src={LogoFull} alt="Beethoven X" style={{ width: '144px', minWidth: '144px' }} />
+                        </motion.div>
+                        {/*<Box>
                     <Image src={PoweredByBalancer} alt="Powered by Balancer V2" />
                 </Box>*/}
-            </Flex>
-            <Flex flex={1} alignItems="center" zIndex="1">
-                <NavbarLink href={'/trade'} selected={router.asPath === '/trade'} text="Swap" mr={5} />
-                <NavbarLink href={'/pools'} selected={router.asPath.startsWith('/pool')} text="Invest" mr={5} />
-                <NavbarLink href={'/pools'} text="Stake" mr={5} />
-                <NavbarLink href={'/pools'} text="Launch" mr={5} />
-                <NavbarAdditionalLinksMenu />
-            </Flex>
-            <WalletConnectButton />
-        </Flex>
+                    </Flex>
+                    <motion.div style={{ flex: 1, zIndex: 1, x: linksX }}>
+                        <Flex alignItems="center">
+                            <NavbarLink href={'/trade'} selected={router.asPath === '/trade'} text="Swap" mr={5} />
+                            <NavbarLink
+                                href={'/pools'}
+                                selected={router.asPath.startsWith('/pool')}
+                                text="Invest"
+                                mr={5}
+                            />
+                            <NavbarLink href={'/pools'} text="Stake" mr={5} />
+                            <NavbarLink href={'/pools'} text="Launch" mr={5} />
+                            <NavbarAdditionalLinksMenu />
+                        </Flex>
+                    </motion.div>
+                    <WalletConnectButton />
+                </Flex>
+            </motion.div>
+        </Box>
     );
 }
 

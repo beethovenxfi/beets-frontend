@@ -116,7 +116,9 @@ function MyApp({ Component, pageProps }: AppProps) {
                         <BeetsFonts />
                         <QueryClientProvider client={queryClient}>
                             <Box height="full" className="bg" overflowX="hidden" ref={ref}>
+                                <Box pt="4" />
                                 <Navbar scrollY={scrollY} />
+                                <Box pt="1" />
                                 <SubNavBar />
                                 <Box display="flex" justifyContent="center" mt="8">
                                     <Box maxWidth="1400px">
