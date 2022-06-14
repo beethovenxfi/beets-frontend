@@ -48,43 +48,16 @@ export default function WalletConnectButton() {
 
                             return (
                                 <HStack>
-                                    <BeetsButton
-                                        bg="transparent"
-                                        rounded="xl"
-                                        fontSize="md"
-                                        onClick={openAccountModal}
-                                        paddingX="none"
-                                        padding="3px"
-                                        color="gray.100"
-                                        _hover={{
-                                            backgroundColor: 'none',
-                                            transform: 'scale(1.05)',
-                                        }}
-                                        _active={{
-                                            backgroundColor: 'none',
-                                        }}
-                                    >
-                                        <HStack width="full" height="full" spacing="1">
-                                            {/* {account.displayBalance ? ` (${account.displayBalance})` : ''} */}
-                                            {/*<Box>{account.ensAvatar}</Box>*/}
-                                            <HStack
-                                                justifyContent="center"
-                                                alignItems="center"
-                                                px="2"
-                                                height="40px"
-                                                rounded="10px"
-                                                bg="beets.lightAlpha.200"
-                                                width="full"
-                                            >
-                                                {txPending ? (
-                                                    <Spinner color="beets.green" />
-                                                ) : (
-                                                    <Image src={BeetsSmart} width="24" alt="your-profile" />
-                                                )}
-                                                <Text>{account.displayName}</Text>
-                                            </HStack>
+                                    <Button onClick={openAccountModal} variant="unstyled">
+                                        <HStack height="40px" width="full" px="2">
+                                            {txPending ? (
+                                                <Spinner color="beets.green" />
+                                            ) : (
+                                                <Image src={BeetsSmart} width="28" alt="your-profile" />
+                                            )}
+                                            <Text>{account.displayName}</Text>
                                         </HStack>
-                                    </BeetsButton>
+                                    </Button>
                                 </HStack>
                             );
                         })()}

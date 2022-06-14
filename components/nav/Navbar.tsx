@@ -81,7 +81,7 @@ function Navbar({ scrollY }: Props) {
                                         <Box>$12.22</Box>
                                     </HStack>
                                 </Button>
-                                <Button variant="unstyled" mx="3">
+                                <Button variant="unstyled" mx="2">
                                     <HStack px="2">
                                         <Box
                                             bgColor="beets.base.400"
