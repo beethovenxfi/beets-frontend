@@ -1,4 +1,9 @@
-import { GqlPoolUnion } from '~/apollo/generated/graphql-codegen-generated';
+import {
+    GqlPoolLinearNested,
+    GqlPoolLinearPoolData,
+    GqlPoolTokenUnion,
+    GqlPoolUnion,
+} from '~/apollo/generated/graphql-codegen-generated';
 import {
     Box,
     Text,
@@ -21,6 +26,7 @@ import { useGetTokens } from '~/lib/global/useToken';
 import numeral from 'numeral';
 import Card from '~/components/card/Card';
 import { useState } from 'react';
+import { CornerDownRight } from 'react-feather';
 
 interface Props {
     pool: GqlPoolUnion;
@@ -34,32 +40,84 @@ interface BreakDownProps extends FlexProps {
     show: boolean;
 }
 
-function BreakDown(props: BreakDownProps) {
-    const bgColor = 'gray.200';
+type PoolToken = GqlPoolTokenUnion & { pool?: GqlPoolLinearNested };
+
+function PoolCompositionRow(token: PoolToken) {
+    const { priceFor } = useGetTokens();
+    const isBoostedToken = !!token.pool;
+
+    const sharedCells = (_token: PoolToken, isLinearToken: boolean) => {
+        const weight = isLinearToken
+            ? parseFloat(_token.weight || '0')
+            : parseFloat(_token.balance) / parseFloat(token.balance);
+
+        return (
+            <>
+                <Td borderBottom="0" p="2" marginBottom="4">
+                    <Text fontSize="sm" color="beets.base.50">
+                        {_token.name}
+                    </Text>
+                </Td>
+                <Td borderBottom="0" p="2" marginBottom="4" width="300px">
+                    {isLinearToken && <Progress width="80%" rounded="lg" value={weight * 100} />}
+                </Td>
+                <Td borderBottom="0" p="2" marginBottom="4">
+                    <Text fontSize="sm" color="beets.base.50">
+                        {numeral(_token.balance).format('0,0.0000')}
+                    </Text>
+                </Td>
+                <Td borderBottom="0" p="2" marginBottom="4" borderTopRightRadius="lg" borderBottomRightRadius="lg">
+                    <Text fontSize="sm" color="beets.base.50">
+                        {numeral(parseFloat(_token.balance) * priceFor(_token.address)).format('$0,0.00a')}
+                    </Text>
+                </Td>
+            </>
+        );
+    };
+
     return (
-        <Collapse
-            in={props.show}
-            transition={{ enter: { duration: 0.5, ease: 'easeIn' }, exit: { duration: 0.4, ease: 'easeOut' } }}
-        >
-            <Flex ml="0.75rem" align="center" key={props.key}>
-                {props.nestLevel === 2 && !props.isLast && <Box w="1px" bgColor={bgColor} h="4.5rem" mt="-2rem" />}
-                <Box
-                    w="1px"
-                    bgColor={bgColor}
-                    h={props.index === 0 ? '3.5rem' : '2rem'}
-                    mt={props.index === 0 ? '-1rem' : '-2.5rem'}
-                    ml={props.isLast ? 10 : props.nestLevel === 2 ? 8 : ''}
-                />
-                <Box h="1px" w="0.75rem" bgColor={bgColor} mr="0.5rem" mt="-0.5rem" />
-                {props.children}
-            </Flex>
-        </Collapse>
+        <>
+            <Tr key={`composition-${token.symbol}`} padding="2" width="full" background="whiteAlpha.100">
+                <Td borderBottom="0" p="2" marginBottom="4" borderTopLeftRadius="lg" borderBottomLeftRadius="lg">
+                    <HStack>
+                        <TokenAvatar size="xs" address={token.address}></TokenAvatar>
+                        <Text fontSize="sm" color="beets.base.50">
+                            {token.symbol}
+                        </Text>
+                    </HStack>
+                </Td>
+                {sharedCells(token, false)}
+            </Tr>
+            {isBoostedToken &&
+                token.pool?.tokens.map((token: any) => (
+                    <Tr key={`composition-${token.symbol}`} width="full" background="blackAlpha.100">
+                        <Td
+                            borderBottom="0"
+                            p="2"
+                            paddingLeft="8"
+                            marginBottom="4"
+                            borderTopLeftRadius="lg"
+                            borderBottomLeftRadius="lg"
+                        >
+                            <HStack>
+                                <Box color="whiteAlpha.400">
+                                    <CornerDownRight />
+                                </Box>
+                                <TokenAvatar size="xs" address={token.address}></TokenAvatar>
+                                <Text fontSize="sm" color="beets.base.50">
+                                    {token.symbol}
+                                </Text>
+                            </HStack>
+                        </Td>
+                        {sharedCells(token, true)}
+                    </Tr>
+                ))}
+        </>
     );
 }
 
 function PoolComposition({ pool }: Props) {
-    const poolTokens = poolGetTokensWithoutPhantomBpt(pool);
-    const { priceFor } = useGetTokens();
+    const poolTokens = poolGetTokensWithoutPhantomBpt(pool) as PoolToken[];
     const [show, setShow] = useState(false);
 
     const toggle = (toggleVal: boolean) => {
@@ -104,54 +162,8 @@ function PoolComposition({ pool }: Props) {
                         </Tr>
                     </Thead>
                     <Tbody>
-                        {poolTokens.map((token) => (
-                            <Tr
-                                key={`composition-${token.symbol}`}
-                                padding="2"
-                                width="full"
-                                background="whiteAlpha.100"
-                            >
-                                <Td
-                                    borderBottom="0"
-                                    p="2"
-                                    marginBottom="4"
-                                    borderTopLeftRadius="lg"
-                                    borderBottomLeftRadius="lg"
-                                >
-                                    <HStack>
-                                        <TokenAvatar size="xs" address={token.address}></TokenAvatar>
-                                        <Text fontSize="sm" color="beets.base.50">
-                                            {token.symbol}
-                                        </Text>
-                                    </HStack>
-                                </Td>
-                                <Td borderBottom="0" p="2" marginBottom="4">
-                                    <Text fontSize="sm" color="beets.base.50">
-                                        {token.name}
-                                    </Text>
-                                </Td>
-                                <Td borderBottom="0" p="2" marginBottom="4" width="300px">
-                                    <Progress width="80%" rounded="lg" value={parseFloat(token.weight || '0') * 100} />
-                                </Td>
-                                <Td borderBottom="0" p="2" marginBottom="4">
-                                    <Text fontSize="sm" color="beets.base.50">
-                                        {numeral(token.balance).format('0,0.0000')}
-                                    </Text>
-                                </Td>
-                                <Td
-                                    borderBottom="0"
-                                    p="2"
-                                    marginBottom="4"
-                                    borderTopRightRadius="lg"
-                                    borderBottomRightRadius="lg"
-                                >
-                                    <Text fontSize="sm" color="beets.base.50">
-                                        {numeral(parseFloat(token.balance) * priceFor(token.address)).format(
-                                            '$0,0.00a',
-                                        )}
-                                    </Text>
-                                </Td>
-                            </Tr>
+                        {poolTokens.map((token, i) => (
+                            <PoolCompositionRow key={`composition-${i}`} {...token} />
                         ))}
                     </Tbody>
                 </Table>

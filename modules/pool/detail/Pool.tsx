@@ -8,13 +8,12 @@ import { useAsyncEffect } from '~/lib/util/custom-hooks';
 import { masterChefService } from '~/lib/services/staking/master-chef.service';
 import { useGetTokens } from '~/lib/global/useToken';
 import { useProvider } from 'wagmi';
-import PoolStats from './components/PoolStats';
+import PoolStats from './components/stats/PoolStats';
 import { PoolTransactions } from './components/transactions/PoolTransactions';
+import PoolActionRow from './PoolActionRow';
 
 function Pool() {
     const { pool } = usePool();
-    const { isLoading, hasBpt } = usePoolUserPoolTokenBalances();
-
     const { tokens } = useGetTokens();
     const provider = useProvider();
 
@@ -28,13 +27,18 @@ function Pool() {
     }, []);
 
     return (
-        <Container maxW="full" marginBottom='8'>
+        <Container maxW="full" marginBottom="8">
             <PoolHeader />
-            <HStack spacing="3" height="md">
-                <PoolStats />
-                <PoolDetailChart />
-            </HStack>
-            <VStack spacing='8' width='full'>
+            <VStack width='full'>
+                <Flex width="full" justifyContent="flex-end">
+                    <PoolActionRow />
+                </Flex>
+                <HStack width='full' spacing="3" height="md">
+                    <PoolStats />
+                    <PoolDetailChart />
+                </HStack>
+            </VStack>
+            <VStack spacing="8" width="full">
                 <PoolComposition pool={pool} />
                 <PoolTransactions />
             </VStack>

@@ -68,10 +68,6 @@ export function PoolTransactions({ ...rest }: Props & BoxProps) {
         }
     };
 
-    console.log({
-        isFetchingMoreInvestments,
-        isFetchingMoreSwaps
-    })
     return (
         <Box width="full" {...rest}>
             <Tabs variant="soft-rounded" onChange={handleTabChanged}>
