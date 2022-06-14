@@ -110,13 +110,13 @@ function MyApp({ Component, pageProps }: AppProps) {
 
     return (
         <WagmiProvider client={wagmiClient}>
-            <RainbowKitProvider coolMode chains={networkChainDefinitions}>
+            <RainbowKitProvider coolMode chains={networkChainDefinitions} showRecentTransactions={true}>
                 <ApolloProvider client={client}>
                     <ChakraProvider theme={chakraTheme}>
                         <BeetsFonts />
                         <QueryClientProvider client={queryClient}>
                             <Box height="full" className="bg" overflowX="hidden" ref={ref}>
-                                <Box pt="4" />
+                                <Box pt="3" />
                                 <Navbar scrollY={scrollY} />
                                 <Box pt="1" />
                                 <SubNavBar />

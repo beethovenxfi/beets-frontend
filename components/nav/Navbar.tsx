@@ -1,13 +1,16 @@
-import { Box, Button, Flex, Link, Menu, MenuButton, MenuItem, MenuList } from '@chakra-ui/react';
+import { Box, Button, Flex, HStack } from '@chakra-ui/react';
 import Image from 'next/image';
 
 import LogoFull from '~/assets/logo/beets-bal.svg';
 import WalletConnectButton from '../wallet/WalletConnectButton';
 import { NavbarLink } from '~/components/nav/NavbarLink';
 import { useRouter } from 'next/router';
-import { MotionValue, useTransform, motion } from 'framer-motion';
+import { AnimatePresence, motion, MotionValue, useTransform } from 'framer-motion';
 import { NavbarAdditionalLinksMenu } from '~/components/nav/NavbarAdditionalLinksMenu';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
+import { BarChart2 } from 'react-feather';
+import StarsIcon from '~/components/apr-tooltip/StarsIcon';
+import { useUserAccount } from '~/lib/global/useUserAccount';
 
 interface Props {
     scrollY: MotionValue<number>;
@@ -17,6 +20,7 @@ function Navbar({ scrollY }: Props) {
     const router = useRouter();
     const opacity = useTransform(scrollY, [0, 32], [0, 1]);
     const [minimized, setMinimized] = useState(false);
+    const { isConnected } = useUserAccount();
 
     scrollY.onChange((latest) => {
         if (latest > 16 && !minimized) {
@@ -40,7 +44,6 @@ function Navbar({ scrollY }: Props) {
                             transition={{
                                 x: { type: 'keyframes' },
                                 scale: { type: 'keyframes' },
-                                //default: { duration: 2 },
                             }}
                         >
                             <Image src={LogoFull} alt="Beethoven X" style={{ width: '144px', minWidth: '144px' }} />
@@ -69,6 +72,34 @@ function Navbar({ scrollY }: Props) {
                             <NavbarAdditionalLinksMenu />
                         </Flex>
                     </motion.div>
+                    <AnimatePresence>
+                        {isConnected ? (
+                            <motion.div animate={{ opacity: 1 }} initial={{ opacity: 0 }} exit={{ opacity: 0 }}>
+                                <Button variant="unstyled" ml="3">
+                                    <HStack px="2">
+                                        <StarsIcon />
+                                        <Box>$12.22</Box>
+                                    </HStack>
+                                </Button>
+                                <Button variant="unstyled" mx="3">
+                                    <HStack px="2">
+                                        <Box
+                                            bgColor="beets.base.400"
+                                            width="32px"
+                                            height="32px"
+                                            display="flex"
+                                            alignItems="center"
+                                            justifyContent="center"
+                                            borderRadius="md"
+                                        >
+                                            <BarChart2 />
+                                        </Box>
+                                        <Box>$2,234.22</Box>
+                                    </HStack>
+                                </Button>
+                            </motion.div>
+                        ) : null}
+                    </AnimatePresence>
                     <WalletConnectButton />
                 </Flex>
             </motion.div>
