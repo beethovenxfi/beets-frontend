@@ -43,4 +43,5 @@ export interface NetworkConfig {
     masterChefContractAddress: string;
     defaultTokenIn: string;
     defaultTokenOut: string;
+    additionalLinks: { url: string; title: string; subTitle?: string }[];
 }

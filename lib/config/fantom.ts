@@ -37,4 +37,48 @@ export const fantomNetworkConfig: NetworkConfig = {
     masterChefContractAddress: '0x8166994d9ebBe5829EC86Bd81258149B87faCfd3',
     defaultTokenIn: '0x04068da6c83afcfa0e13ba15a6696662335d5b75',
     defaultTokenOut: '0x21be370d5312f44cb42ce377bc9b8a0cef1a4c83',
+    additionalLinks: [
+        {
+            title: 'Vote',
+            url: 'https://snapshot.org/#/beets.eth',
+        },
+        {
+            title: 'Analytics',
+            url: 'https://info.beets.fi',
+        },
+        {
+            title: 'Docs & Help',
+            url: 'https://docs.beets.fi',
+        },
+        {
+            title: 'Github',
+            url: 'https://github.com/beethovenxfi',
+        },
+        {
+            title: 'Twitter',
+            url: 'https://twitter.com/beethoven_x',
+        },
+        {
+            title: 'Medium',
+            url: 'https://beethovenxio.medium.com/',
+        },
+        {
+            title: 'Discord',
+            url: 'https://discord.gg/jedS4zGk28',
+        },
+        {
+            title: 'Olympus Bonds',
+            url: 'https://pro.olympusdao.finance/#/bond',
+        },
+        {
+            title: 'Multichain Bridge',
+            subTitle: 'ETH / AVAX / BSC / MATIC',
+            url: 'https://app.multichain.org/#/router',
+        },
+        {
+            title: 'AllBridge',
+            subTitle: 'SOL / MATIC / CELO',
+            url: 'https://app.allbridge.io/bridge?from=SOL&to=FTM&asset=SOL',
+        },
+    ],
 };
