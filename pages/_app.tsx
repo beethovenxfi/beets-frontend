@@ -44,6 +44,8 @@ import { useRouter } from 'next/router';
 import { networkChainDefinitions, wagmiClient } from '~/lib/global/network';
 import { BeetsFonts } from '~/components/fonts/BeetsFonts';
 import { SubNavBar } from '~/components/nav/SubNavBar';
+import { useElementScroll } from 'framer-motion';
+import { useEffect, useRef } from 'react';
 
 const queryClient = new QueryClient();
 
@@ -81,6 +83,8 @@ echarts.use([
 function MyApp({ Component, pageProps }: AppProps) {
     const client = useApollo(pageProps);
     const router = useRouter();
+    const ref = useRef(null);
+    const { scrollY } = useElementScroll(ref);
 
     /*useEffect(() => {
         const handleStart = (url: string) => {
@@ -111,25 +115,29 @@ function MyApp({ Component, pageProps }: AppProps) {
                     <ChakraProvider theme={chakraTheme}>
                         <BeetsFonts />
                         <QueryClientProvider client={queryClient}>
-                            <Box height="full" className="bg" overflowX="hidden">
+                            <Box height="full" className="bg" overflowX="hidden" ref={ref}>
+                                <Navbar scrollY={scrollY} />
+                                <SubNavBar />
+                                <Box display="flex" justifyContent="center" mt="8">
+                                    <Box maxWidth="1400px">
+                                        <Component {...pageProps} />
+                                    </Box>
+                                </Box>
+                            </Box>
+                            {/*<Box height="full" className="bg" overflowX="hidden">
                                 <Box height="full" display="flex" justifyContent="center">
-                                    {/* add gutter here */}
                                     <Grid
                                         templateColumns="repeat(12, 1fr)"
                                         width="1400px"
                                         maxWidth="1400px"
                                         height="fit-content"
                                     >
-                                        <GridItem colSpan={12} height="fit-content">
-                                            <Navbar />
-                                            <SubNavBar />
-                                        </GridItem>
                                         <GridItem colSpan={12} paddingTop="12">
-                                            <Component {...pageProps} />
+                                            <SubNavBar />
                                         </GridItem>
                                     </Grid>
                                 </Box>
-                            </Box>
+                            </Box>*/}
                         </QueryClientProvider>
                     </ChakraProvider>
                 </ApolloProvider>

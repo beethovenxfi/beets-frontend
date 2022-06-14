@@ -67,15 +67,14 @@ export default function WalletConnectButton() {
                                             <HStack
                                                 justifyContent="center"
                                                 alignItems="center"
-                                                padding="2"
-                                                height="full"
+                                                px="2"
+                                                height="40px"
                                                 rounded="10px"
-                                                bg="blue.700"
+                                                bg="beets.lightAlpha.200"
                                                 width="full"
                                             >
                                                 <Image src={BeetsSmart} width="24" alt="your-profile" />
                                                 <Text>{account.displayName}</Text>
-                                                <ChevronDown />
                                             </HStack>
                                         </HStack>
                                     </BeetsButton>
