@@ -11,6 +11,7 @@ import { useState } from 'react';
 import { BarChart2 } from 'react-feather';
 import StarsIcon from '~/components/apr-tooltip/StarsIcon';
 import { useUserAccount } from '~/lib/global/useUserAccount';
+import { NavbarPortfolioDrawer } from '~/components/nav/NavbarPortfolioDrawer';
 
 interface Props {
     scrollY: MotionValue<number>;
@@ -31,7 +32,7 @@ function Navbar({ scrollY }: Props) {
     });
 
     return (
-        <Box width="full" position="sticky" top="0" zIndex="10000">
+        <Box width="full" position="sticky" top="0" zIndex="2">
             <motion.div style={{ width: '100%' }}>
                 <Flex px="4" py="0" alignItems="center">
                     <motion.div style={{ opacity, position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}>
@@ -72,34 +73,28 @@ function Navbar({ scrollY }: Props) {
                             <NavbarAdditionalLinksMenu />
                         </Flex>
                     </motion.div>
-                    <AnimatePresence>
-                        {isConnected ? (
-                            <motion.div animate={{ opacity: 1 }} initial={{ opacity: 0 }} exit={{ opacity: 0 }}>
-                                <Button variant="unstyled" ml="3">
-                                    <HStack px="2">
-                                        <StarsIcon />
-                                        <Box>$12.22</Box>
-                                    </HStack>
-                                </Button>
-                                <Button variant="unstyled" mx="2">
-                                    <HStack px="2">
-                                        <Box
-                                            bgColor="beets.base.400"
-                                            width="32px"
-                                            height="32px"
+                    <Box mr="3">
+                        <AnimatePresence>
+                            {isConnected ? (
+                                <motion.div animate={{ opacity: 1 }} initial={{ opacity: 0 }} exit={{ opacity: 0 }}>
+                                    <HStack spacing="3">
+                                        <Button
+                                            variant="unstyled"
+                                            bgColor="beets.lightAlpha.200"
+                                            width="42px"
+                                            height="40px"
                                             display="flex"
                                             alignItems="center"
                                             justifyContent="center"
-                                            borderRadius="md"
                                         >
-                                            <BarChart2 />
-                                        </Box>
-                                        <Box>$2,234.22</Box>
+                                            <StarsIcon />
+                                        </Button>
+                                        <NavbarPortfolioDrawer />
                                     </HStack>
-                                </Button>
-                            </motion.div>
-                        ) : null}
-                    </AnimatePresence>
+                                </motion.div>
+                            ) : null}
+                        </AnimatePresence>
+                    </Box>
                     <WalletConnectButton />
                 </Flex>
             </motion.div>

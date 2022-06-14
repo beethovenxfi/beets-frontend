@@ -1,10 +1,15 @@
 import { useTheme } from '@chakra-ui/react';
 
-function StarsIcon() {
+interface Props {
+    height?: number;
+    width?: number;
+}
+
+function StarsIcon({ width = 24, height = 25 }: Props) {
     const theme = useTheme();
 
     return (
-        <svg width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg width={`${width}`} height={`${height}`} viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
             <defs>
                 <linearGradient
                     id="stars-gradient"

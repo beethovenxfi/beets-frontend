@@ -5,7 +5,7 @@ import type { AppProps } from 'next/app';
 import { useApollo } from '~/apollo/client';
 import { ApolloProvider } from '@apollo/client';
 
-import { Box, ChakraProvider, Grid, GridItem } from '@chakra-ui/react';
+import { Box, ChakraProvider } from '@chakra-ui/react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 /** Start charting library setup */
 import * as echarts from 'echarts/core';
@@ -45,7 +45,7 @@ import { networkChainDefinitions, wagmiClient } from '~/lib/global/network';
 import { BeetsFonts } from '~/components/fonts/BeetsFonts';
 import { SubNavBar } from '~/components/nav/SubNavBar';
 import { useElementScroll } from 'framer-motion';
-import { useEffect, useRef } from 'react';
+import { useRef } from 'react';
 
 const queryClient = new QueryClient();
 
