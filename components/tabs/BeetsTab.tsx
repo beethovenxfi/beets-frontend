@@ -7,7 +7,6 @@ import { AnimatedBox } from '~/components/animation/chakra';
 const BeetsTab = forwardRef((props: { children: any }, ref: any) => {
     const tabProps = useTab({ ...props, ref });
     const isSelected = !!tabProps['aria-selected'];
-    const styles = useMultiStyleConfig('Tabs', tabProps);
 
     return (
         <Button

@@ -20,10 +20,9 @@ export function PoolListTop() {
                         icon={<Filter />}
                         ml={4}
                         onClick={toggle}
-                        bgColor={filtersVisible ? 'gray.100' : undefined}
-                        _hover={{
-                            bgColor: filtersVisible ? 'gray.100' : undefined,
-                        }}
+                        color={filtersVisible ? 'gray.100' : 'white'}
+                        bgColor={filtersVisible ? 'beets.base.300' : 'beets.lightAlpha.200'}
+                        _hover={{ bgColor: 'beets.light' }}
                     />
                 </Flex>
                 <Box>
