@@ -4,6 +4,7 @@ import { usePoolList } from '~/modules/pools/usePoolList';
 
 export function PoolListFilterMultiSelect() {
     const { filters, refetch, state } = usePoolList();
+    const selected = state.where?.filterIn || [];
 
     return (
         <Box>
@@ -12,6 +13,12 @@ export function PoolListFilterMultiSelect() {
                     value: filter.id,
                     label: filter.title,
                 }))}
+                value={filters
+                    .filter((filter) => selected.includes(filter.id))
+                    .map((filter) => ({
+                        value: filter.id,
+                        label: filter.title,
+                    }))}
                 renderOption={(data) => (
                     <>
                         <Text fontSize="lg">{data.label}</Text>

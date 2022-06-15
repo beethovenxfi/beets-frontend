@@ -6,9 +6,11 @@ import { PoolListTokenMultiSelect } from '~/modules/pools/components/PoolListTok
 import { PoolListFilterMultiSelect } from '~/modules/pools/components/PoolListFilterMultiSelect';
 import { PoolListAttributeMultiSelect } from '~/modules/pools/components/PoolListAttributeMultiSelect';
 import { useBoolean } from '@chakra-ui/hooks';
+import { usePoolList } from '~/modules/pools/usePoolList';
+import { FadeInOutBox } from '~/components/animation/FadeInOutBox';
 
 export function PoolListTop() {
-    const [filtersVisible, { toggle }] = useBoolean(false);
+    const { showFilters, toggleFilterVisibility } = usePoolList();
 
     return (
         <Box>
@@ -19,9 +21,9 @@ export function PoolListTop() {
                         aria-label="filter-button"
                         icon={<Filter />}
                         ml={4}
-                        onClick={toggle}
-                        color={filtersVisible ? 'gray.100' : 'white'}
-                        bgColor={filtersVisible ? 'beets.base.300' : 'beets.lightAlpha.200'}
+                        onClick={toggleFilterVisibility}
+                        color={showFilters ? 'gray.100' : 'white'}
+                        bgColor={showFilters ? 'beets.base.300' : 'beets.lightAlpha.200'}
                         _hover={{ bgColor: 'beets.light' }}
                     />
                 </Flex>
@@ -29,7 +31,7 @@ export function PoolListTop() {
                     <PoolListSearch />
                 </Box>
             </Flex>
-            {filtersVisible ? (
+            <FadeInOutBox isVisible={showFilters}>
                 <Flex pt={2} pb={4} alignItems="center">
                     <Box flex={1} mr={2}>
                         <PoolListTokenMultiSelect />
@@ -41,7 +43,20 @@ export function PoolListTop() {
                         {/*<PoolListAttributeMultiSelect />*/}
                     </Box>
                 </Flex>
-            ) : null}
+            </FadeInOutBox>
+            {/*{showFilters ? (
+                <Flex pt={2} pb={4} alignItems="center">
+                    <Box flex={1} mr={2}>
+                        <PoolListTokenMultiSelect />
+                    </Box>
+                    <Box flex={1} mx={2}>
+                        <PoolListFilterMultiSelect />
+                    </Box>
+                    <Box flex={1} ml={2}>
+                        <PoolListAttributeMultiSelect />
+                    </Box>
+                </Flex>
+            ) : null}*/}
         </Box>
     );
 }

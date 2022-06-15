@@ -15,6 +15,7 @@ export function PoolListAttributeMultiSelect() {
                     imageUrl: token.logoURI,
                     icon: <TokenAvatar address={token.address} size="xs" mr={2} />,
                 }))}
+                value={[]}
                 renderOption={(data, children) => (
                     <>
                         {data.icon} <Text fontSize="lg">{data.label}</Text>

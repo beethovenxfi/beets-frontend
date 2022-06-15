@@ -7,6 +7,7 @@ import { usePoolList } from '~/modules/pools/usePoolList';
 export function PoolListTokenMultiSelect() {
     const { tokens } = useGetTokens();
     const { state, refetch } = usePoolList();
+    const selected = state.where?.tokensIn || [];
 
     return (
         <Box>
@@ -17,6 +18,14 @@ export function PoolListTokenMultiSelect() {
                     imageUrl: token.logoURI,
                     icon: <TokenAvatar address={token.address} size="xs" mr={2} />,
                 }))}
+                value={tokens
+                    .filter((token) => selected.includes(token.address))
+                    .map((token) => ({
+                        value: token.address,
+                        label: token.symbol,
+                        imageUrl: token.logoURI,
+                        icon: <TokenAvatar address={token.address} size="xs" mr={2} />,
+                    }))}
                 renderOption={(data, children) => (
                     <>
                         {data.icon} <Text fontSize="lg">{data.label}</Text>

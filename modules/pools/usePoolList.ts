@@ -6,7 +6,6 @@ import {
     useGetPoolsQuery,
 } from '~/apollo/generated/graphql-codegen-generated';
 import { useBoolean } from '@chakra-ui/hooks';
-import { useEffect } from 'react';
 
 interface PoolsQueryVariables extends GetPoolsQueryVariables {
     first: number;
@@ -27,6 +26,7 @@ export const DEFAULT_POOL_LIST_QUERY_VARS: PoolsQueryVariables = {
 
 const poolListStateVar = makeVar<PoolsQueryVariables>(DEFAULT_POOL_LIST_QUERY_VARS);
 const showMyInvestmentsVar = makeVar(false);
+const showFiltersVar = makeVar(false);
 
 export function usePoolList() {
     const state = useReactiveVar(poolListStateVar);
@@ -84,6 +84,10 @@ export function usePoolList() {
         showMyInvestmentsVar(show);
     }
 
+    function toggleFilterVisibility() {
+        showFiltersVar(!showFiltersVar());
+    }
+
     return {
         state,
         pools: data?.poolGetPools || [],
@@ -97,5 +101,7 @@ export function usePoolList() {
         showMyInvestments,
         setShowMyInvestments,
         filters: poolFilters?.filters || [],
+        toggleFilterVisibility,
+        showFilters: useReactiveVar(showFiltersVar),
     };
 }
