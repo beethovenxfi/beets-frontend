@@ -13,7 +13,6 @@ function PoolList() {
     const [isSearching, { on, off }] = useBoolean();
 
     const submitSearch = debounce(async () => {
-        //await refetch({...state, });
         off();
     }, 250);
 
