@@ -5,7 +5,7 @@ import LogoFull from '~/assets/logo/beets-bal.svg';
 import WalletConnectButton from '../wallet/WalletConnectButton';
 import { NavbarLink } from '~/components/nav/NavbarLink';
 import { useRouter } from 'next/router';
-import { motion, MotionValue, useTransform } from 'framer-motion';
+import { motion, MotionValue, useAnimation, useTransform } from 'framer-motion';
 import { NavbarAdditionalLinksMenu } from '~/components/nav/NavbarAdditionalLinksMenu';
 import { useState } from 'react';
 import StarsIcon from '~/components/apr-tooltip/StarsIcon';
@@ -17,17 +17,39 @@ interface Props {
     scrollY: MotionValue<number>;
 }
 
+const transition = { type: 'spring', stiffness: 250, damping: 25 };
+
 export function Navbar({ scrollY }: Props) {
     const router = useRouter();
     const opacity = useTransform(scrollY, [0, 32], [0, 1]);
+
+    const logoControls = useAnimation();
+    const menuControls = useAnimation();
+
     const [minimized, setMinimized] = useState(false);
     const { isConnected } = useUserAccount();
 
     scrollY.onChange((latest) => {
-        if (latest > 16 && !minimized) {
-            setMinimized(true);
-        } else if (latest <= 16 && minimized) {
-            setMinimized(false);
+        if (latest > 16) {
+            logoControls.start({
+                translateX: -12,
+                scale: 0.8,
+                transition
+            });
+            menuControls.start({
+                translateX: -34,
+                transition
+            });
+        } else if (latest <= 16) {
+            logoControls.start({
+                translateX: 0,
+                scale: 1,
+                transition
+            });
+            menuControls.start({
+                translateX: 0,
+                transition
+            });
         }
     });
 
@@ -39,12 +61,10 @@ export function Navbar({ scrollY }: Props) {
                 </motion.div>
                 <Flex alignItems="center" mr={8}>
                     <motion.div
-                        animate={{ x: minimized ? -12 : 0, scale: minimized ? 0.8 : 1 }}
+                        // animate={{ translateX: minimized ? -12 : 0, scale: minimized ? 0.8 : 1 }}
+                        animate={logoControls}
                         style={{ display: 'flex', alignItems: 'center' }}
-                        transition={{
-                            x: { type: 'keyframes' },
-                            scale: { type: 'keyframes' },
-                        }}
+                        transition={{ type: 'spring', stiffness: 250, damping: 25 }}
                     >
                         <NextLink href="/">
                             <Box cursor="pointer">
@@ -57,11 +77,10 @@ export function Navbar({ scrollY }: Props) {
                 </Box>*/}
                 </Flex>
                 <motion.div
-                    animate={{ x: minimized ? -34 : 0 }}
+                    // animate={{ translateX: minimized ? -34 : 0 }}
+                    animate={menuControls}
                     style={{ flex: 1, zIndex: 1 }}
-                    transition={{
-                        x: { type: 'keyframes' },
-                    }}
+                    transition={{ type: 'spring', stiffness: 250, damping: 25 }}
                 >
                     <Flex alignItems="center">
                         <NavbarLink href={'/trade'} selected={router.asPath === '/trade'} text="Swap" mr={5} />

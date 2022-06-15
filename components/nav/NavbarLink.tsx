@@ -12,7 +12,7 @@ export function NavbarLink({ href, selected, text, ...rest }: Props) {
         <Box {...rest}>
             <Link href={href}>
                 <Text
-                    fontSize="lg"
+                    fontSize="md"
                     color={selected ? 'beets.cyan' : 'gray.100'}
                     cursor="pointer"
                     _hover={{ color: 'beets.cyan' }}
