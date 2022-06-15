@@ -5,7 +5,7 @@ import type { AppProps } from 'next/app';
 import { useApollo } from '~/apollo/client';
 import { ApolloProvider } from '@apollo/client';
 
-import { Box, ChakraProvider } from '@chakra-ui/react';
+import { ChakraProvider } from '@chakra-ui/react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 /** Start charting library setup */
 import * as echarts from 'echarts/core';
@@ -34,18 +34,14 @@ import {
     ToolboxComponent,
     TooltipComponent,
 } from 'echarts/components';
-
 import { CanvasRenderer } from 'echarts/renderers';
-import { Navbar } from '~/components/nav/Navbar';
 import { chakraTheme } from '~/styles/chakraTheme';
 import { WagmiProvider } from 'wagmi';
 import { RainbowKitProvider } from '@rainbow-me/rainbowkit';
 import { useRouter } from 'next/router';
 import { networkChainDefinitions, wagmiClient } from '~/lib/global/network';
 import { BeetsFonts } from '~/components/fonts/BeetsFonts';
-import { SubNavBar } from '~/components/nav/SubNavBar';
-import { useElementScroll } from 'framer-motion';
-import { useRef } from 'react';
+import { AppContent } from '~/pages/_app-content';
 
 const queryClient = new QueryClient();
 
@@ -80,11 +76,9 @@ echarts.use([
 
 /** End charting library setup */
 
-function MyApp({ Component, pageProps }: AppProps) {
-    const client = useApollo(pageProps);
+function BeetsApp(props: AppProps) {
+    const client = useApollo(props.pageProps);
     const router = useRouter();
-    const ref = useRef(null);
-    const { scrollY } = useElementScroll(ref);
 
     /*useEffect(() => {
         const handleStart = (url: string) => {
@@ -115,31 +109,7 @@ function MyApp({ Component, pageProps }: AppProps) {
                     <ChakraProvider theme={chakraTheme}>
                         <BeetsFonts />
                         <QueryClientProvider client={queryClient}>
-                            <Box height="full" className="bg" overflowX="hidden" ref={ref}>
-                                <Box pt="3" />
-                                <Navbar scrollY={scrollY} />
-                                <Box pt="1" />
-                                <SubNavBar />
-                                <Box display="flex" justifyContent="center" mt="8">
-                                    <Box maxWidth="1400px">
-                                        <Component {...pageProps} />
-                                    </Box>
-                                </Box>
-                            </Box>
-                            {/*<Box height="full" className="bg" overflowX="hidden">
-                                <Box height="full" display="flex" justifyContent="center">
-                                    <Grid
-                                        templateColumns="repeat(12, 1fr)"
-                                        width="1400px"
-                                        maxWidth="1400px"
-                                        height="fit-content"
-                                    >
-                                        <GridItem colSpan={12} paddingTop="12">
-                                            <SubNavBar />
-                                        </GridItem>
-                                    </Grid>
-                                </Box>
-                            </Box>*/}
+                            <AppContent {...props} />
                         </QueryClientProvider>
                     </ChakraProvider>
                 </ApolloProvider>
@@ -148,4 +118,4 @@ function MyApp({ Component, pageProps }: AppProps) {
     );
 }
 
-export default MyApp;
+export default BeetsApp;

@@ -6,11 +6,7 @@ import { DEFAULT_POOL_LIST_QUERY_VARS } from '~/modules/pools/usePoolList';
 import { Box } from '@chakra-ui/layout';
 
 function Pools() {
-    return (
-        <Box marginX='20'>
-            <PoolList />
-        </Box>
-    );
+    return <PoolList />;
 }
 
 export async function getStaticProps() {

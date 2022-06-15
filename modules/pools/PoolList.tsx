@@ -1,14 +1,11 @@
-import { Box, Flex, IconButton, Input, InputGroup, InputRightElement } from '@chakra-ui/react';
+import { Box } from '@chakra-ui/react';
 import { NetworkStatus } from '@apollo/client';
 import { usePoolList } from './usePoolList';
 import PoolListItem from '~/modules/pools/components/PoolListItem';
-import { Search } from 'react-feather';
 import PoolListTableHeader from '~/modules/pools/components/PoolListTableHeader';
 import { debounce } from 'lodash';
 import { useBoolean } from '@chakra-ui/hooks';
 import { PaginatedTable } from '~/components/table/PaginatedTable';
-import { PoolListTabs } from '~/modules/pools/components/PoolListTabs';
-import { PoolListSearch } from '~/modules/pools/components/PoolListSearch';
 import { PoolListTop } from '~/modules/pools/components/PoolListTop';
 
 function PoolList() {
@@ -21,7 +18,7 @@ function PoolList() {
     }, 250);
 
     return (
-        <Box p={4}>
+        <Box>
             <PoolListTop />
             <PaginatedTable
                 items={pools}
@@ -41,7 +38,7 @@ function PoolList() {
                         pool={item}
                         borderBottomColor="beets.base.800"
                         borderBottomWidth={index === pools.length - 1 ? 0 : 1}
-                        bg='rgba(255,255,255,0.05)'
+                        bg="rgba(255,255,255,0.05)"
                     />
                 )}
             />

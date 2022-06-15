@@ -26,7 +26,7 @@ export function SubNavBar() {
     const protocolData = data?.protocolData;
 
     return (
-        <HStack px="4">
+        <HStack px={{ base: '4', xl: '8' }}>
             <BeetsBox px="4" py="2" rounded="lg" display="flex">
                 <Popover trigger="hover" placement="bottom-start">
                     {/*
