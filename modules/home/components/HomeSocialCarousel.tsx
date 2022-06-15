@@ -56,7 +56,7 @@ export function HomeSocialCarousel() {
 
     return (
         <Flex height="92.5px" flexDirection="column" justifyContent="flex-end">
-            <Box bgColor="gray.700" py="4" px="2" borderRadius="md" mx="12">
+            <Box bgColor="gray.700" py="4" px="2" borderRadius="md" mx="12" shadow="lg">
                 <Slider {...settings}>
                     <HomeSocialCarouselCard height="153px" />
                     <HomeSocialCarouselCard height="153px" />
