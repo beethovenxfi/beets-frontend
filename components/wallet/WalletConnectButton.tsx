@@ -5,6 +5,7 @@ import Image from 'next/image';
 import BeetsSmart from '~/assets/icons/beetx-smarts.svg';
 import { useReactiveVar } from '@apollo/client';
 import { txPendingVar } from '~/lib/util/useSubmitTransaction';
+import { IconWallet } from '~/components/icons/IconWallet';
 
 export default function WalletConnectButton() {
     const txPending = useReactiveVar(txPendingVar);
@@ -28,7 +29,8 @@ export default function WalletConnectButton() {
                                         onClick={openConnectModal}
                                         type="button"
                                     >
-                                        Connect Wallet
+                                        <IconWallet stroke="red.500" boxSize="20px" />
+                                        <Box ml="2">Connect Wallet</Box>
                                     </BeetsButton>
                                 );
                             }
