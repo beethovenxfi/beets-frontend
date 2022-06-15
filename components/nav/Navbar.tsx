@@ -5,19 +5,19 @@ import LogoFull from '~/assets/logo/beets-bal.svg';
 import WalletConnectButton from '../wallet/WalletConnectButton';
 import { NavbarLink } from '~/components/nav/NavbarLink';
 import { useRouter } from 'next/router';
-import { AnimatePresence, motion, MotionValue, useTransform } from 'framer-motion';
+import { motion, MotionValue, useTransform } from 'framer-motion';
 import { NavbarAdditionalLinksMenu } from '~/components/nav/NavbarAdditionalLinksMenu';
 import { useState } from 'react';
-import { BarChart2 } from 'react-feather';
 import StarsIcon from '~/components/apr-tooltip/StarsIcon';
 import { useUserAccount } from '~/lib/global/useUserAccount';
 import { NavbarPortfolioDrawer } from '~/components/nav/NavbarPortfolioDrawer';
+import { FadeInOutBox } from '~/components/animation/FadeInOutBox';
 
 interface Props {
     scrollY: MotionValue<number>;
 }
 
-function Navbar({ scrollY }: Props) {
+export function Navbar({ scrollY }: Props) {
     const router = useRouter();
     const opacity = useTransform(scrollY, [0, 32], [0, 1]);
     const [minimized, setMinimized] = useState(false);
@@ -73,33 +73,25 @@ function Navbar({ scrollY }: Props) {
                             <NavbarAdditionalLinksMenu />
                         </Flex>
                     </motion.div>
-                    <Box mr="3">
-                        <AnimatePresence>
-                            {isConnected ? (
-                                <motion.div animate={{ opacity: 1 }} initial={{ opacity: 0 }} exit={{ opacity: 0 }}>
-                                    <HStack spacing="3">
-                                        <Button
-                                            variant="unstyled"
-                                            bgColor="beets.lightAlpha.200"
-                                            width="42px"
-                                            height="40px"
-                                            display="flex"
-                                            alignItems="center"
-                                            justifyContent="center"
-                                        >
-                                            <StarsIcon />
-                                        </Button>
-                                        <NavbarPortfolioDrawer />
-                                    </HStack>
-                                </motion.div>
-                            ) : null}
-                        </AnimatePresence>
-                    </Box>
+                    <FadeInOutBox mr="3" isVisible={isConnected}>
+                        <HStack spacing="3">
+                            <Button
+                                variant="unstyled"
+                                bgColor="beets.lightAlpha.200"
+                                width="42px"
+                                height="40px"
+                                display="flex"
+                                alignItems="center"
+                                justifyContent="center"
+                            >
+                                <StarsIcon />
+                            </Button>
+                            <NavbarPortfolioDrawer />
+                        </HStack>
+                    </FadeInOutBox>
                     <WalletConnectButton />
                 </Flex>
             </motion.div>
         </Box>
     );
 }
-
-export default Navbar;

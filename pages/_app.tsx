@@ -36,7 +36,7 @@ import {
 } from 'echarts/components';
 
 import { CanvasRenderer } from 'echarts/renderers';
-import Navbar from '~/components/nav/Navbar';
+import { Navbar } from '~/components/nav/Navbar';
 import { chakraTheme } from '~/styles/chakraTheme';
 import { WagmiProvider } from 'wagmi';
 import { RainbowKitProvider } from '@rainbow-me/rainbowkit';
