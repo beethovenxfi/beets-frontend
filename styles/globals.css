@@ -39,13 +39,13 @@ a {
 .apr-stripes {
     background: linear-gradient(
         45deg,
-        #01F3AF 25%,
-        #0D936D 25%,
-        #0D936D 50%,
-        #01F3AF 50%,
-        #01F3AF 75%,
-        #0D936D 75%,
-        #0D936D 100%
+        #01f3af 25%,
+        #0d936d 25%,
+        #0d936d 50%,
+        #01f3af 50%,
+        #01f3af 75%,
+        #0d936d 75%,
+        #0d936d 100%
     );
     background-size: 1em 1em;
     background-repeat: repeat;

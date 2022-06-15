@@ -31,6 +31,7 @@
         "@types/numeral": "^2.0.1",
         "@types/react": "18.0.8",
         "@types/react-dom": "18.0.3",
+        "@types/react-slick": "^0.23.8",
         "bignumber.js": "^9.0.2",
         "chakra-react-select": "^4.0.0",
         "concurrently": "^7.1.0",

@@ -2,7 +2,7 @@ import Document, { Head, Html, Main, NextScript } from 'next/document';
 import { ColorModeScript } from '@chakra-ui/react';
 import { chakraTheme } from '~/styles/chakraTheme';
 
-class MyDocument extends Document {
+class BeetsDocument extends Document {
     render() {
         return (
             <Html>
@@ -22,4 +22,4 @@ class MyDocument extends Document {
     }
 }
 
-export default MyDocument;
+export default BeetsDocument;

@@ -1,6 +1,6 @@
 import { Box, Button, Flex, HStack } from '@chakra-ui/react';
 import Image from 'next/image';
-
+import NextLink from 'next/link';
 import LogoFull from '~/assets/logo/beets-bal.svg';
 import WalletConnectButton from '../wallet/WalletConnectButton';
 import { NavbarLink } from '~/components/nav/NavbarLink';
@@ -46,7 +46,11 @@ export function Navbar({ scrollY }: Props) {
                             scale: { type: 'keyframes' },
                         }}
                     >
-                        <Image src={LogoFull} alt="Beethoven X" style={{ width: '144px', minWidth: '144px' }} />
+                        <NextLink href="/">
+                            <Box cursor="pointer">
+                                <Image src={LogoFull} alt="Beethoven X" style={{ width: '144px', minWidth: '144px' }} />
+                            </Box>
+                        </NextLink>
                     </motion.div>
                     {/*<Box>
                     <Image src={PoweredByBalancer} alt="Powered by Balancer V2" />
