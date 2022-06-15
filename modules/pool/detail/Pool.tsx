@@ -17,11 +17,11 @@ function Pool() {
     return (
         <Box marginBottom="8">
             <PoolHeader />
-            <VStack width="full">
+            <VStack width="full" spacing='4'>
                 <Flex width="full" justifyContent="flex-end">
                     <PoolActionRow />
                 </Flex>
-                <HStack width="full" spacing="3" height="md">
+                <HStack width="full" spacing="3" height="475px">
                     <PoolStats />
                     <PoolDetailChart />
                 </HStack>

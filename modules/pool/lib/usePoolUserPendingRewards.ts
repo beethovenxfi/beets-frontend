@@ -27,6 +27,7 @@ export function usePoolUserPendingRewards() {
         return pending || { address: rewardToken, amount: '0' };
     });
 
+    console.log('pendingRewards', pendingRewards, pendingRewardsTotalUSD)
     return {
         pendingRewards,
         pendingRewardsTotalUSD,

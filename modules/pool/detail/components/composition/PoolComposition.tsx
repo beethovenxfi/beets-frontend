@@ -27,6 +27,7 @@ import numeral from 'numeral';
 import Card from '~/components/card/Card';
 import { useState } from 'react';
 import { CornerDownRight } from 'react-feather';
+import { usePoolUserPoolTokenBalances } from '~/modules/pool/lib/usePoolUserPoolTokenBalances';
 
 interface Props {
     pool: GqlPoolUnion;
@@ -42,12 +43,17 @@ interface BreakDownProps extends FlexProps {
 
 type PoolToken = GqlPoolTokenUnion & { pool?: GqlPoolLinearNested };
 
-function PoolCompositionRow(token: PoolToken) {
+interface PoolCompositionRowProps {
+    token: PoolToken;
+    hasNestedToken?: boolean;
+    hasBpt?: boolean;
+}
+function PoolCompositionRow({ token, hasNestedToken, hasBpt }: PoolCompositionRowProps) {
     const { priceFor } = useGetTokens();
     const isBoostedToken = !!token.pool;
 
     const sharedCells = (_token: PoolToken, isLinearToken: boolean) => {
-        const weight = isLinearToken
+        const weight = !isLinearToken
             ? parseFloat(_token.weight || '0')
             : parseFloat(_token.balance) / parseFloat(token.balance);
 
@@ -58,9 +64,25 @@ function PoolCompositionRow(token: PoolToken) {
                         {_token.name}
                     </Text>
                 </Td>
-                <Td borderBottom="0" p="2" marginBottom="4" width="300px">
-                    {isLinearToken && <Progress width="80%" rounded="lg" value={weight * 100} />}
-                </Td>
+                {!hasNestedToken && (
+                    <Td borderBottom="0" p="2" marginBottom="4" width="300px">
+                        {!isLinearToken && <Progress width="80%" rounded="lg" value={weight * 100} />}
+                    </Td>
+                )}
+                {hasBpt && (
+                    <>
+                        <Td borderBottom="0" p="2" marginBottom="4">
+                            <Text fontSize="sm" color="beets.base.50">
+                                {numeral(_token.balance).format('0,0.0000')}
+                            </Text>
+                        </Td>
+                        <Td borderBottom="0" p="2" marginBottom="4">
+                            <Text fontSize="sm" color="beets.base.50">
+                                {numeral(parseFloat(_token.balance) * priceFor(_token.address)).format('$0,0.00a')}
+                            </Text>
+                        </Td>
+                    </>
+                )}
                 <Td borderBottom="0" p="2" marginBottom="4">
                     <Text fontSize="sm" color="beets.base.50">
                         {numeral(_token.balance).format('0,0.0000')}
@@ -118,6 +140,7 @@ function PoolCompositionRow(token: PoolToken) {
 
 function PoolComposition({ pool }: Props) {
     const poolTokens = poolGetTokensWithoutPhantomBpt(pool) as PoolToken[];
+    const { isLoading: isLoadingUserPoolBalances, hasBpt, investedAmount } = usePoolUserPoolTokenBalances();
     const [show, setShow] = useState(false);
 
     const toggle = (toggleVal: boolean) => {
@@ -144,11 +167,27 @@ function PoolComposition({ pool }: Props) {
                                     Name
                                 </Text>
                             </Th>
-                            <Th border="none" padding="2">
-                                <Text fontSize="xs" color="beets.base.50">
-                                    Weight
-                                </Text>
-                            </Th>
+                            {!hasNestedTokens && (
+                                <Th border="none" padding="2">
+                                    <Text fontSize="xs" color="beets.base.50">
+                                        Weight
+                                    </Text>
+                                </Th>
+                            )}
+                            {hasBpt && (
+                                <>
+                                    <Th border="none" padding="2">
+                                        <Text fontSize="xs" color="beets.base.50">
+                                            Your supply
+                                        </Text>
+                                    </Th>
+                                    <Th border="none" padding="2">
+                                        <Text fontSize="xs" color="beets.base.50">
+                                            Supplied value
+                                        </Text>
+                                    </Th>
+                                </>
+                            )}
                             <Th border="none" padding="2">
                                 <Text fontSize="xs" color="beets.base.50">
                                     Supply
@@ -163,7 +202,12 @@ function PoolComposition({ pool }: Props) {
                     </Thead>
                     <Tbody>
                         {poolTokens.map((token, i) => (
-                            <PoolCompositionRow key={`composition-${i}`} {...token} />
+                            <PoolCompositionRow
+                                hasNestedToken={hasNestedTokens}
+                                hasBpt={hasBpt}
+                                key={`composition-${i}`}
+                                token={token}
+                            />
                         ))}
                     </Tbody>
                 </Table>

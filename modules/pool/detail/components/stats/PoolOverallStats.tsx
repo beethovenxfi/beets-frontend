@@ -46,7 +46,6 @@ export default function PoolOverallStats() {
                 </Text>
                 <Badge colorScheme="green">0.00%</Badge>
             </VStack>
-            <Divider />
         </VStack>
     );
 }

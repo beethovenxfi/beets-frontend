@@ -3,15 +3,24 @@ import Card from '~/components/card/Card';
 import { usePool } from '../../../lib/usePool';
 import numeral from 'numeral';
 import AprTooltip from '~/components/apr-tooltip/AprTooltip';
+import { usePoolUserPoolTokenBalances } from '~/modules/pool/lib/usePoolUserPoolTokenBalances';
+import { usePoolUserPendingRewards } from '~/modules/pool/lib/usePoolUserPendingRewards';
 
 export default function PoolUserStats() {
     const { pool, poolTokensWithoutPhantomBpt } = usePool();
+    const { isLoading: isLoadingUserPoolBalances, hasBpt, investedAmount } = usePoolUserPoolTokenBalances();
+    const {
+        pendingRewards,
+        pendingRewardsTotalUSD,
+        isLoading: isLoadingPendingRewards,
+        refetch,
+    } = usePoolUserPendingRewards();
 
     return (
-        <VStack spacing="4" width="full" alignItems="flex-start">
+        <VStack spacing="4" width="full" alignItems="flex-start" flex={1}>
             <VStack spacing="0" alignItems="flex-start">
                 <Text lineHeight="1rem" fontWeight="semibold" fontSize="sm" color="beets.base.50">
-                    Pool APR
+                    Your APR
                 </Text>
                 <HStack>
                     <div className="apr-stripes">{numeral(pool.dynamicData.apr.total).format('0.00%')}</div>
@@ -21,32 +30,33 @@ export default function PoolUserStats() {
             <Divider />
             <VStack spacing="0" alignItems="flex-start">
                 <Text lineHeight="1rem" fontWeight="semibold" fontSize="sm" color="beets.base.50">
-                    TVL
+                    Your Liquidity
                 </Text>
                 <Text color="white" fontSize="1.75rem">
-                    {numeral(pool.dynamicData.totalLiquidity).format('$0,0.00a')}
+                    {numeral(investedAmount).format('$0,0.00a')}
                 </Text>
-                <Badge colorScheme="green">0.00%</Badge>
             </VStack>
             <VStack spacing="0" alignItems="flex-start">
                 <Text lineHeight="1rem" fontWeight="semibold" fontSize="sm" color="beets.base.50">
-                    24h Volume
+                    Pending Rewards
                 </Text>
                 <Text color="white" fontSize="1.75rem">
-                    {numeral(pool.dynamicData.volume24h).format('$0,0.00a')}
+                    {numeral(pendingRewardsTotalUSD).format('$0,0.00000a')}
                 </Text>
-                <Badge colorScheme="green">0.00%</Badge>
             </VStack>
             <VStack spacing="0" alignItems="flex-start">
                 <Text lineHeight="1rem" fontWeight="semibold" fontSize="sm" color="beets.base.50">
-                    24h Fees
+                    Staked Share
                 </Text>
-                <Text color="white" fontSize="1.75rem">
-                    {numeral(pool.dynamicData.fees24h).format('$0,0.00a')}
-                </Text>
-                <Badge colorScheme="green">0.00%</Badge>
+                <VStack spacing="none" alignItems="flex-start">
+                    <Text color="white" fontSize="1.75rem">
+                        {numeral(0).format('0,0.0000')}
+                    </Text>
+                    <Text color="white" fontSize="1rem" lineHeight="1rem">
+                        {numeral(0).format('0.00%')}
+                    </Text>
+                </VStack>
             </VStack>
-            <Divider />
         </VStack>
     );
 }
