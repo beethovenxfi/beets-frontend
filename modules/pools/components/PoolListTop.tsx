@@ -44,19 +44,6 @@ export function PoolListTop() {
                     </Box>
                 </Flex>
             </FadeInOutBox>
-            {/*{showFilters ? (
-                <Flex pt={2} pb={4} alignItems="center">
-                    <Box flex={1} mr={2}>
-                        <PoolListTokenMultiSelect />
-                    </Box>
-                    <Box flex={1} mx={2}>
-                        <PoolListFilterMultiSelect />
-                    </Box>
-                    <Box flex={1} ml={2}>
-                        <PoolListAttributeMultiSelect />
-                    </Box>
-                </Flex>
-            ) : null}*/}
         </Box>
     );
 }
