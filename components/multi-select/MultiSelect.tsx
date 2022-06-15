@@ -11,13 +11,13 @@ const chakraStyles: ChakraStylesConfig = {
     }),
     option: (provided, state) => ({
         ...provided,
-        background: state.isFocused ? 'beets.base.800' : 'transparent',
+        background: state.isFocused ? 'beets.base.600' : 'transparent',
         //background: 'beets.base.800',
     }),
     menuList: (provided, state) => ({
         ...provided,
         //background: state.isFocused ? 'blue.100' : 'black',
-        background: 'beets.base.700',
+        background: 'beets.base.800',
     }),
     multiValue: (provided, state) => ({
         ...provided,
