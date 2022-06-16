@@ -6,15 +6,11 @@ import TokenAvatar from '~/components/token/TokenAvatar';
 import { tokenFormatAmount } from '~/lib/services/token/token-util';
 import { usePoolUserDepositBalance } from '~/modules/pool/lib/usePoolUserDepositBalance';
 import { useGetTokens } from '~/lib/global/useToken';
-import { sumBy } from 'lodash';
-import { Feather } from 'react-feather';
-import { usePoolUserPoolTokenBalances } from '~/modules/pool/lib/usePoolUserPoolTokenBalances';
 
 interface Props extends BoxProps {}
 
 export function PoolDetailMyBalance({ ...rest }: Props) {
     const { pool } = usePool();
-    const { userStakedBptBalance, userWalletBptBalance } = usePoolUserPoolTokenBalances();
     const { data, isLoading, userPoolBalanceUSD } = usePoolUserDepositBalance();
     const { formattedPrice } = useGetTokens();
 

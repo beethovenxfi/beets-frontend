@@ -1,11 +1,12 @@
 import { Box, Flex, Input, InputGroup, Link, Text } from '@chakra-ui/react';
-import { usePoolUserPoolTokenBalances } from '~/modules/pool/lib/usePoolUserPoolTokenBalances';
+import { usePoolUserTokenBalancesInWallet } from '~/modules/pool/lib/usePoolUserTokenBalancesInWallet';
 import { useState } from 'react';
 import { numberLimitInputToNumDecimals } from '~/lib/util/number-formats';
 import { PoolInvestStakePreviewModal } from '~/modules/pool/invest/components/PoolInvestStakePreviewModal';
+import { usePoolUserBptBalance } from '~/modules/pool/lib/usePoolUserBptBalance';
 
 export function PoolInvestStakeForm() {
-    const { userWalletBptBalance, hasBptInWallet } = usePoolUserPoolTokenBalances();
+    const { userWalletBptBalance, hasBptInWallet } = usePoolUserBptBalance();
     const [amount, setAmount] = useState('');
     const hasValue = hasBptInWallet && amount !== '';
     const isValid = !hasValue || parseFloat(userWalletBptBalance) >= parseFloat(amount);

@@ -1,12 +1,13 @@
 import PoolInvestForm from '~/modules/pool/invest/components/PoolInvestForm';
 import { PoolInvestStakeForm } from '~/modules/pool/invest/components/PoolInvestStakeForm';
-import { usePoolUserPoolTokenBalances } from '~/modules/pool/lib/usePoolUserPoolTokenBalances';
+import { usePoolUserTokenBalancesInWallet } from '~/modules/pool/lib/usePoolUserTokenBalancesInWallet';
 import { BeetsAccordion } from '~/components/accordion/BeetsAccordion';
 import { usePool } from '~/modules/pool/lib/usePool';
+import { usePoolUserBptBalance } from '~/modules/pool/lib/usePoolUserBptBalance';
 
 export function PoolInvestActions() {
     const { pool } = usePool();
-    const { hasBptInWallet } = usePoolUserPoolTokenBalances();
+    const { hasBptInWallet } = usePoolUserBptBalance();
     const items = [{ headline: 'Invest in pool', content: <PoolInvestForm />, disabled: false }];
 
     if (pool.staking) {

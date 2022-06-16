@@ -1,14 +1,13 @@
 import { Flex, Link, Text } from '@chakra-ui/react';
 import numeral from 'numeral';
 import { usePool } from '~/modules/pool/lib/usePool';
-import { usePoolUserPoolTokenBalances } from '~/modules/pool/lib/usePoolUserPoolTokenBalances';
+import { usePoolUserTokenBalancesInWallet } from '~/modules/pool/lib/usePoolUserTokenBalancesInWallet';
 import { usePoolUserDepositBalance } from '~/modules/pool/lib/usePoolUserDepositBalance';
 
 const DEFAULT_AMOUNT = 2000;
 
 export function PoolDetailPossibleYieldText() {
     const { pool, totalApr } = usePool();
-    const { investableAmount, hasBpt } = usePoolUserPoolTokenBalances();
     const { data, userPoolBalanceUSD, isLoading } = usePoolUserDepositBalance();
     const weeklyYield = totalApr / 52;
     const userHasBalance = userPoolBalanceUSD > 100;

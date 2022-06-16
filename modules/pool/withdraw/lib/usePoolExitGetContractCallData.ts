@@ -5,13 +5,14 @@ import { withdrawStateVar } from '~/modules/pool/withdraw/lib/useWithdrawState';
 import { usePoolExitGetProportionalWithdrawEstimate } from '~/modules/pool/withdraw/lib/usePoolExitGetProportionalWithdrawEstimate';
 import { usePoolExitGetBptInForSingleAssetWithdraw } from '~/modules/pool/withdraw/lib/usePoolExitGetBptInForSingleAssetWithdraw';
 import { oldBnumScaleAmount, oldBnumToHumanReadable } from '~/lib/services/pool/lib/old-big-number';
-import { usePoolUserPoolTokenBalances } from '~/modules/pool/lib/usePoolUserPoolTokenBalances';
+import { usePoolUserTokenBalancesInWallet } from '~/modules/pool/lib/usePoolUserTokenBalancesInWallet';
 import { useSlippage } from '~/lib/global/useSlippage';
+import { usePoolUserBptBalance } from '~/modules/pool/lib/usePoolUserBptBalance';
 
 export function usePoolExitGetContractCallData() {
     const { type, singleAsset, proportionalPercent } = useReactiveVar(withdrawStateVar);
     const { poolService, pool } = usePool();
-    const { userTotalBptBalance } = usePoolUserPoolTokenBalances();
+    const { userTotalBptBalance } = usePoolUserBptBalance();
     const { data: proportionalAmountsOut, error, isLoading } = usePoolExitGetProportionalWithdrawEstimate();
     const { data: singleAssetWithdrawEstimate } = usePoolExitGetBptInForSingleAssetWithdraw();
     const { slippage } = useSlippage();

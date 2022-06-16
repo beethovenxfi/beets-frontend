@@ -1,53 +1,30 @@
-import { GqlPoolLinearNested, GqlPoolTokenUnion, GqlPoolUnion } from '~/apollo/generated/graphql-codegen-generated';
-import {
-    Box,
-    FlexProps,
-    HStack,
-    Progress,
-    Table,
-    TableContainer,
-    Tbody,
-    Td,
-    Text,
-    Th,
-    Thead,
-    Tr,
-} from '@chakra-ui/react';
+import { GqlPoolTokenUnion } from '~/apollo/generated/graphql-codegen-generated';
+import { Box, HStack, Progress, Table, TableContainer, Tbody, Td, Text, Th, Thead, Tr } from '@chakra-ui/react';
 import TokenAvatar from '~/components/token/TokenAvatar';
-import { poolGetTokensWithoutPhantomBpt } from '~/lib/services/pool/pool-util';
 import { useGetTokens } from '~/lib/global/useToken';
 import numeral from 'numeral';
 import Card from '~/components/card/Card';
 import { useState } from 'react';
 import { CornerDownRight } from 'react-feather';
-import { usePoolUserPoolTokenBalances } from '~/modules/pool/lib/usePoolUserPoolTokenBalances';
-
-interface Props {
-    pool: GqlPoolUnion;
-}
-
-interface BreakDownProps extends FlexProps {
-    index: number;
-    key: string;
-    nestLevel: number;
-    isLast?: boolean;
-    show: boolean;
-}
-
-type PoolToken = GqlPoolTokenUnion & { pool?: GqlPoolLinearNested };
+import { usePoolUserTokenBalancesInWallet } from '~/modules/pool/lib/usePoolUserTokenBalancesInWallet';
+import { usePool } from '~/modules/pool/lib/usePool';
+import { usePoolUserBptBalance } from '~/modules/pool/lib/usePoolUserBptBalance';
+import { usePoolUserInvestedTokenBalances } from '~/modules/pool/lib/usePoolUserInvestedTokenBalances';
+import { PoolCompositionRow } from '~/modules/pool/detail/components/composition/PoolCompositionRow';
 
 interface PoolCompositionRowProps {
-    token: PoolToken;
+    token: GqlPoolTokenUnion;
     hasNestedToken?: boolean;
     hasBpt?: boolean;
     userPercentShare: number;
 }
-
+/*
 function PoolCompositionRow({ token, hasNestedToken, hasBpt, userPercentShare }: PoolCompositionRowProps) {
     const { priceFor } = useGetTokens();
-    const isBoostedToken = !!token.pool;
+    const isBoostedToken =
+        token.__typename === 'GqlPoolTokenLinear' || token.__typename === 'GqlPoolTokenPhantomStable';
 
-    const sharedCells = (_token: PoolToken, isLinearToken: boolean) => {
+    const sharedCells = (_token: GqlPoolTokenUnion, isLinearToken: boolean) => {
         const _tokenBalance = parseFloat(_token.balance);
 
         const weight = !isLinearToken ? parseFloat(_token.weight || '0') : _tokenBalance / parseFloat(token.balance);
@@ -99,7 +76,7 @@ function PoolCompositionRow({ token, hasNestedToken, hasBpt, userPercentShare }:
             <Tr key={`composition-${token.symbol}`} padding="2" width="full" background="whiteAlpha.100">
                 <Td borderBottom="0" p="2" marginBottom="4" borderTopLeftRadius="lg" borderBottomLeftRadius="lg">
                     <HStack>
-                        <TokenAvatar size="xs" address={token.address}></TokenAvatar>
+                        <TokenAvatar size="xs" address={token.address} />
                         <Text fontSize="sm" color="beets.base.50">
                             {token.symbol}
                         </Text>
@@ -108,7 +85,7 @@ function PoolCompositionRow({ token, hasNestedToken, hasBpt, userPercentShare }:
                 {sharedCells(token, false)}
             </Tr>
             {isBoostedToken &&
-                token.pool?.tokens.map((token: any) => (
+                token.pool.tokens.map((token: any) => (
                     <Tr key={`composition-${token.symbol}`} width="full" background="blackAlpha.100">
                         <Td
                             borderBottom="0"
@@ -122,7 +99,7 @@ function PoolCompositionRow({ token, hasNestedToken, hasBpt, userPercentShare }:
                                 <Box color="whiteAlpha.400">
                                     <CornerDownRight />
                                 </Box>
-                                <TokenAvatar size="xs" address={token.address}></TokenAvatar>
+                                <TokenAvatar size="xs" address={token.address} />
                                 <Text fontSize="sm" color="beets.base.50">
                                     {token.symbol}
                                 </Text>
@@ -133,20 +110,18 @@ function PoolCompositionRow({ token, hasNestedToken, hasBpt, userPercentShare }:
                 ))}
         </>
     );
-}
+}*/
 
-function PoolComposition({ pool }: Props) {
-    const poolTokens = poolGetTokensWithoutPhantomBpt(pool) as PoolToken[];
-    const { isLoading: isLoadingUserPoolBalances, hasBpt, userPercentShare } = usePoolUserPoolTokenBalances();
+export function PoolComposition() {
+    const { pool } = usePool();
+    const { hasBpt, userPercentShare } = usePoolUserBptBalance();
     const [show, setShow] = useState(false);
+    const { getUserInvestedBalance } = usePoolUserInvestedTokenBalances();
+    const { priceFor } = useGetTokens();
 
     const toggle = (toggleVal: boolean) => {
         setShow((val) => toggleVal);
     };
-
-    const linearType = 'GqlPoolTokenLinear';
-    const phantomStableType = 'GqlPoolTokenPhantomStable';
-    const hasNestedTokens = poolTokens.some((token) => [linearType, phantomStableType].includes(token.__typename));
 
     return (
         <Card px="2" py="2" mt={4} width="full">
@@ -164,13 +139,11 @@ function PoolComposition({ pool }: Props) {
                                     Name
                                 </Text>
                             </Th>
-                            {!hasNestedTokens && (
-                                <Th border="none" padding="2">
-                                    <Text fontSize="xs" color="beets.base.50">
-                                        Weight
-                                    </Text>
-                                </Th>
-                            )}
+                            <Th border="none" padding="2">
+                                <Text fontSize="xs" color="beets.base.50">
+                                    Weight
+                                </Text>
+                            </Th>
                             {hasBpt && (
                                 <>
                                     <Th border="none" padding="2">
@@ -198,14 +171,52 @@ function PoolComposition({ pool }: Props) {
                         </Tr>
                     </Thead>
                     <Tbody>
-                        {poolTokens.map((token, i) => (
-                            <PoolCompositionRow
-                                hasNestedToken={hasNestedTokens}
-                                hasBpt={hasBpt}
-                                key={`composition-${i}`}
-                                token={token}
-                                userPercentShare={userPercentShare}
-                            />
+                        {pool.tokens.map((token, i) => (
+                            <>
+                                <PoolCompositionRow
+                                    userHasBalance={hasBpt}
+                                    key={`composition-${i}`}
+                                    token={token}
+                                    userBalance={getUserInvestedBalance(token.address)}
+                                    tokenPrice={priceFor(token.address)}
+                                    nestedLevel={0}
+                                />
+                                {token.__typename === 'GqlPoolTokenLinear' &&
+                                    token.pool.tokens.map((nestedToken) => (
+                                        <PoolCompositionRow
+                                            userHasBalance={hasBpt}
+                                            key={`composition-${i}-${nestedToken.address}`}
+                                            token={nestedToken}
+                                            userBalance=""
+                                            tokenPrice={priceFor(nestedToken.address)}
+                                            nestedLevel={1}
+                                        />
+                                    ))}
+                                {token.__typename === 'GqlPoolTokenPhantomStable' &&
+                                    token.pool.tokens.map((phantomStableNested) => (
+                                        <>
+                                            <PoolCompositionRow
+                                                userHasBalance={hasBpt}
+                                                key={`composition-${i}-${phantomStableNested.address}`}
+                                                token={phantomStableNested}
+                                                userBalance=""
+                                                tokenPrice={priceFor(phantomStableNested.address)}
+                                                nestedLevel={1}
+                                            />
+                                            {phantomStableNested.__typename === 'GqlPoolTokenLinear' &&
+                                                phantomStableNested.pool.tokens.map((nestedToken) => (
+                                                    <PoolCompositionRow
+                                                        userHasBalance={hasBpt}
+                                                        key={`composition-${i}-${phantomStableNested.address}-${nestedToken.address}`}
+                                                        token={nestedToken}
+                                                        userBalance=""
+                                                        tokenPrice={priceFor(nestedToken.address)}
+                                                        nestedLevel={2}
+                                                    />
+                                                ))}
+                                        </>
+                                    ))}
+                            </>
                         ))}
                     </Tbody>
                 </Table>
@@ -213,5 +224,3 @@ function PoolComposition({ pool }: Props) {
         </Card>
     );
 }
-
-export default PoolComposition;
