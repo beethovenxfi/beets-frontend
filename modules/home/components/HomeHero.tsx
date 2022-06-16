@@ -14,7 +14,7 @@ export function HomeHero() {
             backgroundPosition="center"
             backgroundRepeat="no-repeat"
             backgroundSize="cover"
-            boxShadow="0px 0px 24px 0px rgba(0,0,0,0.15);"
+            boxShadow="0px 0px 24px 0px rgba(0,0,0,0.25);"
         >
             <Flex flex="1" alignItems="center" flexDirection="column" mt="20">
                 <Text as="h1" textStyle="h1" textTransform="uppercase" color="beets.green">
