@@ -9,6 +9,7 @@ import PoolOverallStats from './PoolOverallStats';
 import { TabList, Tabs } from '@chakra-ui/tabs';
 import BeetsTab from '~/components/tabs/BeetsTab';
 import { useState } from 'react';
+import { Box } from '@chakra-ui/react';
 
 export default function PoolStats() {
     const { isLoading, hasBpt } = usePoolUserPoolTokenBalances();
@@ -22,11 +23,11 @@ export default function PoolStats() {
         <Card padding="4" minWidth="300px" width="300px" height="full">
             <VStack height="full" spacing="4">
                 {hasBpt && (
-                    <Tabs variant="soft-rounded" display="flex" onChange={handleTabChanged}>
+                    <Tabs width="full" variant="soft-rounded" display="flex" onChange={handleTabChanged}>
                         <TabList>
                             <HStack spacing="2">
                                 <BeetsTab paddingX="4" paddingY="2" fontSize="xs">
-                                    Your Stats
+                                    My Stats
                                 </BeetsTab>
                                 <BeetsTab paddingX="4" paddingY="2" fontSize="xs">
                                     Pool Stats

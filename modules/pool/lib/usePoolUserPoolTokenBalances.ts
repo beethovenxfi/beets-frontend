@@ -45,24 +45,23 @@ import { usePoolUserBptWalletBalance } from '~/modules/pool/lib/usePoolUserBptWa
 
 export function usePoolUserPoolTokenBalances() {
     const { priceForAmount } = useGetTokens();
-    const { allTokens, allTokenAddresses, pool } = usePool();
+    const { allTokens, allTokenAddresses, pool, bptPrice } = usePool();
 
     const { userBalances, getUserBalance, ...userBalancesQuery } = useUserBalances(allTokenAddresses, allTokens);
     const { data: userStakedBptBalance, ...userStakedBalanceQuery } = usePoolUserStakedBalance();
     const { userWalletBptBalance } = usePoolUserBptWalletBalance(userBalances);
 
     const userStakedBptBalanceScaled = parseUnits(userStakedBptBalance || '0', 18);
-    const userBptBalanceScaled = userWalletBptBalance.add(userStakedBptBalanceScaled);
+    const userTotalBptBalanceScaled = userWalletBptBalance.add(userStakedBptBalanceScaled);
 
     const investTokens = pool.investConfig.options.map((option) => option.tokenOptions).flat();
     const investableAmount = sumBy(investTokens, (token) =>
         priceForAmount({ address: token.address, amount: getUserBalance(token.address) }),
     );
-    const userBptBalanceScaledReadable = parseFloat(formatUnits(userBptBalanceScaled, 18));
 
-    const investedAmount =
-        (parseFloat(pool.dynamicData.totalLiquidity) / parseFloat(pool.dynamicData.totalShares)) *
-        userBptBalanceScaledReadable;
+    const userTotalBptBalance = formatFixed(userTotalBptBalanceScaled, 18);
+    const userPercentShare = parseFloat(userTotalBptBalance) / parseFloat(pool.dynamicData.totalShares);
+    const investedAmount = bptPrice * parseFloat(userTotalBptBalance);
 
     function refetch() {
         userBalancesQuery.refetch();
@@ -81,10 +80,11 @@ export function usePoolUserPoolTokenBalances() {
         userTotalBptBalance: formatFixed(userWalletBptBalance.add(userStakedBptBalanceScaled), 18),
         userWalletBptBalance: formatFixed(userWalletBptBalance, 18),
         userStakedBptBalance: formatFixed(userStakedBptBalanceScaled, 18),
-        hasBpt: userBptBalanceScaled.gt(0),
+        hasBpt: userTotalBptBalanceScaled.gt(0),
         hasBptInWallet: userWalletBptBalance.gt(0),
         hasBptStaked: userStakedBptBalanceScaled.gt(0),
         investableAmount,
         investedAmount,
+        userPercentShare,
     };
 }

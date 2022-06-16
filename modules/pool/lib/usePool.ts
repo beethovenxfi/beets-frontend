@@ -40,6 +40,7 @@ export function usePool() {
         ...pool.withdrawConfig.options.flatMap((option) => option.tokenOptions),
     ];
     const allTokens = uniqBy(allTokensWithDuplicates, (token) => token.address);
+    const bptPrice = parseFloat(pool.dynamicData.totalLiquidity) / parseFloat(pool.dynamicData.totalShares);
 
     return {
         pool,
@@ -49,5 +50,6 @@ export function usePool() {
         bpt,
         poolTokensWithoutPhantomBpt: poolGetTokensWithoutPhantomBpt(pool),
         totalApr: parseFloat(pool.dynamicData.apr.total),
+        bptPrice,
     };
 }
