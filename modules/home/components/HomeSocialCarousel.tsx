@@ -1,9 +1,26 @@
-import Slider from 'react-slick';
-import { HomeSocialCarouselCard } from '~/modules/home/components/HomeSocialCarouselCard';
-import { Box, Flex, IconButton, Link } from '@chakra-ui/react';
+import { Box, Flex, Link } from '@chakra-ui/react';
 import { ChevronLeft, ChevronRight } from 'react-feather';
+import Slider, { CustomArrowProps } from 'react-slick';
+
+import { HomeSocialCarouselCard } from '~/modules/home/components/HomeSocialCarouselCard';
 
 export function HomeSocialCarousel() {
+    const NextArrow = ({ currentSlide, slideCount, ...props }: CustomArrowProps) => (
+        <Box {...props}>
+            <Link color="gray.100" position="absolute" style={{ right: '-18px' }}>
+                <ChevronRight size={32} />
+            </Link>
+        </Box>
+    );
+
+    const PrevArrow = ({ currentSlide, slideCount, ...props }: CustomArrowProps) => (
+        <Box {...props}>
+            <Link color="gray.100" position="absolute" style={{ left: '-18px' }}>
+                <ChevronLeft size={32} />
+            </Link>
+        </Box>
+    );
+
     const settings = {
         dots: true,
         infinite: false,
@@ -12,20 +29,8 @@ export function HomeSocialCarousel() {
         slidesToScroll: 4,
         initialSlide: 0,
         arrows: true,
-        nextArrow: (
-            <Box>
-                <Link color="gray.100" position="absolute" style={{ right: '-18px' }}>
-                    <ChevronRight size={32} />
-                </Link>
-            </Box>
-        ),
-        prevArrow: (
-            <Box>
-                <Link color="gray.100" position="absolute" style={{ left: '-18px' }}>
-                    <ChevronLeft size={32} />
-                </Link>
-            </Box>
-        ),
+        nextArrow: <NextArrow />,
+        prevArrow: <PrevArrow />,
         responsive: [
             {
                 breakpoint: 1024,
