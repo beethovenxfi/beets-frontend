@@ -3,7 +3,7 @@ import { IconDiscord } from '~/components/icons/IconDiscord';
 
 export function HomeSocialCarouselCard({ height }: { height: string }) {
     return (
-        <Box mx="2" p="3" bgColor="gray.900" borderRadius="md" height={height}>
+        <Box mx="2" p="3" bgColor="beets.base.800" borderRadius="md" height={height}>
             <Flex alignItems="center" mb="3">
                 <Box flex="1" fontSize="sm">
                     12 hours ago
