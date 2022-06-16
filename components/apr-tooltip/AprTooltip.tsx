@@ -40,12 +40,12 @@ function AprTooltip({ data, textProps, onlySparkles }: Props) {
                 </PopoverTrigger>
             </HStack>
 
-            <PopoverContent w="fit-content" bgColor="rgba(18, 14, 68, .98)" shadow='2xl'>
-                <PopoverHeader bgColor='whiteAlpha.100'>
+            <PopoverContent w="fit-content" bgColor="beets.base.800" shadow="2xl">
+                <PopoverHeader bgColor="whiteAlpha.100">
                     <Text>Total APR</Text>
-                    <Text fontSize='1.5rem'>{formatApr(data.total)}</Text>
+                    <Text fontSize="1.5rem">{formatApr(data.total)}</Text>
                 </PopoverHeader>
-                <Box p="2" fontSize="sm" bgColor='whiteAlpha.200'>
+                <Box p="2" fontSize="sm" bgColor="whiteAlpha.200">
                     {data.items.map((item, index) => {
                         return (
                             <Box key={index}>

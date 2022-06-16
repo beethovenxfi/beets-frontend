@@ -30,7 +30,7 @@ export function HomeHero() {
                 <Text color="beets.green" fontWeight="bold" fontSize="lg" mb="8">
                     An AMM re-imagineered for everyone.
                 </Text>
-                <HStack>
+                <HStack spacing="4">
                     <BeetsButton>Invest now</BeetsButton>
                     <BeetsButton>Getting started</BeetsButton>
                 </HStack>

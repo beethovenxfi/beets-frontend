@@ -60,8 +60,11 @@ export function HomeSocialCarousel() {
     };
 
     return (
-        <Flex height="92.5px" flexDirection="column" justifyContent="flex-end">
-            <Box bgColor="beets.base.900" py="4" px="2" borderRadius="md" mx="12" shadow="lg" zIndex={0}>
+        <Flex height="132" flexDirection="column" justifyContent="flex-end">
+            <Box mx="0" mt="4" mb="2" fontSize="2xl" fontWeight="bold">
+                Latest updates
+            </Box>
+            <Box bgColor="beets.base.900" py="4" px="2" borderRadius="md" mx="0" shadow="lg" zIndex={0}>
                 <Slider {...settings}>
                     <HomeSocialCarouselCard height="153px" />
                     <HomeSocialCarouselCard height="153px" />
