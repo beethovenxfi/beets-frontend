@@ -16,13 +16,13 @@ export function HomeHero() {
             backgroundSize="cover"
             boxShadow="0px 0px 24px 0px rgba(0,0,0,0.15);"
         >
-            <Flex flex="1" alignItems="center" justifyContent="center" flexDirection="column" mb="20">
+            <Flex flex="1" alignItems="center" flexDirection="column" mt="20">
                 <Text as="h1" textStyle="h1" textTransform="uppercase" color="beets.green">
                     Welcome to
                     <br />
                     Beethoven X
                 </Text>
-                <Text color="white" fontSize="lg" mt="4">
+                <Text color="white" fontSize="lg" mt="6">
                     Why just listen to the music when you
                     <br />
                     can create it? We are Next-Gen DeFi.
