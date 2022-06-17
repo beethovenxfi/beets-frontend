@@ -35,7 +35,7 @@ function AprTooltip({ data, textProps, onlySparkles }: Props) {
                     </Text>
                 )}
                 <PopoverTrigger>
-                    <Button variant="unstyled">
+                    <Button variant="unstyled" _active={{ outline: 'none' }} _focus={{ outline: 'none' }}>
                         <StarsIcon />
                     </Button>
                 </PopoverTrigger>
