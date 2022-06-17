@@ -11,6 +11,7 @@ import {
     Text,
     TextProps,
     HStack,
+    Button,
 } from '@chakra-ui/react';
 import StarsIcon from '~/components/apr-tooltip/StarsIcon';
 import numeral from 'numeral';
@@ -34,9 +35,9 @@ function AprTooltip({ data, textProps, onlySparkles }: Props) {
                     </Text>
                 )}
                 <PopoverTrigger>
-                    <a>
+                    <Button variant="unstyled">
                         <StarsIcon />
-                    </a>
+                    </Button>
                 </PopoverTrigger>
             </HStack>
 
