@@ -1,226 +1,251 @@
-import { GqlPoolTokenUnion } from '~/apollo/generated/graphql-codegen-generated';
+/* eslint-disable react/jsx-key */
 import { Box, HStack, Progress, Table, TableContainer, Tbody, Td, Text, Th, Thead, Tr } from '@chakra-ui/react';
-import TokenAvatar from '~/components/token/TokenAvatar';
-import { useGetTokens } from '~/lib/global/useToken';
-import numeral from 'numeral';
+import { ChevronDown, ChevronUp, CornerDownRight } from 'react-feather';
+import { useExpanded, useTable } from 'react-table';
+
 import Card from '~/components/card/Card';
-import { useState } from 'react';
-import { CornerDownRight } from 'react-feather';
-import { usePoolUserTokenBalancesInWallet } from '~/modules/pool/lib/usePoolUserTokenBalancesInWallet';
+import { GqlPoolTokenUnion } from '~/apollo/generated/graphql-codegen-generated';
+import React from 'react';
+import TokenAvatar from '~/components/token/TokenAvatar';
+import numeral from 'numeral';
+import { poolGetTokensWithoutPhantomBpt } from '~/lib/services/pool/pool-util';
+import { tokenFormatAmount } from '~/lib/services/token/token-util';
+import { useGetTokens } from '~/lib/global/useToken';
 import { usePool } from '~/modules/pool/lib/usePool';
 import { usePoolUserBptBalance } from '~/modules/pool/lib/usePoolUserBptBalance';
 import { usePoolUserInvestedTokenBalances } from '~/modules/pool/lib/usePoolUserInvestedTokenBalances';
-import { PoolCompositionRow } from '~/modules/pool/detail/components/composition/PoolCompositionRow';
 
-interface PoolCompositionRowProps {
-    token: GqlPoolTokenUnion;
-    hasNestedToken?: boolean;
-    hasBpt?: boolean;
-    userPercentShare: number;
+interface PoolCompositionTableProps {
+    columns: any;
+    data: any;
+    hasNestedTokens: boolean;
+    hasBpt: boolean;
 }
-/*
-function PoolCompositionRow({ token, hasNestedToken, hasBpt, userPercentShare }: PoolCompositionRowProps) {
-    const { priceFor } = useGetTokens();
-    const isBoostedToken =
-        token.__typename === 'GqlPoolTokenLinear' || token.__typename === 'GqlPoolTokenPhantomStable';
 
-    const sharedCells = (_token: GqlPoolTokenUnion, isLinearToken: boolean) => {
-        const _tokenBalance = parseFloat(_token.balance);
+interface TableDataTemplate {
+    symbol: string;
+    name: string;
+    weight: number;
+    myBalance: string;
+    myValue: string;
+    balance: string;
+    value: string;
+}
 
-        const weight = !isLinearToken ? parseFloat(_token.weight || '0') : _tokenBalance / parseFloat(token.balance);
+enum Columns {
+    Expander = 'expander',
+    Symbol = 'symbol',
+    Name = 'name',
+    Weight = 'weight',
+    MyBalance = 'myBalance',
+    MyValue = 'myValue',
+    Balance = 'balance',
+    Value = 'value',
+}
 
-        return (
-            <>
-                <Td borderBottom="0" p="2" marginBottom="4">
+interface TableData extends TableDataTemplate {
+    subRows: TableDataTemplate;
+}
+
+const PoolCompositionTable = ({ columns, data, hasBpt, hasNestedTokens }: PoolCompositionTableProps) => {
+    const {
+        getTableProps,
+        getTableBodyProps,
+        headerGroups,
+        rows,
+        prepareRow,
+        allColumns,
+        state: { expanded },
+    } = useTable(
+        {
+            columns,
+            data,
+        },
+        useExpanded,
+    );
+
+    function parseCell(cell: any) {
+        if (cell.column.id === Columns.Expander) {
+            if (!hasNestedTokens) {
+                cell.column.toggleHidden(true);
+            }
+        }
+        if (cell.column.id === Columns.Symbol) {
+            const value = cell.value.split('--');
+            return (
+                <HStack>
+                    {cell.row.depth > 0 ? (
+                        <Box color="whiteAlpha.400" paddingLeft={cell.row.depth === 0 ? '2' : cell.row.depth * 8}>
+                            <CornerDownRight />
+                        </Box>
+                    ) : null}
+                    <TokenAvatar size="xs" address={value[1]} />
                     <Text fontSize="sm" color="beets.base.50">
-                        {_token.name}
+                        {value[0]}
                     </Text>
-                </Td>
-                {!hasNestedToken && (
-                    <Td borderBottom="0" p="2" marginBottom="4" width="300px">
-                        {!isLinearToken && <Progress width="80%" rounded="lg" value={weight * 100} />}
-                    </Td>
-                )}
-                {hasBpt && (
-                    <>
-                        <Td borderBottom="0" p="2" marginBottom="4">
-                            <Text fontSize="sm" color="beets.base.50">
-                                {numeral(_tokenBalance * userPercentShare).format('0,0.0000')}
-                            </Text>
-                        </Td>
-                        <Td borderBottom="0" p="2" marginBottom="4">
-                            <Text fontSize="sm" color="beets.base.50">
-                                {numeral(_tokenBalance * priceFor(_token.address) * userPercentShare).format(
-                                    '$0,0.00a',
-                                )}
-                            </Text>
-                        </Td>
-                    </>
-                )}
-                <Td borderBottom="0" p="2" marginBottom="4">
-                    <Text fontSize="sm" color="beets.base.50">
-                        {numeral(_token.balance).format('0,0.0000')}
-                    </Text>
-                </Td>
-                <Td borderBottom="0" p="2" marginBottom="4" borderTopRightRadius="lg" borderBottomRightRadius="lg">
-                    <Text fontSize="sm" color="beets.base.50">
-                        {numeral(parseFloat(_token.balance) * priceFor(_token.address)).format('$0,0.00a')}
-                    </Text>
-                </Td>
-            </>
-        );
-    };
+                </HStack>
+            );
+        }
+        if (cell.column.id === Columns.Weight) {
+            if (cell.row.depth === 0) {
+                return <Progress width="80%" rounded="lg" value={parseFloat(cell.value || '0') * 100} />;
+            } else {
+                return null;
+            }
+        }
+        if (cell.column.id === Columns.MyBalance || cell.column.id === Columns.MyValue) {
+            if (!hasBpt) {
+                cell.column.toggleHidden(true);
+            } else if (cell.row.depth > 0) {
+                return null;
+            }
+        } else {
+            return cell.render('Cell');
+        }
+    }
 
     return (
-        <>
-            <Tr key={`composition-${token.symbol}`} padding="2" width="full" background="whiteAlpha.100">
-                <Td borderBottom="0" p="2" marginBottom="4" borderTopLeftRadius="lg" borderBottomLeftRadius="lg">
-                    <HStack>
-                        <TokenAvatar size="xs" address={token.address} />
-                        <Text fontSize="sm" color="beets.base.50">
-                            {token.symbol}
-                        </Text>
-                    </HStack>
-                </Td>
-                {sharedCells(token, false)}
-            </Tr>
-            {isBoostedToken &&
-                token.pool.tokens.map((token: any) => (
-                    <Tr key={`composition-${token.symbol}`} width="full" background="blackAlpha.100">
-                        <Td
-                            borderBottom="0"
-                            p="2"
-                            paddingLeft="8"
-                            marginBottom="4"
-                            borderTopLeftRadius="lg"
-                            borderBottomLeftRadius="lg"
-                        >
-                            <HStack>
-                                <Box color="whiteAlpha.400">
-                                    <CornerDownRight />
-                                </Box>
-                                <TokenAvatar size="xs" address={token.address} />
-                                <Text fontSize="sm" color="beets.base.50">
-                                    {token.symbol}
-                                </Text>
-                            </HStack>
-                        </Td>
-                        {sharedCells(token, true)}
-                    </Tr>
-                ))}
-        </>
+        <TableContainer>
+            <Table {...getTableProps()} style={{ borderCollapse: 'separate', borderSpacing: '0 3px' }}>
+                <Thead width="full" paddingX="2">
+                    {headerGroups.map((headerGroup) => (
+                        <Tr {...headerGroup.getHeaderGroupProps()}>
+                            {headerGroup.headers.map((column) => (
+                                <Th
+                                    {...column.getHeaderProps()}
+                                    border="none"
+                                    padding={column.id === Columns.Expander ? '0' : '2'}
+                                >
+                                    {column.id === Columns.Expander ? (
+                                        <Box color="beets.base.50">{column.render('Header')}</Box>
+                                    ) : (
+                                        <Text fontSize="xs" color="beets.base.50">
+                                            {column.render('Header')}
+                                        </Text>
+                                    )}
+                                </Th>
+                            ))}
+                        </Tr>
+                    ))}
+                </Thead>
+                <Tbody {...getTableBodyProps()}>
+                    {rows.map((row) => {
+                        prepareRow(row);
+                        return (
+                            <Tr {...row.getRowProps()} padding="2" width="full" background="whiteAlpha.100">
+                                {row.cells.map((cell, i) => {
+                                    return (
+                                        <Td
+                                            {...cell.getCellProps()}
+                                            borderBottom="0"
+                                            p="2"
+                                            marginBottom="4"
+                                            borderTopLeftRadius={i == 0 ? 'lg' : undefined}
+                                            borderBottomLeftRadius={i == 0 ? 'lg' : undefined}
+                                            borderTopRightRadius={i == row.cells.length - 1 ? 'lg' : undefined}
+                                            borderBottomRightRadius={i == row.cells.length - 1 ? 'lg' : undefined}
+                                        >
+                                            {parseCell(cell)}
+                                        </Td>
+                                    );
+                                })}
+                            </Tr>
+                        );
+                    })}
+                </Tbody>
+            </Table>
+        </TableContainer>
     );
-}*/
+};
 
 export function PoolComposition() {
     const { pool } = usePool();
     const { hasBpt, userPercentShare } = usePoolUserBptBalance();
-    const [show, setShow] = useState(false);
     const { getUserInvestedBalance } = usePoolUserInvestedTokenBalances();
     const { priceFor } = useGetTokens();
+    const poolTokens = poolGetTokensWithoutPhantomBpt(pool);
+    const hasNestedTokens = poolTokens.some((token) =>
+        ['GqlPoolTokenLinear', 'GqlPoolTokenPhantomStable'].includes(token.__typename),
+    );
 
-    const toggle = (toggleVal: boolean) => {
-        setShow((val) => toggleVal);
+    const columns = React.useMemo(
+        () => [
+            {
+                id: 'expander',
+                Header: ({ getToggleAllRowsExpandedProps, isAllRowsExpanded }) => (
+                    <span {...getToggleAllRowsExpandedProps()}>
+                        {isAllRowsExpanded ? <ChevronUp /> : <ChevronDown />}
+                    </span>
+                ),
+                Cell: ({ row }) =>
+                    row.expanded ? (
+                        <span
+                            {...row.getToggleRowExpandedProps({
+                                style: {
+                                    paddingLeft: `${row.depth * 2}rem`,
+                                },
+                            })}
+                        >
+                            <CornerDownRight />
+                        </span>
+                    ) : null,
+            },
+            {
+                Header: 'Symbol',
+                accessor: Columns.Symbol,
+            },
+            {
+                Header: 'Name',
+                accessor: Columns.Name,
+            },
+            {
+                Header: 'Weight',
+                accessor: Columns.Weight,
+            },
+            {
+                Header: 'My balance',
+                accessor: Columns.MyBalance,
+            },
+            {
+                Header: 'My value',
+                accessor: Columns.MyValue,
+            },
+            {
+                Header: 'Balance',
+                accessor: Columns.Balance,
+            },
+            {
+                Header: 'Value',
+                accessor: Columns.Value,
+            },
+        ],
+        [],
+    );
+
+    // TODO: need to type
+    const getTokenData = (tokens: any[]): any => {
+        return tokens?.map((token: any) => {
+            const userBalance = getUserInvestedBalance(token.address);
+            const tokenPrice = priceFor(token.address);
+            const totalTokenValue = parseFloat(token.balance) * tokenPrice;
+            return {
+                symbol: `${token.symbol}--${token.address}`,
+                name: token.name,
+                weight: token.weight ?? totalTokenValue / parseFloat(pool.dynamicData.totalLiquidity),
+                myBalance: tokenFormatAmount(userBalance),
+                myValue: numeral(parseFloat(userBalance) * tokenPrice).format('$0,0.00a'),
+                balance: tokenFormatAmount(token.balance),
+                value: numeral(totalTokenValue).format('$0,0.00a'),
+                ...(hasNestedTokens && { subRows: getTokenData(token.pool?.tokens) }),
+            };
+        });
     };
+
+    const data = () => [...getTokenData(pool.tokens)];
 
     return (
         <Card px="2" py="2" mt={4} width="full">
-            <TableContainer>
-                <Table style={{ borderCollapse: 'separate', borderSpacing: '0 3px' }}>
-                    <Thead width="full" paddingX="2">
-                        <Tr>
-                            <Th border="none" padding="2">
-                                <Text fontSize="xs" color="beets.base.50">
-                                    Symbol
-                                </Text>
-                            </Th>
-                            <Th border="none" padding="2">
-                                <Text fontSize="xs" color="beets.base.50">
-                                    Name
-                                </Text>
-                            </Th>
-                            <Th border="none" padding="2">
-                                <Text fontSize="xs" color="beets.base.50">
-                                    Weight
-                                </Text>
-                            </Th>
-                            {hasBpt && (
-                                <>
-                                    <Th border="none" padding="2">
-                                        <Text fontSize="xs" color="beets.base.50">
-                                            My balance
-                                        </Text>
-                                    </Th>
-                                    <Th border="none" padding="2">
-                                        <Text fontSize="xs" color="beets.base.50">
-                                            My value
-                                        </Text>
-                                    </Th>
-                                </>
-                            )}
-                            <Th border="none" padding="2">
-                                <Text fontSize="xs" color="beets.base.50">
-                                    Balance
-                                </Text>
-                            </Th>
-                            <Th border="none" padding="2">
-                                <Text fontSize="xs" color="beets.base.50">
-                                    Value
-                                </Text>
-                            </Th>
-                        </Tr>
-                    </Thead>
-                    <Tbody>
-                        {pool.tokens.map((token, i) => (
-                            <>
-                                <PoolCompositionRow
-                                    userHasBalance={hasBpt}
-                                    key={`composition-${i}`}
-                                    token={token}
-                                    userBalance={getUserInvestedBalance(token.address)}
-                                    tokenPrice={priceFor(token.address)}
-                                    nestedLevel={0}
-                                />
-                                {token.__typename === 'GqlPoolTokenLinear' &&
-                                    token.pool.tokens.map((nestedToken) => (
-                                        <PoolCompositionRow
-                                            userHasBalance={hasBpt}
-                                            key={`composition-${i}-${nestedToken.address}`}
-                                            token={nestedToken}
-                                            userBalance=""
-                                            tokenPrice={priceFor(nestedToken.address)}
-                                            nestedLevel={1}
-                                        />
-                                    ))}
-                                {token.__typename === 'GqlPoolTokenPhantomStable' &&
-                                    token.pool.tokens.map((phantomStableNested) => (
-                                        <>
-                                            <PoolCompositionRow
-                                                userHasBalance={hasBpt}
-                                                key={`composition-${i}-${phantomStableNested.address}`}
-                                                token={phantomStableNested}
-                                                userBalance=""
-                                                tokenPrice={priceFor(phantomStableNested.address)}
-                                                nestedLevel={1}
-                                            />
-                                            {phantomStableNested.__typename === 'GqlPoolTokenLinear' &&
-                                                phantomStableNested.pool.tokens.map((nestedToken) => (
-                                                    <PoolCompositionRow
-                                                        userHasBalance={hasBpt}
-                                                        key={`composition-${i}-${phantomStableNested.address}-${nestedToken.address}`}
-                                                        token={nestedToken}
-                                                        userBalance=""
-                                                        tokenPrice={priceFor(nestedToken.address)}
-                                                        nestedLevel={2}
-                                                    />
-                                                ))}
-                                        </>
-                                    ))}
-                            </>
-                        ))}
-                    </Tbody>
-                </Table>
-            </TableContainer>
+            <PoolCompositionTable columns={columns} data={data()} hasBpt={hasBpt} hasNestedTokens={hasNestedTokens} />
         </Card>
     );
 }
