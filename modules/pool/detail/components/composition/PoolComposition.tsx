@@ -4,7 +4,6 @@ import { ChevronDown, ChevronUp, CornerDownRight } from 'react-feather';
 import { useExpanded, useTable } from 'react-table';
 
 import Card from '~/components/card/Card';
-import { GqlPoolTokenUnion } from '~/apollo/generated/graphql-codegen-generated';
 import React from 'react';
 import TokenAvatar from '~/components/token/TokenAvatar';
 import numeral from 'numeral';
@@ -157,7 +156,7 @@ const PoolCompositionTable = ({ columns, data, hasBpt, hasNestedTokens }: PoolCo
 
 export function PoolComposition() {
     const { pool } = usePool();
-    const { hasBpt, userPercentShare } = usePoolUserBptBalance();
+    const { hasBpt } = usePoolUserBptBalance();
     const { getUserInvestedBalance } = usePoolUserInvestedTokenBalances();
     const { priceFor } = useGetTokens();
     const poolTokens = poolGetTokensWithoutPhantomBpt(pool);
