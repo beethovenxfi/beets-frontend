@@ -1,4 +1,5 @@
 /* eslint-disable react/jsx-key */
+// https://github.com/TanStack/table/discussions/2647
 import { Box, HStack, Progress, Table, TableContainer, Tbody, Td, Text, Th, Thead, Tr } from '@chakra-ui/react';
 import { ChevronDown, ChevronUp, CornerDownRight } from 'react-feather';
 import { useExpanded, useTable } from 'react-table';
@@ -64,10 +65,11 @@ const PoolCompositionTable = ({ columns, data, hasBpt, hasNestedTokens }: PoolCo
     );
 
     function parseCell(cell: any) {
+        // hide the 'collapse all' button when there are NO tokens in the pool have nested tokens
         if (cell.column.id === Columns.Expander && !hasNestedTokens) {
             cell.column.toggleHidden(true);
         } else if (cell.column.id === Columns.Symbol) {
-            const value = cell.value.split('--');
+            const value = cell.value.split('--'); // here we split the 'symbol' & 'address' values to use the separately
             return (
                 <HStack>
                     {cell.row.depth > 0 ? (
@@ -82,19 +84,24 @@ const PoolCompositionTable = ({ columns, data, hasBpt, hasNestedTokens }: PoolCo
                 </HStack>
             );
         } else if (cell.column.id === Columns.Weight) {
+            // only show the progress bar for the pool token and not for any nested tokens
             if (cell.row.depth === 0) {
                 return <Progress width="80%" rounded="lg" value={parseFloat(cell.value || '0') * 100} />;
             } else {
                 return null;
             }
         } else if (cell.column.id === Columns.MyBalance || cell.column.id === Columns.MyValue) {
+            // hide the 'My Balance' & 'My Value' columns when the user has no BPT
             if (!hasBpt) {
                 cell.column.toggleHidden(true);
+                // or else don't display anything for nested tokens
             } else if (cell.row.depth > 0) {
                 return null;
+                // or else just display the value
             } else {
                 return cell.render('Cell');
             }
+            // else just display the value
         } else {
             return cell.render('Cell');
         }
