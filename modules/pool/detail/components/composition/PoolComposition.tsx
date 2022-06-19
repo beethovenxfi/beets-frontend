@@ -31,6 +31,10 @@ interface TableDataTemplate {
     value: string;
 }
 
+interface TableData extends TableDataTemplate {
+    subRows?: TableDataTemplate[];
+}
+
 enum Columns {
     Expander = 'expander',
     Symbol = 'symbol',
@@ -40,10 +44,6 @@ enum Columns {
     MyValue = 'myValue',
     Balance = 'balance',
     Value = 'value',
-}
-
-interface TableData extends TableDataTemplate {
-    subRows: TableDataTemplate;
 }
 
 const PoolCompositionTable = ({ columns, data, hasBpt, hasNestedTokens }: PoolCompositionTableProps) => {
@@ -168,12 +168,12 @@ export function PoolComposition() {
         () => [
             {
                 id: 'expander',
-                Header: ({ getToggleAllRowsExpandedProps, isAllRowsExpanded }) => (
+                Header: ({ getToggleAllRowsExpandedProps, isAllRowsExpanded }: any) => (
                     <span {...getToggleAllRowsExpandedProps()}>
                         {isAllRowsExpanded ? <ChevronUp /> : <ChevronDown />}
                     </span>
                 ),
-                Cell: ({ row }) =>
+                Cell: ({ row }: any) =>
                     row.expanded ? (
                         <span
                             {...row.getToggleRowExpandedProps({
@@ -219,7 +219,7 @@ export function PoolComposition() {
     );
 
     // TODO: need to type
-    const getTokenData = (tokens: any[]): any => {
+    const getTokenData = (tokens: any[]): TableData[] => {
         return tokens?.map((token: any) => {
             const userBalance = getUserInvestedBalance(token.address);
             const tokenPrice = priceFor(token.address);
