@@ -65,12 +65,9 @@ const PoolCompositionTable = ({ columns, data, hasBpt, hasNestedTokens }: PoolCo
     );
 
     function parseCell(cell: any) {
-        if (cell.column.id === Columns.Expander) {
-            if (!hasNestedTokens) {
-                cell.column.toggleHidden(true);
-            }
-        }
-        if (cell.column.id === Columns.Symbol) {
+        if (cell.column.id === Columns.Expander && !hasNestedTokens) {
+            cell.column.toggleHidden(true);
+        } else if (cell.column.id === Columns.Symbol) {
             const value = cell.value.split('--');
             return (
                 <HStack>
@@ -85,19 +82,19 @@ const PoolCompositionTable = ({ columns, data, hasBpt, hasNestedTokens }: PoolCo
                     </Text>
                 </HStack>
             );
-        }
-        if (cell.column.id === Columns.Weight) {
+        } else if (cell.column.id === Columns.Weight) {
             if (cell.row.depth === 0) {
                 return <Progress width="80%" rounded="lg" value={parseFloat(cell.value || '0') * 100} />;
             } else {
                 return null;
             }
-        }
-        if (cell.column.id === Columns.MyBalance || cell.column.id === Columns.MyValue) {
+        } else if (cell.column.id === Columns.MyBalance || cell.column.id === Columns.MyValue) {
             if (!hasBpt) {
                 cell.column.toggleHidden(true);
             } else if (cell.row.depth > 0) {
                 return null;
+            } else {
+                return cell.render('Cell');
             }
         } else {
             return cell.render('Cell');
