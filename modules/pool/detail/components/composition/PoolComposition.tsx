@@ -60,6 +60,7 @@ const PoolCompositionTable = ({ columns, data, hasBpt, hasNestedTokens }: PoolCo
         {
             columns,
             data,
+            autoResetExpanded: false,
         },
         useExpanded,
     );
