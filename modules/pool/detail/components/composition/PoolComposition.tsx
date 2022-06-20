@@ -1,6 +1,22 @@
 /* eslint-disable react/jsx-key */
 // https://github.com/TanStack/table/discussions/2647
-import { Box, HStack, Progress, Table, TableContainer, Tbody, Td, Text, Th, Thead, Tr } from '@chakra-ui/react';
+import {
+    Box,
+    Flex,
+    FormLabel,
+    HStack,
+    Progress,
+    Spacer,
+    Switch,
+    Table,
+    TableContainer,
+    Tbody,
+    Td,
+    Text,
+    Th,
+    Thead,
+    Tr,
+} from '@chakra-ui/react';
 import { ChevronDown, ChevronUp, CornerDownRight } from 'react-feather';
 import { useExpanded, useTable } from 'react-table';
 
@@ -47,14 +63,14 @@ enum Columns {
     Value = 'value',
 }
 
-const PoolCompositionTable = ({ columns, data, hasBpt, hasNestedTokens }: PoolCompositionTableProps) => {
+const PoolCompositionTable = ({ columns, data, hasBpt, hasNestedTokens }: any) => {
     const {
         getTableProps,
         getTableBodyProps,
         headerGroups,
         rows,
         prepareRow,
-        allColumns,
+        toggleAllRowsExpanded,
         state: { expanded },
     } = useTable(
         {
@@ -109,56 +125,69 @@ const PoolCompositionTable = ({ columns, data, hasBpt, hasNestedTokens }: PoolCo
     }
 
     return (
-        <TableContainer>
-            <Table {...getTableProps()} style={{ borderCollapse: 'separate', borderSpacing: '0 3px' }}>
-                <Thead width="full" paddingX="2">
-                    {headerGroups.map((headerGroup) => (
-                        <Tr {...headerGroup.getHeaderGroupProps()}>
-                            {headerGroup.headers.map((column) => (
-                                <Th
-                                    {...column.getHeaderProps()}
-                                    border="none"
-                                    padding={column.id === Columns.Expander ? '0' : '2'}
-                                >
-                                    {column.id === Columns.Expander ? (
-                                        <Box color="beets.base.50">{column.render('Header')}</Box>
-                                    ) : (
-                                        <Text fontSize="xs" color="beets.base.50">
-                                            {column.render('Header')}
-                                        </Text>
-                                    )}
-                                </Th>
-                            ))}
-                        </Tr>
-                    ))}
-                </Thead>
-                <Tbody {...getTableBodyProps()}>
-                    {rows.map((row) => {
-                        prepareRow(row);
-                        return (
-                            <Tr {...row.getRowProps()} padding="2" width="full" background="whiteAlpha.100">
-                                {row.cells.map((cell, i) => {
-                                    return (
-                                        <Td
-                                            {...cell.getCellProps()}
-                                            borderBottom="0"
-                                            p="2"
-                                            marginBottom="4"
-                                            borderTopLeftRadius={i == 0 ? 'lg' : undefined}
-                                            borderBottomLeftRadius={i == 0 ? 'lg' : undefined}
-                                            borderTopRightRadius={i == row.cells.length - 1 ? 'lg' : undefined}
-                                            borderBottomRightRadius={i == row.cells.length - 1 ? 'lg' : undefined}
-                                        >
-                                            {parseCell(cell)}
-                                        </Td>
-                                    );
-                                })}
+        <>
+            {hasNestedTokens && (
+                <Flex justifyContent="flex-end">
+                    <Spacer />
+                    <Flex>
+                        <FormLabel htmlFor="nested-tokens" mb="0">
+                            Show nested tokens?
+                        </FormLabel>
+                        <Switch id="nested-tokens" onChange={() => toggleAllRowsExpanded()} />
+                    </Flex>
+                </Flex>
+            )}
+            <TableContainer>
+                <Table {...getTableProps()} style={{ borderCollapse: 'separate', borderSpacing: '0 3px' }}>
+                    <Thead width="full" paddingX="2">
+                        {headerGroups.map((headerGroup) => (
+                            <Tr {...headerGroup.getHeaderGroupProps()}>
+                                {headerGroup.headers.map((column) => (
+                                    <Th
+                                        {...column.getHeaderProps()}
+                                        border="none"
+                                        padding={column.id === Columns.Expander ? '0' : '2'}
+                                    >
+                                        {column.id === Columns.Expander ? (
+                                            <Box color="beets.base.50">{column.render('Header')}</Box>
+                                        ) : (
+                                            <Text fontSize="xs" color="beets.base.50">
+                                                {column.render('Header')}
+                                            </Text>
+                                        )}
+                                    </Th>
+                                ))}
                             </Tr>
-                        );
-                    })}
-                </Tbody>
-            </Table>
-        </TableContainer>
+                        ))}
+                    </Thead>
+                    <Tbody {...getTableBodyProps()}>
+                        {rows.map((row) => {
+                            prepareRow(row);
+                            return (
+                                <Tr {...row.getRowProps()} padding="2" width="full" background="whiteAlpha.100">
+                                    {row.cells.map((cell, i) => {
+                                        return (
+                                            <Td
+                                                {...cell.getCellProps()}
+                                                borderBottom="0"
+                                                p="2"
+                                                marginBottom="4"
+                                                borderTopLeftRadius={i == 0 ? 'lg' : undefined}
+                                                borderBottomLeftRadius={i == 0 ? 'lg' : undefined}
+                                                borderTopRightRadius={i == row.cells.length - 1 ? 'lg' : undefined}
+                                                borderBottomRightRadius={i == row.cells.length - 1 ? 'lg' : undefined}
+                                            >
+                                                {parseCell(cell)}
+                                            </Td>
+                                        );
+                                    })}
+                                </Tr>
+                            );
+                        })}
+                    </Tbody>
+                </Table>
+            </TableContainer>
+        </>
     );
 };
 
@@ -174,26 +203,6 @@ export function PoolComposition() {
 
     const columns = React.useMemo(
         () => [
-            {
-                id: 'expander',
-                Header: ({ getToggleAllRowsExpandedProps, isAllRowsExpanded }: any) => (
-                    <span {...getToggleAllRowsExpandedProps()}>
-                        {isAllRowsExpanded ? <ChevronUp /> : <ChevronDown />}
-                    </span>
-                ),
-                Cell: ({ row }: any) =>
-                    row.expanded ? (
-                        <span
-                            {...row.getToggleRowExpandedProps({
-                                style: {
-                                    paddingLeft: `${row.depth * 2}rem`,
-                                },
-                            })}
-                        >
-                            <CornerDownRight />
-                        </span>
-                    ) : null,
-            },
             {
                 Header: 'Symbol',
                 accessor: Columns.Symbol,
