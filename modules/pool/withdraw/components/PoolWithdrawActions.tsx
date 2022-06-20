@@ -1,12 +1,13 @@
-import { usePoolUserPoolTokenBalances } from '~/modules/pool/lib/usePoolUserPoolTokenBalances';
+import { usePoolUserTokenBalancesInWallet } from '~/modules/pool/lib/usePoolUserTokenBalancesInWallet';
 import { BeetsAccordion } from '~/components/accordion/BeetsAccordion';
 import PoolWithdrawForm from '~/modules/pool/withdraw/components/PoolWithdrawForm';
 import { usePool } from '~/modules/pool/lib/usePool';
 import { PoolWithdrawUnstakeForm } from '~/modules/pool/withdraw/components/PoolWithdrawUnstakeForm';
+import { usePoolUserBptBalance } from '~/modules/pool/lib/usePoolUserBptBalance';
 
 export function PoolWithdrawActions() {
     const { pool } = usePool();
-    const { hasBptStaked } = usePoolUserPoolTokenBalances();
+    const { hasBptStaked } = usePoolUserBptBalance();
     let items = [{ headline: 'Withdraw from pool', content: <PoolWithdrawForm />, disabled: false }];
 
     if (pool.staking) {

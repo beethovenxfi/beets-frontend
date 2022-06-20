@@ -8,14 +8,14 @@ import { usePoolJoinGetBptOutAndPriceImpactForTokensIn } from '~/modules/pool/in
 import { usePoolJoinGetContractCallData } from '~/modules/pool/invest/lib/usePoolJoinGetContractCallData';
 import { tokenAmountsGetArrayFromMap } from '~/lib/services/token/token-util';
 import { usePool } from '~/modules/pool/lib/usePool';
-import { usePoolUserPoolTokenBalances } from '~/modules/pool/lib/usePoolUserPoolTokenBalances';
+import { usePoolUserTokenBalancesInWallet } from '~/modules/pool/lib/usePoolUserTokenBalancesInWallet';
 import BeetsButton from '~/components/button/Button';
 
 interface Props extends ContainerProps {}
 
 function PoolInvestForm({ ...rest }: Props) {
     const { pool } = usePool();
-    const { userPoolTokenBalances } = usePoolUserPoolTokenBalances();
+    const { userPoolTokenBalances } = usePoolUserTokenBalancesInWallet();
     const { inputAmounts, setInputAmount } = useInvestState();
     const { joinPool, isSubmitting, submitError } = useJoinPool(pool);
     const tokenAmountsIn = tokenAmountsGetArrayFromMap(inputAmounts);

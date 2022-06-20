@@ -69,7 +69,7 @@ export const fantomTheme: Partial<ChakraTheme> = {
         },
         box: {
             '300': 'rgba(27,20,100,0.25)',
-            '500': 'rgba(255,255,255,0.07)',
+            '500': 'rgba(255,255,255,0.05)',
         },
         beets: {
             green: '#00F89C',

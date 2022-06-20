@@ -3,15 +3,17 @@ import Card from '~/components/card/Card';
 import { usePool } from '../../../lib/usePool';
 import numeral from 'numeral';
 import AprTooltip from '~/components/apr-tooltip/AprTooltip';
-import { usePoolUserPoolTokenBalances } from '~/modules/pool/lib/usePoolUserPoolTokenBalances';
+import { usePoolUserTokenBalancesInWallet } from '~/modules/pool/lib/usePoolUserTokenBalancesInWallet';
 import PoolUserStats from './PoolUserStats';
 import PoolOverallStats from './PoolOverallStats';
 import { TabList, Tabs } from '@chakra-ui/tabs';
 import BeetsTab from '~/components/tabs/BeetsTab';
 import { useState } from 'react';
+import { Box } from '@chakra-ui/react';
+import { usePoolUserBptBalance } from '~/modules/pool/lib/usePoolUserBptBalance';
 
 export default function PoolStats() {
-    const { isLoading, hasBpt } = usePoolUserPoolTokenBalances();
+    const { isLoading, hasBpt } = usePoolUserBptBalance();
     const { pool, poolTokensWithoutPhantomBpt } = usePool();
     const [activeTab, setActiveTab] = useState(0);
 
@@ -22,11 +24,11 @@ export default function PoolStats() {
         <Card padding="4" minWidth="300px" width="300px" height="full">
             <VStack height="full" spacing="4">
                 {hasBpt && (
-                    <Tabs variant="soft-rounded" display="flex" onChange={handleTabChanged}>
+                    <Tabs width="full" variant="soft-rounded" display="flex" onChange={handleTabChanged}>
                         <TabList>
                             <HStack spacing="2">
                                 <BeetsTab paddingX="4" paddingY="2" fontSize="xs">
-                                    Your Stats
+                                    My Stats
                                 </BeetsTab>
                                 <BeetsTab paddingX="4" paddingY="2" fontSize="xs">
                                     Pool Stats

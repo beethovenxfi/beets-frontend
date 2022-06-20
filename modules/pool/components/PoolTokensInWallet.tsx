@@ -1,12 +1,12 @@
 import { Box, Container, Flex, Heading } from '@chakra-ui/react';
 import { useGetTokens } from '~/lib/global/useToken';
 import { tokenFormatAmount, tokenGetAmountForAddress } from '~/lib/services/token/token-util';
-import { usePoolUserPoolTokenBalances } from '~/modules/pool/lib/usePoolUserPoolTokenBalances';
+import { usePoolUserTokenBalancesInWallet } from '~/modules/pool/lib/usePoolUserTokenBalancesInWallet';
 import { usePool } from '~/modules/pool/lib/usePool';
 
 function PoolTokensInWallet() {
     const { formattedPrice } = useGetTokens();
-    const { userPoolTokenBalances } = usePoolUserPoolTokenBalances();
+    const { userPoolTokenBalances } = usePoolUserTokenBalancesInWallet();
     const { pool } = usePool();
 
     return (

@@ -1,14 +1,14 @@
-import { Divider, HStack, Text, VStack, Badge } from '@chakra-ui/layout';
-import Card from '~/components/card/Card';
+import { Divider, HStack, Text, VStack } from '@chakra-ui/layout';
 import { usePool } from '../../../lib/usePool';
 import numeral from 'numeral';
 import AprTooltip from '~/components/apr-tooltip/AprTooltip';
-import { usePoolUserPoolTokenBalances } from '~/modules/pool/lib/usePoolUserPoolTokenBalances';
+import { usePoolUserTokenBalancesInWallet } from '~/modules/pool/lib/usePoolUserTokenBalancesInWallet';
 import { usePoolUserPendingRewards } from '~/modules/pool/lib/usePoolUserPendingRewards';
+import { usePoolUserBptBalance } from '~/modules/pool/lib/usePoolUserBptBalance';
 
 export default function PoolUserStats() {
     const { pool, poolTokensWithoutPhantomBpt } = usePool();
-    const { isLoading: isLoadingUserPoolBalances, hasBpt, investedAmount } = usePoolUserPoolTokenBalances();
+    const { investedAmount } = usePoolUserBptBalance();
     const {
         pendingRewards,
         pendingRewardsTotalUSD,
@@ -20,7 +20,7 @@ export default function PoolUserStats() {
         <VStack spacing="4" width="full" alignItems="flex-start" flex={1}>
             <VStack spacing="0" alignItems="flex-start">
                 <Text lineHeight="1rem" fontWeight="semibold" fontSize="sm" color="beets.base.50">
-                    Your APR
+                    My APR
                 </Text>
                 <HStack>
                     <div className="apr-stripes">{numeral(pool.dynamicData.apr.total).format('0.00%')}</div>
@@ -30,7 +30,7 @@ export default function PoolUserStats() {
             <Divider />
             <VStack spacing="0" alignItems="flex-start">
                 <Text lineHeight="1rem" fontWeight="semibold" fontSize="sm" color="beets.base.50">
-                    Your Liquidity
+                    My Liquidity
                 </Text>
                 <Text color="white" fontSize="1.75rem">
                     {numeral(investedAmount).format('$0,0.00a')}

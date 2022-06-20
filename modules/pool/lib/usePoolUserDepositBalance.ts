@@ -1,13 +1,14 @@
 import { usePool } from '~/modules/pool/lib/usePool';
-import { usePoolUserPoolTokenBalances } from '~/modules/pool/lib/usePoolUserPoolTokenBalances';
+import { usePoolUserTokenBalancesInWallet } from '~/modules/pool/lib/usePoolUserTokenBalancesInWallet';
 import { oldBnumScaleAmount, oldBnumToHumanReadable } from '~/lib/services/pool/lib/old-big-number';
 import { useQuery } from 'react-query';
 import { useGetTokens } from '~/lib/global/useToken';
 import { sumBy } from 'lodash';
+import { usePoolUserBptBalance } from '~/modules/pool/lib/usePoolUserBptBalance';
 
 export function usePoolUserDepositBalance() {
     const { poolService, pool } = usePool();
-    const { userTotalBptBalance, isError, isLoading, error } = usePoolUserPoolTokenBalances();
+    const { userTotalBptBalance, isError, isLoading, error } = usePoolUserBptBalance();
     const { priceForAmount } = useGetTokens();
 
     const query = useQuery(

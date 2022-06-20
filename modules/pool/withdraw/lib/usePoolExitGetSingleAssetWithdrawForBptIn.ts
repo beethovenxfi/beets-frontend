@@ -2,12 +2,13 @@ import { usePool } from '~/modules/pool/lib/usePool';
 import { useReactiveVar } from '@apollo/client';
 import { withdrawStateVar } from '~/modules/pool/withdraw/lib/useWithdrawState';
 import { useQuery } from 'react-query';
-import { usePoolUserPoolTokenBalances } from '~/modules/pool/lib/usePoolUserPoolTokenBalances';
+import { usePoolUserTokenBalancesInWallet } from '~/modules/pool/lib/usePoolUserTokenBalancesInWallet';
+import { usePoolUserBptBalance } from '~/modules/pool/lib/usePoolUserBptBalance';
 
 export function usePoolExitGetSingleAssetWithdrawForBptIn() {
     const { poolService } = usePool();
     const { singleAsset } = useReactiveVar(withdrawStateVar);
-    const { userTotalBptBalance } = usePoolUserPoolTokenBalances();
+    const { userTotalBptBalance } = usePoolUserBptBalance();
 
     return useQuery(
         ['exitGetSingleAssetWithdrawForBptIn', userTotalBptBalance, singleAsset],
