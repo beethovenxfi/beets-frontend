@@ -20,9 +20,6 @@ export function TokenInputSwapButton({ isLoading, onSwap }: Props) {
             border="4px"
             padding="1"
             borderColor="gray.500"
-            position="absolute"
-            bottom="-20px"
-            left="calc(50% - 20px)"
             zIndex="2"
             role="group"
             _hover={{ borderColor: 'beets.green', cursor: 'pointer' }}

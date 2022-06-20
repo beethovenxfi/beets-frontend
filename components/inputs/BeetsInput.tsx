@@ -1,5 +1,6 @@
 import { Input, InputProps } from '@chakra-ui/input';
-import { Box, Heading } from '@chakra-ui/layout';
+import { Box, Heading, VStack } from '@chakra-ui/layout';
+import PresetSelector from './PresetSelector';
 
 type Props = {
     label?: string;
@@ -7,7 +8,7 @@ type Props = {
 
 export default function BeetsInput({ label, children, ...inputProps }: InputProps & Props) {
     return (
-        <Box position="relative" width="full" bg="blackAlpha.600" borderRadius="md">
+        <Box position="relative" width="full" bg="blackAlpha.500" borderRadius="md">
             {label && (
                 <Heading
                     position="absolute"
@@ -34,6 +35,9 @@ export default function BeetsInput({ label, children, ...inputProps }: InputProp
                 paddingTop="5"
                 _hover={{
                     borderColor: 'gray.200',
+                }}
+                _focus={{
+                    outline: 'none',
                 }}
                 _placeholder={{
                     color: 'gray.400',

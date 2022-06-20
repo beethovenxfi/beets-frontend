@@ -7,6 +7,7 @@ import { tokenFormatAmountPrecise, tokenGetAmountForAddress } from '~/lib/servic
 import { AmountHumanReadable } from '~/lib/services/token/token-types';
 import { useUserTokenBalances } from '~/lib/global/useUserTokenBalances';
 import { useUserAccount } from '~/lib/global/useUserAccount';
+import PresetSelector from './PresetSelector';
 
 type Props = {
     label?: string;
@@ -15,44 +16,38 @@ type Props = {
     onChange?: (event: { currentTarget: { value: string } }) => void;
     value?: string | null;
     showBalance?: boolean;
+    showPresets?: boolean;
 };
 
-export default function TokenInput({ label, toggleTokenSelect, address, onChange, value, showBalance = true }: Props) {
+export default function TokenInput({
+    label,
+    toggleTokenSelect,
+    address,
+    onChange,
+    value,
+    showBalance = true,
+    showPresets,
+}: Props) {
     const { getToken } = useGetTokens();
     const { userAddress, isConnected } = useUserAccount();
     const { userBalances, isLoading } = useUserTokenBalances();
     const userBalance = address ? tokenGetAmountForAddress(address, userBalances) : '0';
 
+    const handlePresetSelected = (preset: number) => {
+        onChange && onChange({ currentTarget: { value: (parseFloat(userBalance) * preset).toString() } });
+    };
+
     return (
         <VStack width="full" alignItems="flex-start">
             <Box position="relative" width="full">
-                <BeetsInput min={0} value={value || ''} onChange={onChange} placeholder="0" type="number" label={label}>
-                    {showBalance ? (
-                        <Box>
-                            <Link
-                                onClick={() => {
-                                    if (onChange) {
-                                        onChange({ currentTarget: { value: userBalance } });
-                                    }
-                                }}
-                                cursor="pointer"
-                                _hover={{ textDecoration: 'none' }}
-                            >
-                                <Box fontSize="sm" color="gray.200">
-                                    Balance:{' '}
-                                    {isLoading ? (
-                                        <Skeleton />
-                                    ) : userBalance ? (
-                                        tokenFormatAmountPrecise(userBalance)
-                                    ) : null}
-                                    <Text as="span" color="beets.green">
-                                        Max
-                                    </Text>
-                                </Box>
-                            </Link>
-                        </Box>
-                    ) : null}
-                </BeetsInput>
+                <BeetsInput
+                    min={0}
+                    value={value || ''}
+                    onChange={onChange}
+                    placeholder="0"
+                    type="number"
+                    label={label}
+                ></BeetsInput>
                 <Box position="absolute" zIndex="toast" right=".75rem" top="50%" transform="translateY(-50%)">
                     <Button
                         onClick={toggleTokenSelect}
@@ -65,6 +60,7 @@ export default function TokenInput({ label, toggleTokenSelect, address, onChange
                     </Button>
                 </Box>
             </Box>
+            {showPresets && <PresetSelector onPresetSelected={handlePresetSelected} />}
         </VStack>
     );
 }

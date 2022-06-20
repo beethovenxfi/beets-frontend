@@ -1,3 +1,4 @@
+import { Box } from '@chakra-ui/layout';
 import { EChartsOption } from 'echarts';
 import ReactECharts from 'echarts-for-react';
 import { useMemo } from 'react';
@@ -51,8 +52,6 @@ export function TokenPriceLineChart({ tokenIn, tokenOut, prices }: Props) {
                 splitLine: { show: false },
                 offset: 0,
             },
-            width: '100%',
-            height: '100%',
             grid: {
                 left: 0,
                 right: 0,
@@ -79,5 +78,9 @@ export function TokenPriceLineChart({ tokenIn, tokenOut, prices }: Props) {
         [tokenIn, tokenOut, prices],
     );
 
-    return <ReactECharts option={option} style={{ height: '100%' }} />;
+    return (
+        <Box width='full' height='full' paddingY='4' paddingX='6'>
+            <ReactECharts option={option} style={{ height: '100%' }} />
+        </Box>
+    );
 }

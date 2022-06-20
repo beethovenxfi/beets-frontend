@@ -16,6 +16,7 @@ import { useEffect } from 'react';
 import { GqlSorSwapType } from '~/apollo/generated/graphql-codegen-generated';
 import { oldBnumToFixed } from '~/lib/services/pool/lib/old-big-number';
 import { useDebouncedCallback } from 'use-debounce';
+import { TradeChartSparkline } from './TradeChartSparkline';
 
 const buyAmountVar = makeVar<AmountHumanReadable>('');
 const sellAmountVar = makeVar<AmountHumanReadable>('');
@@ -159,10 +160,12 @@ export function useTradeCard() {
         handleTokensSwitched,
         handleReviewClicked,
         refetchTrade,
+        setSellAmount,
+        setBuyAmount
     };
 }
 
-function TradeCard() {
+function TradeCard2() {
     const controls = useAnimation();
     const [showTokenSelect, setShowTokenSelect] = useBoolean();
     const {
@@ -180,6 +183,8 @@ function TradeCard() {
         handleReviewClicked,
         refetchTrade,
         sorResponse,
+        setBuyAmount,
+        setSellAmount
     } = useTradeCard();
 
     const isReviewDisabled = parseFloat(sellAmount || '0') === 0.0 || parseFloat(buyAmount || '0') === 0.0;
@@ -244,7 +249,8 @@ function TradeCard() {
                     ) : null
                 }
             >
-                <VStack spacing="2" padding="4" width="full">
+                <VStack spacing="3" padding="4" width="full">
+                    <TradeChartSparkline />
                     <Box position="relative" width="full">
                         <TokenInput
                             label="Sell"
@@ -264,7 +270,13 @@ function TradeCard() {
                         value={buyAmount}
                     />
                     <Box width="full" paddingTop="2">
-                        <BeetsButton disabled={isReviewDisabled} onClick={handleReviewClicked} isFullWidth size="lg">
+                        <BeetsButton
+                            disabled={isReviewDisabled}
+                            onClick={handleReviewClicked}
+                            isFullWidth
+                            size="md"
+                            fontSize="1rem"
+                        >
                             Review Swap
                         </BeetsButton>
                     </Box>
@@ -279,4 +291,4 @@ function TradeCard() {
         </Box>
     );
 }
-export default TradeCard;
+export default TradeCard2;
