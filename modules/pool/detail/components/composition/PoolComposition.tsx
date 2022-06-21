@@ -90,7 +90,7 @@ const PoolCompositionTable = ({ columns, data, hasBpt, hasNestedTokens }: any) =
             return (
                 <HStack>
                     {cell.row.depth > 0 ? (
-                        <Box color="whiteAlpha.400" paddingLeft={cell.row.depth === 0 ? '2' : cell.row.depth * 8}>
+                        <Box color="whiteAlpha.400" paddingLeft={cell.row.depth === 1 ? '2' : '12'}>
                             <CornerDownRight />
                         </Box>
                     ) : null}
