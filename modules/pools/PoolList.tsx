@@ -31,15 +31,7 @@ function PoolList() {
                 fetchingMore={networkStatus === NetworkStatus.refetch}
                 onPageSizeChange={setPageSize}
                 renderTableHeader={() => <PoolListTableHeader />}
-                renderTableRow={(item, index) => (
-                    <PoolListItem
-                        key={index}
-                        pool={item}
-                        borderBottomColor="beets.base.800"
-                        borderBottomWidth={index === pools.length - 1 ? 0 : 1}
-                        bg="rgba(255,255,255,0.05)"
-                    />
-                )}
+                renderTableRow={(item, index) => <PoolListItem key={index} pool={item} />}
             />
         </Box>
     );
