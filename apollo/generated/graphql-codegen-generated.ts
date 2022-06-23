@@ -614,6 +614,7 @@ export interface GqlPoolTokenExpanded {
     isPhantomBpt: Scalars['Boolean'];
     name: Scalars['String'];
     symbol: Scalars['String'];
+    weight?: Maybe<Scalars['String']>;
 }
 
 export interface GqlPoolTokenLinear extends GqlPoolTokenBase {
@@ -2586,6 +2587,7 @@ export type GetPoolsQuery = {
             address: string;
             isNested: boolean;
             isPhantomBpt: boolean;
+            weight?: string | null;
         }>;
     }>;
 };
@@ -2632,6 +2634,7 @@ export type GqlPoolMinimalFragment = {
         address: string;
         isNested: boolean;
         isPhantomBpt: boolean;
+        weight?: string | null;
     }>;
 };
 
@@ -3023,6 +3026,7 @@ export const GqlPoolMinimalFragmentDoc = gql`
             address
             isNested
             isPhantomBpt
+            weight
         }
     }
 `;

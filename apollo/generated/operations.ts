@@ -118,6 +118,7 @@ export const GqlPoolMinimal = gql`
             address
             isNested
             isPhantomBpt
+            weight
         }
     }
 `;

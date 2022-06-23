@@ -67,5 +67,6 @@ fragment GqlPoolMinimal on GqlPoolMinimal {
         address
         isNested
         isPhantomBpt
+        weight
     }
 }

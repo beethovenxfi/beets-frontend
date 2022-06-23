@@ -584,6 +584,7 @@ type GqlPoolTokenExpanded {
     isPhantomBpt: Boolean!
     name: String!
     symbol: String!
+    weight: String
 }
 
 type GqlPoolTokenLinear implements GqlPoolTokenBase {
