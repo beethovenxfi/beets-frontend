@@ -5,13 +5,16 @@ import Link from 'next/link';
 import numeral from 'numeral';
 import AprTooltip from '~/components/apr-tooltip/AprTooltip';
 import { BoxProps } from '@chakra-ui/layout';
-import { NextLink } from '~/components/link/NextLink';
+import { AmountHumanReadable } from '~/lib/services/token/token-types';
+import { numberFormatUSDValue } from '~/lib/util/number-formats';
 
 interface Props extends BoxProps {
     pool: GqlPoolMinimalFragment;
+    userBalance?: AmountHumanReadable;
+    showUserBalance: boolean;
 }
 
-export default function PoolListItem({ pool, ...rest }: Props) {
+export default function PoolListItem({ pool, userBalance, showUserBalance, ...rest }: Props) {
     return (
         <Box {...rest}>
             <Link href={`/pool/${pool.id}`} passHref>
@@ -29,6 +32,11 @@ export default function PoolListItem({ pool, ...rest }: Props) {
                         <Flex flex={1}>
                             <Text fontSize="md">{pool.name}</Text>
                         </Flex>
+                        {showUserBalance && (
+                            <Box w={150} textAlign="right">
+                                <Text fontSize="md">{numberFormatUSDValue(userBalance || '0')}</Text>
+                            </Box>
+                        )}
                         <Box w={200} textAlign="right">
                             <Text fontSize="md">{numeral(pool.dynamicData.totalLiquidity).format('$0,0')}</Text>
                         </Box>

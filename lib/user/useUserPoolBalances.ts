@@ -22,11 +22,17 @@ export function useUserPoolBalances() {
             ),
         );
 
+    function balanceForPool(poolId: string) {
+        return poolBalances.find((pool) => pool.poolId === poolId)?.totalBalance || '0';
+    }
+
     return {
         ...rest,
         fbeetsValueUSD,
         portfolioValueUSD,
         poolBalances,
         fbeetsBalance,
+        userPoolIds: poolBalances.map((balance) => balance.poolId),
+        balanceForPool,
     };
 }

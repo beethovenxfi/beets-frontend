@@ -25,7 +25,7 @@ export function PoolListTop() {
                             ml={4}
                             onClick={toggleFilterVisibility}
                             color={showFilters ? 'gray.100' : 'white'}
-                            bgColor={showFilters ? 'beets.base.300' : 'beets.lightAlpha.200'}
+                            bgColor={showFilters ? 'beets.base.300' : 'beets.lightAlpha.300'}
                             _hover={{ bgColor: 'beets.light' }}
                         />
                         {hasFiltersSelected ? (

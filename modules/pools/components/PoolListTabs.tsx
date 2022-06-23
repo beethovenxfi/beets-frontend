@@ -4,25 +4,15 @@ import { useAccount } from 'wagmi';
 import BeetsTab from '~/components/tabs/BeetsTab';
 import { useUserAccount } from '~/lib/user/useUserAccount';
 
-const TABS = [
-    {
-        text: 'Incentivized pools',
-        id: 'incentivized',
-    },
-    {
-        text: 'Community pools',
-        id: 'community',
-    },
-    {
-        text: 'My investments',
-        id: 'my-investments',
-    },
-];
-
 export function PoolListTabs() {
     const { isConnected } = useUserAccount();
     const { state, refetch: refreshPoolList, setShowMyInvestments, showMyInvestments } = usePoolList();
-    const categoryIn = state.where?.categoryIn;
+
+    const TABS = [
+        { text: 'Incentivized pools', id: 'incentivized' },
+        { text: 'Community pools', id: 'community' },
+        ...(isConnected ? [{ text: 'My investments', id: 'my-investments' }] : []),
+    ];
 
     const handleTabChanged = (index: number) => {
         const tab = TABS[index];
@@ -38,6 +28,7 @@ export function PoolListTabs() {
                     ...state.where,
                     categoryIn,
                     categoryNotIn,
+                    idIn: undefined,
                 },
             });
         } else {

@@ -6,6 +6,7 @@ import {
     useGetPoolsQuery,
 } from '~/apollo/generated/graphql-codegen-generated';
 import { useBoolean } from '@chakra-ui/hooks';
+import { eq } from 'lodash';
 
 interface PoolsQueryVariables extends GetPoolsQueryVariables {
     first: number;
@@ -54,6 +55,8 @@ export function usePoolList() {
     }
 
     async function changeSort(orderBy: GqlPoolOrderBy) {
+        const state = poolListStateVar();
+
         isSortingToggle.on();
         if (state.orderBy === orderBy) {
             await refetch({
@@ -74,7 +77,7 @@ export function usePoolList() {
 
     async function setPageSize(pageSize: number) {
         await refetch({
-            ...state,
+            ...poolListStateVar(),
             first: pageSize,
             skip: 0,
         });
@@ -86,6 +89,32 @@ export function usePoolList() {
 
     function toggleFilterVisibility() {
         showFiltersVar(!showFiltersVar());
+    }
+
+    async function setPoolIds(poolIds: string[]) {
+        const state = poolListStateVar();
+
+        if (!eq(poolIds, state.where?.idIn)) {
+            await refetch({
+                ...state,
+                where: {
+                    ...state.where,
+                    idIn: poolIds,
+                },
+            });
+        }
+    }
+
+    async function clearPoolIds() {
+        const state = poolListStateVar();
+
+        await refetch({
+            ...state,
+            where: {
+                ...state.where,
+                idIn: undefined,
+            },
+        });
     }
 
     return {
@@ -103,5 +132,7 @@ export function usePoolList() {
         filters: poolFilters?.filters || [],
         toggleFilterVisibility,
         showFilters: useReactiveVar(showFiltersVar),
+        setPoolIds,
+        clearPoolIds,
     };
 }
