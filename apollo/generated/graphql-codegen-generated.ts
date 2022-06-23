@@ -838,6 +838,7 @@ export interface GqlUserPoolBalance {
     poolId: Scalars['String'];
     stakedBalance: Scalars['AmountHumanReadable'];
     tokenAddress: Scalars['String'];
+    tokenPrice: Scalars['Float'];
     totalBalance: Scalars['AmountHumanReadable'];
     walletBalance: Scalars['AmountHumanReadable'];
 }
@@ -1202,6 +1203,7 @@ export type GetUserBalancesQuery = {
         __typename: 'GqlUserPoolBalance';
         poolId: string;
         tokenAddress: string;
+        tokenPrice: number;
         totalBalance: string;
         stakedBalance: string;
         walletBalance: string;
@@ -3458,6 +3460,7 @@ export const GetUserBalancesDocument = gql`
         balances: userGetPoolBalances {
             poolId
             tokenAddress
+            tokenPrice
             totalBalance
             stakedBalance
             walletBalance

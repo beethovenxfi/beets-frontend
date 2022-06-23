@@ -2,6 +2,7 @@ query GetUserBalances {
     balances: userGetPoolBalances {
         poolId
         tokenAddress
+        tokenPrice
         totalBalance
         stakedBalance
         walletBalance

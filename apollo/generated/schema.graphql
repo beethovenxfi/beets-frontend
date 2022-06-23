@@ -796,6 +796,7 @@ type GqlUserPoolBalance {
     poolId: String!
     stakedBalance: AmountHumanReadable!
     tokenAddress: String!
+    tokenPrice: Float!
     totalBalance: AmountHumanReadable!
     walletBalance: AmountHumanReadable!
 }

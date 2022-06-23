@@ -321,6 +321,7 @@ export const GetUserBalances = gql`
         balances: userGetPoolBalances {
             poolId
             tokenAddress
+            tokenPrice
             totalBalance
             stakedBalance
             walletBalance

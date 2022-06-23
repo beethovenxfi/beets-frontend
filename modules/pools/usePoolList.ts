@@ -100,7 +100,10 @@ export function usePoolList() {
                 where: {
                     ...state.where,
                     idIn: poolIds,
+                    categoryIn: null,
+                    categoryNotIn: null,
                 },
+                first: 100,
             });
         }
     }

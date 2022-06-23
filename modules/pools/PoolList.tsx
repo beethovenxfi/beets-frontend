@@ -12,7 +12,7 @@ import { orderBy } from 'lodash';
 function PoolList() {
     const { pools, refetch, loading, error, networkStatus, state, count, setPageSize, setPoolIds, showMyInvestments } =
         usePoolList();
-    const { poolBalances, userPoolIds, balanceForPool } = useUserPoolBalances();
+    const { poolBalances, userPoolIds, usdBalanceForPool } = useUserPoolBalances();
     const userPoolIdsStr = userPoolIds.join();
 
     useEffect(() => {
@@ -21,7 +21,16 @@ function PoolList() {
         }
     }, [userPoolIdsStr, showMyInvestments]);
 
-    const poolsToRender = showMyInvestments ? orderBy(pools, (pool) => balanceForPool(pool.id), 'desc') : pools;
+    const poolsToRender = showMyInvestments
+        ? orderBy(
+              pools,
+              (pool) => {
+                  console.log('usd value', usdBalanceForPool(pool.id));
+                  return usdBalanceForPool(pool.id);
+              },
+              'desc',
+          )
+        : pools;
 
     return (
         <Box>
@@ -39,15 +48,11 @@ function PoolList() {
                 onPageSizeChange={setPageSize}
                 renderTableHeader={() => <PoolListTableHeader />}
                 renderTableRow={(item, index) => {
-                    const balance = showMyInvestments
-                        ? poolBalances.find((balance) => balance.poolId === item.id)?.totalBalance
-                        : '0.0';
-
                     return (
                         <PoolListItem
                             key={index}
                             pool={item}
-                            userBalance={balance}
+                            userBalance={`${usdBalanceForPool(item.id)}`}
                             showUserBalance={showMyInvestments}
                             borderBottomColor="beets.base.800"
                             borderBottomWidth={index === pools.length - 1 ? 0 : 1}
