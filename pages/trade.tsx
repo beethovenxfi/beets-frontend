@@ -46,6 +46,7 @@ function Trade() {
                         />
                     ) : null}
                 </Flex>
+                <Box height="2xs" />
                 {/*<Box mt="12">
                     <BatchSwapList />
                 </Box>*/}
