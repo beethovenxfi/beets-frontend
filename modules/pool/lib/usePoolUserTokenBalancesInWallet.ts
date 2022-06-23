@@ -1,5 +1,5 @@
 import { usePool } from '~/modules/pool/lib/usePool';
-import { useUserBalances } from '~/lib/global/useUserBalances';
+import { useUserBalances } from '~/lib/user/useUserBalances';
 import { sumBy } from 'lodash';
 import { useGetTokens } from '~/lib/global/useToken';
 

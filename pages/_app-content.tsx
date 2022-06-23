@@ -1,7 +1,7 @@
 import { Box, useTheme } from '@chakra-ui/react';
 import { AppProps } from 'next/app';
-import { Navbar } from '~/components/nav/Navbar';
-import { SubNavBar } from '~/components/nav/SubNavBar';
+import { Navbar } from '~/modules/nav/Navbar';
+import { SubNavBar } from '~/modules/nav/SubNavBar';
 import { useRef } from 'react';
 import { useElementScroll } from 'framer-motion';
 

@@ -2,7 +2,7 @@ import { AmountHumanReadable } from '~/lib/services/token/token-types';
 import { usePool } from '~/modules/pool/lib/usePool';
 import { networkConfig } from '~/lib/config/network-config';
 import { useGetFbeetsRatioQuery } from '~/apollo/generated/graphql-codegen-generated';
-import { useUserBalances } from '~/lib/global/useUserBalances';
+import { useUserBalances } from '~/lib/user/useUserBalances';
 import { parseUnits } from 'ethers/lib/utils';
 import { tokenGetAmountForAddress } from '~/lib/services/token/token-util';
 import { oldBnumScaleAmount } from '~/lib/services/pool/lib/old-big-number';

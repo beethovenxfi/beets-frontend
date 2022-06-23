@@ -2,7 +2,7 @@ import { useGetTokens } from '~/lib/global/useToken';
 import { useEffect } from 'react';
 import { AmountHumanReadable, TokenBase } from '~/lib/services/token/token-types';
 import { useBalances } from '~/lib/util/useBalances';
-import { useUserAccount } from '~/lib/global/useUserAccount';
+import { useUserAccount } from '~/lib/user/useUserAccount';
 
 export function useUserBalances(addresses: string[], additionalTokens?: TokenBase[]) {
     const { tokens: whitelistedTokens } = useGetTokens();

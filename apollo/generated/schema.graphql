@@ -785,6 +785,21 @@ type GqlTokenPriceChartDataItem {
     timestamp: Int!
 }
 
+type GqlUserFbeetsBalance {
+    id: String!
+    stakedBalance: AmountHumanReadable!
+    totalBalance: AmountHumanReadable!
+    walletBalance: AmountHumanReadable!
+}
+
+type GqlUserPoolBalance {
+    poolId: String!
+    stakedBalance: AmountHumanReadable!
+    tokenAddress: String!
+    totalBalance: AmountHumanReadable!
+    walletBalance: AmountHumanReadable!
+}
+
 type GqlUserPoolData {
     id: String!
     myFees: GqlBigNumber!
@@ -859,6 +874,11 @@ type Mutation {
     tokenReloadTokenPrices: Boolean
     tokenSyncTokenDefinitions: String!
     tokenSyncTokenDynamicData: String!
+    userInitStakedBalances: String!
+    userInitWalletBalancesForAllPools: String!
+    userInitWalletBalancesForPool(poolId: String!): String!
+    userSyncStakedBalances: String!
+    userSyncWalletBalancesForAllPools: String!
 }
 
 type Query {
@@ -915,4 +935,6 @@ type Query {
     tokenGetTokenDynamicData(address: String!): GqlTokenDynamicData
     tokenGetTokens: [GqlToken!]!
     tokenGetTokensDynamicData(addresses: [String!]!): [GqlTokenDynamicData!]!
+    userGetFbeetsBalance: GqlUserFbeetsBalance!
+    userGetPoolBalances: [GqlUserPoolBalance!]!
 }

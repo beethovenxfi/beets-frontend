@@ -1,5 +1,5 @@
 import { useGetTokens } from '~/lib/global/useToken';
-import { useUserBalances } from '~/lib/global/useUserBalances';
+import { useUserBalances } from '~/lib/user/useUserBalances';
 
 export function useUserTokenBalances() {
     const { tokens } = useGetTokens();

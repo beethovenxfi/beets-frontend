@@ -316,6 +316,22 @@ export const GetProtocolData = gql`
         }
     }
 `;
+export const GetUserBalances = gql`
+    query GetUserBalances {
+        balances: userGetPoolBalances {
+            poolId
+            tokenAddress
+            totalBalance
+            stakedBalance
+            walletBalance
+        }
+        fbeetsBalance: userGetFbeetsBalance {
+            totalBalance
+            stakedBalance
+            walletBalance
+        }
+    }
+`;
 export const GetPool = gql`
     query GetPool($id: String!) {
         pool: poolGetPool(id: $id) {

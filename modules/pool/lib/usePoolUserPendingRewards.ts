@@ -1,6 +1,5 @@
 import { useMasterChefPendingRewards } from '~/lib/global/useMasterChefPendingRewards';
 import { usePool } from '~/modules/pool/lib/usePool';
-import { usePoolUserTokenBalancesInWallet } from '~/modules/pool/lib/usePoolUserTokenBalancesInWallet';
 import { useGetTokens } from '~/lib/global/useToken';
 import { sumBy, uniq } from 'lodash';
 import { networkConfig } from '~/lib/config/network-config';
@@ -28,7 +27,6 @@ export function usePoolUserPendingRewards() {
         return pending || { address: rewardToken, amount: '0' };
     });
 
-    console.log('pendingRewards', pendingRewards, pendingRewardsTotalUSD);
     return {
         pendingRewards,
         pendingRewardsTotalUSD,

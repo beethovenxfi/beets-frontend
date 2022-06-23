@@ -3,7 +3,7 @@ import { keyBy } from 'lodash';
 import { TokenAmountHumanReadable } from '~/lib/services/token/token-types';
 import numeral from 'numeral';
 import { networkConfig } from '~/lib/config/network-config';
-import { useUserImportedTokens } from '~/lib/global/useUserImportedTokens';
+import { useUserImportedTokens } from '~/lib/user/useUserImportedTokens';
 
 export function useGetTokens() {
     const { data: tokensResponse } = useGetTokensQuery({ fetchPolicy: 'cache-first' });

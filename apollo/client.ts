@@ -1,18 +1,33 @@
 import { useMemo } from 'react';
-import { ApolloClient, HttpLink, InMemoryCache } from '@apollo/client';
+import { ApolloClient, ApolloLink, concat, HttpLink, InMemoryCache } from '@apollo/client';
 import merge from 'deepmerge';
 import isEqual from 'lodash/isEqual';
 import { GetAppGlobalData } from '~/apollo/generated/operations';
 import { concatPagination } from '@apollo/client/utilities';
+import { userAddressVar } from '~/lib/user/useUserAccount';
 
 export const APOLLO_STATE_PROP_NAME = '__APOLLO_STATE__';
 
 let apolloClient: ApolloClient<any>;
 
+const userMiddleware = new ApolloLink((operation, forward) => {
+    // add the user address to the headers
+    operation.setContext(({ headers = {} }) => {
+        return {
+            headers: {
+                ...headers,
+                AccountAddress: userAddressVar(),
+            },
+        };
+    });
+
+    return forward(operation);
+});
+
 function createApolloClient() {
     return new ApolloClient({
         ssrMode: typeof window === 'undefined',
-        link: new HttpLink({ uri: process.env.NEXT_PUBLIC_BACKEND_URL }),
+        link: concat(userMiddleware, new HttpLink({ uri: process.env.NEXT_PUBLIC_BACKEND_URL })),
         cache: new InMemoryCache({
             typePolicies: {
                 GqlToken: {
@@ -20,6 +35,9 @@ function createApolloClient() {
                 },
                 GqlTokenPrice: {
                     keyFields: ['address'],
+                },
+                GqlUserPoolBalance: {
+                    keyFields: ['poolId'],
                 },
                 Query: {
                     fields: {

@@ -5,6 +5,7 @@ import Link from 'next/link';
 import numeral from 'numeral';
 import AprTooltip from '~/components/apr-tooltip/AprTooltip';
 import { BoxProps } from '@chakra-ui/layout';
+import { NextLink } from '~/components/link/NextLink';
 
 interface Props extends BoxProps {
     pool: GqlPoolMinimalFragment;

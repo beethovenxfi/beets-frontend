@@ -2,7 +2,7 @@ import { HStack, TabList, Tabs } from '@chakra-ui/react';
 import { usePoolList } from '~/modules/pools/usePoolList';
 import { useAccount } from 'wagmi';
 import BeetsTab from '~/components/tabs/BeetsTab';
-import { useUserAccount } from '~/lib/global/useUserAccount';
+import { useUserAccount } from '~/lib/user/useUserAccount';
 
 const TABS = [
     {

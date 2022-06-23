@@ -825,6 +825,23 @@ export interface GqlTokenPriceChartDataItem {
     timestamp: Scalars['Int'];
 }
 
+export interface GqlUserFbeetsBalance {
+    __typename: 'GqlUserFbeetsBalance';
+    id: Scalars['String'];
+    stakedBalance: Scalars['AmountHumanReadable'];
+    totalBalance: Scalars['AmountHumanReadable'];
+    walletBalance: Scalars['AmountHumanReadable'];
+}
+
+export interface GqlUserPoolBalance {
+    __typename: 'GqlUserPoolBalance';
+    poolId: Scalars['String'];
+    stakedBalance: Scalars['AmountHumanReadable'];
+    tokenAddress: Scalars['String'];
+    totalBalance: Scalars['AmountHumanReadable'];
+    walletBalance: Scalars['AmountHumanReadable'];
+}
+
 export interface GqlUserPoolData {
     __typename: 'GqlUserPoolData';
     id: Scalars['String'];
@@ -898,6 +915,11 @@ export interface Mutation {
     tokenReloadTokenPrices?: Maybe<Scalars['Boolean']>;
     tokenSyncTokenDefinitions: Scalars['String'];
     tokenSyncTokenDynamicData: Scalars['String'];
+    userInitStakedBalances: Scalars['String'];
+    userInitWalletBalancesForAllPools: Scalars['String'];
+    userInitWalletBalancesForPool: Scalars['String'];
+    userSyncStakedBalances: Scalars['String'];
+    userSyncWalletBalancesForAllPools: Scalars['String'];
 }
 
 export interface MutationCachePortfolioHistoryForDateArgs {
@@ -915,6 +937,10 @@ export interface MutationLgeCreateArgs {
 
 export interface MutationTokenInitChartDataArgs {
     tokenAddress: Scalars['String'];
+}
+
+export interface MutationUserInitWalletBalancesForPoolArgs {
+    poolId: Scalars['String'];
 }
 
 export interface Query {
@@ -948,6 +974,8 @@ export interface Query {
     tokenGetTokenDynamicData?: Maybe<GqlTokenDynamicData>;
     tokenGetTokens: Array<GqlToken>;
     tokenGetTokensDynamicData: Array<GqlTokenDynamicData>;
+    userGetFbeetsBalance: GqlUserFbeetsBalance;
+    userGetPoolBalances: Array<GqlUserPoolBalance>;
 }
 
 export interface QueryLgeArgs {
@@ -1163,6 +1191,26 @@ export type GetProtocolDataQuery = {
         poolCount: string;
         beetsPrice: string;
         fbeetsPrice: string;
+    };
+};
+
+export type GetUserBalancesQueryVariables = Exact<{ [key: string]: never }>;
+
+export type GetUserBalancesQuery = {
+    __typename: 'Query';
+    balances: Array<{
+        __typename: 'GqlUserPoolBalance';
+        poolId: string;
+        tokenAddress: string;
+        totalBalance: string;
+        stakedBalance: string;
+        walletBalance: string;
+    }>;
+    fbeetsBalance: {
+        __typename: 'GqlUserFbeetsBalance';
+        totalBalance: string;
+        stakedBalance: string;
+        walletBalance: string;
     };
 };
 
@@ -3405,6 +3453,53 @@ export function useGetProtocolDataLazyQuery(
 export type GetProtocolDataQueryHookResult = ReturnType<typeof useGetProtocolDataQuery>;
 export type GetProtocolDataLazyQueryHookResult = ReturnType<typeof useGetProtocolDataLazyQuery>;
 export type GetProtocolDataQueryResult = Apollo.QueryResult<GetProtocolDataQuery, GetProtocolDataQueryVariables>;
+export const GetUserBalancesDocument = gql`
+    query GetUserBalances {
+        balances: userGetPoolBalances {
+            poolId
+            tokenAddress
+            totalBalance
+            stakedBalance
+            walletBalance
+        }
+        fbeetsBalance: userGetFbeetsBalance {
+            totalBalance
+            stakedBalance
+            walletBalance
+        }
+    }
+`;
+
+/**
+ * __useGetUserBalancesQuery__
+ *
+ * To run a query within a React component, call `useGetUserBalancesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetUserBalancesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetUserBalancesQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetUserBalancesQuery(
+    baseOptions?: Apollo.QueryHookOptions<GetUserBalancesQuery, GetUserBalancesQueryVariables>,
+) {
+    const options = { ...defaultOptions, ...baseOptions };
+    return Apollo.useQuery<GetUserBalancesQuery, GetUserBalancesQueryVariables>(GetUserBalancesDocument, options);
+}
+export function useGetUserBalancesLazyQuery(
+    baseOptions?: Apollo.LazyQueryHookOptions<GetUserBalancesQuery, GetUserBalancesQueryVariables>,
+) {
+    const options = { ...defaultOptions, ...baseOptions };
+    return Apollo.useLazyQuery<GetUserBalancesQuery, GetUserBalancesQueryVariables>(GetUserBalancesDocument, options);
+}
+export type GetUserBalancesQueryHookResult = ReturnType<typeof useGetUserBalancesQuery>;
+export type GetUserBalancesLazyQueryHookResult = ReturnType<typeof useGetUserBalancesLazyQuery>;
+export type GetUserBalancesQueryResult = Apollo.QueryResult<GetUserBalancesQuery, GetUserBalancesQueryVariables>;
 export const GetPoolDocument = gql`
     query GetPool($id: String!) {
         pool: poolGetPool(id: $id) {

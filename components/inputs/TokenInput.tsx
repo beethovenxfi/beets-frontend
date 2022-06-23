@@ -5,8 +5,8 @@ import TokenAvatar from '../token/TokenAvatar';
 import BeetsInput from './BeetsInput';
 import { tokenFormatAmountPrecise, tokenGetAmountForAddress } from '~/lib/services/token/token-util';
 import { AmountHumanReadable } from '~/lib/services/token/token-types';
-import { useUserTokenBalances } from '~/lib/global/useUserTokenBalances';
-import { useUserAccount } from '~/lib/global/useUserAccount';
+import { useUserTokenBalances } from '~/lib/user/useUserTokenBalances';
+import { useUserAccount } from '~/lib/user/useUserAccount';
 import PresetSelector from './PresetSelector';
 
 type Props = {

@@ -2,15 +2,14 @@ import { Box, Button, Flex, HStack } from '@chakra-ui/react';
 import Image from 'next/image';
 import NextLink from 'next/link';
 import LogoFull from '~/assets/logo/beets-bal.svg';
-import WalletConnectButton from '../wallet/WalletConnectButton';
-import { NavbarLink } from '~/components/nav/NavbarLink';
+import WalletConnectButton from '../../components/wallet/WalletConnectButton';
+import { NavbarLink } from '~/modules/nav/NavbarLink';
 import { useRouter } from 'next/router';
 import { motion, MotionValue, useAnimation, useTransform } from 'framer-motion';
-import { NavbarAdditionalLinksMenu } from '~/components/nav/NavbarAdditionalLinksMenu';
-import { useState } from 'react';
+import { NavbarAdditionalLinksMenu } from '~/modules/nav/NavbarAdditionalLinksMenu';
 import StarsIcon from '~/components/apr-tooltip/StarsIcon';
-import { useUserAccount } from '~/lib/global/useUserAccount';
-import { NavbarPortfolioDrawer } from '~/components/nav/NavbarPortfolioDrawer';
+import { useUserAccount } from '~/lib/user/useUserAccount';
+import { NavbarPortfolioDrawer } from '~/modules/nav/NavbarPortfolioDrawer';
 import { FadeInOutBox } from '~/components/animation/FadeInOutBox';
 
 interface Props {
@@ -22,11 +21,8 @@ const transition = { type: 'spring', stiffness: 250, damping: 25 };
 export function Navbar({ scrollY }: Props) {
     const router = useRouter();
     const opacity = useTransform(scrollY, [0, 32], [0, 1]);
-
     const logoControls = useAnimation();
     const menuControls = useAnimation();
-
-    const [minimized, setMinimized] = useState(false);
     const { isConnected } = useUserAccount();
 
     scrollY.onChange((latest) => {
@@ -34,21 +30,21 @@ export function Navbar({ scrollY }: Props) {
             logoControls.start({
                 translateX: -12,
                 scale: 0.8,
-                transition
+                transition,
             });
             menuControls.start({
                 translateX: -34,
-                transition
+                transition,
             });
         } else if (latest <= 16) {
             logoControls.start({
                 translateX: 0,
                 scale: 1,
-                transition
+                transition,
             });
             menuControls.start({
                 translateX: 0,
-                transition
+                transition,
             });
         }
     });
@@ -61,7 +57,6 @@ export function Navbar({ scrollY }: Props) {
                 </motion.div>
                 <Flex alignItems="center" mr={8}>
                     <motion.div
-                        // animate={{ translateX: minimized ? -12 : 0, scale: minimized ? 0.8 : 1 }}
                         animate={logoControls}
                         style={{ display: 'flex', alignItems: 'center' }}
                         transition={{ type: 'spring', stiffness: 250, damping: 25 }}
@@ -77,7 +72,6 @@ export function Navbar({ scrollY }: Props) {
                 </Box>*/}
                 </Flex>
                 <motion.div
-                    // animate={{ translateX: minimized ? -34 : 0 }}
                     animate={menuControls}
                     style={{ flex: 1, zIndex: 1 }}
                     transition={{ type: 'spring', stiffness: 250, damping: 25 }}
