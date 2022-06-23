@@ -46,9 +46,9 @@ function Trade() {
                         />
                     ) : null}
                 </Flex>
-                <Box mt="12">
+                {/*<Box mt="12">
                     <BatchSwapList />
-                </Box>
+                </Box>*/}
             </GridItem>
             <GridItem w="100%" colSpan={4}>
                 <TradeInterfaceContainer />
