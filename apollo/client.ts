@@ -41,8 +41,8 @@ function createApolloClient() {
                 },
                 Query: {
                     fields: {
-                        poolGetJoinExits: concatPagination(),
-                        poolGetSwaps: concatPagination(),
+                        poolGetJoinExits: concatPagination(['where', ['poolIdIn']]),
+                        poolGetSwaps: concatPagination(['where', ['poolIdIn']]),
                         poolGetBatchSwaps: concatPagination(),
                     },
                 },
