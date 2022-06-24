@@ -27,5 +27,7 @@ export function useUserPendingRewards() {
         pendingRewards,
         ...rest,
         isLoading: isLoading || userPoolBalancesQuery.loading,
+        staking,
+        stakingType: staking[0]?.type || 'MASTER_CHEF',
     };
 }

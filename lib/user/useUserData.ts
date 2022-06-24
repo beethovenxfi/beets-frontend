@@ -1,12 +1,19 @@
-import { useGetUserDataQuery } from '~/apollo/generated/graphql-codegen-generated';
+import { useGetUserDataLazyQuery, useGetUserDataQuery } from '~/apollo/generated/graphql-codegen-generated';
 import { useGetTokens } from '~/lib/global/useToken';
 import { sum } from 'lodash';
 import { networkConfig } from '~/lib/config/network-config';
 import { AmountHumanReadable } from '~/lib/services/token/token-types';
+import { useUserAccount } from '~/lib/user/useUserAccount';
+import { useEffect } from 'react';
 
 export function useUserData() {
-    const { data, ...rest } = useGetUserDataQuery({ pollInterval: 5000 });
+    const [getUserData, { data, ...rest }] = useGetUserDataLazyQuery();
     const { priceForAmount } = useGetTokens();
+    const { userAddress } = useUserAccount();
+
+    useEffect(() => {
+        getUserData({ pollInterval: userAddress ? 30000 : undefined });
+    }, [userAddress]);
 
     const fbeetsBalance = data?.fbeetsBalance || { totalBalance: '0', stakedBalance: '0', walletBalance: '0' };
     const poolBalances = data?.balances || [];

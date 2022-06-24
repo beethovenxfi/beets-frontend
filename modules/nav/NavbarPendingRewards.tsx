@@ -10,27 +10,34 @@ import {
     PopoverContent,
     PopoverHeader,
     PopoverTrigger,
+    Skeleton,
 } from '@chakra-ui/react';
 import { useUserPendingRewards } from '~/lib/user/useUserPendingRewards';
 import { numberFormatUSDValue } from '~/lib/util/number-formats';
 import numeral from 'numeral';
 import { useGetTokens } from '~/lib/global/useToken';
-import { tokenFormatAmount } from '~/lib/services/token/token-util';
 import BeetsButton from '~/components/button/Button';
 import { BeetsBox } from '~/components/box/BeetsBox';
 import { useUserData } from '~/lib/user/useUserData';
 
 export function NavbarPendingRewards() {
-    const { pendingRewards, pendingRewardsTotalUSD } = useUserPendingRewards();
-    const { stakedValueUSD } = useUserData();
+    const {
+        pendingRewards,
+        pendingRewardsTotalUSD,
+        staking,
+        stakingType,
+        isLoading: pendingRewardsLoading,
+    } = useUserPendingRewards();
+    const { stakedValueUSD, loading: userDataLoading } = useUserData();
     const { getToken } = useGetTokens();
+    const loading = pendingRewardsLoading || userDataLoading;
+
     return (
         <Popover>
             {/*
             //@ts-ignore */}
             <PopoverTrigger>
                 <Button
-                    variant="unstyled"
                     bgColor="beets.lightAlpha.200"
                     width="54px"
                     height="40px"
@@ -38,11 +45,27 @@ export function NavbarPendingRewards() {
                     alignItems="center"
                     justifyContent="center"
                     flexDirection="column"
+                    disabled={loading}
+                    _disabled={{ opacity: 1.0, cursor: 'not-allowed' }}
+                    _hover={{ transform: 'scale(1.1)' }}
                 >
                     <StarsIcon width={15} height={16} />
-                    <Box fontSize="11px" pt="0.5">
-                        {numeral(pendingRewardsTotalUSD).format('$0.00a')}
-                    </Box>
+
+                    {loading ? (
+                        <Skeleton
+                            height="10px"
+                            width="36px"
+                            startColor="gray.400"
+                            endColor="gray.500"
+                            mt="1.5"
+                            mb="2px"
+                        />
+                    ) : (
+                        <Box fontSize="11px" pt="0.5">
+                            {numeral(pendingRewardsTotalUSD).format('$0.00a')}
+                        </Box>
+                    )}
+                    <Skeleton />
                 </Button>
             </PopoverTrigger>
             <PopoverContent bgColor="beets.base.900">
@@ -55,7 +78,7 @@ export function NavbarPendingRewards() {
                             Pending rewards
                         </Box>
                         {pendingRewards.map((item) => (
-                            <Box fontSize="xl" fontWeight="normal" lineHeight="26px">
+                            <Box fontSize="xl" fontWeight="normal" lineHeight="26px" key={item.address}>
                                 {numeral(item.amount).format('0.0000')} {getToken(item.address)?.symbol}
                             </Box>
                         ))}
@@ -71,11 +94,11 @@ export function NavbarPendingRewards() {
                             {numberFormatUSDValue(stakedValueUSD)}
                         </Box>
                         <Box color="gray.200" pt="2" fontSize="sm">
-                            in 16 farms
+                            in {staking.length} {stakingType === 'MASTER_CHEF' ? 'farm(s)' : 'gauge(s)'}
                         </Box>
                     </BeetsBox>
                     <Box mt="4">
-                        <BeetsButton width="full">Harvest all rewards</BeetsButton>
+                        <BeetsButton width="full">Claim all rewards</BeetsButton>
                     </Box>
                 </PopoverBody>
             </PopoverContent>
