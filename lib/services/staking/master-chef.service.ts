@@ -102,7 +102,7 @@ export class MasterChefService {
         forEach(result, ({ pendingRewards, pendingBeets }, farmId) => {
             if (pendingBeets && pendingBeets.gt(0)) {
                 pendingRewardAmounts.push({
-                    address: this.beetsAddress,
+                    address: this.beetsAddress.toLowerCase(),
                     amount: formatFixed(pendingBeets, 18),
                     farmId,
                 });
@@ -116,7 +116,7 @@ export class MasterChefService {
                         );
 
                         pendingRewardAmounts.push({
-                            address: pendingRewards.rewardTokens[i],
+                            address: pendingRewards.rewardTokens[i].toLowerCase(),
                             amount: formatFixed(pendingRewards.rewardAmounts[i], token?.decimals || 18),
                             farmId,
                         });

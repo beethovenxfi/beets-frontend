@@ -120,6 +120,21 @@ export const GqlPoolMinimal = gql`
             isPhantomBpt
             weight
         }
+        staking {
+            id
+            type
+            address
+            farm {
+                id
+                beetsPerBlock
+                rewarders {
+                    id
+                    address
+                    tokenAddress
+                    rewardPerSecond
+                }
+            }
+        }
     }
 `;
 export const GqlSorSwapRouteHop = gql`
@@ -317,8 +332,8 @@ export const GetProtocolData = gql`
         }
     }
 `;
-export const GetUserBalances = gql`
-    query GetUserBalances {
+export const GetUserData = gql`
+    query GetUserData {
         balances: userGetPoolBalances {
             poolId
             tokenAddress
@@ -331,6 +346,21 @@ export const GetUserBalances = gql`
             totalBalance
             stakedBalance
             walletBalance
+        }
+        staking: userGetStaking {
+            id
+            type
+            address
+            farm {
+                id
+                beetsPerBlock
+                rewarders {
+                    id
+                    address
+                    tokenAddress
+                    rewardPerSecond
+                }
+            }
         }
     }
 `;

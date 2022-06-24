@@ -907,6 +907,7 @@ export interface Mutation {
     poolSyncNewPoolsFromSubgraph: Array<Scalars['String']>;
     poolSyncPoolAllTokensRelationship: Scalars['String'];
     poolSyncSanityPoolData: Scalars['String'];
+    poolSyncStakingForPools: Scalars['String'];
     poolSyncSwapsForLast24Hours: Scalars['String'];
     poolSyncTotalShares: Scalars['String'];
     poolUpdateAprs: Scalars['String'];
@@ -978,6 +979,7 @@ export interface Query {
     tokenGetTokensDynamicData: Array<GqlTokenDynamicData>;
     userGetFbeetsBalance: GqlUserFbeetsBalance;
     userGetPoolBalances: Array<GqlUserPoolBalance>;
+    userGetStaking: Array<GqlPoolStaking>;
 }
 
 export interface QueryLgeArgs {
@@ -1196,9 +1198,9 @@ export type GetProtocolDataQuery = {
     };
 };
 
-export type GetUserBalancesQueryVariables = Exact<{ [key: string]: never }>;
+export type GetUserDataQueryVariables = Exact<{ [key: string]: never }>;
 
-export type GetUserBalancesQuery = {
+export type GetUserDataQuery = {
     __typename: 'Query';
     balances: Array<{
         __typename: 'GqlUserPoolBalance';
@@ -1215,6 +1217,24 @@ export type GetUserBalancesQuery = {
         stakedBalance: string;
         walletBalance: string;
     };
+    staking: Array<{
+        __typename: 'GqlPoolStaking';
+        id: string;
+        type: GqlPoolStakingType;
+        address: string;
+        farm?: {
+            __typename: 'GqlPoolStakingMasterChefFarm';
+            id: string;
+            beetsPerBlock: string;
+            rewarders?: Array<{
+                __typename: 'GqlPoolStakingMasterChefFarmRewarder';
+                id: string;
+                address: string;
+                tokenAddress: string;
+                rewardPerSecond: string;
+            }> | null;
+        } | null;
+    }>;
 };
 
 export type GetPoolQueryVariables = Exact<{
@@ -2589,6 +2609,24 @@ export type GetPoolsQuery = {
             isPhantomBpt: boolean;
             weight?: string | null;
         }>;
+        staking?: {
+            __typename: 'GqlPoolStaking';
+            id: string;
+            type: GqlPoolStakingType;
+            address: string;
+            farm?: {
+                __typename: 'GqlPoolStakingMasterChefFarm';
+                id: string;
+                beetsPerBlock: string;
+                rewarders?: Array<{
+                    __typename: 'GqlPoolStakingMasterChefFarmRewarder';
+                    id: string;
+                    address: string;
+                    tokenAddress: string;
+                    rewardPerSecond: string;
+                }> | null;
+            } | null;
+        } | null;
     }>;
 };
 
@@ -2636,6 +2674,24 @@ export type GqlPoolMinimalFragment = {
         isPhantomBpt: boolean;
         weight?: string | null;
     }>;
+    staking?: {
+        __typename: 'GqlPoolStaking';
+        id: string;
+        type: GqlPoolStakingType;
+        address: string;
+        farm?: {
+            __typename: 'GqlPoolStakingMasterChefFarm';
+            id: string;
+            beetsPerBlock: string;
+            rewarders?: Array<{
+                __typename: 'GqlPoolStakingMasterChefFarmRewarder';
+                id: string;
+                address: string;
+                tokenAddress: string;
+                rewardPerSecond: string;
+            }> | null;
+        } | null;
+    } | null;
 };
 
 export type GetTokenRelativePriceChartDataQueryVariables = Exact<{
@@ -3027,6 +3083,21 @@ export const GqlPoolMinimalFragmentDoc = gql`
             isNested
             isPhantomBpt
             weight
+        }
+        staking {
+            id
+            type
+            address
+            farm {
+                id
+                beetsPerBlock
+                rewarders {
+                    id
+                    address
+                    tokenAddress
+                    rewardPerSecond
+                }
+            }
         }
     }
 `;
@@ -3459,8 +3530,8 @@ export function useGetProtocolDataLazyQuery(
 export type GetProtocolDataQueryHookResult = ReturnType<typeof useGetProtocolDataQuery>;
 export type GetProtocolDataLazyQueryHookResult = ReturnType<typeof useGetProtocolDataLazyQuery>;
 export type GetProtocolDataQueryResult = Apollo.QueryResult<GetProtocolDataQuery, GetProtocolDataQueryVariables>;
-export const GetUserBalancesDocument = gql`
-    query GetUserBalances {
+export const GetUserDataDocument = gql`
+    query GetUserData {
         balances: userGetPoolBalances {
             poolId
             tokenAddress
@@ -3474,39 +3545,54 @@ export const GetUserBalancesDocument = gql`
             stakedBalance
             walletBalance
         }
+        staking: userGetStaking {
+            id
+            type
+            address
+            farm {
+                id
+                beetsPerBlock
+                rewarders {
+                    id
+                    address
+                    tokenAddress
+                    rewardPerSecond
+                }
+            }
+        }
     }
 `;
 
 /**
- * __useGetUserBalancesQuery__
+ * __useGetUserDataQuery__
  *
- * To run a query within a React component, call `useGetUserBalancesQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetUserBalancesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useGetUserDataQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetUserDataQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useGetUserBalancesQuery({
+ * const { data, loading, error } = useGetUserDataQuery({
  *   variables: {
  *   },
  * });
  */
-export function useGetUserBalancesQuery(
-    baseOptions?: Apollo.QueryHookOptions<GetUserBalancesQuery, GetUserBalancesQueryVariables>,
+export function useGetUserDataQuery(
+    baseOptions?: Apollo.QueryHookOptions<GetUserDataQuery, GetUserDataQueryVariables>,
 ) {
     const options = { ...defaultOptions, ...baseOptions };
-    return Apollo.useQuery<GetUserBalancesQuery, GetUserBalancesQueryVariables>(GetUserBalancesDocument, options);
+    return Apollo.useQuery<GetUserDataQuery, GetUserDataQueryVariables>(GetUserDataDocument, options);
 }
-export function useGetUserBalancesLazyQuery(
-    baseOptions?: Apollo.LazyQueryHookOptions<GetUserBalancesQuery, GetUserBalancesQueryVariables>,
+export function useGetUserDataLazyQuery(
+    baseOptions?: Apollo.LazyQueryHookOptions<GetUserDataQuery, GetUserDataQueryVariables>,
 ) {
     const options = { ...defaultOptions, ...baseOptions };
-    return Apollo.useLazyQuery<GetUserBalancesQuery, GetUserBalancesQueryVariables>(GetUserBalancesDocument, options);
+    return Apollo.useLazyQuery<GetUserDataQuery, GetUserDataQueryVariables>(GetUserDataDocument, options);
 }
-export type GetUserBalancesQueryHookResult = ReturnType<typeof useGetUserBalancesQuery>;
-export type GetUserBalancesLazyQueryHookResult = ReturnType<typeof useGetUserBalancesLazyQuery>;
-export type GetUserBalancesQueryResult = Apollo.QueryResult<GetUserBalancesQuery, GetUserBalancesQueryVariables>;
+export type GetUserDataQueryHookResult = ReturnType<typeof useGetUserDataQuery>;
+export type GetUserDataLazyQueryHookResult = ReturnType<typeof useGetUserDataLazyQuery>;
+export type GetUserDataQueryResult = Apollo.QueryResult<GetUserDataQuery, GetUserDataQueryVariables>;
 export const GetPoolDocument = gql`
     query GetPool($id: String!) {
         pool: poolGetPool(id: $id) {

@@ -11,6 +11,7 @@ import StarsIcon from '~/components/apr-tooltip/StarsIcon';
 import { useUserAccount } from '~/lib/user/useUserAccount';
 import { NavbarPortfolioDrawer } from '~/modules/nav/NavbarPortfolioDrawer';
 import { FadeInOutBox } from '~/components/animation/FadeInOutBox';
+import { NavbarPendingRewards } from '~/modules/nav/NavbarPendingRewards';
 
 interface Props {
     scrollY: MotionValue<number>;
@@ -86,21 +87,7 @@ export function Navbar({ scrollY }: Props) {
                 </motion.div>
                 <FadeInOutBox mr="3" isVisible={isConnected}>
                     <HStack spacing="3">
-                        <Button
-                            variant="unstyled"
-                            bgColor="beets.lightAlpha.200"
-                            width="54px"
-                            height="40px"
-                            display="flex"
-                            alignItems="center"
-                            justifyContent="center"
-                            flexDirection="column"
-                        >
-                            <StarsIcon width={15} height={16} />
-                            <Box fontSize="11px" pt="0.5">
-                                $112.23
-                            </Box>
-                        </Button>
+                        <NavbarPendingRewards />
                         <NavbarPortfolioDrawer />
                     </HStack>
                 </FadeInOutBox>

@@ -866,6 +866,7 @@ type Mutation {
     poolSyncNewPoolsFromSubgraph: [String!]!
     poolSyncPoolAllTokensRelationship: String!
     poolSyncSanityPoolData: String!
+    poolSyncStakingForPools: String!
     poolSyncSwapsForLast24Hours: String!
     poolSyncTotalShares: String!
     poolUpdateAprs: String!
@@ -939,4 +940,5 @@ type Query {
     tokenGetTokensDynamicData(addresses: [String!]!): [GqlTokenDynamicData!]!
     userGetFbeetsBalance: GqlUserFbeetsBalance!
     userGetPoolBalances: [GqlUserPoolBalance!]!
+    userGetStaking: [GqlPoolStaking!]!
 }
