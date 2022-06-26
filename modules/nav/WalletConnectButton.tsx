@@ -1,14 +1,18 @@
 import { ConnectButton } from '@rainbow-me/rainbowkit';
-import BeetsButton from '../button/Button';
-import { Box, HStack, Text, Spinner, Button } from '@chakra-ui/react';
+import BeetsButton from '../../components/button/Button';
+import { Box, HStack, Spinner, Text } from '@chakra-ui/react';
 import Image from 'next/image';
 import BeetsSmart from '~/assets/icons/beetx-smarts.svg';
 import { useReactiveVar } from '@apollo/client';
 import { txPendingVar } from '~/lib/util/useSubmitTransaction';
 import { IconWallet } from '~/components/icons/IconWallet';
+import { BarChart2 } from 'react-feather';
+import { useUserData } from '~/lib/user/useUserData';
+import numeral from 'numeral';
 
 export default function WalletConnectButton() {
     const txPending = useReactiveVar(txPendingVar);
+    const { loading, portfolioValueUSD } = useUserData();
 
     return (
         <ConnectButton.Custom>
@@ -49,7 +53,22 @@ export default function WalletConnectButton() {
                             }
 
                             return (
-                                <HStack>
+                                <HStack spacing="0" position="relative">
+                                    <HStack
+                                        bgColor="beets.base.500"
+                                        pr="3"
+                                        pl="2"
+                                        spacing="1"
+                                        height="40px"
+                                        mr="-1"
+                                        roundedTopLeft="md"
+                                        roundedBottomLeft="md"
+                                    >
+                                        <BarChart2 size={18} />
+                                        <Box fontSize="sm" fontWeight="semibold">
+                                            {numeral(portfolioValueUSD).format('$0.00a')}
+                                        </Box>
+                                    </HStack>
                                     <BeetsButton
                                         rounded="md"
                                         fontSize="md"
@@ -57,6 +76,8 @@ export default function WalletConnectButton() {
                                         paddingX="none"
                                         padding="3px"
                                         color="gray.100"
+                                        zIndex="100"
+                                        position="relative"
                                         _hover={{
                                             backgroundColor: 'none',
                                             transform: 'scale(1.05)',
@@ -64,7 +85,7 @@ export default function WalletConnectButton() {
                                         _active={{
                                             backgroundColor: 'none',
                                         }}
-                                        bg="beets.lightAlpha.200"
+                                        bg="beets.base.800"
                                     >
                                         <HStack width="full" height="full" spacing="1">
                                             {/* {account.displayBalance ? ` (${account.displayBalance})` : ''} */}

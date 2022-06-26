@@ -25,7 +25,7 @@ export function NavbarPortfolioDrawer() {
         <>
             <Button
                 variant="unstyled"
-                bgColor="beets.lightAlpha.200"
+                bgColor="beets.base.500"
                 width="54px"
                 height="40px"
                 display="flex"
