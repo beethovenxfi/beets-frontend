@@ -26,7 +26,6 @@ interface Props {
 
 function AprTooltip({ data, textProps, onlySparkles }: Props) {
     const formatApr = (apr: number) => {
-        console.log('apr', apr);
         if (apr < 0.0000001) {
             return '0.00%';
         }
