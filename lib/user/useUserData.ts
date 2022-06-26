@@ -7,7 +7,7 @@ import { useUserAccount } from '~/lib/user/useUserAccount';
 import { useEffect } from 'react';
 
 export function useUserData() {
-    const [getUserData, { data, ...rest }] = useGetUserDataLazyQuery();
+    const [getUserData, { data, ...rest }] = useGetUserDataLazyQuery({ pollInterval: 30000 });
     const { priceForAmount } = useGetTokens();
     const { userAddress } = useUserAccount();
 
@@ -25,29 +25,26 @@ export function useUserData() {
     });
 
     const portfolioValueUSD =
-        fbeetsValueUSD +
-        sum(
-            poolBalances.map((balance) =>
-                priceForAmount({ address: balance.tokenAddress, amount: balance.totalBalance }),
-            ),
-        );
+        fbeetsValueUSD + sum(poolBalances.map((balance) => parseFloat(balance.totalBalance) * balance.tokenPrice));
 
     const stakedValueUSD =
         priceForAmount({
             address: networkConfig.fbeets.address,
             amount: fbeetsBalance.stakedBalance,
-        }) +
-        sum(
-            poolBalances.map((balance) =>
-                priceForAmount({ address: balance.tokenAddress, amount: balance.stakedBalance }),
-            ),
-        );
+        }) + sum(poolBalances.map((balance) => parseFloat(balance.stakedBalance) * balance.tokenPrice));
 
     function bptBalanceForPool(poolId: string): AmountHumanReadable {
         return poolBalances.find((pool) => pool.poolId === poolId)?.totalBalance || '0';
     }
 
     function usdBalanceForPool(poolId: string): number {
+        if (poolId === networkConfig.fbeets.poolId) {
+            const bptBalance = poolBalances.find((pool) => pool.poolId === poolId);
+            const bptValueUSD = bptBalance ? bptBalance.tokenPrice * parseFloat(bptBalance.totalBalance) : 0;
+
+            return fbeetsValueUSD + bptValueUSD;
+        }
+
         const balance = poolBalances.find((pool) => pool.poolId === poolId);
 
         if (!balance) {
@@ -64,7 +61,10 @@ export function useUserData() {
         poolBalances,
         fbeetsBalance,
         staking,
-        userPoolIds: poolBalances.map((balance) => balance.poolId),
+        userPoolIds: [
+            ...poolBalances.map((balance) => balance.poolId),
+            ...(fbeetsValueUSD > 0 ? [networkConfig.fbeets.poolId] : []),
+        ],
         bptBalanceForPool,
         usdBalanceForPool,
         stakedValueUSD,

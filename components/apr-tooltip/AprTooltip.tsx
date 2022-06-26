@@ -25,7 +25,15 @@ interface Props {
 }
 
 function AprTooltip({ data, textProps, onlySparkles }: Props) {
-    const formatApr = (apr: number) => numeral(apr).format('0.00%');
+    const formatApr = (apr: number) => {
+        console.log('apr', apr);
+        if (apr < 0.0000001) {
+            return '0.00%';
+        }
+
+        return numeral(apr).format('0.00%');
+    };
+
     return (
         <Popover trigger="hover">
             <HStack justify="end" align="center">

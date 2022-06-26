@@ -15,6 +15,7 @@ interface Props extends BoxProps {
 }
 
 export default function PoolListItem({ pool, userBalance, showUserBalance, ...rest }: Props) {
+    console.log(pool.name, pool.dynamicData.apr);
     return (
         <Box {...rest}>
             <Link href={`/pool/${pool.id}`} passHref>
