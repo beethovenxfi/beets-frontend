@@ -854,6 +854,7 @@ scalar JSON
 
 type Mutation {
     beetsSyncFbeetsRatio: String!
+    beetsSyncProtocolData: String!
     cachePortfolioHistoryForDate(date: String!): Boolean!
     clearCacheAtBlock(block: Int!): Boolean!
     clearCachedPools: Boolean!

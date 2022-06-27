@@ -10,51 +10,57 @@ import { useTradeChart } from '~/modules/trade/lib/useTradeChart';
 import numeral from 'numeral';
 import { TradeInterfaceContainer } from '~/modules/trade/components/TradeInterfaceContainer';
 import { TradePageHeader } from '~/modules/trade/components/TradePageHeader';
+import Head from 'next/head';
 
 function Trade() {
     const { priceFor } = useGetTokens();
     const { tokenInData, tokenOutData, tokenInDynamicData, tokenOutDynamicData, tokenOut, tokenIn } = useTradeData();
 
     return (
-        <Grid paddingX="8" width="full" templateColumns="repeat(12, 1fr)" gap="12">
-            <GridItem w="100%" colSpan={8} h="10">
-                <TradePageHeader />
+        <>
+            <Head>
+                <title>Beethoven X | Swap</title>
+            </Head>
+            <Grid paddingX="8" width="full" templateColumns="repeat(12, 1fr)" gap="12">
+                <GridItem w="100%" colSpan={8} h="10">
+                    <TradePageHeader />
 
-                {/*swaps ? <TradeRoutePreview swaps={swaps} /> : null*/}
-                <Box mt="8">
-                    <TradeChart />
-                </Box>
+                    {/*swaps ? <TradeRoutePreview swaps={swaps} /> : null*/}
+                    <Box mt="8">
+                        <TradeChart />
+                    </Box>
 
-                <Flex mt="12" mb="8">
-                    {tokenIn ? (
-                        <TradeTokenDataCard
-                            token={tokenIn}
-                            price={priceFor(tokenIn.address)}
-                            data={tokenInData}
-                            dynamicData={tokenInDynamicData}
-                            flex={1}
-                            mr="4"
-                        />
-                    ) : null}
-                    {tokenOut ? (
-                        <TradeTokenDataCard
-                            token={tokenOut}
-                            price={priceFor(tokenOut.address)}
-                            data={tokenOutData}
-                            dynamicData={tokenOutDynamicData}
-                            flex={1}
-                        />
-                    ) : null}
-                </Flex>
-                <Box height="2xs" />
-                {/*<Box mt="12">
+                    <Flex mt="12" mb="8">
+                        {tokenIn ? (
+                            <TradeTokenDataCard
+                                token={tokenIn}
+                                price={priceFor(tokenIn.address)}
+                                data={tokenInData}
+                                dynamicData={tokenInDynamicData}
+                                flex={1}
+                                mr="4"
+                            />
+                        ) : null}
+                        {tokenOut ? (
+                            <TradeTokenDataCard
+                                token={tokenOut}
+                                price={priceFor(tokenOut.address)}
+                                data={tokenOutData}
+                                dynamicData={tokenOutDynamicData}
+                                flex={1}
+                            />
+                        ) : null}
+                    </Flex>
+                    <Box height="2xs" />
+                    {/*<Box mt="12">
                     <BatchSwapList />
                 </Box>*/}
-            </GridItem>
-            <GridItem w="100%" colSpan={4}>
-                <TradeInterfaceContainer />
-            </GridItem>
-        </Grid>
+                </GridItem>
+                <GridItem w="100%" colSpan={4}>
+                    <TradeInterfaceContainer />
+                </GridItem>
+            </Grid>
+        </>
     );
 }
 

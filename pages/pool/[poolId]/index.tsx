@@ -4,6 +4,7 @@ import { initializeApolloClient, loadApolloState } from '~/apollo/client';
 import { GetPool } from '~/apollo/generated/operations';
 import { Pool } from '~/modules/pool/detail/Pool';
 import { PoolProvider } from '~/modules/pool/components/PoolProvider';
+import Head from 'next/head';
 
 interface Props {
     pool: GqlPoolUnion;
@@ -16,9 +17,14 @@ const PoolPage = ({ pool }: Props) => {
     }
 
     return (
-        <PoolProvider pool={pool}>
-            <Pool />
-        </PoolProvider>
+        <>
+            <Head>
+                <title>Beethoven X | {pool.name}</title>
+            </Head>
+            <PoolProvider pool={pool}>
+                <Pool />
+            </PoolProvider>
+        </>
     );
 };
 
