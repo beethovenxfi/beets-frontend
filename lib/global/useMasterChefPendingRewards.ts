@@ -20,6 +20,6 @@ export function useMasterChefPendingRewards(farms: GqlPoolStakingMasterChefFarm[
                 userAddress: accountData?.address || '',
             });
         },
-        { enabled: !!accountData?.address && farms.length > 0 },
+        { enabled: !!accountData?.address && farms.length > 0, refetchInterval: 15000 },
     );
 }

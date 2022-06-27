@@ -14,7 +14,9 @@ export function useUserAccount() {
     }, []);
 
     useEffect(() => {
-        userAddressVar(query.data?.address);
+        if (query.data?.address !== userAddressVar()) {
+            userAddressVar(query.data?.address);
+        }
     }, [query.data?.address]);
 
     return {

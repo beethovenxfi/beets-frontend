@@ -12,6 +12,7 @@ import { useUserAccount } from '~/lib/user/useUserAccount';
 import { NavbarPortfolioDrawer } from '~/modules/nav/NavbarPortfolioDrawer';
 import { FadeInOutBox } from '~/components/animation/FadeInOutBox';
 import { NavbarPendingRewards } from '~/modules/nav/NavbarPendingRewards';
+import { NavbarAlerts } from '~/modules/nav/NavbarAlerts';
 
 interface Props {
     scrollY: MotionValue<number>;
@@ -78,19 +79,19 @@ export function Navbar({ scrollY }: Props) {
                     transition={{ type: 'spring', stiffness: 250, damping: 25 }}
                 >
                     <Flex alignItems="center">
-                        <NavbarLink href={'/trade'} selected={router.asPath === '/trade'} text="Swap" mr={5} />
                         <NavbarLink href={'/pools'} selected={router.asPath.startsWith('/pool')} text="Invest" mr={5} />
+                        <NavbarLink href={'/trade'} selected={router.asPath === '/trade'} text="Swap" mr={5} />
                         <NavbarLink href={'/pools'} text="Stake" mr={5} />
                         <NavbarLink href={'/pools'} text="Launch" mr={5} />
                         <NavbarAdditionalLinksMenu />
                     </Flex>
                 </motion.div>
                 <FadeInOutBox mr="3" isVisible={isConnected}>
-                    {/*<HStack spacing="3">
+                    <HStack spacing="3">
                         <NavbarPendingRewards />
-                        <NavbarPortfolioDrawer />
-                    </HStack>*/}
-                    <NavbarPendingRewards />
+                        <NavbarAlerts />
+                        {/*<NavbarPortfolioDrawer />*/}
+                    </HStack>
                 </FadeInOutBox>
                 <WalletConnectButton />
             </Flex>

@@ -1,6 +1,7 @@
-import '../styles/slick.css';
 import '@rainbow-me/rainbowkit/styles.css';
 import '../styles/globals.css';
+import 'swiper/css';
+import 'swiper/css/pagination';
 
 import type { AppProps } from 'next/app';
 import { useApollo } from '~/apollo/client';

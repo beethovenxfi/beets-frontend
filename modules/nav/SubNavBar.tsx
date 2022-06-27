@@ -19,10 +19,10 @@ import TokenAvatar from '~/components/token/TokenAvatar';
 import { networkConfig } from '~/lib/config/network-config';
 import OptimismLogo from '~/assets/images/optimism.svg';
 import FantomLogo from '~/assets/images/fantom-logo.png';
+import { BeetsSkeleton } from '~/components/skeleton/BeetsSkeleton';
 
 export function SubNavBar() {
-    const router = useRouter();
-    const { data, error } = useGetProtocolDataQuery();
+    const { data, error, loading } = useGetProtocolDataQuery({ pollInterval: 30000, fetchPolicy: 'cache-and-network' });
     const protocolData = data?.protocolData;
 
     return (
@@ -72,19 +72,35 @@ export function SubNavBar() {
 
                 <HStack mr={5}>
                     <Text color="gray.200">TVL:</Text>
-                    <Text fontWeight="semibold">{numeral(protocolData?.totalLiquidity || '0').format('$0.00a')}</Text>
+                    {loading || !protocolData ? (
+                        <BeetsSkeleton height="16px" width="54px" />
+                    ) : (
+                        <Text fontWeight="semibold">{numeral(protocolData.totalLiquidity).format('$0.00a')}</Text>
+                    )}
                 </HStack>
                 <HStack mr={5}>
                     <Text color="gray.200">Volume (24h):</Text>
-                    <Text fontWeight="semibold">{numeral(protocolData?.swapVolume24h || '0').format('$0.00a')}</Text>
+                    {loading || !protocolData ? (
+                        <BeetsSkeleton height="16px" width="54px" />
+                    ) : (
+                        <Text fontWeight="semibold">{numeral(protocolData.swapVolume24h).format('$0.00a')}</Text>
+                    )}
                 </HStack>
                 <HStack mr={6}>
                     <Text color="gray.200">Fees (24h):</Text>
-                    <Text fontWeight="semibold">{numeral(protocolData?.swapFee24h || '0').format('$0.00a')}</Text>
+                    {loading || !protocolData ? (
+                        <BeetsSkeleton height="16px" width="54px" />
+                    ) : (
+                        <Text fontWeight="semibold">{numeral(protocolData.swapFee24h).format('$0.00a')}</Text>
+                    )}
                 </HStack>
                 <HStack>
                     <TokenAvatar address={networkConfig.beets.address} style={{ width: '20px', height: '20px' }} />
-                    <Text fontWeight="semibold">{numeral(protocolData?.beetsPrice || '0').format('$0.00[00]')}</Text>
+                    {loading || !protocolData ? (
+                        <BeetsSkeleton height="16px" width="54px" />
+                    ) : (
+                        <Text fontWeight="semibold">{numeral(protocolData.beetsPrice).format('$0.00[00]')}</Text>
+                    )}
                 </HStack>
             </BeetsBox>
         </HStack>

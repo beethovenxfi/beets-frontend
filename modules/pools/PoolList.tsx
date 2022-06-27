@@ -21,16 +21,7 @@ function PoolList() {
         }
     }, [userPoolIdsStr, showMyInvestments]);
 
-    const poolsToRender = showMyInvestments
-        ? orderBy(
-              pools,
-              (pool) => {
-                  console.log('usd value', usdBalanceForPool(pool.id));
-                  return usdBalanceForPool(pool.id);
-              },
-              'desc',
-          )
-        : pools;
+    const poolsToRender = showMyInvestments ? orderBy(pools, (pool) => usdBalanceForPool(pool.id), 'desc') : pools;
 
     return (
         <Box>

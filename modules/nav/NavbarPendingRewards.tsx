@@ -2,7 +2,6 @@ import StarsIcon from '~/components/apr-tooltip/StarsIcon';
 import {
     Box,
     Button,
-    Flex,
     Popover,
     PopoverArrow,
     PopoverBody,
@@ -19,6 +18,7 @@ import { useGetTokens } from '~/lib/global/useToken';
 import BeetsButton from '~/components/button/Button';
 import { BeetsBox } from '~/components/box/BeetsBox';
 import { useUserData } from '~/lib/user/useUserData';
+import { BeetsSkeleton } from '~/components/skeleton/BeetsSkeleton';
 
 export function NavbarPendingRewards() {
     const {
@@ -39,7 +39,7 @@ export function NavbarPendingRewards() {
             <PopoverTrigger>
                 <Button
                     bgColor="beets.lightAlpha.200"
-                    width="54px"
+                    width="60px"
                     height="40px"
                     display="flex"
                     alignItems="center"
@@ -52,14 +52,7 @@ export function NavbarPendingRewards() {
                     <StarsIcon width={15} height={16} />
 
                     {loading ? (
-                        <Skeleton
-                            height="10px"
-                            width="36px"
-                            startColor="gray.400"
-                            endColor="gray.500"
-                            mt="1.5"
-                            mb="2px"
-                        />
+                        <BeetsSkeleton height="10px" width="36px" mt="1.5" mb="2px" />
                     ) : (
                         <Box fontSize="11px" pt="0.5">
                             {numeral(pendingRewardsTotalUSD).format('$0.00a')}

@@ -4,9 +4,17 @@ import { GetPoolFilters, GetPools } from '~/apollo/generated/operations';
 import { GetPoolsQuery, GetPoolsQueryVariables } from '~/apollo/generated/graphql-codegen-generated';
 import { DEFAULT_POOL_LIST_QUERY_VARS } from '~/modules/pools/usePoolList';
 import { Box } from '@chakra-ui/layout';
+import Head from 'next/head';
 
 function Pools() {
-    return <PoolList />;
+    return (
+        <>
+            <Head>
+                <title>Beethoven X | Investment pools</title>
+            </Head>
+            <PoolList />
+        </>
+    );
 }
 
 export async function getStaticProps() {
