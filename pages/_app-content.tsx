@@ -22,6 +22,7 @@ export function AppContent({ Component, pageProps }: AppProps) {
                 },
                 '&::-webkit-scrollbar-track': {
                     width: '6px',
+                    background: theme.colors.gray['400'],
                 },
                 '&::-webkit-scrollbar-thumb': {
                     background: theme.colors.beets.base['300'],
