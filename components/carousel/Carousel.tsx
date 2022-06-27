@@ -1,6 +1,5 @@
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { ReactNode } from 'react';
-import { useTheme } from '@chakra-ui/react';
 import { Pagination } from 'swiper';
 
 interface Props {
@@ -11,7 +10,7 @@ export function Carousel({ items }: Props) {
     return (
         <Swiper
             slidesPerView={4}
-            spaceBetween={20}
+            spaceBetween={16}
             onSlideChange={() => console.log('slide change')}
             //onSwiper={(swiper) => console.log(swiper)}
             breakpoints={{
