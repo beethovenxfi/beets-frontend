@@ -3,7 +3,7 @@ import { usePoolList } from '../usePoolList';
 import PoolListSortLink from '~/modules/pools/components/PoolListSortLink';
 
 function PoolListTableHeader() {
-    const { state, changeSort } = usePoolList();
+    const { state, changeSort, wideScreenColumnWidths } = usePoolList();
 
     return (
         <>
@@ -52,21 +52,21 @@ function PoolListTableHeader() {
                         Pool details
                     </Text>
                 </Box>
-                <Box width="200px" textAlign="right">
+                <Box w={wideScreenColumnWidths} textAlign="right">
                     <PoolListSortLink
                         title="TVL"
                         orderDirection={state.orderBy === 'totalLiquidity' ? state.orderDirection : null}
                         onClick={() => changeSort('totalLiquidity')}
                     />
                 </Box>
-                <Box width="200px" textAlign="right">
+                <Box w={wideScreenColumnWidths} textAlign="right">
                     <PoolListSortLink
                         title="Volume (24h)"
                         orderDirection={state.orderBy === 'volume24h' ? state.orderDirection : null}
                         onClick={() => changeSort('volume24h')}
                     />
                 </Box>
-                <Box width="200px" textAlign="right">
+                <Box w={wideScreenColumnWidths} textAlign="right">
                     <PoolListSortLink
                         title="APR"
                         orderDirection={state.orderBy === 'apr' ? state.orderDirection : null}

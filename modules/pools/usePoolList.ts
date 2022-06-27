@@ -88,6 +88,8 @@ export function usePoolList() {
         showFiltersVar(!showFiltersVar());
     }
 
+    const wideScreenColumnWidths = { md: '130px', lg: '200px', xl: '250px' };
+
     return {
         state,
         pools: data?.poolGetPools || [],
@@ -103,5 +105,6 @@ export function usePoolList() {
         filters: poolFilters?.filters || [],
         toggleFilterVisibility,
         showFilters: useReactiveVar(showFiltersVar),
+        wideScreenColumnWidths,
     };
 }

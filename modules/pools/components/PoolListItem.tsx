@@ -8,6 +8,7 @@ import { BoxProps } from '@chakra-ui/layout';
 import Image from 'next/image';
 import PoolIcon1 from '~/assets/icons/pool-icon-1.svg';
 import PoolIcon2 from '~/assets/icons/pool-icon-2.svg';
+import { usePoolList } from '../usePoolList';
 
 interface Props extends BoxProps {
     pool: GqlPoolMinimalFragment;
@@ -20,14 +21,16 @@ export default function PoolListItem({ pool, ...rest }: Props) {
         { label: 'VOLUME (24H)', value: numeral(pool.dynamicData.volume24h).format('$0,0') },
         { label: 'FEES (24H)', value: numeral(pool.dynamicData.volume24h).format('$0,0') },
     ];
+
+    const { wideScreenColumnWidths } = usePoolList();
     return (
         <Box {...rest}>
             <Box
                 bgColor="beets.base.700"
                 border="0px"
                 display={{ base: 'block', md: 'none' }}
-                my={4}
-                p={4}
+                my="4"
+                p="4"
                 borderRadius="xl"
                 boxShadow="xl"
             >
@@ -45,7 +48,7 @@ export default function PoolListItem({ pool, ...rest }: Props) {
                         <Image src={PoolIcon1} alt="pool icon" />
                     </GridItem>
                     <GridItem>
-                        <SimpleGrid columns={[2, 4]} spacing={3}>
+                        <SimpleGrid columns={2} spacing="3">
                             {gridData.map((data, index) => (
                                 <VStack key={index} spacing="0" alignItems="flex-start">
                                     <Text fontSize="0.6em">{data.label}</Text>
@@ -81,10 +84,10 @@ export default function PoolListItem({ pool, ...rest }: Props) {
                             fontSize="lg"
                             _hover={{ bg: '#100C3A' }}
                             borderBottomColor="beets.base.800"
-                            borderBottomWidth={1}
+                            borderBottomWidth="1px"
                             bg="box.500"
                         >
-                            <Box w={90} textAlign={'center'}>
+                            <Box w="90px" textAlign={'center'}>
                                 <TokenAvatarSet
                                     imageSize={25}
                                     width={92}
@@ -96,13 +99,13 @@ export default function PoolListItem({ pool, ...rest }: Props) {
                             <Flex flex={1}>
                                 <Text fontSize="md">{pool.name}</Text>
                             </Flex>
-                            <Box w={200} textAlign="right">
+                            <Box w={wideScreenColumnWidths} textAlign="right">
                                 <Text fontSize="md">{numeral(pool.dynamicData.totalLiquidity).format('$0,0')}</Text>
                             </Box>
-                            <Box w={200} textAlign="right">
+                            <Box w={wideScreenColumnWidths} textAlign="right">
                                 <Text fontSize="md">{numeral(pool.dynamicData.volume24h).format('$0,0')}</Text>
                             </Box>
-                            <Box w={200}>
+                            <Box w={wideScreenColumnWidths}>
                                 <AprTooltip data={pool.dynamicData.apr} textProps={{ fontWeight: 'normal' }} />
                             </Box>
                         </Flex>

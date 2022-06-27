@@ -37,6 +37,7 @@ function AprTooltip({ data, textProps, onlySparkles }: Props) {
                 <PopoverTrigger>
                     <Button
                         height="fit-content"
+                        minWidth="0px"
                         variant="unstyled"
                         _active={{ outline: 'none' }}
                         _focus={{ outline: 'none' }}
