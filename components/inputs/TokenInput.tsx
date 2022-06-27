@@ -1,13 +1,12 @@
-import { Box, Button, Link, Skeleton, Text, VStack } from '@chakra-ui/react';
-import { FormEvent } from 'react';
+import { Box, Button, Text, VStack } from '@chakra-ui/react';
 import { useGetTokens } from '~/lib/global/useToken';
 import TokenAvatar from '../token/TokenAvatar';
 import BeetsInput from './BeetsInput';
-import { tokenFormatAmountPrecise, tokenGetAmountForAddress } from '~/lib/services/token/token-util';
-import { AmountHumanReadable } from '~/lib/services/token/token-types';
+import { tokenGetAmountForAddress } from '~/lib/services/token/token-util';
 import { useUserTokenBalances } from '~/lib/user/useUserTokenBalances';
 import { useUserAccount } from '~/lib/user/useUserAccount';
 import PresetSelector from './PresetSelector';
+import { KeyboardEvent } from 'react';
 
 type Props = {
     label?: string;
@@ -33,9 +32,30 @@ export default function TokenInput({
     const { userBalances, isLoading } = useUserTokenBalances();
     const userBalance = address ? tokenGetAmountForAddress(address, userBalances) : '0';
 
-    const handlePresetSelected = (preset: number) => {
-        onChange && onChange({ currentTarget: { value: (parseFloat(userBalance) * preset).toString() } });
+    const token = getToken(address || '');
+    const decimalPlaces = token ? token.decimals : 0;
+
+    const handleOnChange = (event: { currentTarget: { value: string } }) => {
+        let newValue = event.currentTarget.value;
+
+        if (newValue.includes('.')) {
+            const [leftDigits, rightDigits] = newValue.split('.');
+
+            if (rightDigits && rightDigits.length > decimalPlaces) {
+                const maxLength = leftDigits.length + decimalPlaces + 1;
+                newValue = newValue.slice(0, maxLength);
+            }
+        }
+        onChange && onChange({ currentTarget: { value: newValue } });
     };
+
+    const handlePresetSelected = (preset: number) => {
+        handleOnChange({ currentTarget: { value: (parseFloat(userBalance) * preset).toString() } });
+    };
+
+    function blockInvalidCharacters(event: KeyboardEvent<HTMLInputElement>): void {
+        ['e', 'E', '+', '-'].includes(event.key) && event.preventDefault();
+    }
 
     return (
         <VStack width="full" alignItems="flex-start">
@@ -43,10 +63,11 @@ export default function TokenInput({
                 <BeetsInput
                     min={0}
                     value={value || ''}
-                    onChange={onChange}
+                    onChange={handleOnChange}
                     placeholder="0"
                     type="number"
                     label={label}
+                    onKeyDown={blockInvalidCharacters}
                 ></BeetsInput>
                 <Box position="absolute" zIndex="toast" right=".75rem" top="50%" transform="translateY(-50%)">
                     <Button
@@ -56,7 +77,7 @@ export default function TokenInput({
                         px="2"
                     >
                         <TokenAvatar size="xs" address={address || ''} />
-                        <Text paddingLeft="2">{getToken(address || '')?.symbol || ''} </Text>
+                        <Text paddingLeft="2">{token?.symbol} </Text>
                     </Button>
                 </Box>
             </Box>
