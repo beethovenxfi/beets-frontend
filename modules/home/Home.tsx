@@ -7,7 +7,7 @@ export function Home() {
     return (
         <Box>
             <HomeHero />
-            <HomeSocialCarousel />
+            {/*<HomeSocialCarousel />*/}
             <HomeFeaturedPools />
         </Box>
     );

@@ -11,7 +11,24 @@ export function AppContent({ Component, pageProps }: AppProps) {
     const theme = useTheme();
 
     return (
-        <Box height="full" className="bg" overflowX="hidden" ref={ref}>
+        <Box
+            height="full"
+            className="bg"
+            overflowX="hidden"
+            ref={ref}
+            css={{
+                '&::-webkit-scrollbar': {
+                    width: '4px',
+                },
+                '&::-webkit-scrollbar-track': {
+                    width: '6px',
+                },
+                '&::-webkit-scrollbar-thumb': {
+                    background: theme.colors.beets.base['300'],
+                    borderRadius: '24px',
+                },
+            }}
+        >
             <Box pt="3" />
             <Navbar scrollY={scrollY} />
             <Box pt="1" />

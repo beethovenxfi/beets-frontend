@@ -12,6 +12,7 @@ import { useUserAccount } from '~/lib/user/useUserAccount';
 import { NavbarPortfolioDrawer } from '~/modules/nav/NavbarPortfolioDrawer';
 import { FadeInOutBox } from '~/components/animation/FadeInOutBox';
 import { NavbarPendingRewards } from '~/modules/nav/NavbarPendingRewards';
+import { NavbarAlerts } from '~/modules/nav/NavbarAlerts';
 
 interface Props {
     scrollY: MotionValue<number>;
@@ -86,11 +87,11 @@ export function Navbar({ scrollY }: Props) {
                     </Flex>
                 </motion.div>
                 <FadeInOutBox mr="3" isVisible={isConnected}>
-                    {/*<HStack spacing="3">
+                    <HStack spacing="3">
                         <NavbarPendingRewards />
-                        <NavbarPortfolioDrawer />
-                    </HStack>*/}
-                    <NavbarPendingRewards />
+                        <NavbarAlerts />
+                        {/*<NavbarPortfolioDrawer />*/}
+                    </HStack>
                 </FadeInOutBox>
                 <WalletConnectButton />
             </Flex>
