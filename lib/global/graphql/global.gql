@@ -14,6 +14,16 @@ query GetAppGlobalData {
         address
     }
     beetsGetFbeetsRatio
+    beetsGetProtocolData {
+        totalLiquidity
+        swapFee24h
+        swapVolume24h
+        marketCap
+        circulatingSupply
+        poolCount
+        beetsPrice
+        fbeetsPrice
+    }
 }
 
 query GetTokens {

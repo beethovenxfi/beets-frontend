@@ -43,7 +43,7 @@ export const fantomTheme: Partial<ChakraTheme> = {
         },
         h5: {
             fontFamily: `'Gotham', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif`,
-            fontSize: ['1.2rem'],
+            fontSize: ['1.5rem'],
             fontWeight: '300',
             lineHeight: '115%',
             letterSpacing: '-0.03rem',

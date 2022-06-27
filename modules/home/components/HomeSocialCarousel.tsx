@@ -1,81 +1,99 @@
-import { Box, Flex, Link } from '@chakra-ui/react';
-import { ChevronLeft, ChevronRight } from 'react-feather';
-import Slider, { CustomArrowProps } from 'react-slick';
-
-import { HomeSocialCarouselCard } from '~/modules/home/components/HomeSocialCarouselCard';
+import { Box, Flex } from '@chakra-ui/react';
+import { BeetsBox } from '~/components/box/BeetsBox';
 
 export function HomeSocialCarousel() {
-    const NextArrow = ({ currentSlide, slideCount, ...props }: CustomArrowProps) => (
-        <Box {...props}>
-            <Link color="gray.100" position="absolute" style={{ right: '-18px' }}>
-                <ChevronRight size={32} />
-            </Link>
-        </Box>
-    );
-
-    const PrevArrow = ({ currentSlide, slideCount, ...props }: CustomArrowProps) => (
-        <Box {...props}>
-            <Link color="gray.100" position="absolute" style={{ left: '-18px' }}>
-                <ChevronLeft size={32} />
-            </Link>
-        </Box>
-    );
-
-    const settings = {
-        dots: true,
-        infinite: false,
-        speed: 500,
-        slidesToShow: 4,
-        slidesToScroll: 4,
-        initialSlide: 0,
-        arrows: true,
-        nextArrow: <NextArrow />,
-        prevArrow: <PrevArrow />,
-        responsive: [
-            {
-                breakpoint: 1024,
-                settings: {
-                    slidesToShow: 3,
-                    slidesToScroll: 3,
-                    infinite: true,
-                    dots: true,
-                },
-            },
-            {
-                breakpoint: 600,
-                settings: {
-                    slidesToShow: 2,
-                    slidesToScroll: 2,
-                    initialSlide: 2,
-                },
-            },
-            {
-                breakpoint: 480,
-                settings: {
-                    slidesToShow: 1,
-                    slidesToScroll: 1,
-                },
-            },
-        ],
-    };
-
     return (
-        <Flex height="132" flexDirection="column" justifyContent="flex-end">
-            <Box mx="0" mt="4" mb="2" fontSize="2xl" fontWeight="bold">
-                Latest updates
-            </Box>
-            <Box bgColor="beets.base.900" py="4" px="2" borderRadius="md" mx="0" shadow="lg" zIndex={0}>
-                <Slider {...settings}>
-                    <HomeSocialCarouselCard height="153px" />
-                    <HomeSocialCarouselCard height="153px" />
-                    <HomeSocialCarouselCard height="153px" />
-                    <HomeSocialCarouselCard height="153px" />
-                    <HomeSocialCarouselCard height="153px" />
-                    <HomeSocialCarouselCard height="153px" />
-                    <HomeSocialCarouselCard height="153px" />
-                    <HomeSocialCarouselCard height="153px" />
-                </Slider>
-            </Box>
+        <Flex height="60px" alignItems="flex-end">
+            <BeetsBox
+                height="120px"
+                p="4"
+                flex="1"
+                mr="4"
+                bgColor="beets.base.800"
+                shadow="lg"
+                display="flex"
+                flexDirection="column"
+            >
+                <Box color="gray.200" flex="1">
+                    TVL
+                </Box>
+                <Box fontSize="3xl">78.9m</Box>
+            </BeetsBox>
+            <BeetsBox
+                height="120px"
+                p="4"
+                flex="1"
+                mr="4"
+                bgColor="beets.base.800"
+                shadow="lg"
+                display="flex"
+                flexDirection="column"
+            >
+                <Box color="gray.200" flex="1">
+                    Volume (24h)
+                </Box>
+                <Box fontSize="3xl">78.9m</Box>
+            </BeetsBox>
+            <BeetsBox
+                height="120px"
+                p="4"
+                flex="1"
+                mr="4"
+                bgColor="beets.base.600"
+                shadow="lg"
+                display="flex"
+                flexDirection="column"
+            >
+                <Box color="gray.200" flex="1">
+                    Fees (24h)
+                </Box>
+                <Box fontSize="3xl">78.9m</Box>
+            </BeetsBox>
+            <BeetsBox
+                height="120px"
+                p="4"
+                flex="1"
+                mr="4"
+                bgColor="beets.base.800"
+                shadow="lg"
+                display="flex"
+                flexDirection="column"
+            >
+                <Box color="gray.200" flex="1">
+                    Liquidity providers
+                </Box>
+                <Box fontSize="3xl">11.2k</Box>
+            </BeetsBox>
+            <BeetsBox
+                height="120px"
+                p="4"
+                flex="1"
+                mr="4"
+                bgColor="beets.base.800"
+                shadow="lg"
+                display="flex"
+                flexDirection="column"
+            >
+                <Box color="gray.200" flex="1">
+                    Investment pools
+                </Box>
+                <Box fontSize="3xl">1,322</Box>
+            </BeetsBox>
+            <BeetsBox
+                height="120px"
+                p="4"
+                flex="1"
+                mr="4"
+                bgColor="beets.base.800"
+                shadow="lg"
+                display="flex"
+                flexDirection="column"
+            >
+                <Box color="gray.200" flex="1">
+                    Total liquidity
+                </Box>
+                <Box fontSize="3xl">$78.9m</Box>
+            </BeetsBox>
         </Flex>
     );
 }

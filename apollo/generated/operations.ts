@@ -268,6 +268,16 @@ export const GetAppGlobalData = gql`
             address
         }
         beetsGetFbeetsRatio
+        beetsGetProtocolData {
+            totalLiquidity
+            swapFee24h
+            swapVolume24h
+            marketCap
+            circulatingSupply
+            poolCount
+            beetsPrice
+            fbeetsPrice
+        }
     }
 `;
 export const GetTokens = gql`

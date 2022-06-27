@@ -1,5 +1,6 @@
 import { Box, Flex } from '@chakra-ui/react';
 import { PoolCard } from '~/components/pool-card/PoolCard';
+import { Carousel } from '~/components/carousel/Carousel';
 
 export function HomeFeaturedPools() {
     return (
@@ -7,20 +8,18 @@ export function HomeFeaturedPools() {
             <Box mb="2" fontSize="2xl" fontWeight="bold">
                 Featured pools
             </Box>
-            <Flex>
-                <Box flex="1" mr="4">
-                    <PoolCard />
-                </Box>
-                <Box flex="1" mr="4">
-                    <PoolCard />
-                </Box>
-                <Box flex="1" mr="4">
-                    <PoolCard />
-                </Box>
-                <Box flex="1">
-                    <PoolCard />
-                </Box>
-            </Flex>
+            <Carousel
+                items={[
+                    <PoolCard key="1" />,
+                    <PoolCard key="2" />,
+                    <PoolCard key="3" />,
+                    <PoolCard key="4" />,
+                    <PoolCard key="5" />,
+                    <PoolCard key="6" />,
+                    <PoolCard key="7" />,
+                    <PoolCard key="8" />,
+                ]}
+            />
         </Box>
     );
 }

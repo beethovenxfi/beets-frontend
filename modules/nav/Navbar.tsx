@@ -79,8 +79,8 @@ export function Navbar({ scrollY }: Props) {
                     transition={{ type: 'spring', stiffness: 250, damping: 25 }}
                 >
                     <Flex alignItems="center">
-                        <NavbarLink href={'/trade'} selected={router.asPath === '/trade'} text="Swap" mr={5} />
                         <NavbarLink href={'/pools'} selected={router.asPath.startsWith('/pool')} text="Invest" mr={5} />
+                        <NavbarLink href={'/trade'} selected={router.asPath === '/trade'} text="Swap" mr={5} />
                         <NavbarLink href={'/pools'} text="Stake" mr={5} />
                         <NavbarLink href={'/pools'} text="Launch" mr={5} />
                         <NavbarAdditionalLinksMenu />

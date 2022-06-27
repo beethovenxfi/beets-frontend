@@ -1127,6 +1127,17 @@ export type GetAppGlobalDataQuery = {
         tradable: boolean;
     }>;
     tokenGetCurrentPrices: Array<{ __typename: 'GqlTokenPrice'; price: number; address: string }>;
+    beetsGetProtocolData: {
+        __typename: 'GqlBeetsProtocolData';
+        totalLiquidity: string;
+        swapFee24h: string;
+        swapVolume24h: string;
+        marketCap: string;
+        circulatingSupply: string;
+        poolCount: string;
+        beetsPrice: string;
+        fbeetsPrice: string;
+    };
 };
 
 export type GetTokensQueryVariables = Exact<{ [key: string]: never }>;
@@ -3271,6 +3282,16 @@ export const GetAppGlobalDataDocument = gql`
             address
         }
         beetsGetFbeetsRatio
+        beetsGetProtocolData {
+            totalLiquidity
+            swapFee24h
+            swapVolume24h
+            marketCap
+            circulatingSupply
+            poolCount
+            beetsPrice
+            fbeetsPrice
+        }
     }
 `;
 

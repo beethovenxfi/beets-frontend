@@ -22,7 +22,7 @@ import FantomLogo from '~/assets/images/fantom-logo.png';
 import { BeetsSkeleton } from '~/components/skeleton/BeetsSkeleton';
 
 export function SubNavBar() {
-    const { data, error, loading } = useGetProtocolDataQuery();
+    const { data, error, loading } = useGetProtocolDataQuery({ pollInterval: 30000, fetchPolicy: 'cache-and-network' });
     const protocolData = data?.protocolData;
 
     return (
