@@ -14,7 +14,7 @@ import {
     useDisclosure,
     useTheme,
 } from '@chakra-ui/react';
-import { Bell, ExternalLink } from 'react-feather';
+import { Bell, ExternalLink, Inbox } from 'react-feather';
 import { useRef } from 'react';
 import { useUserData } from '~/lib/user/useUserData';
 import { IconDiscord } from '~/components/icons/IconDiscord';
@@ -42,7 +42,7 @@ export function NavbarAlerts() {
                 _hover={{ transform: 'scale(1.1)' }}
                 position="relative"
             >
-                <Bell />
+                <Inbox />
                 <Box
                     position="absolute"
                     top="-3px"
@@ -76,7 +76,7 @@ export function NavbarAlerts() {
                             },
                         }}
                     >
-                        <BeetsBox p="4" borderRadius="sm" mb="4">
+                        <BeetsBox p="4" mb="4">
                             <Flex alignItems="center" mb="3">
                                 <IconDiscord width="20px" />
                                 <Box ml="2" flex="1" color="gray.200">
@@ -93,7 +93,7 @@ export function NavbarAlerts() {
                                 </Text>
                             </Box>
                         </BeetsBox>
-                        <BeetsBox p="4" borderRadius="sm" mb="4">
+                        <BeetsBox p="4" mb="4">
                             <Flex alignItems="center" mb="3">
                                 <IconDiscord width="20px" />
                                 <Box ml="2" flex="1" color="gray.200">
@@ -110,7 +110,7 @@ export function NavbarAlerts() {
                                 </Text>
                             </Box>
                         </BeetsBox>
-                        <BeetsBox p="4" borderRadius="sm" mb="4">
+                        <BeetsBox p="4" mb="4">
                             <Flex alignItems="center" mb="3">
                                 <IconDiscord width="20px" />
                                 <Box ml="2" flex="1" color="gray.200">
@@ -127,7 +127,7 @@ export function NavbarAlerts() {
                                 </Text>
                             </Box>
                         </BeetsBox>
-                        <BeetsBox p="4" borderRadius="sm" mb="4">
+                        <BeetsBox p="4" mb="4">
                             <Flex alignItems="center" mb="3">
                                 <IconDiscord width="20px" />
                                 <Box ml="2" flex="1" color="gray.200">
@@ -144,7 +144,7 @@ export function NavbarAlerts() {
                                 </Text>
                             </Box>
                         </BeetsBox>
-                        <BeetsBox p="4" borderRadius="sm" mb="4">
+                        <BeetsBox p="4" mb="4">
                             <Flex alignItems="center" mb="3">
                                 <IconDiscord width="20px" />
                                 <Box ml="2" flex="1" color="gray.200">
