@@ -8,7 +8,8 @@ import { txPendingVar } from '~/lib/util/useSubmitTransaction';
 import { IconWallet } from '~/components/icons/IconWallet';
 import { BarChart2 } from 'react-feather';
 import { useUserData } from '~/lib/user/useUserData';
-import numeral from 'numeral';
+import { BeetsSkeleton } from '~/components/skeleton/BeetsSkeleton';
+import { numberFormatLargeUsdValue } from '~/lib/util/number-formats';
 
 export default function WalletConnectButton() {
     const txPending = useReactiveVar(txPendingVar);
@@ -65,9 +66,13 @@ export default function WalletConnectButton() {
                                         roundedBottomLeft="md"
                                     >
                                         <BarChart2 size={18} />
-                                        <Box fontSize="sm" fontWeight="semibold">
-                                            {numeral(portfolioValueUSD).format('$0.00a')}
-                                        </Box>
+                                        {loading ? (
+                                            <BeetsSkeleton height="10px" width="34px" />
+                                        ) : (
+                                            <Box fontSize="sm" fontWeight="semibold">
+                                                {numberFormatLargeUsdValue(portfolioValueUSD)}
+                                            </Box>
+                                        )}
                                     </HStack>
                                     <BeetsButton
                                         rounded="md"

@@ -44,6 +44,16 @@ function createApolloClient() {
                         poolGetJoinExits: concatPagination(),
                         poolGetSwaps: concatPagination(),
                         poolGetBatchSwaps: concatPagination(),
+                        userGetPoolBalances: {
+                            merge(existing = [], incoming: any[]) {
+                                return incoming;
+                            },
+                        },
+                        userGetStaking: {
+                            merge(existing = [], incoming: any[]) {
+                                return incoming;
+                            },
+                        },
                     },
                 },
             },

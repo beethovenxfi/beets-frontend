@@ -894,6 +894,7 @@ export interface GqlUserTokenData {
 
 export interface Mutation {
     __typename: 'Mutation';
+    beetsSyncFbeetsRatio: Scalars['String'];
     cachePortfolioHistoryForDate: Scalars['Boolean'];
     clearCacheAtBlock: Scalars['Boolean'];
     clearCachedPools: Scalars['Boolean'];

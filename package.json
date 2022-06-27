@@ -10,7 +10,7 @@
         "generate": "DOTENV_CONFIG_PATH=./.env.local graphql-codegen --config codegen.yml -r dotenv/config"
     },
     "devDependencies": {
-        "@apollo/client": "^3.6.2",
+        "@apollo/client": "^3.6.9",
         "@balancer-labs/balancer-js": "^1.0.1",
         "@balancer-labs/sdk": "^0.1.10",
         "@balancer-labs/typechain": "^1.0.0",

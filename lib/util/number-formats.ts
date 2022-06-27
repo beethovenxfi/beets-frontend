@@ -23,3 +23,13 @@ export function numberLimitInputToNumDecimals(value: string, decimals = 18) {
 
     return value;
 }
+
+export function numberFormatLargeUsdValue(value: string | number) {
+    const valueNum = typeof value === 'string' ? parseFloat(value) : value;
+
+    if (valueNum < 0.001) {
+        return '$0.00';
+    }
+
+    return numeral(value).format('$0.00a');
+}

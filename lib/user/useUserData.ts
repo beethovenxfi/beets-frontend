@@ -1,18 +1,33 @@
-import { useGetUserDataLazyQuery, useGetUserDataQuery } from '~/apollo/generated/graphql-codegen-generated';
+import { useGetUserDataQuery } from '~/apollo/generated/graphql-codegen-generated';
 import { useGetTokens } from '~/lib/global/useToken';
 import { sum } from 'lodash';
 import { networkConfig } from '~/lib/config/network-config';
 import { AmountHumanReadable } from '~/lib/services/token/token-types';
 import { useUserAccount } from '~/lib/user/useUserAccount';
-import { useEffect } from 'react';
+import { makeVar } from '@apollo/client';
+import { useAsyncEffect } from '~/lib/util/custom-hooks';
+
+const refetchingVar = makeVar(false);
+const currentUserAddressVar = makeVar<string | null>(null);
 
 export function useUserData() {
-    const [getUserData, { data, ...rest }] = useGetUserDataLazyQuery({ pollInterval: 30000 });
-    const { priceForAmount } = useGetTokens();
     const { userAddress } = useUserAccount();
+    const { data, loading, refetch, ...rest } = useGetUserDataQuery({
+        pollInterval: 30000,
+        notifyOnNetworkStatusChange: true,
+        fetchPolicy: 'cache-and-network',
+    });
+    const { priceForAmount } = useGetTokens();
+    const currentUserAddress = currentUserAddressVar();
+    const userAddressChanged = userAddress !== currentUserAddress;
 
-    useEffect(() => {
-        getUserData({ pollInterval: userAddress ? 30000 : undefined });
+    useAsyncEffect(async () => {
+        if (!refetchingVar()) {
+            refetchingVar(true);
+            await refetch();
+            refetchingVar(false);
+            currentUserAddressVar(userAddress);
+        }
     }, [userAddress]);
 
     const fbeetsBalance = data?.fbeetsBalance || { totalBalance: '0', stakedBalance: '0', walletBalance: '0' };
@@ -56,6 +71,8 @@ export function useUserData() {
 
     return {
         ...rest,
+        loading: loading || userAddressChanged,
+        refetch,
         fbeetsValueUSD,
         portfolioValueUSD,
         poolBalances,
