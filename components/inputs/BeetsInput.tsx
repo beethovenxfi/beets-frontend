@@ -1,27 +1,47 @@
 import { Input, InputProps } from '@chakra-ui/input';
-import { Box, Heading, VStack } from '@chakra-ui/layout';
+import { Box, BoxProps, Heading, HeadingProps, HStack, VStack } from '@chakra-ui/layout';
 import PresetSelector from './PresetSelector';
 
 type Props = {
     label?: string;
+    secondaryLabel?: string;
+    headingProps?: HeadingProps;
+    wrapperProps?: BoxProps;
 };
 
-export default function BeetsInput({ label, children, ...inputProps }: InputProps & Props) {
+export default function BeetsInput({ label, secondaryLabel, children, headingProps, wrapperProps, ...inputProps }: InputProps & Props) {
     return (
-        <Box position="relative" width="full" bg="blackAlpha.500" borderRadius="md">
-            {label && (
-                <Heading
-                    position="absolute"
-                    zIndex="dropdown"
-                    top=".5rem"
-                    left=".75rem"
-                    fontWeight="normal"
-                    color="gray.200"
-                    size="xs"
-                >
-                    {label}
-                </Heading>
-            )}
+        <Box position="relative" width="full" bg="blackAlpha.500" borderRadius="md" {...wrapperProps}>
+            <HStack>
+                {label && (
+                    <Heading
+                        position="absolute"
+                        zIndex="dropdown"
+                        top=".5rem"
+                        left=".75rem"
+                        fontWeight="normal"
+                        color="gray.200"
+                        size="xs"
+                        {...headingProps}
+                    >
+                        {label}
+                    </Heading>
+                )}
+                {secondaryLabel && (
+                    <Heading
+                        position="absolute"
+                        zIndex="dropdown"
+                        top=".5rem"
+                        right=".75rem"
+                        fontWeight="normal"
+                        color="gray.200"
+                        size="xs"
+                        {...headingProps}
+                    >
+                        {secondaryLabel}
+                    </Heading>
+                )}
+            </HStack>
             <Input
                 width="full"
                 minHeight="20"
