@@ -13,17 +13,17 @@ export function HomePoolCategories() {
     return (
         <Box py="12">
             <Flex>
-                <BeetsBox flex={1.25} mr="4" p="4" bgColor="beets.base.800" display="flex" flexDirection="column">
+                <BeetsBox flex={1.25} mr="4" p="4" bgColor="beets.base.400" display="flex" flexDirection="column">
                     <Box fontSize="xl" mb="4" fontWeight="bold">
                         Index fund pools
                     </Box>
                     <Flex mb="4" flex="1">
-                        <PoolCardSmall mr="4" bgColor="beets.base.600" />
-                        <PoolCardSmall bgColor="beets.base.600" />
+                        <PoolCardSmall mr="4" bgColor="beets.base.800" flex="1" />
+                        <PoolCardSmall bgColor="beets.base.800" flex="1" />
                     </Flex>
                     <Flex flex="1">
-                        <PoolCardSmall mr="4" bgColor="beets.base.600" />
-                        <PoolCardSmall bgColor="beets.base.600" />
+                        <PoolCardSmall mr="4" bgColor="beets.base.800" flex="1" />
+                        <PoolCardSmall bgColor="beets.base.800" flex="1" />
                     </Flex>
                 </BeetsBox>
                 <Flex flexDirection="column" flex={1}>

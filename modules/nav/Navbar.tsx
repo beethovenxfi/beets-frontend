@@ -89,7 +89,7 @@ export function Navbar({ scrollY }: Props) {
                 <FadeInOutBox mr="3" isVisible={isConnected}>
                     <HStack spacing="3">
                         <NavbarPendingRewards />
-                        <NavbarAlerts />
+                        {/*<NavbarAlerts />*/}
                         {/*<NavbarPortfolioDrawer />*/}
                     </HStack>
                 </FadeInOutBox>

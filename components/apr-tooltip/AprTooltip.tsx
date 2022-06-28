@@ -35,7 +35,7 @@ function AprTooltip({ data, textProps, onlySparkles }: Props) {
 
     return (
         <Popover trigger="hover">
-            <HStack justify="end" align="center">
+            <HStack align="center">
                 {!onlySparkles && (
                     <Text fontSize="1rem" fontWeight="semibold" mr="1" {...textProps}>
                         {formatApr(data.total)}

@@ -43,7 +43,7 @@ export default function PoolListItem({ pool, userBalance, showUserBalance, ...re
                         <Box w={200} textAlign="right">
                             <Text fontSize="md">{numeral(pool.dynamicData.volume24h).format('$0,0')}</Text>
                         </Box>
-                        <Box w={200}>
+                        <Box w={200} display="flex" justifyContent="end">
                             <AprTooltip data={pool.dynamicData.apr} textProps={{ fontWeight: 'normal' }} />
                         </Box>
                     </Flex>

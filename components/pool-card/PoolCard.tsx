@@ -1,4 +1,4 @@
-import { Box, Flex, HStack, Image, Text } from '@chakra-ui/react';
+import { Box, BoxProps, Flex, FlexProps, HStack, Image, Text } from '@chakra-ui/react';
 import PoolIcon1 from '~/assets/icons/pool-icon-1.svg';
 import PoolIcon2 from '~/assets/icons/pool-icon-2.svg';
 import PoolIcon3 from '~/assets/icons/pool-icon-3.svg';
@@ -6,38 +6,27 @@ import AprTooltip from '~/components/apr-tooltip/AprTooltip';
 import TokenAvatarSet from '~/components/token/TokenAvatarSet';
 import NextImage from 'next/image';
 
-interface Props {
-    image?: string;
-}
+interface Props extends BoxProps {}
 
-export function PoolCard({ image }: Props) {
+export function PoolCard({ ...rest }: Props) {
     return (
-        <Box bgColor="box.500" borderRadius="md">
-            {image ? (
-                <Image src={image} height="160px" width="full" borderTopLeftRadius="md" borderTopRightRadius="md" />
-            ) : null}
-            <Box p="4" pb="8">
-                <Box fontSize="xl" pr="12" pb="6">
+        <Box flex="1" {...rest}>
+            <Flex bgColor="beets.base.600" borderRadius="md" p="4" flexDirection="column">
+                <Box fontSize="lg" pb="6">
                     <Text noOfLines={2}>All you need is a really long pool name</Text>
                 </Box>
-                <HStack pb="6" spacing="2">
-                    <Box>
-                        <NextImage src={PoolIcon1} />
-                    </Box>
-                    <Box>
-                        <NextImage src={PoolIcon2} />
-                    </Box>
-                    <Box>
-                        <NextImage src={PoolIcon3} />
-                    </Box>
-                </HStack>
-                <Flex>
-                    <Text fontSize="3xl" lineHeight="30px">
-                        123.23%
-                    </Text>
+                <TokenAvatarSet
+                    addresses={[
+                        '0x21be370d5312f44cb42ce377bc9b8a0cef1a4c83',
+                        '0x04068da6c83afcfa0e13ba15a6696662335d5b75',
+                        '0xf24bcf4d1e507740041c9cfd2dddb29585adce1e',
+                    ]}
+                    width={140}
+                    imageSize={32}
+                />
+                <Box flex="1" pt="6">
                     <AprTooltip
-                        onlySparkles={true}
-                        textProps={{ fontSize: '2xl' }}
+                        textProps={{ fontSize: '2xl', fontWeight: 'normal', mr: '0', lineHeight: '26px' }}
                         data={{
                             __typename: 'GqlPoolApr',
                             total: '1.2323',
@@ -51,20 +40,9 @@ export function PoolCard({ image }: Props) {
                             thirdPartyApr: '0',
                         }}
                     />
-                </Flex>
-                <Text color="gray.200" pb="8">
-                    0.33% Daily
-                </Text>
-                <TokenAvatarSet
-                    addresses={[
-                        '0x21be370d5312f44cb42ce377bc9b8a0cef1a4c83',
-                        '0x04068da6c83afcfa0e13ba15a6696662335d5b75',
-                        '0xf24bcf4d1e507740041c9cfd2dddb29585adce1e',
-                    ]}
-                    width={140}
-                    imageSize={40}
-                />
-            </Box>
+                    <Text color="gray.200">0.33% Daily</Text>
+                </Box>
+            </Flex>
         </Box>
     );
 }
