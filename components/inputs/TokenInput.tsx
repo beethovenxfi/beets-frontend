@@ -33,7 +33,7 @@ export default function TokenInput({
     const userBalance = address ? tokenGetAmountForAddress(address, userBalances) : '0';
 
     const token = getToken(address || '');
-    const decimalPlaces = token ? token.decimals : 0;
+    const decimalPlaces = token ? token.decimals : 18;
 
     const handleOnChange = (event: { currentTarget: { value: string } }) => {
         let newValue = event.currentTarget.value;
@@ -68,7 +68,7 @@ export default function TokenInput({
                     type="number"
                     label={label}
                     onKeyDown={blockInvalidCharacters}
-                ></BeetsInput>
+                />
                 <Box position="absolute" zIndex="toast" right=".75rem" top="50%" transform="translateY(-50%)">
                     <Button
                         onClick={toggleTokenSelect}
