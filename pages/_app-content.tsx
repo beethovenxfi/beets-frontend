@@ -4,6 +4,7 @@ import { Navbar } from '~/modules/nav/Navbar';
 import { SubNavBar } from '~/modules/nav/SubNavBar';
 import { useRef } from 'react';
 import { useElementScroll } from 'framer-motion';
+import { Footer } from '~/modules/nav/Footer';
 
 export function AppContent({ Component, pageProps }: AppProps) {
     const ref = useRef(null);
@@ -43,6 +44,7 @@ export function AppContent({ Component, pageProps }: AppProps) {
                     <Component {...pageProps} />
                 </Box>
             </Box>
+            <Footer />
         </Box>
     );
 }

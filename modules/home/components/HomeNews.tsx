@@ -5,6 +5,7 @@ import { IconTwitter } from '~/components/icons/IconTwitter';
 import { IconMedium } from '~/components/icons/IconMedium';
 import BeetsButton from '~/components/button/Button';
 import { useBoolean } from '@chakra-ui/hooks';
+import { BeetsSubHeadline } from '~/components/typography/BeetsSubHeadline';
 
 export function HomeNews(props: BoxProps) {
     const [expanded, { on }] = useBoolean(false);
@@ -12,11 +13,7 @@ export function HomeNews(props: BoxProps) {
     return (
         <Box {...props}>
             <BeetsHeadline mb="10">What&apos;s new</BeetsHeadline>
-            <Box mb="4">
-                <Text fontSize="2xl" ml="2" color="white">
-                    Latest community updates
-                </Text>
-            </Box>
+            <BeetsSubHeadline mb="4">Latest community updates</BeetsSubHeadline>
             <Box bgColor="beets.base.600" borderRadius="md" p="4">
                 <Box maxHeight={!expanded ? '6xl' : undefined} overflowY={!expanded ? 'hidden' : undefined}>
                     <Box borderBottomWidth={2} borderBottomColor="gray.100" pb="8" mb="8">

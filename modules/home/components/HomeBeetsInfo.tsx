@@ -8,7 +8,7 @@ export function HomeBeetsInfo(props: BoxProps) {
     return (
         <Box {...props}>
             <BeetsHeadline mb="8">The BEETS token</BeetsHeadline>
-            <Box display="flex" justifyContent="center">
+            <Box display="flex" justifyContent="center" mb="8">
                 <NextImage src={BeetsTokenInfoImage} width="466px" height="253px" />
             </Box>
             <Box mb="10">

@@ -2,6 +2,7 @@ import { Box, BoxProps, Flex, Text } from '@chakra-ui/react';
 import NextImage from 'next/image';
 import WhyUsImage from '~/assets/images/why-us.png';
 import { BeetsHeadline } from '~/components/typography/BeetsHeadline';
+import { BeetsSubHeadline } from '~/components/typography/BeetsSubHeadline';
 
 export function HomeWhyUs(props: BoxProps) {
     return (
@@ -17,27 +18,21 @@ export function HomeWhyUs(props: BoxProps) {
             </Box>
             <Flex>
                 <Box flex="1" mr="12">
-                    <Text fontSize="2xl" fontWeight="bold" color="white" mb="6">
-                        For Traders
-                    </Text>
+                    <BeetsSubHeadline mb="6">For Traders</BeetsSubHeadline>
                     <Box>
                         Balancer V2 enables efficient trading by pooling crowdsourced liquidity from investor portfolios
                         and using its unique Smart Order Router to find traders the best available price.
                     </Box>
                 </Box>
                 <Box flex="1" mr="12">
-                    <Text fontSize="2xl" fontWeight="bold" color="white" mb="6">
-                        For Investors
-                    </Text>
+                    <BeetsSubHeadline mb="6">For Investors</BeetsSubHeadline>
                     <Box>
                         Create a unique crypto index fund tailored to your desired asset allocations. Collect fees from
                         traders who rebalance your funds by following arbitrage opportunities.
                     </Box>
                 </Box>
                 <Box flex="1">
-                    <Text fontSize="2xl" fontWeight="bold" color="white" mb="6">
-                        For Protocols
-                    </Text>
+                    <BeetsSubHeadline mb="6">For Protocols</BeetsSubHeadline>
                     <Box>
                         Launch your token in the fairest way possible, using an LGE. Use an 80/20 BPT instead of single
                         staking to capture market volatility with minimal impermanent loss.

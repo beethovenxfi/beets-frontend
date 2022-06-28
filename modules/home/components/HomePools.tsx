@@ -6,17 +6,25 @@ import NextImage from 'next/image';
 import { PoolCard } from '~/components/pool-card/PoolCard';
 import { BeetsHeadline } from '~/components/typography/BeetsHeadline';
 import BeetsButton from '~/components/button/Button';
+import { BeetsSubHeadline } from '~/components/typography/BeetsSubHeadline';
 
 export function HomePools(props: BoxProps) {
     return (
         <Box {...props}>
+            <BeetsHeadline mb="10">My investments</BeetsHeadline>
+            <Box mb="16">
+                <BeetsSubHeadline mb="4">$361.85 invested across 4 pools</BeetsSubHeadline>
+                <Flex>
+                    <PoolCard mr="6" flex="1" />
+                    <PoolCard mr="6" flex="1" />
+                    <PoolCard flex="1" />
+                </Flex>
+            </Box>
             <BeetsHeadline mb="10">Featured pools</BeetsHeadline>
             <Box mb="8">
                 <Flex mb="4">
                     <NextImage src={PoolIcon1} />
-                    <Text fontSize="2xl" ml="2" color="white">
-                        New & popular
-                    </Text>
+                    <BeetsSubHeadline ml="2">New & popular</BeetsSubHeadline>
                 </Flex>
                 <Flex>
                     <PoolCard mr="6" flex="1" />
@@ -27,9 +35,7 @@ export function HomePools(props: BoxProps) {
             <Box mb="8">
                 <Flex mb="4">
                     <NextImage src={PoolIcon2} />
-                    <Text fontSize="2xl" ml="2" color="white">
-                        Index fund pools
-                    </Text>
+                    <BeetsSubHeadline ml="2">Index fund pools</BeetsSubHeadline>
                 </Flex>
                 <Flex>
                     <PoolCard mr="6" flex="1" />
@@ -40,9 +46,7 @@ export function HomePools(props: BoxProps) {
             <Box mb="8">
                 <Flex mb="4">
                     <NextImage src={PoolIcon3} />
-                    <Text fontSize="2xl" ml="2" color="white">
-                        Boosted pools
-                    </Text>
+                    <BeetsSubHeadline ml="2">Boosted pools</BeetsSubHeadline>
                 </Flex>
                 <Flex>
                     <PoolCard mr="6" flex="1" />
@@ -64,9 +68,7 @@ export function HomePools(props: BoxProps) {
             <Box>
                 <Flex mb="4">
                     <NextImage src={PoolIcon3} />
-                    <Text fontSize="2xl" ml="2" color="white">
-                        Stable pools
-                    </Text>
+                    <BeetsSubHeadline ml="2">Stable pools</BeetsSubHeadline>
                 </Flex>
                 <Flex>
                     <PoolCard mr="6" flex="1" />
