@@ -12,7 +12,7 @@ export default function BeetsButton({
     buttonType = 'primary',
     ...buttonOptions
 }: Props & ButtonOptions & ButtonProps) {
-    const color = buttonType === 'secondary' ? 'beets.greenAlpha.400' : 'beets.green';
+    const color = buttonType === 'secondary' ? 'beets.greenAlpha.300' : 'beets.green';
 
     return (
         <ChakraButton

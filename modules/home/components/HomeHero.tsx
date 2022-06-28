@@ -1,4 +1,4 @@
-import { Box, Flex, HStack, Text, useTheme } from '@chakra-ui/react';
+import { Box, Flex, HStack, Link, Text, useTheme } from '@chakra-ui/react';
 import BeetsButton from '~/components/button/Button';
 
 export function HomeHero() {
@@ -16,22 +16,26 @@ export function HomeHero() {
             backgroundSize="cover"
             boxShadow="0px 0px 24px 0px rgba(0,0,0,0.25);"
         >
-            <Flex flex="1" alignItems="center" flexDirection="column" mt="20">
-                <Text as="h1" textStyle="h1" textTransform="uppercase" color="beets.green" fontWeight="semibold">
-                    Welcome to
-                    <br />
-                    Beethoven X
-                </Text>
-                <Text color="white" as="h5" textStyle="h5" mt="6" textAlign="center" mb="6">
-                    Your automated portfolio manager
-                    <br />
-                    and trading platform.
-                </Text>
+            <Flex flex="1" mt="20" justifyContent="center">
+                <Flex alignItems="center" flexDirection="column" width="440px">
+                    <Text as="h1" textStyle="h1" textTransform="uppercase" color="beets.green" fontWeight="semibold">
+                        Welcome to
+                        <br />
+                        Beethoven X
+                    </Text>
+                    <Text color="white" as="h5" textStyle="h5" textAlign="center" mt="10" mb="10">
+                        Built for traders, investors and protocols, we are your complete automated portfolio manager and
+                        trading solution.
+                    </Text>
 
-                <HStack spacing="4">
-                    <BeetsButton>Invest now</BeetsButton>
-                    <BeetsButton>Getting started</BeetsButton>
-                </HStack>
+                    <HStack spacing="4" mb="10">
+                        <BeetsButton width="160px">Invest</BeetsButton>
+                        <BeetsButton width="160px" buttonType="secondary">
+                            Swap
+                        </BeetsButton>
+                    </HStack>
+                    <Link color="beets.cyan">{"I'm new! Help me get started."}</Link>
+                </Flex>
             </Flex>
             <Box flex="1" />
         </Flex>
