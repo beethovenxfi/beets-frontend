@@ -41,10 +41,7 @@ export function TradeCardSwapBreakdown({}: Props) {
 
     return (
         <AnimatePresence>
-            <VStack width="full" spacing="1">
-                <Text color="gray.100" fontSize=".85rem">
-                    For this trade
-                </Text>
+            <VStack backgroundColor='blackAlpha.400' padding='3' width="full" spacing="1" marginTop='1'>
                 <HStack width="full" justifyContent="space-between">
                     <Text color="gray.100" fontSize=".85rem">
                         Price impact

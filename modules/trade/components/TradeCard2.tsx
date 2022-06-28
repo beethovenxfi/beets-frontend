@@ -282,9 +282,8 @@ function TradeCard2() {
                             Review Swap
                         </BeetsButton>
                     </Box>
-                    <Divider />
-                    <TradeCardSwapBreakdown />
                 </VStack>
+                <TradeCardSwapBreakdown />
             </Card>
             <AnimatePresence>
                 {showTokenSelect && (
