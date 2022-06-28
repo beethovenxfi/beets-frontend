@@ -7,7 +7,7 @@ import BeetsButton from '~/components/button/Button';
 import { useBoolean } from '@chakra-ui/hooks';
 
 export function HomeNews(props: BoxProps) {
-    const [expanded, { on }] = useBoolean();
+    const [expanded, { on }] = useBoolean(false);
 
     return (
         <Box {...props}>
