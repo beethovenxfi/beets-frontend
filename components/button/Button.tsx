@@ -4,14 +4,21 @@ import { ReactNode } from 'react';
 
 type Props = {
     children: ReactNode | ReactNode[];
+    buttonType?: 'primary' | 'secondary';
 };
 
-export default function BeetsButton({ children, ...buttonOptions }: Props & ButtonOptions & ButtonProps) {
+export default function BeetsButton({
+    children,
+    buttonType = 'primary',
+    ...buttonOptions
+}: Props & ButtonOptions & ButtonProps) {
+    const color = buttonType === 'secondary' ? 'beets.greenAlpha.400' : 'beets.green';
+
     return (
         <ChakraButton
-            bg="beets.green"
-            color="gray.500"
-            _active={{ backgroundColor: 'beets.green' }}
+            bg={color}
+            color={buttonType === 'secondary' ? 'white' : 'gray.500'}
+            _active={{ backgroundColor: color }}
             _focus={{ outline: 'none' }}
             rounded="xl"
             {...buttonOptions}
