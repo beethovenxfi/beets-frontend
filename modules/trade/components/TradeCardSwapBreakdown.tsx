@@ -1,5 +1,5 @@
 import { useTrade } from '~/modules/trade/lib/useTrade';
-import { Box, Flex, HStack, Link, Text } from '@chakra-ui/react';
+import { Box, Flex, HStack, Link, Text, VStack } from '@chakra-ui/react';
 import { useTradeData } from '~/modules/trade/lib/useTradeData';
 import { tokenFormatAmount } from '~/lib/services/token/token-util';
 import { AnimatePresence } from 'framer-motion';
@@ -9,6 +9,7 @@ import numeral from 'numeral';
 import { useGetTokens } from '~/lib/global/useToken';
 import CoingeckoLogo from '~/assets/images/coingecko.svg';
 import Image from 'next/image';
+import { useMemo } from 'react';
 
 interface Props {}
 
@@ -19,57 +20,69 @@ export function TradeCardSwapBreakdown({}: Props) {
     const swapInfo = reactiveTradeState.sorResponse;
     const [rateExpanded, { toggle }] = useBoolean();
 
+    const hasNoticablePriceImpact = parseFloat(swapInfo?.priceImpact || '0') >= 0.01;
+    const hasHighPriceImpact = parseFloat(swapInfo?.priceImpact || '0') > 0.05;
+
+    const valueIn = priceForAmount({ address: swapInfo?.tokenIn || '', amount: swapInfo?.tokenInAmount || '0' });
+    const tokenOutSwapPrice = valueIn / parseFloat(swapInfo?.tokenOutAmount || '0');
+    const diff = priceFor(tokenOut?.address || '') / tokenOutSwapPrice - 1;
+
+    const coingeckoVariationText = useMemo(() => {
+        if (diff >= 0) {
+            return `cheaper by ${numeral(Math.abs(diff)).format('%0.[00]')}`;
+        } else {
+            return `within ${numeral(Math.abs(diff)).format('%0.[00]')}`;
+        }
+    }, [diff]);
+
     if (!swapInfo || !tokenOut || !tokenIn) {
         return null;
     }
 
-    const hasNoticablePriceImpact = parseFloat(swapInfo.priceImpact) >= 0.01;
-    const hasHighPriceImpact = parseFloat(swapInfo.priceImpact) > 0.05;
-
-    const valueIn = priceForAmount({ address: swapInfo.tokenIn, amount: swapInfo.tokenInAmount });
-    const tokenOutSwapPrice = valueIn / parseFloat(swapInfo.tokenOutAmount);
-    const diff = priceFor(tokenOut.address) / tokenOutSwapPrice - 1;
-
     return (
         <AnimatePresence>
-            <Box w="full" pt="4">
-                <Box borderTopWidth={1} borderTopColor="gray.300" borderTopStyle="dashed" pt="4">
-                    <Flex alignItems="center" mb="2">
-                        <Box flex="1">Price impact</Box>
-                        <Box color={hasNoticablePriceImpact ? 'beets.red.300' : undefined}>
-                            {numeral(swapInfo.priceImpact).format('0.00%')}
-                        </Box>
-                    </Flex>
-                    <Flex alignItems="center">
-                        <Link flex="1" onClick={toggle} userSelect="none">
-                            <HStack spacing="0" position="relative">
-                                <Text>Rate</Text>
-                                <Box pt="1" color="beets.cyan">
-                                    {rateExpanded ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
-                                </Box>
-                            </HStack>
-                        </Link>
-                        <Box>
-                            1 {tokenIn.symbol} = {tokenFormatAmount(swapInfo.effectivePriceReversed)} {tokenOut.symbol}
-                        </Box>
-                    </Flex>
-                    {rateExpanded ? (
-                        <Box textAlign="right">
-                            1 {tokenOut.symbol} = {tokenFormatAmount(swapInfo.effectivePrice)} {tokenIn.symbol}
-                        </Box>
-                    ) : null}
-                    <Flex justifyContent="flex-end" color={diff >= 0 ? 'green.500' : undefined}>
-                        <HStack>
-                            <Text mr="1">
-                                {diff >= 0
-                                    ? `${numeral(Math.abs(diff)).format('%0.[00]')} cheaper than`
-                                    : `Within ${numeral(Math.abs(diff)).format('%0.[00]')} of`}
-                            </Text>
-                            <Image src={CoingeckoLogo} width="16" height="16" />
-                        </HStack>
-                    </Flex>
-                </Box>
-            </Box>
+            <VStack width="full" spacing="1">
+                <Text color="gray.100" fontSize=".85rem">
+                    For this trade
+                </Text>
+                <HStack width="full" justifyContent="space-between">
+                    <Text color="gray.100" fontSize=".85rem">
+                        Price impact
+                    </Text>
+                    <Text fontSize=".85rem" color={hasNoticablePriceImpact ? 'beets.red.300' : 'white'}>
+                        {numeral(swapInfo.priceImpact).format('0.00%')}
+                    </Text>
+                </HStack>
+                <HStack width="full" justifyContent="space-between">
+                    <Text color="gray.100" fontSize=".85rem">
+                        1 {tokenIn.symbol} is
+                    </Text>
+                    <Text fontSize=".85rem" color="white">
+                        {tokenFormatAmount(swapInfo.effectivePriceReversed)} {tokenOut.symbol}
+                    </Text>
+                </HStack>
+                <HStack width="full" justifyContent="space-between">
+                    <Text color="gray.100" fontSize=".85rem">
+                        1 {tokenOut.symbol} is
+                    </Text>
+                    <Text fontSize=".85rem" color="white">
+                        {tokenFormatAmount(swapInfo.effectivePrice)} {tokenIn.symbol}
+                    </Text>
+                </HStack>
+                <HStack width="full" justifyContent="space-between">
+                    <HStack alignItems="center" spacing="1">
+                        <Flex alignItems="center" height="full">
+                            <Image src={CoingeckoLogo} alt="Coingecko Logo" width="16" height="16" />
+                        </Flex>
+                        <Text color="gray.100" fontSize=".85rem">
+                            Coingecko variation
+                        </Text>
+                    </HStack>
+                    <Text fontSize=".85rem" color="white">
+                        {coingeckoVariationText}
+                    </Text>
+                </HStack>
+            </VStack>
         </AnimatePresence>
     );
 }

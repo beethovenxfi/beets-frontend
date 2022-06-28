@@ -24,6 +24,7 @@ export function TokenInputSwapButton({ isLoading, onSwap }: Props) {
             role="group"
             _hover={{ borderColor: 'beets.green', cursor: 'pointer' }}
             _active={{ backgroundColor: 'gray.600' }}
+            _focus={{ outline: 'none' }}
             onClick={onSwap}
         >
             <AnimatePresence>
@@ -63,7 +64,7 @@ export function TokenInputSwapButton({ isLoading, onSwap }: Props) {
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
                         >
-                            <Spinner color="beets.cyan" size="sm" />
+                            <Spinner color="beets.cyan" size="sm" marginBottom="1px" />
                         </AnimatedBox>
                     )}
                 </Box>
