@@ -25,6 +25,8 @@ const userMiddleware = new ApolloLink((operation, forward) => {
 });
 
 function createApolloClient() {
+    const keyArgs = ['where', ['poolIdIn']];
+
     return new ApolloClient({
         ssrMode: typeof window === 'undefined',
         link: concat(userMiddleware, new HttpLink({ uri: process.env.NEXT_PUBLIC_BACKEND_URL })),
@@ -41,8 +43,8 @@ function createApolloClient() {
                 },
                 Query: {
                     fields: {
-                        poolGetJoinExits: concatPagination(),
-                        poolGetSwaps: concatPagination(),
+                        poolGetJoinExits: concatPagination(keyArgs),
+                        poolGetSwaps: concatPagination(keyArgs),
                         poolGetBatchSwaps: concatPagination(),
                         userGetPoolBalances: {
                             merge(existing = [], incoming: any[]) {
