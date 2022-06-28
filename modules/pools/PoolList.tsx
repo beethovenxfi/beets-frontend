@@ -45,9 +45,6 @@ function PoolList() {
                             pool={item}
                             userBalance={`${usdBalanceForPool(item.id)}`}
                             showUserBalance={showMyInvestments}
-                            borderBottomColor="beets.base.800"
-                            borderBottomWidth={index === pools.length - 1 ? 0 : 1}
-                            bg="box.500"
                         />
                     );
                 }}

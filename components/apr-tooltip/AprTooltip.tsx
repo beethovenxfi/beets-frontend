@@ -37,12 +37,18 @@ function AprTooltip({ data, textProps, onlySparkles }: Props) {
         <Popover trigger="hover">
             <HStack align="center">
                 {!onlySparkles && (
-                    <Text fontSize="1rem" fontWeight="semibold" mr="1" {...textProps}>
+                    <Text fontSize={{ base: 'sm', lg: 'md' }} fontWeight="semibold" mr="1" {...textProps}>
                         {formatApr(data.total)}
                     </Text>
                 )}
                 <PopoverTrigger>
-                    <Button height="auto" variant="unstyled" _active={{ outline: 'none' }} _focus={{ outline: 'none' }}>
+                    <Button
+                        height="fit-content"
+                        minWidth="0px"
+                        variant="unstyled"
+                        _active={{ outline: 'none' }}
+                        _focus={{ outline: 'none' }}
+                    >
                         <StarsIcon />
                     </Button>
                 </PopoverTrigger>
