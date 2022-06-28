@@ -71,12 +71,12 @@ export function TradeCardSwapBreakdown({}: Props) {
                 </HStack>
                 <HStack width="full" justifyContent="space-between">
                     <HStack alignItems="center" spacing="1">
+                        <Text color="gray.100" fontSize=".85rem">
+                            Compared to
+                        </Text>
                         <Flex alignItems="center" height="full">
                             <Image src={CoingeckoLogo} alt="Coingecko Logo" width="16" height="16" />
                         </Flex>
-                        <Text color="gray.100" fontSize=".85rem">
-                            Coingecko variation
-                        </Text>
                     </HStack>
                     <Text fontSize=".85rem" color="white">
                         {coingeckoVariationText}
