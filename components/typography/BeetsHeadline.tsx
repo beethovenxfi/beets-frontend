@@ -7,7 +7,7 @@ interface Props extends BoxProps {
 
 export function BeetsHeadline({ children, ...rest }: Props) {
     return (
-        <Box fontSize="4xl" fontWeight="bold" color="beets.green" {...rest}>
+        <Box fontSize={{ base: '3xl', xl: '4xl' }} fontWeight="bold" color="beets.green" {...rest}>
             {children}
         </Box>
     );

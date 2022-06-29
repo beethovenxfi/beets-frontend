@@ -27,7 +27,7 @@ export function PoolCardCarousel({ items, ...rest }: Props) {
                 slidesPerView={2}
                 spaceBetween={16}
                 breakpoints={{
-                    640: { slidesPerView: 3 },
+                    720: { slidesPerView: 3 },
                     992: { slidesPerView: 2 },
                     1124: { slidesPerView: 3 },
                 }}
