@@ -58,7 +58,7 @@ export function Footer() {
                         </Box>
                     </HStack>
                 </Box>
-                <Box flex="1" justifyContent="flex-end" display={{ base: 'none', lg: 'flex' }}>
+                <Box flex="1" justifyContent="flex-end" display={{ base: 'none', lg: 'flex' }} ml="12">
                     <NextImage src={DegenBand} width="590px" height="493.5px" />
                 </Box>
             </Flex>
