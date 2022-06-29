@@ -88,7 +88,7 @@ export function HomeLearn(props: BoxProps) {
                     <HomeLearnItem
                         title={'FTMAlerts (YouTube)'}
                         description={
-                            'Weekly roundup of the latest news on Fantom Opera and other chains, the projects and wider market commentary.'
+                            'Weekly roundup of the latest news on Fantom Opera and other networks, the projects and wider market commentary.'
                         }
                         url={'https://beets.fi'}
                     />

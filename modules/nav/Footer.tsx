@@ -1,6 +1,7 @@
 import { Box, Flex, HStack, Link, useTheme } from '@chakra-ui/react';
 import NextImage from 'next/image';
-import BeetsLogo from '~/assets/logo/beets-logo.svg';
+//import BeetsLogo from '~/assets/logo/beets-logo.svg';
+import BeetsLogo from '~/assets/logo/beets-bal.svg';
 import DegenBand from '~/assets/images/degen-band.png';
 import DiscordIcon from '~/assets/icons/discord.svg';
 import TwitterIcon from '~/assets/icons/twitter.svg';
