@@ -91,7 +91,7 @@ export default function WalletConnectButton() {
                                         _active={{
                                             backgroundColor: 'none',
                                         }}
-                                        bg="beets.base.800"
+                                        bg="beets.base.700"
                                     >
                                         <HStack width="full" height="full" spacing="1">
                                             {/* {account.displayBalance ? ` (${account.displayBalance})` : ''} */}

@@ -75,3 +75,8 @@ a {
         background-position: 110% 50%;
     }
 }
+
+:root {
+    --swiper-theme-color: #00f89c;
+    --swiper-pagination-bullet-inactive-color: #fff;
+}
