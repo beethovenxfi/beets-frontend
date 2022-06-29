@@ -10,7 +10,10 @@ export function HomeHero() {
             mx={{ base: `-${theme.space['4']}`, xl: `-${theme.space['8']}` }}
             overflow="hidden"
             minHeight="400px"
-            backgroundImage="url('/images/hero-image-fantom.png')"
+            backgroundImage={{
+                base: "url('/images/hero-image-fantom-mobile.png')",
+                xl: "url('/images/hero-image-fantom.png')",
+            }}
             backgroundPosition="center"
             backgroundRepeat="no-repeat"
             backgroundSize="cover"
