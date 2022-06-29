@@ -16,8 +16,8 @@ export function HomeHero() {
             backgroundSize="cover"
             boxShadow="0px 0px 24px 0px rgba(0,0,0,0.25);"
         >
-            <Flex flex="1" mt="20" justifyContent="center">
-                <Flex flexDirection="column" width="440px">
+            <Flex flex="1" mt="20" pl={{ base: '4', xl: '8' }}>
+                <Flex flexDirection="column" width="580px">
                     <Text as="h1" textStyle="h1" textTransform="uppercase" color="white" fontWeight="semibold">
                         Welcome to
                         <br />
