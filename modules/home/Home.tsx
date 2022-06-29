@@ -14,7 +14,7 @@ export function Home() {
     return (
         <Box>
             <HomeHero />
-            {/*<Flex
+            <Flex
                 mt="12"
                 borderBottomWidth={2}
                 borderBottomColor="gray.100"
@@ -23,23 +23,7 @@ export function Home() {
             >
                 <HomePools flex="2" mr={{ base: '0', lg: '6', xl: '12' }} />
                 <HomeNews flex="1" />
-            </Flex>*/}
-
-            <Grid
-                templateColumns={{ base: 'repeat(1, 1fr)', lg: 'repeat(3, 1fr)' }}
-                gap={{ base: '12', lg: '6', xl: '12' }}
-                mt="12"
-                borderBottomWidth={2}
-                borderBottomColor="gray.100"
-                pb="24"
-            >
-                <GridItem colSpan={2}>
-                    <HomePools />
-                </GridItem>
-                <GridItem>
-                    <HomeNews />
-                </GridItem>
-            </Grid>
+            </Flex>
 
             <Grid
                 templateColumns={{ base: 'repeat(1, 1fr)', lg: 'repeat(3, 1fr)' }}
