@@ -109,7 +109,10 @@ export default function WalletConnectButton() {
                                                 ) : (
                                                     <Image src={BeetsSmart} width="24" alt="your-profile" />
                                                 )}
-                                                <Text fontSize={{ base: 'xs', lg: 'normal' }}>
+                                                <Text
+                                                    display={{ base: 'none', sm: 'inline' }}
+                                                    fontSize={{ base: 'xs', lg: 'normal' }}
+                                                >
                                                     {account.displayName}
                                                 </Text>
                                             </HStack>
