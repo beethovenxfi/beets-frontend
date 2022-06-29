@@ -1,15 +1,14 @@
-import { Box, Button, Link, Skeleton, Text, VStack, HStack } from '@chakra-ui/react';
-import { FormEvent } from 'react';
+import { Box, Button, Text, VStack, HStack } from '@chakra-ui/react';
 import { useGetTokens } from '~/lib/global/useToken';
 import TokenAvatar from '../token/TokenAvatar';
 import BeetsInput from './BeetsInput';
-import { tokenFormatAmountPrecise, tokenGetAmountForAddress } from '~/lib/services/token/token-util';
-import { AmountHumanReadable } from '~/lib/services/token/token-types';
+import { tokenGetAmountForAddress } from '~/lib/services/token/token-util';
 import { useUserTokenBalances } from '~/lib/user/useUserTokenBalances';
 import { useUserAccount } from '~/lib/user/useUserAccount';
 import PresetSelector from './PresetSelector';
 import { ChevronDown } from 'react-feather';
 import numeral from 'numeral';
+import { KeyboardEvent } from 'react';
 
 type Props = {
     label?: string;
@@ -37,9 +36,30 @@ export default function TokenInput({
     const userBalance = address ? tokenGetAmountForAddress(address, userBalances) : '0';
     const estimatedTokenPrice = priceForAmount({ amount: value || '0', address: address || '' });
 
-    const handlePresetSelected = (preset: number) => {
-        onChange && onChange({ currentTarget: { value: (parseFloat(userBalance) * preset).toString() } });
+    const token = getToken(address || '');
+    const decimalPlaces = token ? token.decimals : 18;
+
+    const handleOnChange = (event: { currentTarget: { value: string } }) => {
+        let newValue = event.currentTarget.value;
+
+        if (newValue.includes('.')) {
+            const [leftDigits, rightDigits] = newValue.split('.');
+
+            if (rightDigits && rightDigits.length > decimalPlaces) {
+                const maxLength = leftDigits.length + decimalPlaces + 1;
+                newValue = newValue.slice(0, maxLength);
+            }
+        }
+        onChange && onChange({ currentTarget: { value: newValue } });
     };
+
+    const handlePresetSelected = (preset: number) => {
+        handleOnChange({ currentTarget: { value: (parseFloat(userBalance) * preset).toString() } });
+    };
+
+    function blockInvalidCharacters(event: KeyboardEvent<HTMLInputElement>): void {
+        ['e', 'E', '+', '-'].includes(event.key) && event.preventDefault();
+    }
 
     return (
         <VStack width="full" alignItems="flex-start">
@@ -47,7 +67,8 @@ export default function TokenInput({
                 <BeetsInput
                     min={0}
                     value={value || ''}
-                    onChange={onChange}
+                    onChange={handleOnChange}
+                    onKeyDown={blockInvalidCharacters}
                     placeholder="0"
                     type="number"
                     label={label}
@@ -69,7 +90,7 @@ export default function TokenInput({
                             <HStack spacing="none">
                                 <TokenAvatar size="xs" address={address || ''} />
                                 <Text fontSize="1.15rem" paddingLeft="2">
-                                    {getToken(address || '')?.symbol || ''}
+                                    {token?.symbol}
                                 </Text>
                                 <Box marginLeft="1">
                                     <ChevronDown size={16} />
