@@ -1,4 +1,4 @@
-import { Box, BoxProps, Flex } from '@chakra-ui/react';
+import { Box, BoxProps, Flex, Grid, GridItem } from '@chakra-ui/react';
 import { BeetsHeadline } from '~/components/typography/BeetsHeadline';
 import BeetsButton from '~/components/button/Button';
 import { BeetsSubHeadline } from '~/components/typography/BeetsSubHeadline';
@@ -7,19 +7,18 @@ import { HomeLearnItem } from '~/modules/home/components/HomeLearnItem';
 export function HomeLearn(props: BoxProps) {
     return (
         <Box {...props}>
-            <Flex mb="16">
-                <Box flex="1">
+            <Grid templateColumns={{ base: 'repeat(1, 1fr)', lg: 'repeat(2, 1fr)' }} mb="16">
+                <GridItem>
                     <BeetsHeadline mb="8">Learning the notes</BeetsHeadline>
                     <Box>
                         If you’re new to DeFi or even a seasoned vet- it’s always wise to DYOR and get schooled up every
                         now and then. Check out resources below to learn more about DeFi and Beethoven X and the
                         technology we provide.
                     </Box>
-                </Box>
-                <Box flex="1" />
-            </Flex>
-            <Flex>
-                <Box flex="1" mr="12">
+                </GridItem>
+            </Grid>
+            <Grid templateColumns={{ base: 'repeat(1, 1fr)', lg: 'repeat(3, 1fr)' }} gap="12">
+                <GridItem>
                     <BeetsSubHeadline mb="8">Beethoven X</BeetsSubHeadline>
                     <HomeLearnItem
                         title={'Boosted Pools on Beethoven X'}
@@ -50,8 +49,8 @@ export function HomeLearn(props: BoxProps) {
                         url={'https://beets.fi'}
                         last={true}
                     />
-                </Box>
-                <Box flex="1" mr="12">
+                </GridItem>
+                <GridItem>
                     <BeetsSubHeadline mb="8">DeFi</BeetsSubHeadline>
                     <HomeLearnItem
                         title={'Getting started: What is DeFi'}
@@ -82,8 +81,8 @@ export function HomeLearn(props: BoxProps) {
                         url={'https://beets.fi'}
                         last={true}
                     />
-                </Box>
-                <Box flex="1" display="flex" flexDirection="column">
+                </GridItem>
+                <GridItem>
                     <BeetsSubHeadline mb="8">Other resources</BeetsSubHeadline>
                     <HomeLearnItem
                         title={'FTMAlerts (YouTube)'}
@@ -105,12 +104,12 @@ export function HomeLearn(props: BoxProps) {
                         url={'https://beets.fi'}
                     />
 
-                    <Box flex="1" mt="12">
+                    <Box flex="1" mt="12" mb="12">
                         <BeetsSubHeadline mb="8">Want to dive even deeper?</BeetsSubHeadline>
                         <BeetsButton>Check out our Docs</BeetsButton>
                     </Box>
-                </Box>
-            </Flex>
+                </GridItem>
+            </Grid>
         </Box>
     );
 }

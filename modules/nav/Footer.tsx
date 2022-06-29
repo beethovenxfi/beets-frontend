@@ -1,4 +1,4 @@
-import { Box, Flex, HStack, Link, useTheme } from '@chakra-ui/react';
+import { Box, Flex, Grid, GridItem, HStack, Link, useTheme } from '@chakra-ui/react';
 import NextImage from 'next/image';
 //import BeetsLogo from '~/assets/logo/beets-logo.svg';
 import BeetsLogo from '~/assets/logo/beets-bal.svg';
@@ -24,24 +24,25 @@ export function Footer() {
                     <Box mb="12">
                         <NextImage src={BeetsLogo} />
                     </Box>
-                    <Flex>
-                        <Box flex="1">
+                    <Grid templateColumns={{ base: 'repeat(2, 1fr)', lg: 'repeat(3, 1fr)' }} gap="8">
+                        <GridItem>
                             <FooterLink>Invest</FooterLink>
                             <FooterLink>Swap</FooterLink>
                             <FooterLink>Stake</FooterLink>
                             <FooterLink>Launch</FooterLink>
-                        </Box>
-                        <Box flex="1">
+                        </GridItem>
+                        <GridItem>
                             <FooterLink>Vote</FooterLink>
                             <FooterLink>Analytics</FooterLink>
                             <FooterLink>Docs & Help</FooterLink>
-                        </Box>
-                        <Box flex="1">
+                        </GridItem>
+                        <GridItem>
                             <FooterLink>Olympus Bonds</FooterLink>
                             <FooterLink>Multichain Bridge</FooterLink>
                             <FooterLink>AllBridge</FooterLink>
-                        </Box>
-                    </Flex>
+                        </GridItem>
+                    </Grid>
+
                     <HStack spacing="6" mt="24">
                         <Box>
                             <NextImage src={DiscordIcon} />
@@ -57,7 +58,7 @@ export function Footer() {
                         </Box>
                     </HStack>
                 </Box>
-                <Box flex="1" justifyContent="flex-end" display="flex">
+                <Box flex="1" justifyContent="flex-end" display={{ base: 'none', lg: 'flex' }}>
                     <NextImage src={DegenBand} width="590px" height="493.5px" />
                 </Box>
             </Flex>
