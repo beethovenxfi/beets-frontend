@@ -41,7 +41,7 @@ export default function PoolListItem({ pool, userBalance, showUserBalance, ...re
                     <GridItem alignSelf="center">
                         <Link href={`/pool/${pool.id}`} passHref>
                             <a>
-                                <Text color="white" fontSize="md" fontWeight="bold" lineHeight="1rem">
+                                <Text color="white" fontSize="lg" fontWeight="bold" lineHeight="1.5rem">
                                     {pool.name}
                                 </Text>
                             </a>
