@@ -21,7 +21,7 @@ function Trade() {
             <Head>
                 <title>Beethoven X | Swap</title>
             </Head>
-            <Grid paddingX="8" width="full" templateColumns="repeat(12, 1fr)" gap="12">
+            <Grid paddingX="8" width="full" templateColumns="repeat(12, 1fr)" gap="12" height="2xl">
                 <GridItem w="100%" colSpan={8} h="10">
                     <TradePageHeader />
 
