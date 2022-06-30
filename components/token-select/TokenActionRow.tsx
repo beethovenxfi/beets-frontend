@@ -5,6 +5,7 @@ import { Box, Heading, HStack } from '@chakra-ui/layout';
 import TokenAvatar from '~/components/token/TokenAvatar';
 import { TokenBase } from '~/lib/services/token/token-types';
 import BeetsButton from '~/components/button/Button';
+import { LinkProps } from '@chakra-ui/react';
 
 type TokenRowProps = TokenBase & {
     index: number;
@@ -17,7 +18,7 @@ export const TokenActionRow = memo(function TokenRow({
     index,
     onClick,
     action,
-}: TokenRowProps & ButtonProps) {
+}: TokenRowProps & ButtonProps & LinkProps) {
     return (
         <Button
             animate={{ opacity: 1, transition: { delay: index * 0.01 } }}

@@ -49,7 +49,11 @@ export function HomePools(props: BoxProps) {
                         <Flex mb="4">
                             <BeetsSkeleton isLoaded={!getPoolsQuery.loading}>
                                 <BeetsSubHeadline>
-                                    {numberFormatUSDValue(portfolioValueUSD)} invested across {userPools.length} pools
+                                    {userPools.length === 1
+                                        ? `${numberFormatUSDValue(portfolioValueUSD)} invested in 1 pool`
+                                        : `${numberFormatUSDValue(portfolioValueUSD)} invested across ${
+                                              userPools.length
+                                          } pools`}
                                 </BeetsSubHeadline>
                             </BeetsSkeleton>
                         </Flex>

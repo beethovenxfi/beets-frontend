@@ -1,6 +1,7 @@
 import BeetsButton from '~/components/button/Button';
 import { ButtonOptions, ButtonProps } from '@chakra-ui/button';
 import { ReactNode } from 'react';
+import { LinkProps } from '@chakra-ui/react';
 
 export type BeetsSubmitTransactionButtonProps = {
     disabled?: boolean;
@@ -24,7 +25,7 @@ export function BeetsSubmitTransactionButton({
     submittingText = 'Confirm in your wallet...',
     pendingText = 'Waiting for confirmation...',
     ...rest
-}: BeetsSubmitTransactionButtonProps & ButtonOptions & ButtonProps) {
+}: BeetsSubmitTransactionButtonProps & ButtonOptions & ButtonProps & LinkProps) {
     return (
         <BeetsButton
             disabled={disabled || isLoading || isSubmitting || isPending}
