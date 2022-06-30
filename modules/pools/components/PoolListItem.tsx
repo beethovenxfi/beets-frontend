@@ -26,7 +26,7 @@ export default function PoolListItem({ pool, userBalance, showUserBalance, ...re
         .filter((token) => !token.isNested && !token.isPhantomBpt)
         .map((token) => {
             const tokenData = getToken(token.address);
-            return { address: token.address, weight: token.weight, symbol: tokenData?.symbol };
+            return { address: token.address, weight: token.weight, symbol: tokenData?.symbol || '' };
         });
 
     return (
