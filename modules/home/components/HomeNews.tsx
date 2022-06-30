@@ -6,6 +6,7 @@ import { IconMedium } from '~/components/icons/IconMedium';
 import BeetsButton from '~/components/button/Button';
 import { useBoolean } from '@chakra-ui/hooks';
 import { BeetsSubHeadline } from '~/components/typography/BeetsSubHeadline';
+import { HomeNewsCard } from '~/modules/home/components/HomeNewsCard';
 
 export function HomeNews(props: BoxProps) {
     const [expanded, { on }] = useBoolean(false);
@@ -14,83 +15,36 @@ export function HomeNews(props: BoxProps) {
         <Box {...props}>
             <BeetsHeadline mb="10">What&apos;s new</BeetsHeadline>
             <BeetsSubHeadline mb="4">Latest community updates</BeetsSubHeadline>
-            <Box bgColor="beets.base.600" borderRadius="md" p="4">
+            <Box>
                 <Box maxHeight={!expanded ? '6xl' : undefined} overflowY={!expanded ? 'hidden' : undefined}>
-                    <Box borderBottomWidth={2} borderBottomColor="gray.100" pb="8" mb="8">
-                        <Image
-                            width="full"
-                            src="https://beethoven-assets.s3.eu-central-1.amazonaws.com/fireside2.png"
-                            borderRadius="md"
-                        />
-                        <Flex mt="4" mb="6" alignItems="center">
-                            <Box color="gray.200" flex="1">
-                                A few minutes ago <Link color="beets.cyan">via Discord</Link>
-                            </Box>
-                            <IconDiscord />
-                        </Flex>
-                        <Box>
-                            With so much happening in the ecosystem we thought it would be a great time to check in and
-                            invite you all for a chat.
-                            <br />
-                            <br />
-                            In the spirit of community and connection we are excited to be hosting a down-to-earth
-                            Fireside session this Tuesday at 12pm UTC.
-                        </Box>
-                    </Box>
-                    <Box borderBottomWidth={2} borderBottomColor="gray.100" pb="8" mb="8">
-                        <Flex mt="4" mb="6" alignItems="center">
-                            <Box color="gray.200" flex="1">
-                                14 hours ago <Link color="beets.cyan">via Twitter</Link>
-                            </Box>
-                            <IconTwitter />
-                        </Flex>
-                        <Box>
-                            The bird of fire 🔥 has arrived on Beethoven x.
-                            <br />
-                            <br />
-                            Love for partnerships that keep evolving ❤️
-                            <br />
-                            <br />
-                            Can you hear the music? 🎸🚀
-                        </Box>
-                    </Box>
-                    <Box borderBottomWidth={2} borderBottomColor="gray.100" pb="8" mb="8">
-                        <Flex mt="4" mb="6" alignItems="center">
-                            <Box color="gray.200" flex="1">
-                                14 hours ago <Link color="beets.cyan">via Medium</Link>
-                            </Box>
-                            <IconMedium />
-                        </Flex>
-                        <Box>
-                            Symphony of the Week: The Grand Orchestra
-                            <br />
-                            <br />
-                            This week we feature a pool whose thunderous sounds are arguably the most influential to us
-                            and those arounds us.
-                            <br />
-                            <br />
-                            As the notes from three powerful master composers fill the sky and the melody ebbs and
+                    <HomeNewsCard
+                        image="https://beethoven-assets.s3.eu-central-1.amazonaws.com/fireside2.png"
+                        source="twitter"
+                        timestamp="123"
+                        text={`With so much happening in the ecosystem we thought it would be a great time to check in and invite you all for a chat.\n\nIn the spirit of community and connection we are excited to be hosting a down-to-earth Fireside session this Tuesday at 12pm UTC.`}
+                        url="https://beets.fi"
+                    />
+                    <HomeNewsCard
+                        source="twitter"
+                        timestamp="123"
+                        text={`The bird of fire 🔥 has arrived on Beethoven x.\n\nLove for partnerships that keep evolving ❤️\n\nCan you hear the music? 🎸🚀`}
+                        url="https://beets.fi"
+                    />
+                    <HomeNewsCard
+                        source="medium"
+                        timestamp="123"
+                        text={`Symphony of the Week: The Grand Orchestra\n\nThis week we feature a pool whose thunderous sounds are arguably the most influential to us
+                            and those around us.️\n\nAs the notes from three powerful master composers fill the sky and the melody ebbs and
                             flows, the audience hangs onto every beat. This week we feature the powerhouse that is The
-                            Grand Orchestra.
-                        </Box>
-                    </Box>
-                    <Box pb="8">
-                        <Flex mt="4" mb="6" alignItems="center">
-                            <Box color="gray.200" flex="1">
-                                14 hours ago <Link color="beets.cyan">via Discord</Link>
-                            </Box>
-                            <IconDiscord />
-                        </Flex>
-                        <Box>
-                            Cue the Music! 🎉
-                            <br />
-                            <br />
-                            The Balancer & Beethoven proposal is live on Optimism snapshot!
-                            <br />
-                            <br />
-                            Cast your vote before July 6th and let’s see if we can turn the music up even louder.
-                        </Box>
-                    </Box>
+                            Grand Orchestra.`}
+                        url="https://beets.fi"
+                    />
+                    <HomeNewsCard
+                        source="discord"
+                        timestamp="123"
+                        text={`Cue the Music! 🎉\n\nThe Balancer & Beethoven proposal is live on Optimism snapshot!\n\nCast your vote before July 6th and let’s see if we can turn the music up even louder.`}
+                        url="https://beets.fi"
+                    />
                 </Box>
                 {!expanded ? (
                     <Flex justifyContent="center" mt="8">

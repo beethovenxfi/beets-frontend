@@ -38,6 +38,7 @@ export function HomeHero() {
                         textStyle={{ base: undefined, lg: 'h5' }}
                         fontSize={{ base: 'lg', lg: undefined }}
                         my={{ base: '6', lg: '10' }}
+                        mr="8"
                     >
                         Built for traders, investors and protocols, we are your complete automated portfolio manager and
                         trading solution.
