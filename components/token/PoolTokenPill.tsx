@@ -27,7 +27,7 @@ export function PoolTokenPill({ token, rounded = true }: Props) {
             <Content />
         </BeetsBox>
     ) : (
-        <Box p="2">
+        <Box p="1">
             <Content />
         </Box>
     );
