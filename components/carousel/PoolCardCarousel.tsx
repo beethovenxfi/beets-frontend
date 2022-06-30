@@ -2,12 +2,15 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { ReactNode } from 'react';
 import { Pagination } from 'swiper';
 import { Box, BoxProps } from '@chakra-ui/react';
+import { BeetsSkeleton } from '~/components/skeleton/BeetsSkeleton';
 
 interface Props extends BoxProps {
     items: ReactNode[];
+    loading?: boolean;
+    cardHeight?: string;
 }
 
-export function PoolCardCarousel({ items, ...rest }: Props) {
+export function PoolCardCarousel({ items, loading, cardHeight = '216px', ...rest }: Props) {
     return (
         <Box
             sx={{
@@ -19,6 +22,7 @@ export function PoolCardCarousel({ items, ...rest }: Props) {
                 },
                 '.swiper': {
                     paddingBottom: '6',
+                    //overflowY: 'visible',
                 },
             }}
             {...rest}
@@ -32,14 +36,26 @@ export function PoolCardCarousel({ items, ...rest }: Props) {
                     1124: { slidesPerView: 3 },
                 }}
                 pagination={{
-                    //dynamicBullets: true,
+                    //dynamicBullets: items.length > 8,
                     clickable: true,
                 }}
                 modules={[Pagination]}
             >
-                {items.map((item, index) => (
-                    <SwiperSlide key={index}>{item}</SwiperSlide>
-                ))}
+                {loading ? (
+                    <>
+                        <SwiperSlide key="1">
+                            <BeetsSkeleton height={cardHeight} />
+                        </SwiperSlide>
+                        <SwiperSlide key="2">
+                            <BeetsSkeleton height={cardHeight} />
+                        </SwiperSlide>
+                        <SwiperSlide key="3">
+                            <BeetsSkeleton height={cardHeight} />
+                        </SwiperSlide>
+                    </>
+                ) : (
+                    items.map((item, index) => <SwiperSlide key={index}>{item}</SwiperSlide>)
+                )}
             </Swiper>
         </Box>
     );

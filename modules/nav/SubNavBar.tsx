@@ -60,30 +60,30 @@ export function SubNavBar() {
                     </PopoverContent>
                 </Popover>
                 <SubNavBarStat
-                    loading={loading || !protocolData}
+                    loading={loading && !protocolData}
                     value={protocolData?.totalLiquidity || '0'}
                     label="TVL"
                     display={{ base: 'none', sm: 'flex' }}
                 />
                 <SubNavBarStat
-                    loading={loading || !protocolData}
+                    loading={loading && !protocolData}
                     value={protocolData?.swapVolume24h || '0'}
                     label="Volume (24h)"
                     display={{ base: 'none', lg: 'flex' }}
                 />
                 <SubNavBarStat
-                    loading={loading || !protocolData}
+                    loading={loading && !protocolData}
                     value={protocolData?.swapFee24h || '0'}
                     label="Fees (24h)"
                     display={{ base: 'none', lg: 'flex' }}
                 />
                 <HStack>
                     <TokenAvatar address={networkConfig.beets.address} style={{ width: '20px', height: '20px' }} />
-                    {loading || !protocolData ? (
+                    {loading && !protocolData ? (
                         <BeetsSkeleton height="16px" width="54px" />
                     ) : (
                         <Text fontWeight="semibold" fontSize={{ base: 'sm', lg: 'md' }}>
-                            {numeral(protocolData.beetsPrice).format('$0.00[00]')}
+                            {numeral(protocolData?.beetsPrice || '0').format('$0.00[00]')}
                         </Text>
                     )}
                 </HStack>

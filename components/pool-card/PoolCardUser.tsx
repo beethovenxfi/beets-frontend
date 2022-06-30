@@ -3,17 +3,21 @@ import AprTooltip from '~/components/apr-tooltip/AprTooltip';
 import TokenAvatarSet from '~/components/token/TokenAvatarSet';
 import { GqlPoolCardDataFragment } from '~/apollo/generated/graphql-codegen-generated';
 import numeral from 'numeral';
+import { numberFormatUSDValue } from '~/lib/util/number-formats';
+import { tokenFormatAmount } from '~/lib/services/token/token-util';
 
 interface Props extends BoxProps {
     pool: GqlPoolCardDataFragment;
+    balance: string;
+    balanceUSD: number;
 }
 
-export function PoolCard({ pool, ...rest }: Props) {
+export function PoolCardUser({ pool, balance, balanceUSD, ...rest }: Props) {
     const dailyApr = parseFloat(pool.dynamicData.apr.total) / 365;
 
     return (
         <Box flex="1" {...rest}>
-            <Flex bgColor="beets.base.600" height="216px" borderRadius="md" p="4" flexDirection="column">
+            <Flex bgColor="beets.base.600" borderRadius="md" p="4" flexDirection="column" height="327px">
                 <Box fontSize="lg" pb="6" flex="1">
                     <Text noOfLines={2}>{pool.name}</Text>
                 </Box>
@@ -21,14 +25,22 @@ export function PoolCard({ pool, ...rest }: Props) {
                     addresses={pool.allTokens
                         .filter((token) => !token.isNested && !token.isPhantomBpt)
                         .map((token) => token.address)}
-                    width={140}
-                    imageSize={32}
+                    width={104}
+                    imageSize={28}
                 />
-                <Box flex="1" pt="6">
+                <Box mt="6" color="gray.200" fontSize="sm">
+                    My balance:
+                </Box>
+                <Box fontSize="3xl" lineHeight="38px" color="white">
+                    {numberFormatUSDValue(balanceUSD)}
+                </Box>
+                <Box color="gray.200">{tokenFormatAmount(balance)} BPT</Box>
+                <Box pt="4" mt="4" borderTopWidth={1} borderTopColor="beets.base.800">
                     <AprTooltip
-                        textProps={{ fontSize: '2xl', fontWeight: 'normal', mr: '0', lineHeight: '26px' }}
+                        textProps={{ fontSize: 'lg', fontWeight: 'normal', mr: '0', lineHeight: '20px' }}
                         data={pool.dynamicData.apr}
                         placement="left"
+                        aprLabel={true}
                     />
                     <Text color="gray.200">{numeral(dailyApr).format('0.00[0]%')} Daily</Text>
                 </Box>

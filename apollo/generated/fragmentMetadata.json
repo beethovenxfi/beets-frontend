@@ -8,6 +8,7 @@
             "GqlPoolStable",
             "GqlPoolWeighted"
         ],
+        "GqlPoolFeaturedPoolGroupItem": ["GqlFeaturePoolGroupItemExternalLink", "GqlPoolMinimal"],
         "GqlPoolNestedUnion": ["GqlPoolLinearNested", "GqlPoolPhantomStableNested"],
         "GqlPoolTokenBase": ["GqlPoolToken", "GqlPoolTokenLinear", "GqlPoolTokenPhantomStable"],
         "GqlPoolTokenPhantomStableNestedUnion": ["GqlPoolToken", "GqlPoolTokenLinear"],

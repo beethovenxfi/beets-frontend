@@ -1,5 +1,5 @@
 import { ButtonOptions, ButtonProps } from '@chakra-ui/button';
-import { Button as ChakraButton } from '@chakra-ui/react';
+import { Button as ChakraButton, LinkProps } from '@chakra-ui/react';
 import { ReactNode } from 'react';
 
 type Props = {
@@ -11,7 +11,7 @@ export default function BeetsButton({
     children,
     buttonType = 'primary',
     ...buttonOptions
-}: Props & ButtonOptions & ButtonProps) {
+}: Props & ButtonOptions & ButtonProps & LinkProps) {
     const color = buttonType === 'secondary' ? 'beets.greenAlpha.300' : 'beets.green';
 
     return (

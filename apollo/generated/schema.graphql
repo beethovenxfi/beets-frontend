@@ -75,6 +75,13 @@ type GqlBeetsProtocolData {
 
 scalar GqlBigNumber
 
+type GqlFeaturePoolGroupItemExternalLink {
+    buttonText: String!
+    buttonUrl: String!
+    id: ID!
+    image: String!
+}
+
 type GqlHistoricalTokenPrice {
     address: String!
     prices: [GqlHistoricalTokenPriceEntry!]!
@@ -249,6 +256,15 @@ type GqlPoolElement implements GqlPoolBase {
     unitSeconds: BigInt!
     withdrawConfig: GqlPoolWithdrawConfig!
 }
+
+type GqlPoolFeaturedPoolGroup {
+    icon: String!
+    id: ID!
+    items: [GqlPoolFeaturedPoolGroupItem!]!
+    title: String!
+}
+
+union GqlPoolFeaturedPoolGroupItem = GqlFeaturePoolGroupItemExternalLink | GqlPoolMinimal
 
 input GqlPoolFilter {
     categoryIn: [GqlPoolFilterCategory!]
@@ -896,6 +912,7 @@ type Query {
     lge(id: ID!): GqlLge!
     lges: [GqlLge!]!
     poolGetBatchSwaps(first: Int, skip: Int, where: GqlPoolSwapFilter): [GqlPoolBatchSwap!]!
+    poolGetFeaturedPoolGroups: [GqlPoolFeaturedPoolGroup!]!
     poolGetJoinExits(first: Int, skip: Int, where: GqlPoolJoinExitFilter): [GqlPoolJoinExit!]!
     poolGetPool(id: String!): GqlPoolBase!
     poolGetPoolFilters: [GqlPoolFilterDefinition!]!

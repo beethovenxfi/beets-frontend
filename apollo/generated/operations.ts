@@ -1,4 +1,56 @@
 import gql from 'graphql-tag';
+export const GqlPoolCardData = gql`
+    fragment GqlPoolCardData on GqlPoolMinimal {
+        id
+        address
+        name
+        dynamicData {
+            totalLiquidity
+            totalShares
+            apr {
+                hasRewardApr
+                thirdPartyApr
+                nativeRewardApr
+                swapApr
+                total
+                items {
+                    title
+                    apr
+                    subItems {
+                        title
+                        apr
+                    }
+                }
+            }
+        }
+        allTokens {
+            id
+            address
+            isNested
+            isPhantomBpt
+            weight
+        }
+    }
+`;
+export const GqlPoolFeaturedPoolGroup = gql`
+    fragment GqlPoolFeaturedPoolGroup on GqlPoolFeaturedPoolGroup {
+        id
+        icon
+        title
+        items {
+            ... on GqlFeaturePoolGroupItemExternalLink {
+                id
+                image
+                buttonText
+                buttonUrl
+            }
+            ... on GqlPoolMinimal {
+                ...GqlPoolCardData
+            }
+        }
+    }
+    ${GqlPoolCardData}
+`;
 export const GqlPoolToken = gql`
     fragment GqlPoolToken on GqlPoolToken {
         id
@@ -373,6 +425,22 @@ export const GetUserData = gql`
             }
         }
     }
+`;
+export const GetHomeData = gql`
+    query GetHomeData {
+        poolGetFeaturedPoolGroups {
+            ...GqlPoolFeaturedPoolGroup
+        }
+    }
+    ${GqlPoolFeaturedPoolGroup}
+`;
+export const GetHomeFeaturedPools = gql`
+    query GetHomeFeaturedPools {
+        featuredPoolGroups: poolGetFeaturedPoolGroups {
+            ...GqlPoolFeaturedPoolGroup
+        }
+    }
+    ${GqlPoolFeaturedPoolGroup}
 `;
 export const GetPool = gql`
     query GetPool($id: String!) {
