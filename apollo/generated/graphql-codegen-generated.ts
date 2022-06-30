@@ -95,6 +95,18 @@ export interface GqlBeetsProtocolData {
     totalSwapVolume: Scalars['BigDecimal'];
 }
 
+export interface GqlConfigNewsItem {
+    __typename: 'GqlConfigNewsItem';
+    id: Scalars['ID'];
+    image?: Maybe<Scalars['String']>;
+    source: GqlConfigNewsItemSource;
+    text: Scalars['String'];
+    timestamp: Scalars['String'];
+    url: Scalars['String'];
+}
+
+export type GqlConfigNewsItemSource = 'discord' | 'medium' | 'twitter';
+
 export interface GqlFeaturePoolGroupItemExternalLink {
     __typename: 'GqlFeaturePoolGroupItemExternalLink';
     buttonText: Scalars['String'];
@@ -972,6 +984,7 @@ export interface Query {
     beetsGetFbeetsRatio: Scalars['String'];
     beetsGetProtocolData: GqlBeetsProtocolData;
     blocksGetAverageBlockTime: Scalars['Float'];
+    configGetNewsItems: Array<GqlConfigNewsItem>;
     fbeetsGetApr: FbeetsApr;
     gnosisIsUserMultisigWallet?: Maybe<Scalars['Boolean']>;
     lge: GqlLge;
@@ -1325,6 +1338,15 @@ export type GetHomeDataQuery = {
               }
         >;
     }>;
+    configGetNewsItems: Array<{
+        __typename: 'GqlConfigNewsItem';
+        id: string;
+        text: string;
+        image?: string | null;
+        url: string;
+        source: GqlConfigNewsItemSource;
+        timestamp: string;
+    }>;
 };
 
 export type GetHomeFeaturedPoolsQueryVariables = Exact<{ [key: string]: never }>;
@@ -1382,6 +1404,21 @@ export type GetHomeFeaturedPoolsQuery = {
                   }>;
               }
         >;
+    }>;
+};
+
+export type GetHomeNewsItemsQueryVariables = Exact<{ [key: string]: never }>;
+
+export type GetHomeNewsItemsQuery = {
+    __typename: 'Query';
+    newsItems: Array<{
+        __typename: 'GqlConfigNewsItem';
+        id: string;
+        text: string;
+        image?: string | null;
+        url: string;
+        source: GqlConfigNewsItemSource;
+        timestamp: string;
     }>;
 };
 
@@ -3895,6 +3932,14 @@ export const GetHomeDataDocument = gql`
         poolGetFeaturedPoolGroups {
             ...GqlPoolFeaturedPoolGroup
         }
+        configGetNewsItems {
+            id
+            text
+            image
+            url
+            source
+            timestamp
+        }
     }
     ${GqlPoolFeaturedPoolGroupFragmentDoc}
 `;
@@ -3977,6 +4022,52 @@ export type GetHomeFeaturedPoolsQueryResult = Apollo.QueryResult<
     GetHomeFeaturedPoolsQuery,
     GetHomeFeaturedPoolsQueryVariables
 >;
+export const GetHomeNewsItemsDocument = gql`
+    query GetHomeNewsItems {
+        newsItems: configGetNewsItems {
+            id
+            text
+            image
+            url
+            source
+            timestamp
+        }
+    }
+`;
+
+/**
+ * __useGetHomeNewsItemsQuery__
+ *
+ * To run a query within a React component, call `useGetHomeNewsItemsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetHomeNewsItemsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetHomeNewsItemsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetHomeNewsItemsQuery(
+    baseOptions?: Apollo.QueryHookOptions<GetHomeNewsItemsQuery, GetHomeNewsItemsQueryVariables>,
+) {
+    const options = { ...defaultOptions, ...baseOptions };
+    return Apollo.useQuery<GetHomeNewsItemsQuery, GetHomeNewsItemsQueryVariables>(GetHomeNewsItemsDocument, options);
+}
+export function useGetHomeNewsItemsLazyQuery(
+    baseOptions?: Apollo.LazyQueryHookOptions<GetHomeNewsItemsQuery, GetHomeNewsItemsQueryVariables>,
+) {
+    const options = { ...defaultOptions, ...baseOptions };
+    return Apollo.useLazyQuery<GetHomeNewsItemsQuery, GetHomeNewsItemsQueryVariables>(
+        GetHomeNewsItemsDocument,
+        options,
+    );
+}
+export type GetHomeNewsItemsQueryHookResult = ReturnType<typeof useGetHomeNewsItemsQuery>;
+export type GetHomeNewsItemsLazyQueryHookResult = ReturnType<typeof useGetHomeNewsItemsLazyQuery>;
+export type GetHomeNewsItemsQueryResult = Apollo.QueryResult<GetHomeNewsItemsQuery, GetHomeNewsItemsQueryVariables>;
 export const GetPoolDocument = gql`
     query GetPool($id: String!) {
         pool: poolGetPool(id: $id) {

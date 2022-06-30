@@ -431,6 +431,14 @@ export const GetHomeData = gql`
         poolGetFeaturedPoolGroups {
             ...GqlPoolFeaturedPoolGroup
         }
+        configGetNewsItems {
+            id
+            text
+            image
+            url
+            source
+            timestamp
+        }
     }
     ${GqlPoolFeaturedPoolGroup}
 `;
@@ -441,6 +449,18 @@ export const GetHomeFeaturedPools = gql`
         }
     }
     ${GqlPoolFeaturedPoolGroup}
+`;
+export const GetHomeNewsItems = gql`
+    query GetHomeNewsItems {
+        newsItems: configGetNewsItems {
+            id
+            text
+            image
+            url
+            source
+            timestamp
+        }
+    }
 `;
 export const GetPool = gql`
     query GetPool($id: String!) {

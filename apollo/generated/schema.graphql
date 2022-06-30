@@ -75,6 +75,21 @@ type GqlBeetsProtocolData {
 
 scalar GqlBigNumber
 
+type GqlConfigNewsItem {
+    id: ID!
+    image: String
+    source: GqlConfigNewsItemSource!
+    text: String!
+    timestamp: String!
+    url: String!
+}
+
+enum GqlConfigNewsItemSource {
+    discord
+    medium
+    twitter
+}
+
 type GqlFeaturePoolGroupItemExternalLink {
     buttonText: String!
     buttonUrl: String!
@@ -907,6 +922,7 @@ type Query {
     beetsGetFbeetsRatio: String!
     beetsGetProtocolData: GqlBeetsProtocolData!
     blocksGetAverageBlockTime: Float!
+    configGetNewsItems: [GqlConfigNewsItem!]!
     fbeetsGetApr: FbeetsApr!
     gnosisIsUserMultisigWallet: Boolean
     lge(id: ID!): GqlLge!
