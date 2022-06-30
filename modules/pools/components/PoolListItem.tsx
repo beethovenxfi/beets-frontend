@@ -47,7 +47,7 @@ export default function PoolListItem({ pool, userBalance, showUserBalance, ...re
                                         />
                                     </a>
                                 </PopoverTrigger>
-                                <PopoverContent w="fit-content" bgColor="beets.base.800" shadow="2xl">
+                                <PopoverContent w="fit-content" bgColor="beets.base.800" shadow="2xl" p="1">
                                     {tokens.map((token, index) => (
                                         <PoolTokenPill key={index} token={token} rounded={false}></PoolTokenPill>
                                     ))}
