@@ -1,4 +1,4 @@
-import { Box, Flex, Grid, GridItem, Text } from '@chakra-ui/react';
+import { Grid, GridItem, Text } from '@chakra-ui/react';
 import { usePoolList } from '../usePoolList';
 import PoolListSortLink from '~/modules/pools/components/PoolListSortLink';
 

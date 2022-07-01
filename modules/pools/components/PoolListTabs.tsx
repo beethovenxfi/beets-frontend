@@ -1,18 +1,12 @@
-import { HStack, TabList, Tabs } from '@chakra-ui/react';
+import { Box, HStack, TabList, Tabs } from '@chakra-ui/react';
 import { usePoolList } from '~/modules/pools/usePoolList';
-import { useAccount } from 'wagmi';
 import BeetsTab from '~/components/tabs/BeetsTab';
 import { useUserAccount } from '~/lib/user/useUserAccount';
 
 export function PoolListTabs() {
     const { isConnected } = useUserAccount();
     const { state, refetch: refreshPoolList, setShowMyInvestments, showMyInvestments } = usePoolList();
-
-    const TABS = [
-        { text: 'Incentivized pools', id: 'incentivized' },
-        { text: 'Community pools', id: 'community' },
-        ...(isConnected ? [{ text: 'My investments', id: 'my-investments' }] : []),
-    ];
+    const TABS = [{ id: 'incentivized' }, { id: 'community' }, { id: 'my-investments' }];
 
     const handleTabChanged = (index: number) => {
         const tab = TABS[index];
@@ -47,9 +41,13 @@ export function PoolListTabs() {
         >
             <TabList>
                 <HStack spacing="2">
-                    {TABS.map((tab) => (
-                        <BeetsTab key={tab.id}>{tab.text}</BeetsTab>
-                    ))}
+                    <BeetsTab key="incentivized">
+                        Icentivized <Box display={{ base: 'none', lg: 'inline' }}>pools</Box>
+                    </BeetsTab>
+                    <BeetsTab key="community">
+                        Community <Box display={{ base: 'none', lg: 'inline' }}>pools</Box>
+                    </BeetsTab>
+                    {isConnected ? <BeetsTab key="my-investments">My investments</BeetsTab> : null}
                 </HStack>
             </TabList>
         </Tabs>
