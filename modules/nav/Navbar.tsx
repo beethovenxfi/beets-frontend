@@ -1,4 +1,4 @@
-import { Box, Button, Flex, HStack } from '@chakra-ui/react';
+import { Box, Flex, HStack } from '@chakra-ui/react';
 import Image from 'next/image';
 import NextLink from 'next/link';
 import LogoFull from '~/assets/logo/beets-bal.svg';
@@ -7,12 +7,9 @@ import { NavbarLink } from '~/modules/nav/NavbarLink';
 import { useRouter } from 'next/router';
 import { motion, MotionValue, useAnimation, useTransform } from 'framer-motion';
 import { NavbarAdditionalLinksMenu } from '~/modules/nav/NavbarAdditionalLinksMenu';
-import StarsIcon from '~/components/apr-tooltip/StarsIcon';
 import { useUserAccount } from '~/lib/user/useUserAccount';
-import { NavbarPortfolioDrawer } from '~/modules/nav/NavbarPortfolioDrawer';
 import { FadeInOutBox } from '~/components/animation/FadeInOutBox';
 import { NavbarPendingRewards } from '~/modules/nav/NavbarPendingRewards';
-import { NavbarAlerts } from '~/modules/nav/NavbarAlerts';
 
 interface Props {
     scrollY: MotionValue<number>;

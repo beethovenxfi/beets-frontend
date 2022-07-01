@@ -1,4 +1,4 @@
-import { Box, BoxProps, Flex, Image } from '@chakra-ui/react';
+import { Box, BoxProps, Flex, Image, Link } from '@chakra-ui/react';
 import { PoolCard } from '~/components/pool-card/PoolCard';
 import { BeetsHeadline } from '~/components/typography/BeetsHeadline';
 import { BeetsSubHeadline } from '~/components/typography/BeetsSubHeadline';
@@ -15,6 +15,7 @@ import { useEffect } from 'react';
 import { BeetsSkeleton } from '~/components/skeleton/BeetsSkeleton';
 import { PoolCardUser } from '~/components/pool-card/PoolCardUser';
 import { orderBy } from 'lodash';
+import { NextLink } from '~/components/link/NextLink';
 
 export function HomePools(props: BoxProps) {
     const {

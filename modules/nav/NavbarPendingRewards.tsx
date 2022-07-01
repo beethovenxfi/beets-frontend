@@ -52,7 +52,7 @@ export function NavbarPendingRewards() {
                     <StarsIcon width={15} height={16} />
 
                     {loading ? (
-                        <BeetsSkeleton height="10px" width="36px" mt="1.5" mb="2px" />
+                        <BeetsSkeleton height="7.5px" width="36px" mt="1.5" mb="2px" />
                     ) : (
                         <Box fontSize="11px" pt="0.5">
                             {numeral(pendingRewardsTotalUSD).format('$0.00a')}

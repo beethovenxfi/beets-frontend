@@ -15,7 +15,9 @@ export function HomeBeetsInfo(props: BoxProps) {
                 The BEETS token launched in October 2021, providing our community with rewards value, incentives and
                 also utility with governance & gauge voting rights with the extended fBEETS token.
             </Box>
-            <BeetsButton>BEETS tokenomics</BeetsButton>
+            <BeetsButton as="a" href="https://docs.beets.fi/beets/tokenomics" target="_blank">
+                BEETS tokenomics
+            </BeetsButton>
         </Box>
     );
 }

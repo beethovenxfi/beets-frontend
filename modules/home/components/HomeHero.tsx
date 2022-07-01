@@ -1,5 +1,6 @@
 import { Box, Flex, HStack, Link, Text, useTheme } from '@chakra-ui/react';
 import BeetsButton from '~/components/button/Button';
+import { NextLink } from '~/components/link/NextLink';
 
 export function HomeHero() {
     const theme = useTheme();
@@ -45,12 +46,16 @@ export function HomeHero() {
                     </Text>
 
                     <HStack spacing="4" mb={{ base: '6', lg: '10' }}>
-                        <BeetsButton width={{ base: '130px', lg: '160px' }}>Invest</BeetsButton>
-                        <BeetsButton width={{ base: '130px', lg: '160px' }} buttonType="secondary">
-                            Swap
-                        </BeetsButton>
+                        <NextLink href="/pools" chakraProps={{ _hover: { textDecoration: 'none' } }}>
+                            <BeetsButton width={{ base: '130px', lg: '160px' }}>Invest</BeetsButton>
+                        </NextLink>
+                        <NextLink href="/trade" chakraProps={{ _hover: { textDecoration: 'none' } }}>
+                            <BeetsButton width={{ base: '130px', lg: '160px' }} buttonType="secondary">
+                                Swap
+                            </BeetsButton>
+                        </NextLink>
                     </HStack>
-                    <Link color="beets.cyan" display="inline">
+                    <Link color="beets.cyan" alignSelf="flex-start">
                         {"I'm new! Help me get started."}
                     </Link>
                 </Flex>

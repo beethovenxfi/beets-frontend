@@ -8,6 +8,7 @@ import TwitterIcon from '~/assets/icons/twitter.svg';
 import MediumIcon from '~/assets/icons/medium.svg';
 import GithubIcon from '~/assets/icons/github.svg';
 import { FooterLink } from '~/modules/nav/FooterLink';
+import { NextLink } from '~/components/link/NextLink';
 
 export function Footer() {
     const theme = useTheme();
@@ -26,40 +27,70 @@ export function Footer() {
                     </Box>
                     <Grid templateColumns={{ base: 'repeat(2, 1fr)', lg: 'repeat(3, 1fr)' }} gap="8">
                         <GridItem>
-                            <FooterLink>Invest</FooterLink>
-                            <FooterLink>Swap</FooterLink>
-                            <FooterLink>Stake</FooterLink>
-                            <FooterLink>Launch</FooterLink>
+                            <FooterLink href="/pools" linkType="internal">
+                                Invest
+                            </FooterLink>
+                            <FooterLink href="/trade" linkType="internal">
+                                Swap
+                            </FooterLink>
+                            <FooterLink href="/trade" linkType="internal">
+                                Stake
+                            </FooterLink>
+                            <FooterLink href="/trade" linkType="internal">
+                                Launch
+                            </FooterLink>
                         </GridItem>
                         <GridItem>
-                            <FooterLink>Vote</FooterLink>
-                            <FooterLink>Analytics</FooterLink>
-                            <FooterLink>Docs & Help</FooterLink>
+                            <FooterLink href="https://snapshot.org/#/beets.eth">Vote</FooterLink>
+                            <FooterLink href="https:/info.beets.fi">Analytics</FooterLink>
+                            <FooterLink href="https:/docs.beets.fi">Docs & Help</FooterLink>
                         </GridItem>
                         <GridItem>
-                            <FooterLink>Olympus Bonds</FooterLink>
-                            <FooterLink>Multichain Bridge</FooterLink>
-                            <FooterLink>AllBridge</FooterLink>
+                            <FooterLink href="https://pro.olympusdao.finance/#/bond">Olympus Bonds</FooterLink>
+                            <FooterLink href="https://app.multichain.org/#/router">Multichain Bridge</FooterLink>
+                            <FooterLink href="https://app.allbridge.io/bridge?from=SOL&to=FTM&asset=SOL">
+                                AllBridge
+                            </FooterLink>
                         </GridItem>
                     </Grid>
 
                     <HStack spacing="6" mt="24">
                         <Box>
-                            <NextImage src={DiscordIcon} />
+                            <Link href="https://discord.gg/jedS4zGk28" target="_blank" _active={{ boxShadow: 'none' }}>
+                                <NextImage src={DiscordIcon} />
+                            </Link>
                         </Box>
                         <Box>
-                            <NextImage src={TwitterIcon} />
+                            <Link
+                                href="https://twitter.com/beethoven_x"
+                                target="_blank"
+                                _active={{ boxShadow: 'none' }}
+                            >
+                                <NextImage src={TwitterIcon} />
+                            </Link>
                         </Box>
                         <Box>
-                            <NextImage src={GithubIcon} />
+                            <Link
+                                href="https://github.com/beethovenxfi"
+                                target="_blank"
+                                _active={{ boxShadow: 'none' }}
+                            >
+                                <NextImage src={GithubIcon} />
+                            </Link>
                         </Box>
                         <Box>
-                            <NextImage src={MediumIcon} />
+                            <Link
+                                href="https://beethovenxio.medium.com/"
+                                target="_blank"
+                                _active={{ boxShadow: 'none' }}
+                            >
+                                <NextImage src={MediumIcon} />
+                            </Link>
                         </Box>
                     </HStack>
                 </Box>
                 <Box flex="1" justifyContent="flex-end" display={{ base: 'none', lg: 'flex' }} ml="12">
-                    <NextImage src={DegenBand} width="590px" height="493.5px" />
+                    <NextImage src={DegenBand} width="472px" height="394.8px" />
                 </Box>
             </Flex>
         </Box>
