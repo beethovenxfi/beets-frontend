@@ -1,7 +1,7 @@
 import { Box } from '@chakra-ui/react';
 import { NetworkStatus } from '@apollo/client';
 import { usePoolList } from './usePoolList';
-import PoolListItem from '~/modules/pools/components/PoolListItem';
+import { PoolListItem } from '~/modules/pools/components/PoolListItem';
 import PoolListTableHeader from '~/modules/pools/components/PoolListTableHeader';
 import { PaginatedTable } from '~/components/table/PaginatedTable';
 import { PoolListTop } from '~/modules/pools/components/PoolListTop';
