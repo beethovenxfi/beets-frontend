@@ -19,7 +19,14 @@ export default function PoolListItem({ pool, userBalance, showUserBalance, ...re
         <Box {...rest}>
             <Link href={`/pool/${pool.id}`} passHref>
                 <a>
-                    <Flex px="4" py="4" cursor="pointer" alignItems={'center'} fontSize="lg" _hover={{ bg: '#100C3A' }}>
+                    <Flex
+                        px="4"
+                        py="4"
+                        cursor="pointer"
+                        alignItems={'center'}
+                        fontSize="lg"
+                        _hover={{ bg: 'beets.base.700' }}
+                    >
                         <Box w={90} textAlign={'center'}>
                             <TokenAvatarSet
                                 imageSize={25}
