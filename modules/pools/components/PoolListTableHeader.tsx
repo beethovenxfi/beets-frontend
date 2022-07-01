@@ -1,73 +1,84 @@
-import { Box, Flex, Text } from '@chakra-ui/react';
+import { Box, Flex, Grid, GridItem, Text } from '@chakra-ui/react';
 import { usePoolList } from '../usePoolList';
 import PoolListSortLink from '~/modules/pools/components/PoolListSortLink';
 
-function PoolListTableHeader() {
+export function PoolListTableHeader() {
     const { state, changeSort, showMyInvestments } = usePoolList();
 
     return (
-        <Flex
-            px="4"
-            py="3"
-            borderTopLeftRadius="md"
-            borderTopRightRadius="md"
-            alignItems={'center'}
-            bgColor="rgba(255,255,255,0.08)"
-            borderBottom="2px"
-            borderColor="beets.base.500"
-            mb={{ base: '4', lg: '0' }}
-        >
-            <Box flex={1}>
-                <Text fontSize="md" fontWeight="semibold" color="beets.base.100">
-                    Pool details
-                </Text>
-            </Box>
-            {showMyInvestments && (
-                <Text fontSize="md" fontWeight="semibold" color="beets.base.100">
-                    My balance
-                </Text>
-            )}
-            <Box width="200px" textAlign="right">
-                {showMyInvestments ? (
+        <>
+            <Grid
+                pl="4"
+                py="3"
+                borderTopLeftRadius="md"
+                borderTopRightRadius="md"
+                alignItems={'center'}
+                bgColor="rgba(255,255,255,0.08)"
+                borderBottom="2px"
+                borderColor="beets.base.500"
+                mb={{ base: '4', lg: '0' }}
+                templateColumns={
+                    showMyInvestments
+                        ? { base: '1fr 150px 200px 200px', xl: '1fr 150px 200px 200px 200px' }
+                        : '1fr 200px 200px 200px'
+                }
+                gap="0"
+            >
+                <GridItem>
                     <Text fontSize="md" fontWeight="semibold" color="beets.base.100">
-                        TVL
+                        Pool details
                     </Text>
-                ) : (
-                    <PoolListSortLink
-                        title="TVL"
-                        orderDirection={state.orderBy === 'totalLiquidity' ? state.orderDirection : null}
-                        onClick={() => changeSort('totalLiquidity')}
-                    />
+                </GridItem>
+                {showMyInvestments && (
+                    <GridItem textAlign="right">
+                        <Text fontSize="md" fontWeight="semibold" color="beets.base.100">
+                            My balance
+                        </Text>
+                    </GridItem>
                 )}
-            </Box>
-            <Box width="200px" textAlign="right">
-                {showMyInvestments ? (
-                    <Text fontSize="md" fontWeight="semibold" color="beets.base.100">
-                        Volume (24h)
-                    </Text>
-                ) : (
-                    <PoolListSortLink
-                        title="Volume (24h)"
-                        orderDirection={state.orderBy === 'volume24h' ? state.orderDirection : null}
-                        onClick={() => changeSort('volume24h')}
-                    />
-                )}
-            </Box>
-            <Box width="200px" textAlign="right">
-                {showMyInvestments ? (
-                    <Text fontSize="md" fontWeight="semibold" color="beets.base.100">
-                        APR
-                    </Text>
-                ) : (
-                    <PoolListSortLink
-                        title="APR"
-                        orderDirection={state.orderBy === 'apr' ? state.orderDirection : null}
-                        onClick={() => changeSort('apr')}
-                    />
-                )}
-            </Box>
-        </Flex>
+                <GridItem textAlign="right">
+                    {showMyInvestments ? (
+                        <Text fontSize="md" fontWeight="semibold" color="beets.base.100">
+                            TVL
+                        </Text>
+                    ) : (
+                        <PoolListSortLink
+                            title="TVL"
+                            orderDirection={state.orderBy === 'totalLiquidity' ? state.orderDirection : null}
+                            onClick={() => changeSort('totalLiquidity')}
+                        />
+                    )}
+                </GridItem>
+                <GridItem
+                    textAlign="right"
+                    display={showMyInvestments ? { base: 'block', lg: 'none', xl: 'block' } : 'block'}
+                >
+                    {showMyInvestments ? (
+                        <Text fontSize="md" fontWeight="semibold" color="beets.base.100">
+                            Volume (24h)
+                        </Text>
+                    ) : (
+                        <PoolListSortLink
+                            title="Volume (24h)"
+                            orderDirection={state.orderBy === 'volume24h' ? state.orderDirection : null}
+                            onClick={() => changeSort('volume24h')}
+                        />
+                    )}
+                </GridItem>
+                <GridItem textAlign="right" pr="4">
+                    {showMyInvestments ? (
+                        <Text fontSize="md" fontWeight="semibold" color="beets.base.100">
+                            APR
+                        </Text>
+                    ) : (
+                        <PoolListSortLink
+                            title="APR"
+                            orderDirection={state.orderBy === 'apr' ? state.orderDirection : null}
+                            onClick={() => changeSort('apr')}
+                        />
+                    )}
+                </GridItem>
+            </Grid>
+        </>
     );
 }
-
-export default PoolListTableHeader;
