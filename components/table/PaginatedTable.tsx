@@ -44,9 +44,14 @@ export function PaginatedTable({
             {renderTableHeader()}
             <Box mb={4} borderBottomLeftRadius="md" borderBottomRightRadius="md" overflow="hidden" shadow="lg">
                 {isLoadingRows && (
-                    <Flex justifyContent={'center'} py={32}>
+                    <Flex justifyContent={'center'} py={32} bg="box.500">
                         <Spinner size="xl" />
                     </Flex>
+                )}
+                {!isLoadingRows && items.length === 0 && (
+                    <Box height="md" display="flex" alignItems="center" justifyContent="center" bg="box.500">
+                        No results found for your search criteria.
+                    </Box>
                 )}
                 {!isLoadingRows &&
                     items.map((item, index) => (

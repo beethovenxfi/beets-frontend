@@ -39,7 +39,12 @@ export function PoolListTabs() {
     };
 
     return (
-        <Tabs variant="soft-rounded" display="flex" onChange={handleTabChanged}>
+        <Tabs
+            variant="soft-rounded"
+            display="flex"
+            onChange={handleTabChanged}
+            defaultIndex={showMyInvestments ? 2 : state.where?.categoryIn?.includes('INCENTIVIZED') ? 0 : 1}
+        >
             <TabList>
                 <HStack spacing="2">
                     {TABS.map((tab) => (

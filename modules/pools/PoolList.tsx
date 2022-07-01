@@ -10,9 +10,9 @@ import { useEffect } from 'react';
 import { orderBy } from 'lodash';
 
 function PoolList() {
-    const { pools, refetch, loading, error, networkStatus, state, count, setPageSize, setPoolIds, showMyInvestments } =
+    const { pools, refetch, loading, networkStatus, state, count, setPageSize, setPoolIds, showMyInvestments } =
         usePoolList();
-    const { poolBalances, userPoolIds, usdBalanceForPool } = useUserData();
+    const { userPoolIds, usdBalanceForPool } = useUserData();
     const userPoolIdsStr = userPoolIds.join();
 
     useEffect(() => {
