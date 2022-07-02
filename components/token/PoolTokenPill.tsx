@@ -5,7 +5,7 @@ import numeral from 'numeral';
 
 interface Token {
     address: string;
-    weight: string;
+    weight?: string;
     symbol: string;
 }
 
