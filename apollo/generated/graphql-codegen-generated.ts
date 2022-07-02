@@ -95,6 +95,26 @@ export interface GqlBeetsProtocolData {
     totalSwapVolume: Scalars['BigDecimal'];
 }
 
+export interface GqlConfigNewsItem {
+    __typename: 'GqlConfigNewsItem';
+    id: Scalars['ID'];
+    image?: Maybe<Scalars['String']>;
+    source: GqlConfigNewsItemSource;
+    text: Scalars['String'];
+    timestamp: Scalars['String'];
+    url: Scalars['String'];
+}
+
+export type GqlConfigNewsItemSource = 'discord' | 'medium' | 'twitter';
+
+export interface GqlFeaturePoolGroupItemExternalLink {
+    __typename: 'GqlFeaturePoolGroupItemExternalLink';
+    buttonText: Scalars['String'];
+    buttonUrl: Scalars['String'];
+    id: Scalars['ID'];
+    image: Scalars['String'];
+}
+
 export interface GqlHistoricalTokenPrice {
     __typename: 'GqlHistoricalTokenPrice';
     address: Scalars['String'];
@@ -280,6 +300,16 @@ export interface GqlPoolElement extends GqlPoolBase {
     unitSeconds: Scalars['BigInt'];
     withdrawConfig: GqlPoolWithdrawConfig;
 }
+
+export interface GqlPoolFeaturedPoolGroup {
+    __typename: 'GqlPoolFeaturedPoolGroup';
+    icon: Scalars['String'];
+    id: Scalars['ID'];
+    items: Array<GqlPoolFeaturedPoolGroupItem>;
+    title: Scalars['String'];
+}
+
+export type GqlPoolFeaturedPoolGroupItem = GqlFeaturePoolGroupItemExternalLink | GqlPoolMinimal;
 
 export interface GqlPoolFilter {
     categoryIn?: InputMaybe<Array<GqlPoolFilterCategory>>;
@@ -954,11 +984,13 @@ export interface Query {
     beetsGetFbeetsRatio: Scalars['String'];
     beetsGetProtocolData: GqlBeetsProtocolData;
     blocksGetAverageBlockTime: Scalars['Float'];
+    configGetNewsItems: Array<GqlConfigNewsItem>;
     fbeetsGetApr: FbeetsApr;
     gnosisIsUserMultisigWallet?: Maybe<Scalars['Boolean']>;
     lge: GqlLge;
     lges: Array<GqlLge>;
     poolGetBatchSwaps: Array<GqlPoolBatchSwap>;
+    poolGetFeaturedPoolGroups: Array<GqlPoolFeaturedPoolGroup>;
     poolGetJoinExits: Array<GqlPoolJoinExit>;
     poolGetPool: GqlPoolBase;
     poolGetPoolFilters: Array<GqlPoolFilterDefinition>;
@@ -1247,6 +1279,233 @@ export type GetUserDataQuery = {
                 rewardPerSecond: string;
             }> | null;
         } | null;
+    }>;
+};
+
+export type GetHomeDataQueryVariables = Exact<{ [key: string]: never }>;
+
+export type GetHomeDataQuery = {
+    __typename: 'Query';
+    poolGetFeaturedPoolGroups: Array<{
+        __typename: 'GqlPoolFeaturedPoolGroup';
+        id: string;
+        icon: string;
+        title: string;
+        items: Array<
+            | {
+                  __typename: 'GqlFeaturePoolGroupItemExternalLink';
+                  id: string;
+                  image: string;
+                  buttonText: string;
+                  buttonUrl: string;
+              }
+            | {
+                  __typename: 'GqlPoolMinimal';
+                  id: string;
+                  address: string;
+                  name: string;
+                  dynamicData: {
+                      __typename: 'GqlPoolDynamicData';
+                      totalLiquidity: string;
+                      totalShares: string;
+                      apr: {
+                          __typename: 'GqlPoolApr';
+                          hasRewardApr: boolean;
+                          thirdPartyApr: string;
+                          nativeRewardApr: string;
+                          swapApr: string;
+                          total: string;
+                          items: Array<{
+                              __typename: 'GqlBalancePoolAprItem';
+                              title: string;
+                              apr: string;
+                              subItems?: Array<{
+                                  __typename: 'GqlBalancePoolAprSubItem';
+                                  title: string;
+                                  apr: string;
+                              }> | null;
+                          }>;
+                      };
+                  };
+                  allTokens: Array<{
+                      __typename: 'GqlPoolTokenExpanded';
+                      id: string;
+                      address: string;
+                      isNested: boolean;
+                      isPhantomBpt: boolean;
+                      weight?: string | null;
+                  }>;
+              }
+        >;
+    }>;
+    configGetNewsItems: Array<{
+        __typename: 'GqlConfigNewsItem';
+        id: string;
+        text: string;
+        image?: string | null;
+        url: string;
+        source: GqlConfigNewsItemSource;
+        timestamp: string;
+    }>;
+};
+
+export type GetHomeFeaturedPoolsQueryVariables = Exact<{ [key: string]: never }>;
+
+export type GetHomeFeaturedPoolsQuery = {
+    __typename: 'Query';
+    featuredPoolGroups: Array<{
+        __typename: 'GqlPoolFeaturedPoolGroup';
+        id: string;
+        icon: string;
+        title: string;
+        items: Array<
+            | {
+                  __typename: 'GqlFeaturePoolGroupItemExternalLink';
+                  id: string;
+                  image: string;
+                  buttonText: string;
+                  buttonUrl: string;
+              }
+            | {
+                  __typename: 'GqlPoolMinimal';
+                  id: string;
+                  address: string;
+                  name: string;
+                  dynamicData: {
+                      __typename: 'GqlPoolDynamicData';
+                      totalLiquidity: string;
+                      totalShares: string;
+                      apr: {
+                          __typename: 'GqlPoolApr';
+                          hasRewardApr: boolean;
+                          thirdPartyApr: string;
+                          nativeRewardApr: string;
+                          swapApr: string;
+                          total: string;
+                          items: Array<{
+                              __typename: 'GqlBalancePoolAprItem';
+                              title: string;
+                              apr: string;
+                              subItems?: Array<{
+                                  __typename: 'GqlBalancePoolAprSubItem';
+                                  title: string;
+                                  apr: string;
+                              }> | null;
+                          }>;
+                      };
+                  };
+                  allTokens: Array<{
+                      __typename: 'GqlPoolTokenExpanded';
+                      id: string;
+                      address: string;
+                      isNested: boolean;
+                      isPhantomBpt: boolean;
+                      weight?: string | null;
+                  }>;
+              }
+        >;
+    }>;
+};
+
+export type GetHomeNewsItemsQueryVariables = Exact<{ [key: string]: never }>;
+
+export type GetHomeNewsItemsQuery = {
+    __typename: 'Query';
+    newsItems: Array<{
+        __typename: 'GqlConfigNewsItem';
+        id: string;
+        text: string;
+        image?: string | null;
+        url: string;
+        source: GqlConfigNewsItemSource;
+        timestamp: string;
+    }>;
+};
+
+export type GqlPoolFeaturedPoolGroupFragment = {
+    __typename: 'GqlPoolFeaturedPoolGroup';
+    id: string;
+    icon: string;
+    title: string;
+    items: Array<
+        | {
+              __typename: 'GqlFeaturePoolGroupItemExternalLink';
+              id: string;
+              image: string;
+              buttonText: string;
+              buttonUrl: string;
+          }
+        | {
+              __typename: 'GqlPoolMinimal';
+              id: string;
+              address: string;
+              name: string;
+              dynamicData: {
+                  __typename: 'GqlPoolDynamicData';
+                  totalLiquidity: string;
+                  totalShares: string;
+                  apr: {
+                      __typename: 'GqlPoolApr';
+                      hasRewardApr: boolean;
+                      thirdPartyApr: string;
+                      nativeRewardApr: string;
+                      swapApr: string;
+                      total: string;
+                      items: Array<{
+                          __typename: 'GqlBalancePoolAprItem';
+                          title: string;
+                          apr: string;
+                          subItems?: Array<{
+                              __typename: 'GqlBalancePoolAprSubItem';
+                              title: string;
+                              apr: string;
+                          }> | null;
+                      }>;
+                  };
+              };
+              allTokens: Array<{
+                  __typename: 'GqlPoolTokenExpanded';
+                  id: string;
+                  address: string;
+                  isNested: boolean;
+                  isPhantomBpt: boolean;
+                  weight?: string | null;
+              }>;
+          }
+    >;
+};
+
+export type GqlPoolCardDataFragment = {
+    __typename: 'GqlPoolMinimal';
+    id: string;
+    address: string;
+    name: string;
+    dynamicData: {
+        __typename: 'GqlPoolDynamicData';
+        totalLiquidity: string;
+        totalShares: string;
+        apr: {
+            __typename: 'GqlPoolApr';
+            hasRewardApr: boolean;
+            thirdPartyApr: string;
+            nativeRewardApr: string;
+            swapApr: string;
+            total: string;
+            items: Array<{
+                __typename: 'GqlBalancePoolAprItem';
+                title: string;
+                apr: string;
+                subItems?: Array<{ __typename: 'GqlBalancePoolAprSubItem'; title: string; apr: string }> | null;
+            }>;
+        };
+    };
+    allTokens: Array<{
+        __typename: 'GqlPoolTokenExpanded';
+        id: string;
+        address: string;
+        isNested: boolean;
+        isPhantomBpt: boolean;
+        weight?: string | null;
     }>;
 };
 
@@ -2976,6 +3235,58 @@ export type GqlTokenDynamicDataFragment = {
     updatedAt: string;
 };
 
+export const GqlPoolCardDataFragmentDoc = gql`
+    fragment GqlPoolCardData on GqlPoolMinimal {
+        id
+        address
+        name
+        dynamicData {
+            totalLiquidity
+            totalShares
+            apr {
+                hasRewardApr
+                thirdPartyApr
+                nativeRewardApr
+                swapApr
+                total
+                items {
+                    title
+                    apr
+                    subItems {
+                        title
+                        apr
+                    }
+                }
+            }
+        }
+        allTokens {
+            id
+            address
+            isNested
+            isPhantomBpt
+            weight
+        }
+    }
+`;
+export const GqlPoolFeaturedPoolGroupFragmentDoc = gql`
+    fragment GqlPoolFeaturedPoolGroup on GqlPoolFeaturedPoolGroup {
+        id
+        icon
+        title
+        items {
+            ... on GqlFeaturePoolGroupItemExternalLink {
+                id
+                image
+                buttonText
+                buttonUrl
+            }
+            ... on GqlPoolMinimal {
+                ...GqlPoolCardData
+            }
+        }
+    }
+    ${GqlPoolCardDataFragmentDoc}
+`;
 export const GqlPoolTokenFragmentDoc = gql`
     fragment GqlPoolToken on GqlPoolToken {
         id
@@ -3616,6 +3927,147 @@ export function useGetUserDataLazyQuery(
 export type GetUserDataQueryHookResult = ReturnType<typeof useGetUserDataQuery>;
 export type GetUserDataLazyQueryHookResult = ReturnType<typeof useGetUserDataLazyQuery>;
 export type GetUserDataQueryResult = Apollo.QueryResult<GetUserDataQuery, GetUserDataQueryVariables>;
+export const GetHomeDataDocument = gql`
+    query GetHomeData {
+        poolGetFeaturedPoolGroups {
+            ...GqlPoolFeaturedPoolGroup
+        }
+        configGetNewsItems {
+            id
+            text
+            image
+            url
+            source
+            timestamp
+        }
+    }
+    ${GqlPoolFeaturedPoolGroupFragmentDoc}
+`;
+
+/**
+ * __useGetHomeDataQuery__
+ *
+ * To run a query within a React component, call `useGetHomeDataQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetHomeDataQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetHomeDataQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetHomeDataQuery(
+    baseOptions?: Apollo.QueryHookOptions<GetHomeDataQuery, GetHomeDataQueryVariables>,
+) {
+    const options = { ...defaultOptions, ...baseOptions };
+    return Apollo.useQuery<GetHomeDataQuery, GetHomeDataQueryVariables>(GetHomeDataDocument, options);
+}
+export function useGetHomeDataLazyQuery(
+    baseOptions?: Apollo.LazyQueryHookOptions<GetHomeDataQuery, GetHomeDataQueryVariables>,
+) {
+    const options = { ...defaultOptions, ...baseOptions };
+    return Apollo.useLazyQuery<GetHomeDataQuery, GetHomeDataQueryVariables>(GetHomeDataDocument, options);
+}
+export type GetHomeDataQueryHookResult = ReturnType<typeof useGetHomeDataQuery>;
+export type GetHomeDataLazyQueryHookResult = ReturnType<typeof useGetHomeDataLazyQuery>;
+export type GetHomeDataQueryResult = Apollo.QueryResult<GetHomeDataQuery, GetHomeDataQueryVariables>;
+export const GetHomeFeaturedPoolsDocument = gql`
+    query GetHomeFeaturedPools {
+        featuredPoolGroups: poolGetFeaturedPoolGroups {
+            ...GqlPoolFeaturedPoolGroup
+        }
+    }
+    ${GqlPoolFeaturedPoolGroupFragmentDoc}
+`;
+
+/**
+ * __useGetHomeFeaturedPoolsQuery__
+ *
+ * To run a query within a React component, call `useGetHomeFeaturedPoolsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetHomeFeaturedPoolsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetHomeFeaturedPoolsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetHomeFeaturedPoolsQuery(
+    baseOptions?: Apollo.QueryHookOptions<GetHomeFeaturedPoolsQuery, GetHomeFeaturedPoolsQueryVariables>,
+) {
+    const options = { ...defaultOptions, ...baseOptions };
+    return Apollo.useQuery<GetHomeFeaturedPoolsQuery, GetHomeFeaturedPoolsQueryVariables>(
+        GetHomeFeaturedPoolsDocument,
+        options,
+    );
+}
+export function useGetHomeFeaturedPoolsLazyQuery(
+    baseOptions?: Apollo.LazyQueryHookOptions<GetHomeFeaturedPoolsQuery, GetHomeFeaturedPoolsQueryVariables>,
+) {
+    const options = { ...defaultOptions, ...baseOptions };
+    return Apollo.useLazyQuery<GetHomeFeaturedPoolsQuery, GetHomeFeaturedPoolsQueryVariables>(
+        GetHomeFeaturedPoolsDocument,
+        options,
+    );
+}
+export type GetHomeFeaturedPoolsQueryHookResult = ReturnType<typeof useGetHomeFeaturedPoolsQuery>;
+export type GetHomeFeaturedPoolsLazyQueryHookResult = ReturnType<typeof useGetHomeFeaturedPoolsLazyQuery>;
+export type GetHomeFeaturedPoolsQueryResult = Apollo.QueryResult<
+    GetHomeFeaturedPoolsQuery,
+    GetHomeFeaturedPoolsQueryVariables
+>;
+export const GetHomeNewsItemsDocument = gql`
+    query GetHomeNewsItems {
+        newsItems: configGetNewsItems {
+            id
+            text
+            image
+            url
+            source
+            timestamp
+        }
+    }
+`;
+
+/**
+ * __useGetHomeNewsItemsQuery__
+ *
+ * To run a query within a React component, call `useGetHomeNewsItemsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetHomeNewsItemsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetHomeNewsItemsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetHomeNewsItemsQuery(
+    baseOptions?: Apollo.QueryHookOptions<GetHomeNewsItemsQuery, GetHomeNewsItemsQueryVariables>,
+) {
+    const options = { ...defaultOptions, ...baseOptions };
+    return Apollo.useQuery<GetHomeNewsItemsQuery, GetHomeNewsItemsQueryVariables>(GetHomeNewsItemsDocument, options);
+}
+export function useGetHomeNewsItemsLazyQuery(
+    baseOptions?: Apollo.LazyQueryHookOptions<GetHomeNewsItemsQuery, GetHomeNewsItemsQueryVariables>,
+) {
+    const options = { ...defaultOptions, ...baseOptions };
+    return Apollo.useLazyQuery<GetHomeNewsItemsQuery, GetHomeNewsItemsQueryVariables>(
+        GetHomeNewsItemsDocument,
+        options,
+    );
+}
+export type GetHomeNewsItemsQueryHookResult = ReturnType<typeof useGetHomeNewsItemsQuery>;
+export type GetHomeNewsItemsLazyQueryHookResult = ReturnType<typeof useGetHomeNewsItemsLazyQuery>;
+export type GetHomeNewsItemsQueryResult = Apollo.QueryResult<GetHomeNewsItemsQuery, GetHomeNewsItemsQueryVariables>;
 export const GetPoolDocument = gql`
     query GetPool($id: String!) {
         pool: poolGetPool(id: $id) {

@@ -1,17 +1,6 @@
-import {
-    Box,
-    BoxProps,
-    forwardRef,
-    HStack,
-    Link,
-    Popover,
-    PopoverContent,
-    PopoverTrigger,
-    Text,
-} from '@chakra-ui/react';
+import { Box, HStack, Link, Popover, PopoverContent, PopoverTrigger, Text } from '@chakra-ui/react';
 import { useGetProtocolDataQuery } from '~/apollo/generated/graphql-codegen-generated';
 import Image from 'next/image';
-import { useRouter } from 'next/router';
 import { Check, ChevronDown } from 'react-feather';
 import numeral from 'numeral';
 import { BeetsBox } from '~/components/box/BeetsBox';
@@ -20,6 +9,7 @@ import { networkConfig } from '~/lib/config/network-config';
 import OptimismLogo from '~/assets/images/optimism.svg';
 import FantomLogo from '~/assets/images/fantom-logo.png';
 import { BeetsSkeleton } from '~/components/skeleton/BeetsSkeleton';
+import { SubNavBarStat } from '~/modules/nav/SubNavBarStat';
 
 export function SubNavBar() {
     const { data, error, loading } = useGetProtocolDataQuery({ pollInterval: 30000, fetchPolicy: 'cache-and-network' });
@@ -69,37 +59,32 @@ export function SubNavBar() {
                         </BeetsBox>
                     </PopoverContent>
                 </Popover>
-
-                <HStack mr={5}>
-                    <Text color="gray.200">TVL:</Text>
-                    {loading || !protocolData ? (
-                        <BeetsSkeleton height="16px" width="54px" />
-                    ) : (
-                        <Text fontWeight="semibold">{numeral(protocolData.totalLiquidity).format('$0.00a')}</Text>
-                    )}
-                </HStack>
-                <HStack mr={5}>
-                    <Text color="gray.200">Volume (24h):</Text>
-                    {loading || !protocolData ? (
-                        <BeetsSkeleton height="16px" width="54px" />
-                    ) : (
-                        <Text fontWeight="semibold">{numeral(protocolData.swapVolume24h).format('$0.00a')}</Text>
-                    )}
-                </HStack>
-                <HStack mr={6}>
-                    <Text color="gray.200">Fees (24h):</Text>
-                    {loading || !protocolData ? (
-                        <BeetsSkeleton height="16px" width="54px" />
-                    ) : (
-                        <Text fontWeight="semibold">{numeral(protocolData.swapFee24h).format('$0.00a')}</Text>
-                    )}
-                </HStack>
+                <SubNavBarStat
+                    loading={loading && !protocolData}
+                    value={protocolData?.totalLiquidity || '0'}
+                    label="TVL"
+                    display={{ base: 'none', sm: 'flex' }}
+                />
+                <SubNavBarStat
+                    loading={loading && !protocolData}
+                    value={protocolData?.swapVolume24h || '0'}
+                    label="Volume (24h)"
+                    display={{ base: 'none', lg: 'flex' }}
+                />
+                <SubNavBarStat
+                    loading={loading && !protocolData}
+                    value={protocolData?.swapFee24h || '0'}
+                    label="Fees (24h)"
+                    display={{ base: 'none', lg: 'flex' }}
+                />
                 <HStack>
                     <TokenAvatar address={networkConfig.beets.address} style={{ width: '20px', height: '20px' }} />
-                    {loading || !protocolData ? (
+                    {loading && !protocolData ? (
                         <BeetsSkeleton height="16px" width="54px" />
                     ) : (
-                        <Text fontWeight="semibold">{numeral(protocolData.beetsPrice).format('$0.00[00]')}</Text>
+                        <Text fontWeight="semibold" fontSize={{ base: 'sm', lg: 'md' }}>
+                            {numeral(protocolData?.beetsPrice || '0').format('$0.00[00]')}
+                        </Text>
                     )}
                 </HStack>
             </BeetsBox>

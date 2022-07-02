@@ -1,8 +1,8 @@
 import { Box } from '@chakra-ui/react';
 import { NetworkStatus } from '@apollo/client';
 import { usePoolList } from './usePoolList';
-import PoolListItem from '~/modules/pools/components/PoolListItem';
-import PoolListTableHeader from '~/modules/pools/components/PoolListTableHeader';
+import { PoolListItem } from '~/modules/pools/components/PoolListItem';
+import { PoolListTableHeader } from '~/modules/pools/components/PoolListTableHeader';
 import { PaginatedTable } from '~/components/table/PaginatedTable';
 import { PoolListTop } from '~/modules/pools/components/PoolListTop';
 import { useUserData } from '~/lib/user/useUserData';
@@ -10,9 +10,9 @@ import { useEffect } from 'react';
 import { orderBy } from 'lodash';
 
 function PoolList() {
-    const { pools, refetch, loading, error, networkStatus, state, count, setPageSize, setPoolIds, showMyInvestments } =
+    const { pools, refetch, loading, networkStatus, state, count, setPageSize, setPoolIds, showMyInvestments } =
         usePoolList();
-    const { poolBalances, userPoolIds, usdBalanceForPool } = useUserData();
+    const { userPoolIds, usdBalanceForPool } = useUserData();
     const userPoolIdsStr = userPoolIds.join();
 
     useEffect(() => {

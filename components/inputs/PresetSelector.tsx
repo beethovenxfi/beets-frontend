@@ -1,27 +1,50 @@
 import { Button } from '@chakra-ui/button';
 import { HStack } from '@chakra-ui/layout';
 
+type Preset = {
+    label: string;
+    value: number;
+};
 interface Props {
     onPresetSelected: (preset: number) => void;
+    presets?: Preset[];
 }
-export default function PresetSelector({ onPresetSelected }: Props) {
+
+const defaultPresets = [
+    {
+        label: '25%',
+        value: 0.25,
+    },
+    {
+        label: '50%',
+        value: 0.5,
+    },
+    {
+        label: '75%',
+        value: 0.75,
+    },
+    {
+        label: '100%',
+        value: 1,
+    },
+];
+export default function PresetSelector({ onPresetSelected, presets = defaultPresets }: Props) {
     const handlePresetSelected = (preset: number) => () => {
         onPresetSelected(preset);
     };
     return (
         <HStack width="full">
-            <Button onClick={handlePresetSelected(0.25)} size="xs" width="full">
-                25%
-            </Button>
-            <Button onClick={handlePresetSelected(0.5)} size="xs" width="full">
-                50%
-            </Button>
-            <Button onClick={handlePresetSelected(0.75)} size="xs" width="full">
-                75%
-            </Button>
-            <Button onClick={handlePresetSelected(1)} size="xs" width="full">
-                100%
-            </Button>
+            {presets.map((preset) => (
+                <Button
+                    key={`preset-${preset.label}`}
+                    _focus={{ outline: 'none' }}
+                    onClick={handlePresetSelected(preset.value)}
+                    size="xs"
+                    width="full"
+                >
+                    {preset.label}
+                </Button>
+            ))}
         </HStack>
     );
 }

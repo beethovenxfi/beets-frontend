@@ -12,6 +12,7 @@ import {
     TextProps,
     HStack,
     Button,
+    PlacementWithLogical,
 } from '@chakra-ui/react';
 import StarsIcon from '~/components/apr-tooltip/StarsIcon';
 import numeral from 'numeral';
@@ -22,9 +23,11 @@ interface Props {
     data: GqlPoolApr;
     textProps?: TextProps;
     onlySparkles?: boolean;
+    placement?: PlacementWithLogical;
+    aprLabel?: boolean;
 }
 
-function AprTooltip({ data, textProps, onlySparkles }: Props) {
+function AprTooltip({ data, textProps, onlySparkles, placement, aprLabel }: Props) {
     const formatApr = (apr: number) => {
         if (apr < 0.0000001) {
             return '0.00%';
@@ -34,11 +37,12 @@ function AprTooltip({ data, textProps, onlySparkles }: Props) {
     };
 
     return (
-        <Popover trigger="hover">
-            <HStack justify="end" align="center">
+        <Popover trigger="hover" placement={placement}>
+            <HStack align="center">
                 {!onlySparkles && (
                     <Text fontSize="1rem" fontWeight="semibold" mr="1" {...textProps}>
                         {formatApr(data.total)}
+                        {aprLabel ? ' APR' : ''}
                     </Text>
                 )}
                 <PopoverTrigger>

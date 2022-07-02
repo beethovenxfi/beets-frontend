@@ -1,4 +1,4 @@
-import { Box, Link as ChakraLink, LinkProps, Text, TextProps, BoxProps } from '@chakra-ui/react';
+import { Box, BoxProps, Text } from '@chakra-ui/react';
 import Link from 'next/link';
 
 interface Props extends Omit<BoxProps, 'children'> {

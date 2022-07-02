@@ -1,70 +1,38 @@
-import { Box, Flex, HStack, Image, Text } from '@chakra-ui/react';
-import PoolIcon1 from '~/assets/icons/pool-icon-1.svg';
-import PoolIcon2 from '~/assets/icons/pool-icon-2.svg';
-import PoolIcon3 from '~/assets/icons/pool-icon-3.svg';
+import { Box, BoxProps, Flex, Text } from '@chakra-ui/react';
 import AprTooltip from '~/components/apr-tooltip/AprTooltip';
 import TokenAvatarSet from '~/components/token/TokenAvatarSet';
-import NextImage from 'next/image';
+import { GqlPoolCardDataFragment } from '~/apollo/generated/graphql-codegen-generated';
+import numeral from 'numeral';
 
-interface Props {
-    image?: string;
+interface Props extends BoxProps {
+    pool: GqlPoolCardDataFragment;
 }
 
-export function PoolCard({ image }: Props) {
+export function PoolCard({ pool, ...rest }: Props) {
+    const dailyApr = parseFloat(pool.dynamicData.apr.total) / 365;
+
     return (
-        <Box bgColor="box.500" borderRadius="md">
-            {image ? (
-                <Image src={image} height="160px" width="full" borderTopLeftRadius="md" borderTopRightRadius="md" />
-            ) : null}
-            <Box p="4" pb="8">
-                <Box fontSize="xl" pr="12" pb="6">
-                    <Text noOfLines={2}>All you need is a really long pool name</Text>
+        <Box flex="1" {...rest}>
+            <Flex bgColor="beets.base.600" height="216px" borderRadius="md" p="4" flexDirection="column">
+                <Box fontSize="lg" pb="6" flex="1">
+                    <Text noOfLines={2}>{pool.name}</Text>
                 </Box>
-                <HStack pb="6" spacing="2">
-                    <Box>
-                        <NextImage src={PoolIcon1} />
-                    </Box>
-                    <Box>
-                        <NextImage src={PoolIcon2} />
-                    </Box>
-                    <Box>
-                        <NextImage src={PoolIcon3} />
-                    </Box>
-                </HStack>
-                <Flex>
-                    <Text fontSize="3xl" lineHeight="30px">
-                        123.23%
-                    </Text>
-                    <AprTooltip
-                        onlySparkles={true}
-                        textProps={{ fontSize: '2xl' }}
-                        data={{
-                            __typename: 'GqlPoolApr',
-                            total: '1.2323',
-                            items: [
-                                { title: 'Swap APR', apr: '0.22', __typename: 'GqlBalancePoolAprItem' },
-                                { title: 'BEETS reward APR', apr: '0.22', __typename: 'GqlBalancePoolAprItem' },
-                            ],
-                            hasRewardApr: false,
-                            nativeRewardApr: '',
-                            swapApr: '0',
-                            thirdPartyApr: '0',
-                        }}
-                    />
-                </Flex>
-                <Text color="gray.200" pb="8">
-                    0.33% Daily
-                </Text>
                 <TokenAvatarSet
-                    addresses={[
-                        '0x21be370d5312f44cb42ce377bc9b8a0cef1a4c83',
-                        '0x04068da6c83afcfa0e13ba15a6696662335d5b75',
-                        '0xf24bcf4d1e507740041c9cfd2dddb29585adce1e',
-                    ]}
+                    addresses={pool.allTokens
+                        .filter((token) => !token.isNested && !token.isPhantomBpt)
+                        .map((token) => token.address)}
                     width={140}
-                    imageSize={40}
+                    imageSize={32}
                 />
-            </Box>
+                <Box flex="1" pt="6">
+                    <AprTooltip
+                        textProps={{ fontSize: '2xl', fontWeight: 'normal', mr: '0', lineHeight: '26px' }}
+                        data={pool.dynamicData.apr}
+                        placement="left"
+                    />
+                    <Text color="gray.200">{numeral(dailyApr).format('0.00[0]%')} Daily</Text>
+                </Box>
+            </Flex>
         </Box>
     );
 }

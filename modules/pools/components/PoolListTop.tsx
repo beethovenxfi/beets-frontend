@@ -1,4 +1,4 @@
-import { Box, Circle, Flex, IconButton } from '@chakra-ui/react';
+import { Box, Circle, Flex, Grid, GridItem, IconButton } from '@chakra-ui/react';
 import { PoolListTabs } from '~/modules/pools/components/PoolListTabs';
 import { PoolListSearch } from '~/modules/pools/components/PoolListSearch';
 import { Filter } from 'react-feather';
@@ -38,17 +38,20 @@ export function PoolListTop() {
                 </Box>
             </Flex>
             <FadeInOutBox isVisible={showFilters}>
-                <Flex pt={2} pb={4} alignItems="center">
-                    <Box flex={1} mr={2}>
+                <Grid
+                    templateColumns={{ base: 'repeat(1, 1fr)', md: '1fr 1fr 0px', lg: '1fr 1fr 1fr' }}
+                    gap="0"
+                    pb="4"
+                    pt="2"
+                >
+                    <GridItem mr={{ base: '0', md: '2' }} mb={{ base: '4', md: '0' }}>
                         <PoolListTokenMultiSelect />
-                    </Box>
-                    <Box flex={1} mx={2}>
+                    </GridItem>
+                    <GridItem ml={{ base: '0', md: '2' }}>
                         <PoolListFilterMultiSelect />
-                    </Box>
-                    <Box flex={1} ml={2}>
-                        {/*<PoolListAttributeMultiSelect />*/}
-                    </Box>
-                </Flex>
+                    </GridItem>
+                    <GridItem display={{ base: 'none', md: 'block' }}>{/*<PoolListAttributeMultiSelect />*/}</GridItem>
+                </Grid>
             </FadeInOutBox>
         </Box>
     );

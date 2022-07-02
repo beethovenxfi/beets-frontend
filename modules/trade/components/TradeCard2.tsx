@@ -1,4 +1,4 @@
-import { Box, VStack } from '@chakra-ui/react';
+import { Box, Divider, VStack } from '@chakra-ui/react';
 import { useBoolean } from '@chakra-ui/hooks';
 import { AnimatePresence, useAnimation } from 'framer-motion';
 import TokenSelect from '~/components/token-select/TokenSelect';
@@ -17,6 +17,7 @@ import { GqlSorSwapType } from '~/apollo/generated/graphql-codegen-generated';
 import { oldBnumToFixed } from '~/lib/services/pool/lib/old-big-number';
 import { useDebouncedCallback } from 'use-debounce';
 import { TradeChartSparkline } from './TradeChartSparkline';
+import { useGetTokens } from '~/lib/global/useToken';
 
 const buyAmountVar = makeVar<AmountHumanReadable>('');
 const sellAmountVar = makeVar<AmountHumanReadable>('');
@@ -161,7 +162,7 @@ export function useTradeCard() {
         handleReviewClicked,
         refetchTrade,
         setSellAmount,
-        setBuyAmount
+        setBuyAmount,
     };
 }
 
@@ -184,8 +185,9 @@ function TradeCard2() {
         refetchTrade,
         sorResponse,
         setBuyAmount,
-        setSellAmount
+        setSellAmount,
     } = useTradeCard();
+    const { getToken } = useGetTokens();
 
     const isReviewDisabled = parseFloat(sellAmount || '0') === 0.0 || parseFloat(buyAmount || '0') === 0.0;
 
@@ -250,10 +252,10 @@ function TradeCard2() {
                 }
             >
                 <VStack spacing="3" padding="4" width="full">
-                    <TradeChartSparkline />
+                    {/* <TradeChartSparkline /> */}
                     <Box position="relative" width="full">
                         <TokenInput
-                            label="Sell"
+                            label={`Sell ${getToken(tokenIn)?.name || ''}`}
                             address={tokenIn}
                             toggleTokenSelect={toggleTokenSelect('tokenIn')}
                             onChange={handleSellAmountChanged}
@@ -263,7 +265,7 @@ function TradeCard2() {
                     </Box>
                     <TokenInputSwapButton onSwap={handleTokensSwitched} isLoading={isLoadingOrFetching} />
                     <TokenInput
-                        label="Buy"
+                        label={`Receive ${getToken(tokenOut)?.name || ''}`}
                         address={tokenOut}
                         toggleTokenSelect={toggleTokenSelect('tokenOut')}
                         onChange={handleBuyAmountChanged}
@@ -280,8 +282,8 @@ function TradeCard2() {
                             Review Swap
                         </BeetsButton>
                     </Box>
-                    <TradeCardSwapBreakdown />
                 </VStack>
+                <TradeCardSwapBreakdown />
             </Card>
             <AnimatePresence>
                 {showTokenSelect && (

@@ -64,6 +64,7 @@ export default function WalletConnectButton() {
                                         mr="-1"
                                         roundedTopLeft="md"
                                         roundedBottomLeft="md"
+                                        display={{ base: 'none', lg: 'flex' }}
                                     >
                                         <BarChart2 size={18} />
                                         {loading ? (
@@ -90,7 +91,7 @@ export default function WalletConnectButton() {
                                         _active={{
                                             backgroundColor: 'none',
                                         }}
-                                        bg="beets.base.800"
+                                        bg="beets.base.700"
                                     >
                                         <HStack width="full" height="full" spacing="1">
                                             {/* {account.displayBalance ? ` (${account.displayBalance})` : ''} */}
@@ -108,7 +109,12 @@ export default function WalletConnectButton() {
                                                 ) : (
                                                     <Image src={BeetsSmart} width="24" alt="your-profile" />
                                                 )}
-                                                <Text>{account.displayName}</Text>
+                                                <Text
+                                                    display={{ base: 'none', sm: 'inline' }}
+                                                    fontSize={{ base: 'xs', lg: 'normal' }}
+                                                >
+                                                    {account.displayName}
+                                                </Text>
                                             </HStack>
                                         </HStack>
                                     </BeetsButton>
