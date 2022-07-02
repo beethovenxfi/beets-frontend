@@ -1,6 +1,6 @@
 import { GqlPoolMinimalFragment } from '~/apollo/generated/graphql-codegen-generated';
 import { Box, Grid, GridItem, GridItemProps, Text } from '@chakra-ui/react';
-import TokenAvatarSet from '~/components/token/TokenAvatarSet';
+import TokenAvatarSet, { TokenData } from '~/components/token/TokenAvatarSet';
 import Link from 'next/link';
 import numeral from 'numeral';
 import AprTooltip from '~/components/apr-tooltip/AprTooltip';
@@ -15,6 +15,10 @@ interface Props extends BoxProps {
 }
 
 export function PoolListItem({ pool, userBalance, showUserBalance, ...rest }: Props) {
+    const tokenData = pool.allTokens
+        .filter((token) => !token.isNested && !token.isPhantomBpt)
+        .map((token) => ({ address: token.address, weight: token.weight } as TokenData));
+
     return (
         <Box mb={{ base: '4', lg: '0' }} borderRadius={{ base: 'md', lg: '0' }} {...rest}>
             <Link href={`/pool/${pool.id}`} passHref>
@@ -50,17 +54,13 @@ export function PoolListItem({ pool, userBalance, showUserBalance, ...rest }: Pr
                         <TokenAvatarSet
                             imageSize={25}
                             width={92}
-                            addresses={pool.allTokens
-                                .filter((token) => !token.isNested && !token.isPhantomBpt)
-                                .map((token) => token.address)}
+                            tokenData={tokenData}
                             display={{ base: 'none', lg: 'block' }}
                         />
                         <TokenAvatarSet
                             imageSize={32}
                             width={124}
-                            addresses={pool.allTokens
-                                .filter((token) => !token.isNested && !token.isPhantomBpt)
-                                .map((token) => token.address)}
+                            tokenData={tokenData}
                             display={{ base: 'block', lg: 'none' }}
                         />
                     </GridItem>

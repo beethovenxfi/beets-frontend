@@ -2,19 +2,20 @@ import { BeetsBox } from '~/components/box/BeetsBox';
 import TokenAvatar from '~/components/token/TokenAvatar';
 import { Box, Flex, Text } from '@chakra-ui/react';
 import numeral from 'numeral';
-import { GqlPoolTokenBase } from '~/apollo/generated/graphql-codegen-generated';
 
-// make some props optional so we don't get errors elsewhere
-type MakeOptional<Type, Key extends keyof Type> = Omit<Type, Key> & Partial<Pick<Type, Key>>;
-type TokenProps = MakeOptional<GqlPoolTokenBase, 'balance' | 'decimals' | 'id' | 'index' | 'name' | 'priceRate'>;
+interface Token {
+    address: string;
+    weight: string;
+    symbol: string;
+}
 
 interface Props {
-    token: TokenProps;
+    token: Token;
     rounded?: boolean;
 }
 
 export function PoolTokenPill({ token, rounded = true }: Props) {
-    const Content = () => (
+    const MainContent = () => (
         <Flex alignItems="center">
             <TokenAvatar address={token.address} size="xs" />
             <Text ml="2">{token.symbol}</Text>
@@ -24,11 +25,11 @@ export function PoolTokenPill({ token, rounded = true }: Props) {
 
     return rounded ? (
         <BeetsBox p="2">
-            <Content />
+            <MainContent />
         </BeetsBox>
     ) : (
         <Box p="1">
-            <Content />
+            <MainContent />
         </Box>
     );
 }
