@@ -16,7 +16,6 @@ import {
 } from '@chakra-ui/react';
 import StarsIcon from '~/components/apr-tooltip/StarsIcon';
 import numeral from 'numeral';
-import { BeetsBox } from '~/components/box/BeetsBox';
 import { AprText } from '~/components/apr-tooltip/AprText';
 
 interface Props {
@@ -71,8 +70,9 @@ function AprTooltip({ data, textProps, onlySparkles, placement, aprLabel }: Prop
                                             m="0.25rem"
                                             h={subItemIndex === 0 ? '1rem' : '2rem'}
                                             mt={subItemIndex === 0 ? '-0.3rem' : '-1.7rem'}
+                                            bgColor="gray.100"
                                         />
-                                        <Box h="1px" w="0.75rem" mr="0.25rem" ml="-0.25rem" />
+                                        <Box h="1px" w="0.75rem" mr="0.25rem" ml="-0.25rem" bgColor="gray.100" />
                                         <Flex grow>
                                             {formatApr(subItem.apr)} <AprText>{subItem.title}</AprText>
                                         </Flex>
