@@ -53,8 +53,10 @@ function AprTooltip({ data, textProps, onlySparkles, placement, aprLabel }: Prop
 
             <PopoverContent w="fit-content" bgColor="beets.base.800" shadow="2xl">
                 <PopoverHeader bgColor="whiteAlpha.100">
-                    <Text>Total APR</Text>
-                    <Text fontSize="1.5rem">{formatApr(data.total)}</Text>
+                    <Text textAlign="left">
+                        Total APR
+                        <Text fontSize="1.5rem">{formatApr(data.total)}</Text>
+                    </Text>
                 </PopoverHeader>
                 <Box p="2" fontSize="sm" bgColor="whiteAlpha.200">
                     {data.items.map((item, index) => {
