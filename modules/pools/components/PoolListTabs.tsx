@@ -42,7 +42,7 @@ export function PoolListTabs() {
             <TabList>
                 <HStack spacing="2">
                     <BeetsTab key="incentivized">
-                        Icentivized <Box display={{ base: 'none', lg: 'inline' }}>pools</Box>
+                        Incentivized <Box display={{ base: 'none', lg: 'inline' }}>pools</Box>
                     </BeetsTab>
                     <BeetsTab key="community">
                         Community <Box display={{ base: 'none', lg: 'inline' }}>pools</Box>
