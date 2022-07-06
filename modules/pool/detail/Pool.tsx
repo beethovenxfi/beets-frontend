@@ -5,6 +5,7 @@ import PoolDetailChart from '~/modules/pool/detail/components/PoolDetailChart';
 import PoolStats from './components/stats/PoolStats';
 import { PoolTransactions } from './components/transactions/PoolTransactions';
 import PoolActionRow from './PoolActionRow';
+import PoolInvestModal from '../invest/components/PoolInvestModal';
 
 export function Pool() {
     return (
