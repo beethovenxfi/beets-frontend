@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router';
 import NProgress from 'nprogress';
-import { useCallback, useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 
 const MIN_DELAY = 250;
 

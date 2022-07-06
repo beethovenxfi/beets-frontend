@@ -26,7 +26,7 @@ export function HomeHero() {
                         as="h1"
                         textStyle={{ base: 'h2', lg: 'h1' }}
                         textTransform="uppercase"
-                        color="beets.green"
+                        color="white"
                         fontWeight="semibold"
                     >
                         Welcome to
