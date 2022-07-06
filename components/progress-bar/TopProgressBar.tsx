@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router';
 import NProgress from 'nprogress';
-import { useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 
 const MIN_DELAY = 250;
 
@@ -22,6 +22,7 @@ export default function () {
     };
 
     const handleStop = () => {
+        document.getElementById('app-content')?.scrollTo(0, 0);
         clearTimeout(timerRef.current);
         NProgress.done();
         stateRef.current = 'stop';
