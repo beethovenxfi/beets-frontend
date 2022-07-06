@@ -18,6 +18,7 @@ export function PoolListTabs() {
             refreshPoolList({
                 ...state,
                 skip: 0,
+                first: 20,
                 where: {
                     ...state.where,
                     categoryIn,
