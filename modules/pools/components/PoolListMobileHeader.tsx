@@ -1,9 +1,25 @@
-import { Box, Flex, Menu, MenuButton, MenuItem, MenuList } from '@chakra-ui/react';
+import {
+    Box,
+    Circle,
+    Flex,
+    Link,
+    Modal,
+    ModalBody,
+    ModalCloseButton,
+    ModalContent,
+    ModalHeader,
+    ModalOverlay,
+    useDisclosure,
+} from '@chakra-ui/react';
 import { usePoolList } from '~/modules/pools/usePoolList';
 import { TextButtonPopupMenu } from '~/components/popup-menu/TextButtonPopupMenu';
+import { PoolListTokenMultiSelect } from '~/modules/pools/components/PoolListTokenMultiSelect';
+import { PoolListFilterMultiSelect } from '~/modules/pools/components/PoolListFilterMultiSelect';
 
 export function PoolListMobileHeader() {
+    const { isOpen, onOpen, onClose } = useDisclosure();
     const { state, setSort, refetch: refreshPoolList, showMyInvestments, setShowMyInvestments } = usePoolList();
+    const hasFiltersSelected = (state.where?.filterIn || []).length > 0 || (state.where?.tokensIn || []).length > 0;
 
     return (
         <Flex display={{ base: 'flex', lg: 'none' }} alignItems="center" mb="4">
@@ -86,24 +102,29 @@ export function PoolListMobileHeader() {
                     ]}
                 />
             </Box>
-            <Menu>
-                <MenuButton
-                    fontSize="lg"
-                    userSelect="none"
-                    color="beets.green"
-                    fontWeight="bold"
-                    _hover={{ textDecoration: 'underline', cursor: 'pointer' }}
-                >
-                    <Box>Filter</Box>
-                </MenuButton>
-                <MenuList bgColor="beets.base.800" borderColor="gray.400" shadow="lg">
-                    <MenuItem display="flex" flexDir="column" alignItems="flex-start">
-                        <Flex alignItems="center">
-                            <Box mr="1">TODO</Box>
-                        </Flex>
-                    </MenuItem>
-                </MenuList>
-            </Menu>
+            <Link onClick={onOpen} fontSize="lg" color="beets.green" fontWeight="bold" position="relative">
+                <Box>Filter</Box>
+                {hasFiltersSelected ? (
+                    <Circle size="1.5" bg="red.500" opacity="0.85" position="absolute" top="4px" right="-6px" />
+                ) : null}
+            </Link>
+            <Modal isOpen={isOpen} onClose={onClose} isCentered>
+                <ModalOverlay />
+                <ModalContent>
+                    <ModalHeader>Filters</ModalHeader>
+                    <ModalCloseButton />
+                    <ModalBody>
+                        <Box mb="6">
+                            <Box mb="1">Tokens:</Box>
+                            <PoolListTokenMultiSelect />
+                        </Box>
+                        <Box mb="8">
+                            <Box mb="1">Categories:</Box>
+                            <PoolListFilterMultiSelect />
+                        </Box>
+                    </ModalBody>
+                </ModalContent>
+            </Modal>
         </Flex>
     );
 }
