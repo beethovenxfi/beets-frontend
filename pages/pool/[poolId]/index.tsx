@@ -5,6 +5,7 @@ import { GetPool } from '~/apollo/generated/operations';
 import { Pool } from '~/modules/pool/detail/Pool';
 import { PoolProvider } from '~/modules/pool/components/PoolProvider';
 import Head from 'next/head';
+import { FallbackPlaceholder } from '~/components/fallback/FallbackPlaceholder';
 
 interface Props {
     pool: GqlPoolUnion;
@@ -13,7 +14,7 @@ interface Props {
 const PoolPage = ({ pool }: Props) => {
     const router = useRouter();
     if (router.isFallback) {
-        return <div>Rendering fallback...</div>;
+        return <FallbackPlaceholder />;
     }
 
     return (
