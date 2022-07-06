@@ -1,6 +1,7 @@
 import '@rainbow-me/rainbowkit/styles.css';
 import 'swiper/css';
 import 'swiper/css/pagination';
+import '../styles/nprogress.css';
 import '../styles/globals.css';
 
 import type { AppProps } from 'next/app';
@@ -44,6 +45,8 @@ import { useRouter } from 'next/router';
 import { networkChainDefinitions, wagmiClient } from '~/lib/global/network';
 import { BeetsFonts } from '~/components/fonts/BeetsFonts';
 import { AppContent } from '~/pages/_app-content';
+import { useEffect } from 'react';
+import dynamic from 'next/dynamic';
 
 const queryClient = new QueryClient();
 
@@ -78,31 +81,15 @@ echarts.use([
 
 /** End charting library setup */
 
+const TopProgressBar = dynamic(
+    () => {
+        return import('../components/progress-bar/TopProgressBar');
+    },
+    { ssr: false },
+);
+
 function BeetsApp(props: AppProps) {
     const client = useApollo(props.pageProps);
-    const router = useRouter();
-
-    /*useEffect(() => {
-        const handleStart = (url: string) => {
-            console.log(`Loading: ${url}`);
-            // NProgress.start()
-            //setPageChanged(true);
-        };
-        const handleStop = () => {
-            console.log(`end`);
-            //setPageChanged(false);
-        };
-
-        router.events.on('routeChangeStart', handleStart);
-        router.events.on('routeChangeComplete', handleStop);
-        router.events.on('routeChangeError', handleStop);
-
-        return () => {
-            router.events.off('routeChangeStart', handleStart);
-            router.events.off('routeChangeComplete', handleStop);
-            router.events.off('routeChangeError', handleStop);
-        };
-    }, [router]);*/
 
     return (
         <WagmiProvider client={wagmiClient}>
@@ -111,6 +98,7 @@ function BeetsApp(props: AppProps) {
                     <ChakraProvider theme={chakraTheme}>
                         <BeetsFonts />
                         <QueryClientProvider client={queryClient}>
+                            <TopProgressBar />
                             <AppContent {...props} />
                         </QueryClientProvider>
                     </ChakraProvider>
