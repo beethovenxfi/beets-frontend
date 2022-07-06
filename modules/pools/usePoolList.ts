@@ -2,6 +2,7 @@ import { makeVar, useReactiveVar } from '@apollo/client';
 import {
     GetPoolsQueryVariables,
     GqlPoolOrderBy,
+    GqlPoolOrderDirection,
     useGetPoolFiltersQuery,
     useGetPoolsQuery,
 } from '~/apollo/generated/graphql-codegen-generated';
@@ -75,6 +76,20 @@ export function usePoolList() {
         isSortingToggle.off();
     }
 
+    async function setSort(orderBy: GqlPoolOrderBy, orderDirection: GqlPoolOrderDirection) {
+        const state = poolListStateVar();
+
+        isSortingToggle.on();
+
+        await refetch({
+            ...state,
+            orderBy: orderBy,
+            orderDirection,
+        });
+
+        isSortingToggle.off();
+    }
+
     async function setPageSize(pageSize: number) {
         await refetch({
             ...poolListStateVar(),
@@ -129,6 +144,7 @@ export function usePoolList() {
         networkStatus,
         refetch,
         changeSort,
+        setSort,
         setPageSize,
         showMyInvestments,
         setShowMyInvestments,

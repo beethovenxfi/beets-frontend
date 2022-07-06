@@ -14,7 +14,7 @@ export function PoolListTop() {
     const hasFiltersSelected = (state.where?.filterIn || []).length > 0 || (state.where?.tokensIn || []).length > 0;
 
     return (
-        <Box>
+        <Box display={{ base: 'none', lg: 'block' }}>
             <Flex pb={4}>
                 <Flex flex={1}>
                     <PoolListTabs />

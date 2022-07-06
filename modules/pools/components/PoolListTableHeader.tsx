@@ -23,6 +23,7 @@ export function PoolListTableHeader() {
                         : '1fr 200px 200px 200px'
                 }
                 gap="0"
+                display={{ base: 'none', lg: 'grid' }}
             >
                 <GridItem>
                     <Text fontSize="md" fontWeight="semibold" color="beets.base.100">
