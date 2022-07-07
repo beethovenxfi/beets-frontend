@@ -1,4 +1,4 @@
-import { Box, Flex, Grid, GridItem, HStack, Link, useTheme } from '@chakra-ui/react';
+import { Box, Flex, Grid, GridItem, HStack, Link } from '@chakra-ui/react';
 import NextImage from 'next/image';
 //import BeetsLogo from '~/assets/logo/beets-logo.svg';
 import BeetsLogo from '~/assets/logo/beets-bal.svg';
@@ -8,18 +8,10 @@ import TwitterIcon from '~/assets/icons/twitter.svg';
 import MediumIcon from '~/assets/icons/medium.svg';
 import GithubIcon from '~/assets/icons/github.svg';
 import { FooterLink } from '~/modules/nav/FooterLink';
-import { NextLink } from '~/components/link/NextLink';
 
 export function Footer() {
-    const theme = useTheme();
-
     return (
-        <Box
-            width={{ base: 'full', '2xl': theme.breakpoints['2xl'] }}
-            pl={{ base: '4', xl: '8' }}
-            bgColor="beets.base.800"
-            pt="24"
-        >
+        <Box width="full" px={{ base: '4', xl: '8' }} bgColor="beets.base.800" pt="24">
             <Flex>
                 <Box flex="1">
                     <Box mb="12">
