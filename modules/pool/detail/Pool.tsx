@@ -4,8 +4,7 @@ import { PoolComposition } from '~/modules/pool/detail/components/composition/Po
 import PoolDetailChart from '~/modules/pool/detail/components/PoolDetailChart';
 import PoolStats from './components/stats/PoolStats';
 import { PoolTransactions } from './components/transactions/PoolTransactions';
-import PoolActionRow from './PoolActionRow';
-import PoolInvestModal from '../invest/components/PoolInvestModal';
+import PoolActionRow from '~/modules/pool/detail/components/PoolActionRow';
 
 export function Pool() {
     return (

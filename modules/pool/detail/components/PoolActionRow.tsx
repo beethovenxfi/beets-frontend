@@ -2,7 +2,7 @@ import { HStack } from '@chakra-ui/layout';
 import BeetsButton from '~/components/button/Button';
 import { NextLink } from '~/components/link/NextLink';
 import { usePool } from '~/modules/pool/lib/usePool';
-import PoolInvestModal from '../invest/components/PoolInvestModal';
+import PoolInvestModal from '~/modules/pool/invest/components/PoolInvestModal';
 
 type Props = {};
 
