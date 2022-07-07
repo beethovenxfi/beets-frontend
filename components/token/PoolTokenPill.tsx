@@ -2,11 +2,11 @@ import { BeetsBox } from '~/components/box/BeetsBox';
 import TokenAvatar from '~/components/token/TokenAvatar';
 import { Box, Flex, Text } from '@chakra-ui/react';
 import numeral from 'numeral';
+import { useGetTokens } from '~/lib/global/useToken';
 
 interface Token {
     address: string;
     weight?: string;
-    symbol: string;
 }
 
 interface Props {
@@ -15,10 +15,11 @@ interface Props {
 }
 
 export function PoolTokenPill({ token, rounded = true }: Props) {
+    const { getToken } = useGetTokens();
     const MainContent = () => (
         <Flex alignItems="center">
             <TokenAvatar address={token.address} size="xs" />
-            <Text ml="2">{token.symbol}</Text>
+            <Text ml="2">{getToken(token.address)?.symbol}</Text>
             {token.weight ? <Text ml="2">{numeral(token.weight).format('%')}</Text> : null}
         </Flex>
     );

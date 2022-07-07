@@ -1,6 +1,6 @@
 import { GqlPoolMinimalFragment } from '~/apollo/generated/graphql-codegen-generated';
 import { Box, Grid, GridItem, GridItemProps, Text } from '@chakra-ui/react';
-import TokenAvatarSet, { TokenData } from '~/components/token/TokenAvatarSet';
+import TokenAvatarSet from '~/components/token/TokenAvatarSet';
 import Link from 'next/link';
 import numeral from 'numeral';
 import AprTooltip from '~/components/apr-tooltip/AprTooltip';
@@ -17,7 +17,7 @@ interface Props extends BoxProps {
 export function PoolListItem({ pool, userBalance, showUserBalance, ...rest }: Props) {
     const tokenData = pool.allTokens
         .filter((token) => !token.isNested && !token.isPhantomBpt)
-        .map((token) => ({ address: token.address, weight: token.weight } as TokenData));
+        .map((token) => ({ address: token.address, ...(token.weight && { weight: token.weight }) }));
 
     return (
         <Box mb={{ base: '4', lg: '0' }} borderRadius={{ base: 'md', lg: '0' }} {...rest}>

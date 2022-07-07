@@ -12,34 +12,26 @@ import { PoolTokenPill } from '~/components/token/PoolTokenPill';
 
 export interface TokenData {
     address: string;
-    weight: string;
+    weight?: string;
 }
 
 interface Props extends FlexProps {
-    tokenData?: TokenData[];
-    addresses?: string[];
+    tokenData: TokenData[];
     imageSize?: number;
     maxAssetsPerLine?: number;
     width: number;
 }
 
-function TokenAvatarSet({ width, addresses, tokenData, imageSize = 32, maxAssetsPerLine = 5, ...rest }: Props) {
+function TokenAvatarSet({ width, tokenData, imageSize = 32, maxAssetsPerLine = 5, ...rest }: Props) {
     // temp fix: https://github.com/chakra-ui/chakra-ui/issues/5896#issuecomment-1104085557
     const PopoverTrigger: React.FC<{ children: React.ReactNode }> = OrigPopoverTrigger;
     const { getToken } = useGetTokens();
 
-    const addressesInput = addresses ?? tokenData?.map((token) => token.address);
+    const addressesInput = tokenData?.map((token) => token.address);
     const addressesInputLength = addressesInput?.length || 0;
     const numTokens = Math.min(addressesInputLength, maxAssetsPerLine);
 
-    const tokensInput = addresses
-        ? addresses.map((address) => ({ address }))
-        : tokenData?.map((token) => ({ ...token }));
-
-    const tokens = tokensInput?.map((token) => {
-        const { symbol } = getToken(token.address);
-        return { ...token, symbol };
-    });
+    const tokens = tokenData?.map((token) => ({ ...token }));
 
     const count = Math.min(addressesInputLength, maxAssetsPerLine);
 

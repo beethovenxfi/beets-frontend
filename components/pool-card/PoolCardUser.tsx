@@ -1,6 +1,6 @@
 import { Box, BoxProps, Flex, Text } from '@chakra-ui/react';
 import AprTooltip from '~/components/apr-tooltip/AprTooltip';
-import TokenAvatarSet, { TokenData } from '~/components/token/TokenAvatarSet';
+import TokenAvatarSet from '~/components/token/TokenAvatarSet';
 import { GqlPoolCardDataFragment } from '~/apollo/generated/graphql-codegen-generated';
 import numeral from 'numeral';
 import { numberFormatUSDValue } from '~/lib/util/number-formats';
@@ -24,7 +24,7 @@ export function PoolCardUser({ pool, balance, balanceUSD, ...rest }: Props) {
                 <TokenAvatarSet
                     tokenData={pool.allTokens
                         .filter((token) => !token.isNested && !token.isPhantomBpt)
-                        .map((token) => ({ address: token.address, weight: token.weight } as TokenData))}
+                        .map((token) => ({ address: token.address, ...(token.weight && { weight: token.weight }) }))}
                     width={104}
                     imageSize={28}
                 />
