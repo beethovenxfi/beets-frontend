@@ -72,35 +72,64 @@ function PoolTransactionAction(props: PoolTransaction) {
 
 function Pool(props: PoolTransaction) {
     const isInvestAction = [PoolTransactionType.Join, PoolTransactionType.Exit].includes(props.type);
+    const isJoinAction = props.type === PoolTransactionType.Join;
+    const isExitAction = props.type === PoolTransactionType.Exit;
+    const isSwapAction = props.type === PoolTransactionType.Swap;
     return (
         <HStack spacing="2" alignItems="center">
-            {isInvestAction &&
-                !props.isPhantomStable &&
-                (props.transaction as GqlPoolJoinExit).amounts
-                    .filter((tokenAmount) => tokenAmount.amount !== '0')
-                    .map((tokenAmount, index) => (
+            {!props.isPhantomStable && (
+                <>
+                    {isInvestAction &&
+                        (props.transaction as GqlPoolJoinExit).amounts
+                            .filter((tokenAmount) => tokenAmount.amount !== '0')
+                            .map((tokenAmount, index) => (
+                                <TokenAmountPill
+                                    fontSize="md"
+                                    key={index}
+                                    amount={tokenAmount.amount}
+                                    address={tokenAmount.address}
+                                />
+                            ))}
+                    {!isInvestAction && (
+                        <>
+                            <TokenAmountPill
+                                fontSize="md"
+                                amount={(props.transaction as GqlPoolSwap).tokenAmountIn}
+                                address={(props.transaction as GqlPoolSwap).tokenIn}
+                            />
+                            <Box mx={2}>
+                                <ArrowRight />
+                            </Box>
+                            <TokenAmountPill
+                                fontSize="md"
+                                amount={(props.transaction as GqlPoolSwap).tokenAmountOut}
+                                address={(props.transaction as GqlPoolSwap).tokenOut}
+                            />
+                        </>
+                    )}
+                </>
+            )}
+            {props.isPhantomStable && (
+                <>
+                    {(isSwapAction || isJoinAction) && (
                         <TokenAmountPill
                             fontSize="md"
-                            key={index}
-                            amount={tokenAmount.amount}
-                            address={tokenAmount.address}
+                            amount={(props.transaction as GqlPoolSwap).tokenAmountIn}
+                            address={(props.transaction as GqlPoolSwap).tokenIn}
                         />
-                    ))}
-            {(!isInvestAction || (isInvestAction && props.isPhantomStable)) && (
-                <>
-                    <TokenAmountPill
-                        fontSize="md"
-                        amount={(props.transaction as GqlPoolSwap).tokenAmountIn}
-                        address={(props.transaction as GqlPoolSwap).tokenIn}
-                    />
-                    <Box mx={2}>
-                        <ArrowRight />
-                    </Box>
-                    <TokenAmountPill
-                        fontSize="md"
-                        amount={(props.transaction as GqlPoolSwap).tokenAmountOut}
-                        address={(props.transaction as GqlPoolSwap).tokenOut}
-                    />
+                    )}
+                    {isSwapAction && (
+                        <Box mx={2}>
+                            <ArrowRight />
+                        </Box>
+                    )}
+                    {(isSwapAction || isExitAction) && (
+                        <TokenAmountPill
+                            fontSize="md"
+                            amount={(props.transaction as GqlPoolSwap).tokenAmountOut}
+                            address={(props.transaction as GqlPoolSwap).tokenOut}
+                        />
+                    )}
                 </>
             )}
         </HStack>

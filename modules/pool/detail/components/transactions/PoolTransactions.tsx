@@ -88,7 +88,7 @@ export function PoolTransactions({ ...rest }: Props & BoxProps) {
     };
 
     const handleFetchMoreTransactions = () => {
-        if (activeTab === 1) {
+        if (activeTab === 1 || isPhantomStable) {
             fetchMoreSwaps({ variables: { skip: transactions.length } });
         } else {
             fetchMoreInvestments({ variables: { skip: transactions.length } });
