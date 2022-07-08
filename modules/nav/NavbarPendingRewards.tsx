@@ -19,6 +19,8 @@ import BeetsButton from '~/components/button/Button';
 import { BeetsBox } from '~/components/box/BeetsBox';
 import { useUserData } from '~/lib/user/useUserData';
 import { BeetsSkeleton } from '~/components/skeleton/BeetsSkeleton';
+import { useUserHarvestAllPendingRewards } from './lib/useUserHarvestAllPendingRewards';
+import { BeetsSubmitTransactionButton } from '~/components/button/BeetsSubmitTransactionButton';
 
 export function NavbarPendingRewards() {
     const {
@@ -31,6 +33,8 @@ export function NavbarPendingRewards() {
     const { stakedValueUSD, loading: userDataLoading } = useUserData();
     const { getToken } = useGetTokens();
     const loading = pendingRewardsLoading || userDataLoading;
+    const { harvestAll, isSubmitting, isPending } = useUserHarvestAllPendingRewards();
+    const farmIds = staking.map((stake) => stake?.farm?.id || '');
 
     return (
         <Popover>
@@ -91,7 +95,15 @@ export function NavbarPendingRewards() {
                         </Box>
                     </BeetsBox>
                     <Box mt="4">
-                        <BeetsButton width="full">Claim all rewards</BeetsButton>
+                        <BeetsSubmitTransactionButton
+                            isSubmitting={isSubmitting}
+                            isPending={isPending}
+                            disabled={pendingRewardsTotalUSD < 0.01}
+                            onClick={() => harvestAll(farmIds)}
+                            width="full"
+                        >
+                            Claim all rewards
+                        </BeetsSubmitTransactionButton>
                     </Box>
                 </PopoverBody>
             </PopoverContent>
