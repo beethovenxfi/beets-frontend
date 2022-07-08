@@ -23,6 +23,7 @@ export enum PoolTransactionType {
 export type PoolTransaction = {
     transaction: GqlPoolJoinExit | GqlPoolSwap;
     type: PoolTransactionType;
+    isPhantomStable?: boolean;
 };
 
 interface Props extends BoxProps {
@@ -74,6 +75,7 @@ function Pool(props: PoolTransaction) {
     return (
         <HStack spacing="2" alignItems="center">
             {isInvestAction &&
+                !props.isPhantomStable &&
                 (props.transaction as GqlPoolJoinExit).amounts
                     .filter((tokenAmount) => tokenAmount.amount !== '0')
                     .map((tokenAmount, index) => (
@@ -84,7 +86,7 @@ function Pool(props: PoolTransaction) {
                             address={tokenAmount.address}
                         />
                     ))}
-            {!isInvestAction && (
+            {(!isInvestAction || (isInvestAction && props.isPhantomStable)) && (
                 <>
                     <TokenAmountPill
                         fontSize="md"
