@@ -66,13 +66,19 @@ export function PoolInvestProportional() {
                             {sliderValue}%
                         </SliderMark>
                     </Slider>
-                    <BeetsBox p="2" pb="1" mt="4">
+                    <BeetsBox mt="4" pt="0.5">
                         {pool.investConfig.options.map((option, index) => {
                             const tokenOption = option.tokenOptions[0];
                             const userBalance = tokenGetAmountForAddress(tokenOption.address, userPoolTokenBalances);
 
                             return (
-                                <Flex key={tokenOption.address} mb="2" alignItems="flex-start">
+                                <Flex
+                                    key={tokenOption.address}
+                                    px="3"
+                                    py="2"
+                                    alignItems="center"
+                                    borderBottomWidth={index === pool.investConfig.options.length - 1 ? 0 : 1}
+                                >
                                     <HStack spacing="none" flex="1">
                                         <TokenAvatar size="xs" address={tokenOption.address} />
                                         <Text paddingLeft="1.5" fontSize="lg">
@@ -104,12 +110,18 @@ export function PoolInvestProportional() {
                         </Text>
                         <Text color="gray.200">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</Text>
                     </Box>
-                    <BeetsBox p="2" pb="1" mt="2">
+                    <BeetsBox mt="2">
                         {pool.investConfig.options.map((option, index) => {
                             const tokenOption = option.tokenOptions[0];
 
                             return (
-                                <Flex key={tokenOption.address} mb="2" alignItems="center">
+                                <Flex
+                                    key={tokenOption.address}
+                                    px="3"
+                                    py="2"
+                                    alignItems="center"
+                                    borderBottomWidth={index === pool.investConfig.options.length - 1 ? 0 : 1}
+                                >
                                     <HStack spacing="none" flex="1">
                                         <TokenAvatar size="xs" address={tokenOption.address} />
                                         <Text paddingLeft="1.5" fontSize="lg">
@@ -135,16 +147,16 @@ export function PoolInvestProportional() {
                             3. Customize settings
                         </Text>
                     </Box>
-                    <BeetsBox p="2" pb="1" mt="2">
-                        <Flex>
+                    <BeetsBox mt="2">
+                        <Flex px="3" py="2" borderBottomWidth={1}>
                             <Box flex="1">Zap into farm</Box>
                             <Switch id="zap-into-farm" colorScheme="green" />
                         </Flex>
-                        <Flex alignItems="center" mt="2">
+                        <Flex px="3" py="2" alignItems="center" borderBottomWidth={1}>
                             <Box flex="1">Max slippage</Box>
                             <Link color="beets.cyan">0.1%</Link>
                         </Flex>
-                        <Flex alignItems="center" mt="2">
+                        <Flex px="3" py="2" alignItems="center">
                             <Box flex="1">Transaction speed</Box>
 
                             <Link color="beets.cyan">Normal</Link>
