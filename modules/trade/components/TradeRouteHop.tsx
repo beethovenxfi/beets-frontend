@@ -26,9 +26,9 @@ export function TradeRouteHop({ hop, ...rest }: Props) {
     const tokenOutPriceRate = tokenInValue / tokenOutAmount;
     const rateComparePercent = 1 - tokenOutPrice / tokenOutPriceRate;
 
-    const addresses = hop.pool.allTokens
+    const tokens = hop.pool.allTokens
         .filter((token) => !token.isNested && !token.isPhantomBpt)
-        .map((token) => token.address);
+        .map((token) => ({ address: token.address }));
 
     return (
         <BeetsBox flex={1} p="4" {...rest}>
@@ -37,10 +37,12 @@ export function TradeRouteHop({ hop, ...rest }: Props) {
                     <TokenAvatarSet
                         imageSize={30}
                         width={112}
-                        addresses={[
-                            hop.tokenIn,
-                            ...addresses.filter((address) => address !== hop.tokenIn && address !== hop.tokenOut),
-                            hop.tokenOut,
+                        tokenData={[
+                            { address: hop.tokenIn },
+                            ...tokens.filter(
+                                (token) => token.address !== hop.tokenIn && token.address !== hop.tokenOut,
+                            ),
+                            { address: hop.tokenOut },
                         ]}
                     />
                 </Box>
