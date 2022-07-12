@@ -42,6 +42,21 @@ export function usePool() {
     const allTokens = uniqBy(allTokensWithDuplicates, (token) => token.address);
     const bptPrice = parseFloat(pool.dynamicData.totalLiquidity) / parseFloat(pool.dynamicData.totalShares);
 
+    function getPoolTypeName() {
+        switch (pool.__typename) {
+            case 'GqlPoolWeighted':
+                return 'Weighted pool';
+            case 'GqlPoolStable':
+                return 'Stable pool';
+            case 'GqlPoolPhantomStable':
+                return 'Stable phantom pool';
+            case 'GqlPoolLiquidityBootstrapping':
+                return 'Liquidity bootstrapping pool';
+            default:
+                return 'unknown';
+        }
+    }
+
     return {
         pool,
         poolService,
@@ -51,5 +66,6 @@ export function usePool() {
         poolTokensWithoutPhantomBpt: poolGetTokensWithoutPhantomBpt(pool),
         totalApr: parseFloat(pool.dynamicData.apr.total),
         bptPrice,
+        getPoolTypeName,
     };
 }

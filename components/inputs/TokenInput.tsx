@@ -2,13 +2,14 @@ import { Box, Button, Text, VStack, HStack } from '@chakra-ui/react';
 import { useGetTokens } from '~/lib/global/useToken';
 import TokenAvatar from '../token/TokenAvatar';
 import BeetsInput from './BeetsInput';
-import { tokenGetAmountForAddress } from '~/lib/services/token/token-util';
+import { tokenFormatAmountPrecise, tokenGetAmountForAddress } from '~/lib/services/token/token-util';
 import { useUserTokenBalances } from '~/lib/user/useUserTokenBalances';
 import { useUserAccount } from '~/lib/user/useUserAccount';
 import PresetSelector from './PresetSelector';
 import { ChevronDown } from 'react-feather';
 import numeral from 'numeral';
 import { KeyboardEvent } from 'react';
+import { tokenInputBlockInvalidCharacters, tokenInputTruncateDecimalPlaces } from '~/lib/util/input-util';
 
 type Props = {
     label?: string;
@@ -40,26 +41,14 @@ export default function TokenInput({
     const decimalPlaces = token ? token.decimals : 18;
 
     const handleOnChange = (event: { currentTarget: { value: string } }) => {
-        let newValue = event.currentTarget.value;
+        const newValue = tokenInputTruncateDecimalPlaces(event.currentTarget.value, decimalPlaces);
 
-        if (newValue.includes('.')) {
-            const [leftDigits, rightDigits] = newValue.split('.');
-
-            if (rightDigits && rightDigits.length > decimalPlaces) {
-                const maxLength = leftDigits.length + decimalPlaces + 1;
-                newValue = newValue.slice(0, maxLength);
-            }
-        }
         onChange && onChange({ currentTarget: { value: newValue } });
     };
 
     const handlePresetSelected = (preset: number) => {
         handleOnChange({ currentTarget: { value: (parseFloat(userBalance) * preset).toString() } });
     };
-
-    function blockInvalidCharacters(event: KeyboardEvent<HTMLInputElement>): void {
-        ['e', 'E', '+', '-'].includes(event.key) && event.preventDefault();
-    }
 
     return (
         <VStack width="full" alignItems="flex-start">
@@ -68,7 +57,7 @@ export default function TokenInput({
                     min={0}
                     value={value || ''}
                     onChange={handleOnChange}
-                    onKeyDown={blockInvalidCharacters}
+                    onKeyDown={tokenInputBlockInvalidCharacters}
                     placeholder="0"
                     type="number"
                     label={label}
@@ -109,20 +98,22 @@ export default function TokenInput({
                     size="xs"
                     fontSize=".85rem"
                 >
-                    You have {numeral(userBalance).format('0,0.00a')}
+                    You have {tokenFormatAmountPrecise(userBalance, 4)}
                 </Text>
-                <Text
-                    position="absolute"
-                    zIndex="dropdown"
-                    bottom=".75rem"
-                    right=".75rem"
-                    fontWeight="normal"
-                    color="gray.200"
-                    size="xs"
-                    fontSize=".85rem"
-                >
-                    ~{numeral(estimatedTokenPrice).format('0,0.000a')}
-                </Text>
+                {estimatedTokenPrice > 0 && (
+                    <Text
+                        position="absolute"
+                        zIndex="dropdown"
+                        bottom=".75rem"
+                        right=".75rem"
+                        fontWeight="normal"
+                        color="gray.200"
+                        size="xs"
+                        fontSize=".85rem"
+                    >
+                        ~${numeral(estimatedTokenPrice).format('0,0.000a')}
+                    </Text>
+                )}
             </Box>
             {showPresets && <PresetSelector onPresetSelected={handlePresetSelected} />}
         </VStack>

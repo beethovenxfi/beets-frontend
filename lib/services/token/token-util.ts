@@ -61,6 +61,10 @@ export function tokenFormatAmount(amount: AmountHumanReadable | number) {
 export function tokenFormatAmountPrecise(amount: AmountHumanReadable | number, precision: 4 | 6 | 12 = 12) {
     const amountNum = typeof amount === 'string' ? parseFloat(amount) : amount;
 
+    if (amountNum === 0) {
+        return '0.0';
+    }
+
     if (precision === 4) {
         if (amountNum < 0.0001) {
             return '< 0.0001';

@@ -34,7 +34,7 @@ export default function WalletConnectButton() {
                                         onClick={openConnectModal}
                                         type="button"
                                     >
-                                        <IconWallet stroke="red.500" boxSize="20px" />
+                                        <IconWallet stroke="black" boxSize="20px" />
                                         <Box ml="2">Connect Wallet</Box>
                                     </BeetsButton>
                                 );
