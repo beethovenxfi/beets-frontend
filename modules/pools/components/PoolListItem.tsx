@@ -15,6 +15,10 @@ interface Props extends BoxProps {
 }
 
 export function PoolListItem({ pool, userBalance, showUserBalance, ...rest }: Props) {
+    const tokenData = pool.allTokens
+        .filter((token) => !token.isNested && !token.isPhantomBpt)
+        .map((token) => ({ address: token.address, ...(token.weight && { weight: token.weight }) }));
+
     return (
         <Box mb={{ base: '4', lg: '0' }} borderRadius={{ base: 'md', lg: '0' }} {...rest}>
             <Link href={`/pool/${pool.id}`} passHref>
@@ -51,17 +55,13 @@ export function PoolListItem({ pool, userBalance, showUserBalance, ...rest }: Pr
                             <TokenAvatarSet
                                 imageSize={25}
                                 width={92}
-                                addresses={pool.allTokens
-                                    .filter((token) => !token.isNested && !token.isPhantomBpt)
-                                    .map((token) => token.address)}
+                                tokenData={tokenData}
                                 display={{ base: 'none', lg: 'block' }}
                             />
                             <TokenAvatarSet
                                 imageSize={32}
                                 width={124}
-                                addresses={pool.allTokens
-                                    .filter((token) => !token.isNested && !token.isPhantomBpt)
-                                    .map((token) => token.address)}
+                                tokenData={tokenData}
                                 display={{ base: 'block', lg: 'none' }}
                             />
                         </GridItem>

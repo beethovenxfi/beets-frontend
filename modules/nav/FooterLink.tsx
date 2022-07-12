@@ -1,7 +1,9 @@
 import { Box, Link, LinkProps } from '@chakra-ui/react';
+import { ReactNode } from 'react';
 import { NextLink } from '~/components/link/NextLink';
 
 interface Props extends LinkProps {
+    children: ReactNode | ReactNode[];
     linkType?: 'internal' | 'external';
     href: string;
 }

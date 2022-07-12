@@ -1,6 +1,5 @@
 import { Box, Flex, Link, Menu, MenuButton, MenuItem, MenuList } from '@chakra-ui/react';
 import { networkConfig } from '~/lib/config/network-config';
-import { ExternalLink, Twitter } from 'react-feather';
 
 export function NavbarAdditionalLinksMenu() {
     return (

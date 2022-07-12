@@ -99,7 +99,7 @@ export function Navbar({ scrollY }: Props) {
                             <NavbarLink href={'/trade'} selected={router.asPath === '/trade'} text="Swap" mr={5} />
                             <NavbarLink href={'/pools'} text="Stake" mr={5} />
                             <NavbarLink href={'/pools'} text="Launch" mr={5} />
-                            <NavbarAdditionalLinksMenu />
+                            {/*<NavbarAdditionalLinksMenu />*/}
                         </Flex>
                     </motion.div>
                     <FadeInOutBox mr="3" isVisible={isConnected}>

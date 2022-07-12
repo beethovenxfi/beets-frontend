@@ -18,6 +18,7 @@ export function PoolListTabs() {
             refreshPoolList({
                 ...state,
                 skip: 0,
+                first: 20,
                 where: {
                     ...state.where,
                     categoryIn,
@@ -41,12 +42,8 @@ export function PoolListTabs() {
         >
             <TabList>
                 <HStack spacing="2">
-                    <BeetsTab key="incentivized">
-                        Incentivized <Box display={{ base: 'none', lg: 'inline' }}>pools</Box>
-                    </BeetsTab>
-                    <BeetsTab key="community">
-                        Community <Box display={{ base: 'none', lg: 'inline' }}>pools</Box>
-                    </BeetsTab>
+                    <BeetsTab key="incentivized">Incentivized pools</BeetsTab>
+                    <BeetsTab key="community">Community pools</BeetsTab>
                     {isConnected ? <BeetsTab key="my-investments">My investments</BeetsTab> : null}
                 </HStack>
             </TabList>

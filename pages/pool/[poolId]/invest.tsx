@@ -4,6 +4,7 @@ import { initializeApolloClient, loadApolloState } from '~/apollo/client';
 import { GetPool } from '~/apollo/generated/operations';
 import PoolInvest from '~/modules/pool/invest/PoolInvest';
 import { PoolProvider } from '~/modules/pool/components/PoolProvider';
+import { FallbackPlaceholder } from '~/components/fallback/FallbackPlaceholder';
 
 interface Props {
     pool: GqlPoolUnion;
@@ -12,7 +13,7 @@ interface Props {
 const Invest = ({ pool }: Props) => {
     const router = useRouter();
     if (router.isFallback) {
-        return <div>Rendering fallback...</div>;
+        return <FallbackPlaceholder />;
     }
 
     return (

@@ -34,13 +34,16 @@ export function BatchSwapList() {
                         <Flex alignItems="center">
                             <Flex flex={1} alignItems="center" justifyContent="space-between">
                                 <TokenAmountPill address={batchSwap.tokenIn} amount={batchSwap.tokenAmountIn} />
-                                {batchSwap.swaps.map((swap, index) => (
-                                    <NextLink href={`/pool/${swap.poolId}`} key={index}>
-                                        <BeetsBox p={2} cursor="pointer">
-                                            <TokenAvatarSet width={120} addresses={swap.poolTokens} imageSize={24} />
-                                        </BeetsBox>
-                                    </NextLink>
-                                ))}
+                                {batchSwap.swaps.map((swap, index) => {
+                                    const tokenData = swap.poolTokens.map((address) => ({ address }));
+                                    return (
+                                        <NextLink href={`/pool/${swap.poolId}`} key={index}>
+                                            <BeetsBox p={2} cursor="pointer">
+                                                <TokenAvatarSet width={120} tokenData={tokenData} imageSize={24} />
+                                            </BeetsBox>
+                                        </NextLink>
+                                    );
+                                })}
                                 <TokenAmountPill address={batchSwap.tokenOut} amount={batchSwap.tokenAmountOut} />
                             </Flex>
                             <Box w={150}>

@@ -14,6 +14,7 @@ export function AppContent({ Component, pageProps }: AppProps) {
 
     return (
         <Box
+            id="app-content"
             height="full"
             className="bg"
             overflowX="hidden"

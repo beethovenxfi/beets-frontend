@@ -36,6 +36,8 @@ export function PoolTransactions({ ...rest }: Props & BoxProps) {
         notifyOnNetworkStatusChange: true,
     });
 
+    const isPhantomStable = pool.__typename === 'GqlPoolPhantomStable';
+
     const isFetchingMoreSwaps = swapsStatus === NetworkStatus.fetchMore;
     const isFetchingMoreInvestments = investmentsStatus === NetworkStatus.fetchMore;
 
@@ -43,25 +45,50 @@ export function PoolTransactions({ ...rest }: Props & BoxProps) {
         const swaps = swapsResponse?.swaps || [];
         const joinExits = investmentsResponse?.joinExits || [];
 
-        if (activeTab === 0) {
-            return joinExits.map((action) => ({
-                transaction: action,
-                type: action.type === 'Join' ? PoolTransactionType.Join : PoolTransactionType.Exit,
-            }));
-        } else {
-            return swaps.map((swap) => ({
+        const joinExitsOutput = joinExits.map((action) => ({
+            transaction: action,
+            type: action.type === 'Join' ? PoolTransactionType.Join : PoolTransactionType.Exit,
+        }));
+
+        const swapsOutput = swaps.map((swap) => ({
+            transaction: swap,
+            type: PoolTransactionType.Swap,
+        }));
+
+        const phantomStableSwapsOutput = swaps.map((swap) => {
+            const phantomStableToken = swap.poolId.slice(0, 42);
+            let type: PoolTransactionType;
+
+            if (swap.tokenOut === phantomStableToken) {
+                type = PoolTransactionType.Join;
+            } else if (swap.tokenIn === phantomStableToken) {
+                type = PoolTransactionType.Exit;
+            } else {
+                type = PoolTransactionType.Swap;
+            }
+
+            return {
                 transaction: swap,
-                type: PoolTransactionType.Swap,
-            }));
+                type,
+                isPhantomStable,
+            };
+        });
+
+        if (activeTab === 0) {
+            return isPhantomStable ? phantomStableSwapsOutput : joinExitsOutput;
+        } else if (activeTab === 1) {
+            return isPhantomStable ? [] : swapsOutput;
+        } else {
+            return [];
         }
-    }, [activeTab, investmentsResponse?.joinExits, swapsResponse?.swaps]);
+    }, [activeTab, isPhantomStable, investmentsResponse?.joinExits, swapsResponse?.swaps]);
 
     const handleTabChanged = (tabIndex: number) => {
         setActiveTab(tabIndex);
     };
 
     const handleFetchMoreTransactions = () => {
-        if (activeTab === 1) {
+        if (activeTab === 1 || isPhantomStable) {
             fetchMoreSwaps({ variables: { skip: transactions.length } });
         } else {
             fetchMoreInvestments({ variables: { skip: transactions.length } });
@@ -74,9 +101,9 @@ export function PoolTransactions({ ...rest }: Props & BoxProps) {
                 <VStack width="full" alignItems="flex-start">
                     <TabList>
                         <HStack>
-                            <BeetsTab>Investments</BeetsTab>
-                            <BeetsTab>Swaps</BeetsTab>
-                            <BeetsTab>My investments</BeetsTab>
+                            <BeetsTab>{isPhantomStable ? 'Transactions' : 'Investments'}</BeetsTab>
+                            {!isPhantomStable && <BeetsTab>Swaps</BeetsTab>}
+                            <BeetsTab>My {isPhantomStable ? 'transactions' : 'investments'}</BeetsTab>
                         </HStack>
                     </TabList>
 

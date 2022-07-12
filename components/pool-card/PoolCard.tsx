@@ -18,9 +18,9 @@ export function PoolCard({ pool, ...rest }: Props) {
                     <Text noOfLines={2}>{pool.name}</Text>
                 </Box>
                 <TokenAvatarSet
-                    addresses={pool.allTokens
+                    tokenData={pool.allTokens
                         .filter((token) => !token.isNested && !token.isPhantomBpt)
-                        .map((token) => token.address)}
+                        .map((token) => ({ address: token.address, ...(token.weight && { weight: token.weight }) }))}
                     width={140}
                     imageSize={32}
                 />

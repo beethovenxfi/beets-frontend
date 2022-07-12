@@ -28,7 +28,7 @@ a {
 
 .bg {
     background: radial-gradient(ellipse at top, rgba(18, 14, 68, 1) 10%, transparent 80%),
-        radial-gradient(ellipse at bottom, rgba(18, 14, 68, 1) 10%, transparent 80%);
+        radial-gradient(ellipse at bottom, rgba(18, 14, 68, 1) 10%, transparent 80%) !important;
 }
 
 .rc-pagination {
