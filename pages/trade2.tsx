@@ -16,7 +16,11 @@ export default function Trade2() {
             <GridItem w="100%" colStart={5} colSpan={4}>
                 <VStack spacing="4">
                     <HStack>
-                        <TokenAvatarSet width={150} imageSize={48} addresses={[_tokenIn, _tokenOut]} />
+                        <TokenAvatarSet
+                            width={150}
+                            imageSize={48}
+                            tokenData={[{ address: _tokenIn }, { address: _tokenOut }]}
+                        />
                         {/* <Heading fontSize='2xl'>{tokenFormatAmount(currentRatio)}</Heading> */}
                     </HStack>
                     <TradeCard />

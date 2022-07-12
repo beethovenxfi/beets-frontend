@@ -1,21 +1,36 @@
 import { BeetsBox } from '~/components/box/BeetsBox';
 import TokenAvatar from '~/components/token/TokenAvatar';
-import { Flex, Text } from '@chakra-ui/react';
+import { Box, Flex, Text } from '@chakra-ui/react';
 import numeral from 'numeral';
-import { GqlPoolTokenBase } from '~/apollo/generated/graphql-codegen-generated';
+import { useGetTokens } from '~/lib/global/useToken';
 
-interface Props {
-    token: GqlPoolTokenBase;
+interface Token {
+    address: string;
+    weight?: string;
 }
 
-export function PoolTokenPill({ token }: Props) {
-    return (
+interface Props {
+    token: Token;
+    rounded?: boolean;
+}
+
+export function PoolTokenPill({ token, rounded = true }: Props) {
+    const { getToken } = useGetTokens();
+    const MainContent = () => (
+        <Flex alignItems="center">
+            <TokenAvatar address={token.address} size="xs" />
+            <Text ml="2">{getToken(token.address)?.symbol}</Text>
+            {token.weight ? <Text ml="2">{numeral(token.weight).format('%')}</Text> : null}
+        </Flex>
+    );
+
+    return rounded ? (
         <BeetsBox p="2">
-            <Flex alignItems="center">
-                <TokenAvatar address={token.address} size="xs" />
-                <Text ml="2">{token.symbol}</Text>
-                {token.weight ? <Text ml="2">{numeral(token.weight).format('%')}</Text> : null}
-            </Flex>
+            <MainContent />
         </BeetsBox>
+    ) : (
+        <Box p="1">
+            <MainContent />
+        </Box>
     );
 }
