@@ -52,6 +52,7 @@ export function PoolInvestFormTokenInput({
     //TODO: add support for multiple options
     const tokenOption = option.tokenOptions[0];
     const userBalance = tokenGetAmountForAddress(tokenOption.address, userBalances);
+    const userHasBalance = parseFloat(userBalance) > 0;
     const isValid =
         !value || parseUnits(value, tokenOption.decimals).lte(parseUnits(userBalance, tokenOption.decimals));
 
@@ -126,6 +127,7 @@ export function PoolInvestFormTokenInput({
                     aria-label={`slider-${tokenOption.symbol}`}
                     defaultValue={0}
                     value={sliderValue}
+                    isDisabled={!userHasBalance}
                     onChange={(value) => {
                         setSliderValue(value);
 
@@ -162,15 +164,6 @@ export function PoolInvestFormTokenInput({
                             {sliderValue}%
                         </SliderMark>
                     ) : null}
-                    {/*<SliderMark value={0} {...labelStyles}>
-                        25%
-                    </SliderMark>
-                    <SliderMark value={50} {...labelStyles}>
-                        50%
-                    </SliderMark>
-                    <SliderMark value={75} {...labelStyles}>
-                        75%
-                    </SliderMark>*/}
                 </Slider>
             </Box>
             <Flex ml="1" alignItems="center">

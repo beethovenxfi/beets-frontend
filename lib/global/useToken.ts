@@ -14,6 +14,8 @@ export function useGetTokens() {
     const prices = keyBy(pricesResponse?.tokenPrices || [], 'address');
 
     function getToken(address: string): GqlToken | null {
+        address = networkConfig.eth.address.toLowerCase() === address ? networkConfig.wethAddress : address;
+
         const token = tokens.find((token) => token.address === address.toLowerCase());
         return token || null;
     }

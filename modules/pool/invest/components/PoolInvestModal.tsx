@@ -27,12 +27,14 @@ import { tokenAmountsGetArrayFromMap } from '~/lib/services/token/token-util';
 import { usePoolJoinGetProportionalSuggestionForFixedAmount } from '~/modules/pool/invest/lib/usePoolJoinGetProportionalSuggestionForFixedAmount';
 import { usePoolJoinGetBptOutAndPriceImpactForTokensIn } from '~/modules/pool/invest/lib/usePoolJoinGetBptOutAndPriceImpactForTokensIn';
 import { usePoolJoinGetContractCallData } from '~/modules/pool/invest/lib/usePoolJoinGetContractCallData';
+import { PoolInvestTypeChoice } from '~/modules/pool/invest/components/PoolInvestTypeChoice';
+import { PoolInvestProportional } from '~/modules/pool/invest/components/PoolInvestProportional';
 
 interface Props {}
 
 export default function PoolInvestModal(props: Props) {
     const [isVisible, setIsVisible] = useBoolean();
-    const { pool } = usePool();
+    const { pool, getPoolTypeName } = usePool();
     const { userPoolTokenBalances } = usePoolUserTokenBalancesInWallet();
     const { inputAmounts, setInputAmount } = useInvestState();
     const { joinPool, isSubmitting, submitError } = useJoinPool(pool);
@@ -49,7 +51,19 @@ export default function PoolInvestModal(props: Props) {
                 <ModalContent backgroundColor="black">
                     <ModalCloseButton />
                     <ModalBody className="bg" padding="0">
-                        <HStack height="600px" padding="4" width="full" backgroundColor="whiteAlpha.100">
+                        <Box pl="4" pt="4" pr="4">
+                            <Heading size="md" noOfLines={1}>
+                                Investing into {pool.name}
+                            </Heading>
+                            <Text color="gray.200">{getPoolTypeName()}</Text>
+                        </Box>
+                        {/*<Box p="4">
+                            <PoolInvestTypeChoice />
+                        </Box>*/}
+                        <Box p="4">
+                            <PoolInvestProportional />
+                        </Box>
+                        {/*<HStack height="600px" padding="4" width="full" backgroundColor="whiteAlpha.100">
                             <Flex width="50%">
                                 <VStack width="full" alignItems="flex-start">
                                     <VStack spacing="none" alignItems="flex-start">
@@ -80,7 +94,7 @@ export default function PoolInvestModal(props: Props) {
                                 </VStack>
                             </Flex>
                             <Flex height="full" width="50%" rounded="lg" backgroundColor="whiteAlpha.300"></Flex>
-                        </HStack>
+                        </HStack>*/}
                     </ModalBody>
                 </ModalContent>
             </Modal>
