@@ -1,9 +1,10 @@
 import { BeetsBoxLineItem } from '~/components/box/BeetsBoxLineItem';
 import { InfoButton } from '~/components/info-button/InfoButton';
-import { Box, BoxProps, Button, Flex, Link, Switch, Text, useBoolean } from '@chakra-ui/react';
+import { Box, BoxProps, Button, Flex, Link, Switch, Text, useBoolean, useTheme } from '@chakra-ui/react';
 import { Collapse } from '@chakra-ui/transition';
 import { BeetsBox } from '~/components/box/BeetsBox';
 import { ModalSectionHeadline } from '~/components/modal/ModalSectionHeadline';
+import { Zap } from 'react-feather';
 
 export function PoolInvestSettings({ stepNumber, ...rest }: BoxProps & { stepNumber: number }) {
     const [zapEnabled, { toggle: toggleZapEnabled }] = useBoolean(true);
@@ -15,11 +16,16 @@ export function PoolInvestSettings({ stepNumber, ...rest }: BoxProps & { stepNum
                 <BeetsBoxLineItem
                     leftContent={
                         <>
-                            <InfoButton
-                                label="Zap into farm"
-                                moreInfoUrl="https://docs.beets.fi"
-                                infoText="With ZAP enabled, your investment BPTs are automatically deposited to the farm, saving time & maximizing yield."
-                            />
+                            <Flex alignItems="center">
+                                {/*<Box mr="1">
+                                    <Zap size={18} />
+                                </Box>*/}
+                                <InfoButton
+                                    label="Zap into farm"
+                                    moreInfoUrl="https://docs.beets.fi"
+                                    infoText="With ZAP enabled, your investment BPTs are automatically deposited to the farm, saving time & maximizing yield."
+                                />
+                            </Flex>
                             <Text color="gray.200" fontSize="sm">
                                 Deposit my BPTs directly into the farm with ZAP.
                             </Text>

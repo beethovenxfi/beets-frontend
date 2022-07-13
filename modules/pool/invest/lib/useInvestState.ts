@@ -1,5 +1,6 @@
 import { makeVar, useReactiveVar } from '@apollo/client';
 import { AmountHumanReadable, AmountHumanReadableMap } from '~/lib/services/token/token-types';
+import { usePool } from '~/modules/pool/lib/usePool';
 
 interface InvestState {
     inputAmounts: AmountHumanReadableMap;

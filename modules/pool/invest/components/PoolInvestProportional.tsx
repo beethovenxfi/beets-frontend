@@ -25,14 +25,20 @@ import { PoolInvestPriceImpactAndYield } from '~/modules/pool/invest/components/
 import { TokenSelectInline } from '~/components/token-select-inline/TokenSelectInline';
 import { BeetsBoxLineItem } from '~/components/box/BeetsBoxLineItem';
 import { useInvestState } from '~/modules/pool/invest/lib/useInvestState';
+import { usePoolJoinGetProportionalSuggestionForFixedAmount } from '~/modules/pool/invest/lib/usePoolJoinGetProportionalSuggestionForFixedAmount';
+import { usePoolJoinGetProportionalInvestmentAmount } from '~/modules/pool/invest/lib/usePoolJoinGetProportionalInvestmentAmount';
+import { useInvest } from '~/modules/pool/invest/lib/useInvest';
 
 export function PoolInvestProportional() {
-    const [sliderValue, setSliderValue] = useState(50);
-    const { pool } = usePool();
-    const { investableAmount, userPoolTokenBalances, canInvestProportionally } = usePoolUserTokenBalancesInWallet();
+    const { pool, poolService } = usePool();
+    const { canInvestProportionally } = useInvest();
+    const { investableAmount, userPoolTokenBalances } = usePoolUserTokenBalancesInWallet();
     const { priceForAmount } = useGetTokens();
     const investOptions = pool.investConfig.options;
     const { setSelectedOption, selectedOptions } = useInvestState();
+
+    const { proportionalPercent, setProportionalPercent, scaledProportionalSuggestions } =
+        usePoolJoinGetProportionalInvestmentAmount();
 
     return (
         <Box>
@@ -47,15 +53,15 @@ export function PoolInvestProportional() {
                         mt="12"
                         aria-label="slider-ex-1"
                         defaultValue={50}
-                        value={sliderValue}
-                        onChange={setSliderValue}
+                        value={proportionalPercent}
+                        onChange={setProportionalPercent}
                     >
                         <SliderTrack>
                             <SliderFilledTrack />
                         </SliderTrack>
                         <SliderThumb boxSize={4} />
                         <SliderMark
-                            value={sliderValue}
+                            value={proportionalPercent}
                             textAlign="center"
                             bg="beets.base.500"
                             color="white"
@@ -66,13 +72,13 @@ export function PoolInvestProportional() {
                             width="60px"
                             borderRadius="md"
                         >
-                            {sliderValue}%
+                            {proportionalPercent}%
                         </SliderMark>
                     </Slider>
                     <BeetsBox mt="4" pt="0.5">
                         {investOptions.map((option, index) => {
                             const tokenOption = option.tokenOptions[0];
-                            const userBalance = tokenGetAmountForAddress(tokenOption.address, userPoolTokenBalances);
+                            const amount = scaledProportionalSuggestions[tokenOption.address];
 
                             return (
                                 <BeetsBoxLineItem
@@ -103,13 +109,10 @@ export function PoolInvestProportional() {
                                     }
                                     rightContent={
                                         <Box>
-                                            <Box textAlign="right">{tokenFormatAmount(userBalance)}</Box>
+                                            <Box textAlign="right">{tokenFormatAmount(amount)}</Box>
                                             <Box textAlign="right" fontSize="sm" color="gray.200">
                                                 {numberFormatUSDValue(
-                                                    priceForAmount({
-                                                        address: tokenOption.address,
-                                                        amount: userBalance,
-                                                    }),
+                                                    priceForAmount({ address: tokenOption.address, amount }),
                                                 )}
                                             </Box>
                                         </Box>
