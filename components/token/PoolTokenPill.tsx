@@ -6,7 +6,7 @@ import { useGetTokens } from '~/lib/global/useToken';
 
 interface Token {
     address: string;
-    weight?: string;
+    weight?: string | null;
 }
 
 interface Props {
