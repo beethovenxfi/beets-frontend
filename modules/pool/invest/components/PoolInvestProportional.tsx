@@ -11,11 +11,10 @@ import {
 } from '@chakra-ui/react';
 import { useState } from 'react';
 import { BeetsBox } from '~/components/box/BeetsBox';
-import { tokenFormatAmount, tokenGetAmountForAddress } from '~/lib/services/token/token-util';
+import { tokenFormatAmount } from '~/lib/services/token/token-util';
 import TokenAvatar from '~/components/token/TokenAvatar';
 import { numberFormatUSDValue } from '~/lib/util/number-formats';
 import { usePool } from '~/modules/pool/lib/usePool';
-import { usePoolUserTokenBalancesInWallet } from '~/modules/pool/lib/usePoolUserTokenBalancesInWallet';
 import { useGetTokens } from '~/lib/global/useToken';
 import BeetsButton from '~/components/button/Button';
 import { PoolInvestSettings } from '~/modules/pool/invest/components/PoolInvestSettings';
@@ -25,20 +24,21 @@ import { PoolInvestPriceImpactAndYield } from '~/modules/pool/invest/components/
 import { TokenSelectInline } from '~/components/token-select-inline/TokenSelectInline';
 import { BeetsBoxLineItem } from '~/components/box/BeetsBoxLineItem';
 import { useInvestState } from '~/modules/pool/invest/lib/useInvestState';
-import { usePoolJoinGetProportionalSuggestionForFixedAmount } from '~/modules/pool/invest/lib/usePoolJoinGetProportionalSuggestionForFixedAmount';
 import { usePoolJoinGetProportionalInvestmentAmount } from '~/modules/pool/invest/lib/usePoolJoinGetProportionalInvestmentAmount';
-import { useInvest } from '~/modules/pool/invest/lib/useInvest';
+import { oldBnum } from '~/lib/services/pool/lib/old-big-number';
+import { mapValues } from 'lodash';
 
 export function PoolInvestProportional() {
     const { pool, poolService } = usePool();
-    const { canInvestProportionally } = useInvest();
-    const { investableAmount, userPoolTokenBalances } = usePoolUserTokenBalancesInWallet();
     const { priceForAmount } = useGetTokens();
     const investOptions = pool.investConfig.options;
     const { setSelectedOption, selectedOptions } = useInvestState();
+    const [proportionalPercent, setProportionalPercent] = useState(50);
+    const { data } = usePoolJoinGetProportionalInvestmentAmount();
 
-    const { proportionalPercent, setProportionalPercent, scaledProportionalSuggestions } =
-        usePoolJoinGetProportionalInvestmentAmount();
+    const scaledProportionalSuggestions = mapValues(data || {}, (val) =>
+        oldBnum(val).times(proportionalPercent).div(100).toString(),
+    );
 
     return (
         <Box>
