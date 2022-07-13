@@ -10,7 +10,7 @@ import { useGetTokens } from '~/lib/global/useToken';
 import { useInvest } from '~/modules/pool/invest/lib/useInvest';
 
 export function PoolInvestTypeChoice() {
-    const { pool, getPoolTypeName } = usePool();
+    const { pool } = usePool();
     const { priceForAmount } = useGetTokens();
     const { investableAmount, userPoolTokenBalances } = usePoolUserTokenBalancesInWallet();
     const { canInvestProportionally } = useInvest();
