@@ -1,5 +1,3 @@
-// @ts-nocheck
-
 import { GqlPoolApr } from '~/apollo/generated/graphql-codegen-generated';
 import {
     Popover,
@@ -11,65 +9,48 @@ import {
     Text,
     TextProps,
     HStack,
+    useTheme,
+    Link,
 } from '@chakra-ui/react';
 import StarsIcon from '~/components/apr-tooltip/StarsIcon';
 import numeral from 'numeral';
 import { BeetsBox } from '~/components/box/BeetsBox';
 import { AprText } from '~/components/apr-tooltip/AprText';
+import { Info } from 'react-feather';
 
 interface Props {
-    data: GqlPoolApr;
-    textProps?: TextProps;
+    iconSize?: number;
+    infoText: string;
+    moreInfoUrl?: string;
+    moreInfoLinkText?: string;
+    label?: string;
 }
 
-export function InfoButton({ data, textProps }: Props) {
-    const color = 'gray.200';
-    const formatApr = (apr: number) => numeral(apr).format('0.00%');
-
+export function InfoButton({ iconSize, infoText, moreInfoUrl, moreInfoLinkText, label }: Props) {
+    const theme = useTheme();
     return (
         <Popover trigger="hover">
-            <HStack justify="end" align="center">
-                <Text fontSize="md" fontWeight="semibold" mr={1} {...textProps}>
-                    {formatApr(data.total)}
-                </Text>
+            <HStack spacing="1">
+                <Box>{label}</Box>
+                {/*
+                // @ts-ignore */}
                 <PopoverTrigger>
                     <a>
-                        <StarsIcon />
+                        <Info size={iconSize || 16} color={theme.colors.gray['100']} />
                     </a>
                 </PopoverTrigger>
             </HStack>
 
-            <PopoverContent w="fit-content" bg="black">
-                <PopoverHeader bgColor="rgba(255,255,255,0.05)">
-                    <Text color={color}>Total APR</Text>
-                    {formatApr(data.total)}
-                </PopoverHeader>
-                <BeetsBox p="2" fontSize="sm">
-                    {data.items.map((item, index) => {
-                        return (
-                            <Box key={index}>
-                                <Flex>
-                                    {formatApr(item.apr)} <AprText>{item.title}</AprText>
-                                </Flex>
-                                {item.subItems?.map((subItem, subItemIndex) => (
-                                    <Flex align="center" key={subItemIndex}>
-                                        <Box
-                                            w="1px"
-                                            bgColor={color}
-                                            m="0.25rem"
-                                            h={subItemIndex === 0 ? '1rem' : '2rem'}
-                                            mt={subItemIndex === 0 ? '-0.3rem' : '-1.7rem'}
-                                        />
-                                        <Box h="1px" w="0.75rem" bgColor={color} mr="0.25rem" ml="-0.25rem" />
-                                        <Flex grow>
-                                            {formatApr(subItem.apr)} <AprText>{subItem.title}</AprText>
-                                        </Flex>
-                                    </Flex>
-                                ))}
-                            </Box>
-                        );
-                    })}
-                </BeetsBox>
+            <PopoverContent w="fit-content" bg="black" borderColor="transparent">
+                <Box p="2" className="bg" maxWidth="300px">
+                    {infoText}
+                    {moreInfoUrl ? ' ' : ''}
+                    {moreInfoUrl ? (
+                        <Link color="beets.cyan" href={moreInfoUrl} target="_blank">
+                            {moreInfoLinkText || 'More info'}.
+                        </Link>
+                    ) : null}
+                </Box>
             </PopoverContent>
         </Popover>
     );

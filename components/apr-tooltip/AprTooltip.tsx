@@ -1,22 +1,19 @@
-// @ts-nocheck
-
 import { GqlPoolApr } from '~/apollo/generated/graphql-codegen-generated';
 import {
+    Box,
+    Button,
+    Flex,
+    HStack,
+    PlacementWithLogical,
     Popover,
-    PopoverTrigger,
     PopoverContent,
     PopoverHeader,
-    Box,
-    Flex,
+    PopoverTrigger,
     Text,
     TextProps,
-    HStack,
-    Button,
-    PlacementWithLogical,
 } from '@chakra-ui/react';
 import StarsIcon from '~/components/apr-tooltip/StarsIcon';
 import numeral from 'numeral';
-import { BeetsBox } from '~/components/box/BeetsBox';
 import { AprText } from '~/components/apr-tooltip/AprText';
 
 interface Props {
@@ -25,11 +22,12 @@ interface Props {
     onlySparkles?: boolean;
     placement?: PlacementWithLogical;
     aprLabel?: boolean;
+    sparklesSize?: 'sm' | 'md';
 }
 
-function AprTooltip({ data, textProps, onlySparkles, placement, aprLabel }: Props) {
-    const formatApr = (apr: number) => {
-        if (apr < 0.0000001) {
+function AprTooltip({ data, textProps, onlySparkles, placement, aprLabel, sparklesSize }: Props) {
+    const formatApr = (apr: string) => {
+        if (parseFloat(apr) < 0.0000001) {
             return '0.00%';
         }
 
@@ -45,9 +43,17 @@ function AprTooltip({ data, textProps, onlySparkles, placement, aprLabel }: Prop
                         {aprLabel ? ' APR' : ''}
                     </Text>
                 )}
+                {/*
+                // @ts-ignore */}
                 <PopoverTrigger>
-                    <Button height="auto" variant="unstyled" _active={{ outline: 'none' }} _focus={{ outline: 'none' }}>
-                        <StarsIcon />
+                    <Button
+                        minWidth="0"
+                        height="auto"
+                        variant="unstyled"
+                        _active={{ outline: 'none' }}
+                        _focus={{ outline: 'none' }}
+                    >
+                        <StarsIcon width={sparklesSize === 'sm' ? 18 : 24} height={sparklesSize === 'sm' ? 19 : 25} />
                     </Button>
                 </PopoverTrigger>
             </HStack>
@@ -73,7 +79,7 @@ function AprTooltip({ data, textProps, onlySparkles, placement, aprLabel }: Prop
                                             mt={subItemIndex === 0 ? '-0.3rem' : '-1.7rem'}
                                         />
                                         <Box h="1px" w="0.75rem" mr="0.25rem" ml="-0.25rem" />
-                                        <Flex grow>
+                                        <Flex>
                                             {formatApr(subItem.apr)} <AprText>{subItem.title}</AprText>
                                         </Flex>
                                     </Flex>

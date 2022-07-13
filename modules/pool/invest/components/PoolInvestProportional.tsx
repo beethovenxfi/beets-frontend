@@ -1,20 +1,13 @@
 import {
     Box,
-    Heading,
-    SliderFilledTrack,
-    SliderThumb,
-    SliderTrack,
-    Slider,
-    SliderMark,
-    Text,
     Flex,
     HStack,
-    Button,
-    Tab,
-    TabList,
-    Tabs,
-    Link,
-    Switch,
+    Slider,
+    SliderFilledTrack,
+    SliderMark,
+    SliderThumb,
+    SliderTrack,
+    Text,
 } from '@chakra-ui/react';
 import { useState } from 'react';
 import { BeetsBox } from '~/components/box/BeetsBox';
@@ -25,21 +18,29 @@ import { usePool } from '~/modules/pool/lib/usePool';
 import { usePoolUserTokenBalancesInWallet } from '~/modules/pool/lib/usePoolUserTokenBalancesInWallet';
 import { useGetTokens } from '~/lib/global/useToken';
 import BeetsButton from '~/components/button/Button';
+import { PoolInvestSettings } from '~/modules/pool/invest/components/PoolInvestSettings';
+import { PoolInvestTokenApproval } from '~/modules/pool/invest/components/PoolInvestTokenApproval';
+import { ModalSectionHeadline } from '~/components/modal/ModalSectionHeadline';
+import { PoolInvestPriceImpactAndYield } from '~/modules/pool/invest/components/PoolInvestPriceImpactAndYield';
+import { TokenSelectInline } from '~/components/token-select-inline/TokenSelectInline';
+import { BeetsBoxLineItem } from '~/components/box/BeetsBoxLineItem';
 
 export function PoolInvestProportional() {
     const [sliderValue, setSliderValue] = useState(50);
     const { pool } = usePool();
     const { investableAmount, userPoolTokenBalances, canInvestProportionally } = usePoolUserTokenBalancesInWallet();
     const { priceForAmount } = useGetTokens();
+    const investOptions = pool.investConfig.options;
 
     return (
         <Box>
             <Flex mt="4" mb="4">
                 <Box flex="1" mr="8">
-                    <Text fontSize="lg" fontWeight="semibold">
-                        1. Configure token amounts
-                    </Text>
-                    <Text color="gray.200">Drag the slider below to configure your investment amount.</Text>
+                    <ModalSectionHeadline
+                        headline="1. Configure token amounts"
+                        description="Drag the slider below to configure your investment amount."
+                        mb="0"
+                    />
                     <Slider
                         mt="12"
                         aria-label="slider-ex-1"
@@ -67,101 +68,53 @@ export function PoolInvestProportional() {
                         </SliderMark>
                     </Slider>
                     <BeetsBox mt="4" pt="0.5">
-                        {pool.investConfig.options.map((option, index) => {
+                        {investOptions.map((option, index) => {
                             const tokenOption = option.tokenOptions[0];
                             const userBalance = tokenGetAmountForAddress(tokenOption.address, userPoolTokenBalances);
 
                             return (
-                                <Flex
+                                <BeetsBoxLineItem
                                     key={tokenOption.address}
-                                    px="3"
-                                    py="2"
-                                    alignItems="center"
-                                    borderBottomWidth={index === pool.investConfig.options.length - 1 ? 0 : 1}
-                                >
-                                    <HStack spacing="none" flex="1">
-                                        <TokenAvatar size="xs" address={tokenOption.address} />
-                                        <Text paddingLeft="1.5" fontSize="lg">
-                                            {tokenOption.symbol}
-                                        </Text>
-                                    </HStack>
-                                    <Box>
-                                        <Box textAlign="right" fontSize="lg">
-                                            {tokenFormatAmount(userBalance)}
+                                    last={index === investOptions.length - 1}
+                                    pl={option.tokenOptions.length > 1 ? '1.5' : '3'}
+                                    leftContent={
+                                        option.tokenOptions.length > 1 ? (
+                                            <Box flex="1">
+                                                <TokenSelectInline
+                                                    tokenOptions={option.tokenOptions}
+                                                    selectedAddress={option.tokenOptions[0].address}
+                                                />
+                                            </Box>
+                                        ) : (
+                                            <HStack spacing="1.5" flex="1">
+                                                <TokenAvatar width="20px" height="20px" address={tokenOption.address} />
+                                                <Text>{tokenOption.symbol}</Text>
+                                            </HStack>
+                                        )
+                                    }
+                                    rightContent={
+                                        <Box>
+                                            <Box textAlign="right">{tokenFormatAmount(userBalance)}</Box>
+                                            <Box textAlign="right" fontSize="sm" color="gray.200">
+                                                {numberFormatUSDValue(
+                                                    priceForAmount({
+                                                        address: tokenOption.address,
+                                                        amount: userBalance,
+                                                    }),
+                                                )}
+                                            </Box>
                                         </Box>
-                                        <Box textAlign="right" fontSize="sm" color="gray.200">
-                                            {numberFormatUSDValue(
-                                                priceForAmount({
-                                                    address: tokenOption.address,
-                                                    amount: userBalance,
-                                                }),
-                                            )}
-                                        </Box>
-                                    </Box>
-                                </Flex>
+                                    }
+                                />
                             );
                         })}
                     </BeetsBox>
+
+                    <PoolInvestPriceImpactAndYield mt="4" />
                 </Box>
                 <Box flex="1">
-                    <Box>
-                        <Text fontSize="lg" fontWeight="semibold">
-                            2. Approve tokens for investing
-                        </Text>
-                        <Text color="gray.200">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</Text>
-                    </Box>
-                    <BeetsBox mt="2">
-                        {pool.investConfig.options.map((option, index) => {
-                            const tokenOption = option.tokenOptions[0];
-
-                            return (
-                                <Flex
-                                    key={tokenOption.address}
-                                    px="3"
-                                    py="2"
-                                    alignItems="center"
-                                    borderBottomWidth={index === pool.investConfig.options.length - 1 ? 0 : 1}
-                                >
-                                    <HStack spacing="none" flex="1">
-                                        <TokenAvatar size="xs" address={tokenOption.address} />
-                                        <Text paddingLeft="1.5" fontSize="lg">
-                                            {tokenOption.symbol}
-                                        </Text>
-                                    </HStack>
-                                    <Box>
-                                        <Button
-                                            variant="outline"
-                                            size="xs"
-                                            color="beets.green"
-                                            borderColor="beets.green"
-                                        >
-                                            Approve
-                                        </Button>
-                                    </Box>
-                                </Flex>
-                            );
-                        })}
-                    </BeetsBox>
-                    <Box mt="6">
-                        <Text fontSize="lg" fontWeight="semibold">
-                            3. Customize settings
-                        </Text>
-                    </Box>
-                    <BeetsBox mt="2">
-                        <Flex px="3" py="2" borderBottomWidth={1}>
-                            <Box flex="1">Zap into farm</Box>
-                            <Switch id="zap-into-farm" colorScheme="green" />
-                        </Flex>
-                        <Flex px="3" py="2" alignItems="center" borderBottomWidth={1}>
-                            <Box flex="1">Max slippage</Box>
-                            <Link color="beets.cyan">0.1%</Link>
-                        </Flex>
-                        <Flex px="3" py="2" alignItems="center">
-                            <Box flex="1">Transaction speed</Box>
-
-                            <Link color="beets.cyan">Normal</Link>
-                        </Flex>
-                    </BeetsBox>
+                    <PoolInvestTokenApproval stepNumber={2} />
+                    <PoolInvestSettings mt="6" stepNumber={3} />
                 </Box>
             </Flex>
             <BeetsButton isFullWidth mt="4" isDisabled={true}>

@@ -15,7 +15,9 @@ export default function PoolActionRow(props: Props) {
             <PoolInvestModal />
             {/* </NextLink> */}
             <NextLink href={`/pool/${pool.id}/withdraw`} chakraProps={{ _hover: { textDecoration: 'none' } }}>
-                <BeetsButton buttonType="secondary">Remove liquidity</BeetsButton>
+                <BeetsButton buttonType="secondary" width="140px">
+                    Withdraw
+                </BeetsButton>
             </NextLink>
         </HStack>
     );
