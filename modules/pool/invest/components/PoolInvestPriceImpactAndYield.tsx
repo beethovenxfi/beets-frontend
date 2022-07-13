@@ -4,10 +4,13 @@ import AprTooltip from '~/components/apr-tooltip/AprTooltip';
 import { BeetsBox } from '~/components/box/BeetsBox';
 import { usePool } from '~/modules/pool/lib/usePool';
 import { BeetsBoxLineItem } from '~/components/box/BeetsBoxLineItem';
+import { numberFormatUSDValue } from '~/lib/util/number-formats';
 
-interface Props extends BoxProps {}
+interface Props extends BoxProps {
+    weeklyYield: number;
+}
 
-export function PoolInvestPriceImpactAndYield({ ...rest }: Props) {
+export function PoolInvestPriceImpactAndYield({ weeklyYield, ...rest }: Props) {
     const { pool } = usePool();
 
     return (
@@ -32,7 +35,7 @@ export function PoolInvestPriceImpactAndYield({ ...rest }: Props) {
                 }
                 rightContent={
                     <Flex alignItems="center">
-                        <Box mr="1">$12.23</Box>
+                        <Box mr="1">{numberFormatUSDValue(weeklyYield)}</Box>
                         <AprTooltip data={pool.dynamicData.apr} onlySparkles={true} sparklesSize="sm" />
                     </Flex>
                 }

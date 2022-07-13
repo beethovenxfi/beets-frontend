@@ -11,7 +11,7 @@ import {
 } from '@chakra-ui/react';
 import { useState } from 'react';
 import { BeetsBox } from '~/components/box/BeetsBox';
-import { tokenFormatAmount } from '~/lib/services/token/token-util';
+import { tokenAmountsGetArrayFromMap, tokenFormatAmount } from '~/lib/services/token/token-util';
 import TokenAvatar from '~/components/token/TokenAvatar';
 import { numberFormatUSDValue } from '~/lib/util/number-formats';
 import { usePool } from '~/modules/pool/lib/usePool';
@@ -26,10 +26,10 @@ import { BeetsBoxLineItem } from '~/components/box/BeetsBoxLineItem';
 import { useInvestState } from '~/modules/pool/invest/lib/useInvestState';
 import { usePoolJoinGetProportionalInvestmentAmount } from '~/modules/pool/invest/lib/usePoolJoinGetProportionalInvestmentAmount';
 import { oldBnum } from '~/lib/services/pool/lib/old-big-number';
-import { mapValues } from 'lodash';
+import { mapValues, sumBy } from 'lodash';
 
 export function PoolInvestProportional() {
-    const { pool, poolService } = usePool();
+    const { pool } = usePool();
     const { priceForAmount } = useGetTokens();
     const investOptions = pool.investConfig.options;
     const { setSelectedOption, selectedOptions } = useInvestState();
@@ -39,6 +39,7 @@ export function PoolInvestProportional() {
     const scaledProportionalSuggestions = mapValues(data || {}, (val) =>
         oldBnum(val).times(proportionalPercent).div(100).toString(),
     );
+    const totalValue = sumBy(tokenAmountsGetArrayFromMap(scaledProportionalSuggestions), priceForAmount);
 
     return (
         <Box>
@@ -52,7 +53,6 @@ export function PoolInvestProportional() {
                     <Slider
                         mt="12"
                         aria-label="slider-ex-1"
-                        defaultValue={50}
                         value={proportionalPercent}
                         onChange={setProportionalPercent}
                     >
@@ -122,7 +122,10 @@ export function PoolInvestProportional() {
                         })}
                     </BeetsBox>
 
-                    <PoolInvestPriceImpactAndYield mt="4" />
+                    <PoolInvestPriceImpactAndYield
+                        mt="4"
+                        weeklyYield={(totalValue * parseFloat(pool.dynamicData.apr.total)) / 52}
+                    />
                 </Box>
                 <Box flex="1">
                     <PoolInvestTokenApproval stepNumber={2} />
@@ -130,7 +133,7 @@ export function PoolInvestProportional() {
                 </Box>
             </Flex>
             <BeetsButton isFullWidth mt="4" isDisabled={true}>
-                Invest $1,221.22
+                Invest {numberFormatUSDValue(totalValue)}
             </BeetsButton>
         </Box>
     );
