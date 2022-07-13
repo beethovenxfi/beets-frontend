@@ -6,9 +6,10 @@ import TokenAvatar from '~/components/token/TokenAvatar';
 interface Props {
     tokenOptions: GqlPoolToken[];
     selectedAddress: string;
+    onOptionSelect: (address: string) => void;
 }
 
-export function TokenSelectInline({ tokenOptions, selectedAddress }: Props) {
+export function TokenSelectInline({ tokenOptions, selectedAddress, onOptionSelect }: Props) {
     const theme = useTheme();
     const selectedToken = tokenOptions.find((option) => option.address === selectedAddress);
 
@@ -32,7 +33,11 @@ export function TokenSelectInline({ tokenOptions, selectedAddress }: Props) {
                     </MenuButton>
                     <MenuList>
                         {tokenOptions.map((option) => (
-                            <MenuItem key={option.address} display="flex">
+                            <MenuItem
+                                key={option.address}
+                                display="flex"
+                                onClick={() => onOptionSelect(option.address)}
+                            >
                                 <HStack spacing="1.5" flex="1">
                                     <TokenAvatar width="20px" height="20px" address={option.address} />
                                     <Text color="gray.100" fontWeight="normal">

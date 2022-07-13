@@ -24,6 +24,7 @@ import { ModalSectionHeadline } from '~/components/modal/ModalSectionHeadline';
 import { PoolInvestPriceImpactAndYield } from '~/modules/pool/invest/components/PoolInvestPriceImpactAndYield';
 import { TokenSelectInline } from '~/components/token-select-inline/TokenSelectInline';
 import { BeetsBoxLineItem } from '~/components/box/BeetsBoxLineItem';
+import { useInvestState } from '~/modules/pool/invest/lib/useInvestState';
 
 export function PoolInvestProportional() {
     const [sliderValue, setSliderValue] = useState(50);
@@ -31,6 +32,7 @@ export function PoolInvestProportional() {
     const { investableAmount, userPoolTokenBalances, canInvestProportionally } = usePoolUserTokenBalancesInWallet();
     const { priceForAmount } = useGetTokens();
     const investOptions = pool.investConfig.options;
+    const { setSelectedOption, selectedOptions } = useInvestState();
 
     return (
         <Box>
@@ -77,12 +79,19 @@ export function PoolInvestProportional() {
                                     key={tokenOption.address}
                                     last={index === investOptions.length - 1}
                                     pl={option.tokenOptions.length > 1 ? '1.5' : '3'}
+                                    center={true}
                                     leftContent={
                                         option.tokenOptions.length > 1 ? (
                                             <Box flex="1">
                                                 <TokenSelectInline
                                                     tokenOptions={option.tokenOptions}
-                                                    selectedAddress={option.tokenOptions[0].address}
+                                                    selectedAddress={
+                                                        selectedOptions[`${option.poolTokenIndex}`] ||
+                                                        option.tokenOptions[0].address
+                                                    }
+                                                    onOptionSelect={(address) =>
+                                                        setSelectedOption(option.poolTokenIndex, address)
+                                                    }
                                                 />
                                             </Box>
                                         ) : (
