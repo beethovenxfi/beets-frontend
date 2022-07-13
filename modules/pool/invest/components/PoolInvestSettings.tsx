@@ -1,10 +1,27 @@
 import { BeetsBoxLineItem } from '~/components/box/BeetsBoxLineItem';
 import { InfoButton } from '~/components/info-button/InfoButton';
-import { Box, BoxProps, Button, Flex, Link, Switch, Text, useBoolean, useTheme } from '@chakra-ui/react';
+import {
+    Box,
+    BoxProps,
+    Button,
+    Flex,
+    IconButton,
+    Input,
+    Link,
+    Menu,
+    MenuButton,
+    MenuItem,
+    MenuList,
+    Switch,
+    Text,
+    useBoolean,
+    useTheme,
+} from '@chakra-ui/react';
 import { Collapse } from '@chakra-ui/transition';
 import { BeetsBox } from '~/components/box/BeetsBox';
 import { ModalSectionHeadline } from '~/components/modal/ModalSectionHeadline';
-import { Zap } from 'react-feather';
+import { Check, ChevronDown, Save, Zap } from 'react-feather';
+import { SlippageTextLinkMenu } from '~/components/slippage/SlippageTextLinkMenu';
 
 export function PoolInvestSettings({ stepNumber, ...rest }: BoxProps & { stepNumber: number }) {
     const [zapEnabled, { toggle: toggleZapEnabled }] = useBoolean(true);
@@ -67,7 +84,7 @@ export function PoolInvestSettings({ stepNumber, ...rest }: BoxProps & { stepNum
                         />
                     </Box>
 
-                    <Link color="beets.cyan">0.1%</Link>
+                    <SlippageTextLinkMenu />
                 </Flex>
                 {/*<Flex px="3" py="2" alignItems="center">
                             <Box flex="1">
