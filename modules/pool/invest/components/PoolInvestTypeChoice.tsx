@@ -7,11 +7,13 @@ import { usePoolUserTokenBalancesInWallet } from '~/modules/pool/lib/usePoolUser
 import { numberFormatUSDValue } from '~/lib/util/number-formats';
 import { tokenFormatAmount, tokenGetAmountForAddress } from '~/lib/services/token/token-util';
 import { useGetTokens } from '~/lib/global/useToken';
+import { useInvest } from '~/modules/pool/invest/lib/useInvest';
 
 export function PoolInvestTypeChoice() {
-    const { pool, getPoolTypeName } = usePool();
+    const { pool } = usePool();
     const { priceForAmount } = useGetTokens();
-    const { investableAmount, userPoolTokenBalances, canInvestProportionally } = usePoolUserTokenBalancesInWallet();
+    const { investableAmount, userPoolTokenBalances } = usePoolUserTokenBalancesInWallet();
+    const { canInvestProportionally } = useInvest();
 
     return (
         <Box>

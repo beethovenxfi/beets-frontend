@@ -6,6 +6,7 @@ import {
 } from '~/lib/services/token/token-types';
 import { map, pickBy } from 'lodash';
 import numeral from 'numeral';
+import { networkConfig } from '~/lib/config/network-config';
 
 export function tokenGetAmountForAddress(
     address: string,
@@ -80,4 +81,12 @@ export function tokenFormatAmountPrecise(amount: AmountHumanReadable | number, p
     }
 
     return numeral(amount).format('0,0.[000000000000]');
+}
+
+export function isEth(address: string) {
+    return address.toLowerCase() === networkConfig.eth.address.toLowerCase();
+}
+
+export function isWeth(address: string) {
+    return address.toLowerCase() === networkConfig.wethAddress;
 }

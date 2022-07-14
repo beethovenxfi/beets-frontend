@@ -45,7 +45,9 @@ export default function PoolInvestModal(props: Props) {
 
     return (
         <>
-            <BeetsButton onClick={() => setIsVisible.on()}>Add liquidity</BeetsButton>
+            <BeetsButton onClick={() => setIsVisible.on()} width="140px">
+                Invest
+            </BeetsButton>
             <Modal isOpen={isVisible} onClose={() => setIsVisible.off()} size="3xl">
                 <ModalOverlay />
                 <ModalContent backgroundColor="black">
@@ -53,7 +55,7 @@ export default function PoolInvestModal(props: Props) {
                     <ModalBody className="bg" padding="0">
                         <Box pl="4" pt="4" pr="4">
                             <Heading size="md" noOfLines={1}>
-                                Investing into {pool.name}
+                                Invest into {pool.name}
                             </Heading>
                             <Text color="gray.200">{getPoolTypeName()}</Text>
                         </Box>

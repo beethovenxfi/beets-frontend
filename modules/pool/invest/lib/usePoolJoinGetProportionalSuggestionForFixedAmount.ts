@@ -3,7 +3,7 @@ import { useReactiveVar } from '@apollo/client';
 import { investStateVar } from '~/modules/pool/invest/lib/useInvestState';
 import { tokenAmountsGetArrayFromMap } from '~/lib/services/token/token-util';
 import { useQuery } from 'react-query';
-import { AmountHumanReadableMap, TokenAmountHumanReadable } from '~/lib/services/token/token-types';
+import { AmountHumanReadableMap } from '~/lib/services/token/token-types';
 
 export function usePoolJoinGetProportionalSuggestionForFixedAmount() {
     const { poolService } = usePool();
