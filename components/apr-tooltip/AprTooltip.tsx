@@ -60,8 +60,10 @@ function AprTooltip({ data, textProps, onlySparkles, placement, aprLabel, sparkl
 
             <PopoverContent w="fit-content" bgColor="beets.base.800" shadow="2xl">
                 <PopoverHeader bgColor="whiteAlpha.100">
-                    <Text>Total APR</Text>
-                    <Text fontSize="1.5rem">{formatApr(data.total)}</Text>
+                    <Text textAlign="left">
+                        Total APR
+                        <Text fontSize="1.5rem">{formatApr(data.total)}</Text>
+                    </Text>
                 </PopoverHeader>
                 <Box p="2" fontSize="sm" bgColor="whiteAlpha.200">
                     {data.items.map((item, index) => {
@@ -77,6 +79,7 @@ function AprTooltip({ data, textProps, onlySparkles, placement, aprLabel, sparkl
                                             m="0.25rem"
                                             h={subItemIndex === 0 ? '1rem' : '2rem'}
                                             mt={subItemIndex === 0 ? '-0.3rem' : '-1.7rem'}
+                                            bgColor="gray.100"
                                         />
                                         <Box h="1px" w="0.75rem" mr="0.25rem" ml="-0.25rem" />
                                         <Flex>
