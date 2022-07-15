@@ -45,7 +45,7 @@ function TokenAvatarSet({ width, tokenData, imageSize = 32, maxAssetsPerLine = 5
     return (
         <Popover trigger="hover">
             <PopoverTrigger>
-                <a>
+                <button>
                     <Flex
                         {...rest}
                         position={'relative'}
@@ -75,7 +75,7 @@ function TokenAvatarSet({ width, tokenData, imageSize = 32, maxAssetsPerLine = 5
                                     );
                                 })}
                     </Flex>
-                </a>
+                </button>
             </PopoverTrigger>
             <PopoverContent w="fit-content" bgColor="beets.base.800" shadow="2xl" p="1">
                 {tokens?.map((token, index) => (
