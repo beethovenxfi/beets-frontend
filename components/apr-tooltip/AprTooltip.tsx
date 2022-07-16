@@ -8,7 +8,7 @@ import {
     Popover,
     PopoverContent,
     PopoverHeader,
-    PopoverTrigger,
+    PopoverTrigger as OrigPopoverTrigger,
     Text,
     TextProps,
 } from '@chakra-ui/react';
@@ -26,6 +26,8 @@ interface Props {
 }
 
 function AprTooltip({ data, textProps, onlySparkles, placement, aprLabel, sparklesSize }: Props) {
+    // temp fix: https://github.com/chakra-ui/chakra-ui/issues/5896#issuecomment-1104085557
+    const PopoverTrigger: React.FC<{ children: React.ReactNode }> = OrigPopoverTrigger;
     const formatApr = (apr: string) => {
         if (parseFloat(apr) < 0.0000001) {
             return '0.00%';
@@ -43,8 +45,6 @@ function AprTooltip({ data, textProps, onlySparkles, placement, aprLabel, sparkl
                         {aprLabel ? ' APR' : ''}
                     </Text>
                 )}
-                {/*
-                // @ts-ignore */}
                 <PopoverTrigger>
                     <Button
                         minWidth="0"
@@ -62,7 +62,8 @@ function AprTooltip({ data, textProps, onlySparkles, placement, aprLabel, sparkl
                 <PopoverHeader bgColor="whiteAlpha.100">
                     <Text textAlign="left">
                         Total APR
-                        <Text fontSize="1.5rem">{formatApr(data.total)}</Text>
+                        <br />
+                        <span style={{ fontSize: '1.5rem' }}>{formatApr(data.total)}</span>
                     </Text>
                 </PopoverHeader>
                 <Box p="2" fontSize="sm" bgColor="whiteAlpha.200">
