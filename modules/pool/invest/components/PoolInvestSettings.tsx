@@ -23,12 +23,12 @@ import { ModalSectionHeadline } from '~/components/modal/ModalSectionHeadline';
 import { Check, ChevronDown, Save, Zap } from 'react-feather';
 import { SlippageTextLinkMenu } from '~/components/slippage/SlippageTextLinkMenu';
 
-export function PoolInvestSettings({ stepNumber, ...rest }: BoxProps & { stepNumber: number }) {
+export function PoolInvestSettings({ ...rest }: BoxProps) {
     const [zapEnabled, { toggle: toggleZapEnabled }] = useBoolean(true);
 
     return (
         <Box {...rest}>
-            <ModalSectionHeadline headline={`${stepNumber}. Customize settings`} />
+            <ModalSectionHeadline headline={`Settings`} />
             <BeetsBox>
                 <BeetsBoxLineItem
                     leftContent={
@@ -57,7 +57,7 @@ export function PoolInvestSettings({ stepNumber, ...rest }: BoxProps & { stepNum
                         />
                     }
                 >
-                    <Collapse in={zapEnabled} animateOpacity>
+                    {/*<Collapse in={zapEnabled} animateOpacity>
                         <Flex mt="2" alignItems="center">
                             <Box flex="1">
                                 <InfoButton
@@ -72,7 +72,7 @@ export function PoolInvestSettings({ stepNumber, ...rest }: BoxProps & { stepNum
                                 </Button>
                             </Box>
                         </Flex>
-                    </Collapse>
+                    </Collapse>*/}
                 </BeetsBoxLineItem>
 
                 <Flex px="3" py="2" justifyContent="center" borderBottomWidth={0}>

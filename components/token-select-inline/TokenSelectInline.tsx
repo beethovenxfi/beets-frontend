@@ -25,7 +25,7 @@ export function TokenSelectInline({ tokenOptions, selectedAddress, onOptionSelec
                         px="1.5"
                     >
                         <HStack spacing="1.5" flex="1">
-                            <TokenAvatar width="20px" height="20px" address={selectedAddress} />
+                            <TokenAvatar size="xs" address={selectedAddress} />
                             <Text color="gray.100" fontWeight="normal">
                                 {selectedToken?.symbol}
                             </Text>

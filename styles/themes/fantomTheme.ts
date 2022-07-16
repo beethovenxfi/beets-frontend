@@ -109,4 +109,13 @@ export const fantomTheme: Partial<ChakraTheme> = {
             },
         },
     },
+    components: {
+        Tooltip: {
+            baseStyle: {
+                borderRadius: 'sm',
+                bgColor: 'gray.400',
+                color: 'white',
+            },
+        },
+    },
 };

@@ -20,7 +20,7 @@ export function PoolInvestStakePreviewModal({ amount, amountIsValid, ...rest }: 
     const { hasApprovalToStakeAmount, isLoading, refetch, isRefetching } = usePoolUserStakingAllowance();
     const hasApproval = amount ? hasApprovalToStakeAmount(amount) : false;
 
-    const { approve, ...approveToken } = useApproveToken(pool.address);
+    const { approve, ...approveToken } = useApproveToken(pool);
     const { stake, ...masterChefDepositIntoFarm } = useMasterChefDepositIntoFarm();
 
     useEffect(() => {

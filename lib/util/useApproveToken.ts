@@ -2,11 +2,12 @@ import { useSubmitTransaction } from '~/lib/util/useSubmitTransaction';
 import ERC20Abi from '../abi/ERC20.json';
 import { networkConfig } from '~/lib/config/network-config';
 import { MaxUint256 } from '@ethersproject/constants';
+import { TokenBase } from '~/lib/services/token/token-types';
 
-export function useApproveToken(tokenAddress: string) {
+export function useApproveToken(token: TokenBase) {
     const { submit, submitAsync, ...rest } = useSubmitTransaction({
         contractConfig: {
-            addressOrName: tokenAddress,
+            addressOrName: token.address || '',
             contractInterface: ERC20Abi,
         },
         functionName: 'approve',
@@ -16,7 +17,7 @@ export function useApproveToken(tokenAddress: string) {
     function approve(contractToApprove = networkConfig.balancer.vault) {
         submit({
             args: [contractToApprove, MaxUint256.toString()],
-            toastText: 'Approve token',
+            toastText: `Approve ${token.symbol}`,
         });
     }
 

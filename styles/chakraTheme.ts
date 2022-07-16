@@ -3,7 +3,6 @@
 // 1. import `extendTheme` function
 import { extendTheme, ThemeConfig } from '@chakra-ui/react';
 import { fantomTheme } from '~/styles/themes/fantomTheme';
-import { StepsStyleConfig } from '~/components/steps';
 
 // 2. Add your color mode config
 const config: ThemeConfig = {
@@ -15,5 +14,7 @@ const config: ThemeConfig = {
 export const chakraTheme = extendTheme({
     ...fantomTheme,
     config,
-    components: { ...fantomTheme.components, Steps: StepsStyleConfig },
+    components: {
+        ...fantomTheme.components,
+    },
 });

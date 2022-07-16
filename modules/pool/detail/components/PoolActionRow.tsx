@@ -3,6 +3,7 @@ import BeetsButton from '~/components/button/Button';
 import { NextLink } from '~/components/link/NextLink';
 import { usePool } from '~/modules/pool/lib/usePool';
 import PoolInvestModal from '~/modules/pool/invest/components/PoolInvestModal';
+import PoolInvestProportional from '~/modules/pool/invest/components/PoolInvestProportional';
 
 type Props = {};
 

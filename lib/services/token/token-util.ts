@@ -13,7 +13,7 @@ export function tokenGetAmountForAddress(
     tokenAmounts: TokenAmountHumanReadable[],
     defaultValue: string = '0',
 ) {
-    return tokenAmounts.find((amount) => amount.address === address)?.amount || defaultValue;
+    return tokenAmounts.find((amount) => amount.address === address.toLowerCase())?.amount || defaultValue;
 }
 
 export function tokenFindTokenAmountForAddress(
@@ -89,4 +89,20 @@ export function isEth(address: string) {
 
 export function isWeth(address: string) {
     return address.toLowerCase() === networkConfig.wethAddress;
+}
+
+export function replaceEthWithWeth(address: string) {
+    if (address.toLowerCase() === networkConfig.eth.address.toLowerCase()) {
+        return networkConfig.wethAddress;
+    }
+
+    return address;
+}
+
+export function replaceWethWithEth(address: string) {
+    if (address.toLowerCase() === networkConfig.wethAddress.toLowerCase()) {
+        return networkConfig.eth.address.toLowerCase();
+    }
+
+    return address;
 }

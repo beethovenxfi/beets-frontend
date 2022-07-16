@@ -5,16 +5,21 @@ import { BeetsBox } from '~/components/box/BeetsBox';
 import { usePool } from '~/modules/pool/lib/usePool';
 import { BeetsBoxLineItem } from '~/components/box/BeetsBoxLineItem';
 import { numberFormatUSDValue } from '~/lib/util/number-formats';
+import { useInvest } from '~/modules/pool/invest/lib/useInvest';
 
-interface Props extends BoxProps {
-    weeklyYield: number;
-}
+interface Props extends BoxProps {}
 
-export function PoolInvestPriceImpactAndYield({ weeklyYield, ...rest }: Props) {
+export function PoolInvestSummary({ ...rest }: Props) {
     const { pool } = usePool();
+    const { totalInvestValue } = useInvest();
+    const weeklyYield = (totalInvestValue * parseFloat(pool.dynamicData.apr.total)) / 52;
 
     return (
         <BeetsBox {...rest}>
+            <BeetsBoxLineItem
+                leftContent={<Box>Total</Box>}
+                rightContent={<Box>{numberFormatUSDValue(totalInvestValue)}</Box>}
+            />
             <BeetsBoxLineItem
                 leftContent={
                     <InfoButton

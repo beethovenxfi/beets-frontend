@@ -17,6 +17,10 @@ export interface TokenBase {
     decimals: number;
 }
 
+export interface TokenBaseWithAmount extends TokenBase {
+    amount: string;
+}
+
 export type AmountHumanReadable = string;
 export type AmountScaled = BigNumber;
 export type AmountScaledString = string;

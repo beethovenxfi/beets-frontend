@@ -12,7 +12,7 @@ export function SlippageTextLinkMenu() {
 
     return (
         <Menu isOpen={isOpen} onClose={onClose} onOpen={onOpen}>
-            <MenuButton as={Link} color="beets.cyan" userSelect="none">
+            <MenuButton as={Link} color="beets.green" userSelect="none">
                 {numeral(slippage).format('0.0[000]%')}
             </MenuButton>
             <MenuList>

@@ -4,15 +4,24 @@ import { AmountHumanReadable, AmountHumanReadableMap } from '~/lib/services/toke
 interface InvestState {
     inputAmounts: AmountHumanReadableMap;
     selectedOptions: { [poolTokenIndex: string]: string };
+    zapEnabled: boolean;
 }
 
 export const investStateVar = makeVar<InvestState>({
     inputAmounts: {},
     selectedOptions: {},
+    zapEnabled: false,
 });
 
 export function useInvestState() {
-    const investState = useReactiveVar(investStateVar);
+    function setInputAmounts(inputAmounts: AmountHumanReadableMap) {
+        const state = investStateVar();
+
+        investStateVar({
+            ...state,
+            inputAmounts,
+        });
+    }
 
     function setInputAmount(tokenAddress: string, amount: AmountHumanReadable) {
         const state = investStateVar();
@@ -39,9 +48,9 @@ export function useInvestState() {
     }
 
     return {
+        setInputAmounts,
         setInputAmount,
         setSelectedOption,
-        inputAmounts: investState.inputAmounts,
-        selectedOptions: investState.selectedOptions,
+        ...useReactiveVar(investStateVar),
     };
 }
