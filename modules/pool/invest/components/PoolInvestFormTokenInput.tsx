@@ -156,13 +156,20 @@ export function PoolInvestFormTokenInput({
                             color="gray.100"
                             fontSize="xs"
                             display="flex"
-                            onClick={() => setInputAmount(option.poolTokenAddress, userBalance)}
+                            onClick={() => {
+                                if (userHasBalance) {
+                                    setInputAmount(option.poolTokenAddress, userBalance);
+                                }
+                            }}
                             _hover={{ textDecoration: 'none' }}
+                            cursor={userHasBalance ? 'pointer' : 'default'}
                         >
                             Balance: {tokenFormatAmountPrecise(userBalance, 4)}
-                            <Text color="beets.cyan" ml="1">
-                                Max
-                            </Text>
+                            {userHasBalance ? (
+                                <Text color="beets.cyan" ml="1">
+                                    Max
+                                </Text>
+                            ) : null}
                         </Link>
                     )}
                 </Box>

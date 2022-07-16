@@ -12,7 +12,8 @@ import { PoolInvestCustom } from '~/modules/pool/invest/components/PoolInvestCus
 export default function PoolInvestModal() {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const { pool, getPoolTypeName } = usePool();
-    const [modalState, setModalState] = useState<'start' | 'proportional' | 'custom' | 'preview'>('custom');
+    const [modalState, setModalState] = useState<'start' | 'proportional' | 'custom' | 'preview'>('start');
+    const [type, setInvestType] = useState<'proportional' | 'custom' | null>(null);
 
     return (
         <>
@@ -39,7 +40,11 @@ export default function PoolInvestModal() {
                                 if (modalState === 'proportional' || modalState === 'custom') {
                                     setModalState('start');
                                 } else if (modalState === 'preview') {
-                                    setModalState('proportional');
+                                    if (type === 'proportional') {
+                                        setModalState('proportional');
+                                    } else if (type === 'custom') {
+                                        setModalState('custom');
+                                    }
                                 }
                             }}
                         />
@@ -77,15 +82,31 @@ export default function PoolInvestModal() {
                     <ModalBody className="bg" pb="6">
                         {modalState === 'start' ? (
                             <PoolInvestTypeChoice
-                                onShowProportional={() => setModalState('proportional')}
-                                onShowCustom={() => setModalState('custom')}
+                                onShowProportional={() => {
+                                    setInvestType('proportional');
+                                    setModalState('proportional');
+                                }}
+                                onShowCustom={() => {
+                                    setInvestType('custom');
+                                    setModalState('custom');
+                                }}
                             />
                         ) : null}
                         {modalState === 'proportional' ? (
-                            <PoolInvestProportional onShowPreview={() => setModalState('preview')} />
+                            <PoolInvestProportional
+                                onShowPreview={() => {
+                                    setInvestType('proportional');
+                                    setModalState('preview');
+                                }}
+                            />
                         ) : null}
                         {modalState === 'custom' ? (
-                            <PoolInvestCustom onShowPreview={() => setModalState('preview')} />
+                            <PoolInvestCustom
+                                onShowPreview={() => {
+                                    setInvestType('custom');
+                                    setModalState('preview');
+                                }}
+                            />
                         ) : null}
                         {modalState === 'preview' ? <PoolInvestPreview /> : null}
                     </ModalBody>

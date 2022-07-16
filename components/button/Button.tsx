@@ -10,6 +10,7 @@ type Props = {
 export default function BeetsButton({
     children,
     buttonType = 'primary',
+    isDisabled,
     ...buttonOptions
 }: Props & ButtonOptions & ButtonProps & LinkProps) {
     const color = buttonType === 'secondary' ? 'beets.greenAlpha.300' : 'beets.green';
@@ -18,14 +19,16 @@ export default function BeetsButton({
         <ChakraButton
             bg={color}
             color={buttonType === 'secondary' ? 'white' : 'gray.500'}
-            _active={{ backgroundColor: color }}
+            _active={{ backgroundColor: isDisabled ? 'beets.greenAlpha.300' : color }}
             _focus={{ outline: 'none' }}
             rounded="xl"
             {...buttonOptions}
             _hover={{
-                transform: 'scale(1.02)',
+                transform: isDisabled ? undefined : 'scale(1.02)',
                 ...buttonOptions._hover,
             }}
+            _disabled={{ bg: 'beets.greenAlpha.300', opacity: '0.5', color: 'white', cursor: 'not-allowed' }}
+            isDisabled={isDisabled}
         >
             {children}
         </ChakraButton>
