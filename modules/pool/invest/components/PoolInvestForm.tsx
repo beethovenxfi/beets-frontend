@@ -28,7 +28,7 @@ function PoolInvestForm({ ...rest }: Props) {
             {/*<Flex justifyContent="flex-end" mb={4}>
                 <Settings />
             </Flex>*/}
-            {pool.investConfig.options.map((option, index) => (
+            {/*pool.investConfig.options.map((option, index) => (
                 <PoolInvestFormTokenInput
                     key={index}
                     userBalances={userPoolTokenBalances}
@@ -41,7 +41,7 @@ function PoolInvestForm({ ...rest }: Props) {
                     mb={4}
                     p={0}
                 />
-            ))}
+            ))*/}
             <BeetsButton
                 width="full"
                 bgColor="green.400"
