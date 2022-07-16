@@ -6,6 +6,9 @@ import { usePool } from '~/modules/pool/lib/usePool';
 import { BeetsBoxLineItem } from '~/components/box/BeetsBoxLineItem';
 import { numberFormatUSDValue } from '~/lib/util/number-formats';
 import { useInvest } from '~/modules/pool/invest/lib/useInvest';
+import { usePoolJoinGetBptOutAndPriceImpactForTokensIn } from '~/modules/pool/invest/lib/usePoolJoinGetBptOutAndPriceImpactForTokensIn';
+import numeral from 'numeral';
+import { BeetsSkeleton } from '~/components/skeleton/BeetsSkeleton';
 
 interface Props extends BoxProps {}
 
@@ -13,6 +16,7 @@ export function PoolInvestSummary({ ...rest }: Props) {
     const { pool } = usePool();
     const { totalInvestValue } = useInvest();
     const weeklyYield = (totalInvestValue * parseFloat(pool.dynamicData.apr.total)) / 52;
+    const { data: bptOutAndPriceImpact, isLoading } = usePoolJoinGetBptOutAndPriceImpactForTokensIn();
 
     return (
         <BeetsBox {...rest}>
@@ -28,7 +32,13 @@ export function PoolInvestSummary({ ...rest }: Props) {
                         infoText="Nunc rutrum aliquet ligula ut tincidunt. Nulla ligula justo, laoreet laoreet convallis et, lacinia non turpis. Duis consectetur sem risus, in lobortis est congue id."
                     />
                 }
-                rightContent={<Box>0.0%</Box>}
+                rightContent={
+                    isLoading ? (
+                        <BeetsSkeleton height="24px" width="64px" />
+                    ) : (
+                        <Box>{numeral(bptOutAndPriceImpact?.priceImpact || 0).format('0.00%')}</Box>
+                    )
+                }
             />
             <BeetsBoxLineItem
                 leftContent={

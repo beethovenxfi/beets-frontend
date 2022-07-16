@@ -11,9 +11,10 @@ import { useInvest } from '~/modules/pool/invest/lib/useInvest';
 
 interface Props {
     onShowProportional(): void;
+    onShowCustom(): void;
 }
 
-export function PoolInvestTypeChoice({ onShowProportional }: Props) {
+export function PoolInvestTypeChoice({ onShowProportional, onShowCustom }: Props) {
     const { pool } = usePool();
     const { priceForAmount } = useGetTokens();
     const { userPoolTokenBalances, investableAmount } = usePoolUserTokenBalancesInWallet();
@@ -98,7 +99,7 @@ export function PoolInvestTypeChoice({ onShowProportional }: Props) {
             <BeetsButton isFullWidth mb="3" isDisabled={!canInvestProportionally} onClick={onShowProportional}>
                 Invest proportionally
             </BeetsButton>
-            <BeetsButton isFullWidth buttonType="secondary" isDisabled={investableAmount === 0}>
+            <BeetsButton isFullWidth buttonType="secondary" isDisabled={investableAmount === 0} onClick={onShowCustom}>
                 Customize my investment
             </BeetsButton>
         </Box>

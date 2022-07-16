@@ -1,4 +1,4 @@
-import { Alert, AlertIcon, Box, BoxProps, Flex, Skeleton } from '@chakra-ui/react';
+import { Alert, AlertIcon, Box, BoxProps, Flex } from '@chakra-ui/react';
 import { HorizontalSteps } from '~/components/steps/HorizontalSteps';
 import { useUserAllowances } from '~/lib/util/useUserAllowances';
 import { usePool } from '~/modules/pool/lib/usePool';
@@ -13,7 +13,6 @@ import { BeetsSubmitTransactionButton } from '~/components/button/BeetsSubmitTra
 import { usePoolJoinGetBptOutAndPriceImpactForTokensIn } from '~/modules/pool/invest/lib/usePoolJoinGetBptOutAndPriceImpactForTokensIn';
 import { usePoolJoinGetContractCallData } from '~/modules/pool/invest/lib/usePoolJoinGetContractCallData';
 import { useJoinPool } from '~/modules/pool/invest/lib/useJoinPool';
-import { tokenAmountsGetArrayFromMap } from '~/lib/services/token/token-util';
 
 type Status = 'current' | 'idle' | 'submitting' | 'pending' | 'complete';
 type Step = TokenApprovalStep | ContractApprovalStep | InvestStep;
@@ -42,10 +41,10 @@ interface Props extends BoxProps {}
 
 export function PoolInvestActions({ ...rest }: Props) {
     const { pool } = usePool();
+    const { joinPool, isSubmitting, isPending, submitError } = useJoinPool(pool);
     const allInvestTokens = pool.investConfig.options.map((option, index) => option.tokenOptions).flat();
     const { selectedInvestTokensWithAmounts } = useInvest();
     const {
-        data,
         hasApprovalForAmount,
         isLoading,
         refetch: refetchUserAllowances,
@@ -53,7 +52,6 @@ export function PoolInvestActions({ ...rest }: Props) {
     const [steps, setSteps] = useState<Step[] | null>(null);
     const [currentStepIdx, setCurrentStepIdx] = useState<number>(0);
     const [stepStatuses, setStepStatuses] = useState<{ [id: string]: Status }>({});
-    const { joinPool, isSubmitting, isPending, submitError } = useJoinPool(pool);
     const { data: bptOutAndPriceImpact } = usePoolJoinGetBptOutAndPriceImpactForTokensIn();
     const { data: contractCallData } = usePoolJoinGetContractCallData(bptOutAndPriceImpact?.minBptReceived || null);
 
