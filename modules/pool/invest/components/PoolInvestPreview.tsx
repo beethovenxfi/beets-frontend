@@ -9,9 +9,11 @@ import { useInvest } from '~/modules/pool/invest/lib/useInvest';
 import { PoolInvestSummary } from '~/modules/pool/invest/components/PoolInvestSummary';
 import { PoolInvestActions } from '~/modules/pool/invest/components/PoolInvestActions';
 
-interface Props {}
+interface Props {
+    onInvestComplete(): void;
+}
 
-export function PoolInvestPreview({}: Props) {
+export function PoolInvestPreview({ onInvestComplete }: Props) {
     const { priceForAmount } = useGetTokens();
     const { selectedInvestTokensWithAmounts } = useInvest();
 
@@ -44,7 +46,7 @@ export function PoolInvestPreview({}: Props) {
                 })}
             </BeetsBox>
             <PoolInvestSummary mt="6" mb="8" />
-            <PoolInvestActions />
+            <PoolInvestActions onInvestComplete={onInvestComplete} />
         </Box>
     );
 }

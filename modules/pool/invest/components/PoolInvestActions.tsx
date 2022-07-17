@@ -37,12 +37,14 @@ interface InvestStep extends BaseStep {
     type: 'invest';
 }
 
-interface Props extends BoxProps {}
+interface Props extends BoxProps {
+    onInvestComplete(): void;
+}
 
-export function PoolInvestActions({ ...rest }: Props) {
+export function PoolInvestActions({ onInvestComplete, ...rest }: Props) {
     const { pool } = usePool();
-    const { selectedInvestTokensWithAmounts, isInvestingWithEth } = useInvest();
-    const { joinPool, isSubmitting, isPending, submitError } = useJoinPool(pool);
+    const { selectedInvestTokensWithAmounts } = useInvest();
+    const { joinPool, isSubmitting, isPending, submitError, isConfirmed } = useJoinPool(pool);
     const allInvestTokens = pool.investConfig.options.map((option, index) => option.tokenOptions).flat();
     const {
         hasApprovalForAmount,
@@ -128,7 +130,7 @@ export function PoolInvestActions({ ...rest }: Props) {
                     onCanceled={() => setStepStatus(currentStep.id, 'current')}
                 />
             ) : null}
-            {currentStep && currentStep.type === 'invest' ? (
+            {currentStep && currentStep.type === 'invest' && !isConfirmed ? (
                 <BeetsSubmitTransactionButton
                     isFullWidth
                     isSubmitting={isSubmitting}
@@ -142,12 +144,23 @@ export function PoolInvestActions({ ...rest }: Props) {
                     Invest
                 </BeetsSubmitTransactionButton>
             ) : null}
+            {isConfirmed && (
+                <BeetsButton onClick={onInvestComplete} isFullWidth buttonType="secondary">
+                    Return to pool
+                </BeetsButton>
+            )}
             {submitError ? (
                 <Alert status="error" mt={4}>
                     <AlertIcon />
                     An error occurred: {submitError.message}
                 </Alert>
             ) : null}
+            {isConfirmed && (
+                <div className="fireworks">
+                    <div className="before" />
+                    <div className="after" />
+                </div>
+            )}
         </Box>
     );
 }

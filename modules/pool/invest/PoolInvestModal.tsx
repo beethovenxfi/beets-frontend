@@ -114,7 +114,15 @@ export function PoolInvestModal() {
                                 }}
                             />
                         ) : null}
-                        {modalState === 'preview' ? <PoolInvestPreview /> : null}
+                        {modalState === 'preview' ? (
+                            <PoolInvestPreview
+                                onInvestComplete={() => {
+                                    setModalState('start');
+                                    setInvestType(null);
+                                    onClose();
+                                }}
+                            />
+                        ) : null}
                     </ModalBody>
                 </ModalContent>
             </Modal>

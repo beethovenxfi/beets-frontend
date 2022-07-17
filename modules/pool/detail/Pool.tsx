@@ -4,7 +4,7 @@ import { PoolComposition } from '~/modules/pool/detail/components/composition/Po
 import PoolDetailChart from '~/modules/pool/detail/components/PoolDetailChart';
 import PoolStats from './components/stats/PoolStats';
 import { PoolTransactions } from './components/transactions/PoolTransactions';
-import PoolActionRow from '~/modules/pool/detail/components/PoolActionRow';
+import { PoolActionsRow } from '~/modules/pool/detail/components/PoolActionsRow';
 
 export function Pool() {
     return (
@@ -12,7 +12,7 @@ export function Pool() {
             <PoolHeader />
             <VStack width="full" spacing="4">
                 <Flex width="full" justifyContent="flex-end">
-                    <PoolActionRow />
+                    <PoolActionsRow />
                 </Flex>
                 <HStack width="full" spacing="3" height="475px">
                     <PoolStats />

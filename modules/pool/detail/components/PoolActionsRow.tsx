@@ -6,7 +6,7 @@ import { PoolInvestModal } from '~/modules/pool/invest/PoolInvestModal';
 
 type Props = {};
 
-export default function PoolActionRow(props: Props) {
+export function PoolActionsRow(props: Props) {
     const { pool } = usePool();
 
     return (
