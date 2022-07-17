@@ -2,21 +2,14 @@ import { Divider, HStack, Text, VStack } from '@chakra-ui/layout';
 import { usePool } from '../../../lib/usePool';
 import numeral from 'numeral';
 import AprTooltip from '~/components/apr-tooltip/AprTooltip';
-import { usePoolUserTokenBalancesInWallet } from '~/modules/pool/lib/usePoolUserTokenBalancesInWallet';
 import { usePoolUserPendingRewards } from '~/modules/pool/lib/usePoolUserPendingRewards';
 import { usePoolUserBptBalance } from '~/modules/pool/lib/usePoolUserBptBalance';
 import { InfoButton } from '~/components/info-button/InfoButton';
-import { Flex } from '@chakra-ui/react';
 
 export default function PoolUserStats() {
-    const { pool, poolTokensWithoutPhantomBpt } = usePool();
+    const { pool } = usePool();
     const { investedAmount } = usePoolUserBptBalance();
-    const {
-        pendingRewards,
-        pendingRewardsTotalUSD,
-        isLoading: isLoadingPendingRewards,
-        refetch,
-    } = usePoolUserPendingRewards();
+    const { pendingRewardsTotalUSD } = usePoolUserPendingRewards();
 
     return (
         <VStack spacing="4" width="full" alignItems="flex-start" flex={1}>
