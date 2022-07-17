@@ -13,8 +13,7 @@ import { Box } from '@chakra-ui/react';
 import { usePoolUserBptBalance } from '~/modules/pool/lib/usePoolUserBptBalance';
 
 export default function PoolStats() {
-    const { isLoading, hasBpt } = usePoolUserBptBalance();
-    const { pool, poolTokensWithoutPhantomBpt } = usePool();
+    const { hasBpt } = usePoolUserBptBalance();
     const [activeTab, setActiveTab] = useState(0);
 
     const handleTabChanged = (tabIndex: number) => {

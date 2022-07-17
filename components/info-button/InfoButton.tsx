@@ -24,14 +24,15 @@ interface Props {
     moreInfoUrl?: string;
     moreInfoLinkText?: string;
     label?: string;
+    labelProps?: TextProps;
 }
 
-export function InfoButton({ iconSize, infoText, moreInfoUrl, moreInfoLinkText, label }: Props) {
+export function InfoButton({ iconSize, infoText, moreInfoUrl, moreInfoLinkText, label, labelProps }: Props) {
     const theme = useTheme();
     return (
         <Popover trigger="hover">
             <HStack spacing="1">
-                <Box>{label}</Box>
+                <Text {...labelProps}>{label}</Text>
                 {/*
                 // @ts-ignore */}
                 <PopoverTrigger>

@@ -5,6 +5,8 @@ import AprTooltip from '~/components/apr-tooltip/AprTooltip';
 import { usePoolUserTokenBalancesInWallet } from '~/modules/pool/lib/usePoolUserTokenBalancesInWallet';
 import { usePoolUserPendingRewards } from '~/modules/pool/lib/usePoolUserPendingRewards';
 import { usePoolUserBptBalance } from '~/modules/pool/lib/usePoolUserBptBalance';
+import { InfoButton } from '~/components/info-button/InfoButton';
+import { Flex } from '@chakra-ui/react';
 
 export default function PoolUserStats() {
     const { pool, poolTokensWithoutPhantomBpt } = usePool();
@@ -29,25 +31,46 @@ export default function PoolUserStats() {
             </VStack>
             <Divider />
             <VStack spacing="0" alignItems="flex-start">
-                <Text lineHeight="1rem" fontWeight="semibold" fontSize="sm" color="beets.base.50">
-                    My Liquidity
-                </Text>
+                <InfoButton
+                    label="My liquidity"
+                    infoText="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis pharetra, sapien eu ultrices mollis, metus libero maximus elit."
+                    labelProps={{
+                        lineHeight: '1rem',
+                        fontWeight: 'semibold',
+                        fontSize: 'sm',
+                        color: 'beets.base.50',
+                    }}
+                />
                 <Text color="white" fontSize="1.75rem">
                     {numeral(investedAmount).format('$0,0.00a')}
                 </Text>
             </VStack>
             <VStack spacing="0" alignItems="flex-start">
-                <Text lineHeight="1rem" fontWeight="semibold" fontSize="sm" color="beets.base.50">
-                    Pending Rewards
-                </Text>
+                <InfoButton
+                    label="Pending rewards"
+                    infoText="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis pharetra, sapien eu ultrices mollis, metus libero maximus elit."
+                    labelProps={{
+                        lineHeight: '1rem',
+                        fontWeight: 'semibold',
+                        fontSize: 'sm',
+                        color: 'beets.base.50',
+                    }}
+                />
                 <Text color="white" fontSize="1.75rem">
                     {numeral(pendingRewardsTotalUSD).format('$0,0.00000a')}
                 </Text>
             </VStack>
             <VStack spacing="0" alignItems="flex-start">
-                <Text lineHeight="1rem" fontWeight="semibold" fontSize="sm" color="beets.base.50">
-                    Staked Share
-                </Text>
+                <InfoButton
+                    label="Staked share"
+                    infoText="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis pharetra, sapien eu ultrices mollis, metus libero maximus elit."
+                    labelProps={{
+                        lineHeight: '1rem',
+                        fontWeight: 'semibold',
+                        fontSize: 'sm',
+                        color: 'beets.base.50',
+                    }}
+                />
                 <VStack spacing="none" alignItems="flex-start">
                     <Text color="white" fontSize="1.75rem">
                         {numeral(0).format('0,0.0000')}

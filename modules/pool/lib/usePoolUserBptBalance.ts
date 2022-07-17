@@ -53,6 +53,7 @@ function usePoolUserBptWalletBalance() {
 
     const { userBalances, ...userBalancesQuery } = useUserBalances(
         isFbeetsPool ? [pool.address, networkConfig.fbeets.address] : [pool.address],
+        [pool],
     );
 
     const userWalletBptBalance = parseUnits(tokenGetAmountForAddress(pool.address, userBalances), 18);
