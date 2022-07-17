@@ -975,5 +975,6 @@ type Query {
     tokenGetTokensDynamicData(addresses: [String!]!): [GqlTokenDynamicData!]!
     userGetFbeetsBalance: GqlUserFbeetsBalance!
     userGetPoolBalances: [GqlUserPoolBalance!]!
+    userGetPoolJoinExits(poolId: String!): [GqlPoolJoinExit!]!
     userGetStaking: [GqlPoolStaking!]!
 }

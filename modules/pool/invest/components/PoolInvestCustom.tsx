@@ -2,7 +2,7 @@ import { usePool } from '~/modules/pool/lib/usePool';
 import { useInvestState } from '~/modules/pool/invest/lib/useInvestState';
 import { usePoolUserTokenBalancesInWallet } from '~/modules/pool/lib/usePoolUserTokenBalancesInWallet';
 import { Box, Text } from '@chakra-ui/react';
-import { PoolInvestFormTokenInput } from '~/modules/pool/invest/components/PoolInvestFormTokenInput';
+import { PoolInvestCustomTokenInput } from '~/modules/pool/invest/components/PoolInvestCustomTokenInput';
 import { PoolInvestSummary } from '~/modules/pool/invest/components/PoolInvestSummary';
 import { PoolInvestSettings } from '~/modules/pool/invest/components/PoolInvestSettings';
 import BeetsButton from '~/components/button/Button';
@@ -24,7 +24,7 @@ export function PoolInvestCustom({ onShowPreview }: Props) {
                 <Text>Drag the slider or enter an amount to configure your investment.</Text>
             </Box>
             {pool.investConfig.options.map((option, index) => (
-                <PoolInvestFormTokenInput
+                <PoolInvestCustomTokenInput
                     tokenOption={selectedInvestTokens[index]}
                     userBalances={userPoolTokenBalances}
                     option={option}

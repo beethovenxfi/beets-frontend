@@ -1,18 +1,8 @@
-import {
-    Box,
-    HStack,
-    Slider,
-    SliderFilledTrack,
-    SliderMark,
-    SliderThumb,
-    SliderTrack,
-    Text,
-    useDisclosure,
-} from '@chakra-ui/react';
+import { Box, HStack, Slider, SliderFilledTrack, SliderMark, SliderThumb, SliderTrack, Text } from '@chakra-ui/react';
 import BeetsButton from '~/components/button/Button';
 import { usePool } from '~/modules/pool/lib/usePool';
 import { useInvestState } from '~/modules/pool/invest/lib/useInvestState';
-import { tokenAmountsGetArrayFromMap, tokenFormatAmount } from '~/lib/services/token/token-util';
+import { tokenFormatAmount } from '~/lib/services/token/token-util';
 import { PoolInvestSettings } from '~/modules/pool/invest/components/PoolInvestSettings';
 import { BeetsBox } from '~/components/box/BeetsBox';
 import { BeetsBoxLineItem } from '~/components/box/BeetsBoxLineItem';
@@ -23,7 +13,7 @@ import { PoolInvestSummary } from '~/modules/pool/invest/components/PoolInvestSu
 import { useGetTokens } from '~/lib/global/useToken';
 import { useEffect, useState } from 'react';
 import { usePoolJoinGetProportionalInvestmentAmount } from '~/modules/pool/invest/lib/usePoolJoinGetProportionalInvestmentAmount';
-import { mapValues, sumBy } from 'lodash';
+import { mapValues } from 'lodash';
 import { oldBnum } from '~/lib/services/pool/lib/old-big-number';
 import { useInvest } from '~/modules/pool/invest/lib/useInvest';
 
@@ -38,7 +28,7 @@ export default function PoolInvestProportional({ onShowPreview }: Props) {
     const { setSelectedOption, selectedOptions, setInputAmounts } = useInvestState();
     const [proportionalPercent, setProportionalPercent] = useState(25);
     const { data } = usePoolJoinGetProportionalInvestmentAmount();
-    const { canInvestProportionally, selectedInvestTokens } = useInvest();
+    const { selectedInvestTokens } = useInvest();
 
     const scaledProportionalSuggestions = mapValues(data || {}, (val, address) =>
         oldBnum(val)
@@ -47,7 +37,6 @@ export default function PoolInvestProportional({ onShowPreview }: Props) {
             .toFixed(getToken(address)?.decimals || 18)
             .toString(),
     );
-    const totalValue = sumBy(tokenAmountsGetArrayFromMap(scaledProportionalSuggestions), priceForAmount);
 
     useEffect(() => {
         setInputAmounts(scaledProportionalSuggestions);
@@ -131,7 +120,6 @@ export default function PoolInvestProportional({ onShowPreview }: Props) {
             <BeetsButton isFullWidth mt="8" onClick={onShowPreview}>
                 Preview
             </BeetsButton>
-            {/*<PoolInvestActions mt="8" />*/}
         </Box>
     );
 }

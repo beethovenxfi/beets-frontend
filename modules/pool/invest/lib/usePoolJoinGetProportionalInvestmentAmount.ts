@@ -18,7 +18,7 @@ export function usePoolJoinGetProportionalInvestmentAmount() {
                 ...balance,
                 //this has precision errors, but its only used for sorting, not any operations
                 normalizedAmount: token?.weight
-                    ? (parseFloat(balance.amount) / parseFloat(token.balance)) * parseFloat(token.weight)
+                    ? (parseFloat(balance.amount) / parseFloat(token.balance)) * (1 / parseFloat(token.weight))
                     : parseFloat(balance.amount),
             };
         }),
@@ -26,7 +26,14 @@ export function usePoolJoinGetProportionalInvestmentAmount() {
     )[0];
 
     return useQuery(
-        [{ key: 'joinGetProportionalInvestmentAmount', tokenWithLowestValue: tokenWithSmallestValue, userAddress }],
+        [
+            {
+                key: 'joinGetProportionalInvestmentAmount',
+                userInvestTokenBalances,
+                tokenWithLowestValue: tokenWithSmallestValue,
+                userAddress,
+            },
+        ],
         async ({ queryKey }) => {
             const hasEth = !!userInvestTokenBalances.find((token) => isEth(token.address));
             const fixedAmount = {

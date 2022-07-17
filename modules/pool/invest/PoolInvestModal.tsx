@@ -5,22 +5,28 @@ import { usePool } from '~/modules/pool/lib/usePool';
 import PoolInvestProportional from '~/modules/pool/invest/components/PoolInvestProportional';
 import { ChevronLeft } from 'react-feather';
 import { PoolInvestPreview } from '~/modules/pool/invest/components/PoolInvestPreview';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { PoolInvestTypeChoice } from '~/modules/pool/invest/components/PoolInvestTypeChoice';
 import { PoolInvestCustom } from '~/modules/pool/invest/components/PoolInvestCustom';
 
-export default function PoolInvestModal() {
+export function PoolInvestModal() {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const { pool, getPoolTypeName } = usePool();
     const [modalState, setModalState] = useState<'start' | 'proportional' | 'custom' | 'preview'>('start');
     const [type, setInvestType] = useState<'proportional' | 'custom' | null>(null);
+    const initialRef = useRef(null);
 
     return (
         <>
             <BeetsButton onClick={onOpen} width="140px">
                 Invest
             </BeetsButton>
-            <Modal isOpen={isOpen} onClose={onClose} size={modalState === 'start' ? '3xl' : '2xl'}>
+            <Modal
+                isOpen={isOpen}
+                onClose={onClose}
+                size={modalState === 'start' ? '3xl' : '2xl'}
+                initialFocusRef={initialRef}
+            >
                 <ModalOverlay />
                 <ModalContent backgroundColor="black">
                     <ModalCloseButton />

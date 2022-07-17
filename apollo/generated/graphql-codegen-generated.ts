@@ -1013,6 +1013,7 @@ export interface Query {
     tokenGetTokensDynamicData: Array<GqlTokenDynamicData>;
     userGetFbeetsBalance: GqlUserFbeetsBalance;
     userGetPoolBalances: Array<GqlUserPoolBalance>;
+    userGetPoolJoinExits: Array<GqlPoolJoinExit>;
     userGetStaking: Array<GqlPoolStaking>;
 }
 
@@ -1104,6 +1105,10 @@ export interface QueryTokenGetTokenDynamicDataArgs {
 
 export interface QueryTokenGetTokensDynamicDataArgs {
     addresses: Array<Scalars['String']>;
+}
+
+export interface QueryUserGetPoolJoinExitsArgs {
+    poolId: Scalars['String'];
 }
 
 export type GetPoolBatchSwapsQueryVariables = Exact<{

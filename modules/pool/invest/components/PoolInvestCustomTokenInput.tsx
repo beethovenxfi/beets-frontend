@@ -35,7 +35,7 @@ interface Props extends BoxProps {
     proportionalAmount?: string;
 }
 
-export function PoolInvestFormTokenInput({
+export function PoolInvestCustomTokenInput({
     userBalances,
     option,
     setInputAmount,
