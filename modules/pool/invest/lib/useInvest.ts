@@ -2,7 +2,7 @@ import { TokenAmountHumanReadable } from '~/lib/services/token/token-types';
 import { usePool } from '~/modules/pool/lib/usePool';
 import { useInvestState } from '~/modules/pool/invest/lib/useInvestState';
 import { usePoolUserTokenBalancesInWallet } from '~/modules/pool/lib/usePoolUserTokenBalancesInWallet';
-import { tokenGetAmountForAddress } from '~/lib/services/token/token-util';
+import { isEth, tokenGetAmountForAddress } from '~/lib/services/token/token-util';
 import { GqlPoolToken } from '~/apollo/generated/graphql-codegen-generated';
 import { sumBy } from 'lodash';
 import { useGetTokens } from '~/lib/global/useToken';
@@ -41,6 +41,7 @@ export function useInvest() {
         ).length === pool.investConfig.options.length;
 
     const totalInvestValue = sumBy(selectedInvestTokensWithAmounts, priceForAmount);
+    const isInvestingWithEth = !!selectedInvestTokens.find((token) => isEth(token.address));
 
     return {
         selectedInvestTokens,
@@ -48,5 +49,6 @@ export function useInvest() {
         userInvestTokenBalances,
         canInvestProportionally,
         totalInvestValue,
+        isInvestingWithEth,
     };
 }

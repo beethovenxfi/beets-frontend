@@ -31,6 +31,7 @@ import { formatFixed } from '@ethersproject/bignumber';
 import { WeightedPoolEncoder } from '@balancer-labs/balancer-js';
 import { PoolBaseService } from '~/lib/services/pool/lib/pool-base.service';
 import OldBigNumber from 'bignumber.js';
+import { replaceWethWithZeroAddress } from '~/lib/services/token/token-util';
 
 export class PoolWeightedService implements PoolService {
     private baseService: PoolBaseService;

@@ -1,26 +1,8 @@
 import { BeetsBoxLineItem } from '~/components/box/BeetsBoxLineItem';
 import { InfoButton } from '~/components/info-button/InfoButton';
-import {
-    Box,
-    BoxProps,
-    Button,
-    Flex,
-    IconButton,
-    Input,
-    Link,
-    Menu,
-    MenuButton,
-    MenuItem,
-    MenuList,
-    Switch,
-    Text,
-    useBoolean,
-    useTheme,
-} from '@chakra-ui/react';
-import { Collapse } from '@chakra-ui/transition';
+import { Box, BoxProps, Flex, Switch, Text, useBoolean } from '@chakra-ui/react';
 import { BeetsBox } from '~/components/box/BeetsBox';
 import { ModalSectionHeadline } from '~/components/modal/ModalSectionHeadline';
-import { Check, ChevronDown, Save, Zap } from 'react-feather';
 import { SlippageTextLinkMenu } from '~/components/slippage/SlippageTextLinkMenu';
 
 export function PoolInvestSettings({ ...rest }: BoxProps) {

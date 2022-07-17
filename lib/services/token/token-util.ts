@@ -7,6 +7,7 @@ import {
 import { map, pickBy } from 'lodash';
 import numeral from 'numeral';
 import { networkConfig } from '~/lib/config/network-config';
+import { AddressZero } from '@ethersproject/constants';
 
 export function tokenGetAmountForAddress(
     address: string,
@@ -105,4 +106,8 @@ export function replaceWethWithEth(address: string) {
     }
 
     return address;
+}
+
+export function replaceWethWithZeroAddress(addresses: string[]): string[] {
+    return addresses.map((address) => (address.toLowerCase() === networkConfig.wethAddress ? AddressZero : address));
 }

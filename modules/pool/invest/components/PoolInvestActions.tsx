@@ -41,9 +41,9 @@ interface Props extends BoxProps {}
 
 export function PoolInvestActions({ ...rest }: Props) {
     const { pool } = usePool();
+    const { selectedInvestTokensWithAmounts, isInvestingWithEth } = useInvest();
     const { joinPool, isSubmitting, isPending, submitError } = useJoinPool(pool);
     const allInvestTokens = pool.investConfig.options.map((option, index) => option.tokenOptions).flat();
-    const { selectedInvestTokensWithAmounts } = useInvest();
     const {
         hasApprovalForAmount,
         isLoading,
