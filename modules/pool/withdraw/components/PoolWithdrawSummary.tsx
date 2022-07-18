@@ -6,15 +6,24 @@ import { BeetsBoxLineItem } from '~/components/box/BeetsBoxLineItem';
 import { numberFormatUSDValue } from '~/lib/util/number-formats';
 import numeral from 'numeral';
 import { BeetsSkeleton } from '~/components/skeleton/BeetsSkeleton';
+import { usePoolExitGetProportionalWithdrawEstimate } from '~/modules/pool/withdraw/lib/usePoolExitGetProportionalWithdrawEstimate';
+import { sum } from 'lodash';
+import { useGetTokens } from '~/lib/global/useToken';
 
 interface Props extends BoxProps {}
 
 export function PoolWithdrawSummary({ ...rest }: Props) {
     const { pool } = usePool();
+    const { data, isLoading } = usePoolExitGetProportionalWithdrawEstimate();
+    const { priceForAmount } = useGetTokens();
+    const totalValue = sum((data || []).map(priceForAmount));
 
     return (
         <BeetsBox {...rest}>
-            <BeetsBoxLineItem leftContent={<Box>Total</Box>} rightContent={<Box>{numberFormatUSDValue('0.0')}</Box>} />
+            <BeetsBoxLineItem
+                leftContent={<Box>Total</Box>}
+                rightContent={<Box>{numberFormatUSDValue(totalValue)}</Box>}
+            />
             <BeetsBoxLineItem
                 leftContent={
                     <InfoButton
