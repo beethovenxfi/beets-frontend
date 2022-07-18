@@ -132,7 +132,15 @@ export function BeetsTransactionStepsSubmit({
                 </BeetsSubmitTransactionButton>
             ) : null}
             {complete && (
-                <BeetsButton onClick={onCompleteButtonClick} isFullWidth buttonType="secondary">
+                <BeetsButton
+                    onClick={() => {
+                        setStepStatuses({});
+                        setComplete(false);
+                        onCompleteButtonClick();
+                    }}
+                    isFullWidth
+                    buttonType="secondary"
+                >
                     {completeButtonText}
                 </BeetsButton>
             )}

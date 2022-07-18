@@ -9,6 +9,7 @@ import { useRef, useState } from 'react';
 import { PoolInvestTypeChoice } from '~/modules/pool/invest/components/PoolInvestTypeChoice';
 import { PoolInvestCustom } from '~/modules/pool/invest/components/PoolInvestCustom';
 import { PoolWithdrawTypeChoice } from '~/modules/pool/withdraw/components/PoolWithdrawTypeChoice';
+import { PoolUnstakeModal } from '~/modules/pool/stake/PoolUnstakeModal';
 
 export function PoolWithdrawModal() {
     const { isOpen, onOpen, onClose } = useDisclosure();
