@@ -125,7 +125,7 @@ export function PoolWithdrawTypeChoice({ onShowProportional, onShowCustom }: Pro
                 Withdraw proportionally
             </BeetsButton>
             <BeetsButton isFullWidth buttonType="secondary" isDisabled={!hasBptInWallet} onClick={onShowCustom}>
-                Customize my withdraw
+                Single asset withdraw
             </BeetsButton>
 
             <PoolUnstakeModal {...unstakeDisclosure} />

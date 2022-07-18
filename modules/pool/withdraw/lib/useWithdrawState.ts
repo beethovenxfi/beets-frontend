@@ -7,28 +7,28 @@ interface WithdrawState {
     type: WithdrawType;
     singleAsset: TokenAmountHumanReadable | null;
     proportionalPercent: number;
+    selectedOptions: { [poolTokenIndex: string]: string };
 }
 
 export const withdrawStateVar = makeVar<WithdrawState>({
     type: 'PROPORTIONAL',
     proportionalPercent: 100,
     singleAsset: null,
+    selectedOptions: {},
 });
 
 export function useWithdrawState() {
-    const withdrawState = useReactiveVar(withdrawStateVar);
-
     async function setProportionalPercent(value: number) {
-        withdrawStateVar({ ...withdrawState, proportionalPercent: value });
+        withdrawStateVar({ ...withdrawStateVar(), proportionalPercent: value });
     }
 
     function setProportionalWithdraw() {
-        withdrawStateVar({ ...withdrawState, type: 'PROPORTIONAL', singleAsset: null });
+        withdrawStateVar({ ...withdrawStateVar(), type: 'PROPORTIONAL', singleAsset: null });
     }
 
     function setSingleAssetWithdraw(tokenAddress: string) {
         withdrawStateVar({
-            ...withdrawState,
+            ...withdrawStateVar(),
             type: 'SINGLE_ASSET',
             singleAsset: { address: tokenAddress, amount: '' },
         });
@@ -36,18 +36,29 @@ export function useWithdrawState() {
 
     function setSingleAssetWithdrawAmount(tokenAmount: TokenAmountHumanReadable) {
         withdrawStateVar({
-            ...withdrawState,
+            ...withdrawStateVar(),
             singleAsset: tokenAmount,
         });
     }
 
+    function setSelectedOption(poolTokenIndex: number, tokenAddress: string) {
+        const state = withdrawStateVar();
+
+        withdrawStateVar({
+            ...state,
+            selectedOptions: {
+                ...state.selectedOptions,
+                [`${poolTokenIndex}`]: tokenAddress,
+            },
+        });
+    }
+
     return {
+        ...useReactiveVar(withdrawStateVar),
         setProportionalPercent,
-        selectedWithdrawType: withdrawState.type,
-        singleAssetWithdraw: withdrawState.singleAsset,
-        proportionalPercent: withdrawState.proportionalPercent,
         setProportionalWithdraw,
         setSingleAssetWithdraw,
         setSingleAssetWithdrawAmount,
+        setSelectedOption,
     };
 }

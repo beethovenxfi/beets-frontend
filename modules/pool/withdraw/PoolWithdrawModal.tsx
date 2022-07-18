@@ -10,6 +10,7 @@ import { PoolInvestTypeChoice } from '~/modules/pool/invest/components/PoolInves
 import { PoolInvestCustom } from '~/modules/pool/invest/components/PoolInvestCustom';
 import { PoolWithdrawTypeChoice } from '~/modules/pool/withdraw/components/PoolWithdrawTypeChoice';
 import { PoolUnstakeModal } from '~/modules/pool/stake/PoolUnstakeModal';
+import { PoolWithdrawProportional } from '~/modules/pool/withdraw/components/PoolWithdrawProportional';
 
 export function PoolWithdrawModal() {
     const { isOpen, onOpen, onClose } = useDisclosure();
@@ -71,19 +72,19 @@ export function PoolWithdrawModal() {
 
                         {modalState === 'proportional' ? (
                             <Heading size="md" textAlign="center">
-                                Proportional investment
+                                Proportional withdraw
                             </Heading>
                         ) : null}
 
                         {modalState === 'custom' ? (
                             <Heading size="md" textAlign="center">
-                                Custom investment
+                                Single asset withdraw
                             </Heading>
                         ) : null}
 
                         {modalState === 'preview' ? (
                             <Heading size="md" textAlign="center">
-                                Investment preview
+                                Withdraw preview
                             </Heading>
                         ) : null}
                     </ModalHeader>
@@ -101,7 +102,7 @@ export function PoolWithdrawModal() {
                             />
                         ) : null}
                         {modalState === 'proportional' ? (
-                            <PoolInvestProportional
+                            <PoolWithdrawProportional
                                 onShowPreview={() => {
                                     setInvestType('proportional');
                                     setModalState('preview');

@@ -2,9 +2,11 @@ import {
     Box,
     Flex,
     Heading,
+    HStack,
     Skeleton,
     Slider,
     SliderFilledTrack,
+    SliderMark,
     SliderThumb,
     SliderTrack,
     Text,
@@ -17,13 +19,24 @@ import { usePool } from '~/modules/pool/lib/usePool';
 import { useGetTokens } from '~/lib/global/useToken';
 import { usePoolExitGetProportionalWithdrawEstimate } from '~/modules/pool/withdraw/lib/usePoolExitGetProportionalWithdrawEstimate';
 import { tokenFormatAmount } from '~/lib/services/token/token-util';
+import { BeetsBox } from '~/components/box/BeetsBox';
+import { TokenSelectInline } from '~/components/token-select-inline/TokenSelectInline';
+import { numberFormatUSDValue } from '~/lib/util/number-formats';
+import { BeetsBoxLineItem } from '~/components/box/BeetsBoxLineItem';
+import { PoolInvestSummary } from '~/modules/pool/invest/components/PoolInvestSummary';
+import { PoolInvestSettings } from '~/modules/pool/invest/components/PoolInvestSettings';
+import BeetsButton from '~/components/button/Button';
+import { PoolWithdrawSettings } from '~/modules/pool/withdraw/components/PoolWithdrawSettings';
+import { PoolWithdrawSummary } from '~/modules/pool/withdraw/components/PoolWithdrawSummary';
 
-interface Props extends BoxProps {}
+interface Props extends BoxProps {
+    onShowPreview: () => void;
+}
 
-export function PoolWithdrawProportional({ ...rest }: Props) {
+export function PoolWithdrawProportional({ onShowPreview, ...rest }: Props) {
     const { pool } = usePool();
-    const { setProportionalPercent, proportionalPercent } = useWithdrawState();
-    const { formattedPrice } = useGetTokens();
+    const { setProportionalPercent, proportionalPercent, setSelectedOption, selectedOptions } = useWithdrawState();
+    const { formattedPrice, priceForAmount } = useGetTokens();
 
     const { data, isLoading } = usePoolExitGetProportionalWithdrawEstimate();
     const proportionalAmounts = data || [];
@@ -32,26 +45,30 @@ export function PoolWithdrawProportional({ ...rest }: Props) {
 
     return (
         <Box {...rest}>
-            <Box mb={2}>
-                <Flex>
-                    <Text flex={1} color="gray.500">
-                        Proportional withdraw
-                    </Text>
-                    <Text color="gray.500">{proportionalPercent}%</Text>
-                </Flex>
-                <Slider
-                    aria-label="proportional-withdraw-slider"
-                    defaultValue={100}
-                    onChange={setProportionalPercent}
-                    value={proportionalPercent}
-                >
+            <Box mt="4">
+                <Text>Drag the slider to configure your withdraw amount.</Text>
+                <Slider mt="12" aria-label="slider-ex-1" value={proportionalPercent} onChange={setProportionalPercent}>
                     <SliderTrack>
                         <SliderFilledTrack />
                     </SliderTrack>
-                    <SliderThumb />
+                    <SliderThumb boxSize={4} />
+                    <SliderMark
+                        value={proportionalPercent}
+                        textAlign="center"
+                        bg="beets.base.500"
+                        color="white"
+                        mt="-10"
+                        ml="-30px"
+                        w="12"
+                        fontSize="md"
+                        width="60px"
+                        borderRadius="md"
+                    >
+                        {proportionalPercent}%
+                    </SliderMark>
                 </Slider>
             </Box>
-            <Box bgColor="beets.base.800" borderRadius="md">
+            <BeetsBox borderRadius="md" mt="4">
                 {withdrawOptions.map((option, index) => {
                     const tokenOption = option.tokenOptions[0];
                     const poolToken = pool.tokens[option.poolTokenIndex];
@@ -61,30 +78,53 @@ export function PoolWithdrawProportional({ ...rest }: Props) {
                         '0';
 
                     return (
-                        <Flex key={index} py={4} px={4} borderBottomWidth={last ? 0 : 1} borderBottomColor="gray.700">
-                            <Flex flex={1} pr={4} alignItems="center">
-                                <TokenAvatar address={tokenOption.address} size="sm" mr={2} />
-                                <Heading fontSize="xl" fontWeight="medium">
-                                    {tokenOption.symbol}{' '}
-                                    {poolToken.weight ? numeral(poolToken.weight).format('%') : null}
-                                </Heading>
-                            </Flex>
-                            <Box>
-                                <Skeleton isLoaded={!isLoading}>
-                                    <Heading fontSize="xl" fontWeight="medium">
-                                        {tokenFormatAmount(proportionalAmount)}
-                                    </Heading>
-                                </Skeleton>
-                                <Skeleton isLoaded={!isLoading}>
-                                    <Text textAlign="right" color="gray.500">
-                                        {formattedPrice({ address: tokenOption.address, amount: proportionalAmount })}
-                                    </Text>
-                                </Skeleton>
-                            </Box>
-                        </Flex>
+                        <BeetsBoxLineItem
+                            key={index}
+                            last={last}
+                            pl={option.tokenOptions.length > 1 ? '1.5' : '3'}
+                            center={true}
+                            leftContent={
+                                option.tokenOptions.length > 1 ? (
+                                    <Box flex="1">
+                                        <TokenSelectInline
+                                            tokenOptions={option.tokenOptions}
+                                            selectedAddress={
+                                                selectedOptions[`${option.poolTokenIndex}`] ||
+                                                option.tokenOptions[0].address
+                                            }
+                                            onOptionSelect={(address) =>
+                                                setSelectedOption(option.poolTokenIndex, address)
+                                            }
+                                        />
+                                    </Box>
+                                ) : (
+                                    <HStack spacing="1.5" flex="1">
+                                        <TokenAvatar size="xs" address={tokenOption.address} />
+                                        <Text>{tokenOption.symbol}</Text>
+                                    </HStack>
+                                )
+                            }
+                            rightContent={
+                                <Box>
+                                    <Box textAlign="right">{tokenFormatAmount(proportionalAmount)}</Box>
+                                    <Box textAlign="right" fontSize="sm" color="gray.200">
+                                        {formattedPrice({
+                                            address: tokenOption.address,
+                                            amount: proportionalAmount,
+                                        })}
+                                    </Box>
+                                </Box>
+                            }
+                        />
                     );
                 })}
-            </Box>
+            </BeetsBox>
+
+            <PoolWithdrawSummary mt="6" />
+            <PoolWithdrawSettings mt="8" />
+            <BeetsButton isFullWidth mt="8" onClick={onShowPreview}>
+                Preview
+            </BeetsButton>
         </Box>
     );
 }

@@ -4,6 +4,7 @@ import { TokenAmountHumanReadable } from '~/lib/services/token/token-types';
 import numeral from 'numeral';
 import { networkConfig } from '~/lib/config/network-config';
 import { useUserImportedTokens } from '~/lib/user/useUserImportedTokens';
+import { numberFormatUSDValue } from '~/lib/util/number-formats';
 
 export function useGetTokens() {
     const { data: tokensResponse } = useGetTokensQuery({ fetchPolicy: 'cache-first' });
@@ -55,11 +56,7 @@ export function useGetTokens() {
     function formattedPrice(tokenAmount: TokenAmountHumanReadable): string {
         const price = priceForAmount(tokenAmount);
 
-        if (price < 0.01) {
-            return '$0.00';
-        }
-
-        return numeral(price).format('$0,0.00');
+        return numberFormatUSDValue(price);
     }
 
     return {
