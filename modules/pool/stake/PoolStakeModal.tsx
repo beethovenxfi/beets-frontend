@@ -107,8 +107,8 @@ export function PoolStakeModal({ isOpen, onOpen, onClose }: Props) {
                 </ModalHeader>
                 <ModalBody className="bg" pt="4" pb="6">
                     <Text mb="4">
-                        Drag the slider to configure the amount of BPT you would like to stake. To maximize your
-                        rewards, stake all of your BPT into the {networkConfig.farmTypeName}.
+                        Drag the slider to configure the amount you would like to stake. To maximize your rewards, stake
+                        all of your BPT into the {networkConfig.farmTypeName}.
                     </Text>
                     <Slider mt="8" aria-label="slider-ex-1" value={percent} onChange={setPercent}>
                         <SliderTrack>
@@ -138,7 +138,7 @@ export function PoolStakeModal({ isOpen, onOpen, onClose }: Props) {
                             center={true}
                             leftContent={
                                 <Box flex="1">
-                                    <Text>BPT to stake</Text>
+                                    <Text>Amount to stake</Text>
                                 </Box>
                             }
                             rightContent={
@@ -150,9 +150,11 @@ export function PoolStakeModal({ isOpen, onOpen, onClose }: Props) {
                                         </>
                                     ) : (
                                         <>
-                                            <Box textAlign="right">{tokenFormatAmount(amount)}</Box>
-                                            <Box textAlign="right" color="gray.200">
+                                            <Box textAlign="right">
                                                 {numberFormatUSDValue(userPoolBalanceUSD * (percent / 100))}
+                                            </Box>
+                                            <Box textAlign="right" color="gray.200">
+                                                {tokenFormatAmount(amount)} BPT
                                             </Box>
                                         </>
                                     )}

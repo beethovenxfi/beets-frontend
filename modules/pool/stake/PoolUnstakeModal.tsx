@@ -40,6 +40,7 @@ export function PoolUnstakeModal({ isOpen, onOpen, onClose }: Props) {
     const { userPoolBalanceUSD } = usePoolUserDepositBalance();
     const [percent, setPercent] = useState(100);
     const {
+        userTotalBptBalance,
         userStakedBptBalance,
         hasBptStaked,
         isLoading: isLoadingBalances,
@@ -49,18 +50,12 @@ export function PoolUnstakeModal({ isOpen, onOpen, onClose }: Props) {
     const amount = oldBnumToHumanReadable(oldBnumScaleAmount(userStakedBptBalance).times(percent).div(100));
     const hasValue = hasBptStaked && amount !== '' && percent !== 0;
     const amountIsValid = !hasValue || parseFloat(userStakedBptBalance) >= parseFloat(amount);
+    const amountValue = (parseFloat(amount) / parseFloat(userTotalBptBalance)) * userPoolBalanceUSD;
     const { pool } = usePool();
-    const {
-        hasApprovalToStakeAmount,
-        isLoading: isLoadingAllowances,
-        refetch: refetchAllowances,
-        isRefetching,
-    } = usePoolUserStakingAllowance();
 
     const { approve, ...approveQuery } = useApproveToken(pool);
     const { withdraw, ...unstakeQuery } = useMasterChefWithdrawFromFarm();
-    const [steps, setSteps] = useState<TransactionStep[] | null>(null);
-    const loading = isLoadingAllowances || isLoadingBalances;
+    const loading = isLoadingBalances;
 
     useEffect(() => {
         if (isOpen && userStakedBptBalance) {
@@ -92,7 +87,7 @@ export function PoolUnstakeModal({ isOpen, onOpen, onClose }: Props) {
                 </ModalHeader>
                 <ModalBody className="bg" pt="4" pb="6">
                     <Text mb="4">
-                        Drag the slider to configure the amount of BPT you would like to unstake from the{' '}
+                        Drag the slider to configure the amount you would like to unstake from the{' '}
                         {networkConfig.farmTypeName}.
                     </Text>
                     <Slider mt="8" aria-label="slider-ex-1" value={percent} onChange={setPercent}>
@@ -123,7 +118,7 @@ export function PoolUnstakeModal({ isOpen, onOpen, onClose }: Props) {
                             center={true}
                             leftContent={
                                 <Box flex="1">
-                                    <Text>BPT to stake</Text>
+                                    <Text>Amount to unstake</Text>
                                 </Box>
                             }
                             rightContent={
@@ -135,9 +130,9 @@ export function PoolUnstakeModal({ isOpen, onOpen, onClose }: Props) {
                                         </>
                                     ) : (
                                         <>
-                                            <Box textAlign="right">{tokenFormatAmount(amount)}</Box>
+                                            <Box textAlign="right">{numberFormatUSDValue(amountValue)}</Box>
                                             <Box textAlign="right" color="gray.200">
-                                                {numberFormatUSDValue(userPoolBalanceUSD * (percent / 100))}
+                                                {tokenFormatAmount(amount)} BPT
                                             </Box>
                                         </>
                                     )}
