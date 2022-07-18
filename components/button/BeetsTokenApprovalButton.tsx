@@ -10,6 +10,7 @@ interface Props {
     onPending(): void;
     onSubmitting(): void;
     onCanceled(): void;
+    isDisabled?: boolean;
 }
 
 export function BeetsTokenApprovalButton({

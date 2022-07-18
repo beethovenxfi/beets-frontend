@@ -33,6 +33,7 @@ interface Props {
     onCompleteButtonClick: () => void;
     onSubmit: (id: string) => void;
     onConfirmed: (id: string) => void;
+    isDisabled?: boolean;
 
     steps: TransactionStep[];
     queries: (Omit<SubmitTransactionQuery, 'submit' | 'submitAsync'> & { id: string })[];
@@ -47,6 +48,7 @@ export function BeetsTransactionStepsSubmit({
     onSubmit,
     onConfirmed,
     queries,
+    isDisabled,
 }: Props) {
     const [currentStepIdx, setCurrentStepIdx] = useState<number>(0);
     const [stepStatuses, setStepStatuses] = useState<{ [id: string]: StepStatus }>({});
@@ -112,6 +114,7 @@ export function BeetsTransactionStepsSubmit({
                     onSubmitting={() => setStepStatus(currentStep.id, 'submitting')}
                     onPending={() => setStepStatus(currentStep.id, 'pending')}
                     onCanceled={() => setStepStatus(currentStep.id, 'current')}
+                    isDisabled={isDisabled}
                 />
             ) : null}
             {currentStep && currentStep.type !== 'tokenApproval' && currentQuery && !complete ? (
@@ -123,6 +126,7 @@ export function BeetsTransactionStepsSubmit({
                     onPending={() => setStepStatus(currentStep.id, 'pending')}
                     onCanceled={() => setStepStatus(currentStep.id, 'current')}
                     onConfirmed={internalOnConfirmed}
+                    isDisabled={isDisabled}
                 >
                     {currentStep.buttonText}
                 </BeetsSubmitTransactionButton>

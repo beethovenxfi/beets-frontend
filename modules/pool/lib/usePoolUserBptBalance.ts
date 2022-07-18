@@ -21,14 +21,10 @@ export function usePoolUserBptBalance() {
     const userTotalBptBalanceScaled = userWalletBptBalance.add(userStakedBptBalanceScaled);
     const userTotalBptBalance = formatFixed(userTotalBptBalanceScaled, 18);
     const userPercentShare = parseFloat(userTotalBptBalance) / parseFloat(pool.dynamicData.totalShares);
-    const investedAmount = userPercentShare * parseFloat(pool.dynamicData.totalLiquidity);
 
     async function refetch() {
-        const wallet = await userWalletBalanceQuery.refetch();
-        const staked = await userStakedBalanceQuery.refetch();
-
-        console.log('wallet', wallet);
-        console.log('staked', staked);
+        await userWalletBalanceQuery.refetch();
+        await userStakedBalanceQuery.refetch();
     }
 
     return {
@@ -45,7 +41,6 @@ export function usePoolUserBptBalance() {
         hasBptInWallet: userWalletBptBalance.gt(0),
         hasBptStaked: userStakedBptBalanceScaled.gt(0),
         userPercentShare,
-        investedAmount,
     };
 }
 

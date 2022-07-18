@@ -3,14 +3,14 @@ import { usePool } from '../../../lib/usePool';
 import numeral from 'numeral';
 import AprTooltip from '~/components/apr-tooltip/AprTooltip';
 import { usePoolUserPendingRewards } from '~/modules/pool/lib/usePoolUserPendingRewards';
-import { usePoolUserBptBalance } from '~/modules/pool/lib/usePoolUserBptBalance';
 import { InfoButton } from '~/components/info-button/InfoButton';
 import { numberFormatUSDValue } from '~/lib/util/number-formats';
+import { usePoolUserDepositBalance } from '~/modules/pool/lib/usePoolUserDepositBalance';
 
 export default function PoolUserStats() {
     const { pool } = usePool();
-    const { investedAmount } = usePoolUserBptBalance();
     const { pendingRewardsTotalUSD } = usePoolUserPendingRewards();
+    const { userPoolBalanceUSD } = usePoolUserDepositBalance();
 
     return (
         <VStack spacing="4" width="full" alignItems="flex-start" flex={1}>
@@ -36,7 +36,7 @@ export default function PoolUserStats() {
                     }}
                 />
                 <Text color="white" fontSize="1.75rem">
-                    {numeral(investedAmount).format('$0,0.00a')}
+                    {numeral(userPoolBalanceUSD).format('$0,0.00a')}
                 </Text>
             </VStack>
             <VStack spacing="0" alignItems="flex-start">

@@ -1,19 +1,32 @@
-import { Box, Flex, Heading, Input, InputGroup, Link, ModalHeader, ModalOverlay, Text } from '@chakra-ui/react';
+import {
+    Box,
+    Heading,
+    ModalHeader,
+    ModalOverlay,
+    Slider,
+    SliderFilledTrack,
+    SliderMark,
+    SliderThumb,
+    SliderTrack,
+    Text,
+} from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
-import { numberLimitInputToNumDecimals } from '~/lib/util/number-formats';
+import { numberFormatUSDValue } from '~/lib/util/number-formats';
 import { usePoolUserBptBalance } from '~/modules/pool/lib/usePoolUserBptBalance';
 import { Modal, ModalBody, ModalCloseButton, ModalContent } from '@chakra-ui/modal';
 import { networkConfig } from '~/lib/config/network-config';
 import { capitalize } from 'lodash';
 import { tokenFormatAmount } from '~/lib/services/token/token-util';
 import { usePool } from '~/modules/pool/lib/usePool';
-import { usePoolUserTokenBalancesInWallet } from '~/modules/pool/lib/usePoolUserTokenBalancesInWallet';
 import { useApproveToken } from '~/lib/util/useApproveToken';
 import { useMasterChefDepositIntoFarm } from '~/lib/global/useMasterChefDepositIntoFarm';
-import { FadeInOutBox } from '~/components/animation/FadeInOutBox';
 import { BeetsSkeleton } from '~/components/skeleton/BeetsSkeleton';
 import { usePoolUserStakingAllowance } from '~/modules/pool/stake/lib/usePoolUserStakingAllowance';
 import { BeetsTransactionStepsSubmit, TransactionStep } from '~/components/button/BeetsTransactionStepsSubmit';
+import { BeetsBoxLineItem } from '~/components/box/BeetsBoxLineItem';
+import { BeetsBox } from '~/components/box/BeetsBox';
+import { usePoolUserDepositBalance } from '~/modules/pool/lib/usePoolUserDepositBalance';
+import { oldBnumScaleAmount, oldBnumToHumanReadable } from '~/lib/services/pool/lib/old-big-number';
 
 interface Props {
     isOpen: boolean;
@@ -21,7 +34,9 @@ interface Props {
     onClose(): void;
 }
 
-export function PoolInvestStakeModal({ isOpen, onOpen, onClose }: Props) {
+export function PoolStakeModal({ isOpen, onOpen, onClose }: Props) {
+    const { userPoolBalanceUSD } = usePoolUserDepositBalance();
+    const [percent, setPercent] = useState(100);
     const {
         userWalletBptBalance,
         hasBptInWallet,
@@ -29,8 +44,8 @@ export function PoolInvestStakeModal({ isOpen, onOpen, onClose }: Props) {
         isRefetching: isRefetchingBalances,
         refetch: refetchBptBalances,
     } = usePoolUserBptBalance();
-    const [amount, setAmount] = useState(userWalletBptBalance);
-    const hasValue = hasBptInWallet && amount !== '';
+    const amount = oldBnumToHumanReadable(oldBnumScaleAmount(userWalletBptBalance).times(percent).div(100));
+    const hasValue = hasBptInWallet && amount !== '' && percent !== 0;
     const amountIsValid = !hasValue || parseFloat(userWalletBptBalance) >= parseFloat(amount);
     const { pool } = usePool();
     const {
@@ -65,7 +80,7 @@ export function PoolInvestStakeModal({ isOpen, onOpen, onClose }: Props) {
 
     useEffect(() => {
         if (isOpen && userWalletBptBalance) {
-            setAmount(userWalletBptBalance);
+            setPercent(100);
         }
     }, [isOpen]);
 
@@ -92,51 +107,59 @@ export function PoolInvestStakeModal({ isOpen, onOpen, onClose }: Props) {
                 </ModalHeader>
                 <ModalBody className="bg" pt="4" pb="6">
                     <Text mb="4">
-                        The balance below indicates the amount of pool tokens (BPT) that you have in your wallet. To
-                        maximize your rewards, stake your BPT into the {networkConfig.farmTypeName}.
+                        Drag the slider to configure the amount of BPT you would like to stake. To maximize your
+                        rewards, stake all of your BPT into the {networkConfig.farmTypeName}.
                     </Text>
-                    <InputGroup>
-                        <Input
-                            type="number"
-                            placeholder={'0.0'}
-                            textAlign="right"
-                            size="lg"
-                            value={amount}
-                            onChange={(e) => {
-                                setAmount(numberLimitInputToNumDecimals(e.target.value));
-                            }}
-                            isInvalid={!amountIsValid}
-                            border="2px"
-                            _hover={{ borderColor: 'gray.200' }}
-                            _placeholder={{ color: 'gray.400' }}
+                    <Slider mt="8" aria-label="slider-ex-1" value={percent} onChange={setPercent}>
+                        <SliderTrack>
+                            <SliderFilledTrack />
+                        </SliderTrack>
+                        <SliderThumb boxSize={4} />
+                        <SliderMark
+                            value={percent}
+                            textAlign="center"
+                            bg="beets.base.500"
+                            color="white"
+                            mt="-10"
+                            ml="-30px"
+                            w="12"
+                            fontSize="md"
+                            width="60px"
+                            borderRadius="md"
+                        >
+                            {percent}%
+                        </SliderMark>
+                    </Slider>
+
+                    <BeetsBox mt="4" pt="0.5" mb="8">
+                        <BeetsBoxLineItem
+                            last={true}
+                            pl="3"
+                            center={true}
+                            leftContent={
+                                <Box flex="1">
+                                    <Text>BPT to stake</Text>
+                                </Box>
+                            }
+                            rightContent={
+                                <Box display="flex" flexDirection="column" alignItems="flex-end">
+                                    {isLoadingBalances || isRefetchingBalances ? (
+                                        <>
+                                            <BeetsSkeleton height="20px" width="60px" mb="2" />
+                                            <BeetsSkeleton height="20px" width="40px" />
+                                        </>
+                                    ) : (
+                                        <>
+                                            <Box textAlign="right">{tokenFormatAmount(amount)}</Box>
+                                            <Box textAlign="right" color="gray.200">
+                                                {numberFormatUSDValue(userPoolBalanceUSD * (percent / 100))}
+                                            </Box>
+                                        </>
+                                    )}
+                                </Box>
+                            }
                         />
-                    </InputGroup>
-                    {isLoadingBalances || isRefetchingBalances ? (
-                        <BeetsSkeleton width="140px" height="20px" mt="2" mb="8" />
-                    ) : (
-                        <Flex mt="1" mb="8">
-                            <Box flex={1}>
-                                <Text color="gray.200">
-                                    Balance: {tokenFormatAmount(userWalletBptBalance)}
-                                    {hasBptInWallet ? (
-                                        <Link
-                                            ml={2}
-                                            color="beets.cyan"
-                                            userSelect="none"
-                                            onClick={() => {
-                                                setAmount(userWalletBptBalance);
-                                            }}
-                                        >
-                                            Max
-                                        </Link>
-                                    ) : null}
-                                </Text>
-                            </Box>
-                            <FadeInOutBox isVisible={!amountIsValid} color="red.500">
-                                Exceeds wallet balance
-                            </FadeInOutBox>
-                        </Flex>
-                    )}
+                    </BeetsBox>
 
                     <BeetsTransactionStepsSubmit
                         isLoading={loading || steps === null}
@@ -156,7 +179,6 @@ export function PoolInvestStakeModal({ isOpen, onOpen, onClose }: Props) {
                             if (id === 'approve') {
                                 refetchAllowances();
                             } else if (id === 'stake') {
-                                setAmount('');
                                 refetchBptBalances();
                             }
                         }}
@@ -165,6 +187,7 @@ export function PoolInvestStakeModal({ isOpen, onOpen, onClose }: Props) {
                             { ...stakeQuery, id: 'stake' },
                             { ...approveQuery, id: 'approve' },
                         ]}
+                        isDisabled={!hasValue || !amountIsValid}
                     />
                 </ModalBody>
             </ModalContent>
