@@ -51,7 +51,7 @@ function PoolWithdrawForm({ ...rest }: Props) {
                 })}
             </Select>
 
-            {singleAssetWithdraw ? <PoolWithdrawSingleAsset /> : <PoolWithdrawProportional />}
+            {/*singleAssetWithdraw ? <PoolWithdrawSingleAsset /> : <PoolWithdrawProportional />*/}
 
             <Button
                 width="full"
