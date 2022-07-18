@@ -23,9 +23,12 @@ export function usePoolUserBptBalance() {
     const userPercentShare = parseFloat(userTotalBptBalance) / parseFloat(pool.dynamicData.totalShares);
     const investedAmount = userPercentShare * parseFloat(pool.dynamicData.totalLiquidity);
 
-    function refetch() {
-        userWalletBalanceQuery.refetch();
-        userStakedBalanceQuery.refetch();
+    async function refetch() {
+        const wallet = await userWalletBalanceQuery.refetch();
+        const staked = await userStakedBalanceQuery.refetch();
+
+        console.log('wallet', wallet);
+        console.log('staked', staked);
     }
 
     return {

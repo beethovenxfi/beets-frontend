@@ -30,7 +30,10 @@ export function useBalances(account: string | null, tokens: TokenBase[]) {
     });
 
     async function refetch() {
-        return Promise.all([ethBalance.refetch, multicall.refetch]);
+        return {
+            ethBalanceResponse: await ethBalance.refetch(),
+            multicallResponse: await multicall.refetch(),
+        };
     }
 
     const balances: TokenAmountHumanReadable[] = multicall.data

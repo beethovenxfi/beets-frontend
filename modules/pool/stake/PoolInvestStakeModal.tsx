@@ -22,12 +22,17 @@ interface Props {
 }
 
 export function PoolInvestStakeModal({ isOpen, onOpen, onClose }: Props) {
-    const { userWalletBptBalance, hasBptInWallet, isLoading: isLoadingBalances } = usePoolUserBptBalance();
+    const {
+        userWalletBptBalance,
+        hasBptInWallet,
+        isLoading: isLoadingBalances,
+        isRefetching: isRefetchingBalances,
+        refetch: refetchBptBalances,
+    } = usePoolUserBptBalance();
     const [amount, setAmount] = useState(userWalletBptBalance);
     const hasValue = hasBptInWallet && amount !== '';
     const amountIsValid = !hasValue || parseFloat(userWalletBptBalance) >= parseFloat(amount);
     const { pool } = usePool();
-    const poolUserPoolTokenBalances = usePoolUserTokenBalancesInWallet();
     const {
         hasApprovalToStakeAmount,
         isLoading: isLoadingAllowances,
@@ -100,7 +105,7 @@ export function PoolInvestStakeModal({ isOpen, onOpen, onClose }: Props) {
                             _placeholder={{ color: 'gray.400' }}
                         />
                     </InputGroup>
-                    {isLoadingBalances ? (
+                    {isLoadingBalances || isRefetchingBalances ? (
                         <BeetsSkeleton width="140px" height="20px" mt="2" mb="8" />
                     ) : (
                         <Flex mt="1" mb="8">
@@ -141,11 +146,11 @@ export function PoolInvestStakeModal({ isOpen, onOpen, onClose }: Props) {
                                 stake(pool.staking?.id || '', amount || '0');
                             }
                         }}
-                        onConfirmed={(id) => {
+                        onConfirmed={async (id) => {
                             if (id === 'approve') {
                                 refetchAllowances();
                             } else if (id === 'stake') {
-                                poolUserPoolTokenBalances.refetch();
+                                refetchBptBalances();
                             }
                         }}
                         steps={steps || []}

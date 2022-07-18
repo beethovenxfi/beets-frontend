@@ -5,6 +5,7 @@ import AprTooltip from '~/components/apr-tooltip/AprTooltip';
 import { usePoolUserPendingRewards } from '~/modules/pool/lib/usePoolUserPendingRewards';
 import { usePoolUserBptBalance } from '~/modules/pool/lib/usePoolUserBptBalance';
 import { InfoButton } from '~/components/info-button/InfoButton';
+import { numberFormatUSDValue } from '~/lib/util/number-formats';
 
 export default function PoolUserStats() {
     const { pool } = usePool();
@@ -50,7 +51,7 @@ export default function PoolUserStats() {
                     }}
                 />
                 <Text color="white" fontSize="1.75rem">
-                    {numeral(pendingRewardsTotalUSD).format('$0,0.00000a')}
+                    {numberFormatUSDValue(pendingRewardsTotalUSD)}
                 </Text>
             </VStack>
             <VStack spacing="0" alignItems="flex-start">
