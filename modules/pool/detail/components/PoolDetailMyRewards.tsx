@@ -16,13 +16,7 @@ interface Props extends BoxProps {}
 export function PoolDetailMyRewards({ ...rest }: Props) {
     const { formattedPrice, getToken } = useGetTokens();
     const { pendingRewards, pendingRewardsTotalUSD, isLoading, refetch } = usePoolUserPendingRewards();
-    const { harvest, isSubmitting, isConfirmed, isPending } = usePoolUserHarvestPendingRewards();
-
-    useEffect(() => {
-        if (isConfirmed) {
-            refetch().catch();
-        }
-    }, [isConfirmed]);
+    const { harvest, ...harvestQuery } = usePoolUserHarvestPendingRewards();
 
     return (
         <BeetsBox {...rest}>
@@ -74,8 +68,8 @@ export function PoolDetailMyRewards({ ...rest }: Props) {
             </Box>
             <Flex p={4} pt={2}>
                 <BeetsSubmitTransactionButton
-                    isSubmitting={isSubmitting}
-                    isPending={isPending}
+                    {...harvestQuery}
+                    onConfirmed={() => refetch()}
                     onClick={() => harvest()}
                     width="full"
                 >

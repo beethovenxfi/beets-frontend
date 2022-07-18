@@ -1,18 +1,14 @@
-import { Alert, AlertIcon, Box, BoxProps, Flex } from '@chakra-ui/react';
-import { HorizontalSteps } from '~/components/steps/HorizontalSteps';
+import { BoxProps } from '@chakra-ui/react';
 import { useUserAllowances } from '~/lib/util/useUserAllowances';
 import { usePool } from '~/modules/pool/lib/usePool';
 import { networkConfig } from '~/lib/config/network-config';
 import { useInvest } from '~/modules/pool/invest/lib/useInvest';
 import { useEffect, useState } from 'react';
 import { TokenBaseWithAmount } from '~/lib/services/token/token-types';
-import { BeetsSkeleton } from '~/components/skeleton/BeetsSkeleton';
-import BeetsButton from '~/components/button/Button';
-import { PoolInvestActionTokenApproval } from '~/modules/pool/invest/components/PoolInvestActionTokenApproval';
-import { BeetsSubmitTransactionButton } from '~/components/button/BeetsSubmitTransactionButton';
 import { usePoolJoinGetBptOutAndPriceImpactForTokensIn } from '~/modules/pool/invest/lib/usePoolJoinGetBptOutAndPriceImpactForTokensIn';
 import { usePoolJoinGetContractCallData } from '~/modules/pool/invest/lib/usePoolJoinGetContractCallData';
 import { useJoinPool } from '~/modules/pool/invest/lib/useJoinPool';
+import { BeetsTransactionStepsSubmit, TransactionStep } from '~/components/button/BeetsTransactionStepsSubmit';
 
 type Status = 'current' | 'idle' | 'submitting' | 'pending' | 'complete';
 type Step = TokenApprovalStep | ContractApprovalStep | InvestStep;
@@ -44,24 +40,16 @@ interface Props extends BoxProps {
 export function PoolInvestActions({ onInvestComplete, ...rest }: Props) {
     const { pool } = usePool();
     const { selectedInvestTokensWithAmounts } = useInvest();
-    const { joinPool, isSubmitting, isPending, submitError, isConfirmed } = useJoinPool(pool);
-    const allInvestTokens = pool.investConfig.options.map((option, index) => option.tokenOptions).flat();
+    const joinQuery = useJoinPool(pool);
+    const allInvestTokens = pool.investConfig.options.map((option) => option.tokenOptions).flat();
     const {
         hasApprovalForAmount,
         isLoading,
         refetch: refetchUserAllowances,
     } = useUserAllowances(allInvestTokens, networkConfig.balancer.vault);
-    const [steps, setSteps] = useState<Step[] | null>(null);
-    const [currentStepIdx, setCurrentStepIdx] = useState<number>(0);
-    const [stepStatuses, setStepStatuses] = useState<{ [id: string]: Status }>({});
+    const [steps, setSteps] = useState<TransactionStep[] | null>(null);
     const { data: bptOutAndPriceImpact } = usePoolJoinGetBptOutAndPriceImpactForTokensIn();
     const { data: contractCallData } = usePoolJoinGetContractCallData(bptOutAndPriceImpact?.minBptReceived || null);
-
-    function setStepStatus(id: string, status: Status) {
-        setStepStatuses({ ...stepStatuses, [id]: status });
-    }
-
-    const loading = isLoading;
 
     useEffect(() => {
         if (!isLoading) {
@@ -69,7 +57,7 @@ export function PoolInvestActions({ onInvestComplete, ...rest }: Props) {
                 (tokenWithAmount) => !hasApprovalForAmount(tokenWithAmount.address, tokenWithAmount.amount),
             );
 
-            const steps: Step[] = [
+            const steps: TransactionStep[] = [
                 ...tokensRequiringApproval.map((token) => ({
                     id: token.symbol,
                     type: 'tokenApproval' as const,
@@ -79,20 +67,17 @@ export function PoolInvestActions({ onInvestComplete, ...rest }: Props) {
                 })),
                 {
                     id: 'invest',
-                    type: 'invest',
+                    type: 'other',
                     buttonText: 'Invest',
                     tooltipText: 'Confirm investment into this pool',
                 },
             ];
 
             setSteps(steps);
-            setStepStatuses({ [steps[0].id]: 'current' });
         }
-    }, [loading]);
+    }, [isLoading]);
 
-    const currentStep = steps ? steps[currentStepIdx] : null;
-
-    return (
+    /*return (
         <Box {...rest}>
             {loading ? (
                 <Flex justifyContent="center">
@@ -113,8 +98,8 @@ export function PoolInvestActions({ onInvestComplete, ...rest }: Props) {
                 </BeetsButton>
             ) : null}
             {steps && currentStep && currentStep.type === 'tokenApproval' ? (
-                <PoolInvestActionTokenApproval
-                    token={currentStep.token}
+                <BeetsTokenApprovalButton
+                    tokenWithAmount={currentStep.token}
                     onConfirmed={() => {
                         setStepStatuses({
                             ...stepStatuses,
@@ -162,5 +147,26 @@ export function PoolInvestActions({ onInvestComplete, ...rest }: Props) {
                 </div>
             )}
         </Box>
+    );*/
+
+    return (
+        <BeetsTransactionStepsSubmit
+            isLoading={steps === null}
+            loadingButtonText="Invest"
+            completeButtonText="Return to pool"
+            onCompleteButtonClick={onInvestComplete}
+            steps={steps || []}
+            onSubmit={(id) => {
+                if (id === 'invest' && contractCallData) {
+                    joinQuery.joinPool(contractCallData, selectedInvestTokensWithAmounts);
+                }
+            }}
+            onConfirmed={(id) => {
+                if (id !== 'invest') {
+                    refetchUserAllowances();
+                }
+            }}
+            queries={[{ ...joinQuery, id: 'invest' }]}
+        />
     );
 }

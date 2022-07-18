@@ -37,7 +37,7 @@ export function HomeLearn(props: BoxProps) {
                     <HomeLearnItem
                         title={'LBP Launches'}
                         description={
-                            'Dive into to Liquidity Bootstrapping Pools.\n\nLearn about the mechanics of how a token is launched in a “classic launch pad” launch.'
+                            'Dive into to Liquidity Bootstrapping Pools.\n\nLearn about the mechanics of how a tokenWithAmount is launched in a “classic launch pad” launch.'
                         }
                         url={'https://beets.fi'}
                     />
@@ -69,7 +69,7 @@ export function HomeLearn(props: BoxProps) {
                     <HomeLearnItem
                         title={'Basics: What is- and do I need a Hardware wallet?'}
                         description={
-                            'Dive into to Liquidity Bootstrapping Pools.\n\nLearn about the mechanics of how a token is launched in a “classic launch pad” launch.'
+                            'Dive into to Liquidity Bootstrapping Pools.\n\nLearn about the mechanics of how a tokenWithAmount is launched in a “classic launch pad” launch.'
                         }
                         url={'https://beets.fi'}
                     />

@@ -33,7 +33,7 @@ export function NavbarPendingRewards() {
     const { stakedValueUSD, loading: userDataLoading } = useUserData();
     const { getToken } = useGetTokens();
     const loading = pendingRewardsLoading || userDataLoading;
-    const { harvestAll, isSubmitting, isPending } = useUserHarvestAllPendingRewards();
+    const { harvestAll, ...harvestQuery } = useUserHarvestAllPendingRewards();
     const farmIds = staking.map((stake) => stake?.farm?.id || '');
 
     return (
@@ -96,9 +96,8 @@ export function NavbarPendingRewards() {
                     </BeetsBox>
                     <Box mt="4">
                         <BeetsSubmitTransactionButton
-                            isSubmitting={isSubmitting}
-                            isPending={isPending}
-                            disabled={pendingRewardsTotalUSD < 0.01}
+                            {...harvestQuery}
+                            isDisabled={pendingRewardsTotalUSD < 0.01}
                             onClick={() => harvestAll(farmIds)}
                             width="full"
                         >

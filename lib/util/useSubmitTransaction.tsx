@@ -11,6 +11,7 @@ import { UseWaitForTransactionConfig } from 'wagmi/dist/declarations/src/hooks/t
 import { useRef } from 'react';
 import { useAddRecentTransaction } from '@rainbow-me/rainbowkit';
 import { makeVar } from '@apollo/client';
+import { TransactionResponse } from '@ethersproject/providers';
 
 interface Props {
     contractConfig: Omit<WriteContractArgs, 'signerOrProvider'>;
@@ -18,6 +19,21 @@ interface Props {
     writeConfig?: UseContractWriteConfig;
     waitForConfig?: UseWaitForTransactionConfig;
     toastType: ToastTransactionType;
+}
+
+export interface SubmitTransactionQuery {
+    submit: (config: WriteContractConfig & { toastText: string }) => void;
+    submitAsync: (config: WriteContractConfig & { toastText: string }) => Promise<TransactionResponse>;
+
+    isSubmitting: boolean;
+    submitError: Error | null;
+    isSubmitError: boolean;
+
+    isPending: boolean;
+    isConfirmed: boolean;
+    isFailed: boolean;
+    error: Error | null;
+    reset: () => void;
 }
 
 export const vaultContractConfig = {
@@ -32,7 +48,13 @@ export const batchRelayerContractConfig = {
 
 export const txPendingVar = makeVar(false);
 
-export function useSubmitTransaction({ contractConfig, functionName, writeConfig, toastType, waitForConfig }: Props) {
+export function useSubmitTransaction({
+    contractConfig,
+    functionName,
+    writeConfig,
+    toastType,
+    waitForConfig,
+}: Props): SubmitTransactionQuery {
     const signer = useSigner();
     const toast = useToast();
     const pendingToastIdRef = useRef<ToastId | undefined>();

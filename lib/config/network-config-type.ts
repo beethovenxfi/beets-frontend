@@ -44,4 +44,5 @@ export interface NetworkConfig {
     defaultTokenIn: string;
     defaultTokenOut: string;
     additionalLinks: { url: string; title: string; subTitle?: string }[];
+    farmTypeName: string;
 }

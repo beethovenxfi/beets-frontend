@@ -20,7 +20,7 @@ type Props = {
 export default function TradePreview({ onClose }: Props) {
     const { reactiveTradeState } = useTrade();
     const { getToken } = useGetTokens();
-    const { batchSwap, isSubmitting, isPending } = useBatchSwap();
+    const batchSwapQuery = useBatchSwap();
     const { slippage } = useSlippage();
     const swapInfo = reactiveTradeState.sorResponse;
     const tokenIn = getToken(swapInfo?.tokenIn || '');
@@ -152,13 +152,12 @@ export default function TradePreview({ onClose }: Props) {
                     </Alert>
                 ) : null}
                 <BeetsSubmitTransactionButton
-                    marginTop="6"
-                    isSubmitting={isSubmitting}
-                    isPending={isPending}
-                    disabled={hasHighPriceImpact && !highPiAccepted}
-                    onClick={() => batchSwap(swapInfo)}
+                    {...batchSwapQuery}
+                    isDisabled={hasHighPriceImpact && !highPiAccepted}
+                    onClick={() => batchSwapQuery.batchSwap(swapInfo)}
                     isFullWidth
                     size="lg"
+                    marginTop="6"
                 >
                     Swap
                 </BeetsSubmitTransactionButton>

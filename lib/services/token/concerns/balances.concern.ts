@@ -48,7 +48,7 @@ export class BalancesConcern {
                     ERC20Abi,
                     tokens.map((token) => [token.address, 'balanceOf', [account]]),
                 )
-            ).map((result) => BigNumber.from(result ?? '0')); // If we fail to read a token's balance, treat it as zero
+            ).map((result) => BigNumber.from(result ?? '0')); // If we fail to read a tokenWithAmount's balance, treat it as zero
 
             return [...this.associateBalances(balances, tokens), ...tokenBalances];
         } catch (error) {

@@ -8,7 +8,7 @@ export class MetadataConcern {
     constructor(private readonly provider: JsonRpcProvider, private readonly chainId: string) {}
 
     /**
-     * Perform an onchain multicall to load token data
+     * Perform an onchain multicall to load tokenWithAmount data
      */
     public async loadOnChainTokenData(addresses: string[]): Promise<TokenBase[]> {
         try {

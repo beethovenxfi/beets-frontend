@@ -86,7 +86,7 @@ export default class TokenService {
         const token = this.allTokens.get(address);
 
         if (!token) {
-            throw new Error('Did not find token for address: ' + address);
+            throw new Error('Did not find tokenWithAmount for address: ' + address);
         }
 
         return token;

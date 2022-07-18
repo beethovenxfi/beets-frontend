@@ -14,13 +14,13 @@ export function PoolWithdrawUnstakeForm() {
     const hasValue = hasBptStaked && amount !== '';
     const isValid = !hasValue || parseFloat(userStakedBptBalance) >= parseFloat(amount);
 
-    const { withdraw, isPending, isSubmitting, isConfirmed } = useMasterChefWithdrawFromFarm();
+    const { withdraw, ...withdrawQuery } = useMasterChefWithdrawFromFarm();
 
     useEffect(() => {
-        if (isConfirmed) {
+        if (withdrawQuery.isConfirmed) {
             refetch();
         }
-    }, [isConfirmed]);
+    }, [withdrawQuery.isConfirmed]);
 
     return (
         <Box>
@@ -58,12 +58,13 @@ export function PoolWithdrawUnstakeForm() {
             </Flex>
             {!isValid ? <Text color="red.500">Exceeds staked balance</Text> : null}
             <BeetsSubmitTransactionButton
+                {...withdrawQuery}
                 isLoading={isLoading}
                 loadingText="Loading balances..."
-                isSubmitting={isSubmitting}
-                isPending={isPending || isRefetching}
+                isPending={withdrawQuery.isPending || isRefetching}
+                onConfirmed={() => refetch()}
                 onClick={() => withdraw(pool.staking?.id || '', amount)}
-                mt={8}
+                mt="8"
                 width="full"
             >
                 Unstake

@@ -2,9 +2,11 @@ import { Box, Center, Circle, Flex, FlexProps, HStack, Spinner, Tooltip, useThem
 import { IconWallet } from '~/components/icons/IconWallet';
 import { Check } from 'react-feather';
 
+export type StepStatus = 'current' | 'idle' | 'submitting' | 'pending' | 'complete';
+
 interface Props extends FlexProps {
     steps: {
-        status: 'current' | 'idle' | 'submitting' | 'pending' | 'complete';
+        status: StepStatus;
         tooltipText: string;
     }[];
 }

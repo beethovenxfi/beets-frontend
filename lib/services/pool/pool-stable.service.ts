@@ -162,7 +162,7 @@ export class PoolStableService implements PoolService {
         const denormAmounts = poolScaleTokenAmounts(tokenAmounts, this.pool.tokens);
 
         // _bptForTokensZeroPriceImpact is the only stable pool function
-        // that requires balances be scaled by the token decimals and not 18
+        // that requires balances be scaled by the tokenWithAmount decimals and not 18
         const balances = this.pool.tokens.map((token) => parseUnits(token.balance, token.decimals));
 
         const bptZeroImpact = stableBPTForTokensZeroPriceImpact(

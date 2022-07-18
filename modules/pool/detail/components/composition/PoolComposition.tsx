@@ -101,7 +101,7 @@ const PoolCompositionTable = ({ columns, data, hasBpt, hasNestedTokens }: any) =
                 </HStack>
             );
         } else if (cell.column.id === Columns.Weight) {
-            // only show the progress bar for the pool token and not for any nested tokens
+            // only show the progress bar for the pool tokenWithAmount and not for any nested tokens
             if (cell.row.depth === 0) {
                 return <Progress width="80%" rounded="lg" value={parseFloat(cell.value || '0') * 100} />;
             } else {

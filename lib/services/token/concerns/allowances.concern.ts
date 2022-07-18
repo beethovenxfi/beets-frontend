@@ -41,7 +41,7 @@ export class AllowancesConcern {
                 ERC20Abi,
                 tokens.map((token) => [token.address, 'allowance', [account, contractAddress]]),
             )
-        ).map((balance) => BigNumber.from(balance ?? '0')); // If we fail to read a token's allowance, treat it as zero;
+        ).map((balance) => BigNumber.from(balance ?? '0')); // If we fail to read a tokenWithAmount's allowance, treat it as zero;
 
         return Object.fromEntries(
             tokens.map((token, i) => [getAddress(token.address), formatUnits(allowances[i], token.decimals)]),
