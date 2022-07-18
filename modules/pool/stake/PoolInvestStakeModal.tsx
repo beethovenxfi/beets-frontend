@@ -63,6 +63,12 @@ export function PoolInvestStakeModal({ isOpen, onOpen, onClose }: Props) {
         }
     }, [loading]);
 
+    useEffect(() => {
+        if (isOpen && userWalletBptBalance) {
+            setAmount(userWalletBptBalance);
+        }
+    }, [isOpen]);
+
     return (
         <Modal
             isOpen={isOpen}
@@ -150,6 +156,7 @@ export function PoolInvestStakeModal({ isOpen, onOpen, onClose }: Props) {
                             if (id === 'approve') {
                                 refetchAllowances();
                             } else if (id === 'stake') {
+                                setAmount('');
                                 refetchBptBalances();
                             }
                         }}
