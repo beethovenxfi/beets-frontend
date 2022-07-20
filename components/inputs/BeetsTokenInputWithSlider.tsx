@@ -13,64 +13,61 @@ import {
     Text,
     useBoolean,
 } from '@chakra-ui/react';
-import { GqlPoolInvestOption, GqlPoolToken } from '~/apollo/generated/graphql-codegen-generated';
+import { GqlPoolToken } from '~/apollo/generated/graphql-codegen-generated';
 import { useGetTokens } from '~/lib/global/useToken';
 import TokenAvatar from '~/components/token/TokenAvatar';
-import { AmountHumanReadable, TokenAmountHumanReadable } from '~/lib/services/token/token-types';
-import { tokenFormatAmountPrecise, tokenGetAmountForAddress } from '~/lib/services/token/token-util';
+import { AmountHumanReadable } from '~/lib/services/token/token-types';
+import { tokenFormatAmountPrecise } from '~/lib/services/token/token-util';
 import { parseUnits } from 'ethers/lib/utils';
 import { tokenInputBlockInvalidCharacters, tokenInputTruncateDecimalPlaces } from '~/lib/util/input-util';
 import { oldBnumScale, oldBnumToHumanReadable } from '~/lib/services/pool/lib/old-big-number';
 import { BeetsBox } from '~/components/box/BeetsBox';
-import { numberFormatUSDValue } from '~/lib/util/number-formats';
 import { TokenSelectInline } from '~/components/token-select-inline/TokenSelectInline';
-import { useInvestState } from '~/modules/pool/invest/lib/useInvestState';
 
 interface Props extends BoxProps {
-    tokenOption: GqlPoolToken;
-    userBalances: TokenAmountHumanReadable[];
-    option: GqlPoolInvestOption;
-    setInputAmount: (address: string, amount: AmountHumanReadable) => void;
+    tokenOptions: GqlPoolToken[];
+    selectedTokenOption: GqlPoolToken;
+    balance: AmountHumanReadable;
+    setInputAmount: (amount: AmountHumanReadable) => void;
     value?: string;
     proportionalAmount?: string;
+
+    setSelectedTokenOption: (address: string) => void;
 }
 
-export function PoolInvestCustomTokenInput({
-    userBalances,
-    option,
+export function BeetsTokenInputWithSlider({
+    balance,
+    tokenOptions,
+    selectedTokenOption,
     setInputAmount,
     value,
     proportionalAmount,
-    tokenOption,
+    setSelectedTokenOption,
     ...rest
 }: Props) {
-    const { setSelectedOption, selectedOptions } = useInvestState();
-    const { priceForAmount } = useGetTokens();
-    const userBalance = tokenGetAmountForAddress(tokenOption.address, userBalances);
-    const userHasBalance = parseFloat(userBalance) > 0;
+    const { formattedPrice } = useGetTokens();
+    const hasBalance = parseFloat(balance) > 0;
     const isValid =
-        !value || parseUnits(value, tokenOption.decimals).lte(parseUnits(userBalance, tokenOption.decimals));
-
+        !value ||
+        parseUnits(value, selectedTokenOption.decimals).lte(parseUnits(balance, selectedTokenOption.decimals));
     const [changing, setIsChanging] = useBoolean(false);
-    const sliderValue = Math.round(userHasBalance ? (parseFloat(value || '0') / parseFloat(userBalance)) * 100 : 0);
+    const sliderValue = Math.round(hasBalance ? (parseFloat(value || '0') / parseFloat(balance)) * 100 : 0);
 
     return (
         <BeetsBox borderRadius="md" width="full" px="2" pt="2" pb="1" {...rest}>
             <Flex>
-                {option.tokenOptions.length > 1 ? (
+                {tokenOptions.length > 1 ? (
                     <Box flex="1">
                         <TokenSelectInline
-                            tokenOptions={option.tokenOptions}
-                            selectedAddress={
-                                selectedOptions[`${option.poolTokenIndex}`] || option.tokenOptions[0].address
-                            }
-                            onOptionSelect={(address) => setSelectedOption(option.poolTokenIndex, address)}
+                            tokenOptions={tokenOptions}
+                            selectedAddress={selectedTokenOption.address}
+                            onOptionSelect={(address) => setSelectedTokenOption(address)}
                         />
                     </Box>
                 ) : (
                     <HStack spacing="1.5" flex="1">
-                        <TokenAvatar size="xs" address={tokenOption.address} />
-                        <Text>{tokenOption.symbol}</Text>
+                        <TokenAvatar size="xs" address={selectedTokenOption.address} />
+                        <Text>{selectedTokenOption.symbol}</Text>
                     </HStack>
                 )}
 
@@ -84,10 +81,10 @@ export function PoolInvestCustomTokenInput({
                         onChange={(e) => {
                             const newValue = tokenInputTruncateDecimalPlaces(
                                 e.currentTarget.value,
-                                tokenOption.decimals,
+                                selectedTokenOption.decimals,
                             );
 
-                            setInputAmount(option.poolTokenAddress, newValue);
+                            setInputAmount(newValue);
                         }}
                         isInvalid={!isValid}
                         _hover={{ borderColor: 'gray.200' }}
@@ -109,19 +106,18 @@ export function PoolInvestCustomTokenInput({
                     focusThumbOnChange={false}
                     onChangeStart={() => setIsChanging.on()}
                     onChangeEnd={() => setIsChanging.off()}
-                    aria-label={`slider-${tokenOption.symbol}`}
+                    aria-label={`slider-${selectedTokenOption.symbol}`}
                     defaultValue={0}
                     value={sliderValue > 100 ? 0 : sliderValue}
-                    isDisabled={!userHasBalance}
+                    isDisabled={!hasBalance}
                     onChange={(value) => {
                         if (value === 100) {
-                            setInputAmount(option.poolTokenAddress, userBalance);
+                            setInputAmount(balance);
                         } else {
                             setInputAmount(
-                                option.poolTokenAddress,
                                 oldBnumToHumanReadable(
-                                    oldBnumScale(userBalance, tokenOption.decimals).times(value / 100),
-                                    tokenOption.decimals,
+                                    oldBnumScale(balance, selectedTokenOption.decimals).times(value / 100),
+                                    selectedTokenOption.decimals,
                                 ),
                             );
                         }
@@ -149,23 +145,23 @@ export function PoolInvestCustomTokenInput({
                     ) : null}
                 </Slider>
             </Box>
-            <Flex ml="1" alignItems="center">
+            <Flex ml="1" alignItems="center" mb="1">
                 <Box flex="1" height="18px">
                     {!changing && (
                         <Link
-                            color="gray.100"
-                            fontSize="xs"
+                            color="gray.200"
+                            fontSize="sm"
                             display="flex"
                             onClick={() => {
-                                if (userHasBalance) {
-                                    setInputAmount(option.poolTokenAddress, userBalance);
+                                if (hasBalance) {
+                                    setInputAmount(balance);
                                 }
                             }}
                             _hover={{ textDecoration: 'none' }}
-                            cursor={userHasBalance ? 'pointer' : 'default'}
+                            cursor={hasBalance ? 'pointer' : 'default'}
                         >
-                            Balance: {tokenFormatAmountPrecise(userBalance, 4)}
-                            {userHasBalance ? (
+                            Balance: {tokenFormatAmountPrecise(balance, 4)}
+                            {hasBalance ? (
                                 <Text color="beets.cyan" ml="1">
                                     Max
                                 </Text>
@@ -175,10 +171,8 @@ export function PoolInvestCustomTokenInput({
                 </Box>
                 <Box height="18px">
                     {!changing && (
-                        <Text color="gray.100" fontSize="xs">
-                            {numberFormatUSDValue(
-                                priceForAmount({ address: tokenOption.address, amount: value || '0' }),
-                            )}
+                        <Text color="gray.200" fontSize="sm">
+                            {formattedPrice({ address: selectedTokenOption.address, amount: value || '0' })}
                         </Text>
                     )}
                 </Box>

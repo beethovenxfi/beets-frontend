@@ -11,12 +11,13 @@ import { PoolInvestCustom } from '~/modules/pool/invest/components/PoolInvestCus
 import { PoolWithdrawTypeChoice } from '~/modules/pool/withdraw/components/PoolWithdrawTypeChoice';
 import { PoolUnstakeModal } from '~/modules/pool/stake/PoolUnstakeModal';
 import { PoolWithdrawProportional } from '~/modules/pool/withdraw/components/PoolWithdrawProportional';
+import { PoolWithdrawSingleAsset } from '~/modules/pool/withdraw/components/PoolWithdrawSingleAsset';
 
 export function PoolWithdrawModal() {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const { pool, getPoolTypeName } = usePool();
-    const [modalState, setModalState] = useState<'start' | 'proportional' | 'custom' | 'preview'>('start');
-    const [type, setInvestType] = useState<'proportional' | 'custom' | null>(null);
+    const [modalState, setModalState] = useState<'start' | 'proportional' | 'single-asset' | 'preview'>('single-asset');
+    const [type, setInvestType] = useState<'proportional' | 'single-asset' | null>(null);
     const initialRef = useRef(null);
 
     return (
@@ -46,13 +47,13 @@ export function PoolWithdrawModal() {
                             top="8px"
                             left="12px"
                             onClick={() => {
-                                if (modalState === 'proportional' || modalState === 'custom') {
+                                if (modalState === 'proportional' || modalState === 'single-asset') {
                                     setModalState('start');
                                 } else if (modalState === 'preview') {
                                     if (type === 'proportional') {
                                         setModalState('proportional');
-                                    } else if (type === 'custom') {
-                                        setModalState('custom');
+                                    } else if (type === 'single-asset') {
+                                        setModalState('single-asset');
                                     }
                                 }
                             }}
@@ -76,7 +77,7 @@ export function PoolWithdrawModal() {
                             </Heading>
                         ) : null}
 
-                        {modalState === 'custom' ? (
+                        {modalState === 'single-asset' ? (
                             <Heading size="md" textAlign="center">
                                 Single asset withdraw
                             </Heading>
@@ -95,9 +96,9 @@ export function PoolWithdrawModal() {
                                     setInvestType('proportional');
                                     setModalState('proportional');
                                 }}
-                                onShowCustom={() => {
-                                    setInvestType('custom');
-                                    setModalState('custom');
+                                onShowSingleAsset={() => {
+                                    setInvestType('single-asset');
+                                    setModalState('single-asset');
                                 }}
                             />
                         ) : null}
@@ -109,10 +110,10 @@ export function PoolWithdrawModal() {
                                 }}
                             />
                         ) : null}
-                        {modalState === 'custom' ? (
-                            <PoolInvestCustom
+                        {modalState === 'single-asset' ? (
+                            <PoolWithdrawSingleAsset
                                 onShowPreview={() => {
-                                    setInvestType('custom');
+                                    setInvestType('single-asset');
                                     setModalState('preview');
                                 }}
                             />

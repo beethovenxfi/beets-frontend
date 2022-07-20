@@ -72,7 +72,6 @@ export function PoolUnstakeModal({ isOpen, onOpen, onClose }: Props) {
                 onClose();
             }}
             size="xl"
-            isCentered
         >
             <ModalOverlay />
             <ModalContent backgroundColor="black">

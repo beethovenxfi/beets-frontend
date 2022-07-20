@@ -28,6 +28,7 @@ import { PoolInvestSettings } from '~/modules/pool/invest/components/PoolInvestS
 import BeetsButton from '~/components/button/Button';
 import { PoolWithdrawSettings } from '~/modules/pool/withdraw/components/PoolWithdrawSettings';
 import { PoolWithdrawSummary } from '~/modules/pool/withdraw/components/PoolWithdrawSummary';
+import { BeetsSkeleton } from '~/components/skeleton/BeetsSkeleton';
 
 interface Props extends BoxProps {
     onShowPreview: () => void;
@@ -105,14 +106,23 @@ export function PoolWithdrawProportional({ onShowPreview, ...rest }: Props) {
                                 )
                             }
                             rightContent={
-                                <Box>
-                                    <Box textAlign="right">{tokenFormatAmount(proportionalAmount)}</Box>
-                                    <Box textAlign="right" fontSize="sm" color="gray.200">
-                                        {formattedPrice({
-                                            address: tokenOption.address,
-                                            amount: proportionalAmount,
-                                        })}
-                                    </Box>
+                                <Box display="flex" alignItems="flex-end" flexDirection="column">
+                                    {isLoading ? (
+                                        <>
+                                            <BeetsSkeleton height="20px" marginBottom="4px" width="64px" />
+                                            <BeetsSkeleton height="18px" marginBottom="3px" width="44px" />
+                                        </>
+                                    ) : (
+                                        <>
+                                            <Box textAlign="right">{tokenFormatAmount(proportionalAmount)}</Box>
+                                            <Box textAlign="right" fontSize="sm" color="gray.200">
+                                                {formattedPrice({
+                                                    address: tokenOption.address,
+                                                    amount: proportionalAmount,
+                                                })}
+                                            </Box>
+                                        </>
+                                    )}
                                 </Box>
                             }
                         />

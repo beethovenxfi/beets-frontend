@@ -18,8 +18,6 @@ export const withdrawStateVar = makeVar<WithdrawState>({
 });
 
 export function useWithdrawState() {
-    const withdrawState = useReactiveVar(withdrawStateVar);
-
     async function setProportionalPercent(value: number) {
         withdrawStateVar({ ...withdrawStateVar(), proportionalPercent: value });
     }
@@ -54,6 +52,8 @@ export function useWithdrawState() {
             },
         });
     }
+
+    const withdrawState = useReactiveVar(withdrawStateVar);
 
     return {
         setProportionalPercent,

@@ -1,28 +1,24 @@
-import { Alert, AlertIcon, Box, Button, Flex, Heading, HStack, Link, Text, useDisclosure } from '@chakra-ui/react';
+import { Alert, AlertIcon, Box, Button, Flex, Heading, HStack, Text, useDisclosure } from '@chakra-ui/react';
 import { BeetsBox } from '~/components/box/BeetsBox';
 import { numberFormatUSDValue } from '~/lib/util/number-formats';
-import { tokenFormatAmount, tokenGetAmountForAddress } from '~/lib/services/token/token-util';
+import { tokenFormatAmount } from '~/lib/services/token/token-util';
 import TokenAvatar from '~/components/token/TokenAvatar';
 import BeetsButton from '~/components/button/Button';
 import { usePool } from '~/modules/pool/lib/usePool';
 import { useGetTokens } from '~/lib/global/useToken';
-import { usePoolUserTokenBalancesInWallet } from '~/modules/pool/lib/usePoolUserTokenBalancesInWallet';
-import { useInvest } from '~/modules/pool/invest/lib/useInvest';
 import { usePoolUserDepositBalance } from '~/modules/pool/lib/usePoolUserDepositBalance';
 import { usePoolUserBptBalance } from '~/modules/pool/lib/usePoolUserBptBalance';
 import { PoolUnstakeModal } from '~/modules/pool/stake/PoolUnstakeModal';
 
 interface Props {
     onShowProportional(): void;
-    onShowCustom(): void;
+    onShowSingleAsset(): void;
 }
 
-export function PoolWithdrawTypeChoice({ onShowProportional, onShowCustom }: Props) {
+export function PoolWithdrawTypeChoice({ onShowProportional, onShowSingleAsset }: Props) {
     const unstakeDisclosure = useDisclosure();
     const { pool } = usePool();
     const { priceForAmount } = useGetTokens();
-    const { investableAmount } = usePoolUserTokenBalancesInWallet();
-    const { canInvestProportionally } = useInvest();
     const { isLoading, userPoolBalanceUSD, data } = usePoolUserDepositBalance();
     const { userTotalBptBalance, userWalletBptBalance, userStakedBptBalance, hasBptInWallet, hasBptStaked } =
         usePoolUserBptBalance();
@@ -111,12 +107,7 @@ export function PoolWithdrawTypeChoice({ onShowProportional, onShowCustom }: Pro
                         You have {numberFormatUSDValue(valueStaked)} worth of BPT staked. In order to withdraw this
                         amount, you must first unstake your BPT.
                     </Box>
-                    <Button
-                        variant="outline"
-                        onClick={() => {
-                            unstakeDisclosure.onOpen();
-                        }}
-                    >
+                    <Button variant="outline" onClick={unstakeDisclosure.onOpen}>
                         Unstake
                     </Button>
                 </Alert>
@@ -124,7 +115,7 @@ export function PoolWithdrawTypeChoice({ onShowProportional, onShowCustom }: Pro
             <BeetsButton isFullWidth mb="3" isDisabled={!hasBptInWallet} onClick={onShowProportional}>
                 Withdraw proportionally
             </BeetsButton>
-            <BeetsButton isFullWidth buttonType="secondary" isDisabled={!hasBptInWallet} onClick={onShowCustom}>
+            <BeetsButton isFullWidth buttonType="secondary" isDisabled={!hasBptInWallet} onClick={onShowSingleAsset}>
                 Single asset withdraw
             </BeetsButton>
 
