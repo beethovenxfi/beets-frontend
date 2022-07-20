@@ -1,4 +1,4 @@
-import { Box } from '@chakra-ui/react';
+import { Box, Text } from '@chakra-ui/react';
 import { useWithdrawState } from '~/modules/pool/withdraw/lib/useWithdrawState';
 import { usePool } from '~/modules/pool/lib/usePool';
 import { BoxProps } from '@chakra-ui/layout';
@@ -43,6 +43,11 @@ export function PoolWithdrawSingleAsset({ onShowPreview, ...rest }: Props) {
 
     return (
         <Box py={4} {...rest}>
+            <Box mb="4">
+                <Text>
+                    Select your desired asset, then drag the slider or enter an amount to configure your withdraw.
+                </Text>
+            </Box>
             <BeetsTokenInputWithSlider
                 tokenOptions={tokenOptions}
                 selectedTokenOption={selectedTokenOption}
@@ -53,7 +58,6 @@ export function PoolWithdrawSingleAsset({ onShowPreview, ...rest }: Props) {
                 value={singleAssetWithdraw.amount}
                 setSelectedTokenOption={setSingleAssetWithdraw}
             />
-
             <PoolWithdrawSummary mt="6" />
             <PoolWithdrawSettings mt="8" />
             <BeetsButton isFullWidth mt="8" onClick={onShowPreview} isDisabled={!isValid}>
