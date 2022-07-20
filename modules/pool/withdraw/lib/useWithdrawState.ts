@@ -12,7 +12,7 @@ interface WithdrawState {
 
 export const withdrawStateVar = makeVar<WithdrawState>({
     type: 'PROPORTIONAL',
-    proportionalPercent: 100,
+    proportionalPercent: 50,
     singleAsset: null,
     selectedOptions: {},
 });

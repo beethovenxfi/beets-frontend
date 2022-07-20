@@ -1,17 +1,4 @@
-import {
-    Box,
-    Flex,
-    Heading,
-    HStack,
-    Skeleton,
-    Slider,
-    SliderFilledTrack,
-    SliderMark,
-    SliderThumb,
-    SliderTrack,
-    Text,
-} from '@chakra-ui/react';
-import numeral from 'numeral';
+import { Box, HStack, Slider, SliderFilledTrack, SliderMark, SliderThumb, SliderTrack, Text } from '@chakra-ui/react';
 import TokenAvatar from '~/components/token/TokenAvatar';
 import { BoxProps } from '@chakra-ui/layout';
 import { useWithdrawState } from '~/modules/pool/withdraw/lib/useWithdrawState';
@@ -21,10 +8,7 @@ import { usePoolExitGetProportionalWithdrawEstimate } from '~/modules/pool/withd
 import { tokenFormatAmount } from '~/lib/services/token/token-util';
 import { BeetsBox } from '~/components/box/BeetsBox';
 import { TokenSelectInline } from '~/components/token-select-inline/TokenSelectInline';
-import { numberFormatUSDValue } from '~/lib/util/number-formats';
 import { BeetsBoxLineItem } from '~/components/box/BeetsBoxLineItem';
-import { PoolInvestSummary } from '~/modules/pool/invest/components/PoolInvestSummary';
-import { PoolInvestSettings } from '~/modules/pool/invest/components/PoolInvestSettings';
 import BeetsButton from '~/components/button/Button';
 import { PoolWithdrawSettings } from '~/modules/pool/withdraw/components/PoolWithdrawSettings';
 import { PoolWithdrawSummary } from '~/modules/pool/withdraw/components/PoolWithdrawSummary';
