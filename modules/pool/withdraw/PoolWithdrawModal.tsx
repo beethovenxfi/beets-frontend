@@ -12,6 +12,7 @@ import { PoolWithdrawTypeChoice } from '~/modules/pool/withdraw/components/PoolW
 import { PoolUnstakeModal } from '~/modules/pool/stake/PoolUnstakeModal';
 import { PoolWithdrawProportional } from '~/modules/pool/withdraw/components/PoolWithdrawProportional';
 import { PoolWithdrawSingleAsset } from '~/modules/pool/withdraw/components/PoolWithdrawSingleAsset';
+import { PoolWithdrawPreview } from '~/modules/pool/withdraw/components/PoolWithdrawPreview';
 
 export function PoolWithdrawModal() {
     const { isOpen, onOpen, onClose } = useDisclosure();
@@ -119,8 +120,8 @@ export function PoolWithdrawModal() {
                             />
                         ) : null}
                         {modalState === 'preview' ? (
-                            <PoolInvestPreview
-                                onInvestComplete={() => {
+                            <PoolWithdrawPreview
+                                onWithdrawComplete={() => {
                                     setModalState('start');
                                     setInvestType(null);
                                     onClose();

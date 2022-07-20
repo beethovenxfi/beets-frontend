@@ -13,6 +13,7 @@ import BeetsButton from '~/components/button/Button';
 import { PoolWithdrawSettings } from '~/modules/pool/withdraw/components/PoolWithdrawSettings';
 import { PoolWithdrawSummary } from '~/modules/pool/withdraw/components/PoolWithdrawSummary';
 import { BeetsSkeleton } from '~/components/skeleton/BeetsSkeleton';
+import { useEffectOnce } from '~/lib/util/custom-hooks';
 
 interface Props extends BoxProps {
     onShowPreview: () => void;
@@ -20,8 +21,13 @@ interface Props extends BoxProps {
 
 export function PoolWithdrawProportional({ onShowPreview, ...rest }: Props) {
     const { pool } = usePool();
-    const { setProportionalPercent, proportionalPercent, setSelectedOption, selectedOptions } = useWithdrawState();
+    const { setProportionalPercent, proportionalPercent, setSelectedOption, selectedOptions, setProportionalWithdraw } =
+        useWithdrawState();
     const { formattedPrice, priceForAmount } = useGetTokens();
+
+    useEffectOnce(() => {
+        setProportionalWithdraw();
+    });
 
     const { data, isLoading } = usePoolExitGetProportionalWithdrawEstimate();
     const proportionalAmounts = data || [];
