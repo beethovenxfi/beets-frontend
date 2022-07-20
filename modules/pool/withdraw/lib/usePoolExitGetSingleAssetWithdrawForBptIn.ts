@@ -11,7 +11,7 @@ export function usePoolExitGetSingleAssetWithdrawForBptIn() {
     const { userTotalBptBalance } = usePoolUserBptBalance();
 
     return useQuery(
-        ['exitGetSingleAssetWithdrawForBptIn', userTotalBptBalance, singleAsset],
+        ['exitGetSingleAssetWithdrawForBptIn', userTotalBptBalance, singleAsset?.address],
         async () => {
             if (!singleAsset) {
                 return {
