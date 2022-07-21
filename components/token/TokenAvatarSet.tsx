@@ -5,10 +5,13 @@ import {
     Popover,
     PopoverTrigger as OrigPopoverTrigger,
     PopoverContent,
+    Text,
 } from '@chakra-ui/react';
 import { useGetTokens } from '~/lib/global/useToken';
 import Jazzicon, { jsNumberForAddress } from 'react-jazzicon';
 import { PoolTokenPill } from '~/components/token/PoolTokenPill';
+import TokenAvatar from '~/components/token/TokenAvatar';
+import numeral from 'numeral';
 
 export interface TokenData {
     address: string;
@@ -79,7 +82,11 @@ function TokenAvatarSet({ width, tokenData, imageSize = 32, maxAssetsPerLine = 5
             </PopoverTrigger>
             <PopoverContent w="fit-content" bgColor="beets.base.800" shadow="2xl" p="1">
                 {tokens?.map((token, index) => (
-                    <PoolTokenPill key={index} token={token} rounded={false} />
+                    <Flex alignItems="center" p="1" key={index}>
+                        <TokenAvatar address={token.address} size="xs" />
+                        <Text ml="2">{getToken(token.address)?.symbol}</Text>
+                        {token.weight ? <Text ml="2">{numeral(token.weight).format('%')}</Text> : null}
+                    </Flex>
                 ))}
             </PopoverContent>
         </Popover>

@@ -11,26 +11,18 @@ interface Token {
 
 interface Props {
     token: Token;
-    rounded?: boolean;
 }
 
-export function PoolTokenPill({ token, rounded = true }: Props) {
+export function PoolTokenPill({ token }: Props) {
     const { getToken } = useGetTokens();
-    const MainContent = () => (
-        <Flex alignItems="center">
-            <TokenAvatar address={token.address} size="xs" />
-            <Text ml="2">{getToken(token.address)?.symbol}</Text>
-            {token.weight ? <Text ml="2">{numeral(token.weight).format('%')}</Text> : null}
-        </Flex>
-    );
 
-    return rounded ? (
+    return (
         <BeetsBox p="2">
-            <MainContent />
+            <Flex alignItems="center">
+                <TokenAvatar address={token.address} size="xs" />
+                <Text ml="2">{getToken(token.address)?.symbol}</Text>
+                {token.weight ? <Text ml="2">{numeral(token.weight).format('%')}</Text> : null}
+            </Flex>
         </BeetsBox>
-    ) : (
-        <Box p="1">
-            <MainContent />
-        </Box>
     );
 }
