@@ -1,4 +1,4 @@
-import { Divider, HStack, Text, VStack } from '@chakra-ui/layout';
+import { Box, Divider, HStack, Text, VStack } from '@chakra-ui/layout';
 import { usePool } from '../../../lib/usePool';
 import numeral from 'numeral';
 import AprTooltip from '~/components/apr-tooltip/AprTooltip';
@@ -6,11 +6,14 @@ import { usePoolUserPendingRewards } from '~/modules/pool/lib/usePoolUserPending
 import { InfoButton } from '~/components/info-button/InfoButton';
 import { numberFormatUSDValue } from '~/lib/util/number-formats';
 import { usePoolUserDepositBalance } from '~/modules/pool/lib/usePoolUserDepositBalance';
+import { usePoolUserHarvestPendingRewards } from '~/modules/pool/lib/usePoolUserHarvestPendingRewards';
+import { BeetsSubmitTransactionButton } from '~/components/button/BeetsSubmitTransactionButton';
 
 export default function PoolUserStats() {
     const { pool } = usePool();
     const { pendingRewardsTotalUSD } = usePoolUserPendingRewards();
     const { userPoolBalanceUSD } = usePoolUserDepositBalance();
+    const { harvest, ...harvestQuery } = usePoolUserHarvestPendingRewards();
 
     return (
         <VStack spacing="4" width="full" alignItems="flex-start" flex={1}>
@@ -74,6 +77,16 @@ export default function PoolUserStats() {
                     </Text>
                 </VStack>
             </VStack>
+            <Box width="full">
+                <BeetsSubmitTransactionButton
+                    {...harvestQuery}
+                    isDisabled={pendingRewardsTotalUSD < 0.01}
+                    onClick={() => harvest()}
+                    width="full"
+                >
+                    Claim rewards
+                </BeetsSubmitTransactionButton>
+            </Box>
         </VStack>
     );
 }
