@@ -82,7 +82,7 @@ function AprTooltip({ data, textProps, onlySparkles, placement, aprLabel, sparkl
                                             mt={subItemIndex === 0 ? '-0.3rem' : '-1.7rem'}
                                             bgColor="gray.100"
                                         />
-                                        <Box h="1px" w="0.75rem" mr="0.25rem" ml="-0.25rem" />
+                                        <Box h="1px" w="0.75rem" mr="0.25rem" ml="-0.25rem" bgColor="gray.100" />
                                         <Flex>
                                             {formatApr(subItem.apr)} <AprText>{subItem.title}</AprText>
                                         </Flex>
