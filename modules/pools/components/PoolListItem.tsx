@@ -101,6 +101,7 @@ export function PoolListItem({ pool, userBalance, showUserBalance, ...rest }: Pr
                             area="apr"
                             display={{ base: 'block', lg: 'flex' }}
                             justifyContent={{ base: 'flex-start', lg: 'end' }}
+                            mr="4"
                         >
                             <MobileLabel text="APR" />
                             <AprTooltip
