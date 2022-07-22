@@ -8,12 +8,14 @@ import { numberFormatUSDValue } from '~/lib/util/number-formats';
 import { usePoolUserDepositBalance } from '~/modules/pool/lib/usePoolUserDepositBalance';
 import { usePoolUserHarvestPendingRewards } from '~/modules/pool/lib/usePoolUserHarvestPendingRewards';
 import { BeetsSubmitTransactionButton } from '~/components/button/BeetsSubmitTransactionButton';
+import { useGetTokens } from '~/lib/global/useToken';
 
 export default function PoolUserStats() {
     const { pool } = usePool();
-    const { pendingRewardsTotalUSD } = usePoolUserPendingRewards();
+    const { pendingRewards, pendingRewardsTotalUSD } = usePoolUserPendingRewards();
     const { userPoolBalanceUSD } = usePoolUserDepositBalance();
     const { harvest, ...harvestQuery } = usePoolUserHarvestPendingRewards();
+    const { getToken } = useGetTokens();
 
     return (
         <VStack spacing="4" width="full" alignItems="flex-start" flex={1}>
@@ -44,21 +46,6 @@ export default function PoolUserStats() {
             </VStack>
             <VStack spacing="0" alignItems="flex-start">
                 <InfoButton
-                    label="Pending rewards"
-                    infoText="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis pharetra, sapien eu ultrices mollis, metus libero maximus elit."
-                    labelProps={{
-                        lineHeight: '1rem',
-                        fontWeight: 'semibold',
-                        fontSize: 'sm',
-                        color: 'beets.base.50',
-                    }}
-                />
-                <Text color="white" fontSize="1.75rem">
-                    {numberFormatUSDValue(pendingRewardsTotalUSD)}
-                </Text>
-            </VStack>
-            <VStack spacing="0" alignItems="flex-start">
-                <InfoButton
                     label="Staked share"
                     infoText="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis pharetra, sapien eu ultrices mollis, metus libero maximus elit."
                     labelProps={{
@@ -76,6 +63,26 @@ export default function PoolUserStats() {
                         {numeral(0).format('0.00%')}
                     </Text>
                 </VStack>
+            </VStack>
+            <VStack spacing="0" alignItems="flex-start">
+                <InfoButton
+                    label="Pending rewards"
+                    infoText="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis pharetra, sapien eu ultrices mollis, metus libero maximus elit."
+                    labelProps={{
+                        lineHeight: '1rem',
+                        fontWeight: 'semibold',
+                        fontSize: 'sm',
+                        color: 'beets.base.50',
+                    }}
+                />
+                <Text color="white" fontSize="1.75rem">
+                    {numberFormatUSDValue(pendingRewardsTotalUSD)}
+                </Text>
+                {pendingRewards.map((reward, index) => (
+                    <Text key={index} color="white" fontSize="1rem" lineHeight="1rem">
+                        {numeral(reward.amount).format('0.0[0000]')} {getToken(reward.address)?.symbol}
+                    </Text>
+                ))}
             </VStack>
             <Box width="full">
                 <BeetsSubmitTransactionButton
