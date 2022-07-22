@@ -272,12 +272,15 @@ export interface GqlPoolDynamicData {
     __typename: 'GqlPoolDynamicData';
     apr: GqlPoolApr;
     fees24h: Scalars['BigDecimal'];
+    fees48h: Scalars['BigDecimal'];
     poolId: Scalars['ID'];
     swapEnabled: Scalars['Boolean'];
     swapFee: Scalars['BigDecimal'];
     totalLiquidity: Scalars['BigDecimal'];
+    totalLiquidity24hAgo: Scalars['BigDecimal'];
     totalShares: Scalars['BigDecimal'];
     volume24h: Scalars['BigDecimal'];
+    volume48h: Scalars['BigDecimal'];
 }
 
 export interface GqlPoolElement extends GqlPoolBase {
@@ -940,9 +943,10 @@ export interface Mutation {
     poolSyncPoolAllTokensRelationship: Scalars['String'];
     poolSyncSanityPoolData: Scalars['String'];
     poolSyncStakingForPools: Scalars['String'];
-    poolSyncSwapsForLast24Hours: Scalars['String'];
+    poolSyncSwapsForLast48Hours: Scalars['String'];
     poolSyncTotalShares: Scalars['String'];
     poolUpdateAprs: Scalars['String'];
+    poolUpdateLiquidity24hAgoForAllPools: Scalars['String'];
     poolUpdateLiquidityValuesForAllPools: Scalars['String'];
     poolUpdateVolumeAndFeeValuesForAllPools: Scalars['String'];
     refreshLatestBlockCachedKey: Scalars['Boolean'];
@@ -1108,7 +1112,9 @@ export interface QueryTokenGetTokensDynamicDataArgs {
 }
 
 export interface QueryUserGetPoolJoinExitsArgs {
+    first?: InputMaybe<Scalars['Int']>;
     poolId: Scalars['String'];
+    skip?: InputMaybe<Scalars['Int']>;
 }
 
 export type GetPoolBatchSwapsQueryVariables = Exact<{
@@ -1551,10 +1557,13 @@ export type GetPoolQuery = {
                   poolId: string;
                   swapEnabled: boolean;
                   totalLiquidity: string;
+                  totalLiquidity24hAgo: string;
                   totalShares: string;
                   fees24h: string;
                   swapFee: string;
                   volume24h: string;
+                  fees48h: string;
+                  volume48h: string;
                   apr: {
                       __typename: 'GqlPoolApr';
                       hasRewardApr: boolean;
@@ -1678,10 +1687,13 @@ export type GetPoolQuery = {
                   poolId: string;
                   swapEnabled: boolean;
                   totalLiquidity: string;
+                  totalLiquidity24hAgo: string;
                   totalShares: string;
                   fees24h: string;
                   swapFee: string;
                   volume24h: string;
+                  fees48h: string;
+                  volume48h: string;
                   apr: {
                       __typename: 'GqlPoolApr';
                       hasRewardApr: boolean;
@@ -1929,10 +1941,13 @@ export type GetPoolQuery = {
                   poolId: string;
                   swapEnabled: boolean;
                   totalLiquidity: string;
+                  totalLiquidity24hAgo: string;
                   totalShares: string;
                   fees24h: string;
                   swapFee: string;
                   volume24h: string;
+                  fees48h: string;
+                  volume48h: string;
                   apr: {
                       __typename: 'GqlPoolApr';
                       hasRewardApr: boolean;
@@ -2181,10 +2196,13 @@ export type GetPoolQuery = {
                   poolId: string;
                   swapEnabled: boolean;
                   totalLiquidity: string;
+                  totalLiquidity24hAgo: string;
                   totalShares: string;
                   fees24h: string;
                   swapFee: string;
                   volume24h: string;
+                  fees48h: string;
+                  volume48h: string;
                   apr: {
                       __typename: 'GqlPoolApr';
                       hasRewardApr: boolean;
@@ -2305,10 +2323,13 @@ export type GetPoolQuery = {
                   poolId: string;
                   swapEnabled: boolean;
                   totalLiquidity: string;
+                  totalLiquidity24hAgo: string;
                   totalShares: string;
                   fees24h: string;
                   swapFee: string;
                   volume24h: string;
+                  fees48h: string;
+                  volume48h: string;
                   apr: {
                       __typename: 'GqlPoolApr';
                       hasRewardApr: boolean;
@@ -2556,10 +2577,13 @@ export type GetPoolQuery = {
                   poolId: string;
                   swapEnabled: boolean;
                   totalLiquidity: string;
+                  totalLiquidity24hAgo: string;
                   totalShares: string;
                   fees24h: string;
                   swapFee: string;
                   volume24h: string;
+                  fees48h: string;
+                  volume48h: string;
                   apr: {
                       __typename: 'GqlPoolApr';
                       hasRewardApr: boolean;
@@ -4088,10 +4112,13 @@ export const GetPoolDocument = gql`
                 poolId
                 swapEnabled
                 totalLiquidity
+                totalLiquidity24hAgo
                 totalShares
                 fees24h
                 swapFee
                 volume24h
+                fees48h
+                volume48h
                 apr {
                     hasRewardApr
                     thirdPartyApr

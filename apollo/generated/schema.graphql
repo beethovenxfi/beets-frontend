@@ -244,12 +244,15 @@ type GqlPoolBatchSwapSwap {
 type GqlPoolDynamicData {
     apr: GqlPoolApr!
     fees24h: BigDecimal!
+    fees48h: BigDecimal!
     poolId: ID!
     swapEnabled: Boolean!
     swapFee: BigDecimal!
     totalLiquidity: BigDecimal!
+    totalLiquidity24hAgo: BigDecimal!
     totalShares: BigDecimal!
     volume24h: BigDecimal!
+    volume48h: BigDecimal!
 }
 
 type GqlPoolElement implements GqlPoolBase {
@@ -900,9 +903,10 @@ type Mutation {
     poolSyncPoolAllTokensRelationship: String!
     poolSyncSanityPoolData: String!
     poolSyncStakingForPools: String!
-    poolSyncSwapsForLast24Hours: String!
+    poolSyncSwapsForLast48Hours: String!
     poolSyncTotalShares: String!
     poolUpdateAprs: String!
+    poolUpdateLiquidity24hAgoForAllPools: String!
     poolUpdateLiquidityValuesForAllPools: String!
     poolUpdateVolumeAndFeeValuesForAllPools: String!
     refreshLatestBlockCachedKey: Boolean!
@@ -975,6 +979,6 @@ type Query {
     tokenGetTokensDynamicData(addresses: [String!]!): [GqlTokenDynamicData!]!
     userGetFbeetsBalance: GqlUserFbeetsBalance!
     userGetPoolBalances: [GqlUserPoolBalance!]!
-    userGetPoolJoinExits(poolId: String!): [GqlPoolJoinExit!]!
+    userGetPoolJoinExits(first: Int = 10, poolId: String!, skip: Int = 0): [GqlPoolJoinExit!]!
     userGetStaking: [GqlPoolStaking!]!
 }

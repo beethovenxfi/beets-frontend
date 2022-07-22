@@ -477,10 +477,13 @@ export const GetPool = gql`
                 poolId
                 swapEnabled
                 totalLiquidity
+                totalLiquidity24hAgo
                 totalShares
                 fees24h
                 swapFee
                 volume24h
+                fees48h
+                volume48h
                 apr {
                     hasRewardApr
                     thirdPartyApr
