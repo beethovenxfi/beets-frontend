@@ -1,9 +1,7 @@
-import { Divider, HStack, Text, VStack, Badge } from '@chakra-ui/layout';
-import Card from '~/components/card/Card';
+import { Badge, Divider, HStack, Text, VStack } from '@chakra-ui/layout';
 import { usePool } from '../../../lib/usePool';
 import numeral from 'numeral';
 import AprTooltip from '~/components/apr-tooltip/AprTooltip';
-import { ArrowUp } from 'react-feather';
 
 export default function PoolOverallStats() {
     const { pool } = usePool();
@@ -33,7 +31,9 @@ export default function PoolOverallStats() {
                 <Text color="white" fontSize="1.75rem">
                     {numeral(data.totalLiquidity).format('$0,0.00a')}
                 </Text>
-                <Badge colorScheme="green">{numeral(tvlPercentChange).format('0.00%')}</Badge>
+                <Badge colorScheme={tvlPercentChange >= 0 ? 'green' : 'red'}>
+                    {numeral(tvlPercentChange).format('0.00%')}
+                </Badge>
             </VStack>
             <VStack spacing="0" alignItems="flex-start">
                 <Text lineHeight="1rem" fontWeight="semibold" fontSize="sm" color="beets.base.50">
