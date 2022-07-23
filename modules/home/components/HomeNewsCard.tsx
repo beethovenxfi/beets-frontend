@@ -14,7 +14,7 @@ export function HomeNewsCard({ item }: Props) {
     const { image, source, text, timestamp, url } = item;
 
     return (
-        <Box bgColor="beets.base.600" borderRadius="md" p="4">
+        <Box bgColor="whiteAlpha.100" borderRadius="md" p="4">
             {image && <Image width="full" src={image} borderRadius="md" />}
             <Flex mt="4" mb="6" alignItems="center">
                 <Box color="gray.200" flex="1">
