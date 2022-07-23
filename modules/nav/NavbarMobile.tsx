@@ -16,6 +16,7 @@ export function NavbarMobile() {
             bgColor="beets.base.800"
             shadow="lg"
             display={{ base: 'flex', md: 'none' }}
+            zIndex="999"
         >
             <Flex alignItems="center">
                 <NavbarLink href={'/pools'} selected={router.asPath.startsWith('/pool')} text="Invest" mr="1" px="4" />

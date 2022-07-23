@@ -19,7 +19,7 @@ export function Home() {
                 borderBottomColor="gray.100"
                 pb="24"
             >
-                <GridItem colSpan={2}>
+                <GridItem colSpan={2} maxW="100%">
                     <HomePools />
                 </GridItem>
                 <GridItem>

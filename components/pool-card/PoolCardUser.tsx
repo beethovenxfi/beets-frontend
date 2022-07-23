@@ -1,4 +1,4 @@
-import { Box, BoxProps, Flex, Text } from '@chakra-ui/react';
+import { Box, BoxProps, Flex, Text, Divider } from '@chakra-ui/react';
 import AprTooltip from '~/components/apr-tooltip/AprTooltip';
 import TokenAvatarSet from '~/components/token/TokenAvatarSet';
 import { GqlPoolCardDataFragment } from '~/apollo/generated/graphql-codegen-generated';
@@ -17,7 +17,7 @@ export function PoolCardUser({ pool, balance, balanceUSD, ...rest }: Props) {
 
     return (
         <Box flex="1" {...rest}>
-            <Flex bgColor="beets.base.600" borderRadius="md" p="4" flexDirection="column" height="327px">
+            <Flex bgColor="whiteAlpha.100" borderRadius="md" p="4" flexDirection="column" height="327px">
                 <Box fontSize="lg" pb="6" flex="1">
                     <Text noOfLines={2}>{pool.name}</Text>
                 </Box>
@@ -35,7 +35,8 @@ export function PoolCardUser({ pool, balance, balanceUSD, ...rest }: Props) {
                     {numberFormatUSDValue(balanceUSD)}
                 </Box>
                 <Box color="gray.200">{tokenFormatAmount(balance)} BPT</Box>
-                <Box pt="4" mt="4" borderTopWidth={1} borderTopColor="beets.base.800">
+                <Divider mt="4" mb="4" />
+                <Box>
                     <AprTooltip
                         textProps={{ fontSize: 'lg', fontWeight: 'normal', mr: '0', lineHeight: '20px' }}
                         data={pool.dynamicData.apr}

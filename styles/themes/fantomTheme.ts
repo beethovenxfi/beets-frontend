@@ -59,7 +59,7 @@ export const fantomTheme: Partial<ChakraTheme> = {
     colors: {
         gray: {
             '100': '#C1C1D1',
-            '200': '#757584',
+            '200': '#828291',
             '300': '#54546C',
             '400': '#33334A',
             '500': '#212138',

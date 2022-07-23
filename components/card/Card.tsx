@@ -75,7 +75,7 @@ export default function Card({
             width="full"
             height="full"
             rounded="lg"
-            backgroundColor="whiteAlpha.200"
+            backgroundColor="whiteAlpha.100"
             border="1px"
             borderColor="blackAlpha.400"
             display="flex"

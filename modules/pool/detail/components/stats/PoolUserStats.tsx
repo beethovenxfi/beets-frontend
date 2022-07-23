@@ -59,7 +59,7 @@ export default function PoolUserStats() {
                     <Text color="white" fontSize="1.75rem">
                         {numeral(0).format('0,0.0000')}
                     </Text>
-                    <Text color="white" fontSize="1rem" lineHeight="1rem">
+                    <Text fontSize="1rem" lineHeight="1rem">
                         {numeral(0).format('0.00%')}
                     </Text>
                 </VStack>
@@ -79,7 +79,7 @@ export default function PoolUserStats() {
                     {numberFormatUSDValue(pendingRewardsTotalUSD)}
                 </Text>
                 {pendingRewards.map((reward, index) => (
-                    <Text key={index} color="white" fontSize="1rem" lineHeight="1rem">
+                    <Text key={index} fontSize="1rem" lineHeight="1rem">
                         {numeral(reward.amount).format('0.0[0000]')} {getToken(reward.address)?.symbol}
                     </Text>
                 ))}
