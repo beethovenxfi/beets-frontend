@@ -1,4 +1,4 @@
-import { Divider, HStack, Text, VStack } from '@chakra-ui/layout';
+import { Box, Divider, HStack, Text, VStack } from '@chakra-ui/layout';
 import { usePool } from '../../../lib/usePool';
 import numeral from 'numeral';
 import AprTooltip from '~/components/apr-tooltip/AprTooltip';
@@ -6,13 +6,15 @@ import { usePoolUserPendingRewards } from '~/modules/pool/lib/usePoolUserPending
 import { InfoButton } from '~/components/info-button/InfoButton';
 import { numberFormatUSDValue } from '~/lib/util/number-formats';
 import { usePoolUserDepositBalance } from '~/modules/pool/lib/usePoolUserDepositBalance';
-import { useGetTokens } from '~/lib/global/useToken';
+import { usePoolUserHarvestPendingRewards } from '~/modules/pool/lib/usePoolUserHarvestPendingRewards';
+import { BeetsSubmitTransactionButton } from '~/components/button/BeetsSubmitTransactionButton';
+import TokenAvatar from '~/components/token/TokenAvatar';
 
 export default function PoolUserStats() {
     const { pool } = usePool();
     const { pendingRewards, pendingRewardsTotalUSD } = usePoolUserPendingRewards();
     const { userPoolBalanceUSD } = usePoolUserDepositBalance();
-    const { getToken } = useGetTokens();
+    const { harvest, ...harvestQuery } = usePoolUserHarvestPendingRewards();
 
     return (
         <VStack spacing="4" width="full" alignItems="flex-start" flex={1}>
@@ -43,26 +45,6 @@ export default function PoolUserStats() {
             </VStack>
             <VStack spacing="0" alignItems="flex-start">
                 <InfoButton
-                    label="Pending rewards"
-                    infoText="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis pharetra, sapien eu ultrices mollis, metus libero maximus elit."
-                    labelProps={{
-                        lineHeight: '1rem',
-                        fontWeight: 'semibold',
-                        fontSize: 'sm',
-                        color: 'beets.base.50',
-                    }}
-                />
-                <Text color="white" fontSize="1.75rem">
-                    {numberFormatUSDValue(pendingRewardsTotalUSD)}
-                </Text>
-                {pendingRewards.map((reward, index) => (
-                    <Text key={index} fontSize="1rem" lineHeight="1rem">
-                        {numeral(reward.amount).format('0.0[0000]')} {getToken(reward.address)?.symbol}
-                    </Text>
-                ))}
-            </VStack>
-            <VStack spacing="0" alignItems="flex-start">
-                <InfoButton
                     label="Staked share"
                     infoText="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis pharetra, sapien eu ultrices mollis, metus libero maximus elit."
                     labelProps={{
@@ -81,6 +63,39 @@ export default function PoolUserStats() {
                     </Text>
                 </VStack>
             </VStack>
+            <VStack spacing="0" alignItems="flex-start">
+                <InfoButton
+                    label="Pending rewards"
+                    infoText="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis pharetra, sapien eu ultrices mollis, metus libero maximus elit."
+                    labelProps={{
+                        lineHeight: '1rem',
+                        fontWeight: 'semibold',
+                        fontSize: 'sm',
+                        color: 'beets.base.50',
+                    }}
+                />
+                <Text color="white" fontSize="1.75rem">
+                    {numberFormatUSDValue(pendingRewardsTotalUSD)}
+                </Text>
+                {pendingRewards.map((reward, index) => (
+                    <HStack key={index}>
+                        <Text fontSize="1rem" lineHeight="1rem">
+                            {numeral(reward.amount).format('0.0[0000]')}
+                        </Text>
+                        <TokenAvatar size="xs" address={reward.address} />
+                    </HStack>
+                ))}
+            </VStack>
+            <Box width="full">
+                <BeetsSubmitTransactionButton
+                    {...harvestQuery}
+                    isDisabled={pendingRewardsTotalUSD < 0.01}
+                    onClick={() => harvest()}
+                    width="full"
+                >
+                    Claim rewards
+                </BeetsSubmitTransactionButton>
+            </Box>
         </VStack>
     );
 }
