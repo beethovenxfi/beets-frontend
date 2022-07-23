@@ -8,14 +8,13 @@ import { numberFormatUSDValue } from '~/lib/util/number-formats';
 import { usePoolUserDepositBalance } from '~/modules/pool/lib/usePoolUserDepositBalance';
 import { usePoolUserHarvestPendingRewards } from '~/modules/pool/lib/usePoolUserHarvestPendingRewards';
 import { BeetsSubmitTransactionButton } from '~/components/button/BeetsSubmitTransactionButton';
-import { useGetTokens } from '~/lib/global/useToken';
+import TokenAvatar from '~/components/token/TokenAvatar';
 
 export default function PoolUserStats() {
     const { pool } = usePool();
     const { pendingRewards, pendingRewardsTotalUSD } = usePoolUserPendingRewards();
     const { userPoolBalanceUSD } = usePoolUserDepositBalance();
     const { harvest, ...harvestQuery } = usePoolUserHarvestPendingRewards();
-    const { getToken } = useGetTokens();
 
     return (
         <VStack spacing="4" width="full" alignItems="flex-start" flex={1}>
@@ -79,9 +78,12 @@ export default function PoolUserStats() {
                     {numberFormatUSDValue(pendingRewardsTotalUSD)}
                 </Text>
                 {pendingRewards.map((reward, index) => (
-                    <Text key={index} fontSize="1rem" lineHeight="1rem">
-                        {numeral(reward.amount).format('0.0[0000]')} {getToken(reward.address)?.symbol}
-                    </Text>
+                    <HStack key={index}>
+                        <Text fontSize="1rem" lineHeight="1rem">
+                            {numeral(reward.amount).format('0.0[0000]')}
+                        </Text>
+                        <TokenAvatar size="xs" address={reward.address} />
+                    </HStack>
                 ))}
             </VStack>
             <Box width="full">
