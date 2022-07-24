@@ -1,12 +1,12 @@
 import { Box, Flex, HStack, VStack } from '@chakra-ui/react';
 import PoolHeader from '~/modules/pool/detail/components/PoolHeader';
 import { PoolComposition } from '~/modules/pool/detail/components/composition/PoolComposition';
-import PoolDetailChart from '~/modules/pool/detail/components/PoolDetailChart';
 import PoolStats from './components/stats/PoolStats';
 import { PoolTransactions } from './components/transactions/PoolTransactions';
 import { PoolActionsRow } from '~/modules/pool/detail/components/PoolActionsRow';
 import { usePool } from '~/modules/pool/lib/usePool';
 import { PoolStakeInFarmWarning } from '~/modules/pool/detail/components/PoolStakeInFarmWarning';
+import { PoolDetailVolumeLiquidityChart } from './components/charts/PoolDetailVolumeLiquidityChart';
 
 export function Pool() {
     const { pool } = usePool();
@@ -21,7 +21,7 @@ export function Pool() {
                 </Flex>
                 <HStack width="full" spacing="3" height="475px">
                     <PoolStats />
-                    <PoolDetailChart />
+                    <PoolDetailVolumeLiquidityChart />
                 </HStack>
             </VStack>
             <VStack spacing="8" width="full">

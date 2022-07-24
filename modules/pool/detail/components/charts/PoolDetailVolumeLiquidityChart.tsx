@@ -1,5 +1,4 @@
-import { Text, BoxProps, Box, VStack, HStack, useTheme } from '@chakra-ui/react';
-import { BeetsBox } from '~/components/box/BeetsBox';
+import { Box, BoxProps, HStack, Text, useTheme, VStack } from '@chakra-ui/react';
 import Card from '~/components/card/Card';
 import ReactECharts from 'echarts-for-react';
 import { useMemo } from 'react';
@@ -9,30 +8,13 @@ import { format } from 'date-fns';
 
 interface Props extends BoxProps {}
 
-function PoolDetailChart({ ...rest }: Props) {
-    const theme: any = useTheme();
+export function PoolDetailVolumeLiquidityChart({ ...rest }: Props) {
+    const { colors } = useTheme();
+
     const option = useMemo<EChartsOption>(
         () => ({
             tooltip: {
                 show: true,
-                // trigger: 'axis',
-                // type: 'shadow',
-                // backgroundColor: 'rgba(24, 24, 46, 0.95)',
-                // borderColor: 'transparent',
-                // borderRadius: 8,
-                // textStyle: {
-                //     color: 'white',
-                // },
-                // padding: 16,
-                // axisPointer: {
-                //     animation: false,
-                //     type: 'cross',
-                //     lineStyle: {
-                //         color: '#376df4',
-                //         width: 2,
-                //         opacity: 1,
-                //     },
-                // },
                 trigger: 'axis',
                 axisPointer: {
                     type: 'cross',
@@ -42,16 +24,17 @@ function PoolDetailChart({ ...rest }: Props) {
                 },
             },
             legend: {
-                data: ['Daily Volume', 'Liquidity'],
+                data: ['Liquidity', 'Daily Volume'],
                 textStyle: {
-                    color: 'white',
+                    color: colors.beets.base['50'],
                 },
+                bottom: '2%',
             },
             grid: {
-                bottom: '5%',
-                right: '5%',
-                left: '5%',
-                top: '10%',
+                bottom: '12.5%',
+                right: '2.5%',
+                left: '2.5%',
+                top: '2.5%',
                 containLabel: true,
             },
             xAxis: {
@@ -62,35 +45,32 @@ function PoolDetailChart({ ...rest }: Props) {
                 axisTick: {
                     show: false,
                 },
-                // axisLine: {
-                //     lineStyle: {
-                //         color: theme.colors.beets.base['100'],
-                //     },
-                // },
                 axisLabel: {
                     formatter: function (value: number) {
-                        return format(new Date(value), 'MMMM d');
+                        return format(new Date(value), 'MMM d');
                     },
-                    rotate: 30,
+                    rotate: 0,
+                    color: colors.beets.base['100'],
                 },
                 maxInterval: 3600 * 1000 * 24,
                 axisPointer: {
                     type: 'line',
                     label: {
                         formatter: function (params) {
-                            return format(new Date(params.value), 'MMMM d');
+                            return format(new Date(params.value), 'MMM d');
                         },
                     },
+                },
+                axisLine: {
+                    show: true,
+                    color: colors.beets.base['100'],
                 },
             },
             yAxis: [
                 {
                     type: 'value',
                     axisLine: {
-                        show: true,
-                        lineStyle: {
-                            color: theme.colors.beets.base['100'],
-                        },
+                        show: false,
                     },
                     minorSplitLine: {
                         show: false,
@@ -102,6 +82,7 @@ function PoolDetailChart({ ...rest }: Props) {
                         formatter: function (value: number) {
                             return `$${numeral(value).format('0a')}`;
                         },
+                        color: colors.beets.base['100'],
                     },
                     axisPointer: {
                         label: {
@@ -115,10 +96,7 @@ function PoolDetailChart({ ...rest }: Props) {
                     type: 'value',
                     max: 6000000, // align with left_axis
                     axisLine: {
-                        show: true,
-                        lineStyle: {
-                            color: theme.colors.beets.base['100'],
-                        },
+                        show: false,
                     },
                     minorSplitLine: {
                         show: false,
@@ -130,6 +108,7 @@ function PoolDetailChart({ ...rest }: Props) {
                         formatter: function (value: number) {
                             return `$${numeral(value).format('0a')}`;
                         },
+                        color: colors.beets.base['100'],
                     },
                     axisPointer: {
                         label: {
@@ -188,7 +167,7 @@ function PoolDetailChart({ ...rest }: Props) {
                     name: 'Daily Volume',
                     type: 'line',
                     yAxisIndex: 1,
-                    color: 'black',
+                    color: colors.beets.base['800'],
                     tooltip: {
                         valueFormatter: function (value) {
                             return `$${numeral(value).format('0a')}`;
@@ -215,5 +194,3 @@ function PoolDetailChart({ ...rest }: Props) {
         </Card>
     );
 }
-
-export default PoolDetailChart;
