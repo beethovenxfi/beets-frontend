@@ -6,7 +6,7 @@ export function PoolAboutThisPool() {
     const { pool } = usePool();
 
     return (
-        <Grid templateColumns={{ base: 'repeat(1, 1fr)', lg: 'repeat(3, 1fr)' }} gap="8" width="full">
+        <Grid templateColumns={{ base: 'repeat(1, 1fr)', lg: 'repeat(3, 1fr)' }} gap="4" width="full">
             <GridItem colSpan={2}>
                 <Card padding="4" width="full">
                     Abc
