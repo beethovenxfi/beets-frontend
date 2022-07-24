@@ -13,7 +13,7 @@ export function PoolCard({ pool, ...rest }: Props) {
 
     return (
         <Box flex="1" {...rest}>
-            <Flex bgColor="beets.base.600" height="216px" borderRadius="md" p="4" flexDirection="column">
+            <Flex bgColor="whiteAlpha.100" height="216px" borderRadius="md" p="4" flexDirection="column">
                 <Box fontSize="lg" pb="6" flex="1">
                     <Text noOfLines={2}>{pool.name}</Text>
                 </Box>

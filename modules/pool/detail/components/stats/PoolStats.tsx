@@ -1,15 +1,10 @@
-import { Divider, HStack, Text, VStack, Badge } from '@chakra-ui/layout';
+import { HStack, VStack } from '@chakra-ui/layout';
 import Card from '~/components/card/Card';
-import { usePool } from '../../../lib/usePool';
-import numeral from 'numeral';
-import AprTooltip from '~/components/apr-tooltip/AprTooltip';
-import { usePoolUserTokenBalancesInWallet } from '~/modules/pool/lib/usePoolUserTokenBalancesInWallet';
 import PoolUserStats from './PoolUserStats';
 import PoolOverallStats from './PoolOverallStats';
 import { TabList, Tabs } from '@chakra-ui/tabs';
 import BeetsTab from '~/components/tabs/BeetsTab';
 import { useState } from 'react';
-import { Box } from '@chakra-ui/react';
 import { usePoolUserBptBalance } from '~/modules/pool/lib/usePoolUserBptBalance';
 
 export default function PoolStats() {

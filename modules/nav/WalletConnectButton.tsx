@@ -68,7 +68,7 @@ export default function WalletConnectButton() {
                                     >
                                         <BarChart2 size={18} />
                                         {loading ? (
-                                            <BeetsSkeleton height="10px" width="34px" />
+                                            <BeetsSkeleton height="10px" width="41px" />
                                         ) : (
                                             <Box fontSize="sm" fontWeight="semibold">
                                                 {numberFormatLargeUsdValue(portfolioValueUSD)}

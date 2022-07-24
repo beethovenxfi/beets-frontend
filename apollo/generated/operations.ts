@@ -477,10 +477,13 @@ export const GetPool = gql`
                 poolId
                 swapEnabled
                 totalLiquidity
+                totalLiquidity24hAgo
                 totalShares
                 fees24h
                 swapFee
                 volume24h
+                fees48h
+                volume48h
                 apr {
                     hasRewardApr
                     thirdPartyApr
@@ -645,6 +648,22 @@ export const GetPoolSwaps = gql`
 export const GetPoolJoinExits = gql`
     query GetPoolJoinExits($first: Int, $skip: Int, $poolId: String!) {
         joinExits: poolGetJoinExits(first: $first, skip: $skip, where: { poolIdIn: [$poolId] }) {
+            id
+            timestamp
+            tx
+            type
+            poolId
+            valueUSD
+            amounts {
+                address
+                amount
+            }
+        }
+    }
+`;
+export const GetPoolUserJoinExits = gql`
+    query GetPoolUserJoinExits($first: Int, $skip: Int, $poolId: String!) {
+        joinExits: userGetPoolJoinExits(poolId: $poolId, first: $first, skip: $skip) {
             id
             timestamp
             tx

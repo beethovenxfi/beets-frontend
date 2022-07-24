@@ -9,6 +9,7 @@ import PoolTransactionItem, { PoolTransactionType } from './PoolTransactionRow';
 import { useMemo, useState } from 'react';
 import PoolTransactionHeader from './PoolTransactionsHeader';
 import { NetworkStatus } from '@apollo/client';
+import { PoolAboutThisPool } from '~/modules/pool/detail/components/PoolAboutThisPool';
 
 type Props = {};
 
@@ -83,10 +84,6 @@ export function PoolTransactions({ ...rest }: Props & BoxProps) {
         }
     }, [activeTab, isPhantomStable, investmentsResponse?.joinExits, swapsResponse?.swaps]);
 
-    const handleTabChanged = (tabIndex: number) => {
-        setActiveTab(tabIndex);
-    };
-
     const handleFetchMoreTransactions = () => {
         if (activeTab === 1 || isPhantomStable) {
             fetchMoreSwaps({ variables: { skip: transactions.length } });
@@ -97,27 +94,32 @@ export function PoolTransactions({ ...rest }: Props & BoxProps) {
 
     return (
         <Box width="full" {...rest}>
-            <Tabs variant="soft-rounded" onChange={handleTabChanged}>
+            <Tabs variant="soft-rounded" onChange={setActiveTab}>
                 <VStack width="full" alignItems="flex-start">
                     <TabList>
                         <HStack>
+                            <BeetsTab>About this pool</BeetsTab>
                             <BeetsTab>{isPhantomStable ? 'Transactions' : 'Investments'}</BeetsTab>
                             {!isPhantomStable && <BeetsTab>Swaps</BeetsTab>}
                             <BeetsTab>My {isPhantomStable ? 'transactions' : 'investments'}</BeetsTab>
                         </HStack>
                     </TabList>
 
-                    <PaginatedTable
-                        isInfinite
-                        width="full"
-                        items={transactions}
-                        pageSize={20}
-                        loading={false}
-                        fetchingMore={isFetchingMoreSwaps || isFetchingMoreInvestments}
-                        renderTableHeader={() => <PoolTransactionHeader />}
-                        renderTableRow={(item, index) => <PoolTransactionItem transaction={item} />}
-                        onFetchMore={handleFetchMoreTransactions}
-                    />
+                    {activeTab === 0 ? (
+                        <PoolAboutThisPool />
+                    ) : (
+                        <PaginatedTable
+                            isInfinite
+                            width="full"
+                            items={transactions}
+                            pageSize={20}
+                            loading={false}
+                            fetchingMore={isFetchingMoreSwaps || isFetchingMoreInvestments}
+                            renderTableHeader={() => <PoolTransactionHeader />}
+                            renderTableRow={(item, index) => <PoolTransactionItem transaction={item} />}
+                            onFetchMore={handleFetchMoreTransactions}
+                        />
+                    )}
                 </VStack>
             </Tabs>
         </Box>

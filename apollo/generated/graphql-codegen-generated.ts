@@ -1557,10 +1557,13 @@ export type GetPoolQuery = {
                   poolId: string;
                   swapEnabled: boolean;
                   totalLiquidity: string;
+                  totalLiquidity24hAgo: string;
                   totalShares: string;
                   fees24h: string;
                   swapFee: string;
                   volume24h: string;
+                  fees48h: string;
+                  volume48h: string;
                   apr: {
                       __typename: 'GqlPoolApr';
                       hasRewardApr: boolean;
@@ -1684,10 +1687,13 @@ export type GetPoolQuery = {
                   poolId: string;
                   swapEnabled: boolean;
                   totalLiquidity: string;
+                  totalLiquidity24hAgo: string;
                   totalShares: string;
                   fees24h: string;
                   swapFee: string;
                   volume24h: string;
+                  fees48h: string;
+                  volume48h: string;
                   apr: {
                       __typename: 'GqlPoolApr';
                       hasRewardApr: boolean;
@@ -1935,10 +1941,13 @@ export type GetPoolQuery = {
                   poolId: string;
                   swapEnabled: boolean;
                   totalLiquidity: string;
+                  totalLiquidity24hAgo: string;
                   totalShares: string;
                   fees24h: string;
                   swapFee: string;
                   volume24h: string;
+                  fees48h: string;
+                  volume48h: string;
                   apr: {
                       __typename: 'GqlPoolApr';
                       hasRewardApr: boolean;
@@ -2187,10 +2196,13 @@ export type GetPoolQuery = {
                   poolId: string;
                   swapEnabled: boolean;
                   totalLiquidity: string;
+                  totalLiquidity24hAgo: string;
                   totalShares: string;
                   fees24h: string;
                   swapFee: string;
                   volume24h: string;
+                  fees48h: string;
+                  volume48h: string;
                   apr: {
                       __typename: 'GqlPoolApr';
                       hasRewardApr: boolean;
@@ -2311,10 +2323,13 @@ export type GetPoolQuery = {
                   poolId: string;
                   swapEnabled: boolean;
                   totalLiquidity: string;
+                  totalLiquidity24hAgo: string;
                   totalShares: string;
                   fees24h: string;
                   swapFee: string;
                   volume24h: string;
+                  fees48h: string;
+                  volume48h: string;
                   apr: {
                       __typename: 'GqlPoolApr';
                       hasRewardApr: boolean;
@@ -2562,10 +2577,13 @@ export type GetPoolQuery = {
                   poolId: string;
                   swapEnabled: boolean;
                   totalLiquidity: string;
+                  totalLiquidity24hAgo: string;
                   totalShares: string;
                   fees24h: string;
                   swapFee: string;
                   volume24h: string;
+                  fees48h: string;
+                  volume48h: string;
                   apr: {
                       __typename: 'GqlPoolApr';
                       hasRewardApr: boolean;
@@ -2830,6 +2848,26 @@ export type GetPoolJoinExitsQueryVariables = Exact<{
 }>;
 
 export type GetPoolJoinExitsQuery = {
+    __typename: 'Query';
+    joinExits: Array<{
+        __typename: 'GqlPoolJoinExit';
+        id: string;
+        timestamp: number;
+        tx: string;
+        type: GqlPoolJoinExitType;
+        poolId: string;
+        valueUSD: string;
+        amounts: Array<{ __typename: 'GqlPoolJoinExitAmount'; address: string; amount: string }>;
+    }>;
+};
+
+export type GetPoolUserJoinExitsQueryVariables = Exact<{
+    first?: InputMaybe<Scalars['Int']>;
+    skip?: InputMaybe<Scalars['Int']>;
+    poolId: Scalars['String'];
+}>;
+
+export type GetPoolUserJoinExitsQuery = {
     __typename: 'Query';
     joinExits: Array<{
         __typename: 'GqlPoolJoinExit';
@@ -4094,10 +4132,13 @@ export const GetPoolDocument = gql`
                 poolId
                 swapEnabled
                 totalLiquidity
+                totalLiquidity24hAgo
                 totalShares
                 fees24h
                 swapFee
                 volume24h
+                fees48h
+                volume48h
                 apr {
                     hasRewardApr
                     thirdPartyApr
@@ -4374,6 +4415,65 @@ export function useGetPoolJoinExitsLazyQuery(
 export type GetPoolJoinExitsQueryHookResult = ReturnType<typeof useGetPoolJoinExitsQuery>;
 export type GetPoolJoinExitsLazyQueryHookResult = ReturnType<typeof useGetPoolJoinExitsLazyQuery>;
 export type GetPoolJoinExitsQueryResult = Apollo.QueryResult<GetPoolJoinExitsQuery, GetPoolJoinExitsQueryVariables>;
+export const GetPoolUserJoinExitsDocument = gql`
+    query GetPoolUserJoinExits($first: Int, $skip: Int, $poolId: String!) {
+        joinExits: userGetPoolJoinExits(poolId: $poolId, first: $first, skip: $skip) {
+            id
+            timestamp
+            tx
+            type
+            poolId
+            valueUSD
+            amounts {
+                address
+                amount
+            }
+        }
+    }
+`;
+
+/**
+ * __useGetPoolUserJoinExitsQuery__
+ *
+ * To run a query within a React component, call `useGetPoolUserJoinExitsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetPoolUserJoinExitsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetPoolUserJoinExitsQuery({
+ *   variables: {
+ *      first: // value for 'first'
+ *      skip: // value for 'skip'
+ *      poolId: // value for 'poolId'
+ *   },
+ * });
+ */
+export function useGetPoolUserJoinExitsQuery(
+    baseOptions: Apollo.QueryHookOptions<GetPoolUserJoinExitsQuery, GetPoolUserJoinExitsQueryVariables>,
+) {
+    const options = { ...defaultOptions, ...baseOptions };
+    return Apollo.useQuery<GetPoolUserJoinExitsQuery, GetPoolUserJoinExitsQueryVariables>(
+        GetPoolUserJoinExitsDocument,
+        options,
+    );
+}
+export function useGetPoolUserJoinExitsLazyQuery(
+    baseOptions?: Apollo.LazyQueryHookOptions<GetPoolUserJoinExitsQuery, GetPoolUserJoinExitsQueryVariables>,
+) {
+    const options = { ...defaultOptions, ...baseOptions };
+    return Apollo.useLazyQuery<GetPoolUserJoinExitsQuery, GetPoolUserJoinExitsQueryVariables>(
+        GetPoolUserJoinExitsDocument,
+        options,
+    );
+}
+export type GetPoolUserJoinExitsQueryHookResult = ReturnType<typeof useGetPoolUserJoinExitsQuery>;
+export type GetPoolUserJoinExitsLazyQueryHookResult = ReturnType<typeof useGetPoolUserJoinExitsLazyQuery>;
+export type GetPoolUserJoinExitsQueryResult = Apollo.QueryResult<
+    GetPoolUserJoinExitsQuery,
+    GetPoolUserJoinExitsQueryVariables
+>;
 export const GetPoolsDocument = gql`
     query GetPools(
         $first: Int

@@ -6,11 +6,13 @@ import { usePoolUserPendingRewards } from '~/modules/pool/lib/usePoolUserPending
 import { InfoButton } from '~/components/info-button/InfoButton';
 import { numberFormatUSDValue } from '~/lib/util/number-formats';
 import { usePoolUserDepositBalance } from '~/modules/pool/lib/usePoolUserDepositBalance';
+import { useGetTokens } from '~/lib/global/useToken';
 
 export default function PoolUserStats() {
     const { pool } = usePool();
-    const { pendingRewardsTotalUSD } = usePoolUserPendingRewards();
+    const { pendingRewards, pendingRewardsTotalUSD } = usePoolUserPendingRewards();
     const { userPoolBalanceUSD } = usePoolUserDepositBalance();
+    const { getToken } = useGetTokens();
 
     return (
         <VStack spacing="4" width="full" alignItems="flex-start" flex={1}>
@@ -53,6 +55,11 @@ export default function PoolUserStats() {
                 <Text color="white" fontSize="1.75rem">
                     {numberFormatUSDValue(pendingRewardsTotalUSD)}
                 </Text>
+                {pendingRewards.map((reward, index) => (
+                    <Text key={index} fontSize="1rem" lineHeight="1rem">
+                        {numeral(reward.amount).format('0.0[0000]')} {getToken(reward.address)?.symbol}
+                    </Text>
+                ))}
             </VStack>
             <VStack spacing="0" alignItems="flex-start">
                 <InfoButton
@@ -69,7 +76,7 @@ export default function PoolUserStats() {
                     <Text color="white" fontSize="1.75rem">
                         {numeral(0).format('0,0.0000')}
                     </Text>
-                    <Text color="white" fontSize="1rem" lineHeight="1rem">
+                    <Text fontSize="1rem" lineHeight="1rem">
                         {numeral(0).format('0.00%')}
                     </Text>
                 </VStack>

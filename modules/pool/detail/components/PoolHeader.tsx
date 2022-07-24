@@ -1,52 +1,81 @@
-import { Box, Flex, Heading, Text, HStack, VStack, Badge } from '@chakra-ui/react';
+import {
+    Box,
+    Flex,
+    Text,
+    HStack,
+    VStack,
+    Popover,
+    PopoverContent,
+    PopoverTrigger as OrigPopoverTrigger,
+} from '@chakra-ui/react';
 import numeral from 'numeral';
 import { PoolTokenPill } from '~/components/token/PoolTokenPill';
 import { usePool } from '~/modules/pool/lib/usePool';
-import AprTooltip from '~/components/apr-tooltip/AprTooltip';
 import { networkConfig } from '~/lib/config/network-config';
 import PoolOwnerImage from '~/assets/images/pool-owner.png';
 import Image from 'next/image';
+import { HelpCircle } from 'react-feather';
 
 function PoolHeader() {
     const { pool, poolTokensWithoutPhantomBpt } = usePool();
 
-    const swapFeeType = !pool.owner ? 'Static' : 'Dynamic';
+    // temp fix: https://github.com/chakra-ui/chakra-ui/issues/5896#issuecomment-1104085557
+    const PopoverTrigger: React.FC<{ children: React.ReactNode }> = OrigPopoverTrigger;
+
+    const hasBeetsOwner = pool.owner === networkConfig.beetsPoolOwnerAddress;
+    const hasZeroOwner = pool.owner === '0x0000000000000000000000000000000000000000';
+    const swapFeeType = hasZeroOwner ? 'Fixed' : 'Dynamic';
+    const tooltipText1 = `Liquidity providers earn ${swapFeeType.toLowerCase()} swap fees on every trade utilizing the liquidity in this pool.`;
+    const tooltipText2 = `Dynamic swap fees are controlled by the ${
+        hasBeetsOwner ? 'Beethoven X Liquidity Committee Multisig' : 'pool owner'
+    }.`;
+
     return (
-        <VStack width="full" spacing="8" alignItems="flex-start">
-            <VStack width='full' alignItems='flex-start'>
-                <HStack>
-                    <Text textStyle="h3" as="h3" fontWeight="bold">
-                        {pool.name}
-                    </Text>
-                    <HStack spacing="2">
-                        {poolTokensWithoutPhantomBpt.map((token, index) => (
-                            <PoolTokenPill key={index} token={token} />
-                        ))}
-                    </HStack>
+        <VStack width="full" alignItems="flex-start" mb="8">
+            <HStack>
+                <Text textStyle="h3" as="h3" fontWeight="bold">
+                    {pool.name}
+                </Text>
+                <HStack spacing="2">
+                    {poolTokensWithoutPhantomBpt.map((token, index) => (
+                        <PoolTokenPill key={index} token={token} />
+                    ))}
                 </HStack>
-                <HStack
-                    paddingX="3"
-                    paddingY="2"
-                    bg="whiteAlpha.200"
-                    spacing="2"
-                    fontSize="md"
-                    rounded="full"
-                    color="beets.base.50"
-                    justifyContent="center"
-                    fontWeight="semibold"
-                >
-                    <HStack>
-                        <Flex alignItems="center">
-                            <Image src={PoolOwnerImage} width={24} height={24} alt="Pool Owner Image" />
-                        </Flex>
+            </HStack>
+            <Popover trigger="hover" placement="right">
+                <PopoverTrigger>
+                    <HStack
+                        paddingX="3"
+                        paddingY="2"
+                        bg="whiteAlpha.200"
+                        spacing="2"
+                        fontSize="md"
+                        rounded="full"
+                        color="beets.base.50"
+                        justifyContent="center"
+                        fontWeight="semibold"
+                    >
+                        {!hasZeroOwner && (
+                            <Flex alignItems="center">
+                                {hasBeetsOwner ? (
+                                    <Image src={PoolOwnerImage} width="24" height="24" alt="Pool Owner Image" />
+                                ) : (
+                                    <HelpCircle size="24" />
+                                )}
+                            </Flex>
+                        )}
                         <HStack spacing="1">
                             <Text>{numeral(pool.dynamicData.swapFee).format('0.0[00]%')}</Text>
                             <Text>{swapFeeType} Fee</Text>
                         </HStack>
                     </HStack>
-                </HStack>
-            </VStack>
-            <Flex mt={2}>{pool.owner === networkConfig.beetsPoolOwnerAddress ? <Box ml={1}></Box> : null}</Flex>
+                </PopoverTrigger>
+                <PopoverContent w="200px" bgColor="beets.base.800" shadow="2xl">
+                    <Box p="2" fontSize="sm" bgColor="whiteAlpha.200">
+                        {tooltipText1} {!hasZeroOwner && tooltipText2}
+                    </Box>
+                </PopoverContent>
+            </Popover>
         </VStack>
     );
 }

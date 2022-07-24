@@ -105,8 +105,14 @@ export function HomePools(props: BoxProps) {
                                                 right="0"
                                                 height="216px"
                                                 alt={`${item.id}-image`}
+                                                objectFit={{ base: 'cover', sm: 'contain' }}
                                             />
-                                            <BeetsButton as="a" href={item.buttonUrl} target="_blank">
+                                            <BeetsButton
+                                                as="a"
+                                                href={item.buttonUrl}
+                                                target="_blank"
+                                                fontSize={{ base: '0.75rem', sm: '1rem' }}
+                                            >
                                                 {item.buttonText}
                                             </BeetsButton>
                                         </Flex>
