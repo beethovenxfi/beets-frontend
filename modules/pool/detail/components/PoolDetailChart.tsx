@@ -5,7 +5,7 @@ import ReactECharts from 'echarts-for-react';
 import { useMemo } from 'react';
 import { EChartsOption } from 'echarts';
 import numeral from 'numeral';
-import dateFormat from 'dateformat';
+import { format } from 'date-fns';
 
 interface Props extends BoxProps {}
 
@@ -69,7 +69,7 @@ function PoolDetailChart({ ...rest }: Props) {
                 // },
                 axisLabel: {
                     formatter: function (value: number) {
-                        return dateFormat(new Date(value), 'mmmm d');
+                        return format(new Date(value), 'MMMM d');
                     },
                     rotate: 30,
                 },
@@ -78,7 +78,7 @@ function PoolDetailChart({ ...rest }: Props) {
                     type: 'line',
                     label: {
                         formatter: function (params) {
-                            return dateFormat(new Date(params.value), 'mmmm d');
+                            return format(new Date(params.value), 'MMMM d');
                         },
                     },
                 },
