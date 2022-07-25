@@ -1,10 +1,8 @@
-import { Box, BoxProps, Flex, HStack, Select, TabList, Tabs, Text, VStack } from '@chakra-ui/react';
+import { Box, BoxProps, Flex, HStack, Select, Text, VStack } from '@chakra-ui/react';
 import Card from '~/components/card/Card';
 import { PoolDetailBptPriceChart } from '~/modules/pool/detail/components/charts/PoolDetailBptPriceChart';
 import { numberFormatUSDValue } from '~/lib/util/number-formats';
-import { Badge } from '@chakra-ui/layout';
 import { usePool } from '~/modules/pool/lib/usePool';
-import numeral from 'numeral';
 import { PercentChangeBadge } from '~/components/badge/PercentChangeBadge';
 
 interface Props extends BoxProps {}
@@ -40,7 +38,6 @@ export function PoolDetailCharts({ ...rest }: Props) {
                     <Select width="116px" value="share-price" variant="filled">
                         <option value="share-price">7 days</option>
                         <option value="option2">30 days</option>
-                        <option value="option2">1 year</option>
                         <option value="option2">All time</option>
                     </Select>
                 </HStack>
