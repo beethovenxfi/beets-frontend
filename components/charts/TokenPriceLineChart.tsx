@@ -1,18 +1,23 @@
 import { Box } from '@chakra-ui/layout';
-import { EChartsOption } from 'echarts';
+import { EChartsOption, graphic } from 'echarts';
 import ReactECharts from 'echarts-for-react';
 import { useMemo } from 'react';
 
 import { GqlTokenPriceChartDataItem } from '~/apollo/generated/graphql-codegen-generated';
-import { TokenBase } from '~/lib/services/token/token-types';
+import { useTheme } from '@chakra-ui/react';
+import numeral from 'numeral';
+import { numberFormatUSDValue } from '~/lib/util/number-formats';
+import { format } from 'date-fns';
 
 interface Props {
-    tokenIn: TokenBase | null;
-    tokenOut: TokenBase | null;
+    label: string;
     prices: GqlTokenPriceChartDataItem[];
 }
 
-export function TokenPriceLineChart({ tokenIn, tokenOut, prices }: Props) {
+export function TokenPriceLineChart({ label, prices }: Props) {
+    const { colors } = useTheme();
+    const max = Math.max(...prices.map((price) => parseFloat(price.price))) * 1.01;
+
     const option = useMemo<EChartsOption>(
         () => ({
             tooltip: {
@@ -40,17 +45,18 @@ export function TokenPriceLineChart({ tokenIn, tokenOut, prices }: Props) {
                 type: 'time',
                 axisLine: { lineStyle: { color: '#8392A5' } },
                 offset: 0,
-                /*axisLabel: {
+                axisLabel: {
                     fontSize: 14,
                     formatter: (value: number) => format(value * 1000, 'MMM. dd'),
-                },*/
+                },
             },
             yAxis: {
                 show: false,
                 scale: true,
-                axisLine: { lineStyle: { color: '#8392A5' } },
+                //axisLine: { lineStyle: { color: '#8392A5' } },
                 splitLine: { show: false },
                 offset: 0,
+                max,
             },
             grid: {
                 left: 0,
@@ -63,23 +69,31 @@ export function TokenPriceLineChart({ tokenIn, tokenOut, prices }: Props) {
                 {
                     type: 'line',
                     smooth: true,
-                    name: `${tokenOut?.symbol}/${tokenIn?.symbol}`,
+                    name: label,
                     showSymbol: false,
                     data: prices.map((item) => [item.timestamp * 1000, item.price]),
                     itemStyle: {
-                        color: '#0CF49B',
-                        color0: '#FD1050',
-                        borderColor: '#0CF49B',
-                        borderColor0: '#FD1050',
+                        color: colors.beets.cyan,
+                        borderColor: colors.beets.cyan,
+                    },
+                    areaStyle: {
+                        opacity: 0.2,
+                        color: new graphic.LinearGradient(0, 0, 0, 1, [
+                            { offset: 0, color: 'rgba(0, 255, 255,0.5)' },
+                            { offset: 1, color: 'rgba(0, 255, 255, 0)' },
+                        ]),
+                    },
+                    tooltip: {
+                        valueFormatter: (value) => numberFormatUSDValue(value as number),
                     },
                 },
             ],
         }),
-        [tokenIn, tokenOut, prices],
+        [label, prices],
     );
 
     return (
-        <Box width='full' height='full' paddingY='4' paddingX='6'>
+        <Box width="full" height="full">
             <ReactECharts option={option} style={{ height: '100%' }} />
         </Box>
     );

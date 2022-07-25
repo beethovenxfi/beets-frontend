@@ -479,6 +479,7 @@ export const GetPool = gql`
                 totalLiquidity
                 totalLiquidity24hAgo
                 totalShares
+                totalShares24hAgo
                 fees24h
                 swapFee
                 volume24h
@@ -658,6 +659,15 @@ export const GetPoolJoinExits = gql`
                 address
                 amount
             }
+        }
+    }
+`;
+export const GetPoolBptPriceChartData = gql`
+    query GetPoolBptPriceChartData($address: String!, $range: GqlTokenChartDataRange!) {
+        prices: tokenGetPriceChartData(address: $address, range: $range) {
+            id
+            price
+            timestamp
         }
     }
 `;
