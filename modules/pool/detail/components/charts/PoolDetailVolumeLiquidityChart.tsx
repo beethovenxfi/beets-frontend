@@ -1,13 +1,13 @@
-import { BoxProps, useTheme } from '@chakra-ui/react';
+import { useTheme } from '@chakra-ui/react';
 import ReactECharts from 'echarts-for-react';
 import { useMemo } from 'react';
 import { EChartsOption, graphic } from 'echarts';
 import numeral from 'numeral';
 import { format } from 'date-fns';
 
-interface Props extends BoxProps {}
+interface Props {}
 
-export function PoolDetailVolumeLiquidityChart({ ...rest }: Props) {
+export function PoolDetailVolumeLiquidityChart({}: Props) {
     const { colors } = useTheme();
 
     const option = useMemo<EChartsOption>(
@@ -32,9 +32,9 @@ export function PoolDetailVolumeLiquidityChart({ ...rest }: Props) {
                 right: '2%',
             },
             grid: {
-                bottom: '2.5%',
-                right: '2.5%',
-                left: '2.5%',
+                bottom: '2%',
+                right: '2%',
+                left: '2%',
                 top: '10%',
                 containLabel: true,
             },
@@ -43,7 +43,7 @@ export function PoolDetailVolumeLiquidityChart({ ...rest }: Props) {
                 minorSplitLine: { show: false },
                 axisTick: { show: false },
                 axisLabel: {
-                    formatter: function (value: number, index: number) {
+                    formatter: (value: number, index: number) => {
                         return index % 3 === 0 ? format(new Date(value), 'MMM d') : '';
                     },
                     color: colors.gray['200'],
@@ -52,17 +52,12 @@ export function PoolDetailVolumeLiquidityChart({ ...rest }: Props) {
                 axisPointer: {
                     type: 'line',
                     label: {
-                        formatter: function (params) {
+                        formatter: (params) => {
                             return format(new Date(params.value), 'MMM d');
                         },
                     },
                 },
-                axisLine: {
-                    show: false,
-                    lineStyle: {
-                        color: colors.gray['300'],
-                    },
-                },
+                axisLine: { show: false },
             },
             yAxis: [
                 {
@@ -74,7 +69,7 @@ export function PoolDetailVolumeLiquidityChart({ ...rest }: Props) {
                         formatter: function (value: number, index: number) {
                             return index % 3 === 1 ? `$${numeral(value).format('0a')}` : '';
                         },
-                        color: colors.beets.cyan,
+                        color: colors.beets.base['100'],
                     },
                     axisPointer: {
                         label: {
@@ -86,7 +81,7 @@ export function PoolDetailVolumeLiquidityChart({ ...rest }: Props) {
                 },
                 {
                     type: 'value',
-                    max: 6000000, // align with left_axis
+                    //max: 6000000, // align with left_axis
                     axisLine: { show: false },
                     minorSplitLine: { show: false },
                     splitLine: { show: false },
@@ -134,9 +129,9 @@ export function PoolDetailVolumeLiquidityChart({ ...rest }: Props) {
                         opacity: 1,
                         borderRadius: [5, 5, 0, 0],
                         color: new graphic.LinearGradient(0, 0, 0, 1, [
-                            { offset: 0, color: 'rgba(0, 255, 255, 1)' },
-                            { offset: 0.4, color: 'rgba(0, 255, 255, 0.5)' },
-                            { offset: 1, color: 'rgba(0, 255, 255, 0.0)' },
+                            { offset: 0, color: 'rgba(88, 95, 198, 1)' },
+                            { offset: 0.5, color: 'rgba(88, 95, 198, 0.7)' },
+                            { offset: 1, color: 'rgba(88, 95, 198, 0.0)' },
                         ]),
                     },
                 },
