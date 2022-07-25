@@ -279,6 +279,7 @@ export interface GqlPoolDynamicData {
     totalLiquidity: Scalars['BigDecimal'];
     totalLiquidity24hAgo: Scalars['BigDecimal'];
     totalShares: Scalars['BigDecimal'];
+    totalShares24hAgo: Scalars['BigDecimal'];
     volume24h: Scalars['BigDecimal'];
     volume48h: Scalars['BigDecimal'];
 }
@@ -1559,6 +1560,7 @@ export type GetPoolQuery = {
                   totalLiquidity: string;
                   totalLiquidity24hAgo: string;
                   totalShares: string;
+                  totalShares24hAgo: string;
                   fees24h: string;
                   swapFee: string;
                   volume24h: string;
@@ -1689,6 +1691,7 @@ export type GetPoolQuery = {
                   totalLiquidity: string;
                   totalLiquidity24hAgo: string;
                   totalShares: string;
+                  totalShares24hAgo: string;
                   fees24h: string;
                   swapFee: string;
                   volume24h: string;
@@ -1943,6 +1946,7 @@ export type GetPoolQuery = {
                   totalLiquidity: string;
                   totalLiquidity24hAgo: string;
                   totalShares: string;
+                  totalShares24hAgo: string;
                   fees24h: string;
                   swapFee: string;
                   volume24h: string;
@@ -2198,6 +2202,7 @@ export type GetPoolQuery = {
                   totalLiquidity: string;
                   totalLiquidity24hAgo: string;
                   totalShares: string;
+                  totalShares24hAgo: string;
                   fees24h: string;
                   swapFee: string;
                   volume24h: string;
@@ -2325,6 +2330,7 @@ export type GetPoolQuery = {
                   totalLiquidity: string;
                   totalLiquidity24hAgo: string;
                   totalShares: string;
+                  totalShares24hAgo: string;
                   fees24h: string;
                   swapFee: string;
                   volume24h: string;
@@ -2579,6 +2585,7 @@ export type GetPoolQuery = {
                   totalLiquidity: string;
                   totalLiquidity24hAgo: string;
                   totalShares: string;
+                  totalShares24hAgo: string;
                   fees24h: string;
                   swapFee: string;
                   volume24h: string;
@@ -4144,6 +4151,7 @@ export const GetPoolDocument = gql`
                 totalLiquidity
                 totalLiquidity24hAgo
                 totalShares
+                totalShares24hAgo
                 fees24h
                 swapFee
                 volume24h

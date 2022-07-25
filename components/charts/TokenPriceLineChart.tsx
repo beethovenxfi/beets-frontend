@@ -16,6 +16,7 @@ interface Props {
 
 export function TokenPriceLineChart({ label, prices }: Props) {
     const { colors } = useTheme();
+    const max = Math.max(...prices.map((price) => parseFloat(price.price))) * 1.01;
 
     const option = useMemo<EChartsOption>(
         () => ({
@@ -55,7 +56,7 @@ export function TokenPriceLineChart({ label, prices }: Props) {
                 //axisLine: { lineStyle: { color: '#8392A5' } },
                 splitLine: { show: false },
                 offset: 0,
-                max: 66.5,
+                max,
             },
             grid: {
                 left: 0,

@@ -479,6 +479,7 @@ export const GetPool = gql`
                 totalLiquidity
                 totalLiquidity24hAgo
                 totalShares
+                totalShares24hAgo
                 fees24h
                 swapFee
                 volume24h

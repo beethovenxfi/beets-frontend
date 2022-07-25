@@ -2,6 +2,7 @@ import { Badge, Divider, HStack, Text, VStack } from '@chakra-ui/layout';
 import { usePool } from '../../../lib/usePool';
 import numeral from 'numeral';
 import AprTooltip from '~/components/apr-tooltip/AprTooltip';
+import { PercentChangeBadge } from '~/components/badge/PercentChangeBadge';
 
 export default function PoolOverallStats() {
     const { pool } = usePool();
@@ -31,9 +32,7 @@ export default function PoolOverallStats() {
                 <Text color="white" fontSize="1.75rem">
                     {numeral(data.totalLiquidity).format('$0,0.00a')}
                 </Text>
-                <Badge colorScheme={tvlPercentChange >= 0 ? 'green' : 'red'}>
-                    {numeral(tvlPercentChange).format('0.00%')}
-                </Badge>
+                <PercentChangeBadge percentChange={tvlPercentChange} />
             </VStack>
             <VStack spacing="0" alignItems="flex-start">
                 <Text lineHeight="1rem" fontWeight="semibold" fontSize="sm" color="beets.base.50">
@@ -42,9 +41,7 @@ export default function PoolOverallStats() {
                 <Text color="white" fontSize="1.75rem">
                     {numeral(data.volume24h).format('$0,0.00a')}
                 </Text>
-                <Badge colorScheme={volumePercentChange >= 0 ? 'green' : 'red'}>
-                    {numeral(volumePercentChange).format('0.00%')}
-                </Badge>
+                <PercentChangeBadge percentChange={volumePercentChange} />
             </VStack>
             <VStack spacing="0" alignItems="flex-start">
                 <Text lineHeight="1rem" fontWeight="semibold" fontSize="sm" color="beets.base.50">

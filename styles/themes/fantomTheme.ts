@@ -93,6 +93,7 @@ export const fantomTheme: Partial<ChakraTheme> = {
                 '50': 'rgba(46,49,146, 0.05)',
                 '100': 'rgba(46,49,146, 0.1)',
                 '200': 'rgba(46,49,146, 0.2)',
+                '300': 'rgba(46,49,146, 0.3)',
                 '500': 'rgba(46,49,146, 0.5)',
             },
             greenAlpha: {
@@ -110,11 +111,22 @@ export const fantomTheme: Partial<ChakraTheme> = {
         },
     },
     components: {
-        Tooltip: {
-            baseStyle: {
-                borderRadius: 'sm',
-                bgColor: 'gray.400',
-                color: 'white',
+        Select: {
+            parts: ['field'],
+            variants: {
+                filled: {
+                    field: {
+                        bgColor: 'beets.lightAlpha.300',
+                        borderColor: 'transparent',
+                        _hover: {
+                            borderColor: 'beets.base.200',
+                            bgColor: 'beets.lightAlpha.300',
+                        },
+                        _focus: {
+                            bgColor: 'beets.lightAlpha.300',
+                        },
+                    },
+                },
             },
         },
     },
