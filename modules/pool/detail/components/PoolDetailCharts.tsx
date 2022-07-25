@@ -1,51 +1,44 @@
-import { Box, BoxProps, Flex, HStack, Select, Text, VStack } from '@chakra-ui/react';
+import { HStack, Select } from '@chakra-ui/react';
 import Card from '~/components/card/Card';
 import { PoolDetailBptPriceChart } from '~/modules/pool/detail/components/charts/PoolDetailBptPriceChart';
-import { numberFormatUSDValue } from '~/lib/util/number-formats';
 import { usePool } from '~/modules/pool/lib/usePool';
-import { PercentChangeBadge } from '~/components/badge/PercentChangeBadge';
+import { useState } from 'react';
+import { PoolDetailVolumeLiquidityChart } from '~/modules/pool/detail/components/charts/PoolDetailVolumeLiquidityChart';
 
-interface Props extends BoxProps {}
+type ChartType = 'SHARE_PRICE' | 'VOLUME_TVL';
+type ChartRange = 'SEVEN_DAYS' | 'THIRTY_DAYS' | 'ALL_TIME';
 
-export function PoolDetailCharts({ ...rest }: Props) {
+export function PoolDetailCharts() {
     const { pool } = usePool();
-    const sharePrice = parseFloat(pool.dynamicData.totalLiquidity) / parseFloat(pool.dynamicData.totalShares);
-    const totalShares24hAgo = parseFloat(pool.dynamicData.totalShares24hAgo);
-    const sharePrice24hAgo =
-        totalShares24hAgo > 0 ? parseFloat(pool.dynamicData.totalLiquidity24hAgo) / totalShares24hAgo : 0;
-    const percentChange = (sharePrice - sharePrice24hAgo) / sharePrice24hAgo;
+    const [chartType, setChartType] = useState<ChartType>('SHARE_PRICE');
+    const [chartRange, setChartRange] = useState<ChartRange>('SEVEN_DAYS');
 
     return (
-        <Card position="relative">
-            <Flex padding="4" pb="0" alignItems="center">
-                <Box flex="1">
-                    <Text color="beets.base.50" fontSize="sm" fontWeight="semibold">
-                        Share price
-                    </Text>
-                    <Flex alignItems="flex-end">
-                        <Text as="h2" fontSize="3xl" color="white" fontWeight="bold">
-                            {numberFormatUSDValue(sharePrice)}
-                        </Text>
-                        <PercentChangeBadge percentChange={percentChange} mb="2.5" ml="2" />
-                    </Flex>
-                </Box>
-                <HStack spacing="4">
-                    <Select width="200px" value="share-price" variant="filled">
-                        <option value="share-price">Share price</option>
-                        <option value="option2">Volume / TVL</option>
-                        <option value="option3">Fees</option>
-                    </Select>
-                    <Select width="116px" value="share-price" variant="filled">
-                        <option value="share-price">7 days</option>
-                        <option value="option2">30 days</option>
-                        <option value="option2">All time</option>
-                    </Select>
-                </HStack>
-            </Flex>
+        <Card>
+            <HStack padding="4" pb="0" spacing="4">
+                <Select
+                    value={chartType}
+                    onChange={(e) => setChartType(e.currentTarget.value as ChartType)}
+                    width="180px"
+                    variant="filled"
+                >
+                    <option value="SHARE_PRICE">Share price</option>
+                    <option value="VOLUME_TVL">Liquidity / TVL</option>
+                </Select>
+                <Select
+                    value={chartRange}
+                    onChange={(e) => setChartRange(e.currentTarget.value as ChartRange)}
+                    width="140px"
+                    variant="filled"
+                >
+                    <option value="SEVEN_DAYS">last 7 days</option>
+                    <option value="THIRTY_DAYS">last 30 days</option>
+                    <option value="ALL_TIME">All time</option>
+                </Select>
+            </HStack>
 
-            <VStack width="full" height="full">
-                <PoolDetailBptPriceChart />
-            </VStack>
+            {chartType === 'SHARE_PRICE' && <PoolDetailBptPriceChart />}
+            {chartType === 'VOLUME_TVL' && <PoolDetailVolumeLiquidityChart />}
         </Card>
     );
 }

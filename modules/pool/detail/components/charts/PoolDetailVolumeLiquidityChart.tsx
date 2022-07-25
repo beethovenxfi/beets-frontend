@@ -2,7 +2,7 @@ import { Box, BoxProps, HStack, Text, useTheme, VStack } from '@chakra-ui/react'
 import Card from '~/components/card/Card';
 import ReactECharts from 'echarts-for-react';
 import { useMemo } from 'react';
-import { EChartsOption } from 'echarts';
+import { EChartsOption, graphic } from 'echarts';
 import numeral from 'numeral';
 import { format } from 'date-fns';
 
@@ -24,33 +24,30 @@ export function PoolDetailVolumeLiquidityChart({ ...rest }: Props) {
                 },
             },
             legend: {
+                show: false,
                 data: ['Liquidity', 'Daily Volume'],
                 textStyle: {
                     color: colors.beets.base['50'],
                 },
-                bottom: '2%',
+                top: '0',
+                right: '2%',
             },
             grid: {
-                bottom: '12.5%',
+                bottom: '2.5%',
                 right: '2.5%',
                 left: '2.5%',
-                top: '2.5%',
+                top: '10%',
                 containLabel: true,
             },
             xAxis: {
                 type: 'time',
-                minorSplitLine: {
-                    show: false,
-                },
-                axisTick: {
-                    show: false,
-                },
+                minorSplitLine: { show: false },
+                axisTick: { show: false },
                 axisLabel: {
-                    formatter: function (value: number) {
-                        return format(new Date(value), 'MMM d');
+                    formatter: function (value: number, index: number) {
+                        return index % 3 === 0 ? format(new Date(value), 'MMM d') : '';
                     },
-                    rotate: 0,
-                    color: colors.beets.base['100'],
+                    color: colors.gray['200'],
                 },
                 maxInterval: 3600 * 1000 * 24,
                 axisPointer: {
@@ -62,27 +59,23 @@ export function PoolDetailVolumeLiquidityChart({ ...rest }: Props) {
                     },
                 },
                 axisLine: {
-                    show: true,
-                    color: colors.beets.base['100'],
+                    show: false,
+                    lineStyle: {
+                        color: colors.gray['300'],
+                    },
                 },
             },
             yAxis: [
                 {
                     type: 'value',
-                    axisLine: {
-                        show: false,
-                    },
-                    minorSplitLine: {
-                        show: false,
-                    },
-                    splitLine: {
-                        show: false,
-                    },
+                    axisLine: { show: false },
+                    minorSplitLine: { show: false },
+                    splitLine: { show: false },
                     axisLabel: {
-                        formatter: function (value: number) {
-                            return `$${numeral(value).format('0a')}`;
+                        formatter: function (value: number, index: number) {
+                            return index % 3 === 0 ? `$${numeral(value).format('0a')}` : '';
                         },
-                        color: colors.beets.base['100'],
+                        color: colors.beets.cyan,
                     },
                     axisPointer: {
                         label: {
@@ -95,20 +88,14 @@ export function PoolDetailVolumeLiquidityChart({ ...rest }: Props) {
                 {
                     type: 'value',
                     max: 6000000, // align with left_axis
-                    axisLine: {
-                        show: false,
-                    },
-                    minorSplitLine: {
-                        show: false,
-                    },
-                    splitLine: {
-                        show: false,
-                    },
+                    axisLine: { show: false },
+                    minorSplitLine: { show: false },
+                    splitLine: { show: false },
                     axisLabel: {
-                        formatter: function (value: number) {
-                            return `$${numeral(value).format('0a')}`;
+                        formatter: function (value: number, index: number) {
+                            return index % 3 === 0 ? `$${numeral(value).format('0a')}` : '';
                         },
-                        color: colors.beets.base['100'],
+                        color: colors.white,
                     },
                     axisPointer: {
                         label: {
@@ -139,13 +126,19 @@ export function PoolDetailVolumeLiquidityChart({ ...rest }: Props) {
                     ],
                     name: 'Liquidity',
                     type: 'bar',
-                    itemStyle: {
-                        borderRadius: [5, 5, 0, 0],
-                    },
                     tooltip: {
                         valueFormatter: function (value) {
                             return `$${numeral(value).format('0a')}`;
                         },
+                    },
+                    itemStyle: {
+                        opacity: 1,
+                        borderRadius: [5, 5, 0, 0],
+                        color: new graphic.LinearGradient(0, 0, 0, 1, [
+                            { offset: 0, color: 'rgba(0, 255, 255, 1)' },
+                            { offset: 0.4, color: 'rgba(0, 255, 255, 0.5)' },
+                            { offset: 1, color: 'rgba(0, 255, 255, 0.0)' },
+                        ]),
                     },
                 },
                 {
@@ -167,11 +160,21 @@ export function PoolDetailVolumeLiquidityChart({ ...rest }: Props) {
                     name: 'Daily Volume',
                     type: 'line',
                     yAxisIndex: 1,
-                    color: colors.beets.base['800'],
+
                     tooltip: {
                         valueFormatter: function (value) {
                             return `$${numeral(value).format('0a')}`;
                         },
+                    },
+                    symbol: 'circle',
+                    symbolSize: 8,
+                    itemStyle: {
+                        color: colors.black,
+                        borderColor: colors.white,
+                        borderWidth: 1.5,
+                    },
+                    lineStyle: {
+                        color: colors.white,
                     },
                 },
             ],
@@ -179,18 +182,5 @@ export function PoolDetailVolumeLiquidityChart({ ...rest }: Props) {
         [],
     );
 
-    return (
-        <Card width="full" display="flex" alignItems="center" justifyContent="center" height="full">
-            <VStack width="full" height="full">
-                <HStack width="full" padding="4">
-                    <Text as="h2" fontSize="3xl" fontWeight="bold" color="beets.base.50">
-                        $4.23m
-                    </Text>
-                </HStack>
-                <Box width="full" height="full">
-                    <ReactECharts option={option} style={{ height: '100%' }} />
-                </Box>
-            </VStack>
-        </Card>
-    );
+    return <ReactECharts option={option} style={{ height: '100%' }} />;
 }

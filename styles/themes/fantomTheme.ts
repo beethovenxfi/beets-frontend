@@ -116,14 +116,15 @@ export const fantomTheme: Partial<ChakraTheme> = {
             variants: {
                 filled: {
                     field: {
-                        bgColor: 'beets.lightAlpha.300',
+                        color: 'white',
+                        bgColor: 'beets.lightAlpha.500',
                         borderColor: 'transparent',
                         _hover: {
                             borderColor: 'beets.base.200',
-                            bgColor: 'beets.lightAlpha.300',
+                            bgColor: 'beets.lightAlpha.500',
                         },
                         _focus: {
-                            bgColor: 'beets.lightAlpha.300',
+                            bgColor: 'beets.lightAlpha.500',
                         },
                     },
                 },
