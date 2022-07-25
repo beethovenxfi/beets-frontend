@@ -28,7 +28,7 @@ export function PoolDetailCharts() {
                 <Select
                     value={chartRange}
                     onChange={(e) => setChartRange(e.currentTarget.value as ChartRange)}
-                    width="140px"
+                    width="150px"
                     variant="filled"
                 >
                     <option value="SEVEN_DAYS">last 7 days</option>

@@ -1,5 +1,4 @@
-import { Box, BoxProps, HStack, Text, useTheme, VStack } from '@chakra-ui/react';
-import Card from '~/components/card/Card';
+import { BoxProps, useTheme } from '@chakra-ui/react';
 import ReactECharts from 'echarts-for-react';
 import { useMemo } from 'react';
 import { EChartsOption, graphic } from 'echarts';
@@ -73,7 +72,7 @@ export function PoolDetailVolumeLiquidityChart({ ...rest }: Props) {
                     splitLine: { show: false },
                     axisLabel: {
                         formatter: function (value: number, index: number) {
-                            return index % 3 === 0 ? `$${numeral(value).format('0a')}` : '';
+                            return index % 3 === 1 ? `$${numeral(value).format('0a')}` : '';
                         },
                         color: colors.beets.cyan,
                     },
@@ -93,7 +92,7 @@ export function PoolDetailVolumeLiquidityChart({ ...rest }: Props) {
                     splitLine: { show: false },
                     axisLabel: {
                         formatter: function (value: number, index: number) {
-                            return index % 3 === 0 ? `$${numeral(value).format('0a')}` : '';
+                            return index % 3 === 1 ? `$${numeral(value).format('0a')}` : '';
                         },
                         color: colors.white,
                     },

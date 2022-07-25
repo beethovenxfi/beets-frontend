@@ -7,7 +7,7 @@ interface Props {}
 
 export function PoolDetailBptPriceChart({}: Props) {
     const { pool } = usePool();
-    const [range, setRange] = useState<GqlTokenChartDataRange>('SEVEN_DAY');
+    const [range, setRange] = useState<GqlTokenChartDataRange>('THIRTY_DAY');
     const { data } = useGetPoolBptPriceChartDataQuery({ variables: { address: pool.address, range } });
 
     return <TokenPriceLineChart label="Share price" prices={data?.prices || []} />;
