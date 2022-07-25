@@ -515,6 +515,30 @@ type GqlPoolPhantomStableNested {
     totalShares: BigDecimal!
 }
 
+type GqlPoolSnapshot {
+    amounts: [String!]!
+    fees24h: String!
+    holdersCount: String!
+    id: ID!
+    poolId: String!
+    sharePrice: String!
+    swapsCount: String!
+    timestamp: Int!
+    totalLiquidity: String!
+    totalShares: String!
+    totalSwapFee: String!
+    totalSwapVolume: String!
+    volume24h: String!
+}
+
+enum GqlPoolSnapshotDataRange {
+    ALL_TIME
+    NINETY_DAYS
+    ONE_HUNDRED_EIGHTY_DAYS
+    ONE_YEAR
+    THIRTY_DAYS
+}
+
 type GqlPoolStable implements GqlPoolBase {
     address: Bytes!
     allTokens: [GqlPoolTokenExpanded!]!
@@ -897,6 +921,7 @@ type Mutation {
     lgeCreate(lge: GqlLgeCreateInput!, signature: String!): GqlLge!
     poolLoadOnChainDataForAllPools: String!
     poolLoadOnChainDataForPoolsWithActiveUpdates: String!
+    poolLoadSnapshotsForAllPools: String!
     poolReloadAllPoolAprs: String!
     poolReloadStakingForAllPools: String!
     poolSyncAllPoolsFromSubgraph: [String!]!
@@ -953,6 +978,7 @@ type Query {
         textSearch: String
         where: GqlPoolFilter
     ): Int!
+    poolGetSnapshots(id: String!, range: GqlPoolSnapshotDataRange!): [GqlPoolSnapshot!]!
     poolGetSwaps(first: Int, skip: Int, where: GqlPoolSwapFilter): [GqlPoolSwap!]!
     poolGetUserSwapVolume(first: Int, skip: Int, where: GqlUserSwapVolumeFilter): [GqlPoolUserSwapVolume!]!
     portfolioGetUserPortfolio: GqlUserPortfolioData!

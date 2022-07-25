@@ -1,23 +1,18 @@
 import { useMemo, useState } from 'react';
-import { TokenPriceLineChart } from '~/components/charts/TokenPriceLineChart';
 import { GqlTokenChartDataRange, useGetPoolBptPriceChartDataQuery } from '~/apollo/generated/graphql-codegen-generated';
 import { usePool } from '~/modules/pool/lib/usePool';
 import { EChartsOption, graphic } from 'echarts';
 import { format } from 'date-fns';
 import { numberFormatUSDValue } from '~/lib/util/number-formats';
-import { Box } from '@chakra-ui/layout';
 import ReactECharts from 'echarts-for-react';
 import { useTheme } from '@chakra-ui/react';
-import numeral from 'numeral';
 
-interface Props {}
+interface Props {
+    prices: { timestamp: number; price: string }[];
+}
 
-export function PoolDetailBptPriceChart({}: Props) {
+export function PoolDetailBptPriceChart({ prices }: Props) {
     const { colors } = useTheme();
-    const { pool } = usePool();
-    const [range, setRange] = useState<GqlTokenChartDataRange>('THIRTY_DAY');
-    const { data } = useGetPoolBptPriceChartDataQuery({ variables: { address: pool.address, range } });
-    const prices = data?.prices || [];
     const max = Math.max(...prices.map((price) => parseFloat(price.price))) * 1.01;
 
     const option = useMemo<EChartsOption>(
@@ -53,6 +48,8 @@ export function PoolDetailBptPriceChart({}: Props) {
                         return index % 2 === 0 ? format(new Date(value), 'MMM d') : '';
                     },
                     color: colors.gray['200'],
+                    showMaxLabel: false,
+                    showMinLabel: false,
                 },
                 axisPointer: {
                     type: 'line',
@@ -74,7 +71,7 @@ export function PoolDetailBptPriceChart({}: Props) {
             grid: {
                 left: 0,
                 right: 0,
-                top: '2.5%',
+                top: '5%',
                 bottom: '7.5%',
                 containLabel: false,
             },

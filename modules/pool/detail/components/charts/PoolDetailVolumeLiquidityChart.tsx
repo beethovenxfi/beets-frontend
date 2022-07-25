@@ -5,9 +5,11 @@ import { EChartsOption, graphic } from 'echarts';
 import numeral from 'numeral';
 import { format } from 'date-fns';
 
-interface Props {}
+interface Props {
+    data: { timestamp: number; totalLiquidity: string; volume24h: string }[];
+}
 
-export function PoolDetailVolumeLiquidityChart({}: Props) {
+export function PoolDetailVolumeLiquidityChart({ data }: Props) {
     const { colors } = useTheme();
 
     const option = useMemo<EChartsOption>(
@@ -44,11 +46,15 @@ export function PoolDetailVolumeLiquidityChart({}: Props) {
                 axisTick: { show: false },
                 axisLabel: {
                     formatter: (value: number, index: number) => {
-                        return index % 3 === 0 ? format(new Date(value), 'MMM d') : '';
+                        return format(new Date(value), 'MMM d');
                     },
                     color: colors.gray['200'],
+                    interval: 'auto',
+
+                    showMaxLabel: false,
+                    showMinLabel: false,
                 },
-                maxInterval: 3600 * 1000 * 24,
+                //maxInterval: 3600 * 1000 * 24,
                 axisPointer: {
                     type: 'line',
                     label: {
@@ -103,21 +109,7 @@ export function PoolDetailVolumeLiquidityChart({}: Props) {
             color: ['rgba(0,255,255, 1.0)'],
             series: [
                 {
-                    data: [
-                        [1656633600000, 51000000],
-                        [1656720000000, 52000000],
-                        [1656806400000, 59000000],
-                        [1656892800000, 58000000],
-                        [1656979200000, 54000000],
-                        [1657065600000, 55000000],
-                        [1657152000000, 57000000],
-                        [1657238400000, 53000000],
-                        [1657324800000, 51000000],
-                        [1657411200000, 59000000],
-                        [1657497600000, 58000000],
-                        [1657584000000, 55000000],
-                        [1657670400000, 52000000],
-                    ],
+                    data: data.map((item) => [item.timestamp * 1000, item.totalLiquidity]),
                     name: 'Liquidity',
                     type: 'bar',
                     tooltip: {
@@ -136,21 +128,8 @@ export function PoolDetailVolumeLiquidityChart({}: Props) {
                     },
                 },
                 {
-                    data: [
-                        [1656633600000, 4100000],
-                        [1656720000000, 4200000],
-                        [1656806400000, 4900000],
-                        [1656892800000, 4800000],
-                        [1656979200000, 4400000],
-                        [1657065600000, 4500000],
-                        [1657152000000, 4700000],
-                        [1657238400000, 4300000],
-                        [1657324800000, 4100000],
-                        [1657411200000, 4900000],
-                        [1657497600000, 4800000],
-                        [1657584000000, 4500000],
-                        [1657670400000, 4200000],
-                    ],
+                    data: data.map((item) => [item.timestamp * 1000, item.volume24h]),
+
                     name: 'Daily Volume',
                     type: 'line',
                     yAxisIndex: 1,
@@ -161,7 +140,7 @@ export function PoolDetailVolumeLiquidityChart({}: Props) {
                         },
                     },
                     symbol: 'circle',
-                    symbolSize: 8,
+                    symbolSize: data.length > 60 ? 6 : 8,
                     itemStyle: {
                         color: colors.black,
                         borderColor: colors.white,
@@ -173,7 +152,7 @@ export function PoolDetailVolumeLiquidityChart({}: Props) {
                 },
             ],
         }),
-        [],
+        [JSON.stringify(data)],
     );
 
     return <ReactECharts option={option} style={{ height: '100%' }} />;

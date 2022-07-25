@@ -687,6 +687,18 @@ export const GetPoolUserJoinExits = gql`
         }
     }
 `;
+export const GetPoolSnapshots = gql`
+    query GetPoolSnapshots($poolId: String!, $range: GqlPoolSnapshotDataRange!) {
+        snapshots: poolGetSnapshots(id: $poolId, range: $range) {
+            id
+            timestamp
+            totalLiquidity
+            volume24h
+            fees24h
+            sharePrice
+        }
+    }
+`;
 export const GetPools = gql`
     query GetPools(
         $first: Int

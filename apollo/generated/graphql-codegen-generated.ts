@@ -540,6 +540,30 @@ export interface GqlPoolPhantomStableNested {
     totalShares: Scalars['BigDecimal'];
 }
 
+export interface GqlPoolSnapshot {
+    __typename: 'GqlPoolSnapshot';
+    amounts: Array<Scalars['String']>;
+    fees24h: Scalars['String'];
+    holdersCount: Scalars['String'];
+    id: Scalars['ID'];
+    poolId: Scalars['String'];
+    sharePrice: Scalars['String'];
+    swapsCount: Scalars['String'];
+    timestamp: Scalars['Int'];
+    totalLiquidity: Scalars['String'];
+    totalShares: Scalars['String'];
+    totalSwapFee: Scalars['String'];
+    totalSwapVolume: Scalars['String'];
+    volume24h: Scalars['String'];
+}
+
+export type GqlPoolSnapshotDataRange =
+    | 'ALL_TIME'
+    | 'NINETY_DAYS'
+    | 'ONE_HUNDRED_EIGHTY_DAYS'
+    | 'ONE_YEAR'
+    | 'THIRTY_DAYS';
+
 export interface GqlPoolStable extends GqlPoolBase {
     __typename: 'GqlPoolStable';
     address: Scalars['Bytes'];
@@ -937,6 +961,7 @@ export interface Mutation {
     lgeCreate: GqlLge;
     poolLoadOnChainDataForAllPools: Scalars['String'];
     poolLoadOnChainDataForPoolsWithActiveUpdates: Scalars['String'];
+    poolLoadSnapshotsForAllPools: Scalars['String'];
     poolReloadAllPoolAprs: Scalars['String'];
     poolReloadStakingForAllPools: Scalars['String'];
     poolSyncAllPoolsFromSubgraph: Array<Scalars['String']>;
@@ -1001,6 +1026,7 @@ export interface Query {
     poolGetPoolFilters: Array<GqlPoolFilterDefinition>;
     poolGetPools: Array<GqlPoolMinimal>;
     poolGetPoolsCount: Scalars['Int'];
+    poolGetSnapshots: Array<GqlPoolSnapshot>;
     poolGetSwaps: Array<GqlPoolSwap>;
     poolGetUserSwapVolume: Array<GqlPoolUserSwapVolume>;
     portfolioGetUserPortfolio: GqlUserPortfolioData;
@@ -1058,6 +1084,11 @@ export interface QueryPoolGetPoolsCountArgs {
     skip?: InputMaybe<Scalars['Int']>;
     textSearch?: InputMaybe<Scalars['String']>;
     where?: InputMaybe<GqlPoolFilter>;
+}
+
+export interface QueryPoolGetSnapshotsArgs {
+    id: Scalars['String'];
+    range: GqlPoolSnapshotDataRange;
 }
 
 export interface QueryPoolGetSwapsArgs {
@@ -2898,6 +2929,24 @@ export type GetPoolUserJoinExitsQuery = {
     }>;
 };
 
+export type GetPoolSnapshotsQueryVariables = Exact<{
+    poolId: Scalars['String'];
+    range: GqlPoolSnapshotDataRange;
+}>;
+
+export type GetPoolSnapshotsQuery = {
+    __typename: 'Query';
+    snapshots: Array<{
+        __typename: 'GqlPoolSnapshot';
+        id: string;
+        timestamp: number;
+        totalLiquidity: string;
+        volume24h: string;
+        fees24h: string;
+        sharePrice: string;
+    }>;
+};
+
 export type GetPoolsQueryVariables = Exact<{
     first?: InputMaybe<Scalars['Int']>;
     skip?: InputMaybe<Scalars['Int']>;
@@ -4543,6 +4592,54 @@ export type GetPoolUserJoinExitsQueryResult = Apollo.QueryResult<
     GetPoolUserJoinExitsQuery,
     GetPoolUserJoinExitsQueryVariables
 >;
+export const GetPoolSnapshotsDocument = gql`
+    query GetPoolSnapshots($poolId: String!, $range: GqlPoolSnapshotDataRange!) {
+        snapshots: poolGetSnapshots(id: $poolId, range: $range) {
+            id
+            timestamp
+            totalLiquidity
+            volume24h
+            fees24h
+            sharePrice
+        }
+    }
+`;
+
+/**
+ * __useGetPoolSnapshotsQuery__
+ *
+ * To run a query within a React component, call `useGetPoolSnapshotsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetPoolSnapshotsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetPoolSnapshotsQuery({
+ *   variables: {
+ *      poolId: // value for 'poolId'
+ *      range: // value for 'range'
+ *   },
+ * });
+ */
+export function useGetPoolSnapshotsQuery(
+    baseOptions: Apollo.QueryHookOptions<GetPoolSnapshotsQuery, GetPoolSnapshotsQueryVariables>,
+) {
+    const options = { ...defaultOptions, ...baseOptions };
+    return Apollo.useQuery<GetPoolSnapshotsQuery, GetPoolSnapshotsQueryVariables>(GetPoolSnapshotsDocument, options);
+}
+export function useGetPoolSnapshotsLazyQuery(
+    baseOptions?: Apollo.LazyQueryHookOptions<GetPoolSnapshotsQuery, GetPoolSnapshotsQueryVariables>,
+) {
+    const options = { ...defaultOptions, ...baseOptions };
+    return Apollo.useLazyQuery<GetPoolSnapshotsQuery, GetPoolSnapshotsQueryVariables>(
+        GetPoolSnapshotsDocument,
+        options,
+    );
+}
+export type GetPoolSnapshotsQueryHookResult = ReturnType<typeof useGetPoolSnapshotsQuery>;
+export type GetPoolSnapshotsLazyQueryHookResult = ReturnType<typeof useGetPoolSnapshotsLazyQuery>;
+export type GetPoolSnapshotsQueryResult = Apollo.QueryResult<GetPoolSnapshotsQuery, GetPoolSnapshotsQueryVariables>;
 export const GetPoolsDocument = gql`
     query GetPools(
         $first: Int

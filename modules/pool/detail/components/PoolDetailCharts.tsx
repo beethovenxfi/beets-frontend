@@ -4,14 +4,15 @@ import { PoolDetailBptPriceChart } from '~/modules/pool/detail/components/charts
 import { usePool } from '~/modules/pool/lib/usePool';
 import { useState } from 'react';
 import { PoolDetailVolumeLiquidityChart } from '~/modules/pool/detail/components/charts/PoolDetailVolumeLiquidityChart';
+import { GqlPoolSnapshotDataRange, useGetPoolSnapshotsQuery } from '~/apollo/generated/graphql-codegen-generated';
 
 type ChartType = 'SHARE_PRICE' | 'VOLUME_TVL';
-type ChartRange = 'SEVEN_DAYS' | 'THIRTY_DAYS' | 'ALL_TIME';
 
 export function PoolDetailCharts() {
     const { pool } = usePool();
     const [chartType, setChartType] = useState<ChartType>('SHARE_PRICE');
-    const [chartRange, setChartRange] = useState<ChartRange>('SEVEN_DAYS');
+    const [range, setRange] = useState<GqlPoolSnapshotDataRange>('THIRTY_DAYS');
+    const { data } = useGetPoolSnapshotsQuery({ variables: { poolId: pool.id, range } });
 
     return (
         <Card>
@@ -23,22 +24,30 @@ export function PoolDetailCharts() {
                     variant="filled"
                 >
                     <option value="SHARE_PRICE">Share price</option>
-                    <option value="VOLUME_TVL">Liquidity / TVL</option>
+                    <option value="VOLUME_TVL">Volume / TVL</option>
                 </Select>
                 <Select
-                    value={chartRange}
-                    onChange={(e) => setChartRange(e.currentTarget.value as ChartRange)}
-                    width="150px"
+                    value={range}
+                    onChange={(e) => setRange(e.currentTarget.value as GqlPoolSnapshotDataRange)}
+                    width="160px"
                     variant="filled"
                 >
-                    <option value="SEVEN_DAYS">last 7 days</option>
                     <option value="THIRTY_DAYS">last 30 days</option>
+                    <option value="NINETY_DAYS">last 90 days</option>
+                    <option value="ONE_HUNDRED_EIGHTY_DAYS">last 180 days</option>
+                    <option value="ONE_YEAR">last 365 days</option>
                     <option value="ALL_TIME">All time</option>
                 </Select>
             </HStack>
-
-            {chartType === 'SHARE_PRICE' && <PoolDetailBptPriceChart />}
-            {chartType === 'VOLUME_TVL' && <PoolDetailVolumeLiquidityChart />}
+            {chartType === 'SHARE_PRICE' && (
+                <PoolDetailBptPriceChart
+                    prices={(data?.snapshots || []).map((snapshot) => ({
+                        timestamp: snapshot.timestamp,
+                        price: snapshot.sharePrice,
+                    }))}
+                />
+            )}
+            {chartType === 'VOLUME_TVL' && <PoolDetailVolumeLiquidityChart data={data?.snapshots || []} />}
         </Card>
     );
 }

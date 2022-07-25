@@ -293,3 +293,14 @@ query GetPoolUserJoinExits($first: Int, $skip: Int, $poolId: String!) {
         }
     }
 }
+
+query GetPoolSnapshots($poolId: String!, $range: GqlPoolSnapshotDataRange!) {
+    snapshots: poolGetSnapshots(id: $poolId, range: $range) {
+        id
+        timestamp
+        totalLiquidity
+        volume24h
+        fees24h
+        sharePrice
+    }
+}
