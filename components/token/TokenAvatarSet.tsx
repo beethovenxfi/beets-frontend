@@ -48,37 +48,35 @@ function TokenAvatarSet({ width, tokenData, imageSize = 32, maxAssetsPerLine = 5
     return (
         <Popover trigger="hover">
             <PopoverTrigger>
-                <button>
-                    <Flex
-                        {...rest}
-                        position={'relative'}
-                        //width={(imageSize - 10) * addressesInputLength}
-                        height={`${imageSize}px`}
-                        width={`${leftOffsetFor(count - 1) + imageSize + 1}px`}
-                    >
-                        {addressesInput &&
-                            addressesInput
-                                .slice(0, maxAssetsPerLine)
-                                .reverse()
-                                .map((address, i) => {
-                                    const token = getToken(address);
+                <Flex
+                    {...rest}
+                    position={'relative'}
+                    //width={(imageSize - 10) * addressesInputLength}
+                    height={`${imageSize}px`}
+                    width={`${leftOffsetFor(count - 1) + imageSize + 1}px`}
+                >
+                    {addressesInput &&
+                        addressesInput
+                            .slice(0, maxAssetsPerLine)
+                            .reverse()
+                            .map((address, i) => {
+                                const token = getToken(address);
 
-                                    return (
-                                        <Avatar
-                                            boxSize={`${imageSize}px`}
-                                            //size="sm"
-                                            key={i}
-                                            src={token?.logoURI || undefined}
-                                            //zIndex={10 - i}
-                                            left={`${leftOffsetFor(numTokens - i - 1)}px`}
-                                            bg={'#181729'}
-                                            position="absolute"
-                                            icon={<Jazzicon diameter={imageSize} seed={jsNumberForAddress(address)} />}
-                                        />
-                                    );
-                                })}
-                    </Flex>
-                </button>
+                                return (
+                                    <Avatar
+                                        boxSize={`${imageSize}px`}
+                                        //size="sm"
+                                        key={i}
+                                        src={token?.logoURI || undefined}
+                                        //zIndex={10 - i}
+                                        left={`${leftOffsetFor(numTokens - i - 1)}px`}
+                                        bg={'#181729'}
+                                        position="absolute"
+                                        icon={<Jazzicon diameter={imageSize} seed={jsNumberForAddress(address)} />}
+                                    />
+                                );
+                            })}
+                </Flex>
             </PopoverTrigger>
             <PopoverContent w="fit-content" bgColor="beets.base.800" shadow="2xl" p="1">
                 {tokens?.map((token, index) => (

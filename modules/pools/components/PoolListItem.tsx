@@ -26,6 +26,7 @@ export function PoolListItem({ pool, userBalance, showUserBalance, ...rest }: Pr
                     <Grid
                         pl="4"
                         py="4"
+                        alignItems="center"
                         templateColumns={{
                             base: '1fr 1fr',
                             lg: showUserBalance ? '90px 1fr 150px 200px 0px 200px' : '90px 1fr 200px 200px 200px',
