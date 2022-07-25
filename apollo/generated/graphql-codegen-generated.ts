@@ -2861,6 +2861,16 @@ export type GetPoolJoinExitsQuery = {
     }>;
 };
 
+export type GetPoolBptPriceChartDataQueryVariables = Exact<{
+    address: Scalars['String'];
+    range: GqlTokenChartDataRange;
+}>;
+
+export type GetPoolBptPriceChartDataQuery = {
+    __typename: 'Query';
+    prices: Array<{ __typename: 'GqlTokenPriceChartDataItem'; id: string; price: string; timestamp: number }>;
+};
+
 export type GetPoolUserJoinExitsQueryVariables = Exact<{
     first?: InputMaybe<Scalars['Int']>;
     skip?: InputMaybe<Scalars['Int']>;
@@ -4415,6 +4425,57 @@ export function useGetPoolJoinExitsLazyQuery(
 export type GetPoolJoinExitsQueryHookResult = ReturnType<typeof useGetPoolJoinExitsQuery>;
 export type GetPoolJoinExitsLazyQueryHookResult = ReturnType<typeof useGetPoolJoinExitsLazyQuery>;
 export type GetPoolJoinExitsQueryResult = Apollo.QueryResult<GetPoolJoinExitsQuery, GetPoolJoinExitsQueryVariables>;
+export const GetPoolBptPriceChartDataDocument = gql`
+    query GetPoolBptPriceChartData($address: String!, $range: GqlTokenChartDataRange!) {
+        prices: tokenGetPriceChartData(address: $address, range: $range) {
+            id
+            price
+            timestamp
+        }
+    }
+`;
+
+/**
+ * __useGetPoolBptPriceChartDataQuery__
+ *
+ * To run a query within a React component, call `useGetPoolBptPriceChartDataQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetPoolBptPriceChartDataQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetPoolBptPriceChartDataQuery({
+ *   variables: {
+ *      address: // value for 'address'
+ *      range: // value for 'range'
+ *   },
+ * });
+ */
+export function useGetPoolBptPriceChartDataQuery(
+    baseOptions: Apollo.QueryHookOptions<GetPoolBptPriceChartDataQuery, GetPoolBptPriceChartDataQueryVariables>,
+) {
+    const options = { ...defaultOptions, ...baseOptions };
+    return Apollo.useQuery<GetPoolBptPriceChartDataQuery, GetPoolBptPriceChartDataQueryVariables>(
+        GetPoolBptPriceChartDataDocument,
+        options,
+    );
+}
+export function useGetPoolBptPriceChartDataLazyQuery(
+    baseOptions?: Apollo.LazyQueryHookOptions<GetPoolBptPriceChartDataQuery, GetPoolBptPriceChartDataQueryVariables>,
+) {
+    const options = { ...defaultOptions, ...baseOptions };
+    return Apollo.useLazyQuery<GetPoolBptPriceChartDataQuery, GetPoolBptPriceChartDataQueryVariables>(
+        GetPoolBptPriceChartDataDocument,
+        options,
+    );
+}
+export type GetPoolBptPriceChartDataQueryHookResult = ReturnType<typeof useGetPoolBptPriceChartDataQuery>;
+export type GetPoolBptPriceChartDataLazyQueryHookResult = ReturnType<typeof useGetPoolBptPriceChartDataLazyQuery>;
+export type GetPoolBptPriceChartDataQueryResult = Apollo.QueryResult<
+    GetPoolBptPriceChartDataQuery,
+    GetPoolBptPriceChartDataQueryVariables
+>;
 export const GetPoolUserJoinExitsDocument = gql`
     query GetPoolUserJoinExits($first: Int, $skip: Int, $poolId: String!) {
         joinExits: userGetPoolJoinExits(poolId: $poolId, first: $first, skip: $skip) {
