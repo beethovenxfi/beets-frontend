@@ -661,6 +661,15 @@ export const GetPoolJoinExits = gql`
         }
     }
 `;
+export const GetPoolBptPriceChartData = gql`
+    query GetPoolBptPriceChartData($address: String!, $range: GqlTokenChartDataRange!) {
+        prices: tokenGetPriceChartData(address: $address, range: $range) {
+            id
+            price
+            timestamp
+        }
+    }
+`;
 export const GetPoolUserJoinExits = gql`
     query GetPoolUserJoinExits($first: Int, $skip: Int, $poolId: String!) {
         joinExits: userGetPoolJoinExits(poolId: $poolId, first: $first, skip: $skip) {

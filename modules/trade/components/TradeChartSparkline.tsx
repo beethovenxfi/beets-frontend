@@ -33,7 +33,7 @@ export function TradeChartSparkline() {
     return (
         <Box backgroundColor="blackAlpha.500" rounded="lg" width="full">
             <Box height="125px">
-                <TokenPriceLineChart prices={data?.prices || []} tokenIn={tokenIn} tokenOut={tokenOut} />
+                <TokenPriceLineChart prices={data?.prices || []} label={`${tokenOut?.symbol}/${tokenIn?.symbol}`} />
             </Box>
         </Box>
     );

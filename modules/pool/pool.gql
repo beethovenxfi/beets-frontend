@@ -270,6 +270,14 @@ query GetPoolJoinExits($first: Int, $skip: Int, $poolId: String!) {
     }
 }
 
+query GetPoolBptPriceChartData($address: String!, $range: GqlTokenChartDataRange!) {
+    prices: tokenGetPriceChartData(address: $address, range: $range) {
+        id
+        price
+        timestamp
+    }
+}
+
 query GetPoolUserJoinExits($first: Int, $skip: Int, $poolId: String!) {
     joinExits: userGetPoolJoinExits(poolId: $poolId, first: $first, skip: $skip) {
         id

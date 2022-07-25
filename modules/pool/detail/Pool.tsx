@@ -6,7 +6,7 @@ import { PoolTransactions } from './components/transactions/PoolTransactions';
 import { PoolActionsRow } from '~/modules/pool/detail/components/PoolActionsRow';
 import { usePool } from '~/modules/pool/lib/usePool';
 import { PoolStakeInFarmWarning } from '~/modules/pool/detail/components/PoolStakeInFarmWarning';
-import { PoolDetailVolumeLiquidityChart } from './components/charts/PoolDetailVolumeLiquidityChart';
+import { PoolDetailCharts } from '~/modules/pool/detail/components/PoolDetailCharts';
 
 export function Pool() {
     const { pool } = usePool();
@@ -21,7 +21,7 @@ export function Pool() {
                 </Flex>
                 <HStack width="full" spacing="3" height="475px">
                     <PoolStats />
-                    <PoolDetailVolumeLiquidityChart />
+                    <PoolDetailCharts />
                 </HStack>
             </VStack>
             <VStack spacing="8" width="full">
