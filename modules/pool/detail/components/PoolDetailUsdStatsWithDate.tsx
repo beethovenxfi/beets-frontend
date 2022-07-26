@@ -28,7 +28,7 @@ export function PoolDetailUsdStatsWithDate({ title, stats }: Props) {
                                     <Flex alignItems="center">
                                         <Box>{numberFormatLargeUsdValue(value)}</Box>
                                         <PercentChangeBadge
-                                            percentChange={(valueNum - currentValueNum) / currentValueNum}
+                                            percentChange={Math.min((currentValueNum - valueNum) / valueNum, 1)}
                                             ml="1.5"
                                         />
                                     </Flex>

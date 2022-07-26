@@ -333,6 +333,7 @@ query GetPoolTokensDynamicData($addresses: [String!]!) {
         discordUrl
         telegramUrl
         twitterUsername
+        websiteUrl
     }
     dynamicData: tokenGetTokensDynamicData(addresses: $addresses) {
         ...GqlTokenDynamicData

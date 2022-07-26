@@ -74,7 +74,7 @@ export default function Card({
             initial={initial}
             exit={exit}
             rounded="lg"
-            backgroundColor="whiteAlpha.100"
+            backgroundColor="box.500"
             border="1px"
             borderColor="blackAlpha.400"
             display="flex"

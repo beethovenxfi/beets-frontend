@@ -728,6 +728,7 @@ export const GetPoolTokensDynamicData = gql`
             discordUrl
             telegramUrl
             twitterUsername
+            websiteUrl
         }
         dynamicData: tokenGetTokensDynamicData(addresses: $addresses) {
             ...GqlTokenDynamicData

@@ -3108,6 +3108,7 @@ export type GetPoolTokensDynamicDataQuery = {
         discordUrl?: string | null;
         telegramUrl?: string | null;
         twitterUsername?: string | null;
+        websiteUrl?: string | null;
     }>;
     dynamicData: Array<{
         __typename: 'GqlTokenDynamicData';
@@ -4850,6 +4851,7 @@ export const GetPoolTokensDynamicDataDocument = gql`
             discordUrl
             telegramUrl
             twitterUsername
+            websiteUrl
         }
         dynamicData: tokenGetTokensDynamicData(addresses: $addresses) {
             ...GqlTokenDynamicData
