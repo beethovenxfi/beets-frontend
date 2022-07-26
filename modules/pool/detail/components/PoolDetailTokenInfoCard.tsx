@@ -114,7 +114,7 @@ export function PoolDetailTokenInfoCard({ token, price, data, dynamicData, ...re
             {hasLinks && <Divider mt="4" mb="4" />}
             {hasLinks && (
                 <Flex>
-                    <Link mr="3">
+                    <Link mr="3" href={`https://www.coingecko.com/en/coins/${token.address}`} target="_blank">
                         <NextImage src={CoingeckoLogo} width="24" height="24" />
                     </Link>
                     {data?.websiteUrl && (
