@@ -33,3 +33,15 @@ export function numberFormatLargeUsdValue(value: string | number) {
 
     return numeral(value).format('$0.00a');
 }
+
+export function numberFormatLargeValue(value: string | number) {
+    const valueNum = typeof value === 'string' ? parseFloat(value) : value;
+
+    if (valueNum < 0.001) {
+        return '0';
+    } else if (valueNum < 1000) {
+        return valueNum;
+    }
+
+    return numeral(value).format('0.00a');
+}

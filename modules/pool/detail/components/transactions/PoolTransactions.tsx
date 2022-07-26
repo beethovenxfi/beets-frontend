@@ -9,7 +9,7 @@ import PoolTransactionItem, { PoolTransactionType } from './PoolTransactionRow';
 import { useMemo, useState } from 'react';
 import PoolTransactionHeader from './PoolTransactionsHeader';
 import { NetworkStatus } from '@apollo/client';
-import { PoolAboutThisPool } from '~/modules/pool/detail/components/PoolAboutThisPool';
+import { PoolDetailAboutThisPool } from '~/modules/pool/detail/components/PoolDetailAboutThisPool';
 
 type Props = {};
 
@@ -96,9 +96,10 @@ export function PoolTransactions({ ...rest }: Props & BoxProps) {
         <Box width="full" {...rest}>
             <Tabs variant="soft-rounded" onChange={setActiveTab}>
                 <VStack width="full" alignItems="flex-start">
-                    <TabList>
+                    <TabList mb="2">
                         <HStack>
                             <BeetsTab>About this pool</BeetsTab>
+                            {/*<BeetsTab>Top holders</BeetsTab>*/}
                             <BeetsTab>{isPhantomStable ? 'Transactions' : 'Investments'}</BeetsTab>
                             {!isPhantomStable && <BeetsTab>Swaps</BeetsTab>}
                             <BeetsTab>My {isPhantomStable ? 'transactions' : 'investments'}</BeetsTab>
@@ -106,7 +107,7 @@ export function PoolTransactions({ ...rest }: Props & BoxProps) {
                     </TabList>
 
                     {activeTab === 0 ? (
-                        <PoolAboutThisPool />
+                        <PoolDetailAboutThisPool />
                     ) : (
                         <PaginatedTable
                             isInfinite

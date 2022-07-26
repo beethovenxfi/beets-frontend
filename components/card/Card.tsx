@@ -13,6 +13,7 @@ import {
 import { ReactNode, useMemo } from 'react';
 import { X } from 'react-feather';
 import { AnimatedBox } from '../animation/chakra';
+import { Text } from '@chakra-ui/react';
 
 type Props = {
     title?: string;
@@ -35,16 +36,16 @@ export default function Card({
         () => (
             <Flex
                 justifyContent="space-between"
-                borderBottom="1px"
-                borderColor="gray.400"
-                width="full"
-                padding="4"
+                //borderBottom="1px"
+                //borderColor="gray.400"
+                //width="full"
+                mb="4"
                 alignItems="center"
                 position="relative"
             >
-                <Heading color="gray.100" fontWeight="semibold" size="sm">
+                <Text fontWeight="semibold" fontSize="xl" color="beets.base.50">
                     {title}
-                </Heading>
+                </Text>
                 {onClose && (
                     <Button
                         position="absolute"
@@ -72,8 +73,6 @@ export default function Card({
             animate={animate}
             initial={initial}
             exit={exit}
-            width="full"
-            height="full"
             rounded="lg"
             backgroundColor="whiteAlpha.100"
             border="1px"

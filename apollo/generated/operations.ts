@@ -485,6 +485,26 @@ export const GetPool = gql`
                 volume24h
                 fees48h
                 volume48h
+                lifetimeVolume
+                lifetimeSwapFees
+                holdersCount
+                swapsCount
+                sharePriceAth
+                sharePriceAthTimestamp
+                sharePriceAtl
+                sharePriceAtlTimestamp
+                totalLiquidityAth
+                totalLiquidityAthTimestamp
+                totalLiquidityAtl
+                totalLiquidityAtlTimestamp
+                volume24hAth
+                volume24hAthTimestamp
+                volume24hAtl
+                volume24hAtlTimestamp
+                fees24hAth
+                fees24hAthTimestamp
+                fees24hAtl
+                fees24hAtlTimestamp
                 apr {
                     hasRewardApr
                     thirdPartyApr
@@ -698,6 +718,22 @@ export const GetPoolSnapshots = gql`
             sharePrice
         }
     }
+`;
+export const GetPoolTokensDynamicData = gql`
+    query GetPoolTokensDynamicData($addresses: [String!]!) {
+        staticData: tokenGetTokensData(addresses: $addresses) {
+            id
+            tokenAddress
+            description
+            discordUrl
+            telegramUrl
+            twitterUsername
+        }
+        dynamicData: tokenGetTokensDynamicData(addresses: $addresses) {
+            ...GqlTokenDynamicData
+        }
+    }
+    ${GqlTokenDynamicData}
 `;
 export const GetPools = gql`
     query GetPools(

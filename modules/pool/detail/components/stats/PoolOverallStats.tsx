@@ -34,7 +34,7 @@ export default function PoolOverallStats() {
             <Divider />
             <VStack spacing="0" alignItems="flex-start">
                 <Text lineHeight="1rem" fontWeight="semibold" fontSize="sm" color="beets.base.50">
-                    Share price
+                    BPT price
                 </Text>
                 <Text color="white" fontSize="1.75rem">
                     {numberFormatUSDValue(sharePrice)}

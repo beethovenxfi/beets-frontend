@@ -6,16 +6,16 @@ import { useState } from 'react';
 import { PoolDetailVolumeLiquidityChart } from '~/modules/pool/detail/components/charts/PoolDetailVolumeLiquidityChart';
 import { GqlPoolSnapshotDataRange, useGetPoolSnapshotsQuery } from '~/apollo/generated/graphql-codegen-generated';
 
-type ChartType = 'SHARE_PRICE' | 'VOLUME_TVL';
+type ChartType = 'BPT_PRICE' | 'VOLUME_TVL';
 
 export function PoolDetailCharts() {
     const { pool } = usePool();
-    const [chartType, setChartType] = useState<ChartType>('SHARE_PRICE');
+    const [chartType, setChartType] = useState<ChartType>('BPT_PRICE');
     const [range, setRange] = useState<GqlPoolSnapshotDataRange>('THIRTY_DAYS');
     const { data } = useGetPoolSnapshotsQuery({ variables: { poolId: pool.id, range } });
 
     return (
-        <Card>
+        <Card width="full" height="full">
             <HStack padding="4" pb="0" spacing="4">
                 <Select
                     value={chartType}
@@ -23,7 +23,7 @@ export function PoolDetailCharts() {
                     width="180px"
                     variant="filled"
                 >
-                    <option value="SHARE_PRICE">Share price</option>
+                    <option value="BPT_PRICE">BPT price</option>
                     <option value="VOLUME_TVL">Volume / TVL</option>
                 </Select>
                 <Select
@@ -39,7 +39,7 @@ export function PoolDetailCharts() {
                     <option value="ALL_TIME">All time</option>
                 </Select>
             </HStack>
-            {chartType === 'SHARE_PRICE' && (
+            {chartType === 'BPT_PRICE' && (
                 <PoolDetailBptPriceChart
                     prices={(data?.snapshots || []).map((snapshot) => ({
                         timestamp: snapshot.timestamp,

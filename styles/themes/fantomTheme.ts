@@ -130,5 +130,10 @@ export const fantomTheme: Partial<ChakraTheme> = {
                 },
             },
         },
+        Link: {
+            baseStyle: {
+                color: 'beets.cyan',
+            },
+        },
     },
 };

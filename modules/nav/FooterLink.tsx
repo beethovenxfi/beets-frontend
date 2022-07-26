@@ -12,9 +12,11 @@ export function FooterLink({ linkType = 'external', href, ...rest }: Props) {
     return (
         <Box mb="4">
             {linkType === 'internal' ? (
-                <NextLink href={href}>{rest.children}</NextLink>
+                <NextLink chakraProps={{ color: 'white' }} href={href}>
+                    {rest.children}
+                </NextLink>
             ) : (
-                <Link alignSelf="flex-start" href={href} target="_blank" {...rest} />
+                <Link color="white" alignSelf="flex-start" href={href} target="_blank" {...rest} />
             )}
         </Box>
     );

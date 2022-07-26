@@ -272,15 +272,35 @@ export interface GqlPoolDynamicData {
     __typename: 'GqlPoolDynamicData';
     apr: GqlPoolApr;
     fees24h: Scalars['BigDecimal'];
+    fees24hAth: Scalars['BigDecimal'];
+    fees24hAthTimestamp: Scalars['Int'];
+    fees24hAtl: Scalars['BigDecimal'];
+    fees24hAtlTimestamp: Scalars['Int'];
     fees48h: Scalars['BigDecimal'];
+    holdersCount: Scalars['BigInt'];
+    lifetimeSwapFees: Scalars['BigDecimal'];
+    lifetimeVolume: Scalars['BigDecimal'];
     poolId: Scalars['ID'];
+    sharePriceAth: Scalars['BigDecimal'];
+    sharePriceAthTimestamp: Scalars['Int'];
+    sharePriceAtl: Scalars['BigDecimal'];
+    sharePriceAtlTimestamp: Scalars['Int'];
     swapEnabled: Scalars['Boolean'];
     swapFee: Scalars['BigDecimal'];
+    swapsCount: Scalars['BigInt'];
     totalLiquidity: Scalars['BigDecimal'];
     totalLiquidity24hAgo: Scalars['BigDecimal'];
+    totalLiquidityAth: Scalars['BigDecimal'];
+    totalLiquidityAthTimestamp: Scalars['Int'];
+    totalLiquidityAtl: Scalars['BigDecimal'];
+    totalLiquidityAtlTimestamp: Scalars['Int'];
     totalShares: Scalars['BigDecimal'];
     totalShares24hAgo: Scalars['BigDecimal'];
     volume24h: Scalars['BigDecimal'];
+    volume24hAth: Scalars['BigDecimal'];
+    volume24hAthTimestamp: Scalars['Int'];
+    volume24hAtl: Scalars['BigDecimal'];
+    volume24hAtlTimestamp: Scalars['Int'];
     volume48h: Scalars['BigDecimal'];
 }
 
@@ -965,6 +985,7 @@ export interface Mutation {
     poolReloadAllPoolAprs: Scalars['String'];
     poolReloadStakingForAllPools: Scalars['String'];
     poolSyncAllPoolsFromSubgraph: Array<Scalars['String']>;
+    poolSyncLatestSnapshotsForAllPools: Scalars['String'];
     poolSyncNewPoolsFromSubgraph: Array<Scalars['String']>;
     poolSyncPoolAllTokensRelationship: Scalars['String'];
     poolSyncSanityPoolData: Scalars['String'];
@@ -972,6 +993,7 @@ export interface Mutation {
     poolSyncSwapsForLast48Hours: Scalars['String'];
     poolSyncTotalShares: Scalars['String'];
     poolUpdateAprs: Scalars['String'];
+    poolUpdateLifetimeValuesForAllPools: Scalars['String'];
     poolUpdateLiquidity24hAgoForAllPools: Scalars['String'];
     poolUpdateLiquidityValuesForAllPools: Scalars['String'];
     poolUpdateVolumeAndFeeValuesForAllPools: Scalars['String'];
@@ -1041,6 +1063,7 @@ export interface Query {
     tokenGetTokenData?: Maybe<GqlTokenData>;
     tokenGetTokenDynamicData?: Maybe<GqlTokenDynamicData>;
     tokenGetTokens: Array<GqlToken>;
+    tokenGetTokensData: Array<GqlTokenData>;
     tokenGetTokensDynamicData: Array<GqlTokenDynamicData>;
     userGetFbeetsBalance: GqlUserFbeetsBalance;
     userGetPoolBalances: Array<GqlUserPoolBalance>;
@@ -1137,6 +1160,10 @@ export interface QueryTokenGetTokenDataArgs {
 
 export interface QueryTokenGetTokenDynamicDataArgs {
     address: Scalars['String'];
+}
+
+export interface QueryTokenGetTokensDataArgs {
+    addresses: Array<Scalars['String']>;
 }
 
 export interface QueryTokenGetTokensDynamicDataArgs {
@@ -1597,6 +1624,26 @@ export type GetPoolQuery = {
                   volume24h: string;
                   fees48h: string;
                   volume48h: string;
+                  lifetimeVolume: string;
+                  lifetimeSwapFees: string;
+                  holdersCount: string;
+                  swapsCount: string;
+                  sharePriceAth: string;
+                  sharePriceAthTimestamp: number;
+                  sharePriceAtl: string;
+                  sharePriceAtlTimestamp: number;
+                  totalLiquidityAth: string;
+                  totalLiquidityAthTimestamp: number;
+                  totalLiquidityAtl: string;
+                  totalLiquidityAtlTimestamp: number;
+                  volume24hAth: string;
+                  volume24hAthTimestamp: number;
+                  volume24hAtl: string;
+                  volume24hAtlTimestamp: number;
+                  fees24hAth: string;
+                  fees24hAthTimestamp: number;
+                  fees24hAtl: string;
+                  fees24hAtlTimestamp: number;
                   apr: {
                       __typename: 'GqlPoolApr';
                       hasRewardApr: boolean;
@@ -1728,6 +1775,26 @@ export type GetPoolQuery = {
                   volume24h: string;
                   fees48h: string;
                   volume48h: string;
+                  lifetimeVolume: string;
+                  lifetimeSwapFees: string;
+                  holdersCount: string;
+                  swapsCount: string;
+                  sharePriceAth: string;
+                  sharePriceAthTimestamp: number;
+                  sharePriceAtl: string;
+                  sharePriceAtlTimestamp: number;
+                  totalLiquidityAth: string;
+                  totalLiquidityAthTimestamp: number;
+                  totalLiquidityAtl: string;
+                  totalLiquidityAtlTimestamp: number;
+                  volume24hAth: string;
+                  volume24hAthTimestamp: number;
+                  volume24hAtl: string;
+                  volume24hAtlTimestamp: number;
+                  fees24hAth: string;
+                  fees24hAthTimestamp: number;
+                  fees24hAtl: string;
+                  fees24hAtlTimestamp: number;
                   apr: {
                       __typename: 'GqlPoolApr';
                       hasRewardApr: boolean;
@@ -1983,6 +2050,26 @@ export type GetPoolQuery = {
                   volume24h: string;
                   fees48h: string;
                   volume48h: string;
+                  lifetimeVolume: string;
+                  lifetimeSwapFees: string;
+                  holdersCount: string;
+                  swapsCount: string;
+                  sharePriceAth: string;
+                  sharePriceAthTimestamp: number;
+                  sharePriceAtl: string;
+                  sharePriceAtlTimestamp: number;
+                  totalLiquidityAth: string;
+                  totalLiquidityAthTimestamp: number;
+                  totalLiquidityAtl: string;
+                  totalLiquidityAtlTimestamp: number;
+                  volume24hAth: string;
+                  volume24hAthTimestamp: number;
+                  volume24hAtl: string;
+                  volume24hAtlTimestamp: number;
+                  fees24hAth: string;
+                  fees24hAthTimestamp: number;
+                  fees24hAtl: string;
+                  fees24hAtlTimestamp: number;
                   apr: {
                       __typename: 'GqlPoolApr';
                       hasRewardApr: boolean;
@@ -2239,6 +2326,26 @@ export type GetPoolQuery = {
                   volume24h: string;
                   fees48h: string;
                   volume48h: string;
+                  lifetimeVolume: string;
+                  lifetimeSwapFees: string;
+                  holdersCount: string;
+                  swapsCount: string;
+                  sharePriceAth: string;
+                  sharePriceAthTimestamp: number;
+                  sharePriceAtl: string;
+                  sharePriceAtlTimestamp: number;
+                  totalLiquidityAth: string;
+                  totalLiquidityAthTimestamp: number;
+                  totalLiquidityAtl: string;
+                  totalLiquidityAtlTimestamp: number;
+                  volume24hAth: string;
+                  volume24hAthTimestamp: number;
+                  volume24hAtl: string;
+                  volume24hAtlTimestamp: number;
+                  fees24hAth: string;
+                  fees24hAthTimestamp: number;
+                  fees24hAtl: string;
+                  fees24hAtlTimestamp: number;
                   apr: {
                       __typename: 'GqlPoolApr';
                       hasRewardApr: boolean;
@@ -2367,6 +2474,26 @@ export type GetPoolQuery = {
                   volume24h: string;
                   fees48h: string;
                   volume48h: string;
+                  lifetimeVolume: string;
+                  lifetimeSwapFees: string;
+                  holdersCount: string;
+                  swapsCount: string;
+                  sharePriceAth: string;
+                  sharePriceAthTimestamp: number;
+                  sharePriceAtl: string;
+                  sharePriceAtlTimestamp: number;
+                  totalLiquidityAth: string;
+                  totalLiquidityAthTimestamp: number;
+                  totalLiquidityAtl: string;
+                  totalLiquidityAtlTimestamp: number;
+                  volume24hAth: string;
+                  volume24hAthTimestamp: number;
+                  volume24hAtl: string;
+                  volume24hAtlTimestamp: number;
+                  fees24hAth: string;
+                  fees24hAthTimestamp: number;
+                  fees24hAtl: string;
+                  fees24hAtlTimestamp: number;
                   apr: {
                       __typename: 'GqlPoolApr';
                       hasRewardApr: boolean;
@@ -2622,6 +2749,26 @@ export type GetPoolQuery = {
                   volume24h: string;
                   fees48h: string;
                   volume48h: string;
+                  lifetimeVolume: string;
+                  lifetimeSwapFees: string;
+                  holdersCount: string;
+                  swapsCount: string;
+                  sharePriceAth: string;
+                  sharePriceAthTimestamp: number;
+                  sharePriceAtl: string;
+                  sharePriceAtlTimestamp: number;
+                  totalLiquidityAth: string;
+                  totalLiquidityAthTimestamp: number;
+                  totalLiquidityAtl: string;
+                  totalLiquidityAtlTimestamp: number;
+                  volume24hAth: string;
+                  volume24hAthTimestamp: number;
+                  volume24hAtl: string;
+                  volume24hAtlTimestamp: number;
+                  fees24hAth: string;
+                  fees24hAthTimestamp: number;
+                  fees24hAtl: string;
+                  fees24hAtlTimestamp: number;
                   apr: {
                       __typename: 'GqlPoolApr';
                       hasRewardApr: boolean;
@@ -2944,6 +3091,40 @@ export type GetPoolSnapshotsQuery = {
         volume24h: string;
         fees24h: string;
         sharePrice: string;
+    }>;
+};
+
+export type GetPoolTokensDynamicDataQueryVariables = Exact<{
+    addresses: Array<Scalars['String']> | Scalars['String'];
+}>;
+
+export type GetPoolTokensDynamicDataQuery = {
+    __typename: 'Query';
+    staticData: Array<{
+        __typename: 'GqlTokenData';
+        id: string;
+        tokenAddress: string;
+        description?: string | null;
+        discordUrl?: string | null;
+        telegramUrl?: string | null;
+        twitterUsername?: string | null;
+    }>;
+    dynamicData: Array<{
+        __typename: 'GqlTokenDynamicData';
+        id: string;
+        tokenAddress: string;
+        ath: number;
+        atl: number;
+        marketCap?: string | null;
+        fdv?: string | null;
+        priceChange24h: number;
+        priceChangePercent24h: number;
+        priceChangePercent7d?: number | null;
+        priceChangePercent14d?: number | null;
+        priceChangePercent30d?: number | null;
+        high24h: number;
+        low24h: number;
+        updatedAt: string;
     }>;
 };
 
@@ -4206,6 +4387,26 @@ export const GetPoolDocument = gql`
                 volume24h
                 fees48h
                 volume48h
+                lifetimeVolume
+                lifetimeSwapFees
+                holdersCount
+                swapsCount
+                sharePriceAth
+                sharePriceAthTimestamp
+                sharePriceAtl
+                sharePriceAtlTimestamp
+                totalLiquidityAth
+                totalLiquidityAthTimestamp
+                totalLiquidityAtl
+                totalLiquidityAtlTimestamp
+                volume24hAth
+                volume24hAthTimestamp
+                volume24hAtl
+                volume24hAtlTimestamp
+                fees24hAth
+                fees24hAthTimestamp
+                fees24hAtl
+                fees24hAtlTimestamp
                 apr {
                     hasRewardApr
                     thirdPartyApr
@@ -4640,6 +4841,63 @@ export function useGetPoolSnapshotsLazyQuery(
 export type GetPoolSnapshotsQueryHookResult = ReturnType<typeof useGetPoolSnapshotsQuery>;
 export type GetPoolSnapshotsLazyQueryHookResult = ReturnType<typeof useGetPoolSnapshotsLazyQuery>;
 export type GetPoolSnapshotsQueryResult = Apollo.QueryResult<GetPoolSnapshotsQuery, GetPoolSnapshotsQueryVariables>;
+export const GetPoolTokensDynamicDataDocument = gql`
+    query GetPoolTokensDynamicData($addresses: [String!]!) {
+        staticData: tokenGetTokensData(addresses: $addresses) {
+            id
+            tokenAddress
+            description
+            discordUrl
+            telegramUrl
+            twitterUsername
+        }
+        dynamicData: tokenGetTokensDynamicData(addresses: $addresses) {
+            ...GqlTokenDynamicData
+        }
+    }
+    ${GqlTokenDynamicDataFragmentDoc}
+`;
+
+/**
+ * __useGetPoolTokensDynamicDataQuery__
+ *
+ * To run a query within a React component, call `useGetPoolTokensDynamicDataQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetPoolTokensDynamicDataQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetPoolTokensDynamicDataQuery({
+ *   variables: {
+ *      addresses: // value for 'addresses'
+ *   },
+ * });
+ */
+export function useGetPoolTokensDynamicDataQuery(
+    baseOptions: Apollo.QueryHookOptions<GetPoolTokensDynamicDataQuery, GetPoolTokensDynamicDataQueryVariables>,
+) {
+    const options = { ...defaultOptions, ...baseOptions };
+    return Apollo.useQuery<GetPoolTokensDynamicDataQuery, GetPoolTokensDynamicDataQueryVariables>(
+        GetPoolTokensDynamicDataDocument,
+        options,
+    );
+}
+export function useGetPoolTokensDynamicDataLazyQuery(
+    baseOptions?: Apollo.LazyQueryHookOptions<GetPoolTokensDynamicDataQuery, GetPoolTokensDynamicDataQueryVariables>,
+) {
+    const options = { ...defaultOptions, ...baseOptions };
+    return Apollo.useLazyQuery<GetPoolTokensDynamicDataQuery, GetPoolTokensDynamicDataQueryVariables>(
+        GetPoolTokensDynamicDataDocument,
+        options,
+    );
+}
+export type GetPoolTokensDynamicDataQueryHookResult = ReturnType<typeof useGetPoolTokensDynamicDataQuery>;
+export type GetPoolTokensDynamicDataLazyQueryHookResult = ReturnType<typeof useGetPoolTokensDynamicDataLazyQuery>;
+export type GetPoolTokensDynamicDataQueryResult = Apollo.QueryResult<
+    GetPoolTokensDynamicDataQuery,
+    GetPoolTokensDynamicDataQueryVariables
+>;
 export const GetPoolsDocument = gql`
     query GetPools(
         $first: Int

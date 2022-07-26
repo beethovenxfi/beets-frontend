@@ -244,15 +244,35 @@ type GqlPoolBatchSwapSwap {
 type GqlPoolDynamicData {
     apr: GqlPoolApr!
     fees24h: BigDecimal!
+    fees24hAth: BigDecimal!
+    fees24hAthTimestamp: Int!
+    fees24hAtl: BigDecimal!
+    fees24hAtlTimestamp: Int!
     fees48h: BigDecimal!
+    holdersCount: BigInt!
+    lifetimeSwapFees: BigDecimal!
+    lifetimeVolume: BigDecimal!
     poolId: ID!
+    sharePriceAth: BigDecimal!
+    sharePriceAthTimestamp: Int!
+    sharePriceAtl: BigDecimal!
+    sharePriceAtlTimestamp: Int!
     swapEnabled: Boolean!
     swapFee: BigDecimal!
+    swapsCount: BigInt!
     totalLiquidity: BigDecimal!
     totalLiquidity24hAgo: BigDecimal!
+    totalLiquidityAth: BigDecimal!
+    totalLiquidityAthTimestamp: Int!
+    totalLiquidityAtl: BigDecimal!
+    totalLiquidityAtlTimestamp: Int!
     totalShares: BigDecimal!
     totalShares24hAgo: BigDecimal!
     volume24h: BigDecimal!
+    volume24hAth: BigDecimal!
+    volume24hAthTimestamp: Int!
+    volume24hAtl: BigDecimal!
+    volume24hAtlTimestamp: Int!
     volume48h: BigDecimal!
 }
 
@@ -925,6 +945,7 @@ type Mutation {
     poolReloadAllPoolAprs: String!
     poolReloadStakingForAllPools: String!
     poolSyncAllPoolsFromSubgraph: [String!]!
+    poolSyncLatestSnapshotsForAllPools: String!
     poolSyncNewPoolsFromSubgraph: [String!]!
     poolSyncPoolAllTokensRelationship: String!
     poolSyncSanityPoolData: String!
@@ -932,6 +953,7 @@ type Mutation {
     poolSyncSwapsForLast48Hours: String!
     poolSyncTotalShares: String!
     poolUpdateAprs: String!
+    poolUpdateLifetimeValuesForAllPools: String!
     poolUpdateLiquidity24hAgoForAllPools: String!
     poolUpdateLiquidityValuesForAllPools: String!
     poolUpdateVolumeAndFeeValuesForAllPools: String!
@@ -1003,6 +1025,7 @@ type Query {
     tokenGetTokenData(address: String!): GqlTokenData
     tokenGetTokenDynamicData(address: String!): GqlTokenDynamicData
     tokenGetTokens: [GqlToken!]!
+    tokenGetTokensData(addresses: [String!]!): [GqlTokenData!]!
     tokenGetTokensDynamicData(addresses: [String!]!): [GqlTokenDynamicData!]!
     userGetFbeetsBalance: GqlUserFbeetsBalance!
     userGetPoolBalances: [GqlUserPoolBalance!]!

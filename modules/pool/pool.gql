@@ -20,6 +20,26 @@ query GetPool($id: String!) {
             volume24h
             fees48h
             volume48h
+            lifetimeVolume
+            lifetimeSwapFees
+            holdersCount
+            swapsCount
+            sharePriceAth
+            sharePriceAthTimestamp
+            sharePriceAtl
+            sharePriceAtlTimestamp
+            totalLiquidityAth
+            totalLiquidityAthTimestamp
+            totalLiquidityAtl
+            totalLiquidityAtlTimestamp
+            volume24hAth
+            volume24hAthTimestamp
+            volume24hAtl
+            volume24hAtlTimestamp
+            fees24hAth
+            fees24hAthTimestamp
+            fees24hAtl
+            fees24hAtlTimestamp
             apr {
                 hasRewardApr
                 thirdPartyApr
@@ -302,5 +322,19 @@ query GetPoolSnapshots($poolId: String!, $range: GqlPoolSnapshotDataRange!) {
         volume24h
         fees24h
         sharePrice
+    }
+}
+
+query GetPoolTokensDynamicData($addresses: [String!]!) {
+    staticData: tokenGetTokensData(addresses: $addresses) {
+        id
+        tokenAddress
+        description
+        discordUrl
+        telegramUrl
+        twitterUsername
+    }
+    dynamicData: tokenGetTokensDynamicData(addresses: $addresses) {
+        ...GqlTokenDynamicData
     }
 }
