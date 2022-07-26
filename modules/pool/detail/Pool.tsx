@@ -19,7 +19,7 @@ export function Pool() {
                 <Flex width="full" justifyContent="flex-end">
                     <PoolActionsRow />
                 </Flex>
-                <HStack width="full" spacing="3" height="475px">
+                <HStack width="full" spacing="3" height="524px">
                     <PoolStats />
                     <PoolDetailCharts />
                 </HStack>

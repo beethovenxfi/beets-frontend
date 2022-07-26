@@ -35,8 +35,8 @@ export function PoolDetailVolumeLiquidityChart({ data }: Props) {
             },
             grid: {
                 bottom: '2%',
-                right: '2%',
-                left: '2%',
+                right: '1.5%',
+                left: '1.5%',
                 top: '10%',
                 containLabel: true,
             },
@@ -129,11 +129,9 @@ export function PoolDetailVolumeLiquidityChart({ data }: Props) {
                 },
                 {
                     data: data.map((item) => [item.timestamp * 1000, item.volume24h]),
-
                     name: 'Daily Volume',
                     type: 'line',
                     yAxisIndex: 1,
-
                     tooltip: {
                         valueFormatter: function (value) {
                             return `$${numeral(value).format('0a')}`;
