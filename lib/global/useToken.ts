@@ -6,12 +6,16 @@ import { networkConfig } from '~/lib/config/network-config';
 import { useUserImportedTokens } from '~/lib/user/useUserImportedTokens';
 import { numberFormatUSDValue } from '~/lib/util/number-formats';
 
+interface TokenWithImportedFlag extends GqlToken {
+    imported?: boolean;
+}
+
 export function useGetTokens() {
     const { data: tokensResponse } = useGetTokensQuery({ fetchPolicy: 'cache-first' });
     const { data: pricesResponse } = useGetTokenPricesQuery({ pollInterval: 30000, fetchPolicy: 'cache-first' });
     const { userImportedTokens } = useUserImportedTokens();
 
-    const tokens = [...(tokensResponse?.tokens || []), ...userImportedTokens];
+    const tokens: TokenWithImportedFlag[] = [...(tokensResponse?.tokens || []), ...userImportedTokens];
     const prices = keyBy(pricesResponse?.tokenPrices || [], 'address');
 
     function getToken(address: string): GqlToken | null {

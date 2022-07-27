@@ -83,13 +83,16 @@ export function useUserImportedTokens() {
         localStorage.setItem(USER_IMPORTED_CACHE_KEY, JSON.stringify([]));
     }
 
-    const userImportedTokens: GqlToken[] = useReactiveVar(userImportedTokensVar).map((token) => ({
-        ...token,
-        __typename: 'GqlToken',
-        tradable: true,
-        chainId: parseInt(networkConfig.chainId),
-        priority: 0,
-    }));
+    const userImportedTokens: (GqlToken & { imported?: boolean })[] = useReactiveVar(userImportedTokensVar).map(
+        (token) => ({
+            ...token,
+            __typename: 'GqlToken',
+            tradable: true,
+            chainId: parseInt(networkConfig.chainId),
+            priority: 0,
+            imported: true,
+        }),
+    );
 
     return {
         getImportedToken,

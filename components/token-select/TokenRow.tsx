@@ -4,12 +4,13 @@ import TokenAvatar from '~/components/token/TokenAvatar';
 import { AmountHumanReadable, TokenBase } from '~/lib/services/token/token-types';
 import { tokenFormatAmountPrecise } from '~/lib/services/token/token-util';
 import { numberFormatUSDValue } from '~/lib/util/number-formats';
-import { Circle, Skeleton } from '@chakra-ui/react';
+import { Badge, Circle, Skeleton } from '@chakra-ui/react';
 
 type TokenRowProps = TokenBase & {
     userBalance: AmountHumanReadable;
     userBalanceUSD: number;
     loading: boolean;
+    imported?: boolean;
 };
 
 export function TokenRow({
@@ -19,6 +20,7 @@ export function TokenRow({
     userBalance,
     userBalanceUSD,
     loading,
+    imported,
 }: TokenRowProps & ButtonProps) {
     const hasBalance = parseFloat(userBalance) > 0;
 
@@ -38,6 +40,11 @@ export function TokenRow({
                 <HStack>
                     <TokenAvatar address={address} size="xs" />
                     <Text fontSize="lg">{symbol}</Text>
+                    {imported && (
+                        <Badge colorScheme="orange" py="0.5">
+                            Imported
+                        </Badge>
+                    )}
                 </HStack>
                 <Box marginTop="2px" display="flex" flexDirection="column">
                     {loading ? (
