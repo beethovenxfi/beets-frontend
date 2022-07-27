@@ -13,13 +13,14 @@ import {
 import { ReactNode, useMemo } from 'react';
 import { X } from 'react-feather';
 import { AnimatedBox } from '../animation/chakra';
-import { Text } from '@chakra-ui/react';
+import { FlexProps, Text } from '@chakra-ui/react';
 
 type Props = {
     title?: string;
     children?: ReactNode | ReactNode[];
     onClose?: () => void;
     topRight?: ReactNode | ReactNode[];
+    titleProps?: FlexProps;
 };
 
 export default function Card({
@@ -30,6 +31,7 @@ export default function Card({
     initial,
     exit,
     topRight,
+    titleProps,
     ...boxProps
 }: Props & BoxProps & MotionProps) {
     const TitleSection = useMemo(
@@ -38,10 +40,11 @@ export default function Card({
                 justifyContent="space-between"
                 //borderBottom="1px"
                 //borderColor="gray.400"
-                //width="full"
-                mb="4"
+                width="full"
+                padding="4"
                 alignItems="center"
                 position="relative"
+                {...titleProps}
             >
                 <Text fontWeight="semibold" fontSize="xl" color="beets.base.50">
                     {title}

@@ -10,6 +10,7 @@ import { ChevronDown } from 'react-feather';
 import numeral from 'numeral';
 import { KeyboardEvent } from 'react';
 import { tokenInputBlockInvalidCharacters, tokenInputTruncateDecimalPlaces } from '~/lib/util/input-util';
+import { numberFormatLargeUsdValue } from '~/lib/util/number-formats';
 
 type Props = {
     label?: string;
@@ -66,7 +67,7 @@ export default function TokenInput({
                     headingProps={{ marginTop: '2', fontSize: '.85rem' }}
                     paddingBottom="5"
                 />
-                <Box position="absolute" zIndex="toast" left=".75rem" top="50%" transform="translateY(-50%)">
+                <Box position="absolute" left=".75rem" top="50%" transform="translateY(-50%)">
                     <VStack spacing="none">
                         <Button
                             height="fit-content"
@@ -75,6 +76,7 @@ export default function TokenInput({
                             backgroundColor="transparent"
                             _hover={{ backgroundColor: 'beets.green', color: 'gray.500' }}
                             paddingX="1"
+                            _focus={{ boxShadow: 'none' }}
                         >
                             <HStack spacing="none">
                                 <TokenAvatar size="xs" address={address || ''} />
@@ -88,18 +90,20 @@ export default function TokenInput({
                         </Button>
                     </VStack>
                 </Box>
-                <Text
-                    position="absolute"
-                    zIndex="dropdown"
-                    bottom=".75rem"
-                    left=".75rem"
-                    fontWeight="normal"
-                    color="gray.200"
-                    size="xs"
-                    fontSize=".85rem"
-                >
-                    You have {tokenFormatAmountPrecise(userBalance, 4)}
-                </Text>
+                {!isLoading && (
+                    <Text
+                        position="absolute"
+                        zIndex="dropdown"
+                        bottom=".75rem"
+                        left=".75rem"
+                        fontWeight="normal"
+                        color="gray.200"
+                        size="xs"
+                        fontSize=".85rem"
+                    >
+                        Balance: {tokenFormatAmountPrecise(userBalance, 4)}
+                    </Text>
+                )}
                 {estimatedTokenPrice > 0 && (
                     <Text
                         position="absolute"
@@ -111,7 +115,7 @@ export default function TokenInput({
                         size="xs"
                         fontSize=".85rem"
                     >
-                        ~${numeral(estimatedTokenPrice).format('0,0.000a')}
+                        ~{numberFormatLargeUsdValue(estimatedTokenPrice)}
                     </Text>
                 )}
             </Box>

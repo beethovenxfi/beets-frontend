@@ -1,4 +1,4 @@
-import { Avatar, useTheme } from '@chakra-ui/react';
+import { Avatar, Circle } from '@chakra-ui/react';
 import { AvatarProps } from '@chakra-ui/avatar/src/avatar';
 import { useGetTokens } from '~/lib/global/useToken';
 import Jazzicon, { jsNumberForAddress } from 'react-jazzicon';
@@ -19,10 +19,14 @@ function TokenAvatar({ address, size, ...rest }: Props) {
             src={token?.logoURI || undefined}
             bg={'transparent'}
             icon={
-                <Jazzicon
-                    seed={jsNumberForAddress(address || AddressZero)}
-                    paperStyles={{ width: '100%', height: '100%' }}
-                />
+                token?.logoURI ? (
+                    <Circle size="32px" backgroundColor="whiteAlpha.200" />
+                ) : (
+                    <Jazzicon
+                        seed={jsNumberForAddress(address || AddressZero)}
+                        paperStyles={{ width: '100%', height: '100%' }}
+                    />
+                )
             }
         />
     );

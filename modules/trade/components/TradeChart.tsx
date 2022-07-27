@@ -3,6 +3,7 @@ import { useTradeChart } from '~/modules/trade/lib/useTradeChart';
 import { NetworkStatus } from '@apollo/client';
 import { Box, Flex, HStack, Link, Skeleton } from '@chakra-ui/react';
 import { useTradeData } from '~/modules/trade/lib/useTradeData';
+import { BeetsBox } from '~/components/box/BeetsBox';
 
 export function TradeChart() {
     const { setRange, range, data, loading, networkStatus } = useTradeChart();
@@ -31,9 +32,10 @@ export function TradeChart() {
 
     return (
         <Box>
-            <Box height="3xs">
+            {/*<Box height="3xs">
                 <TokenPriceLineChart prices={data?.prices || []} label={`${tokenOut?.symbol}/${tokenIn?.symbol}`} />
-            </Box>
+            </Box>*/}
+            <BeetsBox height="150px" />
             {/*<Skeleton height="3xs" />*/}
             <Flex mt="2">
                 <Box flex={1} />

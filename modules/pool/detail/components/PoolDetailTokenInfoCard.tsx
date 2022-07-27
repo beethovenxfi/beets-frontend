@@ -75,15 +75,6 @@ export function PoolDetailTokenInfoCard({ token, price, data, dynamicData, ...re
                         </Text>
                     </Box>
                 </HStack>
-                {/*<Box>
-                    <Link href={etherscanGetTokenUrl(token.address)} target="_blank">
-                        <HStack spacing="1">
-                            <Box>{addressShortDisplayName(token.address)}</Box>
-                            <ExternalLink size={16} />
-                        </HStack>
-                    </Link>
-                </Box>*/}
-                {/* https://www.coingecko.com/en/coins/0x74b23882a30290451a17c44f4f05243b6b58c76d */}
 
                 {price ? (
                     <Box display="flex" flexDirection="column">

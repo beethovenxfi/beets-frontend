@@ -66,5 +66,8 @@
         "typescript": "4.6.4",
         "use-debounce": "^8.0.1",
         "wagmi": "^0.3.5"
+    },
+    "dependencies": {
+        "react-tiny-virtual-list": "^2.2.0"
     }
 }

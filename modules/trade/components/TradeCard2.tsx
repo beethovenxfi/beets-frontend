@@ -1,7 +1,7 @@
 import { Box, Divider, VStack } from '@chakra-ui/react';
 import { useBoolean } from '@chakra-ui/hooks';
 import { AnimatePresence, useAnimation } from 'framer-motion';
-import TokenSelect from '~/components/token-select/TokenSelect';
+//import TokenSelect from '~/components/token-select/TokenSelect';
 import TokenInput from '~/components/inputs/TokenInput';
 import Card from '~/components/card/Card';
 import BeetsButton from '~/components/button/Button';
@@ -285,11 +285,11 @@ function TradeCard2() {
                 </VStack>
                 <TradeCardSwapBreakdown />
             </Card>
-            <AnimatePresence>
+            {/*<AnimatePresence>
                 {showTokenSelect && (
                     <TokenSelect onTokenSelected={handleTokenSelected} onClose={toggleTokenSelect(tokenSelectKey)} />
                 )}
-            </AnimatePresence>
+            </AnimatePresence>*/}
         </Box>
     );
 }

@@ -9,7 +9,14 @@ type Props = {
     wrapperProps?: BoxProps;
 };
 
-export default function BeetsInput({ label, secondaryLabel, children, headingProps, wrapperProps, ...inputProps }: InputProps & Props) {
+export default function BeetsInput({
+    label,
+    secondaryLabel,
+    children,
+    headingProps,
+    wrapperProps,
+    ...inputProps
+}: InputProps & Props) {
     return (
         <Box position="relative" width="full" bg="blackAlpha.500" borderRadius="md" {...wrapperProps}>
             <HStack>
@@ -47,7 +54,6 @@ export default function BeetsInput({ label, secondaryLabel, children, headingPro
                 minHeight="20"
                 height="full"
                 fontSize="2xl"
-                color="gray.100"
                 fontWeight="semibold"
                 borderColor="transparent"
                 border="2px"

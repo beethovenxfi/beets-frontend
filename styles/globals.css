@@ -344,3 +344,17 @@ a {
         margin-left: 80%;
     }
 }
+
+.token-select-list::-webkit-scrollbar {
+    width: 4px;
+}
+
+.token-select-list::-webkit-scrollbar-track {
+    width: 6px;
+    background-color: #33334a;
+}
+
+.token-select-list::-webkit-scrollbar-thumb {
+    background-color: #3d3fa9;
+    border-radius: 24px;
+}

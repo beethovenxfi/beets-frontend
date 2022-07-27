@@ -11,15 +11,15 @@ export function TradePageHeader() {
 
     return (
         <>
-            <Text textStyle="h1">
+            <Text fontSize="2xl" fontWeight="bold" color="white">
                 1
-                <Text as="span" fontSize="3xl" fontWeight="light">
+                <Text as="span" fontSize="lg" fontWeight="normal" color="gray.100">
                     {' '}
                     {tokenOut?.symbol}
                     {' = '}
                 </Text>
                 {tokenFormatAmount(currentRatio)}
-                <Text as="span" fontSize="3xl" fontWeight="light">
+                <Text as="span" fontSize="lg" fontWeight="normal" color="gray.100">
                     {' '}
                     {tokenIn?.symbol}
                 </Text>

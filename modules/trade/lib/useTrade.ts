@@ -19,7 +19,7 @@ type TradeContext = {
     isPreviewVisible: boolean;
 };
 
-const tradeStateVar = makeVar<TradeState>({
+export const tradeStateVar = makeVar<TradeState>({
     tokenIn: networkConfig.defaultTokenIn,
     tokenOut: networkConfig.defaultTokenOut,
     swapType: 'EXACT_IN',

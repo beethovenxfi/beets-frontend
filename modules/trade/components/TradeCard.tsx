@@ -1,7 +1,5 @@
-import { Box, VStack } from '@chakra-ui/react';
-import { useBoolean } from '@chakra-ui/hooks';
-import { AnimatePresence, useAnimation } from 'framer-motion';
-import TokenSelect from '~/components/token-select/TokenSelect';
+import { Box, useDisclosure, VStack } from '@chakra-ui/react';
+import { useAnimation } from 'framer-motion';
 import TokenInput from '~/components/inputs/TokenInput';
 import Card from '~/components/card/Card';
 import BeetsButton from '~/components/button/Button';
@@ -9,171 +7,20 @@ import { TokenInputSwapButton } from '~/modules/trade/components/TokenInputSwapB
 import { TradeCardSwapBreakdown } from '~/modules/trade/components/TradeCardSwapBreakdown';
 import { RefreshCcw } from 'react-feather';
 import { Button } from '@chakra-ui/button';
-import { makeVar, NetworkStatus, useReactiveVar } from '@apollo/client';
-import { AmountHumanReadable } from '~/lib/services/token/token-types';
-import { useTrade } from '~/modules/trade/lib/useTrade';
-import { useEffect } from 'react';
-import { GqlSorSwapType } from '~/apollo/generated/graphql-codegen-generated';
-import { oldBnumToFixed } from '~/lib/services/pool/lib/old-big-number';
-import { useDebouncedCallback } from 'use-debounce';
+import { useTradeCard } from '~/modules/trade/lib/useTradeCard';
+import { TokenSelectModal } from '~/components/token-select/TokenSelectModal';
 
-const buyAmountVar = makeVar<AmountHumanReadable>('');
-const sellAmountVar = makeVar<AmountHumanReadable>('');
-const tokenSelectedVar = makeVar<'tokenIn' | 'tokenOut'>('tokenIn');
-
-export function useTradeCard() {
-    const {
-        reactiveTradeState,
-        loadSwaps: _loadSwaps,
-        loadingSwaps,
-        setPreviewVisible,
-        clearSwaps,
-        setTradeConfig,
-        getLatestState,
-        setTokens,
-        networkStatus,
-    } = useTrade();
-
-    // refetching the swaps may not always trigger the query loading state,
-    // so we use a fallback flag to make sure that we always have some loading
-    // even if the query is retrieving the 'same' value from the cache.
-    const [isFetching, setIsFetching] = useBoolean();
-
-    function setBuyAmount(amount: AmountHumanReadable) {
-        buyAmountVar(amount);
-    }
-
-    function setSellAmount(amount: AmountHumanReadable) {
-        sellAmountVar(amount);
-    }
-
-    function setTokenSelectKey(selected: 'tokenIn' | 'tokenOut') {
-        tokenSelectedVar(selected);
-    }
-
-    const isLoadingOrFetching = loadingSwaps || isFetching || networkStatus === NetworkStatus.refetch;
-
-    useEffect(() => {
-        //TODO: load token in/out from url if passed in
-    }, []);
-
-    const fetchTrade = async (type: GqlSorSwapType, amount: string) => {
-        setTradeConfig(type, amount);
-        setPreviewVisible(false);
-
-        const trade = await _loadSwaps(type, amount);
-        const resultAmount = trade?.returnAmount || '0';
-        const resultAmountFixed = resultAmount ? oldBnumToFixed(resultAmount, 6) : '';
-
-        if (type === 'EXACT_IN') {
-            setBuyAmount(resultAmountFixed);
-        } else {
-            setSellAmount(resultAmountFixed);
-        }
-        setIsFetching.off();
-    };
-
-    const dFetchTrade = useDebouncedCallback((type: 'EXACT_IN' | 'EXACT_OUT', amount: string) => {
-        fetchTrade(type, amount);
-    }, 300);
-
-    const handleSellAmountChanged = async (event: { currentTarget: { value: string } }) => {
-        const amount = event.currentTarget.value;
-
-        if (amount === '' || parseFloat(amount) === 0) {
-            dFetchTrade.cancel();
-            setSellAmount(amount);
-            setBuyAmount('');
-            setIsFetching.off();
-            clearSwaps();
-        } else {
-            setIsFetching.on();
-            dFetchTrade('EXACT_IN', amount);
-            setSellAmount(amount);
-        }
-    };
-
-    const handleBuyAmountChanged = async (event: { currentTarget: { value: string } }) => {
-        const amount = event.currentTarget.value;
-
-        if (amount === '' || parseFloat(amount) === 0) {
-            dFetchTrade.cancel();
-            setBuyAmount(amount);
-            setSellAmount('');
-            setIsFetching.off();
-            clearSwaps();
-        } else {
-            setIsFetching.on();
-            dFetchTrade('EXACT_OUT', amount);
-            setBuyAmount(amount);
-        }
-    };
-
-    const handleTokenSelected = (address: string) => {
-        const tokenSelectKey = tokenSelectedVar();
-        const sellAmount = sellAmountVar();
-
-        setTokens({ [tokenSelectKey]: address });
-
-        if (parseFloat(sellAmount || '0') > 0) {
-            setIsFetching.on();
-            dFetchTrade('EXACT_IN', sellAmount);
-        }
-    };
-
-    const handleTokensSwitched = () => {
-        const state = getLatestState();
-        const sellAmount = sellAmountVar();
-        const buyAmount = buyAmountVar();
-
-        setTokens({ tokenIn: state.tokenOut, tokenOut: state.tokenIn });
-        setBuyAmount(sellAmount);
-        setSellAmount(buyAmount);
-    };
-
-    const handleReviewClicked = () => {
-        setPreviewVisible(true);
-    };
-
-    function refetchTrade() {
-        const state = getLatestState();
-
-        if (state.swapAmount) {
-            setIsFetching.on();
-            fetchTrade(state.swapType, state.swapAmount);
-        }
-    }
-
-    return {
-        tokenIn: reactiveTradeState.tokenIn,
-        tokenOut: reactiveTradeState.tokenOut,
-        sorResponse: reactiveTradeState.sorResponse,
-        tokenSelectKey: useReactiveVar(tokenSelectedVar),
-        sellAmount: useReactiveVar(sellAmountVar),
-        buyAmount: useReactiveVar(buyAmountVar),
-        isLoadingOrFetching,
-        setTokenSelectKey,
-        handleTokenSelected,
-        handleSellAmountChanged,
-        handleBuyAmountChanged,
-        handleTokensSwitched,
-        handleReviewClicked,
-        refetchTrade,
-    };
-}
-
-function TradeCard() {
+export function TradeCard() {
     const controls = useAnimation();
-    const [showTokenSelect, setShowTokenSelect] = useBoolean();
+    //const [showTokenSelect, setShowTokenSelect] = useBoolean();
+    const { isOpen, onOpen, onClose } = useDisclosure();
     const {
         sellAmount,
         buyAmount,
         isLoadingOrFetching,
-        tokenSelectKey,
         tokenIn,
         tokenOut,
         setTokenSelectKey,
-        handleTokenSelected,
         handleBuyAmountChanged,
         handleSellAmountChanged,
         handleTokensSwitched,
@@ -184,38 +31,10 @@ function TradeCard() {
 
     const isReviewDisabled = parseFloat(sellAmount || '0') === 0.0 || parseFloat(buyAmount || '0') === 0.0;
 
-    const toggleTokenSelect = (tokenKey: 'tokenIn' | 'tokenOut') => () => {
-        setShowTokenSelect.toggle();
+    function showTokenSelect(tokenKey: 'tokenIn' | 'tokenOut') {
         setTokenSelectKey(tokenKey);
-        if (!showTokenSelect) {
-            controls.set({ position: 'absolute', top: '0', height: 'fit-content' });
-            controls.start({
-                scale: 0.9,
-                opacity: 0,
-                transition: {
-                    type: 'spring',
-                    stiffness: 400,
-                    damping: 30,
-                },
-            });
-        } else {
-            controls.set({
-                translateX: '0px',
-                translateY: '0px',
-                opacity: 1,
-                position: 'absolute',
-            });
-            controls.start({
-                scale: 1,
-                opacity: 1,
-                transition: {
-                    type: 'spring',
-                    stiffness: 400,
-                    damping: 30,
-                },
-            });
-        }
-    };
+        onOpen();
+    }
 
     return (
         <Box width="full" position="relative">
@@ -249,7 +68,7 @@ function TradeCard() {
                         <TokenInput
                             label="Sell"
                             address={tokenIn}
-                            toggleTokenSelect={toggleTokenSelect('tokenIn')}
+                            toggleTokenSelect={() => showTokenSelect('tokenIn')}
                             onChange={handleSellAmountChanged}
                             value={sellAmount}
                             showPresets
@@ -259,7 +78,7 @@ function TradeCard() {
                     <TokenInput
                         label="Buy"
                         address={tokenOut}
-                        toggleTokenSelect={toggleTokenSelect('tokenOut')}
+                        toggleTokenSelect={() => showTokenSelect('tokenOut')}
                         onChange={handleBuyAmountChanged}
                         value={buyAmount}
                     />
@@ -271,12 +90,7 @@ function TradeCard() {
                 </VStack>
                 <TradeCardSwapBreakdown />
             </Card>
-            <AnimatePresence>
-                {showTokenSelect && (
-                    <TokenSelect onTokenSelected={handleTokenSelected} onClose={toggleTokenSelect(tokenSelectKey)} />
-                )}
-            </AnimatePresence>
+            <TokenSelectModal isOpen={isOpen} onOpen={onOpen} onClose={onClose} />
         </Box>
     );
 }
-export default TradeCard;

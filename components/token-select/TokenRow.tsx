@@ -1,24 +1,20 @@
-import { memo } from 'react';
 import { Button, ButtonProps } from '@chakra-ui/button';
-import { motion } from 'framer-motion';
 import { Box, Heading, HStack, Text } from '@chakra-ui/layout';
 import TokenAvatar from '~/components/token/TokenAvatar';
 import { AmountHumanReadable, TokenBase } from '~/lib/services/token/token-types';
 import { tokenFormatAmountPrecise } from '~/lib/services/token/token-util';
 import { numberFormatUSDValue } from '~/lib/util/number-formats';
-import { Skeleton } from '@chakra-ui/react';
+import { Circle, Skeleton } from '@chakra-ui/react';
 
 type TokenRowProps = TokenBase & {
-    index: number;
     userBalance: AmountHumanReadable;
     userBalanceUSD: number;
     loading: boolean;
 };
 
-export const TokenRow = memo(function TokenRow({
+export function TokenRow({
     symbol,
     address,
-    index,
     onClick,
     userBalance,
     userBalanceUSD,
@@ -28,21 +24,20 @@ export const TokenRow = memo(function TokenRow({
 
     return (
         <Button
-            animate={{ opacity: 1, transition: { delay: index * 0.01 } }}
-            initial={{ opacity: 0 }}
-            as={motion.button}
             width="full"
-            height="fit-content"
             variant="ghost"
-            _hover={{ backgroundColor: 'blackAlpha.400' }}
+            _hover={{ backgroundColor: 'whiteAlpha.200' }}
+            _focus={{ boxShadow: 'none' }}
+            borderRadius="none"
             onClick={onClick}
+            height="56px"
+            fontWeight="normal"
+            color="gray.100"
         >
             <HStack width="full" paddingY="4" justifyContent="space-between">
                 <HStack>
-                    <TokenAvatar address={address} size="sm" />
-                    <Heading size="md" fontWeight="semibold" color="gray.100">
-                        {symbol}
-                    </Heading>
+                    <TokenAvatar address={address} size="xs" />
+                    <Text fontSize="lg">{symbol}</Text>
                 </HStack>
                 <Box marginTop="2px" display="flex" flexDirection="column">
                     {loading ? (
@@ -52,10 +47,8 @@ export const TokenRow = memo(function TokenRow({
                         </>
                     ) : (
                         <>
-                            <Text color="gray.100" textAlign="right">
-                                {hasBalance ? tokenFormatAmountPrecise(userBalance, 4) : '-'}
-                            </Text>
-                            <Text color="gray.300" textAlign="right">
+                            <Text textAlign="right">{hasBalance ? tokenFormatAmountPrecise(userBalance, 4) : '-'}</Text>
+                            <Text color="gray.200" textAlign="right" fontSize="sm">
                                 {userBalanceUSD > 0 ? numberFormatUSDValue(userBalanceUSD) : '-'}
                             </Text>
                         </>
@@ -64,4 +57,4 @@ export const TokenRow = memo(function TokenRow({
             </HStack>
         </Button>
     );
-});
+}
