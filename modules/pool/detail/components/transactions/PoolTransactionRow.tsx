@@ -1,18 +1,11 @@
-import {
-    GqlPoolJoinExit,
-    GqlPoolJoinExitType,
-    GqlPoolMinimalFragment,
-    GqlPoolSwap,
-} from '~/apollo/generated/graphql-codegen-generated';
-import { Box, Flex, Text } from '@chakra-ui/react';
-import TokenAvatarSet from '~/components/token/TokenAvatarSet';
-import Link from 'next/link';
+import { GqlPoolJoinExit, GqlPoolSwap } from '~/apollo/generated/graphql-codegen-generated';
+import { Box, Flex, Text, Link } from '@chakra-ui/react';
 import numeral from 'numeral';
-import AprTooltip from '~/components/apr-tooltip/AprTooltip';
 import { BoxProps, HStack } from '@chakra-ui/layout';
 import { ArrowRight, ExternalLink, Minus, Plus, Zap } from 'react-feather';
 import { TokenAmountPill } from '~/components/token/TokenAmountPill';
 import { formatDistanceToNow } from 'date-fns';
+import { etherscanGetTxUrl } from '~/lib/util/etherscan';
 
 export enum PoolTransactionType {
     Swap = 'SWAP',
@@ -159,7 +152,9 @@ export default function PoolTransactionItem({ transaction, ...rest }: Props) {
                                 addSuffix: true,
                             })}
                         </Text>
-                        <ExternalLink size={14} />
+                        <Link href={etherscanGetTxUrl(transaction.transaction.tx)} isExternal>
+                            <ExternalLink size={14} />
+                        </Link>
                     </HStack>
                 </Box>
             </Flex>
