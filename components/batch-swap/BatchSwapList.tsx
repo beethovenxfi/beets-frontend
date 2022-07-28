@@ -1,9 +1,8 @@
 import { useGetPoolBatchSwapsQuery } from '~/apollo/generated/graphql-codegen-generated';
 import { Box } from '@chakra-ui/react';
-import { NetworkStatus } from '@apollo/client';
-import BeetsButton from '~/components/button/Button';
 import { BatchSwapListItem } from '~/components/batch-swap/components/BatchSwapListItem';
-import Card from '~/components/card/Card';
+import { useEffect } from 'react';
+import { useGetTokens } from '~/lib/global/useToken';
 
 interface Props {
     tokenIn: string;
@@ -11,30 +10,32 @@ interface Props {
 }
 
 export function BatchSwapList({ tokenIn, tokenOut }: Props) {
-    const { data, fetchMore, networkStatus, loading } = useGetPoolBatchSwapsQuery({
-        variables: { first: 8, skip: 0, where: { tokenInIn: [tokenIn], tokenOutIn: [tokenOut] } },
+    const { priceFor, getToken } = useGetTokens();
+    const { data, startPolling } = useGetPoolBatchSwapsQuery({
+        variables: { first: 6, skip: 0, where: { tokenInIn: [tokenIn], tokenOutIn: [tokenOut] } },
         notifyOnNetworkStatusChange: true,
+    });
+
+    useEffect(() => {
+        startPolling(15000);
     });
 
     const batchSwaps = data?.batchSwaps || [];
 
     return (
         <Box>
-            <Box>
-                {batchSwaps.map((batchSwap) => (
-                    <BatchSwapListItem batchSwap={batchSwap} key={batchSwap.id} />
-                ))}
-            </Box>
-            {/*<BeetsButton
-                width="full"
-                isLoading={networkStatus === NetworkStatus.fetchMore}
-                onClick={() => {
-                    fetchMore({ variables: { skip: batchSwaps.length } }).catch();
-                }}
-                flex={1}
-            >
-                Load more
-            </BeetsButton>*/}
+            {batchSwaps.map((batchSwap) => {
+                return (
+                    <BatchSwapListItem
+                        batchSwap={batchSwap}
+                        tokenIn={getToken(batchSwap.tokenIn)}
+                        tokenOut={getToken(batchSwap.tokenOut)}
+                        tokenInPrice={priceFor(tokenIn)}
+                        tokenOutPrice={priceFor(tokenOut)}
+                        key={batchSwap.id}
+                    />
+                );
+            })}
         </Box>
     );
 }

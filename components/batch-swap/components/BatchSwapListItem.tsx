@@ -1,29 +1,28 @@
-import { Box, Flex, Text, Badge, Link, HStack } from '@chakra-ui/react';
+import { Badge, Box, Flex, HStack, Link, Text } from '@chakra-ui/react';
 import {
     BatchSwapDashedLine,
     BatchSwapRouteDashedLineArrowSpacer,
 } from '~/components/batch-swap/components/BatchSwapDashedLine';
 import { BatchSwapTokenAmount } from '~/components/batch-swap/components/BatchSwapTokenAmount';
-import { GqlPoolBatchSwapFragment } from '~/apollo/generated/graphql-codegen-generated';
+import { GqlPoolBatchSwapFragment, GqlToken } from '~/apollo/generated/graphql-codegen-generated';
 import { BatchSwapHop } from '~/components/batch-swap/components/BatchSwapHop';
 import { useGetTokens } from '~/lib/global/useToken';
 import Card from '~/components/card/Card';
 import { formatDistanceToNow } from 'date-fns';
-import { numberFormatUSDValue } from '~/lib/util/number-formats';
 import { ExternalLink, User } from 'react-feather';
 import { tokenFormatAmount } from '~/lib/services/token/token-util';
 import { PercentChangeBadge } from '~/components/badge/PercentChangeBadge';
+import { etherscanGetAddressUrl, etherscanGetTxUrl } from '~/lib/util/etherscan';
 
 interface Props {
     batchSwap: GqlPoolBatchSwapFragment;
+    tokenIn: GqlToken | null;
+    tokenOut: GqlToken | null;
+    tokenInPrice: number;
+    tokenOutPrice: number;
 }
 
-export function BatchSwapListItem({ batchSwap }: Props) {
-    const { priceForAmount, getToken, priceFor } = useGetTokens();
-    const tokenIn = getToken(batchSwap.tokenIn);
-    const tokenOut = getToken(batchSwap.tokenOut);
-    const tokenInPrice = tokenIn ? priceFor(tokenIn.address) : 0;
-    const tokenOutPrice = tokenOut ? priceFor(tokenOut.address) : 0;
+export function BatchSwapListItem({ tokenIn, tokenOut, tokenInPrice, tokenOutPrice, batchSwap }: Props) {
     const exchangeRate = parseFloat(batchSwap.tokenAmountIn) / parseFloat(batchSwap.tokenAmountOut);
     const percentChange = tokenInPrice !== 0 ? (tokenOutPrice / tokenInPrice - exchangeRate) / exchangeRate : 0;
 
@@ -36,22 +35,22 @@ export function BatchSwapListItem({ batchSwap }: Props) {
                     </Text>
                     <Text>
                         {'\u00A0'}
-                        {tokenIn?.symbol} ={'\u00A0'}
+                        {tokenOut?.symbol} ={'\u00A0'}
                     </Text>
                     <Text fontSize="md" fontWeight="bold">
                         {tokenFormatAmount(exchangeRate)}
                     </Text>
                     <Text>
                         {'\u00A0'}
-                        {tokenOut?.symbol}
+                        {tokenIn?.symbol}
                     </Text>
                 </Flex>
 
                 <HStack>
-                    <Link>
+                    <Link href={etherscanGetTxUrl(batchSwap.tx)} target="_blank" mr="1">
                         <ExternalLink size={16} />
                     </Link>
-                    <Link>
+                    <Link href={etherscanGetAddressUrl(batchSwap.userAddress)} target="_blank">
                         <User size={16} />
                     </Link>
                 </HStack>
