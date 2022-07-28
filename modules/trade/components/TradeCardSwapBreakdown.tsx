@@ -41,7 +41,7 @@ export function TradeCardSwapBreakdown({}: Props) {
 
     return (
         <AnimatePresence>
-            <VStack backgroundColor='blackAlpha.400' padding='3' width="full" spacing="1" marginTop='1'>
+            <VStack backgroundColor="blackAlpha.400" padding="3" width="full" spacing="1" marginTop="1">
                 <HStack width="full" justifyContent="space-between">
                     <Text color="gray.100" fontSize=".85rem">
                         Price impact
@@ -75,7 +75,10 @@ export function TradeCardSwapBreakdown({}: Props) {
                             <Image src={CoingeckoLogo} alt="Coingecko Logo" width="16" height="16" />
                         </Flex>
                     </HStack>
-                    <Text fontSize=".85rem" color="white">
+                    <Text
+                        fontSize=".85rem"
+                        color={diff > 0 ? 'beets.green' : diff < -0.15 ? 'red' : diff < -0.02 ? 'orange' : 'white'}
+                    >
                         {coingeckoVariationText}
                     </Text>
                 </HStack>

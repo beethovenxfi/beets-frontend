@@ -256,8 +256,7 @@ export interface GqlPoolBatchSwapPool {
 export interface GqlPoolBatchSwapSwap {
     __typename: 'GqlPoolBatchSwapSwap';
     id: Scalars['ID'];
-    poolId: Scalars['String'];
-    poolTokens: Array<Scalars['String']>;
+    pool: GqlPoolMinimal;
     timestamp: Scalars['Int'];
     tokenAmountIn: Scalars['String'];
     tokenAmountOut: Scalars['String'];
@@ -1218,10 +1217,86 @@ export type GetPoolBatchSwapsQuery = {
             tokenIn: string;
             tokenOut: string;
             valueUSD: number;
-            poolTokens: Array<string>;
-            poolId: string;
+            pool: {
+                __typename: 'GqlPoolMinimal';
+                id: string;
+                name: string;
+                type: GqlPoolMinimalType;
+                symbol: string;
+                allTokens: Array<{
+                    __typename: 'GqlPoolTokenExpanded';
+                    address: string;
+                    isNested: boolean;
+                    isPhantomBpt: boolean;
+                    weight?: string | null;
+                }>;
+            };
         }>;
     }>;
+};
+
+export type GqlPoolBatchSwapFragment = {
+    __typename: 'GqlPoolBatchSwap';
+    id: string;
+    timestamp: number;
+    tokenAmountIn: string;
+    tokenAmountOut: string;
+    tokenIn: string;
+    tokenOut: string;
+    tokenInPrice: number;
+    tokenOutPrice: number;
+    tx: string;
+    userAddress: string;
+    valueUSD: number;
+    swaps: Array<{
+        __typename: 'GqlPoolBatchSwapSwap';
+        id: string;
+        timestamp: number;
+        tokenAmountIn: string;
+        tokenAmountOut: string;
+        tokenIn: string;
+        tokenOut: string;
+        valueUSD: number;
+        pool: {
+            __typename: 'GqlPoolMinimal';
+            id: string;
+            name: string;
+            type: GqlPoolMinimalType;
+            symbol: string;
+            allTokens: Array<{
+                __typename: 'GqlPoolTokenExpanded';
+                address: string;
+                isNested: boolean;
+                isPhantomBpt: boolean;
+                weight?: string | null;
+            }>;
+        };
+    }>;
+};
+
+export type GqlPoolBatchSwapSwapFragment = {
+    __typename: 'GqlPoolBatchSwapSwap';
+    id: string;
+    timestamp: number;
+    tokenAmountIn: string;
+    tokenAmountOut: string;
+    tokenIn: string;
+    tokenOut: string;
+    valueUSD: number;
+    pool: {
+        __typename: 'GqlPoolMinimal';
+        id: string;
+        name: string;
+        type: GqlPoolMinimalType;
+        symbol: string;
+        allTokens: Array<{
+            __typename: 'GqlPoolTokenExpanded';
+            address: string;
+            isNested: boolean;
+            isPhantomBpt: boolean;
+            weight?: string | null;
+        }>;
+    };
 };
 
 export type GetAppGlobalDataQueryVariables = Exact<{ [key: string]: never }>;
@@ -3552,6 +3627,48 @@ export type GqlTokenDynamicDataFragment = {
     updatedAt: string;
 };
 
+export const GqlPoolBatchSwapSwapFragmentDoc = gql`
+    fragment GqlPoolBatchSwapSwap on GqlPoolBatchSwapSwap {
+        id
+        timestamp
+        tokenAmountIn
+        tokenAmountOut
+        tokenIn
+        tokenOut
+        valueUSD
+        pool {
+            id
+            name
+            type
+            symbol
+            allTokens {
+                address
+                isNested
+                isPhantomBpt
+                weight
+            }
+        }
+    }
+`;
+export const GqlPoolBatchSwapFragmentDoc = gql`
+    fragment GqlPoolBatchSwap on GqlPoolBatchSwap {
+        id
+        timestamp
+        tokenAmountIn
+        tokenAmountOut
+        tokenIn
+        tokenOut
+        tokenInPrice
+        tokenOutPrice
+        tx
+        userAddress
+        valueUSD
+        swaps {
+            ...GqlPoolBatchSwapSwap
+        }
+    }
+    ${GqlPoolBatchSwapSwapFragmentDoc}
+`;
 export const GqlPoolCardDataFragmentDoc = gql`
     fragment GqlPoolCardData on GqlPoolMinimal {
         id
@@ -3833,30 +3950,10 @@ export const GqlTokenDynamicDataFragmentDoc = gql`
 export const GetPoolBatchSwapsDocument = gql`
     query GetPoolBatchSwaps($first: Int, $skip: Int, $where: GqlPoolSwapFilter) {
         batchSwaps: poolGetBatchSwaps(first: $first, skip: $skip, where: $where) {
-            id
-            timestamp
-            tokenAmountIn
-            tokenAmountOut
-            tokenIn
-            tokenOut
-            tokenInPrice
-            tokenOutPrice
-            tx
-            userAddress
-            valueUSD
-            swaps {
-                id
-                timestamp
-                tokenAmountIn
-                tokenAmountOut
-                tokenIn
-                tokenOut
-                valueUSD
-                poolTokens
-                poolId
-            }
+            ...GqlPoolBatchSwap
         }
     }
+    ${GqlPoolBatchSwapFragmentDoc}
 `;
 
 /**

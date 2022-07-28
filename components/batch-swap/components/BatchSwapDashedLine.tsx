@@ -40,7 +40,7 @@ export function BatchSwapRouteDashedLineRightSide(props: IconProps) {
     );
 }
 
-export function BatchSwapRouteDashedLine(props: IconProps) {
+export function BatchSwapDashedLine(props: IconProps) {
     return (
         <Flex top="50%" left="42px" right="42px" bottom="50%" position="absolute">
             <Icon

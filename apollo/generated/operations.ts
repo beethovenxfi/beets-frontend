@@ -1,4 +1,46 @@
 import gql from 'graphql-tag';
+export const GqlPoolBatchSwapSwap = gql`
+    fragment GqlPoolBatchSwapSwap on GqlPoolBatchSwapSwap {
+        id
+        timestamp
+        tokenAmountIn
+        tokenAmountOut
+        tokenIn
+        tokenOut
+        valueUSD
+        pool {
+            id
+            name
+            type
+            symbol
+            allTokens {
+                address
+                isNested
+                isPhantomBpt
+                weight
+            }
+        }
+    }
+`;
+export const GqlPoolBatchSwap = gql`
+    fragment GqlPoolBatchSwap on GqlPoolBatchSwap {
+        id
+        timestamp
+        tokenAmountIn
+        tokenAmountOut
+        tokenIn
+        tokenOut
+        tokenInPrice
+        tokenOutPrice
+        tx
+        userAddress
+        valueUSD
+        swaps {
+            ...GqlPoolBatchSwapSwap
+        }
+    }
+    ${GqlPoolBatchSwapSwap}
+`;
 export const GqlPoolCardData = gql`
     fragment GqlPoolCardData on GqlPoolMinimal {
         id
@@ -280,30 +322,10 @@ export const GqlTokenDynamicData = gql`
 export const GetPoolBatchSwaps = gql`
     query GetPoolBatchSwaps($first: Int, $skip: Int, $where: GqlPoolSwapFilter) {
         batchSwaps: poolGetBatchSwaps(first: $first, skip: $skip, where: $where) {
-            id
-            timestamp
-            tokenAmountIn
-            tokenAmountOut
-            tokenIn
-            tokenOut
-            tokenInPrice
-            tokenOutPrice
-            tx
-            userAddress
-            valueUSD
-            swaps {
-                id
-                timestamp
-                tokenAmountIn
-                tokenAmountOut
-                tokenIn
-                tokenOut
-                valueUSD
-                poolTokens
-                poolId
-            }
+            ...GqlPoolBatchSwap
         }
     }
+    ${GqlPoolBatchSwap}
 `;
 export const GetAppGlobalData = gql`
     query GetAppGlobalData {

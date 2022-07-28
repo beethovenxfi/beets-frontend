@@ -1,12 +1,22 @@
-import { GqlSorSwapRouteHopFragment } from '~/apollo/generated/graphql-codegen-generated';
 import { Box } from '@chakra-ui/react';
 import TokenAvatarSet from '~/components/token/TokenAvatarSet';
 
 interface Props {
-    hop: GqlSorSwapRouteHopFragment;
+    hop: {
+        tokenIn: string;
+        tokenOut: string;
+        pool: {
+            allTokens: {
+                address: string;
+                weight?: string | null;
+                isNested?: boolean;
+                isPhantomBpt?: boolean;
+            }[];
+        };
+    };
 }
 
-export function BatchSwapRouteHop({ hop }: Props) {
+export function BatchSwapHop({ hop }: Props) {
     const tokens = hop.pool.allTokens
         .filter((token) => !token.isNested && !token.isPhantomBpt)
         .map((token) => ({ address: token.address, weight: token.weight }));

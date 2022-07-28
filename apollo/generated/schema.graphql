@@ -229,8 +229,7 @@ type GqlPoolBatchSwapPool {
 
 type GqlPoolBatchSwapSwap {
     id: ID!
-    poolId: String!
-    poolTokens: [String!]!
+    pool: GqlPoolMinimal!
     timestamp: Int!
     tokenAmountIn: String!
     tokenAmountOut: String!
