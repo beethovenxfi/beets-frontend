@@ -32,10 +32,10 @@ export function TradeChart() {
 
     return (
         <Box>
-            {/*<Box height="3xs">
+            <Box height="150px">
                 <TokenPriceLineChart prices={data?.prices || []} label={`${tokenOut?.symbol}/${tokenIn?.symbol}`} />
-            </Box>*/}
-            <BeetsBox height="150px" />
+            </Box>
+            {/* <BeetsBox height="150px" />*/}
             {/*<Skeleton height="3xs" />*/}
             <Flex mt="2">
                 <Box flex={1} />

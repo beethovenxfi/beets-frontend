@@ -1,14 +1,5 @@
 import { GqlSorGetSwapsResponseFragment } from '~/apollo/generated/graphql-codegen-generated';
 import { Box, Flex } from '@chakra-ui/react';
-import { TokenAmountPill } from '~/components/token/TokenAmountPill';
-import {
-    BatchSwapDashedLine,
-    BatchSwapRouteDashedLineArrowSpacer,
-    BatchSwapRouteDashedLineLeftSide,
-    BatchSwapRouteDashedLineRightSide,
-} from '~/components/batch-swap/components/BatchSwapDashedLine';
-import { BatchSwapTokenAmount } from '~/components/batch-swap/components/BatchSwapTokenAmount';
-import { BatchSwapHop } from '~/components/batch-swap/components/BatchSwapHop';
 import { BatchSwapTokenMarker } from '~/components/batch-swap/components/BatchSwapTokenMarker';
 import { tokenFormatAmount } from '~/lib/services/token/token-util';
 import { useGetTokens } from '~/lib/global/useToken';
