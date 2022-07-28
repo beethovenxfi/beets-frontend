@@ -11,7 +11,7 @@ export function TradeChart() {
 
     if (loading && !data) {
         //loading and no data
-        return <Skeleton height="3xs" />;
+        return <Skeleton height="150px" />;
     }
 
     if (loading || networkStatus === NetworkStatus.refetch) {
@@ -24,7 +24,7 @@ export function TradeChart() {
 
     if (!tokenIn || !tokenOut) {
         //tokens not yet populated
-        return <Skeleton height="3xs" />;
+        return <Skeleton height="150px" />;
     }
 
     const sevenDaySelected = range === 'SEVEN_DAY';

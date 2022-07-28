@@ -1,8 +1,9 @@
-import { Text } from '@chakra-ui/react';
+import { Flex, HStack, Text } from '@chakra-ui/react';
 import { tokenFormatAmount } from '~/lib/services/token/token-util';
 import numeral from 'numeral';
 import { useTradeData } from '~/modules/trade/lib/useTradeData';
 import { useTradeChart } from '~/modules/trade/lib/useTradeChart';
+import { PercentChangeBadge } from '~/components/badge/PercentChangeBadge';
 
 export function TradePageHeader() {
     const { tokenOut, tokenIn, currentRatio } = useTradeData();
@@ -24,14 +25,12 @@ export function TradePageHeader() {
                     {tokenIn?.symbol}
                 </Text>
             </Text>
-            {percentChange !== null ? (
-                <Text>
-                    <Text as="span" color={percentChange < 0 ? 'red.500' : 'green.500'}>
-                        {numeral(percentChange).format('+0.[00]%')}
-                    </Text>{' '}
-                    in the past {range === 'SEVEN_DAY' ? 'week' : 'month'}
-                </Text>
-            ) : null}
+            {percentChange !== null && (
+                <HStack>
+                    <PercentChangeBadge percentChange={percentChange} />
+                    <Text>in the past {range === 'SEVEN_DAY' ? 'week' : 'month'}</Text>
+                </HStack>
+            )}
         </>
     );
 }
