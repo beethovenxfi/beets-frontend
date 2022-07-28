@@ -29,7 +29,7 @@ export function TradeCardSwapBreakdown({}: Props) {
 
     const coingeckoVariationText = useMemo(() => {
         if (diff >= 0) {
-            return `cheaper by ${numeral(Math.abs(diff)).format('%0.[00]')}`;
+            return `${numeral(Math.abs(diff)).format('%0.[00]')} cheaper`;
         } else {
             return `within ${numeral(Math.abs(diff)).format('%0.[00]')}`;
         }

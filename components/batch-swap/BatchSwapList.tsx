@@ -13,7 +13,7 @@ interface Props {
 export function BatchSwapList({ tokenIn, tokenOut }: Props) {
     const { priceFor, getToken } = useGetTokens();
     const { data, startPolling } = useGetPoolBatchSwapsQuery({
-        variables: { first: 6, skip: 0, where: { tokenInIn: [tokenIn], tokenOutIn: [tokenOut] } },
+        variables: { first: 5, skip: 0, where: { tokenInIn: [tokenIn], tokenOutIn: [tokenOut] } },
         notifyOnNetworkStatusChange: true,
     });
 

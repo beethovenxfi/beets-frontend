@@ -45,12 +45,12 @@ export function TradeContainer() {
                         Smart order routing
                     </Text>
                     <Text mb="4" color="gray.200">
-                        The SOR sources the optimal path...
+                        The SOR searches all Beethoven X pools to ensure you receive the best available price.
                     </Text>
                     {swaps ? <BatchSwapSorRoute swaps={swaps} /> : null}
 
                     <motion.div layout>
-                        <Text fontSize="xl" fontWeight="bold" lineHeight="1.2rem" mt="10">
+                        <Text fontSize="xl" fontWeight="bold" lineHeight="1.2rem" mt="12">
                             Latest swaps
                         </Text>
                         <Text mb="4" color="gray.200">
