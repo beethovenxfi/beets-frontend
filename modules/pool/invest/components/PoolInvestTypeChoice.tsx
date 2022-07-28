@@ -8,6 +8,7 @@ import { usePool } from '~/modules/pool/lib/usePool';
 import { useGetTokens } from '~/lib/global/useToken';
 import { usePoolUserTokenBalancesInWallet } from '~/modules/pool/lib/usePoolUserTokenBalancesInWallet';
 import { useInvest } from '~/modules/pool/invest/lib/useInvest';
+import numeral from 'numeral';
 
 interface Props {
     onShowProportional(): void;
@@ -85,14 +86,19 @@ export function PoolInvestTypeChoice({ onShowProportional, onShowCustom }: Props
                 </Box>
                 <Box flex="1">
                     <BeetsBox p="4">
-                        Information about investing proportionally vs custom. Lorem ipsum dolor sit amet, consectetur
-                        adipiscing elit. Sed sit amet lectus viverra, lacinia erat a, consectetur ex. Praesent vel nulla
-                        ac risus auctor mollis id vitae libero.
+                        We recommend investing proportionally into this pool. This ensures you will{' '}
+                        <Text as="span" fontWeight="bold">
+                            NOT
+                        </Text>{' '}
+                        be subject to potential fees caused by price impact.
                         <br />
                         <br />
-                        Nunc sollicitudin lectus aliquam turpis maximus mollis. Duis auctor euismod urna, vel blandit
-                        urna efficitur eu. Donec scelerisque consectetur enim, nec sodales diam tincidunt ut. Praesent
-                        faucibus iaculis lacus, in sagittis erat euismod at.
+                        Alternatively, you can customize and invest in this pool in any proportion. Investing in this
+                        manner, however, may shift the pool out of balance and is therefore subject to price impact.
+                        <br />
+                        <br />
+                        When investing in a liquidity pool, you will receive pool tokens (BPT) which represent your
+                        share of the pool.
                     </BeetsBox>
                 </Box>
             </Flex>
