@@ -15,7 +15,7 @@ import numeral from 'numeral';
 
 export interface TokenData {
     address: string;
-    weight?: string;
+    weight?: string | null;
 }
 
 interface Props extends FlexProps {

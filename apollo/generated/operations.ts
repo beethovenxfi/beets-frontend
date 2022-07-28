@@ -195,6 +195,7 @@ export const GqlSorSwapRouteHop = gql`
         pool {
             id
             name
+            type
             symbol
             dynamicData {
                 totalLiquidity
@@ -203,6 +204,7 @@ export const GqlSorSwapRouteHop = gql`
                 address
                 isNested
                 isPhantomBpt
+                weight
             }
         }
         tokenIn

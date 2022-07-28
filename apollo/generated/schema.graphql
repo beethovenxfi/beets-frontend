@@ -479,6 +479,19 @@ type GqlPoolMinimal {
     owner: Bytes
     staking: GqlPoolStaking
     symbol: String!
+    type: GqlPoolMinimalType!
+}
+
+enum GqlPoolMinimalType {
+    ELEMENT
+    INVESTMENT
+    LINEAR
+    LIQUIDITY_BOOTSTRAPPING
+    META_STABLE
+    PHANTOM_STABLE
+    STABLE
+    UNKNOWN
+    WEIGHTED
 }
 
 union GqlPoolNestedUnion = GqlPoolLinearNested | GqlPoolPhantomStableNested

@@ -5,6 +5,7 @@ import { TradeChart } from '~/modules/trade/components/TradeChart';
 import { useGetTokens } from '~/lib/global/useToken';
 import { useTradeData } from '~/modules/trade/lib/useTradeData';
 import { useTrade } from '~/modules/trade/lib/useTrade';
+import { BatchSwapRoute } from '~/components/batch-swap-route/BatchSwapRoute';
 
 export function TradeContainer() {
     const { priceFor } = useGetTokens();
@@ -33,7 +34,7 @@ export function TradeContainer() {
                     <TradeChart />
                 </Box>
 
-                {/*swaps ? <TradeRoutePreview swaps={swaps} /> : null*/}
+                {swaps ? <BatchSwapRoute swaps={swaps} /> : null}
                 {/*<Flex mt="12" mb="8">
                         {tokenIn ? (
                             <TradeTokenDataCard

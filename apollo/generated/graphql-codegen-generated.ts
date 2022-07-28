@@ -515,7 +515,19 @@ export interface GqlPoolMinimal {
     owner?: Maybe<Scalars['Bytes']>;
     staking?: Maybe<GqlPoolStaking>;
     symbol: Scalars['String'];
+    type: GqlPoolMinimalType;
 }
+
+export type GqlPoolMinimalType =
+    | 'ELEMENT'
+    | 'INVESTMENT'
+    | 'LINEAR'
+    | 'LIQUIDITY_BOOTSTRAPPING'
+    | 'META_STABLE'
+    | 'PHANTOM_STABLE'
+    | 'STABLE'
+    | 'UNKNOWN'
+    | 'WEIGHTED';
 
 export type GqlPoolNestedUnion = GqlPoolLinearNested | GqlPoolPhantomStableNested;
 
@@ -3329,6 +3341,7 @@ export type GetSorSwapsQuery = {
                     __typename: 'GqlPoolMinimal';
                     id: string;
                     name: string;
+                    type: GqlPoolMinimalType;
                     symbol: string;
                     dynamicData: { __typename: 'GqlPoolDynamicData'; totalLiquidity: string };
                     allTokens: Array<{
@@ -3336,6 +3349,7 @@ export type GetSorSwapsQuery = {
                         address: string;
                         isNested: boolean;
                         isPhantomBpt: boolean;
+                        weight?: string | null;
                     }>;
                 };
             }>;
@@ -3388,6 +3402,7 @@ export type GqlSorGetSwapsResponseFragment = {
                 __typename: 'GqlPoolMinimal';
                 id: string;
                 name: string;
+                type: GqlPoolMinimalType;
                 symbol: string;
                 dynamicData: { __typename: 'GqlPoolDynamicData'; totalLiquidity: string };
                 allTokens: Array<{
@@ -3395,6 +3410,7 @@ export type GqlSorGetSwapsResponseFragment = {
                     address: string;
                     isNested: boolean;
                     isPhantomBpt: boolean;
+                    weight?: string | null;
                 }>;
             };
         }>;
@@ -3419,6 +3435,7 @@ export type GqlSorSwapRouteFragment = {
             __typename: 'GqlPoolMinimal';
             id: string;
             name: string;
+            type: GqlPoolMinimalType;
             symbol: string;
             dynamicData: { __typename: 'GqlPoolDynamicData'; totalLiquidity: string };
             allTokens: Array<{
@@ -3426,6 +3443,7 @@ export type GqlSorSwapRouteFragment = {
                 address: string;
                 isNested: boolean;
                 isPhantomBpt: boolean;
+                weight?: string | null;
             }>;
         };
     }>;
@@ -3442,6 +3460,7 @@ export type GqlSorSwapRouteHopFragment = {
         __typename: 'GqlPoolMinimal';
         id: string;
         name: string;
+        type: GqlPoolMinimalType;
         symbol: string;
         dynamicData: { __typename: 'GqlPoolDynamicData'; totalLiquidity: string };
         allTokens: Array<{
@@ -3449,6 +3468,7 @@ export type GqlSorSwapRouteHopFragment = {
             address: string;
             isNested: boolean;
             isPhantomBpt: boolean;
+            weight?: string | null;
         }>;
     };
 };
@@ -3728,6 +3748,7 @@ export const GqlSorSwapRouteHopFragmentDoc = gql`
         pool {
             id
             name
+            type
             symbol
             dynamicData {
                 totalLiquidity
@@ -3736,6 +3757,7 @@ export const GqlSorSwapRouteHopFragmentDoc = gql`
                 address
                 isNested
                 isPhantomBpt
+                weight
             }
         }
         tokenIn

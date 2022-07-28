@@ -63,6 +63,7 @@ fragment GqlSorSwapRouteHop on GqlSorSwapRouteHop {
     pool {
         id
         name
+        type
         symbol
         dynamicData {
             totalLiquidity
@@ -71,6 +72,7 @@ fragment GqlSorSwapRouteHop on GqlSorSwapRouteHop {
             address
             isNested
             isPhantomBpt
+            weight
         }
     }
     tokenIn

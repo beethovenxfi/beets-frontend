@@ -8,7 +8,7 @@ import { oldBnumToFixed } from '~/lib/services/pool/lib/old-big-number';
 import { useDebouncedCallback } from 'use-debounce';
 
 const buyAmountVar = makeVar<AmountHumanReadable>('');
-const sellAmountVar = makeVar<AmountHumanReadable>('');
+const sellAmountVar = makeVar<AmountHumanReadable>('1');
 const tokenSelectedVar = makeVar<'tokenIn' | 'tokenOut'>('tokenIn');
 
 export function useTradeCard() {
@@ -45,6 +45,9 @@ export function useTradeCard() {
 
     useEffect(() => {
         //TODO: load token in/out from url if passed in
+
+        setIsFetching.on();
+        dFetchTrade('EXACT_IN', sellAmountVar());
     }, []);
 
     const fetchTrade = async (type: GqlSorSwapType, amount: string) => {
