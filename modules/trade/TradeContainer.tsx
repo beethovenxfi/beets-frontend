@@ -16,6 +16,8 @@ export function TradeContainer() {
     const { tokenInData, tokenOutData, tokenInDynamicData, tokenOutDynamicData, tokenOut, tokenIn } = useTradeData();
     const { swaps } = useTrade();
 
+    console.log('swaps', swaps);
+
     return (
         <Grid
             templateAreas={{
@@ -41,16 +43,23 @@ export function TradeContainer() {
                 {/*
                 // @ts-ignore */}
                 <AnimateSharedLayout>
-                    <Text fontSize="xl" fontWeight="bold" lineHeight="1.2rem" mt="4">
-                        Smart order routing
-                    </Text>
-                    <Text mb="4" color="gray.200">
-                        The SOR searches all Beethoven X pools to ensure you receive the best available price.
-                    </Text>
-                    {swaps ? <BatchSwapSorRoute swaps={swaps} /> : null}
+                    <AnimatePresence>
+                        {swaps && swaps.swaps.length > 0 && (
+                            <motion.div layout initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+                                <Text fontSize="xl" fontWeight="bold" lineHeight="1.2rem" mt="8">
+                                    Smart order routing
+                                </Text>
+                                <Text mb="4" color="gray.200">
+                                    The SOR searches all Beethoven X pools to ensure you receive the best available
+                                    price.
+                                </Text>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
+                    {swaps && swaps.swaps.length > 0 && <BatchSwapSorRoute swaps={swaps} />}
 
                     <motion.div layout>
-                        <Text fontSize="xl" fontWeight="bold" lineHeight="1.2rem" mt="12">
+                        <Text fontSize="xl" fontWeight="bold" lineHeight="1.2rem" mt="8">
                             Latest swaps
                         </Text>
                         <Text mb="4" color="gray.200">

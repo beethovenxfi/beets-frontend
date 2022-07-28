@@ -11,7 +11,7 @@ import { useUserData } from '~/lib/user/useUserData';
 import { BeetsSkeleton } from '~/components/skeleton/BeetsSkeleton';
 import { numberFormatLargeUsdValue } from '~/lib/util/number-formats';
 
-export default function WalletConnectButton() {
+export default function NavbarWalletConnectButton() {
     const txPending = useReactiveVar(txPendingVar);
     const { loading, portfolioValueUSD } = useUserData();
 

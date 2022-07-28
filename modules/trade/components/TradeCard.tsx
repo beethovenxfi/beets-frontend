@@ -9,10 +9,15 @@ import { RefreshCcw } from 'react-feather';
 import { Button } from '@chakra-ui/button';
 import { useTradeCard } from '~/modules/trade/lib/useTradeCard';
 import { TokenSelectModal } from '~/components/token-select/TokenSelectModal';
+import { useUserAccount } from '~/lib/user/useUserAccount';
+import { WalletConnectButton } from '~/components/button/WalletConnectButton';
+import { useUserTokenBalances } from '~/lib/user/useUserTokenBalances';
+import { useGetTokens } from '~/lib/global/useToken';
 
 export function TradeCard() {
+    const { isConnected } = useUserAccount();
+    const { getUserBalance, isAmountLessThanEqUserBalance } = useUserTokenBalances();
     const controls = useAnimation();
-    //const [showTokenSelect, setShowTokenSelect] = useBoolean();
     const { isOpen, onOpen, onClose } = useDisclosure();
     const {
         sellAmount,
@@ -28,8 +33,11 @@ export function TradeCard() {
         refetchTrade,
         sorResponse,
     } = useTradeCard();
+    const { getToken } = useGetTokens();
 
-    const isReviewDisabled = parseFloat(sellAmount || '0') === 0.0 || parseFloat(buyAmount || '0') === 0.0;
+    const isAmountMoreThanUserBalance = !isAmountLessThanEqUserBalance({ address: tokenIn, amount: sellAmount });
+    const isReviewDisabled =
+        parseFloat(sellAmount || '0') === 0.0 || parseFloat(buyAmount || '0') === 0.0 || isAmountMoreThanUserBalance;
 
     function showTokenSelect(tokenKey: 'tokenIn' | 'tokenOut') {
         setTokenSelectKey(tokenKey);
@@ -83,9 +91,20 @@ export function TradeCard() {
                         value={buyAmount}
                     />
                     <Box width="full" paddingTop="2">
-                        <BeetsButton disabled={isReviewDisabled} onClick={handleReviewClicked} isFullWidth size="lg">
-                            Review Swap
-                        </BeetsButton>
+                        {!isConnected ? (
+                            <WalletConnectButton isFullWidth size="lg" />
+                        ) : (
+                            <BeetsButton
+                                disabled={isReviewDisabled}
+                                onClick={handleReviewClicked}
+                                isFullWidth
+                                size="lg"
+                            >
+                                {isAmountMoreThanUserBalance
+                                    ? `Insufficient ${getToken(tokenIn)?.symbol} balance`
+                                    : 'Review Swap'}
+                            </BeetsButton>
+                        )}
                     </Box>
                 </VStack>
                 <TradeCardSwapBreakdown />

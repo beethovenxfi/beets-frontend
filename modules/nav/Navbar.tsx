@@ -2,7 +2,7 @@ import { Box, Flex, HStack } from '@chakra-ui/react';
 import Image from 'next/image';
 import NextLink from 'next/link';
 import LogoFull from '~/assets/logo/beets-bal.svg';
-import WalletConnectButton from './WalletConnectButton';
+import NavbarWalletConnectButton from './NavbarWalletConnectButton';
 import { NavbarLink } from '~/modules/nav/NavbarLink';
 import { useRouter } from 'next/router';
 import { motion, MotionValue, useAnimation, useTransform } from 'framer-motion';
@@ -109,7 +109,7 @@ export function Navbar({ scrollY }: Props) {
                             {/*<NavbarPortfolioDrawer />*/}
                         </HStack>
                     </FadeInOutBox>
-                    <WalletConnectButton />
+                    <NavbarWalletConnectButton />
                 </Flex>
             </Box>
         </>
