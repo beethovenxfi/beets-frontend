@@ -32,6 +32,7 @@ export function TradeCard() {
         handleReviewClicked,
         refetchTrade,
         sorResponse,
+        isNotEnoughLiquidity,
     } = useTradeCard();
     const { getToken } = useGetTokens();
 
@@ -99,8 +100,11 @@ export function TradeCard() {
                                 onClick={handleReviewClicked}
                                 isFullWidth
                                 size="lg"
+                                colorScheme="red"
                             >
-                                {isAmountMoreThanUserBalance
+                                {isNotEnoughLiquidity
+                                    ? 'Not enough liquidity'
+                                    : isAmountMoreThanUserBalance
                                     ? `Insufficient ${getToken(tokenIn)?.symbol} balance`
                                     : 'Review Swap'}
                             </BeetsButton>

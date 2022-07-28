@@ -22,6 +22,7 @@ export function useTradeCard() {
         getLatestState,
         setTokens,
         networkStatus,
+        swaps,
     } = useTrade();
 
     // refetching the swaps may not always trigger the query loading state,
@@ -42,6 +43,8 @@ export function useTradeCard() {
     }
 
     const isLoadingOrFetching = loadingSwaps || isFetching || networkStatus === NetworkStatus.refetch;
+    const hasAmount = parseFloat(sellAmountVar()) > 0 || parseFloat(buyAmountVar()) > 0;
+    const isNotEnoughLiquidity = swaps && swaps.swaps.length === 0 && hasAmount;
 
     useEffect(() => {
         //TODO: load token in/out from url if passed in
@@ -58,11 +61,20 @@ export function useTradeCard() {
         const resultAmount = trade?.returnAmount || '0';
         const resultAmountFixed = resultAmount ? oldBnumToFixed(resultAmount, 6) : '';
 
-        if (type === 'EXACT_IN') {
-            setBuyAmount(resultAmountFixed);
+        if (parseFloat(resultAmountFixed) === 0) {
+            if (type === 'EXACT_IN') {
+                setBuyAmount('');
+            } else {
+                setSellAmount('');
+            }
         } else {
-            setSellAmount(resultAmountFixed);
+            if (type === 'EXACT_IN') {
+                setBuyAmount(resultAmountFixed);
+            } else {
+                setSellAmount(resultAmountFixed);
+            }
         }
+
         setIsFetching.off();
     };
 
@@ -153,6 +165,7 @@ export function useTradeCard() {
         sellAmount: useReactiveVar(sellAmountVar),
         buyAmount: useReactiveVar(buyAmountVar),
         isLoadingOrFetching,
+        isNotEnoughLiquidity,
         setTokenSelectKey,
         handleTokenSelected,
         handleSellAmountChanged,
