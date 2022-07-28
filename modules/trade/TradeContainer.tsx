@@ -5,10 +5,11 @@ import { TradeChart } from '~/modules/trade/components/TradeChart';
 import { useGetTokens } from '~/lib/global/useToken';
 import { useTradeData } from '~/modules/trade/lib/useTradeData';
 import { useTrade } from '~/modules/trade/lib/useTrade';
-import { BatchSwapRoute } from '~/components/batch-swap/BatchSwapRoute';
+import { BatchSwapSorRoute } from '~/components/batch-swap/BatchSwapSorRoute';
 import { BeetsHeadline } from '~/components/typography/BeetsHeadline';
 import { BeetsSubHeadline } from '~/components/typography/BeetsSubHeadline';
 import { BatchSwapList } from '~/components/batch-swap/BatchSwapList';
+import { AnimatePresence, AnimateSharedLayout, motion } from 'framer-motion';
 
 export function TradeContainer() {
     const { priceFor } = useGetTokens();
@@ -37,13 +38,28 @@ export function TradeContainer() {
                     <TradeChart />
                 </Box>
 
-                <Text fontSize="xl" fontWeight="bold" lineHeight="1.2rem" mt="4">
-                    Smart order routing
-                </Text>
-                <Text mb="4" color="gray.200">
-                    The SOR sources the optimal path...
-                </Text>
-                {swaps ? <BatchSwapRoute swaps={swaps} /> : null}
+                {/*
+                // @ts-ignore */}
+                <AnimateSharedLayout>
+                    <Text fontSize="xl" fontWeight="bold" lineHeight="1.2rem" mt="4">
+                        Smart order routing
+                    </Text>
+                    <Text mb="4" color="gray.200">
+                        The SOR sources the optimal path...
+                    </Text>
+                    {swaps ? <BatchSwapSorRoute swaps={swaps} /> : null}
+
+                    <motion.div layout>
+                        <Text fontSize="xl" fontWeight="bold" lineHeight="1.2rem" mt="10">
+                            Latest swaps
+                        </Text>
+                        <Text mb="4" color="gray.200">
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis molestie gravida.
+                        </Text>
+                    </motion.div>
+                    {tokenIn && tokenOut && <BatchSwapList tokenIn={tokenIn.address} tokenOut={tokenOut.address} />}
+                </AnimateSharedLayout>
+
                 {/*<Flex mt="12" mb="8">
                         {tokenIn ? (
                             <TradeTokenDataCard
@@ -66,13 +82,6 @@ export function TradeContainer() {
                         ) : null}
                     </Flex>
                     <Box height="2xs" />*/}
-                <Text fontSize="xl" fontWeight="bold" lineHeight="1.2rem" mt="10">
-                    Latest swaps
-                </Text>
-                <Text mb="4" color="gray.200">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis molestie gravida.
-                </Text>
-                {tokenIn && tokenOut && <BatchSwapList tokenIn={tokenIn.address} tokenOut={tokenOut.address} />}
             </GridItem>
         </Grid>
     );

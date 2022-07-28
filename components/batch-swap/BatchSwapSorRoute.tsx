@@ -12,12 +12,14 @@ import { BatchSwapHop } from '~/components/batch-swap/components/BatchSwapHop';
 import { BatchSwapTokenMarker } from '~/components/batch-swap/components/BatchSwapTokenMarker';
 import { tokenFormatAmount } from '~/lib/services/token/token-util';
 import { useGetTokens } from '~/lib/global/useToken';
+import { AnimatePresence, motion } from 'framer-motion';
+import { BatchSwapRoute } from '~/components/batch-swap/components/BatchSwapRoute';
 
 interface Props {
     swaps: GqlSorGetSwapsResponseFragment;
 }
 
-export function BatchSwapRoute({ swaps }: Props) {
+export function BatchSwapSorRoute({ swaps }: Props) {
     const { getToken } = useGetTokens();
     const tokenIn = getToken(swaps.tokenIn);
     const tokenOut = getToken(swaps.tokenOut);
@@ -43,30 +45,11 @@ export function BatchSwapRoute({ swaps }: Props) {
                         </Box>
                     </Flex>
                     {swaps.routes.map((route, index) => (
-                        <Box key={index} height="64px">
-                            <Flex flex="1" flexDirection="column" justifyContent="space-around">
-                                <Flex position="relative" columnGap="5px">
-                                    <BatchSwapRouteDashedLineLeftSide />
-                                    <BatchSwapRouteDashedLineRightSide />
-                                    <BatchSwapDashedLine />
-                                    <BatchSwapTokenAmount address={route.tokenIn} amount={route.tokenInAmount} />
-                                    <Flex flex="1" height="64px" alignItems="center" position="relative" top="2px">
-                                        <Box flex="1">
-                                            <BatchSwapRouteDashedLineArrowSpacer />
-                                        </Box>
-                                        {route.hops
-                                            .filter((hop) => hop.pool.type !== 'LINEAR')
-                                            .map((hop, index) => (
-                                                <>
-                                                    <BatchSwapHop key={index} hop={hop} />
-                                                    <BatchSwapRouteDashedLineArrowSpacer key={`spacer-${index}`} />
-                                                </>
-                                            ))}
-                                    </Flex>
-                                    <BatchSwapTokenAmount address={route.tokenOut} amount={route.tokenOutAmount} />
-                                </Flex>
-                            </Flex>
-                        </Box>
+                        <AnimatePresence key={index}>
+                            <motion.div layout initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                                <BatchSwapRoute route={route} />
+                            </motion.div>
+                        </AnimatePresence>
                     ))}
                 </Box>
                 <BatchSwapTokenMarker token={swaps.tokenOut} position="end" />
