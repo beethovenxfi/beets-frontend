@@ -13,7 +13,7 @@ export function usePoolJoinGetBptOutAndPriceImpactForTokensIn() {
     const { slippage } = useSlippage();
     const tokenAmountsIn = tokenAmountsGetArrayFromMap(inputAmounts);
 
-    const { data: bptOutAndPriceImpact, isLoading } = useQuery(
+    const query = useQuery(
         ['joinGetBptOutAndPriceImpactForTokensIn', tokenAmountsIn, slippage],
         () => {
             return poolService.joinGetBptOutAndPriceImpactForTokensIn(tokenAmountsIn, slippage);
@@ -21,6 +21,7 @@ export function usePoolJoinGetBptOutAndPriceImpactForTokensIn() {
         { enabled: tokenAmountsIn.length > 0, staleTime: 0, cacheTime: 0 },
     );
 
+    const bptOutAndPriceImpact = query.data;
     const hasHighPriceImpact = Math.abs(bptOutAndPriceImpact?.priceImpact || 0) > HIGH_PRICE_IMPACT;
     const hasMediumPriceImpact =
         !hasHighPriceImpact && Math.abs(bptOutAndPriceImpact?.priceImpact || 0) > MEDIUM_PRICE_IMPACT;
@@ -28,10 +29,10 @@ export function usePoolJoinGetBptOutAndPriceImpactForTokensIn() {
     const formattedPriceImpact = numeral(Math.abs(bptOutAndPriceImpact?.priceImpact || 0)).format('0.00%');
 
     return {
+        ...query,
         bptOutAndPriceImpact,
         hasHighPriceImpact,
         hasMediumPriceImpact,
         formattedPriceImpact,
-        isLoading,
     };
 }
