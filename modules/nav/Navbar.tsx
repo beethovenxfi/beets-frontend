@@ -31,7 +31,7 @@ export function Navbar({ scrollY }: Props) {
         if (latest > 16) {
             logoControls.start({
                 translateX: -12,
-                scale: 1,
+                width: '90%',
                 transition,
             });
             menuControls.start({
@@ -41,7 +41,7 @@ export function Navbar({ scrollY }: Props) {
         } else if (latest <= 16) {
             logoControls.start({
                 translateX: 0,
-                scale: 1.2,
+                width: '100%',
                 transition,
             });
             menuControls.start({
@@ -73,7 +73,7 @@ export function Navbar({ scrollY }: Props) {
                     </motion.div>
                     <Flex alignItems="center" mr={8} ml="3">
                         <motion.div
-                            initial={{ scale: 1.2 }}
+                            // initial={{ scale: 1.2 }}
                             //transformTemplate={template}
                             animate={logoControls}
                             style={{ display: 'flex', alignItems: 'center' }}
@@ -81,11 +81,12 @@ export function Navbar({ scrollY }: Props) {
                         >
                             <NextLink href="/">
                                 <Box cursor="pointer">
-                                    <BeetsBalLogo
-                                        //alt="Beethoven X"
+                                    <Image
+                                        src={LogoFull}
+                                        alt="Beethoven X"
                                         //style={{ width: '115px', minWidth: '115px' }}
                                         // width="142px"
-                                        width="115px"
+                                        //width="115px"
                                         //height="30px"
                                     />
                                 </Box>
