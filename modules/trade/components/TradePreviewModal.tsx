@@ -50,7 +50,7 @@ export function TradePreviewModal({ isOpen, onClose }: Props) {
             <BeetsModalContent>
                 <ModalCloseButton />
                 <BeetsModalHeader>
-                    <BeetsModalHeadline>{!submitting ? 'Review swap' : 'Transaction details'}</BeetsModalHeadline>
+                    <BeetsModalHeadline>{!submitting ? 'Review swap' : 'Swap transaction details'}</BeetsModalHeadline>
                     {!submitting && (
                         <BeetsModalSubHeadline>
                             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed eu leo vestibulum
