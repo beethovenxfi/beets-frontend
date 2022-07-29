@@ -11,7 +11,7 @@ interface Props {
     onSubmitting?: () => void;
     onCanceled?: () => void;
     isDisabled?: boolean;
-    size: string;
+    size?: string;
 }
 
 export function BeetsTokenApprovalButton({
