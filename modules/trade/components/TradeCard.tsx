@@ -56,7 +56,8 @@ export function TradeCard() {
         parseFloat(sellAmount || '0') === 0.0 ||
         parseFloat(buyAmount || '0') === 0.0 ||
         isAmountMoreThanUserBalance;
-    const hasApprovalForSellAmount = isLoadingAllowances || (isConnected && hasApprovalForAmount(tokenIn, sellAmount));
+    const hasApprovalForSellAmount =
+        isLoadingAllowances || !isConnected || (isConnected && hasApprovalForAmount(tokenIn, sellAmount));
 
     function showTokenSelect(tokenKey: 'tokenIn' | 'tokenOut') {
         setTokenSelectKey(tokenKey);
