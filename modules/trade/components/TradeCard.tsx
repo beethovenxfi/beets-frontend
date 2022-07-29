@@ -55,7 +55,7 @@ export function TradeCard() {
         parseFloat(sellAmount || '0') === 0.0 ||
         parseFloat(buyAmount || '0') === 0.0 ||
         isAmountMoreThanUserBalance;
-    const isAmountMoreThanApproved = isConnected && !hasApprovalForAmount(tokenIn, sellAmount);
+    const hasApprovalForSellAmount = isLoadingAllowances || (isConnected && hasApprovalForAmount(tokenIn, sellAmount));
 
     function showTokenSelect(tokenKey: 'tokenIn' | 'tokenOut') {
         setTokenSelectKey(tokenKey);
@@ -98,7 +98,7 @@ export function TradeCard() {
                             onChange={handleSellAmountChanged}
                             value={sellAmount}
                             showPresets
-                            requiresApproval={isAmountMoreThanApproved}
+                            requiresApproval={!hasApprovalForSellAmount}
                         />
                     </Box>
                     <TokenInputSwapButton onSwap={handleTokensSwitched} isLoading={isLoadingOrFetching} />
@@ -112,7 +112,7 @@ export function TradeCard() {
                     <Box width="full" paddingTop="2">
                         {!isConnected ? (
                             <WalletConnectButton isFullWidth size="lg" />
-                        ) : isAmountMoreThanApproved && tokenInData ? (
+                        ) : !hasApprovalForSellAmount && tokenInData ? (
                             <BeetsTokenApprovalButton
                                 tokenWithAmount={{ ...tokenInData, amount: sellAmount }}
                                 onConfirmed={() => {
