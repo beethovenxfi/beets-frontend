@@ -8,21 +8,9 @@ import {
     BeetsModalSubHeadline,
 } from '~/components/modal/BeetsModal';
 import { TradePreviewContent } from '~/modules/trade/components/TradePreviewContent';
-import { Alert, AlertIcon, Box, Button, Link, Modal, ModalOverlay, Spinner } from '@chakra-ui/react';
+import { Modal, ModalOverlay } from '@chakra-ui/react';
 import { ModalCloseButton } from '@chakra-ui/modal';
-import { AnimateSharedLayout, motion, AnimatePresence } from 'framer-motion';
-import { BeetsBox } from '~/components/box/BeetsBox';
-import { BatchSwapSorRoute } from '~/components/batch-swap/BatchSwapSorRoute';
-import { useTrade } from '~/modules/trade/lib/useTrade';
-import { CardRow } from '~/components/card/CardRow';
-import { addressShortDisplayName } from '~/lib/util/address';
-import {
-    etherscanGetAddressUrl,
-    etherscanGetBlockUrl,
-    etherscanGetTxUrl,
-    etherscanTxShortenForDisplay,
-} from '~/lib/util/etherscan';
-import { format } from 'date-fns';
+import { motion } from 'framer-motion';
 import { TradeSubmittedContent } from '~/modules/trade/components/TradeSubmittedContent';
 
 interface Props {

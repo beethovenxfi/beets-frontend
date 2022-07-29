@@ -6,11 +6,12 @@ import { networkConfig } from '~/lib/config/network-config';
 interface Props {
     tokenWithAmount: TokenBaseWithAmount;
     contractToApprove?: string;
-    onConfirmed(): void;
-    onPending(): void;
-    onSubmitting(): void;
-    onCanceled(): void;
+    onConfirmed?: () => void;
+    onPending?: () => void;
+    onSubmitting?: () => void;
+    onCanceled?: () => void;
     isDisabled?: boolean;
+    size: string;
 }
 
 export function BeetsTokenApprovalButton({

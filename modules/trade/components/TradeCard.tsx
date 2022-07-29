@@ -14,6 +14,8 @@ import { WalletConnectButton } from '~/components/button/WalletConnectButton';
 import { useUserTokenBalances } from '~/lib/user/useUserTokenBalances';
 import { useGetTokens } from '~/lib/global/useToken';
 import { TradePreviewModal } from '~/modules/trade/components/TradePreviewModal';
+import { useUserAllowances } from '~/lib/util/useUserAllowances';
+import { BeetsTokenApprovalButton } from '~/components/button/BeetsTokenApprovalButton';
 
 export function TradeCard() {
     const { isConnected } = useUserAccount();
@@ -21,6 +23,8 @@ export function TradeCard() {
     const controls = useAnimation();
     const tokenSelectDisclosure = useDisclosure();
     const tradePreviewDisclosure = useDisclosure();
+    const { getToken, tokens } = useGetTokens();
+
     const {
         sellAmount,
         buyAmount,
@@ -37,14 +41,21 @@ export function TradeCard() {
         tradeStartPolling,
         tradeStopPolling,
     } = useTradeCard();
-    const { getToken } = useGetTokens();
 
+    const {
+        hasApprovalForAmount,
+        isLoading: isLoadingAllowances,
+        refetch: refetchAllowances,
+    } = useUserAllowances(tokens.filter((token) => token.address === tokenIn));
+
+    const tokenInData = getToken(tokenIn);
     const isAmountMoreThanUserBalance = !isAmountLessThanEqUserBalance({ address: tokenIn, amount: sellAmount });
     const isReviewDisabled =
         isLoadingOrFetching ||
         parseFloat(sellAmount || '0') === 0.0 ||
         parseFloat(buyAmount || '0') === 0.0 ||
         isAmountMoreThanUserBalance;
+    const isAmountMoreThanApproved = isConnected && !hasApprovalForAmount(tokenIn, sellAmount);
 
     function showTokenSelect(tokenKey: 'tokenIn' | 'tokenOut') {
         setTokenSelectKey(tokenKey);
@@ -87,7 +98,7 @@ export function TradeCard() {
                             onChange={handleSellAmountChanged}
                             value={sellAmount}
                             showPresets
-                            requiresApproval={true}
+                            requiresApproval={isAmountMoreThanApproved}
                         />
                     </Box>
                     <TokenInputSwapButton onSwap={handleTokensSwitched} isLoading={isLoadingOrFetching} />
@@ -101,6 +112,14 @@ export function TradeCard() {
                     <Box width="full" paddingTop="2">
                         {!isConnected ? (
                             <WalletConnectButton isFullWidth size="lg" />
+                        ) : isAmountMoreThanApproved && tokenInData ? (
+                            <BeetsTokenApprovalButton
+                                tokenWithAmount={{ ...tokenInData, amount: sellAmount }}
+                                onConfirmed={() => {
+                                    refetchAllowances();
+                                }}
+                                size="lg"
+                            />
                         ) : (
                             <BeetsButton
                                 disabled={isReviewDisabled}

@@ -7,7 +7,7 @@ export function TradeInterfaceContainer() {
     return (
         <Box display="flex" justifyContent={{ md: 'center', xl: 'initial' }}>
             <Box w={{ base: 'full', md: '600px', xl: 'full' }} position="relative">
-                <AnimatePresence>
+                {/*<AnimatePresence>
                     <AnimatedBox
                         w="full"
                         animate={{ scale: 1, transition: { type: 'spring', stiffness: 250, damping: 15 } }}
@@ -27,7 +27,8 @@ export function TradeInterfaceContainer() {
                     >
                         <TradeCard />
                     </AnimatedBox>
-                </AnimatePresence>
+                </AnimatePresence>*/}
+                <TradeCard />
             </Box>
         </Box>
     );
