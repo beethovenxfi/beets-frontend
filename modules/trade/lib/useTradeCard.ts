@@ -139,9 +139,12 @@ export function useTradeCard() {
         const sellAmount = sellAmountVar();
         const buyAmount = buyAmountVar();
 
+        tradeStateVar({ ...tradeStateVar(), sorResponse: null });
+
         setTokens({ tokenIn: state.tokenOut, tokenOut: state.tokenIn });
         setBuyAmount(sellAmount);
         setSellAmount(buyAmount);
+        dFetchTrade('EXACT_IN', sellAmount);
     };
 
     function refetchTrade() {
