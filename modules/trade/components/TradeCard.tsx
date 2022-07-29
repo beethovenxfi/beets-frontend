@@ -5,8 +5,6 @@ import Card from '~/components/card/Card';
 import BeetsButton from '~/components/button/Button';
 import { TokenInputSwapButton } from '~/modules/trade/components/TokenInputSwapButton';
 import { TradeCardSwapBreakdown } from '~/modules/trade/components/TradeCardSwapBreakdown';
-import { RefreshCcw } from 'react-feather';
-import { Button } from '@chakra-ui/button';
 import { useTradeCard } from '~/modules/trade/lib/useTradeCard';
 import { TokenSelectModal } from '~/components/token-select/TokenSelectModal';
 import { useUserAccount } from '~/lib/user/useUserAccount';
