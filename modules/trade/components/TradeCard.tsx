@@ -16,6 +16,7 @@ import { useGetTokens } from '~/lib/global/useToken';
 import { TradePreviewModal } from '~/modules/trade/components/TradePreviewModal';
 import { useUserAllowances } from '~/lib/util/useUserAllowances';
 import { BeetsTokenApprovalButton } from '~/components/button/BeetsTokenApprovalButton';
+import { TradeCardRefreshButton } from '~/modules/trade/components/TradeCardRefreshButton';
 
 export function TradeCard() {
     const { isConnected } = useUserAccount();
@@ -69,25 +70,7 @@ export function TradeCard() {
                 title="Swap"
                 position="relative"
                 shadow="lg"
-                topRight={
-                    sorResponse ? (
-                        <Button
-                            position="absolute"
-                            height="fit-content"
-                            borderRadius="full"
-                            variant="ghost"
-                            color="gray.200"
-                            _hover={{ color: 'beets.cyan' }}
-                            _active={{ backgroundColor: 'gray.300' }}
-                            _focus={{ outline: 'none' }}
-                            padding="2"
-                            right=".5rem"
-                            onClick={() => refetchTrade()}
-                        >
-                            <RefreshCcw size={24} />
-                        </Button>
-                    ) : null
-                }
+                topRight={sorResponse ? <TradeCardRefreshButton onClick={() => refetchTrade()} /> : null}
             >
                 <VStack spacing="2" padding="4" width="full">
                     <Box position="relative" width="full">
