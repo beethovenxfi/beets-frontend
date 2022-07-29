@@ -13,12 +13,14 @@ import { useUserAccount } from '~/lib/user/useUserAccount';
 import { WalletConnectButton } from '~/components/button/WalletConnectButton';
 import { useUserTokenBalances } from '~/lib/user/useUserTokenBalances';
 import { useGetTokens } from '~/lib/global/useToken';
+import { TradePreviewModal } from '~/modules/trade/components/TradePreviewModal';
 
 export function TradeCard() {
     const { isConnected } = useUserAccount();
     const { getUserBalance, isAmountLessThanEqUserBalance } = useUserTokenBalances();
     const controls = useAnimation();
-    const { isOpen, onOpen, onClose } = useDisclosure();
+    const tokenSelectDisclosure = useDisclosure();
+    const tradePreviewDisclosure = useDisclosure();
     const {
         sellAmount,
         buyAmount,
@@ -29,7 +31,6 @@ export function TradeCard() {
         handleBuyAmountChanged,
         handleSellAmountChanged,
         handleTokensSwitched,
-        handleReviewClicked,
         refetchTrade,
         sorResponse,
         isNotEnoughLiquidity,
@@ -42,7 +43,7 @@ export function TradeCard() {
 
     function showTokenSelect(tokenKey: 'tokenIn' | 'tokenOut') {
         setTokenSelectKey(tokenKey);
-        onOpen();
+        tokenSelectDisclosure.onOpen();
     }
 
     return (
@@ -81,6 +82,7 @@ export function TradeCard() {
                             onChange={handleSellAmountChanged}
                             value={sellAmount}
                             showPresets
+                            requiresApproval={true}
                         />
                     </Box>
                     <TokenInputSwapButton onSwap={handleTokensSwitched} isLoading={isLoadingOrFetching} />
@@ -97,7 +99,7 @@ export function TradeCard() {
                         ) : (
                             <BeetsButton
                                 disabled={isReviewDisabled}
-                                onClick={handleReviewClicked}
+                                onClick={tradePreviewDisclosure.onOpen}
                                 isFullWidth
                                 size="lg"
                                 colorScheme="red"
@@ -106,14 +108,19 @@ export function TradeCard() {
                                     ? 'Not enough liquidity'
                                     : isAmountMoreThanUserBalance
                                     ? `Insufficient ${getToken(tokenIn)?.symbol} balance`
-                                    : 'Review Swap'}
+                                    : 'Review swap'}
                             </BeetsButton>
                         )}
                     </Box>
                 </VStack>
                 <TradeCardSwapBreakdown />
             </Card>
-            <TokenSelectModal isOpen={isOpen} onOpen={onOpen} onClose={onClose} />
+            <TokenSelectModal
+                isOpen={tokenSelectDisclosure.isOpen}
+                onOpen={tokenSelectDisclosure.onOpen}
+                onClose={tokenSelectDisclosure.onClose}
+            />
+            <TradePreviewModal isOpen={tradePreviewDisclosure.isOpen} onClose={tradePreviewDisclosure.onClose} />
         </Box>
     );
 }

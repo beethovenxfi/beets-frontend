@@ -16,8 +16,6 @@ export function TradeContainer() {
     const { tokenInData, tokenOutData, tokenInDynamicData, tokenOutDynamicData, tokenOut, tokenIn } = useTradeData();
     const { swaps } = useTrade();
 
-    console.log('swaps', swaps);
-
     return (
         <Grid
             templateAreas={{
@@ -56,7 +54,7 @@ export function TradeContainer() {
                             </motion.div>
                         )}
                     </AnimatePresence>
-                    {swaps && swaps.swaps.length > 0 && <BatchSwapSorRoute swaps={swaps} />}
+                    {swaps && swaps.swaps.length > 0 && <BatchSwapSorRoute swapInfo={swaps} />}
 
                     <motion.div layout>
                         <Text fontSize="xl" fontWeight="bold" lineHeight="1.2rem" mt="8">

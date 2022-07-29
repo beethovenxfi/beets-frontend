@@ -10,6 +10,8 @@ import { sum } from 'lodash';
 import { useGetTokens } from '~/lib/global/useToken';
 import { usePoolExitGetBptInForSingleAssetWithdraw } from '~/modules/pool/withdraw/lib/usePoolExitGetBptInForSingleAssetWithdraw';
 import { useWithdrawState } from '~/modules/pool/withdraw/lib/useWithdrawState';
+import Card from '~/components/card/Card';
+import { CardRow } from '~/components/card/CardRow';
 
 interface Props extends BoxProps {}
 

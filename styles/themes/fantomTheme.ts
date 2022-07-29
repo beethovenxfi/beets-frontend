@@ -169,5 +169,10 @@ export const fantomTheme: Partial<ChakraTheme> = {
                 color: 'beets.cyan',
             },
         },
+        Tooltip: {
+            baseStyle: {
+                color: 'white',
+            },
+        },
     },
 };

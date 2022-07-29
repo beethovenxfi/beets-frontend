@@ -15,10 +15,6 @@ type TradeState = {
     sorResponse: GqlSorGetSwapsResponseFragment | null;
 };
 
-type TradeContext = {
-    isPreviewVisible: boolean;
-};
-
 export const tradeStateVar = makeVar<TradeState>({
     tokenIn: networkConfig.defaultTokenIn,
     tokenOut: networkConfig.defaultTokenOut,
@@ -27,16 +23,11 @@ export const tradeStateVar = makeVar<TradeState>({
     sorResponse: null,
 });
 
-const tradeContextVar = makeVar<TradeContext>({
-    isPreviewVisible: false,
-});
-
 export function useTrade() {
     // swap related data
     const reactiveTradeState = useReactiveVar(tradeStateVar);
     // overarching trade context
 
-    const tradeContext = useReactiveVar(tradeContextVar);
     // make sure not to cache as this data needs to be always fresh
     const [load, { loading, error, data, networkStatus }] = useGetSorSwapsLazyQuery({
         //fetchPolicy: 'no-cache',
@@ -84,13 +75,6 @@ export function useTrade() {
         });
     }
 
-    function setPreviewVisible(visible: boolean) {
-        tradeContextVar({
-            ...tradeContext,
-            isPreviewVisible: visible,
-        });
-    }
-
     function setTokens(input: { tokenIn?: string; tokenOut?: string }) {
         tradeStateVar({
             ...tradeStateVar(),
@@ -110,9 +94,7 @@ export function useTrade() {
         loadingSwaps: loading,
         error,
         networkStatus,
-        tradeContext,
         setTradeConfig,
-        setPreviewVisible,
         setTokens,
         getLatestState,
     };

@@ -28,7 +28,13 @@ export function BatchSwapList({ tokenIn, tokenOut }: Props) {
             {batchSwaps.map((batchSwap) => {
                 return (
                     <AnimatePresence key={batchSwap.id}>
-                        <motion.div layout initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                        <motion.div
+                            layout
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            layoutId={batchSwap.id}
+                        >
                             <BatchSwapListItem
                                 batchSwap={batchSwap}
                                 tokenIn={getToken(batchSwap.tokenIn)}

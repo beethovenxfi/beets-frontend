@@ -16,7 +16,6 @@ export function useTradeCard() {
         reactiveTradeState,
         loadSwaps: _loadSwaps,
         loadingSwaps,
-        setPreviewVisible,
         clearSwaps,
         setTradeConfig,
         getLatestState,
@@ -25,7 +24,7 @@ export function useTradeCard() {
         swaps,
     } = useTrade();
 
-    // refetching the swaps may not always trigger the query loading state,
+    // refetching the swapInfo may not always trigger the query loading state,
     // so we use a fallback flag to make sure that we always have some loading
     // even if the query is retrieving the 'same' value from the cache.
     const [isFetching, setIsFetching] = useBoolean();
@@ -55,7 +54,6 @@ export function useTradeCard() {
 
     const fetchTrade = async (type: GqlSorSwapType, amount: string) => {
         setTradeConfig(type, amount);
-        setPreviewVisible(false);
 
         const trade = await _loadSwaps(type, amount);
         const resultAmount = trade?.returnAmount || '0';
@@ -144,10 +142,6 @@ export function useTradeCard() {
         setSellAmount(buyAmount);
     };
 
-    const handleReviewClicked = () => {
-        setPreviewVisible(true);
-    };
-
     function refetchTrade() {
         const state = getLatestState();
 
@@ -171,7 +165,6 @@ export function useTradeCard() {
         handleSellAmountChanged,
         handleBuyAmountChanged,
         handleTokensSwitched,
-        handleReviewClicked,
         refetchTrade,
     };
 }

@@ -36,7 +36,7 @@ export function useTradeCard() {
         networkStatus,
     } = useTrade();
 
-    // refetching the swaps may not always trigger the query loading state,
+    // refetching the swapInfo may not always trigger the query loading state,
     // so we use a fallback flag to make sure that we always have some loading
     // even if the query is retrieving the 'same' value from the cache.
     const [isFetching, setIsFetching] = useBoolean();

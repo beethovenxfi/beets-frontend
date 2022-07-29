@@ -1,6 +1,7 @@
 import { Input, InputProps } from '@chakra-ui/input';
 import { Box, BoxProps, Heading, HeadingProps, HStack, VStack } from '@chakra-ui/layout';
 import PresetSelector from './PresetSelector';
+import { Lock } from 'react-feather';
 
 type Props = {
     label?: string;
