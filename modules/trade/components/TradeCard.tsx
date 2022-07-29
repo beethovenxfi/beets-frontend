@@ -34,6 +34,8 @@ export function TradeCard() {
         refetchTrade,
         sorResponse,
         isNotEnoughLiquidity,
+        tradeStartPolling,
+        tradeStopPolling,
     } = useTradeCard();
     const { getToken } = useGetTokens();
 
@@ -102,7 +104,10 @@ export function TradeCard() {
                         ) : (
                             <BeetsButton
                                 disabled={isReviewDisabled}
-                                onClick={tradePreviewDisclosure.onOpen}
+                                onClick={() => {
+                                    tradeStopPolling();
+                                    tradePreviewDisclosure.onOpen();
+                                }}
                                 isFullWidth
                                 size="lg"
                                 colorScheme="red"
@@ -123,7 +128,13 @@ export function TradeCard() {
                 onOpen={tokenSelectDisclosure.onOpen}
                 onClose={tokenSelectDisclosure.onClose}
             />
-            <TradePreviewModal isOpen={tradePreviewDisclosure.isOpen} onClose={tradePreviewDisclosure.onClose} />
+            <TradePreviewModal
+                isOpen={tradePreviewDisclosure.isOpen}
+                onClose={() => {
+                    tradePreviewDisclosure.onClose();
+                    tradeStartPolling();
+                }}
+            />
         </Box>
     );
 }

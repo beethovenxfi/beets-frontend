@@ -22,6 +22,8 @@ export function useTradeCard() {
         setTokens,
         networkStatus,
         swaps,
+        tradeStartPolling,
+        tradeStopPolling,
     } = useTrade();
 
     // refetching the swapInfo may not always trigger the query loading state,
@@ -166,5 +168,7 @@ export function useTradeCard() {
         handleBuyAmountChanged,
         handleTokensSwitched,
         refetchTrade,
+        tradeStartPolling,
+        tradeStopPolling,
     };
 }
