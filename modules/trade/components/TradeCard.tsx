@@ -17,7 +17,7 @@ import { TradePreviewModal } from '~/modules/trade/components/TradePreviewModal'
 
 export function TradeCard() {
     const { isConnected } = useUserAccount();
-    const { getUserBalance, isAmountLessThanEqUserBalance } = useUserTokenBalances();
+    const { isAmountLessThanEqUserBalance } = useUserTokenBalances();
     const controls = useAnimation();
     const tokenSelectDisclosure = useDisclosure();
     const tradePreviewDisclosure = useDisclosure();

@@ -28,7 +28,7 @@ export function useTradeCard() {
         reactiveTradeState,
         loadSwaps: _loadSwaps,
         loadingSwaps,
-        setPreviewVisible,
+        //setPreviewVisible,
         clearSwaps,
         setTradeConfig,
         getLatestState,
@@ -61,7 +61,7 @@ export function useTradeCard() {
 
     const fetchTrade = async (type: GqlSorSwapType, amount: string) => {
         setTradeConfig(type, amount);
-        setPreviewVisible(false);
+        //setPreviewVisible(false);
 
         const trade = await _loadSwaps(type, amount);
         const resultAmount = trade?.returnAmount || '0';
@@ -134,7 +134,7 @@ export function useTradeCard() {
     };
 
     const handleReviewClicked = () => {
-        setPreviewVisible(true);
+        //setPreviewVisible(true);
     };
 
     function refetchTrade() {

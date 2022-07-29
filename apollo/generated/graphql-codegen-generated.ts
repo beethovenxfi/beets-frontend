@@ -1080,6 +1080,7 @@ export interface Query {
     userGetPoolBalances: Array<GqlUserPoolBalance>;
     userGetPoolJoinExits: Array<GqlPoolJoinExit>;
     userGetStaking: Array<GqlPoolStaking>;
+    userGetSwaps: Array<GqlPoolSwap>;
 }
 
 export interface QueryLgeArgs {
@@ -1182,6 +1183,12 @@ export interface QueryTokenGetTokensDynamicDataArgs {
 }
 
 export interface QueryUserGetPoolJoinExitsArgs {
+    first?: InputMaybe<Scalars['Int']>;
+    poolId: Scalars['String'];
+    skip?: InputMaybe<Scalars['Int']>;
+}
+
+export interface QueryUserGetSwapsArgs {
     first?: InputMaybe<Scalars['Int']>;
     poolId: Scalars['String'];
     skip?: InputMaybe<Scalars['Int']>;

@@ -1043,4 +1043,5 @@ type Query {
     userGetPoolBalances: [GqlUserPoolBalance!]!
     userGetPoolJoinExits(first: Int = 10, poolId: String!, skip: Int = 0): [GqlPoolJoinExit!]!
     userGetStaking: [GqlPoolStaking!]!
+    userGetSwaps(first: Int = 10, poolId: String!, skip: Int = 0): [GqlPoolSwap!]!
 }
