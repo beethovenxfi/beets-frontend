@@ -39,7 +39,10 @@ export function TradeCard() {
 
     const isAmountMoreThanUserBalance = !isAmountLessThanEqUserBalance({ address: tokenIn, amount: sellAmount });
     const isReviewDisabled =
-        parseFloat(sellAmount || '0') === 0.0 || parseFloat(buyAmount || '0') === 0.0 || isAmountMoreThanUserBalance;
+        isLoadingOrFetching ||
+        parseFloat(sellAmount || '0') === 0.0 ||
+        parseFloat(buyAmount || '0') === 0.0 ||
+        isAmountMoreThanUserBalance;
 
     function showTokenSelect(tokenKey: 'tokenIn' | 'tokenOut') {
         setTokenSelectKey(tokenKey);
