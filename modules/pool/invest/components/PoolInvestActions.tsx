@@ -48,7 +48,7 @@ export function PoolInvestActions({ onInvestComplete, ...rest }: Props) {
         refetch: refetchUserAllowances,
     } = useUserAllowances(allInvestTokens, networkConfig.balancer.vault);
     const [steps, setSteps] = useState<TransactionStep[] | null>(null);
-    const { data: bptOutAndPriceImpact } = usePoolJoinGetBptOutAndPriceImpactForTokensIn();
+    const { bptOutAndPriceImpact } = usePoolJoinGetBptOutAndPriceImpactForTokensIn();
     const { data: contractCallData } = usePoolJoinGetContractCallData(bptOutAndPriceImpact?.minBptReceived || null);
 
     useEffect(() => {
