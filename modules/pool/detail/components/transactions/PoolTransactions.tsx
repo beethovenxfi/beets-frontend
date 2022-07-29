@@ -25,7 +25,7 @@ export function PoolTransactions({ ...rest }: Props & BoxProps) {
         networkStatus: investmentsStatus,
     } = useGetPoolJoinExitsQuery({
         variables: { poolId: pool.id },
-        pollInterval: 7500,
+        pollInterval: 30000,
         notifyOnNetworkStatusChange: true,
     });
 
@@ -35,7 +35,7 @@ export function PoolTransactions({ ...rest }: Props & BoxProps) {
         networkStatus: swapsStatus,
     } = useGetPoolSwapsQuery({
         variables: { where: { poolIdIn: [pool.id] } },
-        pollInterval: 7500,
+        pollInterval: 30000,
         notifyOnNetworkStatusChange: true,
     });
 
@@ -45,7 +45,7 @@ export function PoolTransactions({ ...rest }: Props & BoxProps) {
         networkStatus: userInvestmentsStatus,
     } = useGetPoolUserJoinExitsQuery({
         variables: { poolId: pool.id },
-        pollInterval: 7500,
+        pollInterval: 30000,
         notifyOnNetworkStatusChange: true,
     });
 
@@ -131,7 +131,6 @@ export function PoolTransactions({ ...rest }: Props & BoxProps) {
                     <TabList mb="2">
                         <HStack>
                             <BeetsTab>About this pool</BeetsTab>
-                            {/*<BeetsTab>Top holders</BeetsTab>*/}
                             <BeetsTab>{isPhantomStable ? 'Transactions' : 'Investments'}</BeetsTab>
                             {!isPhantomStable && <BeetsTab>Swaps</BeetsTab>}
                             <BeetsTab>My {isPhantomStable ? 'transactions' : 'investments'}</BeetsTab>
