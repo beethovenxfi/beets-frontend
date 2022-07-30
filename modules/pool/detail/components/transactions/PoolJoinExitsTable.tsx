@@ -34,18 +34,15 @@ export function PoolJoinExitsTable() {
     };
 
     return (
-        <>
-            test
-            <PaginatedTable
-                isInfinite
-                width="full"
-                items={transactions}
-                loading={false}
-                fetchingMore={isFetchingMoreInvestments}
-                renderTableHeader={() => <PoolTransactionHeader />}
-                renderTableRow={(item, index) => <PoolTransactionItem transaction={item} />}
-                onFetchMore={handleFetchMoreTransactions}
-            />
-        </>
+        <PaginatedTable
+            isInfinite
+            width="full"
+            items={transactions}
+            loading={false}
+            fetchingMore={isFetchingMoreInvestments}
+            renderTableHeader={() => <PoolTransactionHeader />}
+            renderTableRow={(item, index) => <PoolTransactionItem transaction={item} />}
+            onFetchMore={handleFetchMoreTransactions}
+        />
     );
 }
