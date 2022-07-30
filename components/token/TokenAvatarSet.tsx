@@ -6,6 +6,7 @@ import {
     PopoverTrigger as OrigPopoverTrigger,
     PopoverContent,
     Text,
+    Circle,
 } from '@chakra-ui/react';
 import { useGetTokens } from '~/lib/global/useToken';
 import Jazzicon, { jsNumberForAddress } from 'react-jazzicon';
@@ -78,7 +79,13 @@ function TokenAvatarSet({
                                 left={`${leftOffsetFor(numTokens - i - 1)}px`}
                                 bg={'#181729'}
                                 position="absolute"
-                                icon={<Jazzicon diameter={imageSize} seed={jsNumberForAddress(address)} />}
+                                icon={
+                                    token?.logoURI ? (
+                                        <Circle size={`${imageSize}px`} backgroundColor="whiteAlpha.200" />
+                                    ) : (
+                                        <Jazzicon diameter={imageSize} seed={jsNumberForAddress(address)} />
+                                    )
+                                }
                             />
                         );
                     })}
