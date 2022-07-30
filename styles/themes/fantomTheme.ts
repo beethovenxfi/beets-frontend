@@ -174,5 +174,14 @@ export const fantomTheme: Partial<ChakraTheme> = {
                 color: 'white',
             },
         },
+        Alert: {
+            parts: ['container'],
+            baseStyle: {
+                container: {
+                    borderRadius: 'md',
+                    alignItems: 'flex-start',
+                },
+            },
+        },
     },
 };

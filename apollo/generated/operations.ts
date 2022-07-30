@@ -731,6 +731,21 @@ export const GetPoolUserJoinExits = gql`
         }
     }
 `;
+export const GetUserSwaps = gql`
+    query GetUserSwaps($first: Int, $skip: Int, $poolId: String!) {
+        swaps: userGetSwaps(first: $first, skip: $skip, poolId: $poolId) {
+            id
+            poolId
+            timestamp
+            tokenAmountIn
+            tokenAmountOut
+            tokenIn
+            tokenOut
+            tx
+            valueUSD
+        }
+    }
+`;
 export const GetPoolSnapshots = gql`
     query GetPoolSnapshots($poolId: String!, $range: GqlPoolSnapshotDataRange!) {
         snapshots: poolGetSnapshots(id: $poolId, range: $range) {

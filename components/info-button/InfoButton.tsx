@@ -1,21 +1,4 @@
-import { GqlPoolApr } from '~/apollo/generated/graphql-codegen-generated';
-import {
-    Popover,
-    PopoverTrigger,
-    PopoverContent,
-    PopoverHeader,
-    Box,
-    Flex,
-    Text,
-    TextProps,
-    HStack,
-    useTheme,
-    Link,
-} from '@chakra-ui/react';
-import StarsIcon from '~/components/apr-tooltip/StarsIcon';
-import numeral from 'numeral';
-import { BeetsBox } from '~/components/box/BeetsBox';
-import { AprText } from '~/components/apr-tooltip/AprText';
+import { Box, HStack, Link, Popover, PopoverContent, PopoverTrigger, Text, TextProps } from '@chakra-ui/react';
 import { Info } from 'react-feather';
 
 interface Props {
@@ -28,7 +11,6 @@ interface Props {
 }
 
 export function InfoButton({ iconSize, infoText, moreInfoUrl, moreInfoLinkText, label, labelProps }: Props) {
-    const theme = useTheme();
     return (
         <Popover trigger="hover">
             <HStack spacing="1">
@@ -37,13 +19,13 @@ export function InfoButton({ iconSize, infoText, moreInfoUrl, moreInfoLinkText, 
                 // @ts-ignore */}
                 <PopoverTrigger>
                     <a>
-                        <Info size={iconSize || 16} color={theme.colors.gray['100']} />
+                        <Info size={iconSize || 16} color="currentColor" />
                     </a>
                 </PopoverTrigger>
             </HStack>
 
             <PopoverContent w="fit-content" bg="black" borderColor="transparent">
-                <Box p="2" className="bg" maxWidth="300px">
+                <Box p="2" className="bg" maxWidth="300px" fontWeight="normal">
                     {infoText}
                     {moreInfoUrl ? ' ' : ''}
                     {moreInfoUrl ? (

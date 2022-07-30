@@ -83,4 +83,14 @@ export const fantomNetworkConfig: NetworkConfig = {
             url: 'https://app.allbridge.io/bridge?from=SOL&to=FTM&asset=SOL',
         },
     ],
+    priceImpact: {
+        invest: {
+            noticeable: 0.005,
+            high: 0.01,
+        },
+        trade: {
+            noticeable: 0.01,
+            high: 0.05,
+        },
+    },
 };

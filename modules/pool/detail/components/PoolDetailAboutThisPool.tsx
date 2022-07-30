@@ -24,8 +24,8 @@ export function PoolDetailAboutThisPool() {
     });
 
     return (
-        <Grid templateColumns={{ base: 'repeat(1, 1fr)', lg: 'repeat(3, 1fr)' }} gap="4" width="full">
-            <GridItem colSpan={2}>
+        <Grid templateColumns={{ base: '1fr', lg: '2fr 1fr' }} gap="4" width="full">
+            <GridItem>
                 <Text fontWeight="semibold" fontSize="xl" color="white" mb="4">
                     Pool tokens
                 </Text>
@@ -133,7 +133,7 @@ export function PoolDetailAboutThisPool() {
                 </Card>
 
                 <Text fontWeight="semibold" fontSize="xl" color="white" mb="4">
-                    Pool statistics
+                    Pool info
                 </Text>
                 <Card padding="2">
                     <CardRow>

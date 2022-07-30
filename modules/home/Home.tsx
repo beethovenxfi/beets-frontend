@@ -46,10 +46,6 @@ export function Home() {
             <Box mt="20">
                 <HomeLearn />
             </Box>
-
-            {/*<HomeSocialCarousel />*/}
-            {/* <HomeMyInvestmentPools />
-            <HomePoolCategories />*/}
         </Box>
     );
 }

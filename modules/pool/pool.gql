@@ -314,6 +314,20 @@ query GetPoolUserJoinExits($first: Int, $skip: Int, $poolId: String!) {
     }
 }
 
+query GetUserSwaps($first: Int, $skip: Int, $poolId: String!) {
+    swaps: userGetSwaps(first: $first, skip: $skip, poolId: $poolId) {
+        id
+        poolId
+        timestamp
+        tokenAmountIn
+        tokenAmountOut
+        tokenIn
+        tokenOut
+        tx
+        valueUSD
+    }
+}
+
 query GetPoolSnapshots($poolId: String!, $range: GqlPoolSnapshotDataRange!) {
     snapshots: poolGetSnapshots(id: $poolId, range: $range) {
         id
