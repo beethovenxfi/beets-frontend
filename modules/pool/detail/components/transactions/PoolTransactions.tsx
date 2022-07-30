@@ -7,6 +7,7 @@ import { PoolDetailAboutThisPool } from '~/modules/pool/detail/components/PoolDe
 import { PoolSwapsTable } from '~/modules/pool/detail/components/transactions/PoolSwapsTable';
 import { PoolJoinExitsTable } from '~/modules/pool/detail/components/transactions/PoolJoinExitsTable';
 import { PoolUserInvestmentsTable } from '~/modules/pool/detail/components/transactions/PoolUserInvestmentsTable';
+import { PoolUserSwapsTable } from '~/modules/pool/detail/components/transactions/PoolUserTransactionsTable';
 
 type Props = {};
 
@@ -28,8 +29,8 @@ export function PoolTransactions({ ...rest }: Props & BoxProps) {
                         </HStack>
                     </TabList>
                     {activeTab === 0 && <PoolDetailAboutThisPool />}
-                    {activeTab === 1 && <PoolJoinExitsTable />}
-                    {activeTab === 2 && <PoolSwapsTable />}
+                    {activeTab === 1 && (isPhantomStable ? <PoolSwapsTable /> : <PoolJoinExitsTable />)}
+                    {activeTab === 2 && (isPhantomStable ? <PoolUserSwapsTable /> : <PoolSwapsTable />)}
                     {activeTab === 3 && <PoolUserInvestmentsTable />}
                 </VStack>
             </Tabs>
