@@ -103,7 +103,7 @@ export default function TokenInput({
                         </Button>
                     </VStack>
                 </Box>
-                {!isLoading && (
+                {!isLoading && isConnected && (
                     <Text
                         position="absolute"
                         zIndex="dropdown"
