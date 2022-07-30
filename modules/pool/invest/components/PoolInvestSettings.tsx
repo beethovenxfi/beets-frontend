@@ -4,6 +4,7 @@ import { Box, BoxProps, Flex, Switch, Text, useBoolean } from '@chakra-ui/react'
 import { BeetsBox } from '~/components/box/BeetsBox';
 import { ModalSectionHeadline } from '~/components/modal/ModalSectionHeadline';
 import { SlippageTextLinkMenu } from '~/components/slippage/SlippageTextLinkMenu';
+import { CardRow } from '~/components/card/CardRow';
 
 export function PoolInvestSettings({ ...rest }: BoxProps) {
     const [zapEnabled, { toggle: toggleZapEnabled }] = useBoolean(true);
@@ -11,35 +12,23 @@ export function PoolInvestSettings({ ...rest }: BoxProps) {
     return (
         <Box {...rest}>
             <ModalSectionHeadline headline={`Settings`} />
-            <BeetsBox>
-                <BeetsBoxLineItem
-                    leftContent={
-                        <>
-                            <Flex alignItems="center">
-                                {/*<Box mr="1">
-                                    <Zap size={18} />
-                                </Box>*/}
-                                <InfoButton
-                                    label="Zap into farm"
-                                    moreInfoUrl="https://docs.beets.fi"
-                                    infoText="With ZAP enabled, your investment BPTs are automatically deposited to the farm, saving time & maximizing yield."
-                                />
-                            </Flex>
-                            <Text color="gray.200" fontSize="sm">
-                                Deposit my BPTs directly into the farm with ZAP.
-                            </Text>
-                        </>
-                    }
-                    rightContent={
-                        <Switch
-                            id="zap-into-farm"
-                            colorScheme="green"
-                            isChecked={zapEnabled}
-                            onChange={toggleZapEnabled}
-                        />
-                    }
-                >
-                    {/*<Collapse in={zapEnabled} animateOpacity>
+            <BeetsBox p="2">
+                <CardRow>
+                    <Box flex="1">
+                        <Flex alignItems="center">
+                            <InfoButton
+                                label="Zap into farm"
+                                moreInfoUrl="https://docs.beets.fi"
+                                infoText="With ZAP enabled, your investment BPTs are automatically deposited to the farm, saving time & maximizing yield."
+                            />
+                        </Flex>
+                        <Text color="gray.200" fontSize="sm">
+                            Deposit my BPTs directly into the farm with ZAP.
+                        </Text>
+                    </Box>
+                    <Switch id="zap-into-farm" colorScheme="green" isChecked={zapEnabled} onChange={toggleZapEnabled} />
+                </CardRow>
+                {/*<Collapse in={zapEnabled} animateOpacity>
                         <Flex mt="2" alignItems="center">
                             <Box flex="1">
                                 <InfoButton
@@ -55,9 +44,8 @@ export function PoolInvestSettings({ ...rest }: BoxProps) {
                             </Box>
                         </Flex>
                     </Collapse>*/}
-                </BeetsBoxLineItem>
 
-                <Flex px="3" py="2" justifyContent="center" borderBottomWidth={0}>
+                <CardRow mb="0">
                     <Box flex="1">
                         <InfoButton
                             label="Max slippage"
@@ -65,9 +53,9 @@ export function PoolInvestSettings({ ...rest }: BoxProps) {
                             infoText="The maximum amount of slippage that you're willing to accept for the transaction."
                         />
                     </Box>
-
                     <SlippageTextLinkMenu />
-                </Flex>
+                </CardRow>
+
                 {/*<Flex px="3" py="2" alignItems="center">
                             <Box flex="1">
                                 <InfoButton

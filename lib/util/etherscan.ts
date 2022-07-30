@@ -11,3 +11,11 @@ export function etherscanGetAddressUrl(address: string): string {
 export function etherscanGetTxUrl(tx: string): string {
     return `${networkConfig.etherscanUrl}/tx/${tx}`;
 }
+
+export function etherscanGetBlockUrl(blockNumber: number): string {
+    return `${networkConfig.etherscanUrl}/block/${blockNumber}`;
+}
+
+export function etherscanTxShortenForDisplay(txHash: string) {
+    return txHash.slice(0, 12) + '...';
+}

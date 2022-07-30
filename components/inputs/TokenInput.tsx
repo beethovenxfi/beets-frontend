@@ -1,4 +1,4 @@
-import { Box, Button, Text, VStack, HStack } from '@chakra-ui/react';
+import { Box, Button, Text, VStack, HStack, Tooltip } from '@chakra-ui/react';
 import { useGetTokens } from '~/lib/global/useToken';
 import TokenAvatar from '../token/TokenAvatar';
 import BeetsInput from './BeetsInput';
@@ -6,7 +6,7 @@ import { tokenFormatAmountPrecise, tokenGetAmountForAddress } from '~/lib/servic
 import { useUserTokenBalances } from '~/lib/user/useUserTokenBalances';
 import { useUserAccount } from '~/lib/user/useUserAccount';
 import PresetSelector from './PresetSelector';
-import { ChevronDown } from 'react-feather';
+import { ChevronDown, Lock } from 'react-feather';
 import numeral from 'numeral';
 import { KeyboardEvent } from 'react';
 import { tokenInputBlockInvalidCharacters, tokenInputTruncateDecimalPlaces } from '~/lib/util/input-util';
@@ -20,6 +20,7 @@ type Props = {
     value?: string | null;
     showBalance?: boolean;
     showPresets?: boolean;
+    requiresApproval?: boolean;
 };
 
 export default function TokenInput({
@@ -28,6 +29,7 @@ export default function TokenInput({
     address,
     onChange,
     value,
+    requiresApproval,
     showBalance = true,
     showPresets,
 }: Props) {
@@ -66,7 +68,18 @@ export default function TokenInput({
                     wrapperProps={{ height: '125px' }}
                     headingProps={{ marginTop: '2', fontSize: '.85rem' }}
                     paddingBottom="5"
-                />
+                >
+                    {requiresApproval && (
+                        <Box position="absolute" color="orange" top=".5rem" right=".75rem" mt="1">
+                            <Tooltip
+                                label={`Before swapping, you'll need to give the Beethoven X vault contract permission to move ${token?.symbol} on your behalf.`}
+                                hasArrow
+                            >
+                                <Lock size={16} />
+                            </Tooltip>
+                        </Box>
+                    )}
+                </BeetsInput>
                 <Box position="absolute" left=".75rem" top="50%" transform="translateY(-50%)">
                     <VStack spacing="none">
                         <Button

@@ -16,16 +16,17 @@ export function useTradeCard() {
         reactiveTradeState,
         loadSwaps: _loadSwaps,
         loadingSwaps,
-        setPreviewVisible,
         clearSwaps,
         setTradeConfig,
         getLatestState,
         setTokens,
         networkStatus,
-        swaps,
+        swapInfo,
+        tradeStartPolling,
+        tradeStopPolling,
     } = useTrade();
 
-    // refetching the swaps may not always trigger the query loading state,
+    // refetching the swapInfo may not always trigger the query loading state,
     // so we use a fallback flag to make sure that we always have some loading
     // even if the query is retrieving the 'same' value from the cache.
     const [isFetching, setIsFetching] = useBoolean();
@@ -44,7 +45,7 @@ export function useTradeCard() {
 
     const isLoadingOrFetching = loadingSwaps || isFetching || networkStatus === NetworkStatus.refetch;
     const hasAmount = parseFloat(sellAmountVar()) > 0 || parseFloat(buyAmountVar()) > 0;
-    const isNotEnoughLiquidity = swaps && swaps.swaps.length === 0 && hasAmount;
+    const isNotEnoughLiquidity = swapInfo && swapInfo.swaps.length === 0 && hasAmount;
 
     useEffect(() => {
         //TODO: load token in/out from url if passed in
@@ -55,7 +56,6 @@ export function useTradeCard() {
 
     const fetchTrade = async (type: GqlSorSwapType, amount: string) => {
         setTradeConfig(type, amount);
-        setPreviewVisible(false);
 
         const trade = await _loadSwaps(type, amount);
         const resultAmount = trade?.returnAmount || '0';
@@ -139,13 +139,12 @@ export function useTradeCard() {
         const sellAmount = sellAmountVar();
         const buyAmount = buyAmountVar();
 
+        tradeStateVar({ ...tradeStateVar(), sorResponse: null });
+
         setTokens({ tokenIn: state.tokenOut, tokenOut: state.tokenIn });
         setBuyAmount(sellAmount);
         setSellAmount(buyAmount);
-    };
-
-    const handleReviewClicked = () => {
-        setPreviewVisible(true);
+        dFetchTrade('EXACT_IN', sellAmount);
     };
 
     function refetchTrade() {
@@ -171,7 +170,8 @@ export function useTradeCard() {
         handleSellAmountChanged,
         handleBuyAmountChanged,
         handleTokensSwitched,
-        handleReviewClicked,
         refetchTrade,
+        tradeStartPolling,
+        tradeStopPolling,
     };
 }

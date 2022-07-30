@@ -1,13 +1,14 @@
 import { usePool } from '~/modules/pool/lib/usePool';
 import { useInvestState } from '~/modules/pool/invest/lib/useInvestState';
 import { usePoolUserTokenBalancesInWallet } from '~/modules/pool/lib/usePoolUserTokenBalancesInWallet';
-import { Box, Text } from '@chakra-ui/react';
+import { Box, Text, Collapse, Checkbox, useBoolean, Alert, AlertIcon } from '@chakra-ui/react';
 import { PoolInvestSummary } from '~/modules/pool/invest/components/PoolInvestSummary';
 import { PoolInvestSettings } from '~/modules/pool/invest/components/PoolInvestSettings';
 import BeetsButton from '~/components/button/Button';
 import { useInvest } from '~/modules/pool/invest/lib/useInvest';
 import { BeetsTokenInputWithSlider } from '~/components/inputs/BeetsTokenInputWithSlider';
-
+import { usePoolJoinGetBptOutAndPriceImpactForTokensIn } from '~/modules/pool/invest/lib/usePoolJoinGetBptOutAndPriceImpactForTokensIn';
+import numeral from 'numeral';
 interface Props {
     onShowPreview(): void;
 }
@@ -17,6 +18,8 @@ export function PoolInvestCustom({ onShowPreview }: Props) {
     const { inputAmounts, setInputAmount, setSelectedOption } = useInvestState();
     const { selectedInvestTokens } = useInvest();
     const { userPoolTokenBalances } = usePoolUserTokenBalancesInWallet();
+    const { hasHighPriceImpact, formattedPriceImpact } = usePoolJoinGetBptOutAndPriceImpactForTokensIn();
+    const [acknowledgeHighPriceImpact, { toggle: toggleAcknowledgeHighPriceImpact }] = useBoolean(false);
 
     return (
         <Box mt="4">
@@ -41,7 +44,21 @@ export function PoolInvestCustom({ onShowPreview }: Props) {
             ))}
             <PoolInvestSummary mt="6" />
             <PoolInvestSettings mt="8" />
-            <BeetsButton isFullWidth mt="8" onClick={onShowPreview}>
+            <Collapse in={hasHighPriceImpact} animateOpacity>
+                <Alert status="error" borderRadius="md" mt="4">
+                    <Checkbox
+                        id="high-price-impact-acknowledge"
+                        isChecked={acknowledgeHighPriceImpact}
+                        colorScheme="red"
+                        onChange={toggleAcknowledgeHighPriceImpact}
+                        spacing="1rem"
+                    >
+                        I confirm that my custom investment will result in a {formattedPriceImpact} price impact,
+                        subjecting me to fees and possible impermanent loss.
+                    </Checkbox>
+                </Alert>
+            </Collapse>
+            <BeetsButton isFullWidth mt="8" onClick={onShowPreview} isDisabled={!acknowledgeHighPriceImpact}>
                 Preview
             </BeetsButton>
         </Box>

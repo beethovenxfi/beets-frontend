@@ -1,11 +1,11 @@
-import { makeVar, useReactiveVar } from '@apollo/client';
+import { makeVar, NetworkStatus, useReactiveVar } from '@apollo/client';
 import {
-    GqlSorGetSwapsResponse,
     GqlSorGetSwapsResponseFragment,
     GqlSorSwapType,
     useGetSorSwapsLazyQuery,
 } from '~/apollo/generated/graphql-codegen-generated';
 import { networkConfig } from '~/lib/config/network-config';
+import { useEffect } from 'react';
 
 type TradeState = {
     tokenIn: string;
@@ -13,10 +13,6 @@ type TradeState = {
     swapType: GqlSorSwapType;
     swapAmount: string | null;
     sorResponse: GqlSorGetSwapsResponseFragment | null;
-};
-
-type TradeContext = {
-    isPreviewVisible: boolean;
 };
 
 export const tradeStateVar = makeVar<TradeState>({
@@ -27,24 +23,41 @@ export const tradeStateVar = makeVar<TradeState>({
     sorResponse: null,
 });
 
-const tradeContextVar = makeVar<TradeContext>({
-    isPreviewVisible: false,
-});
+const lastFetchTimestampVar = makeVar<Date | null>(null);
+const isFetchingVar = makeVar(false);
 
 export function useTrade() {
     // swap related data
     const reactiveTradeState = useReactiveVar(tradeStateVar);
     // overarching trade context
 
-    const tradeContext = useReactiveVar(tradeContextVar);
+    const priceImpact = parseFloat(reactiveTradeState.sorResponse?.priceImpact || '0');
+    const hasNoticeablePriceImpact = priceImpact >= networkConfig.priceImpact.trade.noticeable;
+    const hasHighPriceImpact = priceImpact >= networkConfig.priceImpact.trade.high;
+
     // make sure not to cache as this data needs to be always fresh
-    const [load, { loading, error, data, networkStatus }] = useGetSorSwapsLazyQuery({
-        //fetchPolicy: 'no-cache',
-        pollInterval: 15000,
-        notifyOnNetworkStatusChange: true,
-    });
+    const [load, { loading, error, data, networkStatus, stopPolling: tradeStopPolling, startPolling }] =
+        useGetSorSwapsLazyQuery({
+            fetchPolicy: 'no-cache',
+            pollInterval: 30000,
+            notifyOnNetworkStatusChange: true,
+        });
+
+    useEffect(() => {
+        if (loading && !isFetchingVar()) {
+            isFetchingVar(true);
+        } else if (!loading && isFetchingVar()) {
+            isFetchingVar(false);
+            lastFetchTimestampVar(new Date());
+        }
+    }, [loading]);
+
+    function tradeStartPolling() {
+        startPolling(30000);
+    }
 
     async function loadSwaps(type: GqlSorSwapType, amount: string) {
+        tradeStopPolling();
         const state = getLatestState();
 
         if (!state.tokenIn || !state.tokenOut || (!state.swapType && !type) || (!state.swapAmount && !amount)) {
@@ -66,6 +79,8 @@ export function useTrade() {
         const swaps = data?.swaps || null;
         tradeStateVar({ ...state, swapAmount: amount || '0', sorResponse: swaps });
 
+        tradeStartPolling();
+
         return swaps;
     }
 
@@ -84,13 +99,6 @@ export function useTrade() {
         });
     }
 
-    function setPreviewVisible(visible: boolean) {
-        tradeContextVar({
-            ...tradeContext,
-            isPreviewVisible: visible,
-        });
-    }
-
     function setTokens(input: { tokenIn?: string; tokenOut?: string }) {
         tradeStateVar({
             ...tradeStateVar(),
@@ -106,14 +114,18 @@ export function useTrade() {
         loadSwaps,
         clearSwaps,
         reactiveTradeState,
-        swaps: reactiveTradeState.sorResponse,
+        swapInfo: reactiveTradeState.sorResponse,
         loadingSwaps: loading,
         error,
         networkStatus,
-        tradeContext,
         setTradeConfig,
-        setPreviewVisible,
         setTokens,
         getLatestState,
+        tradeStartPolling,
+        tradeStopPolling,
+        lastFetchTimestamp: lastFetchTimestampVar(),
+        priceImpact,
+        hasNoticeablePriceImpact,
+        hasHighPriceImpact,
     };
 }

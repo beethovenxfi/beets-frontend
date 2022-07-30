@@ -11,7 +11,7 @@ import { UseWaitForTransactionConfig } from 'wagmi/dist/declarations/src/hooks/t
 import { useRef } from 'react';
 import { useAddRecentTransaction } from '@rainbow-me/rainbowkit';
 import { makeVar } from '@apollo/client';
-import { TransactionResponse } from '@ethersproject/providers';
+import { TransactionReceipt, TransactionResponse } from '@ethersproject/providers';
 
 interface Props {
     contractConfig: Omit<WriteContractArgs, 'signerOrProvider'>;
@@ -34,6 +34,9 @@ export interface SubmitTransactionQuery {
     isFailed: boolean;
     error: Error | null;
     reset: () => void;
+
+    txResponse?: TransactionResponse;
+    txReceipt?: TransactionReceipt;
 }
 
 export const vaultContractConfig = {
@@ -141,5 +144,7 @@ export function useSubmitTransaction({
         isFailed: waitForTransaction.isError,
         error: waitForTransaction.error,
         reset: contractWrite.reset,
+        txResponse: contractWrite.data,
+        txReceipt: waitForTransaction.data,
     };
 }

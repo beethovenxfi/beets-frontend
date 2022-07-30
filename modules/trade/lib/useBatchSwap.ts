@@ -1,18 +1,11 @@
 import { useSubmitTransaction, vaultContractConfig } from '~/lib/util/useSubmitTransaction';
-import {
-    GqlPoolUnion,
-    GqlSorGetSwapsResponse,
-    GqlSorGetSwapsResponseFragment,
-    GqlSorSwapType,
-} from '~/apollo/generated/graphql-codegen-generated';
-import { PoolExitContractCallData } from '~/lib/services/pool/pool-types';
+import { GqlSorGetSwapsResponseFragment } from '~/apollo/generated/graphql-codegen-generated';
 import { useAccount } from 'wagmi';
-import { tokenAmountsConcatenatedString } from '~/lib/services/token/token-util';
 import { isSameAddress } from '@balancer-labs/sdk';
 import { useSlippage } from '~/lib/global/useSlippage';
 import { useGetTokens } from '~/lib/global/useToken';
 import { parseUnits } from 'ethers/lib/utils';
-import { oldBnum, oldBnumScaleAmount } from '~/lib/services/pool/lib/old-big-number';
+import { oldBnumScaleAmount } from '~/lib/services/pool/lib/old-big-number';
 import { MaxUint256 } from '@ethersproject/constants';
 
 export function useBatchSwap() {
