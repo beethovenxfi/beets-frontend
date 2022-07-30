@@ -18,7 +18,7 @@ export function PoolInvestModal() {
 
     return (
         <>
-            <BeetsButton onClick={onOpen} width="140px">
+            <BeetsButton onClick={onOpen} width={{ base: 'full', md: '140px' }} mr="2">
                 Invest
             </BeetsButton>
             <Modal
