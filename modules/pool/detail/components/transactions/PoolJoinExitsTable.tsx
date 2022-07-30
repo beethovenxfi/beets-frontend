@@ -18,8 +18,6 @@ export function PoolJoinExitsTable() {
         notifyOnNetworkStatusChange: true,
     });
 
-    const isPhantomStable = pool.__typename === 'GqlPoolPhantomStable';
-
     const isFetchingMoreInvestments = investmentsStatus === NetworkStatus.fetchMore;
 
     const transactions = useMemo(() => {

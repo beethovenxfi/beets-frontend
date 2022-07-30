@@ -8,6 +8,7 @@ import { PoolSwapsTable } from '~/modules/pool/detail/components/transactions/Po
 import { PoolJoinExitsTable } from '~/modules/pool/detail/components/transactions/PoolJoinExitsTable';
 import { PoolUserInvestmentsTable } from '~/modules/pool/detail/components/transactions/PoolUserInvestmentsTable';
 import { ChevronDown } from 'react-feather';
+import { PoolUserSwapsTable } from '~/modules/pool/detail/components/transactions/PoolUserSwapsTable';
 
 type Props = {};
 
@@ -49,8 +50,8 @@ export function PoolTransactions({ ...rest }: Props & BoxProps) {
                     </TabList>
 
                     {activeTab === 0 && <PoolDetailAboutThisPool />}
-                    {activeTab === 1 && <PoolJoinExitsTable />}
-                    {activeTab === 2 && <PoolSwapsTable />}
+                    {activeTab === 1 && (isPhantomStable ? <PoolSwapsTable /> : <PoolJoinExitsTable />)}
+                    {activeTab === 2 && (isPhantomStable ? <PoolUserSwapsTable /> : <PoolSwapsTable />)}
                     {activeTab === 3 && <PoolUserInvestmentsTable />}
                 </VStack>
             </Tabs>
