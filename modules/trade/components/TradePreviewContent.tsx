@@ -1,4 +1,15 @@
-import { Alert, AlertIcon, Box, Flex, Link, Text } from '@chakra-ui/react';
+import {
+    Alert,
+    AlertDescription,
+    AlertIcon,
+    AlertTitle,
+    Box,
+    Checkbox,
+    Flex,
+    Link,
+    Text,
+    useCheckbox,
+} from '@chakra-ui/react';
 import { useRef, useState } from 'react';
 import Card from '~/components/card/Card';
 import { BeetsSubmitTransactionButton } from '~/components/button/BeetsSubmitTransactionButton';
@@ -28,7 +39,7 @@ interface Props {
 }
 
 export function TradePreviewContent({ query, onTransactionSubmitted }: Props) {
-    const { reactiveTradeState } = useTrade();
+    const { reactiveTradeState, hasNoticeablePriceImpact, hasHighPriceImpact, priceImpact } = useTrade();
     const { getToken, formattedPrice, priceForAmount, priceFor } = useGetTokens();
     const { slippage } = useSlippage();
     const swapInfo = reactiveTradeState.sorResponse;
@@ -52,8 +63,6 @@ export function TradePreviewContent({ query, onTransactionSubmitted }: Props) {
             .times(1 - parseFloat(slippage))
             .toString(),
     );
-    const hasHighPriceImpact = parseFloat(swapInfo.priceImpact) > 0.05;
-    const hasMedPriceImpact = parseFloat(swapInfo.priceImpact) > 0.015;
 
     const exchangeRate = parseFloat(swapInfo.tokenOutAmount) / parseFloat(swapInfo.tokenInAmount);
     const reverseExchangeRate = parseFloat(swapInfo.tokenInAmount) / parseFloat(swapInfo.tokenOutAmount);
@@ -173,7 +182,7 @@ export function TradePreviewContent({ query, onTransactionSubmitted }: Props) {
                                 infoText="Lorem ipsum dolor...."
                             />
                         </Box>
-                        <Box color={hasHighPriceImpact ? 'white' : hasMedPriceImpact ? 'orange' : 'current'}>
+                        <Box color={hasHighPriceImpact ? 'white' : hasNoticeablePriceImpact ? 'orange' : 'current'}>
                             {numeral(swapInfo.priceImpact).format('0.00%')}
                         </Box>
                     </CardRow>
@@ -213,6 +222,16 @@ export function TradePreviewContent({ query, onTransactionSubmitted }: Props) {
                     </CardRow>
                 </Card>
             </Box>
+            <Alert status="error" mt="4" display="flex" alignItems="flex-start">
+                <Checkbox
+                    colorScheme="red"
+                    mt="1"
+                    mr="4"
+                    isChecked={highPiAccepted}
+                    onChange={() => setHighPiAccepted(!highPiAccepted)}
+                />
+                <Box>I understand that this trade will significantly move the market price.</Box>
+            </Alert>
             <BeetsSubmitTransactionButton
                 {...query}
                 isDisabled={hasHighPriceImpact && !highPiAccepted}

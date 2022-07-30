@@ -1033,6 +1033,10 @@ export interface MutationLgeCreateArgs {
     signature: Scalars['String'];
 }
 
+export interface MutationPoolSyncLatestSnapshotsForAllPoolsArgs {
+    daysToSync?: InputMaybe<Scalars['Int']>;
+}
+
 export interface MutationTokenInitChartDataArgs {
     tokenAddress: Scalars['String'];
 }
