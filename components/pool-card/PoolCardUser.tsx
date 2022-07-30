@@ -27,6 +27,7 @@ export function PoolCardUser({ pool, balance, balanceUSD, ...rest }: Props) {
                         .map((token) => ({ address: token.address, ...(token.weight && { weight: token.weight }) }))}
                     width={104}
                     imageSize={28}
+                    renderPopover={false}
                 />
                 <Box mt="6" color="gray.200" fontSize="sm">
                     My balance:

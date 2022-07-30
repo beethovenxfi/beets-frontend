@@ -23,6 +23,7 @@ export function PoolCard({ pool, ...rest }: Props) {
                         .map((token) => ({ address: token.address, ...(token.weight && { weight: token.weight }) }))}
                     width={140}
                     imageSize={32}
+                    renderPopover={false}
                 />
                 <Box flex="1" pt="6">
                     <AprTooltip
