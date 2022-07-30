@@ -8,7 +8,6 @@ import BeetsButton from '~/components/button/Button';
 import { useInvest } from '~/modules/pool/invest/lib/useInvest';
 import { BeetsTokenInputWithSlider } from '~/components/inputs/BeetsTokenInputWithSlider';
 import { usePoolJoinGetBptOutAndPriceImpactForTokensIn } from '~/modules/pool/invest/lib/usePoolJoinGetBptOutAndPriceImpactForTokensIn';
-import { useEffect } from 'react';
 interface Props {
     onShowPreview(): void;
 }
