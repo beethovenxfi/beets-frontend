@@ -1084,7 +1084,6 @@ export interface Query {
     userGetPoolBalances: Array<GqlUserPoolBalance>;
     userGetPoolJoinExits: Array<GqlPoolJoinExit>;
     userGetStaking: Array<GqlPoolStaking>;
-    userGetSwaps: Array<GqlPoolSwap>;
 }
 
 export interface QueryLgeArgs {
@@ -1187,12 +1186,6 @@ export interface QueryTokenGetTokensDynamicDataArgs {
 }
 
 export interface QueryUserGetPoolJoinExitsArgs {
-    first?: InputMaybe<Scalars['Int']>;
-    poolId: Scalars['String'];
-    skip?: InputMaybe<Scalars['Int']>;
-}
-
-export interface QueryUserGetSwapsArgs {
     first?: InputMaybe<Scalars['Int']>;
     poolId: Scalars['String'];
     skip?: InputMaybe<Scalars['Int']>;
@@ -3174,28 +3167,6 @@ export type GetPoolUserJoinExitsQuery = {
     }>;
 };
 
-export type GetUserSwapsQueryVariables = Exact<{
-    first?: InputMaybe<Scalars['Int']>;
-    skip?: InputMaybe<Scalars['Int']>;
-    poolId: Scalars['String'];
-}>;
-
-export type GetUserSwapsQuery = {
-    __typename: 'Query';
-    swaps: Array<{
-        __typename: 'GqlPoolSwap';
-        id: string;
-        poolId: string;
-        timestamp: number;
-        tokenAmountIn: string;
-        tokenAmountOut: string;
-        tokenIn: string;
-        tokenOut: string;
-        tx: string;
-        valueUSD: number;
-    }>;
-};
-
 export type GetPoolSnapshotsQueryVariables = Exact<{
     poolId: Scalars['String'];
     range: GqlPoolSnapshotDataRange;
@@ -4946,55 +4917,6 @@ export type GetPoolUserJoinExitsQueryResult = Apollo.QueryResult<
     GetPoolUserJoinExitsQuery,
     GetPoolUserJoinExitsQueryVariables
 >;
-export const GetUserSwapsDocument = gql`
-    query GetUserSwaps($first: Int, $skip: Int, $poolId: String!) {
-        swaps: userGetSwaps(first: $first, skip: $skip, poolId: $poolId) {
-            id
-            poolId
-            timestamp
-            tokenAmountIn
-            tokenAmountOut
-            tokenIn
-            tokenOut
-            tx
-            valueUSD
-        }
-    }
-`;
-
-/**
- * __useGetUserSwapsQuery__
- *
- * To run a query within a React component, call `useGetUserSwapsQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetUserSwapsQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetUserSwapsQuery({
- *   variables: {
- *      first: // value for 'first'
- *      skip: // value for 'skip'
- *      poolId: // value for 'poolId'
- *   },
- * });
- */
-export function useGetUserSwapsQuery(
-    baseOptions: Apollo.QueryHookOptions<GetUserSwapsQuery, GetUserSwapsQueryVariables>,
-) {
-    const options = { ...defaultOptions, ...baseOptions };
-    return Apollo.useQuery<GetUserSwapsQuery, GetUserSwapsQueryVariables>(GetUserSwapsDocument, options);
-}
-export function useGetUserSwapsLazyQuery(
-    baseOptions?: Apollo.LazyQueryHookOptions<GetUserSwapsQuery, GetUserSwapsQueryVariables>,
-) {
-    const options = { ...defaultOptions, ...baseOptions };
-    return Apollo.useLazyQuery<GetUserSwapsQuery, GetUserSwapsQueryVariables>(GetUserSwapsDocument, options);
-}
-export type GetUserSwapsQueryHookResult = ReturnType<typeof useGetUserSwapsQuery>;
-export type GetUserSwapsLazyQueryHookResult = ReturnType<typeof useGetUserSwapsLazyQuery>;
-export type GetUserSwapsQueryResult = Apollo.QueryResult<GetUserSwapsQuery, GetUserSwapsQueryVariables>;
 export const GetPoolSnapshotsDocument = gql`
     query GetPoolSnapshots($poolId: String!, $range: GqlPoolSnapshotDataRange!) {
         snapshots: poolGetSnapshots(id: $poolId, range: $range) {
