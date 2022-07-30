@@ -14,7 +14,9 @@ import { AnimatePresence, AnimateSharedLayout, motion } from 'framer-motion';
 export function TradeContainer() {
     const { priceFor } = useGetTokens();
     const { tokenInData, tokenOutData, tokenInDynamicData, tokenOutDynamicData, tokenOut, tokenIn } = useTradeData();
-    const { swaps } = useTrade();
+    const { swapInfo, loadingSwaps } = useTrade();
+    const showRouting = loadingSwaps || (swapInfo && swapInfo.swaps.length > 0);
+    const hasNoRoute = !loadingSwaps && (!swapInfo || swapInfo.swaps.length === 0);
 
     return (
         <Grid
@@ -42,7 +44,7 @@ export function TradeContainer() {
                 // @ts-ignore */}
                 <AnimateSharedLayout>
                     <AnimatePresence>
-                        {swaps && swaps.swaps.length > 0 && (
+                        {swapInfo && swapInfo.swaps.length > 0 && (
                             <motion.div layout initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
                                 <Text fontSize="xl" fontWeight="bold" lineHeight="1.2rem" mt="8">
                                     Smart order routing
@@ -54,7 +56,7 @@ export function TradeContainer() {
                             </motion.div>
                         )}
                     </AnimatePresence>
-                    {swaps && swaps.swaps.length > 0 && <BatchSwapSorRoute swapInfo={swaps} />}
+                    {swapInfo && swapInfo.swaps.length > 0 && <BatchSwapSorRoute swapInfo={swapInfo} />}
 
                     <motion.div layout>
                         <Text fontSize="xl" fontWeight="bold" lineHeight="1.2rem" mt="8">

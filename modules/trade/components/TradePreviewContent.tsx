@@ -55,7 +55,8 @@ export function TradePreviewContent({ query, onTransactionSubmitted }: Props) {
     const hasHighPriceImpact = parseFloat(swapInfo.priceImpact) > 0.05;
     const hasMedPriceImpact = parseFloat(swapInfo.priceImpact) > 0.015;
 
-    const exchangeRate = parseFloat(swapInfo.tokenInAmount) / parseFloat(swapInfo.tokenOutAmount);
+    const exchangeRate = parseFloat(swapInfo.tokenOutAmount) / parseFloat(swapInfo.tokenInAmount);
+    const reverseExchangeRate = parseFloat(swapInfo.tokenInAmount) / parseFloat(swapInfo.tokenOutAmount);
     const valueIn = priceForAmount({ address: swapInfo.tokenIn, amount: swapInfo.tokenInAmount });
     const tokenOutSwapPrice = valueIn / parseFloat(swapInfo.tokenOutAmount);
     const diff = priceFor(swapInfo.tokenOut) / tokenOutSwapPrice - 1;
@@ -138,15 +139,27 @@ export function TradePreviewContent({ query, onTransactionSubmitted }: Props) {
                 <Card p="2">
                     <CardRow>
                         <Box flex="1">Effective price</Box>
-                        <Box fontWeight="bold">
-                            1{' '}
-                            <Text as="span" fontSize="sm" fontWeight="normal">
-                                {tokenOut?.symbol} =
-                            </Text>{' '}
-                            {tokenFormatAmount(exchangeRate)}{' '}
-                            <Text as="span" fontSize="sm" fontWeight="normal">
-                                {tokenIn?.symbol}
-                            </Text>
+                        <Box>
+                            <Box fontWeight="bold" textAlign="right">
+                                1{' '}
+                                <Text as="span" fontSize="sm" fontWeight="normal">
+                                    {tokenIn?.symbol} =
+                                </Text>{' '}
+                                {tokenFormatAmount(exchangeRate)}{' '}
+                                <Text as="span" fontSize="sm" fontWeight="normal">
+                                    {tokenOut?.symbol}
+                                </Text>
+                            </Box>
+                            <Box fontWeight="bold" textAlign="right">
+                                1{' '}
+                                <Text as="span" fontSize="sm" fontWeight="normal">
+                                    {tokenOut?.symbol} =
+                                </Text>{' '}
+                                {tokenFormatAmount(reverseExchangeRate)}{' '}
+                                <Text as="span" fontSize="sm" fontWeight="normal">
+                                    {tokenIn?.symbol}
+                                </Text>
+                            </Box>
                         </Box>
                     </CardRow>
                     <CardRow

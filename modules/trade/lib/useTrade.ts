@@ -110,7 +110,7 @@ export function useTrade() {
         loadSwaps,
         clearSwaps,
         reactiveTradeState,
-        swaps: reactiveTradeState.sorResponse,
+        swapInfo: reactiveTradeState.sorResponse,
         loadingSwaps: loading,
         error,
         networkStatus,

@@ -21,7 +21,7 @@ export function useTradeCard() {
         getLatestState,
         setTokens,
         networkStatus,
-        swaps,
+        swapInfo,
         tradeStartPolling,
         tradeStopPolling,
     } = useTrade();
@@ -45,7 +45,7 @@ export function useTradeCard() {
 
     const isLoadingOrFetching = loadingSwaps || isFetching || networkStatus === NetworkStatus.refetch;
     const hasAmount = parseFloat(sellAmountVar()) > 0 || parseFloat(buyAmountVar()) > 0;
-    const isNotEnoughLiquidity = swaps && swaps.swaps.length === 0 && hasAmount;
+    const isNotEnoughLiquidity = swapInfo && swapInfo.swaps.length === 0 && hasAmount;
 
     useEffect(() => {
         //TODO: load token in/out from url if passed in
