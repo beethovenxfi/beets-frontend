@@ -1,10 +1,11 @@
-import { Box, BoxProps, Flex, Text, Divider } from '@chakra-ui/react';
+import { Box, BoxProps, Flex, Text, Divider, LinkBox } from '@chakra-ui/react';
 import AprTooltip from '~/components/apr-tooltip/AprTooltip';
 import TokenAvatarSet from '~/components/token/TokenAvatarSet';
 import { GqlPoolCardDataFragment } from '~/apollo/generated/graphql-codegen-generated';
 import numeral from 'numeral';
 import { numberFormatUSDValue } from '~/lib/util/number-formats';
 import { tokenFormatAmount } from '~/lib/services/token/token-util';
+import { NextLinkOverlay } from '~/components/link/NextLink';
 
 interface Props extends BoxProps {
     pool: GqlPoolCardDataFragment;
@@ -16,10 +17,12 @@ export function PoolCardUser({ pool, balance, balanceUSD, ...rest }: Props) {
     const dailyApr = parseFloat(pool.dynamicData.apr.total) / 365;
 
     return (
-        <Box flex="1" {...rest}>
+        <LinkBox as="article" flex="1" {...rest}>
             <Flex bgColor="whiteAlpha.100" borderRadius="md" p="4" flexDirection="column" height="327px">
                 <Box fontSize="lg" pb="6" flex="1">
-                    <Text noOfLines={2}>{pool.name}</Text>
+                    <NextLinkOverlay href={`pool/${pool.id}`}>
+                        <Text noOfLines={2}>{pool.name}</Text>
+                    </NextLinkOverlay>
                 </Box>
                 <TokenAvatarSet
                     tokenData={pool.allTokens
@@ -47,6 +50,6 @@ export function PoolCardUser({ pool, balance, balanceUSD, ...rest }: Props) {
                     <Text color="gray.200">{numeral(dailyApr).format('0.00[0]%')} Daily</Text>
                 </Box>
             </Flex>
-        </Box>
+        </LinkBox>
     );
 }
