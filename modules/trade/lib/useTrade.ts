@@ -31,6 +31,10 @@ export function useTrade() {
     const reactiveTradeState = useReactiveVar(tradeStateVar);
     // overarching trade context
 
+    const priceImpact = parseFloat(reactiveTradeState.sorResponse?.priceImpact || '0');
+    const hasNoticeablePriceImpact = priceImpact >= networkConfig.priceImpact.trade.noticeable;
+    const hasHighPriceImpact = priceImpact >= networkConfig.priceImpact.trade.high;
+
     // make sure not to cache as this data needs to be always fresh
     const [load, { loading, error, data, networkStatus, stopPolling: tradeStopPolling, startPolling }] =
         useGetSorSwapsLazyQuery({
@@ -120,5 +124,8 @@ export function useTrade() {
         tradeStartPolling,
         tradeStopPolling,
         lastFetchTimestamp: lastFetchTimestampVar(),
+        priceImpact,
+        hasNoticeablePriceImpact,
+        hasHighPriceImpact,
     };
 }

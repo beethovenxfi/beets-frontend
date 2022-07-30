@@ -45,4 +45,14 @@ export interface NetworkConfig {
     defaultTokenOut: string;
     additionalLinks: { url: string; title: string; subTitle?: string }[];
     farmTypeName: string;
+    priceImpact: {
+        invest: {
+            noticeable: number;
+            high: number;
+        };
+        trade: {
+            noticeable: number;
+            high: number;
+        };
+    };
 }
