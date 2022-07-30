@@ -51,11 +51,13 @@ export function PoolInvestCustom({ onShowPreview }: Props) {
                         isChecked={acknowledgeHighPriceImpact}
                         colorScheme="red"
                         onChange={toggleAcknowledgeHighPriceImpact}
-                        spacing="1rem"
-                    >
+                        mt="1"
+                        mr="2"
+                    />
+                    <Box>
                         I confirm that my custom investment will result in a {formattedPriceImpact} price impact,
                         subjecting me to fees and possible impermanent loss.
-                    </Checkbox>
+                    </Box>
                 </Alert>
             </Collapse>
             <BeetsButton isFullWidth mt="8" onClick={onShowPreview} isDisabled={!acknowledgeHighPriceImpact}>
