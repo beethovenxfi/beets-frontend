@@ -18,8 +18,6 @@ export function PoolJoinExitsTable() {
         notifyOnNetworkStatusChange: true,
     });
 
-    const isPhantomStable = pool.__typename === 'GqlPoolPhantomStable';
-
     const isFetchingMoreInvestments = investmentsStatus === NetworkStatus.fetchMore;
 
     const transactions = useMemo(() => {
@@ -36,15 +34,18 @@ export function PoolJoinExitsTable() {
     };
 
     return (
-        <PaginatedTable
-            isInfinite
-            width="full"
-            items={transactions}
-            loading={false}
-            fetchingMore={isFetchingMoreInvestments}
-            renderTableHeader={() => <PoolTransactionHeader />}
-            renderTableRow={(item, index) => <PoolTransactionItem transaction={item} />}
-            onFetchMore={handleFetchMoreTransactions}
-        />
+        <>
+            test
+            <PaginatedTable
+                isInfinite
+                width="full"
+                items={transactions}
+                loading={false}
+                fetchingMore={isFetchingMoreInvestments}
+                renderTableHeader={() => <PoolTransactionHeader />}
+                renderTableRow={(item, index) => <PoolTransactionItem transaction={item} />}
+                onFetchMore={handleFetchMoreTransactions}
+            />
+        </>
     );
 }
