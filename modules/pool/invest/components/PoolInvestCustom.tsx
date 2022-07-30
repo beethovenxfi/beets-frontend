@@ -60,7 +60,12 @@ export function PoolInvestCustom({ onShowPreview }: Props) {
                     </Box>
                 </Alert>
             </Collapse>
-            <BeetsButton isFullWidth mt="8" onClick={onShowPreview} isDisabled={!acknowledgeHighPriceImpact}>
+            <BeetsButton
+                isFullWidth
+                mt="8"
+                onClick={onShowPreview}
+                isDisabled={hasHighPriceImpact && !acknowledgeHighPriceImpact}
+            >
                 Preview
             </BeetsButton>
         </Box>
