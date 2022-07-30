@@ -21,7 +21,9 @@ export function useTradeCard() {
         getLatestState,
         setTokens,
         networkStatus,
-        swaps,
+        swapInfo,
+        tradeStartPolling,
+        tradeStopPolling,
     } = useTrade();
 
     // refetching the swapInfo may not always trigger the query loading state,
@@ -43,7 +45,7 @@ export function useTradeCard() {
 
     const isLoadingOrFetching = loadingSwaps || isFetching || networkStatus === NetworkStatus.refetch;
     const hasAmount = parseFloat(sellAmountVar()) > 0 || parseFloat(buyAmountVar()) > 0;
-    const isNotEnoughLiquidity = swaps && swaps.swaps.length === 0 && hasAmount;
+    const isNotEnoughLiquidity = swapInfo && swapInfo.swaps.length === 0 && hasAmount;
 
     useEffect(() => {
         //TODO: load token in/out from url if passed in
@@ -137,9 +139,12 @@ export function useTradeCard() {
         const sellAmount = sellAmountVar();
         const buyAmount = buyAmountVar();
 
+        tradeStateVar({ ...tradeStateVar(), sorResponse: null });
+
         setTokens({ tokenIn: state.tokenOut, tokenOut: state.tokenIn });
         setBuyAmount(sellAmount);
         setSellAmount(buyAmount);
+        dFetchTrade('EXACT_IN', sellAmount);
     };
 
     function refetchTrade() {
@@ -166,5 +171,7 @@ export function useTradeCard() {
         handleBuyAmountChanged,
         handleTokensSwitched,
         refetchTrade,
+        tradeStartPolling,
+        tradeStopPolling,
     };
 }

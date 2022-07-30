@@ -15,7 +15,7 @@ export function PoolDetailCharts() {
     const { data } = useGetPoolSnapshotsQuery({ variables: { poolId: pool.id, range } });
 
     return (
-        <Card width="full" height="full">
+        <Card height="full" minHeight="540px">
             <HStack padding="4" pb="0" spacing="4">
                 <Select
                     value={chartType}

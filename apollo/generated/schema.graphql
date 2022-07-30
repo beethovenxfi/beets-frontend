@@ -957,7 +957,7 @@ type Mutation {
     poolReloadAllPoolAprs: String!
     poolReloadStakingForAllPools: String!
     poolSyncAllPoolsFromSubgraph: [String!]!
-    poolSyncLatestSnapshotsForAllPools: String!
+    poolSyncLatestSnapshotsForAllPools(daysToSync: Int): String!
     poolSyncNewPoolsFromSubgraph: [String!]!
     poolSyncPoolAllTokensRelationship: String!
     poolSyncSanityPoolData: String!

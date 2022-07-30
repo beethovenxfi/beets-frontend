@@ -23,7 +23,7 @@ export function PoolWithdrawModal() {
 
     return (
         <>
-            <BeetsButton onClick={onOpen} width="140px" buttonType="secondary">
+            <BeetsButton onClick={onOpen} buttonType="secondary" width={{ base: 'full', md: '140px' }}>
                 Withdraw
             </BeetsButton>
             <Modal

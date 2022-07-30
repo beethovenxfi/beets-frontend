@@ -4,8 +4,8 @@ import { useReactiveVar } from '@apollo/client';
 import { investStateVar } from '~/modules/pool/invest/lib/useInvestState';
 import { tokenAmountsGetArrayFromMap } from '~/lib/services/token/token-util';
 import { useSlippage } from '~/lib/global/useSlippage';
-import { HIGH_PRICE_IMPACT, MEDIUM_PRICE_IMPACT } from '~/modules/constants';
 import numeral from 'numeral';
+import { networkConfig } from '~/lib/config/network-config';
 
 export function usePoolJoinGetBptOutAndPriceImpactForTokensIn() {
     const { poolService } = usePool();
@@ -22,9 +22,10 @@ export function usePoolJoinGetBptOutAndPriceImpactForTokensIn() {
     );
 
     const bptOutAndPriceImpact = query.data;
-    const hasHighPriceImpact = Math.abs(bptOutAndPriceImpact?.priceImpact || 0) > HIGH_PRICE_IMPACT;
+    const hasHighPriceImpact = Math.abs(bptOutAndPriceImpact?.priceImpact || 0) > networkConfig.priceImpact.invest.high;
     const hasMediumPriceImpact =
-        !hasHighPriceImpact && Math.abs(bptOutAndPriceImpact?.priceImpact || 0) > MEDIUM_PRICE_IMPACT;
+        !hasHighPriceImpact &&
+        Math.abs(bptOutAndPriceImpact?.priceImpact || 0) > networkConfig.priceImpact.invest.noticeable;
 
     const formattedPriceImpact = numeral(Math.abs(bptOutAndPriceImpact?.priceImpact || 0)).format('0.00%');
 

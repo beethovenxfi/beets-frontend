@@ -1,10 +1,8 @@
 import { useTrade } from '~/modules/trade/lib/useTrade';
-import { Box, Flex, HStack, Link, Text, VStack } from '@chakra-ui/react';
+import { Flex, HStack, Text, VStack } from '@chakra-ui/react';
 import { useTradeData } from '~/modules/trade/lib/useTradeData';
 import { tokenFormatAmount } from '~/lib/services/token/token-util';
 import { AnimatePresence } from 'framer-motion';
-import { ChevronDown, ChevronUp } from 'react-feather';
-import { useBoolean } from '@chakra-ui/hooks';
 import numeral from 'numeral';
 import { useGetTokens } from '~/lib/global/useToken';
 import CoingeckoLogo from '~/assets/images/coingecko.svg';
@@ -15,13 +13,8 @@ interface Props {}
 
 export function TradeCardSwapBreakdown({}: Props) {
     const { priceFor, priceForAmount } = useGetTokens();
-    const { reactiveTradeState } = useTrade();
+    const { swapInfo, hasHighPriceImpact, hasNoticeablePriceImpact, priceImpact } = useTrade();
     const { tokenOut, tokenIn } = useTradeData();
-    const swapInfo = reactiveTradeState.sorResponse;
-    const [rateExpanded, { toggle }] = useBoolean();
-
-    const hasNoticablePriceImpact = parseFloat(swapInfo?.priceImpact || '0') >= 0.01;
-    const hasHighPriceImpact = parseFloat(swapInfo?.priceImpact || '0') > 0.05;
 
     const valueIn = priceForAmount({ address: swapInfo?.tokenIn || '', amount: swapInfo?.tokenInAmount || '0' });
     const tokenOutSwapPrice = valueIn / parseFloat(swapInfo?.tokenOutAmount || '0');
@@ -46,8 +39,11 @@ export function TradeCardSwapBreakdown({}: Props) {
                     <Text color="gray.100" fontSize=".85rem">
                         Price impact
                     </Text>
-                    <Text fontSize=".85rem" color={hasNoticablePriceImpact ? 'beets.red.300' : 'white'}>
-                        {numeral(swapInfo.priceImpact).format('0.00%')}
+                    <Text
+                        fontSize=".85rem"
+                        color={hasHighPriceImpact ? 'beets.red' : hasNoticeablePriceImpact ? 'orange' : 'white'}
+                    >
+                        {numeral(priceImpact).format('0.00%')}
                     </Text>
                 </HStack>
                 <HStack width="full" justifyContent="space-between">
@@ -77,7 +73,7 @@ export function TradeCardSwapBreakdown({}: Props) {
                     </HStack>
                     <Text
                         fontSize=".85rem"
-                        color={diff > 0 ? 'beets.green' : diff < -0.15 ? 'red' : diff < -0.02 ? 'orange' : 'white'}
+                        color={diff > 0 ? 'beets.green' : diff < -0.075 ? 'red' : diff < -0.02 ? 'orange' : 'white'}
                     >
                         {coingeckoVariationText}
                     </Text>
