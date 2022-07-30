@@ -7,6 +7,8 @@ import {
     Popover,
     PopoverContent,
     PopoverTrigger as OrigPopoverTrigger,
+    WrapItem,
+    Wrap,
 } from '@chakra-ui/react';
 import numeral from 'numeral';
 import { PoolTokenPill } from '~/components/token/PoolTokenPill';
@@ -32,16 +34,21 @@ function PoolHeader() {
 
     return (
         <VStack width="full" alignItems="flex-start" mb="8">
-            <HStack>
-                <Text textStyle="h3" as="h3" fontWeight="bold">
-                    {pool.name}
-                </Text>
-                <HStack spacing="2">
-                    {poolTokensWithoutPhantomBpt.map((token, index) => (
-                        <PoolTokenPill key={index} token={token} />
-                    ))}
-                </HStack>
-            </HStack>
+            <Text textStyle="h3" as="h3" fontWeight="bold" mr="4" display={{ base: 'block', lg: 'none' }}>
+                {pool.name}
+            </Text>
+            <Wrap>
+                <WrapItem display={{ base: 'none', lg: 'flex' }}>
+                    <Text textStyle="h3" as="h3" fontWeight="bold" mr="4">
+                        {pool.name}
+                    </Text>
+                </WrapItem>
+                {poolTokensWithoutPhantomBpt.map((token, index) => (
+                    <WrapItem key={index}>
+                        <PoolTokenPill token={token} />
+                    </WrapItem>
+                ))}
+            </Wrap>
             <Popover trigger="hover" placement="right">
                 <PopoverTrigger>
                     <HStack
