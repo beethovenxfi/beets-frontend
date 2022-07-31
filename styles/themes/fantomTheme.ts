@@ -183,5 +183,12 @@ export const fantomTheme: Partial<ChakraTheme> = {
                 },
             },
         },
+        Skeleton: {
+            baseStyle: {
+                borderRadius: 'md',
+                startColor: 'gray.400',
+                endColor: 'gray.500',
+            },
+        },
     },
 };

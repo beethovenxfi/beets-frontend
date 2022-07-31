@@ -12,9 +12,10 @@ import { format } from 'date-fns';
 interface Props {
     label: string;
     prices: GqlTokenPriceChartDataItem[];
+    priceValueFormatter: (value: number) => string;
 }
 
-export function TokenPriceLineChart({ label, prices }: Props) {
+export function TokenPriceLineChart({ label, prices, priceValueFormatter }: Props) {
     const { colors } = useTheme();
     const max = Math.max(...prices.map((price) => parseFloat(price.price))) * 1.01;
 
@@ -47,7 +48,15 @@ export function TokenPriceLineChart({ label, prices }: Props) {
                 offset: 0,
                 axisLabel: {
                     fontSize: 14,
-                    formatter: (value: number) => format(value * 1000, 'MMM. dd'),
+                    formatter: (value: number) => format(value * 1000, 'd. MMM HH:mm'),
+                },
+                axisPointer: {
+                    type: 'line',
+                    label: {
+                        formatter: (params) => {
+                            return format(new Date(params.value), 'd. MMM HH:mm');
+                        },
+                    },
                 },
             },
             yAxis: {
@@ -84,7 +93,7 @@ export function TokenPriceLineChart({ label, prices }: Props) {
                         ]),
                     },
                     tooltip: {
-                        valueFormatter: (value) => numberFormatUSDValue(value as number),
+                        valueFormatter: (value) => priceValueFormatter(value as number),
                     },
                 },
             ],

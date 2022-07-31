@@ -4,6 +4,7 @@ import { NetworkStatus } from '@apollo/client';
 import { Box, Flex, HStack, Link, Skeleton } from '@chakra-ui/react';
 import { useTradeData } from '~/modules/trade/lib/useTradeData';
 import { BeetsBox } from '~/components/box/BeetsBox';
+import { tokenFormatAmount } from '~/lib/services/token/token-util';
 
 export function TradeChart() {
     const { setRange, range, data, loading, networkStatus } = useTradeChart();
@@ -33,7 +34,13 @@ export function TradeChart() {
     return (
         <Box>
             <Box height="150px">
-                <TokenPriceLineChart prices={data?.prices || []} label={`${tokenOut?.symbol}/${tokenIn?.symbol}`} />
+                <TokenPriceLineChart
+                    prices={data?.prices || []}
+                    label={``}
+                    priceValueFormatter={(value) =>
+                        `1 ${tokenOut?.symbol} = ${tokenFormatAmount(value)} ${tokenIn?.symbol}`
+                    }
+                />
             </Box>
             {/* <BeetsBox height="150px" />*/}
             {/*<Skeleton height="3xs" />*/}
