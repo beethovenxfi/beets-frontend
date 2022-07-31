@@ -107,7 +107,8 @@ export function HomePools(props: BoxProps) {
                                                 as="a"
                                                 href={item.buttonUrl}
                                                 target="_blank"
-                                                fontSize={{ base: '0.75rem', sm: '1rem' }}
+                                                size="md"
+                                                _hover={{ transform: 'none', bgColor: 'beets.highlight' }}
                                             >
                                                 {item.buttonText}
                                             </Button>
