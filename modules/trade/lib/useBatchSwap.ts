@@ -12,7 +12,7 @@ import { isEth } from '~/lib/services/token/token-util';
 export function useBatchSwap() {
     const { getRequiredToken } = useGetTokens();
     const { data: accountData } = useAccount();
-    const { slippageDifference } = useSlippage();
+    const { slippageDifference, slippageAddition } = useSlippage();
     const { submit, submitAsync, ...rest } = useSubmitTransaction({
         contractConfig: vaultContractConfig,
         functionName: 'batchSwap',
@@ -28,6 +28,7 @@ export function useBatchSwap() {
         swapAmount,
         returnAmount,
         tokenInAmount,
+        tokenOutAmount,
     }: GqlSorGetSwapsResponseFragment) {
         //TODO: make sure manually added tokens end up in the tokens array or this will throw
         const tokenInDefinition = getRequiredToken(tokenIn);
@@ -40,17 +41,17 @@ export function useBatchSwap() {
         const limits = tokenAddresses.map((tokenAddress, i) => {
             if (
                 swapType === 'EXACT_IN' &&
-                (isSameAddress(tokenAddress, tokenIn) || (isEth(tokenIn) && tokenAddress === AddressZero))
-            ) {
-                return parseUnits(swapAmount, getRequiredToken(tokenIn).decimals).toString();
-            } else if (
-                swapType === 'EXACT_OUT' &&
                 (isSameAddress(tokenAddress, tokenOut) || (isEth(tokenOut) && tokenAddress === AddressZero))
             ) {
-                return oldBnumScaleAmount(swapAmount, tokenOutDefinition.decimals)
+                return oldBnumScaleAmount(tokenOutAmount, tokenOutDefinition.decimals)
                     .times(slippageDifference)
                     .times(-1)
                     .toFixed(0);
+            } else if (
+                swapType === 'EXACT_OUT' &&
+                (isSameAddress(tokenAddress, tokenIn) || (isEth(tokenIn) && tokenAddress === AddressZero))
+            ) {
+                return oldBnumScaleAmount(tokenInAmount, tokenInDefinition.decimals).times(slippageAddition).toFixed(0);
             }
 
             return '0';
