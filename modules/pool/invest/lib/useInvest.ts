@@ -41,6 +41,7 @@ export function useInvest() {
         ).length === pool.investConfig.options.length;
 
     const totalInvestValue = sumBy(selectedInvestTokensWithAmounts, priceForAmount);
+    const totalTokenAmounts = sumBy(selectedInvestTokensWithAmounts, (token) => parseFloat(token.amount));
     const isInvestingWithEth = !!selectedInvestTokens.find((token) => isEth(token.address));
 
     return {
@@ -49,6 +50,7 @@ export function useInvest() {
         userInvestTokenBalances,
         canInvestProportionally,
         totalInvestValue,
+        totalTokenAmounts,
         isInvestingWithEth,
     };
 }

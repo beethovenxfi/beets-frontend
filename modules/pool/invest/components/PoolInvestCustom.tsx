@@ -8,7 +8,6 @@ import BeetsButton from '~/components/button/Button';
 import { useInvest } from '~/modules/pool/invest/lib/useInvest';
 import { BeetsTokenInputWithSlider } from '~/components/inputs/BeetsTokenInputWithSlider';
 import { usePoolJoinGetBptOutAndPriceImpactForTokensIn } from '~/modules/pool/invest/lib/usePoolJoinGetBptOutAndPriceImpactForTokensIn';
-import numeral from 'numeral';
 interface Props {
     onShowPreview(): void;
 }
@@ -16,7 +15,7 @@ interface Props {
 export function PoolInvestCustom({ onShowPreview }: Props) {
     const { pool } = usePool();
     const { inputAmounts, setInputAmount, setSelectedOption } = useInvestState();
-    const { selectedInvestTokens } = useInvest();
+    const { selectedInvestTokens, totalTokenAmounts } = useInvest();
     const { userPoolTokenBalances } = usePoolUserTokenBalancesInWallet();
     const { hasHighPriceImpact, formattedPriceImpact } = usePoolJoinGetBptOutAndPriceImpactForTokensIn();
     const [acknowledgeHighPriceImpact, { toggle: toggleAcknowledgeHighPriceImpact }] = useBoolean(false);
@@ -64,7 +63,7 @@ export function PoolInvestCustom({ onShowPreview }: Props) {
                 isFullWidth
                 mt="8"
                 onClick={onShowPreview}
-                isDisabled={hasHighPriceImpact && !acknowledgeHighPriceImpact}
+                isDisabled={(totalTokenAmounts <= 0 || hasHighPriceImpact) && !acknowledgeHighPriceImpact}
             >
                 Preview
             </BeetsButton>
