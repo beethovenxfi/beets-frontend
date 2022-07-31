@@ -1,4 +1,4 @@
-import { Box, HStack, Link, Popover, PopoverContent, PopoverTrigger, Text } from '@chakra-ui/react';
+import { Box, HStack, Link, Popover, PopoverContent, PopoverTrigger, Text, Skeleton } from '@chakra-ui/react';
 import { useGetProtocolDataQuery } from '~/apollo/generated/graphql-codegen-generated';
 import Image from 'next/image';
 import { Check, ChevronDown } from 'react-feather';

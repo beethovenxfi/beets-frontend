@@ -1,21 +1,16 @@
-import { Box, BoxProps, Button, Flex, Image, Link } from '@chakra-ui/react';
+import { Box, BoxProps, Button, Flex, Image, Skeleton } from '@chakra-ui/react';
 import { PoolCard } from '~/components/pool-card/PoolCard';
 import { BeetsHeadline } from '~/components/typography/BeetsHeadline';
 import { BeetsSubHeadline } from '~/components/typography/BeetsSubHeadline';
 import { PoolCardCarousel } from '~/components/carousel/PoolCardCarousel';
 
 import { useUserData } from '~/lib/user/useUserData';
-import {
-    useGetHomeFeaturedPoolsQuery,
-    useGetPoolsLazyQuery,
-    useGetPoolsQuery,
-} from '~/apollo/generated/graphql-codegen-generated';
+import { useGetHomeFeaturedPoolsQuery, useGetPoolsLazyQuery } from '~/apollo/generated/graphql-codegen-generated';
 import { numberFormatUSDValue } from '~/lib/util/number-formats';
 import { useEffect } from 'react';
 
 import { PoolCardUser } from '~/components/pool-card/PoolCardUser';
 import { orderBy } from 'lodash';
-import { NextLink } from '~/components/link/NextLink';
 
 export function HomePools(props: BoxProps) {
     const {
