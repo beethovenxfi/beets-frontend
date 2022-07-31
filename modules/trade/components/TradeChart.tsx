@@ -35,7 +35,6 @@ export function TradeChart() {
 
     return (
         <Box>
-            <Skeleton height="200px" />
             <Box height="150px">
                 <TokenPriceLineChart
                     prices={data?.prices || []}
