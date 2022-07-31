@@ -81,6 +81,8 @@ export function useTrade() {
 
         tradeStartPolling();
 
+        console.log('swaps', swaps);
+
         return swaps;
     }
 

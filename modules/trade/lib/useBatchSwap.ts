@@ -6,7 +6,8 @@ import { useSlippage } from '~/lib/global/useSlippage';
 import { useGetTokens } from '~/lib/global/useToken';
 import { parseUnits } from 'ethers/lib/utils';
 import { oldBnumScaleAmount } from '~/lib/services/pool/lib/old-big-number';
-import { MaxUint256 } from '@ethersproject/constants';
+import { AddressZero, MaxUint256 } from '@ethersproject/constants';
+import { isEth } from '~/lib/services/token/token-util';
 
 export function useBatchSwap() {
     const { getRequiredToken } = useGetTokens();
@@ -26,6 +27,7 @@ export function useBatchSwap() {
         tokenOut,
         swapAmount,
         returnAmount,
+        tokenInAmount,
     }: GqlSorGetSwapsResponseFragment) {
         //TODO: make sure manually added tokens end up in the tokens array or this will throw
         const tokenInDefinition = getRequiredToken(tokenIn);
@@ -36,9 +38,15 @@ export function useBatchSwap() {
         // -ve means min to receive
         // For a multihop the intermediate tokens should be 0
         const limits = tokenAddresses.map((tokenAddress, i) => {
-            if (swapType === 'EXACT_IN' && isSameAddress(tokenAddress, tokenIn)) {
+            if (
+                swapType === 'EXACT_IN' &&
+                (isSameAddress(tokenAddress, tokenIn) || (isEth(tokenIn) && tokenAddress === AddressZero))
+            ) {
                 return parseUnits(swapAmount, getRequiredToken(tokenIn).decimals).toString();
-            } else if (swapType === 'EXACT_OUT' && isSameAddress(tokenAddress, tokenOut)) {
+            } else if (
+                swapType === 'EXACT_OUT' &&
+                (isSameAddress(tokenAddress, tokenOut) || (isEth(tokenOut) && tokenAddress === AddressZero))
+            ) {
                 return oldBnumScaleAmount(swapAmount, tokenOutDefinition.decimals)
                     .times(slippageDifference)
                     .times(-1)
@@ -66,6 +74,13 @@ export function useBatchSwap() {
                 swapType === 'EXACT_IN'
                     ? `${swapAmount} ${tokenInDefinition.symbol} -> ${returnAmount} ${tokenOutDefinition.symbol}`
                     : `${returnAmount} ${tokenInDefinition.symbol} -> ${swapAmount} ${tokenOutDefinition.symbol}`,
+            ...(isEth(tokenIn)
+                ? {
+                      overrides: {
+                          value: swapType === 'EXACT_IN' ? parseUnits(swapAmount, 18) : '0',
+                      },
+                  }
+                : {}),
         });
     }
 

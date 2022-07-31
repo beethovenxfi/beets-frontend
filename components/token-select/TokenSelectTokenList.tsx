@@ -47,7 +47,7 @@ export function TokenSelectTokenList({ listHeight, searchTerm, onTokenRowClick }
                 const token = filteredTokensByPrice[index];
                 const userBalance = tokenFindTokenAmountForAddress(token.address, userBalances);
                 return (
-                    <div style={style}>
+                    <div style={style} key={index}>
                         <TokenRow
                             {...token}
                             onClick={() => onTokenRowClick(token.address)}

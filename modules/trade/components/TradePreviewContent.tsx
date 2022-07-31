@@ -222,16 +222,18 @@ export function TradePreviewContent({ query, onTransactionSubmitted }: Props) {
                     </CardRow>
                 </Card>
             </Box>
-            <Alert status="error" mt="4" display="flex" alignItems="flex-start">
-                <Checkbox
-                    colorScheme="red"
-                    mt="1"
-                    mr="4"
-                    isChecked={highPiAccepted}
-                    onChange={() => setHighPiAccepted(!highPiAccepted)}
-                />
-                <Box>I understand that this trade will significantly move the market price.</Box>
-            </Alert>
+            {hasHighPriceImpact && (
+                <Alert status="error" mt="4" display="flex" alignItems="flex-start">
+                    <Checkbox
+                        colorScheme="red"
+                        mt="1"
+                        mr="4"
+                        isChecked={highPiAccepted}
+                        onChange={() => setHighPiAccepted(!highPiAccepted)}
+                    />
+                    <Box>I understand that this trade will significantly move the market price.</Box>
+                </Alert>
+            )}
             <BeetsSubmitTransactionButton
                 {...query}
                 isDisabled={hasHighPriceImpact && !highPiAccepted}

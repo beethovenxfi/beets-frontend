@@ -20,7 +20,7 @@ function TokenAvatar({ address, size, ...rest }: Props) {
             bg={'transparent'}
             icon={
                 token?.logoURI ? (
-                    <Circle size={size} backgroundColor="whiteAlpha.200" />
+                    <Circle size="32px" backgroundColor="whiteAlpha.200" />
                 ) : (
                     <Jazzicon
                         seed={jsNumberForAddress(address || AddressZero)}
