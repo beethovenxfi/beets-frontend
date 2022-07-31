@@ -34,12 +34,6 @@ export function TradeChart() {
 
     return (
         <Box>
-            <Button variant="primary" mb="4" isFullWidth size="lg">
-                Testing
-            </Button>
-            <Button variant="secondary" isFullWidth size="lg">
-                Testing
-            </Button>
             <Box height="150px">
                 <TokenPriceLineChart
                     prices={data?.prices || []}
