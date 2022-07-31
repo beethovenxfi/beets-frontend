@@ -192,7 +192,7 @@ export function TradePreviewContent({ query, onTransactionSubmitted }: Props) {
                                 <InfoButton label="Minimum received" infoText="Lorem ipsum dolor...." />
                             </Box>
                             <Box fontWeight="bold">
-                                {tokenFormatAmountPrecise(minAmountOut)}{' '}
+                                {tokenFormatAmount(minAmountOut)}{' '}
                                 <Text as="span" fontSize="sm" fontWeight="normal">
                                     {tokenOut?.symbol}
                                 </Text>
@@ -204,7 +204,7 @@ export function TradePreviewContent({ query, onTransactionSubmitted }: Props) {
                                 <InfoButton label="Maximum spent" infoText="Lorem ipsum dolor...." />
                             </Box>
                             <Box fontWeight="bold">
-                                {tokenFormatAmountPrecise(maxAmountIn)}{' '}
+                                {tokenFormatAmount(maxAmountIn)}
                                 <Text as="span" fontSize="sm" fontWeight="normal">
                                     {tokenIn?.symbol}
                                 </Text>
