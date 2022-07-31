@@ -8,7 +8,7 @@ import TokenAvatar from '~/components/token/TokenAvatar';
 import { networkConfig } from '~/lib/config/network-config';
 import OptimismLogo from '~/assets/images/optimism.svg';
 import FantomLogo from '~/assets/images/fantom-logo.png';
-import { BeetsSkeleton } from '~/components/skeleton/BeetsSkeleton';
+
 import { SubNavBarStat } from '~/modules/nav/SubNavBarStat';
 
 export function SubNavBar() {
@@ -80,7 +80,7 @@ export function SubNavBar() {
                 <HStack>
                     <TokenAvatar address={networkConfig.beets.address} style={{ width: '20px', height: '20px' }} />
                     {loading && !protocolData ? (
-                        <BeetsSkeleton height="16px" width="54px" />
+                        <Skeleton height="16px" width="54px" />
                     ) : (
                         <Text fontWeight="semibold" fontSize={{ base: 'sm', lg: 'md' }}>
                             {numeral(protocolData?.beetsPrice || '0').format('$0.00[00]')}

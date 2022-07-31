@@ -5,7 +5,8 @@ import { Box, Button, Flex, HStack, Link, Skeleton } from '@chakra-ui/react';
 import { useTradeData } from '~/modules/trade/lib/useTradeData';
 import { BeetsBox } from '~/components/box/BeetsBox';
 import { tokenFormatAmount } from '~/lib/services/token/token-util';
-import { BeetsSkeleton } from '~/components/skeleton/BeetsSkeleton';
+
+import { cssVar } from '@chakra-ui/theme-tools';
 
 export function TradeChart() {
     const { setRange, range, data, loading, networkStatus } = useTradeChart();
@@ -13,7 +14,7 @@ export function TradeChart() {
 
     if (loading && !data) {
         //loading and no data
-        return <BeetsSkeleton height="150px" />;
+        return <Skeleton height="150px" />;
     }
 
     if (loading || networkStatus === NetworkStatus.refetch) {
@@ -26,7 +27,7 @@ export function TradeChart() {
 
     if (!tokenIn || !tokenOut) {
         //tokens not yet populated
-        return <BeetsSkeleton height="150px" />;
+        return <Skeleton height="150px" />;
     }
 
     const sevenDaySelected = range === 'SEVEN_DAY';
@@ -34,6 +35,7 @@ export function TradeChart() {
 
     return (
         <Box>
+            <Skeleton height="200px" />
             <Box height="150px">
                 <TokenPriceLineChart
                     prices={data?.prices || []}

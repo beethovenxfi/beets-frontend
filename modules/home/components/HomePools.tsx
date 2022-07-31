@@ -12,7 +12,7 @@ import {
 } from '~/apollo/generated/graphql-codegen-generated';
 import { numberFormatUSDValue } from '~/lib/util/number-formats';
 import { useEffect } from 'react';
-import { BeetsSkeleton } from '~/components/skeleton/BeetsSkeleton';
+
 import { PoolCardUser } from '~/components/pool-card/PoolCardUser';
 import { orderBy } from 'lodash';
 import { NextLink } from '~/components/link/NextLink';
@@ -48,7 +48,7 @@ export function HomePools(props: BoxProps) {
                     <BeetsHeadline mb="10">My investments</BeetsHeadline>
                     <Box mb="10">
                         <Flex mb="4">
-                            <BeetsSkeleton isLoaded={!getPoolsQuery.loading}>
+                            <Skeleton isLoaded={!getPoolsQuery.loading}>
                                 <BeetsSubHeadline>
                                     {userPools.length === 1
                                         ? `${numberFormatUSDValue(portfolioValueUSD)} invested in 1 pool`
@@ -56,7 +56,7 @@ export function HomePools(props: BoxProps) {
                                               userPools.length
                                           } pools`}
                                 </BeetsSubHeadline>
-                            </BeetsSkeleton>
+                            </Skeleton>
                         </Flex>
                         <PoolCardCarousel
                             items={userPools.map((pool) => (

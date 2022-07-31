@@ -1,8 +1,7 @@
 import { TokenBaseWithAmount } from '~/lib/services/token/token-types';
 import { useState } from 'react';
 import { HorizontalSteps, StepStatus } from '~/components/steps/HorizontalSteps';
-import { Alert, AlertIcon, Box, Button, Flex } from '@chakra-ui/react';
-import { BeetsSkeleton } from '~/components/skeleton/BeetsSkeleton';
+import { Alert, AlertIcon, Box, Button, Flex, Skeleton } from '@chakra-ui/react';
 
 import { BeetsSubmitTransactionButton } from '~/components/button/BeetsSubmitTransactionButton';
 import { BeetsTokenApprovalButton } from '~/components/button/BeetsTokenApprovalButton';
@@ -90,7 +89,7 @@ export function BeetsTransactionStepsSubmit({
         <Box>
             {isLoading ? (
                 <Flex justifyContent="center">
-                    <BeetsSkeleton height="30px" width="180px" />
+                    <Skeleton height="30px" width="180px" />
                 </Flex>
             ) : steps && steps.length > 1 ? (
                 <HorizontalSteps

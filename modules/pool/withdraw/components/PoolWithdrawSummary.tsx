@@ -1,10 +1,10 @@
-import { Box, BoxProps } from '@chakra-ui/react';
+import { Box, BoxProps, Skeleton } from '@chakra-ui/react';
 import { InfoButton } from '~/components/info-button/InfoButton';
 import { BeetsBox } from '~/components/box/BeetsBox';
 import { BeetsBoxLineItem } from '~/components/box/BeetsBoxLineItem';
 import { numberFormatUSDValue } from '~/lib/util/number-formats';
 import numeral from 'numeral';
-import { BeetsSkeleton } from '~/components/skeleton/BeetsSkeleton';
+
 import { usePoolExitGetProportionalWithdrawEstimate } from '~/modules/pool/withdraw/lib/usePoolExitGetProportionalWithdrawEstimate';
 import { sum } from 'lodash';
 import { useGetTokens } from '~/lib/global/useToken';
@@ -35,7 +35,7 @@ export function PoolWithdrawSummary({ ...rest }: Props) {
                         {selectedWithdrawType === 'PROPORTIONAL' ? (
                             <>
                                 {isLoading ? (
-                                    <BeetsSkeleton height="20px" width="64px" marginBottom="4px" />
+                                    <Skeleton height="20px" width="64px" marginBottom="4px" />
                                 ) : (
                                     numberFormatUSDValue(totalValue)
                                 )}
@@ -56,7 +56,7 @@ export function PoolWithdrawSummary({ ...rest }: Props) {
                     selectedWithdrawType === 'PROPORTIONAL' ? (
                         <Box>0.00%</Box>
                     ) : bptInForSingleAssetWithdraw.isLoading ? (
-                        <BeetsSkeleton height="20px" width="64px" mb="4px" />
+                        <Skeleton height="20px" width="64px" mb="4px" />
                     ) : (
                         <Box>{numeral(priceImpact).format('0.00%')}</Box>
                     )

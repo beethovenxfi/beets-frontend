@@ -3,6 +3,7 @@ import {
     Heading,
     ModalHeader,
     ModalOverlay,
+    Skeleton,
     Slider,
     SliderFilledTrack,
     SliderMark,
@@ -20,7 +21,7 @@ import { tokenFormatAmount } from '~/lib/services/token/token-util';
 import { usePool } from '~/modules/pool/lib/usePool';
 import { useApproveToken } from '~/lib/util/useApproveToken';
 import { useMasterChefDepositIntoFarm } from '~/lib/global/useMasterChefDepositIntoFarm';
-import { BeetsSkeleton } from '~/components/skeleton/BeetsSkeleton';
+
 import { usePoolUserStakingAllowance } from '~/modules/pool/stake/lib/usePoolUserStakingAllowance';
 import { BeetsTransactionStepsSubmit, TransactionStep } from '~/components/button/BeetsTransactionStepsSubmit';
 import { BeetsBoxLineItem } from '~/components/box/BeetsBoxLineItem';
@@ -145,8 +146,8 @@ export function PoolStakeModal({ isOpen, onOpen, onClose }: Props) {
                                 <Box display="flex" flexDirection="column" alignItems="flex-end">
                                     {isLoadingBalances || isRefetchingBalances ? (
                                         <>
-                                            <BeetsSkeleton height="20px" width="60px" mb="2" />
-                                            <BeetsSkeleton height="20px" width="40px" />
+                                            <Skeleton height="20px" width="60px" mb="2" />
+                                            <Skeleton height="20px" width="40px" />
                                         </>
                                     ) : (
                                         <>

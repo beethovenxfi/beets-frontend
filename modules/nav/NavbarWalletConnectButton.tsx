@@ -1,5 +1,5 @@
 import { ConnectButton } from '@rainbow-me/rainbowkit';
-import { Box, Button, HStack, Spinner, Text } from '@chakra-ui/react';
+import { Box, Button, HStack, Skeleton, Spinner, Text } from '@chakra-ui/react';
 import Image from 'next/image';
 import BeetsSmart from '~/assets/icons/beetx-smarts.svg';
 import { useReactiveVar } from '@apollo/client';
@@ -7,7 +7,7 @@ import { txPendingVar } from '~/lib/util/useSubmitTransaction';
 import { IconWallet } from '~/components/icons/IconWallet';
 import { BarChart2 } from 'react-feather';
 import { useUserData } from '~/lib/user/useUserData';
-import { BeetsSkeleton } from '~/components/skeleton/BeetsSkeleton';
+
 import { numberFormatLargeUsdValue } from '~/lib/util/number-formats';
 
 export default function NavbarWalletConnectButton() {
@@ -69,7 +69,7 @@ export default function NavbarWalletConnectButton() {
                                     >
                                         <BarChart2 size={18} />
                                         {loading ? (
-                                            <BeetsSkeleton height="10px" width="41px" />
+                                            <Skeleton height="10px" width="41px" />
                                         ) : (
                                             <Box fontSize="sm" fontWeight="semibold">
                                                 {numberFormatLargeUsdValue(portfolioValueUSD)}

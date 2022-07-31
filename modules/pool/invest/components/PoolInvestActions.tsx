@@ -81,7 +81,7 @@ export function PoolInvestActions({ onInvestComplete, ...rest }: Props) {
         <Box {...rest}>
             {loading ? (
                 <Flex justifyContent="center">
-                    <BeetsSkeleton height="30px" width="180px" />
+                    <Skeleton height="30px" width="180px" />
                 </Flex>
             ) : steps && steps.length > 1 ? (
                 <HorizontalSteps

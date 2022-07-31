@@ -1,4 +1,4 @@
-import { Box, BoxProps, Flex } from '@chakra-ui/react';
+import { Box, BoxProps, Flex, Skeleton } from '@chakra-ui/react';
 import { InfoButton } from '~/components/info-button/InfoButton';
 import AprTooltip from '~/components/apr-tooltip/AprTooltip';
 import { BeetsBox } from '~/components/box/BeetsBox';
@@ -7,7 +7,7 @@ import { numberFormatUSDValue } from '~/lib/util/number-formats';
 import { useInvest } from '~/modules/pool/invest/lib/useInvest';
 import { usePoolJoinGetBptOutAndPriceImpactForTokensIn } from '~/modules/pool/invest/lib/usePoolJoinGetBptOutAndPriceImpactForTokensIn';
 import numeral from 'numeral';
-import { BeetsSkeleton } from '~/components/skeleton/BeetsSkeleton';
+
 import { CardRow } from '~/components/card/CardRow';
 
 interface Props extends BoxProps {}
@@ -34,7 +34,7 @@ export function PoolInvestSummary({ ...rest }: Props) {
                     />
                 </Box>
                 {isLoading ? (
-                    <BeetsSkeleton height="24px" width="64px" />
+                    <Skeleton height="24px" width="64px" />
                 ) : (
                     <Box color={hasMediumPriceImpact ? 'orange' : 'current'}>{formattedPriceImpact}</Box>
                 )}

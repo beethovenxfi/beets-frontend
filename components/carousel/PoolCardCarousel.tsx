@@ -1,8 +1,7 @@
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { ReactNode } from 'react';
 import { Pagination } from 'swiper';
-import { Box, BoxProps } from '@chakra-ui/react';
-import { BeetsSkeleton } from '~/components/skeleton/BeetsSkeleton';
+import { Box, BoxProps, Skeleton } from '@chakra-ui/react';
 
 interface Props extends BoxProps {
     items: ReactNode[];
@@ -44,13 +43,13 @@ export function PoolCardCarousel({ items, loading, cardHeight = '216px', ...rest
                 {loading ? (
                     <>
                         <SwiperSlide key="1">
-                            <BeetsSkeleton height={cardHeight} />
+                            <Skeleton height={cardHeight} />
                         </SwiperSlide>
                         <SwiperSlide key="2">
-                            <BeetsSkeleton height={cardHeight} />
+                            <Skeleton height={cardHeight} />
                         </SwiperSlide>
                         <SwiperSlide key="3">
-                            <BeetsSkeleton height={cardHeight} />
+                            <Skeleton height={cardHeight} />
                         </SwiperSlide>
                     </>
                 ) : (

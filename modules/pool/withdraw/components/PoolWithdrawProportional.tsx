@@ -2,6 +2,7 @@ import {
     Box,
     Button,
     HStack,
+    Skeleton,
     Slider,
     SliderFilledTrack,
     SliderMark,
@@ -22,7 +23,7 @@ import { BeetsBoxLineItem } from '~/components/box/BeetsBoxLineItem';
 
 import { PoolWithdrawSettings } from '~/modules/pool/withdraw/components/PoolWithdrawSettings';
 import { PoolWithdrawSummary } from '~/modules/pool/withdraw/components/PoolWithdrawSummary';
-import { BeetsSkeleton } from '~/components/skeleton/BeetsSkeleton';
+
 import { useEffectOnce } from '~/lib/util/custom-hooks';
 
 interface Props extends BoxProps {
@@ -109,8 +110,8 @@ export function PoolWithdrawProportional({ onShowPreview, ...rest }: Props) {
                                 <Box display="flex" alignItems="flex-end" flexDirection="column">
                                     {isLoading ? (
                                         <>
-                                            <BeetsSkeleton height="20px" marginBottom="4px" width="64px" />
-                                            <BeetsSkeleton height="18px" marginBottom="3px" width="44px" />
+                                            <Skeleton height="20px" marginBottom="4px" width="64px" />
+                                            <Skeleton height="18px" marginBottom="3px" width="44px" />
                                         </>
                                     ) : (
                                         <>
