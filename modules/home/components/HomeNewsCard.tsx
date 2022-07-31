@@ -19,7 +19,7 @@ export function HomeNewsCard({ item }: Props) {
             <Flex mt="4" mb="6" alignItems="center">
                 <Box color="gray.200" flex="1">
                     {formatDistanceToNow(new Date(timestamp), { addSuffix: true })}{' '}
-                    <Link color="beets.cyan" href={url} target="_blank">
+                    <Link color="beets.highlight" href={url} target="_blank">
                         via {capitalize(source)}
                     </Link>
                 </Box>

@@ -3,7 +3,6 @@ import { BeetsBox } from '~/components/box/BeetsBox';
 import { numberFormatUSDValue } from '~/lib/util/number-formats';
 import { tokenFormatAmount } from '~/lib/services/token/token-util';
 import TokenAvatar from '~/components/token/TokenAvatar';
-import BeetsButton from '~/components/button/Button';
 import { usePool } from '~/modules/pool/lib/usePool';
 import { useGetTokens } from '~/lib/global/useToken';
 import { usePoolUserDepositBalance } from '~/modules/pool/lib/usePoolUserDepositBalance';
@@ -112,12 +111,12 @@ export function PoolWithdrawTypeChoice({ onShowProportional, onShowSingleAsset }
                     </Button>
                 </Alert>
             )}
-            <BeetsButton isFullWidth mb="3" isDisabled={!hasBptInWallet} onClick={onShowProportional}>
+            <Button variant="primary" isFullWidth mb="3" isDisabled={!hasBptInWallet} onClick={onShowProportional}>
                 Withdraw proportionally
-            </BeetsButton>
-            <BeetsButton isFullWidth buttonType="secondary" isDisabled={!hasBptInWallet} onClick={onShowSingleAsset}>
+            </Button>
+            <Button variant="secondary" isFullWidth isDisabled={!hasBptInWallet} onClick={onShowSingleAsset}>
                 Single asset withdraw
-            </BeetsButton>
+            </Button>
 
             <PoolUnstakeModal {...unstakeDisclosure} />
         </Box>

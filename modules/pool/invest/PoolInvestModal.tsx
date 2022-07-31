@@ -1,6 +1,5 @@
 import { Modal, ModalBody, ModalCloseButton, ModalContent } from '@chakra-ui/modal';
-import { Heading, IconButton, ModalHeader, ModalOverlay, Text, useDisclosure } from '@chakra-ui/react';
-import BeetsButton from '~/components/button/Button';
+import { Button, Heading, IconButton, ModalHeader, ModalOverlay, Text, useDisclosure } from '@chakra-ui/react';
 import { usePool } from '~/modules/pool/lib/usePool';
 import PoolInvestProportional from '~/modules/pool/invest/components/PoolInvestProportional';
 import { ChevronLeft } from 'react-feather';
@@ -18,9 +17,9 @@ export function PoolInvestModal() {
 
     return (
         <>
-            <BeetsButton onClick={onOpen} width={{ base: 'full', md: '140px' }} mr="2">
+            <Button variant="primary" onClick={onOpen} width={{ base: 'full', md: '140px' }} mr="2">
                 Invest
-            </BeetsButton>
+            </Button>
             <Modal
                 isOpen={isOpen}
                 onClose={onClose}

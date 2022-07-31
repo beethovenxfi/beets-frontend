@@ -1,6 +1,6 @@
 import { Box, BoxProps, Flex, Grid, GridItem } from '@chakra-ui/react';
 import { BeetsHeadline } from '~/components/typography/BeetsHeadline';
-import BeetsButton from '~/components/button/Button';
+
 import { useBoolean } from '@chakra-ui/hooks';
 import { BeetsSubHeadline } from '~/components/typography/BeetsSubHeadline';
 import { HomeNewsCard } from '~/modules/home/components/HomeNewsCard';
@@ -36,9 +36,9 @@ export function HomeNews(props: BoxProps) {
                 </Box>*/}
                 {/*!expanded ? (
                     <Flex justifyContent="center" mt="8">
-                        <BeetsButton buttonType="secondary" onClick={on}>
+                        <Button variant="secondary" onClick={on}>
                             View more
-                        </BeetsButton>
+                        </Button>
                     </Flex>
                 ) : null*/}
             </Box>

@@ -1,4 +1,4 @@
-import { Box, Text } from '@chakra-ui/react';
+import { Box, Button, Text } from '@chakra-ui/react';
 import { useWithdrawState } from '~/modules/pool/withdraw/lib/useWithdrawState';
 import { usePool } from '~/modules/pool/lib/usePool';
 import { BoxProps } from '@chakra-ui/layout';
@@ -6,7 +6,6 @@ import { usePoolExitGetSingleAssetWithdrawForBptIn } from '~/modules/pool/withdr
 import { useEffect } from 'react';
 import { PoolWithdrawSummary } from '~/modules/pool/withdraw/components/PoolWithdrawSummary';
 import { PoolWithdrawSettings } from '~/modules/pool/withdraw/components/PoolWithdrawSettings';
-import BeetsButton from '~/components/button/Button';
 import { BeetsTokenInputWithSlider } from '~/components/inputs/BeetsTokenInputWithSlider';
 
 interface Props extends BoxProps {
@@ -60,9 +59,9 @@ export function PoolWithdrawSingleAsset({ onShowPreview, ...rest }: Props) {
             />
             <PoolWithdrawSummary mt="6" />
             <PoolWithdrawSettings mt="8" />
-            <BeetsButton isFullWidth mt="8" onClick={onShowPreview} isDisabled={!isValid}>
+            <Button variant="primary" isFullWidth mt="8" onClick={onShowPreview} isDisabled={!isValid}>
                 Preview
-            </BeetsButton>
+            </Button>
         </Box>
     );
 }

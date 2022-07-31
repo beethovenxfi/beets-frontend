@@ -15,7 +15,7 @@ import { useUserPendingRewards } from '~/lib/user/useUserPendingRewards';
 import { numberFormatUSDValue } from '~/lib/util/number-formats';
 import numeral from 'numeral';
 import { useGetTokens } from '~/lib/global/useToken';
-import BeetsButton from '~/components/button/Button';
+
 import { BeetsBox } from '~/components/box/BeetsBox';
 import { useUserData } from '~/lib/user/useUserData';
 import { BeetsSkeleton } from '~/components/skeleton/BeetsSkeleton';

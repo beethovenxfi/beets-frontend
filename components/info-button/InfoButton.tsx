@@ -29,7 +29,7 @@ export function InfoButton({ iconSize, infoText, moreInfoUrl, moreInfoLinkText, 
                     {infoText}
                     {moreInfoUrl ? ' ' : ''}
                     {moreInfoUrl ? (
-                        <Link color="beets.cyan" href={moreInfoUrl} target="_blank">
+                        <Link color="beets.highlight" href={moreInfoUrl} target="_blank">
                             {moreInfoLinkText || 'More info'}.
                         </Link>
                     ) : null}

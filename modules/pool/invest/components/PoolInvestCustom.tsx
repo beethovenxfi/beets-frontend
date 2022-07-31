@@ -1,10 +1,10 @@
 import { usePool } from '~/modules/pool/lib/usePool';
 import { useInvestState } from '~/modules/pool/invest/lib/useInvestState';
 import { usePoolUserTokenBalancesInWallet } from '~/modules/pool/lib/usePoolUserTokenBalancesInWallet';
-import { Box, Text, Collapse, Checkbox, useBoolean, Alert, AlertIcon } from '@chakra-ui/react';
+import { Box, Text, Collapse, Checkbox, useBoolean, Alert, AlertIcon, Button } from '@chakra-ui/react';
 import { PoolInvestSummary } from '~/modules/pool/invest/components/PoolInvestSummary';
 import { PoolInvestSettings } from '~/modules/pool/invest/components/PoolInvestSettings';
-import BeetsButton from '~/components/button/Button';
+
 import { useInvest } from '~/modules/pool/invest/lib/useInvest';
 import { BeetsTokenInputWithSlider } from '~/components/inputs/BeetsTokenInputWithSlider';
 import { usePoolJoinGetBptOutAndPriceImpactForTokensIn } from '~/modules/pool/invest/lib/usePoolJoinGetBptOutAndPriceImpactForTokensIn';
@@ -59,14 +59,15 @@ export function PoolInvestCustom({ onShowPreview }: Props) {
                     </Box>
                 </Alert>
             </Collapse>
-            <BeetsButton
+            <Button
+                variant="primary"
                 isFullWidth
                 mt="8"
                 onClick={onShowPreview}
                 isDisabled={(totalTokenAmounts <= 0 || hasHighPriceImpact) && !acknowledgeHighPriceImpact}
             >
                 Preview
-            </BeetsButton>
+            </Button>
         </Box>
     );
 }

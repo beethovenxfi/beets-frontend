@@ -1,9 +1,9 @@
-import { Box, BoxProps, Flex, Image, Link } from '@chakra-ui/react';
+import { Box, BoxProps, Button, Flex, Image, Link } from '@chakra-ui/react';
 import { PoolCard } from '~/components/pool-card/PoolCard';
 import { BeetsHeadline } from '~/components/typography/BeetsHeadline';
 import { BeetsSubHeadline } from '~/components/typography/BeetsSubHeadline';
 import { PoolCardCarousel } from '~/components/carousel/PoolCardCarousel';
-import BeetsButton from '~/components/button/Button';
+
 import { useUserData } from '~/lib/user/useUserData';
 import {
     useGetHomeFeaturedPoolsQuery,
@@ -107,14 +107,15 @@ export function HomePools(props: BoxProps) {
                                                 alt={`${item.id}-image`}
                                                 objectFit={{ base: 'cover', sm: 'contain' }}
                                             />
-                                            <BeetsButton
+                                            <Button
+                                                variant="primary"
                                                 as="a"
                                                 href={item.buttonUrl}
                                                 target="_blank"
                                                 fontSize={{ base: '0.75rem', sm: '1rem' }}
                                             >
                                                 {item.buttonText}
-                                            </BeetsButton>
+                                            </Button>
                                         </Flex>
                                     );
                             }
@@ -168,7 +169,7 @@ export function HomePools(props: BoxProps) {
                                 bottom="0"
                                 right="0"
                             />
-                            <BeetsButton onClick={() => {}}>What is a Boosted pool?</BeetsButton>
+                            <Button variant="primary" onClick={() => {}}>What is a Boosted pool?</BeetsButton>
                         </Flex>,
                     ]}
                 />

@@ -1,9 +1,9 @@
 import { ConnectButton } from '@rainbow-me/rainbowkit';
-import BeetsButton, { BeetsButtonProps } from '../../components/button/Button';
-import { Box } from '@chakra-ui/react';
+import { Box, Button } from '@chakra-ui/react';
 import { useUserAccount } from '~/lib/user/useUserAccount';
+import { ButtonProps } from '@chakra-ui/button';
 
-export function WalletConnectButton(props: Omit<BeetsButtonProps, 'children' | 'onClick'>) {
+export function WalletConnectButton(props: Omit<ButtonProps, 'children' | 'onClick'>) {
     const { isConnected } = useUserAccount();
 
     if (isConnected) {
@@ -18,9 +18,9 @@ export function WalletConnectButton(props: Omit<BeetsButtonProps, 'children' | '
                         {(() => {
                             if (!mounted || !account || !chain) {
                                 return (
-                                    <BeetsButton onClick={openConnectModal} {...props}>
+                                    <Button variant="primary" onClick={openConnectModal} {...props}>
                                         Connect Wallet
-                                    </BeetsButton>
+                                    </Button>
                                 );
                             }
 

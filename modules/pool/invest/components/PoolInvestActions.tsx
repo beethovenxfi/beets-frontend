@@ -93,9 +93,9 @@ export function PoolInvestActions({ onInvestComplete, ...rest }: Props) {
                 />
             ) : null}
             {loading ? (
-                <BeetsButton isLoading={true} isFullWidth>
+                <Button isLoading={true} isFullWidth>
                     Invest
-                </BeetsButton>
+                </Button>
             ) : null}
             {steps && currentStep && currentStep.type === 'tokenApproval' ? (
                 <BeetsTokenApprovalButton
@@ -130,9 +130,9 @@ export function PoolInvestActions({ onInvestComplete, ...rest }: Props) {
                 </BeetsSubmitTransactionButton>
             ) : null}
             {isConfirmed && (
-                <BeetsButton onClick={onInvestComplete} isFullWidth buttonType="secondary">
+                <Button onClick={onInvestComplete} isFullWidth buttonType="secondary">
                     Return to pool
-                </BeetsButton>
+                </Button>
             )}
             {submitError ? (
                 <Alert status="error" mt={4}>

@@ -1,10 +1,11 @@
 import { TokenPriceLineChart } from '~/components/charts/TokenPriceLineChart';
 import { useTradeChart } from '~/modules/trade/lib/useTradeChart';
 import { NetworkStatus } from '@apollo/client';
-import { Box, Flex, HStack, Link, Skeleton } from '@chakra-ui/react';
+import { Box, Button, Flex, HStack, Link, Skeleton } from '@chakra-ui/react';
 import { useTradeData } from '~/modules/trade/lib/useTradeData';
 import { BeetsBox } from '~/components/box/BeetsBox';
 import { tokenFormatAmount } from '~/lib/services/token/token-util';
+import { BeetsSkeleton } from '~/components/skeleton/BeetsSkeleton';
 
 export function TradeChart() {
     const { setRange, range, data, loading, networkStatus } = useTradeChart();
@@ -12,7 +13,7 @@ export function TradeChart() {
 
     if (loading && !data) {
         //loading and no data
-        return <Skeleton height="150px" />;
+        return <BeetsSkeleton height="150px" />;
     }
 
     if (loading || networkStatus === NetworkStatus.refetch) {
@@ -25,7 +26,7 @@ export function TradeChart() {
 
     if (!tokenIn || !tokenOut) {
         //tokens not yet populated
-        return <Skeleton height="150px" />;
+        return <BeetsSkeleton height="150px" />;
     }
 
     const sevenDaySelected = range === 'SEVEN_DAY';
@@ -33,6 +34,12 @@ export function TradeChart() {
 
     return (
         <Box>
+            <Button variant="primary" mb="4" isFullWidth size="lg">
+                Testing
+            </Button>
+            <Button variant="secondary" isFullWidth size="lg">
+                Testing
+            </Button>
             <Box height="150px">
                 <TokenPriceLineChart
                     prices={data?.prices || []}

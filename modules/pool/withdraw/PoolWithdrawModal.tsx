@@ -1,6 +1,6 @@
 import { Modal, ModalBody, ModalCloseButton, ModalContent } from '@chakra-ui/modal';
-import { Heading, IconButton, ModalHeader, ModalOverlay, Text, useDisclosure } from '@chakra-ui/react';
-import BeetsButton from '~/components/button/Button';
+import { Button, Heading, IconButton, ModalHeader, ModalOverlay, Text, useDisclosure } from '@chakra-ui/react';
+
 import { usePool } from '~/modules/pool/lib/usePool';
 import PoolInvestProportional from '~/modules/pool/invest/components/PoolInvestProportional';
 import { ChevronLeft } from 'react-feather';
@@ -23,9 +23,9 @@ export function PoolWithdrawModal() {
 
     return (
         <>
-            <BeetsButton onClick={onOpen} buttonType="secondary" width={{ base: 'full', md: '140px' }}>
+            <Button onClick={onOpen} variant="secondary" width={{ base: 'full', md: '140px' }}>
                 Withdraw
-            </BeetsButton>
+            </Button>
             <Modal
                 isOpen={isOpen}
                 onClose={onClose}

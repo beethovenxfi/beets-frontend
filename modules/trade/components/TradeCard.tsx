@@ -1,8 +1,8 @@
-import { Box, useDisclosure, VStack } from '@chakra-ui/react';
+import { Box, Button, useDisclosure, VStack } from '@chakra-ui/react';
 import { useAnimation } from 'framer-motion';
 import TokenInput from '~/components/inputs/TokenInput';
 import Card from '~/components/card/Card';
-import BeetsButton from '~/components/button/Button';
+
 import { TokenInputSwapButton } from '~/modules/trade/components/TokenInputSwapButton';
 import { TradeCardSwapBreakdown } from '~/modules/trade/components/TradeCardSwapBreakdown';
 import { useTradeCard } from '~/modules/trade/lib/useTradeCard';
@@ -103,7 +103,8 @@ export function TradeCard() {
                                 size="lg"
                             />
                         ) : (
-                            <BeetsButton
+                            <Button
+                                variant="primary"
                                 disabled={isReviewDisabled}
                                 onClick={() => {
                                     tradeStopPolling();
@@ -111,14 +112,13 @@ export function TradeCard() {
                                 }}
                                 isFullWidth
                                 size="lg"
-                                colorScheme="red"
                             >
                                 {isNotEnoughLiquidity
                                     ? 'Not enough liquidity'
                                     : isAmountMoreThanUserBalance
                                     ? `Insufficient ${getToken(tokenIn)?.symbol} balance`
                                     : 'Review swap'}
-                            </BeetsButton>
+                            </Button>
                         )}
                     </Box>
                 </VStack>

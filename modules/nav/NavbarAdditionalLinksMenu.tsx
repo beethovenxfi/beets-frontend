@@ -8,7 +8,7 @@ export function NavbarAdditionalLinksMenu() {
                 as={Link}
                 fontSize="4xl"
                 userSelect="none"
-                _hover={{ color: 'beets.cyan', textDecoration: 'none' }}
+                _hover={{ color: 'beets.highlight', textDecoration: 'none' }}
                 fontFamily="Inter-Variable,-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif,Apple Color Emoji,Segoe UI emoji"
             >
                 <Box position="relative" top="-10px">

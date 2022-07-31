@@ -1,4 +1,14 @@
-import { Box, HStack, Slider, SliderFilledTrack, SliderMark, SliderThumb, SliderTrack, Text } from '@chakra-ui/react';
+import {
+    Box,
+    Button,
+    HStack,
+    Slider,
+    SliderFilledTrack,
+    SliderMark,
+    SliderThumb,
+    SliderTrack,
+    Text,
+} from '@chakra-ui/react';
 import TokenAvatar from '~/components/token/TokenAvatar';
 import { BoxProps } from '@chakra-ui/layout';
 import { useWithdrawState } from '~/modules/pool/withdraw/lib/useWithdrawState';
@@ -9,7 +19,7 @@ import { tokenFormatAmount } from '~/lib/services/token/token-util';
 import { BeetsBox } from '~/components/box/BeetsBox';
 import { TokenSelectInline } from '~/components/token-select-inline/TokenSelectInline';
 import { BeetsBoxLineItem } from '~/components/box/BeetsBoxLineItem';
-import BeetsButton from '~/components/button/Button';
+
 import { PoolWithdrawSettings } from '~/modules/pool/withdraw/components/PoolWithdrawSettings';
 import { PoolWithdrawSummary } from '~/modules/pool/withdraw/components/PoolWithdrawSummary';
 import { BeetsSkeleton } from '~/components/skeleton/BeetsSkeleton';
@@ -122,9 +132,9 @@ export function PoolWithdrawProportional({ onShowPreview, ...rest }: Props) {
 
             <PoolWithdrawSummary mt="6" />
             <PoolWithdrawSettings mt="8" />
-            <BeetsButton isFullWidth mt="8" onClick={onShowPreview}>
+            <Button variant="primary" isFullWidth mt="8" onClick={onShowPreview}>
                 Preview
-            </BeetsButton>
+            </Button>
         </Box>
     );
 }

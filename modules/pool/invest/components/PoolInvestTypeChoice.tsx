@@ -1,9 +1,9 @@
-import { Box, Flex, Heading, HStack, Text } from '@chakra-ui/react';
+import { Box, Button, Flex, Heading, HStack, Text } from '@chakra-ui/react';
 import { BeetsBox } from '~/components/box/BeetsBox';
 import { numberFormatUSDValue } from '~/lib/util/number-formats';
 import { tokenFormatAmount, tokenGetAmountForAddress } from '~/lib/services/token/token-util';
 import TokenAvatar from '~/components/token/TokenAvatar';
-import BeetsButton from '~/components/button/Button';
+
 import { usePool } from '~/modules/pool/lib/usePool';
 import { useGetTokens } from '~/lib/global/useToken';
 import { usePoolUserTokenBalancesInWallet } from '~/modules/pool/lib/usePoolUserTokenBalancesInWallet';
@@ -102,12 +102,18 @@ export function PoolInvestTypeChoice({ onShowProportional, onShowCustom }: Props
                     </BeetsBox>
                 </Box>
             </Flex>
-            <BeetsButton isFullWidth mb="3" isDisabled={!canInvestProportionally} onClick={onShowProportional}>
+            <Button
+                variant="primary"
+                isFullWidth
+                mb="3"
+                isDisabled={!canInvestProportionally}
+                onClick={onShowProportional}
+            >
                 Invest proportionally
-            </BeetsButton>
-            <BeetsButton isFullWidth buttonType="secondary" isDisabled={investableAmount === 0} onClick={onShowCustom}>
+            </Button>
+            <Button isFullWidth variant="secondary" isDisabled={investableAmount === 0} onClick={onShowCustom}>
                 Customize my investment
-            </BeetsButton>
+            </Button>
         </Box>
     );
 }

@@ -1,9 +1,9 @@
 import { TokenBaseWithAmount } from '~/lib/services/token/token-types';
 import { useState } from 'react';
 import { HorizontalSteps, StepStatus } from '~/components/steps/HorizontalSteps';
-import { Alert, AlertIcon, Box, Flex } from '@chakra-ui/react';
+import { Alert, AlertIcon, Box, Button, Flex } from '@chakra-ui/react';
 import { BeetsSkeleton } from '~/components/skeleton/BeetsSkeleton';
-import BeetsButton from '~/components/button/Button';
+
 import { BeetsSubmitTransactionButton } from '~/components/button/BeetsSubmitTransactionButton';
 import { BeetsTokenApprovalButton } from '~/components/button/BeetsTokenApprovalButton';
 import { SubmitTransactionQuery } from '~/lib/util/useSubmitTransaction';
@@ -102,9 +102,9 @@ export function BeetsTransactionStepsSubmit({
                 />
             ) : null}
             {isLoading ? (
-                <BeetsButton isLoading={true} loadingText={loadingButtonText} isFullWidth>
+                <Button variant="primary" isLoading={true} loadingText={loadingButtonText} isFullWidth>
                     {loadingButtonText}
-                </BeetsButton>
+                </Button>
             ) : null}
             {steps && currentStep && currentStep.type === 'tokenApproval' && !complete ? (
                 <BeetsTokenApprovalButton
@@ -132,17 +132,17 @@ export function BeetsTransactionStepsSubmit({
                 </BeetsSubmitTransactionButton>
             ) : null}
             {complete && (
-                <BeetsButton
+                <Button
                     onClick={() => {
                         setStepStatuses({});
                         setComplete(false);
                         onCompleteButtonClick();
                     }}
                     isFullWidth
-                    buttonType="secondary"
+                    variant="secondary"
                 >
                     {completeButtonText}
-                </BeetsButton>
+                </Button>
             )}
             {currentQuery && currentQuery.submitError ? (
                 <Alert status="error" mt={4}>

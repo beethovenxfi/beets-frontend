@@ -89,7 +89,7 @@ export function NavbarAlerts() {
                             <Box>
                                 <Text>
                                     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse consectetur et
-                                    arcu nec... <Link color="beets.cyan">more</Link>
+                                    arcu nec... <Link color="beets.highlight">more</Link>
                                 </Text>
                             </Box>
                         </BeetsBox>
@@ -106,7 +106,7 @@ export function NavbarAlerts() {
                             <Box>
                                 <Text>
                                     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse consectetur et
-                                    arcu nec... <Link color="beets.cyan">more</Link>
+                                    arcu nec... <Link color="beets.highlight">more</Link>
                                 </Text>
                             </Box>
                         </BeetsBox>
@@ -123,7 +123,7 @@ export function NavbarAlerts() {
                             <Box>
                                 <Text>
                                     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse consectetur et
-                                    arcu nec... <Link color="beets.cyan">more</Link>
+                                    arcu nec... <Link color="beets.highlight">more</Link>
                                 </Text>
                             </Box>
                         </BeetsBox>
@@ -140,7 +140,7 @@ export function NavbarAlerts() {
                             <Box>
                                 <Text>
                                     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse consectetur et
-                                    arcu nec... <Link color="beets.cyan">more</Link>
+                                    arcu nec... <Link color="beets.highlight">more</Link>
                                 </Text>
                             </Box>
                         </BeetsBox>
@@ -157,7 +157,7 @@ export function NavbarAlerts() {
                             <Box>
                                 <Text>
                                     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse consectetur et
-                                    arcu nec... <Link color="beets.cyan">more</Link>
+                                    arcu nec... <Link color="beets.highlight">more</Link>
                                 </Text>
                             </Box>
                         </BeetsBox>

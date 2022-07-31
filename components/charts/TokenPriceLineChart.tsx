@@ -82,8 +82,8 @@ export function TokenPriceLineChart({ label, prices, priceValueFormatter }: Prop
                     showSymbol: false,
                     data: prices.map((item) => [item.timestamp * 1000, item.price]),
                     itemStyle: {
-                        color: colors.beets.cyan,
-                        borderColor: colors.beets.cyan,
+                        color: colors.beets.highlight,
+                        borderColor: colors.beets.highlight,
                     },
                     areaStyle: {
                         opacity: 0.2,
