@@ -31,6 +31,7 @@ import { CoingeckoIcon } from '~/assets/icons/CoingeckoIcon';
 import { SubmitTransactionQuery } from '~/lib/util/useSubmitTransaction';
 import { GqlSorGetSwapsResponseFragment } from '~/apollo/generated/graphql-codegen-generated';
 import { transactionMessageFromError } from '~/lib/util/transaction-util';
+import { useUserTokenBalances } from '~/lib/user/useUserTokenBalances';
 
 interface Props {
     query: Omit<SubmitTransactionQuery, 'submit' | 'submitAsync'> & {
@@ -47,6 +48,7 @@ export function TradePreviewContent({ query, onTransactionSubmitted }: Props) {
     const tokenIn = getToken(swapInfo?.tokenIn || '');
     const tokenOut = getToken(swapInfo?.tokenOut || '');
     const [highPiAccepted, setHighPiAccepted] = useState(false);
+    const { refetch: refetchUserBalances } = useUserTokenBalances();
 
     if (!swapInfo) {
         //TODO: handle
@@ -242,6 +244,7 @@ export function TradePreviewContent({ query, onTransactionSubmitted }: Props) {
                 isDisabled={hasHighPriceImpact && !highPiAccepted}
                 onClick={() => query.batchSwap(swapInfo)}
                 onPending={onTransactionSubmitted}
+                onConfirmed={() => refetchUserBalances()}
                 isFullWidth
                 size="lg"
                 marginTop="6"

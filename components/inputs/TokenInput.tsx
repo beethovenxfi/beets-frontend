@@ -1,4 +1,4 @@
-import { Box, Button, Text, VStack, HStack, Tooltip } from '@chakra-ui/react';
+import { Box, Button, Text, VStack, HStack, Tooltip, Skeleton } from '@chakra-ui/react';
 import { useGetTokens } from '~/lib/global/useToken';
 import TokenAvatar from '../token/TokenAvatar';
 import BeetsInput from './BeetsInput';
@@ -108,20 +108,26 @@ export default function TokenInput({
                         </Button>
                     </VStack>
                 </Box>
-                {!isLoading && isConnected && (
-                    <Text
+                {isConnected && (
+                    <HStack
                         position="absolute"
                         zIndex="dropdown"
                         bottom=".75rem"
                         left=".75rem"
                         fontWeight="normal"
                         color="gray.200"
-                        size="xs"
                         fontSize=".85rem"
+                        spacing="1"
                     >
-                        Balance: {tokenFormatAmountPrecise(userBalance, 4)}
-                    </Text>
+                        <Text>Balance:</Text>
+                        {isLoading ? (
+                            <Skeleton width="52px" height="16px" />
+                        ) : (
+                            <Text>{tokenFormatAmountPrecise(userBalance, 4)}</Text>
+                        )}
+                    </HStack>
                 )}
+
                 {estimatedTokenPrice > 0 && (
                     <Text
                         position="absolute"

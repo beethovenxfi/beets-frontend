@@ -200,7 +200,7 @@ export const fantomTheme: Partial<ChakraTheme> = {
                     background: 'beets.green',
                     color: 'gray.500',
                     _active: { bgColor: 'beets.green' },
-                    _focus: { outline: 'none' },
+                    _focus: { outline: 'none', boxShadow: 'none' },
                     rounded: 'xl',
                     _hover: {
                         bgColor: 'beets.highlight',
@@ -222,7 +222,7 @@ export const fantomTheme: Partial<ChakraTheme> = {
                     bgColor: 'beets.greenAlpha.300',
                     color: 'white',
                     _active: { bgColor: 'beets.greenAlpha.300' },
-                    _focus: { outline: 'none' },
+                    _focus: { outline: 'none', boxShadow: 'none' },
                     rounded: 'xl',
                     _hover: {
                         transform: 'scale(1.01)',
