@@ -1,4 +1,4 @@
-import { Box, Button, useDisclosure, VStack } from '@chakra-ui/react';
+import { Box, Button, Flex, useDisclosure, VStack } from '@chakra-ui/react';
 import { useAnimation } from 'framer-motion';
 import TokenInput from '~/components/inputs/TokenInput';
 import Card from '~/components/card/Card';
@@ -130,13 +130,20 @@ export function TradeCard() {
                                     : `Unwrap ${networkConfig.eth.symbol}`}
                             </BeetsSubmitTransactionButton>
                         ) : !hasApprovalForSellAmount && tokenInData ? (
-                            <BeetsTokenApprovalButton
-                                tokenWithAmount={{ ...tokenInData, amount: sellAmount }}
-                                onConfirmed={() => {
-                                    refetchAllowances();
-                                }}
-                                size="lg"
-                            />
+                            <Flex>
+                                <Box flex="1">
+                                    <BeetsTokenApprovalButton
+                                        tokenWithAmount={{ ...tokenInData, amount: sellAmount }}
+                                        onConfirmed={() => {
+                                            refetchAllowances();
+                                        }}
+                                        size="lg"
+                                    />
+                                </Box>
+                                <Button variant="primary" size="lg" flex="1" ml="4" isDisabled>
+                                    Review swap
+                                </Button>
+                            </Flex>
                         ) : (
                             <Button
                                 variant="primary"
