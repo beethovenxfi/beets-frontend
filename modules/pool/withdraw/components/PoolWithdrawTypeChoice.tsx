@@ -31,13 +31,12 @@ export function PoolWithdrawTypeChoice({ onShowProportional, onShowSingleAsset }
                 <Box flex="1" mr="8">
                     <BeetsBox p="2" mb="6">
                         <Flex mb="4">
-                            <Text fontSize="lg" fontWeight="semibold" mb="2">
-                                Pool tokens breakdown
-                            </Text>
-                            <Heading size="md" flex="1">
+                            <Text fontSize="lg" fontWeight="semibold" flex="1">
                                 My balance
-                            </Heading>
-                            <Heading size="md">{numberFormatUSDValue(userPoolBalanceUSD)}</Heading>
+                            </Text>
+                            <Text fontSize="lg" fontWeight="semibold">
+                                {numberFormatUSDValue(userPoolBalanceUSD)}
+                            </Text>
                         </Flex>
                         {pool.staking ? (
                             <>
@@ -54,7 +53,7 @@ export function PoolWithdrawTypeChoice({ onShowProportional, onShowSingleAsset }
                     </BeetsBox>
 
                     <BeetsBox p="2">
-                        <Text fontSize="lg" fontWeight="semibold" mb="2">
+                        <Text fontSize="lg" fontWeight="semibold" mb="4">
                             Pool tokens breakdown
                         </Text>
                         {pool.tokens.map((token, index) => {

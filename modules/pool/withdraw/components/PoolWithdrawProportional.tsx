@@ -25,6 +25,7 @@ import { PoolWithdrawSettings } from '~/modules/pool/withdraw/components/PoolWit
 import { PoolWithdrawSummary } from '~/modules/pool/withdraw/components/PoolWithdrawSummary';
 
 import { useEffectOnce } from '~/lib/util/custom-hooks';
+import { CardRow } from '~/components/card/CardRow';
 
 interface Props extends BoxProps {
     onShowPreview: () => void;
@@ -70,7 +71,7 @@ export function PoolWithdrawProportional({ onShowPreview, ...rest }: Props) {
                     </SliderMark>
                 </Slider>
             </Box>
-            <BeetsBox borderRadius="md" mt="4">
+            <BeetsBox mt="4" p="2">
                 {withdrawOptions.map((option, index) => {
                     const tokenOption = option.tokenOptions[0];
                     const poolToken = pool.tokens[option.poolTokenIndex];
@@ -80,53 +81,43 @@ export function PoolWithdrawProportional({ onShowPreview, ...rest }: Props) {
                         '0';
 
                     return (
-                        <BeetsBoxLineItem
-                            key={index}
-                            last={last}
-                            pl={option.tokenOptions.length > 1 ? '1.5' : '3'}
-                            center={true}
-                            leftContent={
-                                option.tokenOptions.length > 1 ? (
-                                    <Box flex="1">
-                                        <TokenSelectInline
-                                            tokenOptions={option.tokenOptions}
-                                            selectedAddress={
-                                                selectedOptions[`${option.poolTokenIndex}`] ||
-                                                option.tokenOptions[0].address
-                                            }
-                                            onOptionSelect={(address) =>
-                                                setSelectedOption(option.poolTokenIndex, address)
-                                            }
-                                        />
-                                    </Box>
-                                ) : (
-                                    <HStack spacing="1.5" flex="1">
-                                        <TokenAvatar size="xs" address={tokenOption.address} />
-                                        <Text>{tokenOption.symbol}</Text>
-                                    </HStack>
-                                )
-                            }
-                            rightContent={
-                                <Box display="flex" alignItems="flex-end" flexDirection="column">
-                                    {isLoading ? (
-                                        <>
-                                            <Skeleton height="20px" marginBottom="4px" width="64px" />
-                                            <Skeleton height="18px" marginBottom="3px" width="44px" />
-                                        </>
-                                    ) : (
-                                        <>
-                                            <Box textAlign="right">{tokenFormatAmount(proportionalAmount)}</Box>
-                                            <Box textAlign="right" fontSize="sm" color="gray.200">
-                                                {formattedPrice({
-                                                    address: tokenOption.address,
-                                                    amount: proportionalAmount,
-                                                })}
-                                            </Box>
-                                        </>
-                                    )}
+                        <CardRow key={index} mb={last ? '0' : '1'}>
+                            {option.tokenOptions.length > 1 ? (
+                                <Box flex="1">
+                                    <TokenSelectInline
+                                        tokenOptions={option.tokenOptions}
+                                        selectedAddress={
+                                            selectedOptions[`${option.poolTokenIndex}`] ||
+                                            option.tokenOptions[0].address
+                                        }
+                                        onOptionSelect={(address) => setSelectedOption(option.poolTokenIndex, address)}
+                                    />
                                 </Box>
-                            }
-                        />
+                            ) : (
+                                <HStack spacing="1.5" flex="1">
+                                    <TokenAvatar size="xs" address={tokenOption.address} />
+                                    <Text>{tokenOption.symbol}</Text>
+                                </HStack>
+                            )}
+                            <Box display="flex" alignItems="flex-end" flexDirection="column">
+                                {isLoading ? (
+                                    <>
+                                        <Skeleton height="20px" marginBottom="4px" width="64px" />
+                                        <Skeleton height="18px" marginBottom="3px" width="44px" />
+                                    </>
+                                ) : (
+                                    <>
+                                        <Box textAlign="right">{tokenFormatAmount(proportionalAmount)}</Box>
+                                        <Box textAlign="right" fontSize="sm" color="gray.200">
+                                            {formattedPrice({
+                                                address: tokenOption.address,
+                                                amount: proportionalAmount,
+                                            })}
+                                        </Box>
+                                    </>
+                                )}
+                            </Box>
+                        </CardRow>
                     );
                 })}
             </BeetsBox>
