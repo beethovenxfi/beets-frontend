@@ -9,6 +9,7 @@ import { usePoolUserDepositBalance } from '~/modules/pool/lib/usePoolUserDeposit
 import { usePoolUserHarvestPendingRewards } from '~/modules/pool/lib/usePoolUserHarvestPendingRewards';
 import { BeetsSubmitTransactionButton } from '~/components/button/BeetsSubmitTransactionButton';
 import TokenAvatar from '~/components/token/TokenAvatar';
+import { Flex } from '@chakra-ui/react';
 
 export default function PoolUserStats() {
     const { pool } = usePool();
@@ -17,8 +18,8 @@ export default function PoolUserStats() {
     const { harvest, ...harvestQuery } = usePoolUserHarvestPendingRewards();
 
     return (
-        <VStack spacing="4" width="full" alignItems="flex-start" flex={1}>
-            <VStack spacing="0" alignItems="flex-start">
+        <Flex width="full" alignItems="flex-start" flex={1} flexDirection="column">
+            <VStack spacing="0" alignItems="flex-start" mb="4">
                 <Text lineHeight="1rem" fontWeight="semibold" fontSize="sm" color="beets.base.50">
                     My APR
                 </Text>
@@ -27,8 +28,8 @@ export default function PoolUserStats() {
                     <AprTooltip onlySparkles data={pool.dynamicData.apr} />
                 </HStack>
             </VStack>
-            <Divider />
-            <VStack spacing="0" alignItems="flex-start">
+            <Divider mb="4" />
+            <VStack spacing="0" alignItems="flex-start" mb="4">
                 <InfoButton
                     label="My liquidity"
                     infoText="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis pharetra, sapien eu ultrices mollis, metus libero maximus elit."
@@ -43,7 +44,7 @@ export default function PoolUserStats() {
                     {numeral(userPoolBalanceUSD).format('$0,0.00a')}
                 </Text>
             </VStack>
-            <VStack spacing="0" alignItems="flex-start">
+            <VStack spacing="0" alignItems="flex-start" mb="4">
                 <InfoButton
                     label="Staked share"
                     infoText="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis pharetra, sapien eu ultrices mollis, metus libero maximus elit."
@@ -63,7 +64,7 @@ export default function PoolUserStats() {
                     </Text>
                 </VStack>
             </VStack>
-            <VStack spacing="0" alignItems="flex-start">
+            <VStack spacing="0" alignItems="flex-start" flex="1" mb="4">
                 <InfoButton
                     label="Pending rewards"
                     infoText="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis pharetra, sapien eu ultrices mollis, metus libero maximus elit."
@@ -96,6 +97,6 @@ export default function PoolUserStats() {
                     Claim rewards
                 </BeetsSubmitTransactionButton>
             </Box>
-        </VStack>
+        </Flex>
     );
 }

@@ -8,24 +8,6 @@ export function TradeChart() {
     const { setRange, range, data, loading, networkStatus } = useTradeChart();
     const { tokenOut, tokenIn } = useTradeData();
 
-    /*if (loading && !data) {
-        //loading and no data
-        return <Skeleton height="150px" />;
-    }
-
-    if (loading || networkStatus === NetworkStatus.refetch) {
-        //loading or reloading and data exists
-    }
-
-    if (!data || data.prices.length === 0) {
-        // no data
-    }
-
-    if (!tokenIn || !tokenOut) {
-        //tokens not yet populated
-        return <Skeleton height="150px" />;
-    }*/
-
     const sevenDaySelected = range === 'SEVEN_DAY';
     const thirtyDaySelected = range === 'THIRTY_DAY';
 
