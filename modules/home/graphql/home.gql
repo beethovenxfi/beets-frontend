@@ -2,7 +2,7 @@ query GetHomeData {
     poolGetFeaturedPoolGroups {
         ...GqlPoolFeaturedPoolGroup
     }
-    configGetNewsItems {
+    contentGetNewsItems {
         id
         text
         image
@@ -19,7 +19,7 @@ query GetHomeFeaturedPools {
 }
 
 query GetHomeNewsItems {
-    newsItems: configGetNewsItems {
+    newsItems: contentGetNewsItems {
         id
         text
         image
