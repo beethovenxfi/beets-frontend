@@ -1,6 +1,6 @@
-import { Box, BoxProps, Flex, Grid, GridItem } from '@chakra-ui/react';
+import { Box, BoxProps, Button, Flex, Grid, GridItem } from '@chakra-ui/react';
 import { BeetsHeadline } from '~/components/typography/BeetsHeadline';
-import BeetsButton from '~/components/button/Button';
+
 import { BeetsSubHeadline } from '~/components/typography/BeetsSubHeadline';
 import { HomeLearnItem } from '~/modules/home/components/HomeLearnItem';
 
@@ -106,9 +106,9 @@ export function HomeLearn(props: BoxProps) {
 
                     <Box flex="1" mt="12" mb="12">
                         <BeetsSubHeadline mb="8">Want to dive even deeper?</BeetsSubHeadline>
-                        <BeetsButton as="a" href="https://docs.beets.fi" target="_blank">
+                        <Button variant="primary" as="a" href="https://docs.beets.fi" target="_blank">
                             Check out our Docs
-                        </BeetsButton>
+                        </Button>
                     </Box>
                 </GridItem>
             </Grid>

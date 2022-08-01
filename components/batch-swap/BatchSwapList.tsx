@@ -4,6 +4,7 @@ import { BatchSwapListItem } from '~/components/batch-swap/components/BatchSwapL
 import { useEffect } from 'react';
 import { useGetTokens } from '~/lib/global/useToken';
 import { AnimatePresence, motion } from 'framer-motion';
+import { replaceEthWithWeth } from '~/lib/services/token/token-util';
 
 interface Props {
     tokenIn: string;
@@ -13,7 +14,14 @@ interface Props {
 export function BatchSwapList({ tokenIn, tokenOut }: Props) {
     const { priceFor, getToken } = useGetTokens();
     const { data, startPolling } = useGetPoolBatchSwapsQuery({
-        variables: { first: 5, skip: 0, where: { tokenInIn: [tokenIn], tokenOutIn: [tokenOut] } },
+        variables: {
+            first: 5,
+            skip: 0,
+            where: {
+                tokenInIn: [replaceEthWithWeth(tokenIn)],
+                tokenOutIn: [replaceEthWithWeth(tokenOut)],
+            },
+        },
         notifyOnNetworkStatusChange: true,
     });
 

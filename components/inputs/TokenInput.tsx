@@ -1,4 +1,4 @@
-import { Box, Button, Text, VStack, HStack, Tooltip } from '@chakra-ui/react';
+import { Box, Button, Text, VStack, HStack, Tooltip, Skeleton } from '@chakra-ui/react';
 import { useGetTokens } from '~/lib/global/useToken';
 import TokenAvatar from '../token/TokenAvatar';
 import BeetsInput from './BeetsInput';
@@ -11,6 +11,9 @@ import numeral from 'numeral';
 import { KeyboardEvent } from 'react';
 import { tokenInputBlockInvalidCharacters, tokenInputTruncateDecimalPlaces } from '~/lib/util/input-util';
 import { numberFormatLargeUsdValue } from '~/lib/util/number-formats';
+import { parseUnits } from 'ethers/lib/utils';
+import { oldBnumScaleAmount, oldBnumScaleDown } from '~/lib/services/pool/lib/old-big-number';
+import { formatFixed } from '@ethersproject/bignumber';
 
 type Props = {
     label?: string;
@@ -50,7 +53,9 @@ export default function TokenInput({
     };
 
     const handlePresetSelected = (preset: number) => {
-        handleOnChange({ currentTarget: { value: (parseFloat(userBalance) * preset).toString() } });
+        const scaledAmount = oldBnumScaleAmount(userBalance, token?.decimals).times(preset).toFixed(0);
+
+        handleOnChange({ currentTarget: { value: formatFixed(scaledAmount, token?.decimals) } });
     };
 
     return (
@@ -93,7 +98,7 @@ export default function TokenInput({
                         >
                             <HStack spacing="none">
                                 <TokenAvatar size="xs" address={address || ''} />
-                                <Text fontSize="1.15rem" paddingLeft="2">
+                                <Text fontSize="lg" paddingLeft="2">
                                     {token?.symbol}
                                 </Text>
                                 <Box marginLeft="1">
@@ -103,20 +108,26 @@ export default function TokenInput({
                         </Button>
                     </VStack>
                 </Box>
-                {!isLoading && isConnected && (
-                    <Text
+                {isConnected && (
+                    <HStack
                         position="absolute"
                         zIndex="dropdown"
                         bottom=".75rem"
                         left=".75rem"
                         fontWeight="normal"
                         color="gray.200"
-                        size="xs"
                         fontSize=".85rem"
+                        spacing="1"
                     >
-                        Balance: {tokenFormatAmountPrecise(userBalance, 4)}
-                    </Text>
+                        <Text>Balance:</Text>
+                        {isLoading ? (
+                            <Skeleton width="52px" height="16px" />
+                        ) : (
+                            <Text>{tokenFormatAmountPrecise(userBalance, 4)}</Text>
+                        )}
+                    </HStack>
                 )}
+
                 {estimatedTokenPrice > 0 && (
                     <Text
                         position="absolute"

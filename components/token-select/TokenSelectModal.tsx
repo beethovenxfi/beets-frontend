@@ -16,7 +16,7 @@ interface Props {
     onClose(): void;
 }
 
-export function TokenSelectModal({ isOpen, onOpen, onClose }: Props) {
+export function TokenSelectModal({ isOpen, onClose }: Props) {
     const listHeight = 500;
     const [searchTerm, setSearchTerm] = useState('');
     const { handleTokenSelected, tokenSelectKey } = useTradeCard();

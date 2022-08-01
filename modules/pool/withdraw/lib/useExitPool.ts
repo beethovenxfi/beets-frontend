@@ -9,7 +9,7 @@ export function useExitPool(pool: GqlPoolUnion) {
     const { submit, submitAsync, ...rest } = useSubmitTransaction({
         contractConfig: vaultContractConfig,
         functionName: pool.__typename === 'GqlPoolPhantomStable' ? 'batchSwap' : 'exitPool',
-        toastType: 'EXIT',
+        transactionType: 'EXIT',
     });
 
     function exitPool(contractCallData: PoolExitContractCallData) {

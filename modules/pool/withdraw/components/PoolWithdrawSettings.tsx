@@ -1,15 +1,16 @@
 import { InfoButton } from '~/components/info-button/InfoButton';
-import { Box, BoxProps, Flex, useBoolean } from '@chakra-ui/react';
+import { Box, BoxProps } from '@chakra-ui/react';
 import { BeetsBox } from '~/components/box/BeetsBox';
 import { ModalSectionHeadline } from '~/components/modal/ModalSectionHeadline';
 import { SlippageTextLinkMenu } from '~/components/slippage/SlippageTextLinkMenu';
+import { CardRow } from '~/components/card/CardRow';
 
 export function PoolWithdrawSettings({ ...rest }: BoxProps) {
     return (
         <Box {...rest}>
             <ModalSectionHeadline headline={`Settings`} />
-            <BeetsBox>
-                <Flex px="3" py="2" justifyContent="center" borderBottomWidth={0}>
+            <BeetsBox p="2">
+                <CardRow mb="0">
                     <Box flex="1">
                         <InfoButton
                             label="Max slippage"
@@ -17,9 +18,8 @@ export function PoolWithdrawSettings({ ...rest }: BoxProps) {
                             infoText="The maximum amount of slippage that you're willing to accept for the transaction."
                         />
                     </Box>
-
                     <SlippageTextLinkMenu />
-                </Flex>
+                </CardRow>
             </BeetsBox>
         </Box>
     );

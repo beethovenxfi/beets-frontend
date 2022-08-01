@@ -52,15 +52,15 @@ export function HorizontalSteps({ steps, ...rest }: Props) {
                                             ? 'gray.300'
                                             : status === 'complete'
                                             ? 'beets.green'
-                                            : 'beets.cyan'
+                                            : 'beets.highlight'
                                     }
-                                    color={status === 'idle' ? 'gray.100' : 'beets.cyan'}
+                                    color={status === 'idle' ? 'gray.100' : 'beets.highlight'}
                                     fontWeight={status === 'idle' ? 'normal' : 'bold'}
                                     cursor="default"
                                     userSelect="none"
                                 >
                                     {status === 'submitting' ? (
-                                        <IconWallet stroke={theme.colors.beets.cyan} boxSize="16px" ml="0.5" />
+                                        <IconWallet stroke={theme.colors.beets.highlight} boxSize="16px" ml="0.5" />
                                     ) : status === 'complete' ? (
                                         <Check size="18" color={theme.colors.beets.green} />
                                     ) : (

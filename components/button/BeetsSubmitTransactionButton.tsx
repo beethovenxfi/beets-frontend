@@ -1,7 +1,6 @@
-import BeetsButton from '~/components/button/Button';
 import { ButtonOptions, ButtonProps } from '@chakra-ui/button';
 import { ReactNode, useEffect } from 'react';
-import { LinkProps } from '@chakra-ui/react';
+import { Button, LinkProps } from '@chakra-ui/react';
 import { SubmitTransactionQuery } from '~/lib/util/useSubmitTransaction';
 
 interface BeetsSubmitTransactionButtonProps extends Omit<SubmitTransactionQuery, 'submit' | 'submitAsync'> {
@@ -61,7 +60,8 @@ export function BeetsSubmitTransactionButton({
     }, [isConfirmed]);
 
     return (
-        <BeetsButton
+        <Button
+            variant="primary"
             isDisabled={isDisabled || isLoading || isSubmitting || isPending}
             isLoading={isLoading || isSubmitting || isPending}
             loadingText={isSubmitting ? submittingText : isPending ? pendingText : loadingText}

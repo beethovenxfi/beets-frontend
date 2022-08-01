@@ -12,8 +12,8 @@ import { AnimatePresence, AnimateSharedLayout, motion } from 'framer-motion';
 export function TradeContainer() {
     const { priceFor } = useGetTokens();
     const { tokenInData, tokenOutData, tokenInDynamicData, tokenOutDynamicData, tokenOut, tokenIn } = useTradeData();
-    const { swapInfo, loadingSwaps } = useTrade();
-    const showRouting = loadingSwaps || (swapInfo && swapInfo.swaps.length > 0);
+    const { swapInfo, loadingSwaps, isNativeAssetUnwrap, isNativeAssetWrap } = useTrade();
+    const showRouting = !isNativeAssetUnwrap && !isNativeAssetWrap && swapInfo && swapInfo.swaps.length > 0;
     const hasNoRoute = !loadingSwaps && (!swapInfo || swapInfo.swaps.length === 0);
 
     return (
@@ -23,8 +23,8 @@ export function TradeContainer() {
                        "chart-route"`,
                 xl: `"swap chart-route"`,
             }}
-            templateColumns={{ base: '1fr', xl: '400px 1fr' }}
-            gap="12"
+            templateColumns={{ base: '1fr', xl: '412px 1fr' }}
+            gap="10"
             pb="20"
             pt="8"
         >
@@ -43,7 +43,7 @@ export function TradeContainer() {
                     // @ts-ignore */}
                     <AnimateSharedLayout>
                         <AnimatePresence>
-                            {swapInfo && swapInfo.swaps.length > 0 && (
+                            {showRouting && (
                                 <motion.div layout initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
                                     <Text fontSize="xl" fontWeight="bold" lineHeight="1.2rem" mt="8">
                                         Smart order routing
@@ -55,7 +55,7 @@ export function TradeContainer() {
                                 </motion.div>
                             )}
                         </AnimatePresence>
-                        {swapInfo && swapInfo.swaps.length > 0 && <BatchSwapSorRoute swapInfo={swapInfo} />}
+                        {showRouting && <BatchSwapSorRoute swapInfo={swapInfo} />}
 
                         <motion.div layout>
                             <Text fontSize="xl" fontWeight="bold" lineHeight="1.2rem" mt="8">

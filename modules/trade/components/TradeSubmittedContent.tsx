@@ -1,16 +1,4 @@
-import { useRef, useState } from 'react';
-import { useBatchSwap } from '~/modules/trade/lib/useBatchSwap';
-import {
-    BeetsModalBody,
-    BeetsModalContent,
-    BeetsModalHeader,
-    BeetsModalHeadline,
-    BeetsModalSubHeadline,
-} from '~/components/modal/BeetsModal';
-import { TradePreviewContent } from '~/modules/trade/components/TradePreviewContent';
-import { Alert, AlertIcon, Box, Button, Link, Modal, ModalOverlay, Spinner } from '@chakra-ui/react';
-import { ModalCloseButton } from '@chakra-ui/modal';
-import { AnimateSharedLayout, motion, AnimatePresence } from 'framer-motion';
+import { Alert, AlertIcon, Box, Button, Link, Spinner } from '@chakra-ui/react';
 import { BeetsBox } from '~/components/box/BeetsBox';
 import { BatchSwapSorRoute } from '~/components/batch-swap/BatchSwapSorRoute';
 import { useTrade } from '~/modules/trade/lib/useTrade';
@@ -22,9 +10,8 @@ import {
     etherscanGetTxUrl,
     etherscanTxShortenForDisplay,
 } from '~/lib/util/etherscan';
-import { format } from 'date-fns';
 import { SubmitTransactionQuery } from '~/lib/util/useSubmitTransaction';
-import { GqlSorGetSwapsResponseFragment } from '~/apollo/generated/graphql-codegen-generated';
+import { FadeInBox } from '~/components/animation/FadeInBox';
 
 interface Props {
     query: Omit<SubmitTransactionQuery, 'submit' | 'submitAsync'>;
@@ -67,12 +54,6 @@ export function TradeSubmittedContent({ query }: Props) {
                         </Box>
                     </CardRow>
                 )}
-                {/*txReceipt?.timestamp && (
-                                        <CardRow>
-                                            <Box flex="1">Submitted</Box>
-                                            <Box>{format(txReceipt.timestamp * 1000, 'MMM. dd, HH:mm:ss')}</Box>
-                                        </CardRow>
-                                    )*/}
                 {txReceipt?.blockNumber && (
                     <CardRow mb="0">
                         <Box flex="1">Block number</Box>
@@ -90,12 +71,12 @@ export function TradeSubmittedContent({ query }: Props) {
                     </Alert>
                 ) : null}
             </BeetsBox>
-            {query.isConfirmed && (
+            <FadeInBox isVisible={query.isConfirmed}>
                 <Alert status="success" borderRadius="md" mt="4">
                     <AlertIcon />
                     Your swap was successfully executed
                 </Alert>
-            )}
+            </FadeInBox>
         </Box>
     );
 }

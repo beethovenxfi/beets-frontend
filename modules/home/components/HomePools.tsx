@@ -1,21 +1,16 @@
-import { Box, BoxProps, Flex, Image, Link } from '@chakra-ui/react';
+import { Box, BoxProps, Button, Flex, Image, Skeleton } from '@chakra-ui/react';
 import { PoolCard } from '~/components/pool-card/PoolCard';
 import { BeetsHeadline } from '~/components/typography/BeetsHeadline';
 import { BeetsSubHeadline } from '~/components/typography/BeetsSubHeadline';
 import { PoolCardCarousel } from '~/components/carousel/PoolCardCarousel';
-import BeetsButton from '~/components/button/Button';
+
 import { useUserData } from '~/lib/user/useUserData';
-import {
-    useGetHomeFeaturedPoolsQuery,
-    useGetPoolsLazyQuery,
-    useGetPoolsQuery,
-} from '~/apollo/generated/graphql-codegen-generated';
+import { useGetHomeFeaturedPoolsQuery, useGetPoolsLazyQuery } from '~/apollo/generated/graphql-codegen-generated';
 import { numberFormatUSDValue } from '~/lib/util/number-formats';
 import { useEffect } from 'react';
-import { BeetsSkeleton } from '~/components/skeleton/BeetsSkeleton';
+
 import { PoolCardUser } from '~/components/pool-card/PoolCardUser';
 import { orderBy } from 'lodash';
-import { NextLink } from '~/components/link/NextLink';
 
 export function HomePools(props: BoxProps) {
     const {
@@ -48,7 +43,7 @@ export function HomePools(props: BoxProps) {
                     <BeetsHeadline mb="10">My investments</BeetsHeadline>
                     <Box mb="10">
                         <Flex mb="4">
-                            <BeetsSkeleton isLoaded={!getPoolsQuery.loading}>
+                            <Skeleton isLoaded={!getPoolsQuery.loading}>
                                 <BeetsSubHeadline>
                                     {userPools.length === 1
                                         ? `${numberFormatUSDValue(portfolioValueUSD)} invested in 1 pool`
@@ -56,7 +51,7 @@ export function HomePools(props: BoxProps) {
                                               userPools.length
                                           } pools`}
                                 </BeetsSubHeadline>
-                            </BeetsSkeleton>
+                            </Skeleton>
                         </Flex>
                         <PoolCardCarousel
                             items={userPools.map((pool) => (
@@ -107,14 +102,16 @@ export function HomePools(props: BoxProps) {
                                                 alt={`${item.id}-image`}
                                                 objectFit={{ base: 'cover', sm: 'contain' }}
                                             />
-                                            <BeetsButton
+                                            <Button
+                                                variant="primary"
                                                 as="a"
                                                 href={item.buttonUrl}
                                                 target="_blank"
-                                                fontSize={{ base: '0.75rem', sm: '1rem' }}
+                                                size="md"
+                                                _hover={{ transform: 'none', bgColor: 'beets.highlight' }}
                                             >
                                                 {item.buttonText}
-                                            </BeetsButton>
+                                            </Button>
                                         </Flex>
                                     );
                             }
@@ -168,7 +165,7 @@ export function HomePools(props: BoxProps) {
                                 bottom="0"
                                 right="0"
                             />
-                            <BeetsButton onClick={() => {}}>What is a Boosted pool?</BeetsButton>
+                            <Button variant="primary" onClick={() => {}}>What is a Boosted pool?</BeetsButton>
                         </Flex>,
                     ]}
                 />

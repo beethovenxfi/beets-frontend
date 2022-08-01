@@ -1,5 +1,5 @@
-import { Box, Flex, HStack, Link, Text, useTheme } from '@chakra-ui/react';
-import BeetsButton from '~/components/button/Button';
+import { Box, Button, Flex, HStack, Link, Text, useTheme } from '@chakra-ui/react';
+
 import { NextLink } from '~/components/link/NextLink';
 
 export function HomeHero() {
@@ -47,17 +47,19 @@ export function HomeHero() {
 
                     <HStack spacing="4" mb={{ base: '6', lg: '10' }}>
                         <NextLink href="/pools" chakraProps={{ _hover: { textDecoration: 'none' } }}>
-                            <BeetsButton width={{ base: '130px', lg: '160px' }}>Invest</BeetsButton>
+                            <Button variant="primary" width={{ base: '130px', lg: '160px' }}>
+                                Invest
+                            </Button>
                         </NextLink>
                         <NextLink href="/trade" chakraProps={{ _hover: { textDecoration: 'none' } }}>
-                            <BeetsButton width={{ base: '130px', lg: '160px' }} buttonType="secondary">
+                            <Button width={{ base: '130px', lg: '160px' }} variant="secondary">
                                 Swap
-                            </BeetsButton>
+                            </Button>
                         </NextLink>
                     </HStack>
-                    <Link color="beets.cyan" alignSelf="flex-start">
+                    {/*<Link color="beets.highlight" alignSelf="flex-start">
                         {"I'm new! Help me get started."}
-                    </Link>
+                    </Link>*/}
                 </Flex>
             </Flex>
             <Box flex="1" display={{ base: 'none', md: 'block' }} />

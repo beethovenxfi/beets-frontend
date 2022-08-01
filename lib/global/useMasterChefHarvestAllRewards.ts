@@ -11,7 +11,7 @@ export function useMasterChefHarvestAllRewards() {
             contractInterface: BeethovenxMasterChefAbi,
         },
         functionName: 'harvestAll',
-        toastType: 'HARVEST',
+        transactionType: 'HARVEST',
     });
 
     function harvestAll(farmIds: string[]) {

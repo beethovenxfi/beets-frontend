@@ -162,7 +162,7 @@ export function BeetsTokenInputWithSlider({
                         >
                             Balance: {tokenFormatAmountPrecise(balance, 4)}
                             {hasBalance ? (
-                                <Text color="beets.cyan" ml="1">
+                                <Text color="beets.highlight" ml="1">
                                     Max
                                 </Text>
                             ) : null}

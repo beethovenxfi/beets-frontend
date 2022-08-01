@@ -5,6 +5,7 @@ import {
 } from '~/apollo/generated/graphql-codegen-generated';
 import { useTrade } from '~/modules/trade/lib/useTrade';
 import { useEffect } from 'react';
+import { replaceEthWithWeth } from '~/lib/services/token/token-util';
 
 const tradeChartRangeVar = makeVar<GqlTokenChartDataRange>('SEVEN_DAY');
 
@@ -13,7 +14,11 @@ export function useTradeChart() {
     const range = useReactiveVar(tradeChartRangeVar);
 
     const query = useGetTokenRelativePriceChartDataQuery({
-        variables: { tokenIn: reactiveTradeState.tokenIn, tokenOut: reactiveTradeState.tokenOut, range },
+        variables: {
+            tokenIn: replaceEthWithWeth(reactiveTradeState.tokenIn),
+            tokenOut: replaceEthWithWeth(reactiveTradeState.tokenOut),
+            range,
+        },
         notifyOnNetworkStatusChange: true,
     });
 
@@ -23,8 +28,8 @@ export function useTradeChart() {
 
     useEffect(() => {
         query.refetch({
-            tokenIn: reactiveTradeState.tokenIn,
-            tokenOut: reactiveTradeState.tokenOut,
+            tokenIn: replaceEthWithWeth(reactiveTradeState.tokenIn),
+            tokenOut: replaceEthWithWeth(reactiveTradeState.tokenOut),
             range,
         });
     }, [range, reactiveTradeState.tokenIn, reactiveTradeState.tokenOut]);

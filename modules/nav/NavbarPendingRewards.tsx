@@ -15,10 +15,10 @@ import { useUserPendingRewards } from '~/lib/user/useUserPendingRewards';
 import { numberFormatUSDValue } from '~/lib/util/number-formats';
 import numeral from 'numeral';
 import { useGetTokens } from '~/lib/global/useToken';
-import BeetsButton from '~/components/button/Button';
+
 import { BeetsBox } from '~/components/box/BeetsBox';
 import { useUserData } from '~/lib/user/useUserData';
-import { BeetsSkeleton } from '~/components/skeleton/BeetsSkeleton';
+
 import { useUserHarvestAllPendingRewards } from './lib/useUserHarvestAllPendingRewards';
 import { BeetsSubmitTransactionButton } from '~/components/button/BeetsSubmitTransactionButton';
 
@@ -56,7 +56,7 @@ export function NavbarPendingRewards() {
                     <StarsIcon width={15} height={16} />
 
                     {loading ? (
-                        <BeetsSkeleton height="7.5px" width="36px" mt="1.5" mb="2px" />
+                        <Skeleton height="7.5px" width="36px" mt="1.5" mb="2px" />
                     ) : (
                         <Box fontSize="11px" pt="0.5">
                             {numeral(pendingRewardsTotalUSD).format('$0.00a')}

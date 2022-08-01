@@ -2,9 +2,7 @@ import React from 'react';
 import { Box, BoxProps, Button, Flex, IconButton, Select, Spinner, Text } from '@chakra-ui/react';
 import { ChevronLeft, ChevronRight } from 'react-feather';
 import Pagination from 'rc-pagination';
-import { AnimatePresence } from 'framer-motion';
 import { AnimatedBox } from '../animation/chakra';
-import BeetsButton from '../button/Button';
 
 interface Props<T> extends BoxProps {
     items: T[];
@@ -118,7 +116,7 @@ export function PaginatedTable({
                             const selected = pageNumber === currentPage;
 
                             return (
-                                <Button borderRadius={0} color={selected ? 'beets.cyan' : undefined}>
+                                <Button borderRadius={0} color={selected ? 'beets.highlight' : undefined}>
                                     {element}
                                 </Button>
                             );
@@ -128,9 +126,9 @@ export function PaginatedTable({
             )}
             {isInfinite && (
                 <Flex justifyContent="center" width="full">
-                    <BeetsButton isLoading={fetchingMore} onClick={onFetchMore}>
+                    <Button variant="primary" isLoading={fetchingMore} onClick={onFetchMore}>
                         Load More
-                    </BeetsButton>
+                    </Button>
                 </Flex>
             )}
         </Box>

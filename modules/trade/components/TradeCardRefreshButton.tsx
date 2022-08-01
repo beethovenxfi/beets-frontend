@@ -64,7 +64,7 @@ export function TradeCardRefreshButton({ isLoading, onClick }: Props) {
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
                         >
-                            <Spinner color="beets.cyan" size="sm" marginBottom="1px" />
+                            <Spinner color="beets.highlight" size="sm" marginBottom="1px" />
                         </AnimatedBox>
                     )}
                 </Box>

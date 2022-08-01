@@ -74,8 +74,7 @@ export const fantomTheme: Partial<ChakraTheme> = {
         beets: {
             green: '#00F89C',
             red: '#FF0000',
-            cyan: '#00FFFF',
-            buttonSecondary: '#00F89C',
+            highlight: '#00FFFF',
             base: {
                 '50': '#C3C5E9',
                 '100': '#8F93D6',
@@ -107,6 +106,18 @@ export const fantomTheme: Partial<ChakraTheme> = {
                 '700': 'rgba(0,248,156, 0.7)',
                 '800': 'rgba(0,248,156, 0.8)',
                 '900': 'rgba(0,248,156, 0.9)',
+            },
+            highlightAlpha: {
+                '50': 'rgba(0, 255, 255, 0.05)',
+                '100': 'rgba(0, 255, 255, 0.1)',
+                '200': 'rgba(0, 255, 255, 0.2)',
+                '300': 'rgba(0, 255, 255, 0.3)',
+                '400': 'rgba(0, 255, 255, 0.4)',
+                '500': 'rgba(0, 255, 255, 0.5)',
+                '600': 'rgba(0, 255, 255, 0.6)',
+                '700': 'rgba(0, 255, 255, 0.7)',
+                '800': 'rgba(0, 255, 255, 0.8)',
+                '900': 'rgba(0, 255, 255, 0.9)',
             },
         },
     },
@@ -166,7 +177,7 @@ export const fantomTheme: Partial<ChakraTheme> = {
         },
         Link: {
             baseStyle: {
-                color: 'beets.cyan',
+                color: 'beets.highlight',
             },
         },
         Tooltip: {
@@ -180,6 +191,72 @@ export const fantomTheme: Partial<ChakraTheme> = {
                 container: {
                     borderRadius: 'md',
                     alignItems: 'flex-start',
+                },
+            },
+        },
+        Button: {
+            variants: {
+                primary: {
+                    background: 'beets.green',
+                    color: 'gray.500',
+                    _active: { bgColor: 'beets.green' },
+                    _focus: { outline: 'none', boxShadow: 'none' },
+                    rounded: 'xl',
+                    _hover: {
+                        bgColor: 'beets.highlight',
+                        transform: 'scale(1.01)',
+                        _disabled: {
+                            transform: 'none',
+                            background: 'gray.400',
+                        },
+                    },
+                    _disabled: {
+                        bgColor: 'gray.400',
+                        opacity: 1,
+                        color: 'whiteAlpha.700',
+                        cursor: 'not-allowed',
+                        _active: { bgColor: 'gray.400' },
+                    },
+                },
+                secondary: {
+                    bgColor: 'beets.greenAlpha.300',
+                    color: 'white',
+                    _active: { bgColor: 'beets.greenAlpha.300' },
+                    _focus: { outline: 'none', boxShadow: 'none' },
+                    rounded: 'xl',
+                    _hover: {
+                        transform: 'scale(1.01)',
+                        bgColor: 'beets.highlightAlpha.200',
+                        _disabled: {
+                            transform: 'none',
+                            background: 'gray.400',
+                        },
+                    },
+                    _disabled: {
+                        bgColor: 'gray.400',
+                        opacity: 1,
+                        color: 'whiteAlpha.700',
+                        cursor: 'not-allowed',
+                        _active: { bgColor: 'gray.400' },
+                    },
+                },
+            },
+        },
+        Skeleton: {
+            baseStyle: {
+                borderRadius: 'md',
+            },
+            defaultProps: {
+                startColor: 'gray.400',
+                endColor: 'gray.500',
+            },
+        },
+        Text: {
+            variants: {
+                cardHeadline: {
+                    fontWeight: 'semibold',
+                    fontSize: 'xl',
+                    color: 'white',
                 },
             },
         },

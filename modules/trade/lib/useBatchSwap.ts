@@ -6,16 +6,17 @@ import { useSlippage } from '~/lib/global/useSlippage';
 import { useGetTokens } from '~/lib/global/useToken';
 import { parseUnits } from 'ethers/lib/utils';
 import { oldBnumScaleAmount } from '~/lib/services/pool/lib/old-big-number';
-import { MaxUint256 } from '@ethersproject/constants';
+import { AddressZero, MaxUint256 } from '@ethersproject/constants';
+import { isEth, tokenFormatAmount } from '~/lib/services/token/token-util';
 
 export function useBatchSwap() {
     const { getRequiredToken } = useGetTokens();
     const { data: accountData } = useAccount();
-    const { slippageDifference } = useSlippage();
+    const { slippageDifference, slippageAddition } = useSlippage();
     const { submit, submitAsync, ...rest } = useSubmitTransaction({
         contractConfig: vaultContractConfig,
         functionName: 'batchSwap',
-        toastType: 'SWAP',
+        transactionType: 'SWAP',
     });
 
     function batchSwap({
@@ -26,6 +27,8 @@ export function useBatchSwap() {
         tokenOut,
         swapAmount,
         returnAmount,
+        tokenInAmount,
+        tokenOutAmount,
     }: GqlSorGetSwapsResponseFragment) {
         //TODO: make sure manually added tokens end up in the tokens array or this will throw
         const tokenInDefinition = getRequiredToken(tokenIn);
@@ -36,13 +39,23 @@ export function useBatchSwap() {
         // -ve means min to receive
         // For a multihop the intermediate tokens should be 0
         const limits = tokenAddresses.map((tokenAddress, i) => {
-            if (swapType === 'EXACT_IN' && isSameAddress(tokenAddress, tokenIn)) {
-                return parseUnits(swapAmount, getRequiredToken(tokenIn).decimals).toString();
-            } else if (swapType === 'EXACT_OUT' && isSameAddress(tokenAddress, tokenOut)) {
-                return oldBnumScaleAmount(swapAmount, tokenOutDefinition.decimals)
-                    .times(slippageDifference)
-                    .times(-1)
-                    .toFixed(0);
+            if (swapType === 'EXACT_IN') {
+                if (isSameAddress(tokenAddress, tokenIn) || (isEth(tokenIn) && tokenAddress === AddressZero)) {
+                    return oldBnumScaleAmount(tokenInAmount, tokenInDefinition.decimals).toString();
+                } else if (isSameAddress(tokenAddress, tokenOut) || (isEth(tokenOut) && tokenAddress === AddressZero)) {
+                    return oldBnumScaleAmount(tokenOutAmount, tokenOutDefinition.decimals)
+                        .times(slippageDifference)
+                        .times(-1)
+                        .toFixed(0);
+                }
+            } else if (swapType === 'EXACT_OUT') {
+                if (isSameAddress(tokenAddress, tokenIn) || (isEth(tokenIn) && tokenAddress === AddressZero)) {
+                    return oldBnumScaleAmount(tokenInAmount, tokenInDefinition.decimals)
+                        .times(slippageAddition)
+                        .toFixed(0);
+                } else if (isSameAddress(tokenAddress, tokenOut) || (isEth(tokenOut) && tokenAddress === AddressZero)) {
+                    return oldBnumScaleAmount(tokenOutAmount, tokenOutDefinition.decimals).toString();
+                }
             }
 
             return '0';
@@ -62,10 +75,16 @@ export function useBatchSwap() {
                 limits,
                 MaxUint256,
             ],
-            toastText:
-                swapType === 'EXACT_IN'
-                    ? `${swapAmount} ${tokenInDefinition.symbol} -> ${returnAmount} ${tokenOutDefinition.symbol}`
-                    : `${returnAmount} ${tokenInDefinition.symbol} -> ${swapAmount} ${tokenOutDefinition.symbol}`,
+            toastText: `${tokenFormatAmount(tokenInAmount)} ${tokenInDefinition.symbol} -> ${tokenFormatAmount(
+                tokenOutAmount,
+            )} ${tokenOutDefinition.symbol}`,
+            ...(isEth(tokenIn)
+                ? {
+                      overrides: {
+                          value: swapType === 'EXACT_IN' ? parseUnits(swapAmount, 18) : '0',
+                      },
+                  }
+                : {}),
         });
     }
 

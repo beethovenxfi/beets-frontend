@@ -11,7 +11,7 @@ export function useApproveToken(token: TokenBase) {
             contractInterface: ERC20Abi,
         },
         functionName: 'approve',
-        toastType: 'APPROVE',
+        transactionType: 'APPROVE',
     });
 
     function approve(contractToApprove = networkConfig.balancer.vault) {

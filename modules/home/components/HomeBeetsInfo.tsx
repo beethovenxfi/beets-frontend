@@ -1,8 +1,7 @@
-import { Box, BoxProps, Flex, Text } from '@chakra-ui/react';
+import { Box, BoxProps, Button, Flex, Text } from '@chakra-ui/react';
 import { BeetsHeadline } from '~/components/typography/BeetsHeadline';
 import NextImage from 'next/image';
 import BeetsTokenInfoImage from '~/assets/images/beets-token-info.png';
-import BeetsButton from '~/components/button/Button';
 
 export function HomeBeetsInfo(props: BoxProps) {
     return (
@@ -15,9 +14,9 @@ export function HomeBeetsInfo(props: BoxProps) {
                 The BEETS token launched in October 2021, providing our community with rewards value, incentives and
                 also utility with governance & gauge voting rights with the extended fBEETS token.
             </Box>
-            <BeetsButton as="a" href="https://docs.beets.fi/beets/tokenomics" target="_blank">
+            <Button variant="primary" as="a" href="https://docs.beets.fi/beets/tokenomics" target="_blank">
                 BEETS tokenomics
-            </BeetsButton>
+            </Button>
         </Box>
     );
 }

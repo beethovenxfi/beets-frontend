@@ -1,31 +1,26 @@
 import { Modal, ModalBody, ModalCloseButton, ModalContent } from '@chakra-ui/modal';
-import { Heading, IconButton, ModalHeader, ModalOverlay, Text, useDisclosure } from '@chakra-ui/react';
-import BeetsButton from '~/components/button/Button';
+import { Button, Heading, IconButton, ModalHeader, ModalOverlay, Text, useDisclosure } from '@chakra-ui/react';
 import { usePool } from '~/modules/pool/lib/usePool';
-import PoolInvestProportional from '~/modules/pool/invest/components/PoolInvestProportional';
 import { ChevronLeft } from 'react-feather';
-import { PoolInvestPreview } from '~/modules/pool/invest/components/PoolInvestPreview';
 import { useRef, useState } from 'react';
-import { PoolInvestTypeChoice } from '~/modules/pool/invest/components/PoolInvestTypeChoice';
-import { PoolInvestCustom } from '~/modules/pool/invest/components/PoolInvestCustom';
 import { PoolWithdrawTypeChoice } from '~/modules/pool/withdraw/components/PoolWithdrawTypeChoice';
-import { PoolUnstakeModal } from '~/modules/pool/stake/PoolUnstakeModal';
 import { PoolWithdrawProportional } from '~/modules/pool/withdraw/components/PoolWithdrawProportional';
 import { PoolWithdrawSingleAsset } from '~/modules/pool/withdraw/components/PoolWithdrawSingleAsset';
 import { PoolWithdrawPreview } from '~/modules/pool/withdraw/components/PoolWithdrawPreview';
+import { FadeInBox } from '~/components/animation/FadeInBox';
 
 export function PoolWithdrawModal() {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const { pool, getPoolTypeName } = usePool();
-    const [modalState, setModalState] = useState<'start' | 'proportional' | 'single-asset' | 'preview'>('single-asset');
+    const [modalState, setModalState] = useState<'start' | 'proportional' | 'single-asset' | 'preview'>('start');
     const [type, setInvestType] = useState<'proportional' | 'single-asset' | null>(null);
     const initialRef = useRef(null);
 
     return (
         <>
-            <BeetsButton onClick={onOpen} buttonType="secondary" width={{ base: 'full', md: '140px' }}>
+            <Button onClick={onOpen} variant="secondary" width={{ base: 'full', md: '140px' }}>
                 Withdraw
-            </BeetsButton>
+            </Button>
             <Modal
                 isOpen={isOpen}
                 onClose={onClose}
@@ -91,7 +86,7 @@ export function PoolWithdrawModal() {
                         ) : null}
                     </ModalHeader>
                     <ModalBody className="bg" pb="6">
-                        {modalState === 'start' ? (
+                        <FadeInBox isVisible={modalState === 'start'}>
                             <PoolWithdrawTypeChoice
                                 onShowProportional={() => {
                                     setInvestType('proportional');
@@ -102,24 +97,24 @@ export function PoolWithdrawModal() {
                                     setModalState('single-asset');
                                 }}
                             />
-                        ) : null}
-                        {modalState === 'proportional' ? (
+                        </FadeInBox>
+                        <FadeInBox isVisible={modalState === 'proportional'}>
                             <PoolWithdrawProportional
                                 onShowPreview={() => {
                                     setInvestType('proportional');
                                     setModalState('preview');
                                 }}
                             />
-                        ) : null}
-                        {modalState === 'single-asset' ? (
+                        </FadeInBox>
+                        <FadeInBox isVisible={modalState === 'single-asset'}>
                             <PoolWithdrawSingleAsset
                                 onShowPreview={() => {
                                     setInvestType('single-asset');
                                     setModalState('preview');
                                 }}
                             />
-                        ) : null}
-                        {modalState === 'preview' ? (
+                        </FadeInBox>
+                        <FadeInBox isVisible={modalState === 'preview'}>
                             <PoolWithdrawPreview
                                 onWithdrawComplete={() => {
                                     setModalState('start');
@@ -127,7 +122,7 @@ export function PoolWithdrawModal() {
                                     onClose();
                                 }}
                             />
-                        ) : null}
+                        </FadeInBox>
                     </ModalBody>
                 </ModalContent>
             </Modal>

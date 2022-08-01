@@ -6,6 +6,7 @@ import {
 } from '~/apollo/generated/graphql-codegen-generated';
 import { networkConfig } from '~/lib/config/network-config';
 import { useEffect } from 'react';
+import { isEth, isWeth } from '~/lib/services/token/token-util';
 
 type TradeState = {
     tokenIn: string;
@@ -34,6 +35,8 @@ export function useTrade() {
     const priceImpact = parseFloat(reactiveTradeState.sorResponse?.priceImpact || '0');
     const hasNoticeablePriceImpact = priceImpact >= networkConfig.priceImpact.trade.noticeable;
     const hasHighPriceImpact = priceImpact >= networkConfig.priceImpact.trade.high;
+    const isNativeAssetWrap = isEth(reactiveTradeState.tokenIn) && isWeth(reactiveTradeState.tokenOut);
+    const isNativeAssetUnwrap = isEth(reactiveTradeState.tokenOut) && isWeth(reactiveTradeState.tokenIn);
 
     // make sure not to cache as this data needs to be always fresh
     const [load, { loading, error, data, networkStatus, stopPolling: tradeStopPolling, startPolling }] =
@@ -127,5 +130,7 @@ export function useTrade() {
         priceImpact,
         hasNoticeablePriceImpact,
         hasHighPriceImpact,
+        isNativeAssetWrap,
+        isNativeAssetUnwrap,
     };
 }

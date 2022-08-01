@@ -37,7 +37,7 @@ a {
 }
 
 .apr-stripes {
-    background: linear-gradient(
+    /*background: linear-gradient(
         45deg,
         #01f3af 25%,
         #0d936d 25%,
@@ -46,16 +46,16 @@ a {
         #01f3af 75%,
         #0d936d 75%,
         #0d936d 100%
-    );
-    background-size: 1em 1em;
-    background-repeat: repeat;
-    color: transparent;
+    );*/
+    /*background-size: 1em 1em;
+    background-repeat: repeat;*/
+    color: #00f89c;
     font-size: 2.5rem;
     font-weight: 900;
-    background-clip: text;
+    /*background-clip: text;*/
 
-    animation: move 15s infinite linear;
-    -webkit-animation: move 15s infinite linear;
+    /*animation: move 15s infinite linear;
+    -webkit-animation: move 15s infinite linear;*/
 }
 
 @-webkit-keyframes move {

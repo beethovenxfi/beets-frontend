@@ -30,6 +30,8 @@ import { etherscanGetTokenUrl } from '~/lib/util/etherscan';
 import { CoingeckoIcon } from '~/assets/icons/CoingeckoIcon';
 import { SubmitTransactionQuery } from '~/lib/util/useSubmitTransaction';
 import { GqlSorGetSwapsResponseFragment } from '~/apollo/generated/graphql-codegen-generated';
+import { transactionMessageFromError } from '~/lib/util/transaction-util';
+import { useUserTokenBalances } from '~/lib/user/useUserTokenBalances';
 
 interface Props {
     query: Omit<SubmitTransactionQuery, 'submit' | 'submitAsync'> & {
@@ -46,6 +48,7 @@ export function TradePreviewContent({ query, onTransactionSubmitted }: Props) {
     const tokenIn = getToken(swapInfo?.tokenIn || '');
     const tokenOut = getToken(swapInfo?.tokenOut || '');
     const [highPiAccepted, setHighPiAccepted] = useState(false);
+    const { refetch: refetchUserBalances } = useUserTokenBalances();
 
     if (!swapInfo) {
         //TODO: handle
@@ -73,6 +76,8 @@ export function TradePreviewContent({ query, onTransactionSubmitted }: Props) {
         diff >= 0
             ? `${numeral(Math.abs(diff)).format('%0.[00]')} cheaper`
             : `within ${numeral(Math.abs(diff)).format('%0.[00]')}`;
+
+    //console.log('query.submitError', query.submitError ? query.submitError.reason : null);
 
     return (
         <Box>
@@ -192,7 +197,7 @@ export function TradePreviewContent({ query, onTransactionSubmitted }: Props) {
                                 <InfoButton label="Minimum received" infoText="Lorem ipsum dolor...." />
                             </Box>
                             <Box fontWeight="bold">
-                                {tokenFormatAmountPrecise(minAmountOut)}{' '}
+                                {tokenFormatAmount(minAmountOut)}{' '}
                                 <Text as="span" fontSize="sm" fontWeight="normal">
                                     {tokenOut?.symbol}
                                 </Text>
@@ -204,7 +209,7 @@ export function TradePreviewContent({ query, onTransactionSubmitted }: Props) {
                                 <InfoButton label="Maximum spent" infoText="Lorem ipsum dolor...." />
                             </Box>
                             <Box fontWeight="bold">
-                                {tokenFormatAmountPrecise(maxAmountIn)}{' '}
+                                {tokenFormatAmount(maxAmountIn)}
                                 <Text as="span" fontSize="sm" fontWeight="normal">
                                     {tokenIn?.symbol}
                                 </Text>
@@ -222,21 +227,24 @@ export function TradePreviewContent({ query, onTransactionSubmitted }: Props) {
                     </CardRow>
                 </Card>
             </Box>
-            <Alert status="error" mt="4" display="flex" alignItems="flex-start">
-                <Checkbox
-                    colorScheme="red"
-                    mt="1"
-                    mr="4"
-                    isChecked={highPiAccepted}
-                    onChange={() => setHighPiAccepted(!highPiAccepted)}
-                />
-                <Box>I understand that this trade will significantly move the market price.</Box>
-            </Alert>
+            {hasHighPriceImpact && (
+                <Alert status="error" mt="4" display="flex" alignItems="flex-start">
+                    <Checkbox
+                        colorScheme="red"
+                        mt="1"
+                        mr="4"
+                        isChecked={highPiAccepted}
+                        onChange={() => setHighPiAccepted(!highPiAccepted)}
+                    />
+                    <Box>I understand that this trade will significantly move the market price.</Box>
+                </Alert>
+            )}
             <BeetsSubmitTransactionButton
                 {...query}
                 isDisabled={hasHighPriceImpact && !highPiAccepted}
                 onClick={() => query.batchSwap(swapInfo)}
                 onPending={onTransactionSubmitted}
+                onConfirmed={() => refetchUserBalances()}
                 isFullWidth
                 size="lg"
                 marginTop="6"
@@ -246,7 +254,7 @@ export function TradePreviewContent({ query, onTransactionSubmitted }: Props) {
             {query && query.submitError ? (
                 <Alert status="error" mt={4}>
                     <AlertIcon />
-                    An error occurred: {query.submitError.message}
+                    {transactionMessageFromError(query.submitError)}
                 </Alert>
             ) : null}
         </Box>

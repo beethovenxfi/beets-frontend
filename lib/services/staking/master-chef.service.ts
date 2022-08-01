@@ -4,6 +4,7 @@ import { networkConfig } from '~/lib/config/network-config';
 import { BaseProvider } from '@ethersproject/providers';
 import BeethovenxMasterChefAbi from '~/lib/abi/BeethovenxMasterChef.json';
 import TimeBasedRewarderAbi from '~/lib/abi/TimeBasedRewarder.json';
+import ERC20Abi from '~/lib/abi/ERC20.json';
 import { BigNumber } from 'ethers';
 import { formatFixed } from '@ethersproject/bignumber';
 import { forEach } from 'lodash';
@@ -46,6 +47,21 @@ export class MasterChefService {
         const response: { amount: BigNumber } = await contract.userInfo(farmId, userAddress);
 
         return formatFixed(response.amount, 18);
+    }
+
+    public async getMasterChefTokenBalance({
+        address,
+        provider,
+        decimals,
+    }: {
+        address: string;
+        provider: BaseProvider;
+        decimals: number;
+    }): Promise<AmountHumanReadable> {
+        const tokenContract = new Contract(address, ERC20Abi, provider);
+        const response: BigNumber = await tokenContract.balanceOf(this.masterChefContractAddress);
+
+        return formatFixed(response, decimals);
     }
 
     public async getPendingRewards({

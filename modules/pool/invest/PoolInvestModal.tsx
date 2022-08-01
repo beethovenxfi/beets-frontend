@@ -1,13 +1,13 @@
 import { Modal, ModalBody, ModalCloseButton, ModalContent } from '@chakra-ui/modal';
-import { Heading, IconButton, ModalHeader, ModalOverlay, Text, useDisclosure } from '@chakra-ui/react';
-import BeetsButton from '~/components/button/Button';
+import { Button, Heading, IconButton, ModalHeader, ModalOverlay, Text, useDisclosure } from '@chakra-ui/react';
 import { usePool } from '~/modules/pool/lib/usePool';
-import PoolInvestProportional from '~/modules/pool/invest/components/PoolInvestProportional';
+import { PoolInvestProportional } from '~/modules/pool/invest/components/PoolInvestProportional';
 import { ChevronLeft } from 'react-feather';
 import { PoolInvestPreview } from '~/modules/pool/invest/components/PoolInvestPreview';
 import { useRef, useState } from 'react';
 import { PoolInvestTypeChoice } from '~/modules/pool/invest/components/PoolInvestTypeChoice';
 import { PoolInvestCustom } from '~/modules/pool/invest/components/PoolInvestCustom';
+import { motion } from 'framer-motion';
 
 export function PoolInvestModal() {
     const { isOpen, onOpen, onClose } = useDisclosure();
@@ -18,9 +18,9 @@ export function PoolInvestModal() {
 
     return (
         <>
-            <BeetsButton onClick={onOpen} width={{ base: 'full', md: '140px' }} mr="2">
+            <Button variant="primary" onClick={onOpen} width={{ base: 'full', md: '140px' }} mr="2">
                 Invest
-            </BeetsButton>
+            </Button>
             <Modal
                 isOpen={isOpen}
                 onClose={onClose}
@@ -87,24 +87,29 @@ export function PoolInvestModal() {
                     </ModalHeader>
                     <ModalBody className="bg" pb="6">
                         {modalState === 'start' ? (
-                            <PoolInvestTypeChoice
-                                onShowProportional={() => {
-                                    setInvestType('proportional');
-                                    setModalState('proportional');
-                                }}
-                                onShowCustom={() => {
-                                    setInvestType('custom');
-                                    setModalState('custom');
-                                }}
-                            />
+                            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+                                <PoolInvestTypeChoice
+                                    onShowProportional={() => {
+                                        setInvestType('proportional');
+                                        setModalState('proportional');
+                                    }}
+                                    onShowCustom={() => {
+                                        setInvestType('custom');
+                                        setModalState('custom');
+                                    }}
+                                />
+                            </motion.div>
                         ) : null}
+
                         {modalState === 'proportional' ? (
-                            <PoolInvestProportional
-                                onShowPreview={() => {
-                                    setInvestType('proportional');
-                                    setModalState('preview');
-                                }}
-                            />
+                            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+                                <PoolInvestProportional
+                                    onShowPreview={() => {
+                                        setInvestType('proportional');
+                                        setModalState('preview');
+                                    }}
+                                />
+                            </motion.div>
                         ) : null}
                         {modalState === 'custom' ? (
                             <PoolInvestCustom
@@ -115,13 +120,15 @@ export function PoolInvestModal() {
                             />
                         ) : null}
                         {modalState === 'preview' ? (
-                            <PoolInvestPreview
-                                onInvestComplete={() => {
-                                    setModalState('start');
-                                    setInvestType(null);
-                                    onClose();
-                                }}
-                            />
+                            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+                                <PoolInvestPreview
+                                    onInvestComplete={() => {
+                                        setModalState('start');
+                                        setInvestType(null);
+                                        onClose();
+                                    }}
+                                />
+                            </motion.div>
                         ) : null}
                     </ModalBody>
                 </ModalContent>

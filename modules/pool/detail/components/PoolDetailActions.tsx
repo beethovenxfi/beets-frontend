@@ -1,7 +1,7 @@
 import { BeetsBox } from '~/components/box/BeetsBox';
-import { BoxProps, Flex } from '@chakra-ui/react';
+import { BoxProps, Button, Flex } from '@chakra-ui/react';
 import { usePool } from '~/modules/pool/lib/usePool';
-import BeetsButton from '~/components/button/Button';
+
 import NextLink from 'next/link';
 import { PoolDetailPossibleYieldText } from '~/modules/pool/detail/components/PoolDetailPossibleYieldText';
 
@@ -15,14 +15,14 @@ export function PoolDetailActions({ ...rest }: Props) {
             {totalApr > 0.05 ? <PoolDetailPossibleYieldText /> : null}
             <Flex pt={totalApr > 0.05 ? 10 : 4}>
                 <NextLink href={`/pool/${pool.id}/invest`} passHref>
-                    <BeetsButton flex={1} mr={2}>
+                    <Button variant="primary" flex={1} mr={2}>
                         Invest
-                    </BeetsButton>
+                    </Button>
                 </NextLink>
                 <NextLink href={`/pool/${pool.id}/withdraw`} passHref>
-                    <BeetsButton flex={1} bg="blue.400" _active={{ backgroundColor: 'blue.600' }} color="white" ml={2}>
+                    <Button flex={1} bg="blue.400" _active={{ backgroundColor: 'blue.600' }} color="white" ml={2}>
                         Withdraw
-                    </BeetsButton>
+                    </Button>
                 </NextLink>
             </Flex>
         </BeetsBox>

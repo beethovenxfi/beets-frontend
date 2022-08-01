@@ -20,7 +20,7 @@ export function PoolStakeInFarmWarning() {
                     <Box flex="1" mr="8">
                         You have {numberFormatUSDValue(valueInWallet)} worth of BPT in your wallet. This pool offers
                         additional rewards that will accumulate over time when your BPT are staked.{' '}
-                        <Link color="beets.cyan">More details</Link>
+                        <Link color="beets.highlight">More details</Link>
                     </Box>
                     <Button variant="outline" onClick={onOpen}>
                         Stake now

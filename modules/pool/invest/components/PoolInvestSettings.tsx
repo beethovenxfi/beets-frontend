@@ -65,7 +65,7 @@ export function PoolInvestSettings({ ...rest }: BoxProps) {
                                 />
                             </Box>
 
-                            <Link color="beets.cyan">Normal</Link>
+                            <Link color="beets.highlight">Normal</Link>
                         </Flex>*/}
             </BeetsBox>
         </Box>

@@ -1,6 +1,5 @@
 import { ConnectButton } from '@rainbow-me/rainbowkit';
-import BeetsButton from '../../components/button/Button';
-import { Box, HStack, Spinner, Text } from '@chakra-ui/react';
+import { Box, Button, HStack, Skeleton, Spinner, Text } from '@chakra-ui/react';
 import Image from 'next/image';
 import BeetsSmart from '~/assets/icons/beetx-smarts.svg';
 import { useReactiveVar } from '@apollo/client';
@@ -8,7 +7,7 @@ import { txPendingVar } from '~/lib/util/useSubmitTransaction';
 import { IconWallet } from '~/components/icons/IconWallet';
 import { BarChart2 } from 'react-feather';
 import { useUserData } from '~/lib/user/useUserData';
-import { BeetsSkeleton } from '~/components/skeleton/BeetsSkeleton';
+
 import { numberFormatLargeUsdValue } from '~/lib/util/number-formats';
 
 export default function NavbarWalletConnectButton() {
@@ -23,7 +22,8 @@ export default function NavbarWalletConnectButton() {
                         {(() => {
                             if (!mounted || !account || !chain) {
                                 return (
-                                    <BeetsButton
+                                    <Button
+                                        variant="primary"
                                         _hover={{
                                             backgroundColor: 'beets.green',
                                             transform: 'scale(1.1)',
@@ -36,20 +36,21 @@ export default function NavbarWalletConnectButton() {
                                     >
                                         <IconWallet stroke="black" boxSize="20px" />
                                         <Box ml="2">Connect Wallet</Box>
-                                    </BeetsButton>
+                                    </Button>
                                 );
                             }
 
                             if (chain.unsupported) {
                                 return (
-                                    <BeetsButton
+                                    <Button
+                                        variant="primary"
                                         backgroundColor="red.400"
                                         _hover={{ backgroundColor: 'red.600' }}
                                         onClick={openChainModal}
                                         type="button"
                                     >
                                         Wrong network
-                                    </BeetsButton>
+                                    </Button>
                                 );
                             }
 
@@ -68,14 +69,15 @@ export default function NavbarWalletConnectButton() {
                                     >
                                         <BarChart2 size={18} />
                                         {loading ? (
-                                            <BeetsSkeleton height="10px" width="41px" />
+                                            <Skeleton height="10px" width="41px" />
                                         ) : (
                                             <Box fontSize="sm" fontWeight="semibold">
                                                 {numberFormatLargeUsdValue(portfolioValueUSD)}
                                             </Box>
                                         )}
                                     </HStack>
-                                    <BeetsButton
+                                    <Button
+                                        variant="primary"
                                         rounded="md"
                                         fontSize="md"
                                         onClick={openAccountModal}
@@ -117,7 +119,7 @@ export default function NavbarWalletConnectButton() {
                                                 </Text>
                                             </HStack>
                                         </HStack>
-                                    </BeetsButton>
+                                    </Button>
                                 </HStack>
                             );
                         })()}

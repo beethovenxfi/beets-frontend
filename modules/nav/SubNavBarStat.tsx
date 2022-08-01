@@ -1,5 +1,5 @@
-import { HStack, StackProps, Text } from '@chakra-ui/react';
-import { BeetsSkeleton } from '~/components/skeleton/BeetsSkeleton';
+import { HStack, Skeleton, StackProps, Text } from '@chakra-ui/react';
+
 import numeral from 'numeral';
 
 interface Props extends StackProps {
@@ -15,7 +15,7 @@ export function SubNavBarStat({ label, value, loading, ...rest }: Props) {
                 {label}:
             </Text>
             {loading ? (
-                <BeetsSkeleton height="16px" width="54px" />
+                <Skeleton height="16px" width="54px" />
             ) : (
                 <Text fontWeight="semibold" fontSize={{ base: 'sm', lg: 'md' }}>
                     {numeral(value).format('$0.00a')}

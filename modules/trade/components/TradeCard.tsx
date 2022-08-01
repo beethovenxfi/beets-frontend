@@ -1,8 +1,8 @@
-import { Box, useDisclosure, VStack } from '@chakra-ui/react';
+import { Box, Button, Flex, useDisclosure, VStack } from '@chakra-ui/react';
 import { useAnimation } from 'framer-motion';
 import TokenInput from '~/components/inputs/TokenInput';
 import Card from '~/components/card/Card';
-import BeetsButton from '~/components/button/Button';
+
 import { TokenInputSwapButton } from '~/modules/trade/components/TokenInputSwapButton';
 import { TradeCardSwapBreakdown } from '~/modules/trade/components/TradeCardSwapBreakdown';
 import { useTradeCard } from '~/modules/trade/lib/useTradeCard';
@@ -15,10 +15,14 @@ import { TradePreviewModal } from '~/modules/trade/components/TradePreviewModal'
 import { useUserAllowances } from '~/lib/util/useUserAllowances';
 import { BeetsTokenApprovalButton } from '~/components/button/BeetsTokenApprovalButton';
 import { TradeCardRefreshButton } from '~/modules/trade/components/TradeCardRefreshButton';
+import { BeetsSubmitTransactionButton } from '~/components/button/BeetsSubmitTransactionButton';
+import { networkConfig } from '~/lib/config/network-config';
+import { useWrapEth } from '~/lib/util/useWrapEth';
+import { useUnwrapEth } from '~/lib/util/useUnwrapEth';
 
 export function TradeCard() {
     const { isConnected } = useUserAccount();
-    const { isAmountLessThanEqUserBalance } = useUserTokenBalances();
+    const { isAmountLessThanEqUserBalance, refetch: refetchUserBalances } = useUserTokenBalances();
     const controls = useAnimation();
     const tokenSelectDisclosure = useDisclosure();
     const tradePreviewDisclosure = useDisclosure();
@@ -39,7 +43,12 @@ export function TradeCard() {
         isNotEnoughLiquidity,
         tradeStartPolling,
         tradeStopPolling,
+        isNativeAssetWrap,
+        isNativeAssetUnwrap,
     } = useTradeCard();
+
+    const wrapEthQuery = useWrapEth();
+    const unwrapEthQuery = useUnwrapEth();
 
     const {
         hasApprovalForAmount,
@@ -80,7 +89,7 @@ export function TradeCard() {
                             onChange={handleSellAmountChanged}
                             value={sellAmount}
                             showPresets
-                            requiresApproval={!hasApprovalForSellAmount}
+                            requiresApproval={!hasApprovalForSellAmount && !isNativeAssetUnwrap}
                         />
                     </Box>
                     <TokenInputSwapButton onSwap={handleTokensSwitched} isLoading={isLoadingOrFetching} />
@@ -94,6 +103,32 @@ export function TradeCard() {
                     <Box width="full" paddingTop="2">
                         {!isConnected ? (
                             <WalletConnectButton isFullWidth size="lg" />
+                        ) : isNativeAssetWrap ? (
+                            <BeetsSubmitTransactionButton
+                                {...wrapEthQuery}
+                                isDisabled={isAmountMoreThanUserBalance}
+                                onClick={() => wrapEthQuery.wrap(sellAmount)}
+                                onConfirmed={() => refetchUserBalances()}
+                                width="full"
+                                size="lg"
+                            >
+                                {isAmountMoreThanUserBalance
+                                    ? `Insufficient ${networkConfig.eth.symbol} balance`
+                                    : `Wrap ${networkConfig.eth.symbol}`}
+                            </BeetsSubmitTransactionButton>
+                        ) : isNativeAssetUnwrap ? (
+                            <BeetsSubmitTransactionButton
+                                {...unwrapEthQuery}
+                                isDisabled={isAmountMoreThanUserBalance}
+                                onClick={() => unwrapEthQuery.unwrap(sellAmount)}
+                                onConfirmed={() => refetchUserBalances()}
+                                width="full"
+                                size="lg"
+                            >
+                                {isAmountMoreThanUserBalance
+                                    ? `Insufficient ${networkConfig.eth.symbol} balance`
+                                    : `Unwrap ${networkConfig.eth.symbol}`}
+                            </BeetsSubmitTransactionButton>
                         ) : !hasApprovalForSellAmount && tokenInData ? (
                             <BeetsTokenApprovalButton
                                 tokenWithAmount={{ ...tokenInData, amount: sellAmount }}
@@ -103,7 +138,8 @@ export function TradeCard() {
                                 size="lg"
                             />
                         ) : (
-                            <BeetsButton
+                            <Button
+                                variant="primary"
                                 disabled={isReviewDisabled}
                                 onClick={() => {
                                     tradeStopPolling();
@@ -111,14 +147,13 @@ export function TradeCard() {
                                 }}
                                 isFullWidth
                                 size="lg"
-                                colorScheme="red"
                             >
                                 {isNotEnoughLiquidity
                                     ? 'Not enough liquidity'
                                     : isAmountMoreThanUserBalance
                                     ? `Insufficient ${getToken(tokenIn)?.symbol} balance`
                                     : 'Review swap'}
-                            </BeetsButton>
+                            </Button>
                         )}
                     </Box>
                 </VStack>
