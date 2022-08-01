@@ -16,7 +16,6 @@ export function usePoolJoinGetBptOutAndPriceImpactForTokensIn() {
     const query = useQuery(
         ['joinGetBptOutAndPriceImpactForTokensIn', tokenAmountsIn, slippage],
         async () => {
-            tokenAmountsIn.map((t) => console.log(t));
             if (
                 !tokenAmountsIn ||
                 tokenAmountsIn.every((tokenAmount) => !tokenAmount.amount || parseFloat(tokenAmount.amount) === 0)
