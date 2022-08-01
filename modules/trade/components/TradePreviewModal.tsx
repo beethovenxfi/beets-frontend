@@ -53,7 +53,7 @@ export function TradePreviewModal({ isOpen, onClose }: Props) {
                         />
                     )}
                     {submitting && (
-                        <motion.div animate={{ opacity: 1 }} initial={{ opacity: 0 }} exit={{ opacity: 0 }}>
+                        <motion.div animate={{ opacity: 1 }} initial={{ opacity: 0 }}>
                             <TradeSubmittedContent query={batchSwapQuery} />
                         </motion.div>
                     )}

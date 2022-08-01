@@ -7,6 +7,7 @@ import { PoolWithdrawTypeChoice } from '~/modules/pool/withdraw/components/PoolW
 import { PoolWithdrawProportional } from '~/modules/pool/withdraw/components/PoolWithdrawProportional';
 import { PoolWithdrawSingleAsset } from '~/modules/pool/withdraw/components/PoolWithdrawSingleAsset';
 import { PoolWithdrawPreview } from '~/modules/pool/withdraw/components/PoolWithdrawPreview';
+import { FadeInBox } from '~/components/animation/FadeInBox';
 
 export function PoolWithdrawModal() {
     const { isOpen, onOpen, onClose } = useDisclosure();
@@ -85,7 +86,7 @@ export function PoolWithdrawModal() {
                         ) : null}
                     </ModalHeader>
                     <ModalBody className="bg" pb="6">
-                        {modalState === 'start' ? (
+                        <FadeInBox isVisible={modalState === 'start'}>
                             <PoolWithdrawTypeChoice
                                 onShowProportional={() => {
                                     setInvestType('proportional');
@@ -96,24 +97,24 @@ export function PoolWithdrawModal() {
                                     setModalState('single-asset');
                                 }}
                             />
-                        ) : null}
-                        {modalState === 'proportional' ? (
+                        </FadeInBox>
+                        <FadeInBox isVisible={modalState === 'proportional'}>
                             <PoolWithdrawProportional
                                 onShowPreview={() => {
                                     setInvestType('proportional');
                                     setModalState('preview');
                                 }}
                             />
-                        ) : null}
-                        {modalState === 'single-asset' ? (
+                        </FadeInBox>
+                        <FadeInBox isVisible={modalState === 'single-asset'}>
                             <PoolWithdrawSingleAsset
                                 onShowPreview={() => {
                                     setInvestType('single-asset');
                                     setModalState('preview');
                                 }}
                             />
-                        ) : null}
-                        {modalState === 'preview' ? (
+                        </FadeInBox>
+                        <FadeInBox isVisible={modalState === 'preview'}>
                             <PoolWithdrawPreview
                                 onWithdrawComplete={() => {
                                     setModalState('start');
@@ -121,7 +122,7 @@ export function PoolWithdrawModal() {
                                     onClose();
                                 }}
                             />
-                        ) : null}
+                        </FadeInBox>
                     </ModalBody>
                 </ModalContent>
             </Modal>
