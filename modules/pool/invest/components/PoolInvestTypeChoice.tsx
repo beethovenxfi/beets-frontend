@@ -60,7 +60,7 @@ export function PoolInvestTypeChoice({ onShowProportional, onShowCustom }: Props
                                             <CardRow
                                                 key={tokenOption.address}
                                                 mb={lastOption && lastTokenOption ? '0' : '1'}
-                                                alignItems="flex-start"
+                                                alignItems="center"
                                             >
                                                 <HStack spacing="none" flex="1">
                                                     <TokenAvatar size="xs" address={tokenOption.address} />
