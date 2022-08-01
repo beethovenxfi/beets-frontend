@@ -8,6 +8,7 @@ import { useGetTokens } from '~/lib/global/useToken';
 import { usePoolUserDepositBalance } from '~/modules/pool/lib/usePoolUserDepositBalance';
 import { usePoolUserBptBalance } from '~/modules/pool/lib/usePoolUserBptBalance';
 import { PoolUnstakeModal } from '~/modules/pool/stake/PoolUnstakeModal';
+import { CardRow } from '~/components/card/CardRow';
 
 interface Props {
     onShowProportional(): void;
@@ -28,8 +29,8 @@ export function PoolWithdrawTypeChoice({ onShowProportional, onShowSingleAsset }
         <Box>
             <Flex mt="4" mb="4">
                 <Box flex="1" mr="8">
-                    <BeetsBox px="2" py="4" mb="4">
-                        <Flex>
+                    <BeetsBox p="2" mb="6">
+                        <Flex mb="4">
                             <Heading size="md" flex="1">
                                 My balance
                             </Heading>
@@ -37,31 +38,31 @@ export function PoolWithdrawTypeChoice({ onShowProportional, onShowSingleAsset }
                         </Flex>
                         {pool.staking ? (
                             <>
-                                <Flex>
-                                    <Text flex="1" color="gray.200">
-                                        Wallet balance
-                                    </Text>
-                                    <Text color="gray.200">{numberFormatUSDValue(valueInWallet)}</Text>
-                                </Flex>
-                                <Flex>
-                                    <Text flex="1" color="gray.200">
-                                        Staked balance
-                                    </Text>
-                                    <Text color="gray.200">{numberFormatUSDValue(valueStaked)}</Text>
-                                </Flex>
+                                <CardRow>
+                                    <Text flex="1">Wallet balance</Text>
+                                    <Text>{numberFormatUSDValue(valueInWallet)}</Text>
+                                </CardRow>
+                                <CardRow mb="0">
+                                    <Text flex="1">Staked balance</Text>
+                                    <Text>{numberFormatUSDValue(valueStaked)}</Text>
+                                </CardRow>
                             </>
                         ) : null}
                     </BeetsBox>
 
-                    <BeetsBox p="2" pt="2">
-                        <Heading size="sm" mb="4">
+                    <BeetsBox p="2">
+                        <Text fontSize="lg" fontWeight="semibold" mb="2">
                             Pool tokens breakdown
-                        </Heading>
+                        </Text>
                         {pool.tokens.map((token, index) => {
                             const balance = data?.find((item) => item.address === token.address)?.amount || '0';
 
                             return (
-                                <Flex key={token.address} mb="2" alignItems="flex-start">
+                                <CardRow
+                                    key={token.address}
+                                    mb={index === pool.tokens.length - 1 ? '0' : '1'}
+                                    alignItems="flex-start"
+                                >
                                     <HStack spacing="none" flex="1">
                                         <TokenAvatar size="xs" address={token.address} />
                                         <Text paddingLeft="1.5" fontSize="lg">
@@ -81,7 +82,7 @@ export function PoolWithdrawTypeChoice({ onShowProportional, onShowSingleAsset }
                                             )}
                                         </Box>
                                     </Box>
-                                </Flex>
+                                </CardRow>
                             );
                         })}
                     </BeetsBox>
@@ -111,7 +112,7 @@ export function PoolWithdrawTypeChoice({ onShowProportional, onShowSingleAsset }
                     </Button>
                 </Alert>
             )}
-            <Button variant="primary" isFullWidth mb="3" isDisabled={!hasBptInWallet} onClick={onShowProportional}>
+            <Button variant="primary" isFullWidth mb="2" isDisabled={!hasBptInWallet} onClick={onShowProportional}>
                 Withdraw proportionally
             </Button>
             <Button variant="secondary" isFullWidth isDisabled={!hasBptInWallet} onClick={onShowSingleAsset}>

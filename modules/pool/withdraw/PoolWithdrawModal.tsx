@@ -1,15 +1,9 @@
 import { Modal, ModalBody, ModalCloseButton, ModalContent } from '@chakra-ui/modal';
 import { Button, Heading, IconButton, ModalHeader, ModalOverlay, Text, useDisclosure } from '@chakra-ui/react';
-
 import { usePool } from '~/modules/pool/lib/usePool';
-import PoolInvestProportional from '~/modules/pool/invest/components/PoolInvestProportional';
 import { ChevronLeft } from 'react-feather';
-import { PoolInvestPreview } from '~/modules/pool/invest/components/PoolInvestPreview';
 import { useRef, useState } from 'react';
-import { PoolInvestTypeChoice } from '~/modules/pool/invest/components/PoolInvestTypeChoice';
-import { PoolInvestCustom } from '~/modules/pool/invest/components/PoolInvestCustom';
 import { PoolWithdrawTypeChoice } from '~/modules/pool/withdraw/components/PoolWithdrawTypeChoice';
-import { PoolUnstakeModal } from '~/modules/pool/stake/PoolUnstakeModal';
 import { PoolWithdrawProportional } from '~/modules/pool/withdraw/components/PoolWithdrawProportional';
 import { PoolWithdrawSingleAsset } from '~/modules/pool/withdraw/components/PoolWithdrawSingleAsset';
 import { PoolWithdrawPreview } from '~/modules/pool/withdraw/components/PoolWithdrawPreview';

@@ -26,28 +26,26 @@ export function PoolInvestTypeChoice({ onShowProportional, onShowCustom }: Props
         <Box>
             <Flex mt="4" mb="4">
                 <Box flex="1" mr="8">
-                    <Flex>
-                        <Heading size="md" flex="1">
-                            You can invest
-                        </Heading>
-                        <Heading size="md">{numberFormatUSDValue(investableAmount)}</Heading>
-                    </Flex>
-                    <Flex alignItems="center" mb="6">
-                        <Text size="lg" flex="1" color="gray.200">
-                            Max proportional
-                        </Text>
-                        {data?.maxAmount && !isLoading ? (
-                            <Text size="lg" color="gray.200">
-                                {numberFormatUSDValue(data.maxAmount)}
-                            </Text>
-                        ) : (
-                            <Skeleton height="20px" width="80px" />
-                        )}
-                    </Flex>
-                    <Text fontSize="lg" fontWeight="semibold" mb="2">
-                        Pool tokens in my wallet
-                    </Text>
+                    <BeetsBox p="2" mb="6">
+                        <Flex mb="4">
+                            <Heading size="md" flex="1">
+                                You can invest
+                            </Heading>
+                            <Heading size="md">{numberFormatUSDValue(investableAmount)}</Heading>
+                        </Flex>
+                        <CardRow alignItems="center" mb="0">
+                            <Text flex="1">Max proportional</Text>
+                            {data?.maxAmount && !isLoading ? (
+                                <Text>{numberFormatUSDValue(data.maxAmount)}</Text>
+                            ) : (
+                                <Skeleton height="20px" width="80px" />
+                            )}
+                        </CardRow>
+                    </BeetsBox>
                     <BeetsBox p="2">
+                        <Text fontSize="lg" fontWeight="semibold" mb="2">
+                            Pool tokens in my wallet
+                        </Text>
                         {pool.investConfig.options.map((option, index) => {
                             const lastOption = pool.investConfig.options.length - 1 === index;
 
@@ -64,6 +62,7 @@ export function PoolInvestTypeChoice({ onShowProportional, onShowCustom }: Props
                                             <CardRow
                                                 key={tokenOption.address}
                                                 mb={lastOption && lastTokenOption ? '0' : '1'}
+                                                alignItems="flex-start"
                                             >
                                                 <HStack spacing="none" flex="1">
                                                     <TokenAvatar size="xs" address={tokenOption.address} />
