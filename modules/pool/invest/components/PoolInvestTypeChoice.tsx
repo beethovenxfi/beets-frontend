@@ -24,18 +24,16 @@ export function PoolInvestTypeChoice({ onShowProportional, onShowCustom }: Props
 
     return (
         <Box>
-            <Flex mt="4" mb="4">
+            <Flex mt="4" mb="6">
                 <Box flex="1" mr="8">
                     <BeetsBox p="2" mb="6">
-                        <Flex mb="4">
-                            <Heading size="md" flex="1">
-                                You can invest
-                            </Heading>
-                            <Heading size="md">{numberFormatUSDValue(investableAmount)}</Heading>
+                        <Flex fontSize="lg" fontWeight="semibold" mb="4">
+                            <Text flex="1">You can invest</Text>
+                            <Text>{numberFormatUSDValue(investableAmount)}</Text>
                         </Flex>
                         <CardRow alignItems="center" mb="0">
                             <Text flex="1">Max proportional</Text>
-                            {data?.maxAmount && !isLoading ? (
+                            {typeof data?.maxAmount === 'number' && !isLoading ? (
                                 <Text>{numberFormatUSDValue(data.maxAmount)}</Text>
                             ) : (
                                 <Skeleton height="20px" width="80px" />
@@ -43,7 +41,7 @@ export function PoolInvestTypeChoice({ onShowProportional, onShowCustom }: Props
                         </CardRow>
                     </BeetsBox>
                     <BeetsBox p="2">
-                        <Text fontSize="lg" fontWeight="semibold" mb="2">
+                        <Text fontSize="lg" fontWeight="semibold" mb="4">
                             Pool tokens in my wallet
                         </Text>
                         {pool.investConfig.options.map((option, index) => {
@@ -92,7 +90,7 @@ export function PoolInvestTypeChoice({ onShowProportional, onShowCustom }: Props
                     </BeetsBox>
                 </Box>
                 <Box flex="1">
-                    <BeetsBox p="4">
+                    <BeetsBox px="4" py="2">
                         We recommend investing proportionally into this pool. This ensures you will{' '}
                         <Text as="span" fontWeight="bold">
                             NOT

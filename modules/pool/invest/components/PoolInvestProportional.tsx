@@ -26,6 +26,7 @@ import { usePoolJoinGetProportionalInvestmentAmount } from '~/modules/pool/inves
 import { mapValues } from 'lodash';
 import { oldBnum } from '~/lib/services/pool/lib/old-big-number';
 import { useInvest } from '~/modules/pool/invest/lib/useInvest';
+import { CardRow } from '~/components/card/CardRow';
 
 interface Props {
     onShowPreview(): void;
@@ -75,19 +76,20 @@ export function PoolInvestProportional({ onShowPreview }: Props) {
                     {proportionalPercent}%
                 </SliderMark>
             </Slider>
-            <BeetsBox mt="4" pt="0.5">
+            <BeetsBox mt="4" p="2">
                 {investOptions.map((option, index) => {
                     const tokenOption = selectedInvestTokens[index];
                     const amount = scaledProportionalSuggestions[tokenOption.address];
 
                     return (
-                        <BeetsBoxLineItem
+                        <CardRow
                             key={tokenOption.address}
-                            last={index === investOptions.length - 1}
                             pl={option.tokenOptions.length > 1 ? '1.5' : '3'}
-                            center={true}
-                            leftContent={
-                                option.tokenOptions.length > 1 ? (
+                            mb={index === investOptions.length - 1 ? '0' : '1'}
+                            alignItems="center"
+                        >
+                            <Box flex="1">
+                                {option.tokenOptions.length > 1 ? (
                                     <Box flex="1">
                                         <TokenSelectInline
                                             tokenOptions={option.tokenOptions}
@@ -105,22 +107,20 @@ export function PoolInvestProportional({ onShowPreview }: Props) {
                                         <TokenAvatar size="xs" address={tokenOption.address} />
                                         <Text>{tokenOption.symbol}</Text>
                                     </HStack>
-                                )
-                            }
-                            rightContent={
-                                <Box>
-                                    <Box textAlign="right">{tokenFormatAmount(amount)}</Box>
-                                    <Box textAlign="right" fontSize="sm" color="gray.200">
-                                        {numberFormatUSDValue(
-                                            priceForAmount({
-                                                address: tokenOption.address,
-                                                amount,
-                                            }),
-                                        )}
-                                    </Box>
+                                )}
+                            </Box>
+                            <Box>
+                                <Box textAlign="right">{tokenFormatAmount(amount)}</Box>
+                                <Box textAlign="right" fontSize="sm" color="gray.200">
+                                    {numberFormatUSDValue(
+                                        priceForAmount({
+                                            address: tokenOption.address,
+                                            amount,
+                                        }),
+                                    )}
                                 </Box>
-                            }
-                        />
+                            </Box>
+                        </CardRow>
                     );
                 })}
             </BeetsBox>
