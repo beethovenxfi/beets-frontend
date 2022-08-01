@@ -18,16 +18,10 @@ export interface Scalars {
     BigDecimal: string;
     BigInt: string;
     Bytes: string;
-    /** Date custom scalar type */
     Date: any;
     GqlBigNumber: any;
     /** The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf). */
     JSON: any;
-}
-
-export interface FbeetsApr {
-    __typename: 'FbeetsApr';
-    apr: Scalars['Float'];
 }
 
 export interface GqlBalancePoolAprItem {
@@ -43,69 +37,17 @@ export interface GqlBalancePoolAprSubItem {
     title: Scalars['String'];
 }
 
-export interface GqlBeetsConfig {
-    __typename: 'GqlBeetsConfig';
-    blacklistedPools: Array<Scalars['String']>;
-    blacklistedTokens: Array<Scalars['String']>;
-    boostedPools: Array<Scalars['String']>;
-    excludedPools: Array<Scalars['String']>;
-    featuredPools: Array<Scalars['String']>;
-    homeEducationItems: Array<GqlBeetsConfigNewsItem>;
-    homeFeaturedPools: Array<GqlBeetsConfigFeaturedPool>;
-    homeNewsItems: Array<GqlBeetsConfigNewsItem>;
-    incentivizedPools: Array<Scalars['String']>;
-    pausedPools: Array<Scalars['String']>;
-    poolFilters: Array<GqlBeetsConfigPoolFilterItem>;
-}
-
-export interface GqlBeetsConfigFeaturedPool {
-    __typename: 'GqlBeetsConfigFeaturedPool';
-    description?: Maybe<Scalars['String']>;
-    image: Scalars['String'];
-    poolId: Scalars['String'];
-}
-
-export interface GqlBeetsConfigNewsItem {
-    __typename: 'GqlBeetsConfigNewsItem';
-    description: Scalars['String'];
-    image: Scalars['String'];
-    publishDate: Scalars['String'];
-    title: Scalars['String'];
-    url: Scalars['String'];
-}
-
-export interface GqlBeetsConfigPoolFilterItem {
-    __typename: 'GqlBeetsConfigPoolFilterItem';
-    id: Scalars['ID'];
-    pools: Array<Scalars['String']>;
-    title: Scalars['String'];
-}
-
-export interface GqlBeetsProtocolData {
-    __typename: 'GqlBeetsProtocolData';
-    beetsPrice: Scalars['BigDecimal'];
-    circulatingSupply: Scalars['BigDecimal'];
-    fbeetsPrice: Scalars['BigDecimal'];
-    marketCap: Scalars['BigDecimal'];
-    poolCount: Scalars['BigInt'];
-    swapFee24h: Scalars['BigDecimal'];
-    swapVolume24h: Scalars['BigDecimal'];
-    totalLiquidity: Scalars['BigDecimal'];
-    totalSwapFee: Scalars['BigDecimal'];
-    totalSwapVolume: Scalars['BigDecimal'];
-}
-
-export interface GqlConfigNewsItem {
-    __typename: 'GqlConfigNewsItem';
+export interface GqlContentNewsItem {
+    __typename: 'GqlContentNewsItem';
     id: Scalars['ID'];
     image?: Maybe<Scalars['String']>;
-    source: GqlConfigNewsItemSource;
+    source: GqlContentNewsItemSource;
     text: Scalars['String'];
     timestamp: Scalars['String'];
     url: Scalars['String'];
 }
 
-export type GqlConfigNewsItemSource = 'discord' | 'medium' | 'twitter';
+export type GqlContentNewsItemSource = 'discord' | 'medium' | 'twitter';
 
 export interface GqlFeaturePoolGroupItemExternalLink {
     __typename: 'GqlFeaturePoolGroupItemExternalLink';
@@ -788,6 +730,16 @@ export interface GqlPoolWithdrawOption {
     tokenOptions: Array<GqlPoolToken>;
 }
 
+export interface GqlProtocolMetrics {
+    __typename: 'GqlProtocolMetrics';
+    poolCount: Scalars['BigInt'];
+    swapFee24h: Scalars['BigDecimal'];
+    swapVolume24h: Scalars['BigDecimal'];
+    totalLiquidity: Scalars['BigDecimal'];
+    totalSwapFee: Scalars['BigDecimal'];
+    totalSwapVolume: Scalars['BigDecimal'];
+}
+
 export interface GqlSorGetSwapsResponse {
     __typename: 'GqlSorGetSwapsResponse';
     effectivePrice: Scalars['AmountHumanReadable'];
@@ -984,7 +936,6 @@ export interface GqlUserTokenData {
 export interface Mutation {
     __typename: 'Mutation';
     beetsSyncFbeetsRatio: Scalars['String'];
-    beetsSyncProtocolData: Scalars['String'];
     cachePortfolioHistoryForDate: Scalars['Boolean'];
     clearCacheAtBlock: Scalars['Boolean'];
     clearCachedPools: Scalars['Boolean'];
@@ -1008,6 +959,7 @@ export interface Mutation {
     poolUpdateLiquidity24hAgoForAllPools: Scalars['String'];
     poolUpdateLiquidityValuesForAllPools: Scalars['String'];
     poolUpdateVolumeAndFeeValuesForAllPools: Scalars['String'];
+    protocolCacheMetrics: Scalars['String'];
     refreshLatestBlockCachedKey: Scalars['Boolean'];
     tokenInitChartData: Scalars['String'];
     tokenReloadTokenPrices?: Maybe<Scalars['Boolean']>;
@@ -1047,13 +999,9 @@ export interface MutationUserInitWalletBalancesForPoolArgs {
 
 export interface Query {
     __typename: 'Query';
-    beetsGetConfig: GqlBeetsConfig;
     beetsGetFbeetsRatio: Scalars['String'];
-    beetsGetProtocolData: GqlBeetsProtocolData;
     blocksGetAverageBlockTime: Scalars['Float'];
-    configGetNewsItems: Array<GqlConfigNewsItem>;
-    fbeetsGetApr: FbeetsApr;
-    gnosisIsUserMultisigWallet?: Maybe<Scalars['Boolean']>;
+    contentGetNewsItems: Array<GqlContentNewsItem>;
     lge: GqlLge;
     lges: Array<GqlLge>;
     poolGetBatchSwaps: Array<GqlPoolBatchSwap>;
@@ -1069,6 +1017,7 @@ export interface Query {
     portfolioGetUserPortfolio: GqlUserPortfolioData;
     portfolioGetUserPortfolioHistory: Array<GqlUserPortfolioData>;
     portfolioGetUserPortfolioHistoryAdmin: Array<GqlUserPortfolioData>;
+    protocolMetrics: GqlProtocolMetrics;
     sorGetSwaps: GqlSorGetSwapsResponse;
     tokenGetCandlestickChartData: Array<GqlTokenCandlestickChartDataItem>;
     tokenGetCurrentPrices: Array<GqlTokenPrice>;
@@ -1327,16 +1276,14 @@ export type GetAppGlobalDataQuery = {
         tradable: boolean;
     }>;
     tokenGetCurrentPrices: Array<{ __typename: 'GqlTokenPrice'; price: number; address: string }>;
-    beetsGetProtocolData: {
-        __typename: 'GqlBeetsProtocolData';
+    protocolMetrics: {
+        __typename: 'GqlProtocolMetrics';
         totalLiquidity: string;
+        totalSwapVolume: string;
+        totalSwapFee: string;
+        poolCount: string;
         swapFee24h: string;
         swapVolume24h: string;
-        marketCap: string;
-        circulatingSupply: string;
-        poolCount: string;
-        beetsPrice: string;
-        fbeetsPrice: string;
     };
 };
 
@@ -1399,15 +1346,13 @@ export type GetProtocolDataQueryVariables = Exact<{ [key: string]: never }>;
 export type GetProtocolDataQuery = {
     __typename: 'Query';
     protocolData: {
-        __typename: 'GqlBeetsProtocolData';
+        __typename: 'GqlProtocolMetrics';
         totalLiquidity: string;
+        totalSwapVolume: string;
+        totalSwapFee: string;
+        poolCount: string;
         swapFee24h: string;
         swapVolume24h: string;
-        marketCap: string;
-        circulatingSupply: string;
-        poolCount: string;
-        beetsPrice: string;
-        fbeetsPrice: string;
     };
 };
 
@@ -1506,13 +1451,13 @@ export type GetHomeDataQuery = {
               }
         >;
     }>;
-    configGetNewsItems: Array<{
-        __typename: 'GqlConfigNewsItem';
+    contentGetNewsItems: Array<{
+        __typename: 'GqlContentNewsItem';
         id: string;
         text: string;
         image?: string | null;
         url: string;
-        source: GqlConfigNewsItemSource;
+        source: GqlContentNewsItemSource;
         timestamp: string;
     }>;
 };
@@ -1580,12 +1525,12 @@ export type GetHomeNewsItemsQueryVariables = Exact<{ [key: string]: never }>;
 export type GetHomeNewsItemsQuery = {
     __typename: 'Query';
     newsItems: Array<{
-        __typename: 'GqlConfigNewsItem';
+        __typename: 'GqlContentNewsItem';
         id: string;
         text: string;
         image?: string | null;
         url: string;
-        source: GqlConfigNewsItemSource;
+        source: GqlContentNewsItemSource;
         timestamp: string;
     }>;
 };
@@ -4042,15 +3987,13 @@ export const GetAppGlobalDataDocument = gql`
             address
         }
         beetsGetFbeetsRatio
-        beetsGetProtocolData {
+        protocolMetrics {
             totalLiquidity
+            totalSwapVolume
+            totalSwapFee
+            poolCount
             swapFee24h
             swapVolume24h
-            marketCap
-            circulatingSupply
-            poolCount
-            beetsPrice
-            fbeetsPrice
         }
     }
 `;
@@ -4270,15 +4213,13 @@ export type GetFbeetsRatioLazyQueryHookResult = ReturnType<typeof useGetFbeetsRa
 export type GetFbeetsRatioQueryResult = Apollo.QueryResult<GetFbeetsRatioQuery, GetFbeetsRatioQueryVariables>;
 export const GetProtocolDataDocument = gql`
     query GetProtocolData {
-        protocolData: beetsGetProtocolData {
+        protocolData: protocolMetrics {
             totalLiquidity
+            totalSwapVolume
+            totalSwapFee
+            poolCount
             swapFee24h
             swapVolume24h
-            marketCap
-            circulatingSupply
-            poolCount
-            beetsPrice
-            fbeetsPrice
         }
     }
 `;
@@ -4381,7 +4322,7 @@ export const GetHomeDataDocument = gql`
         poolGetFeaturedPoolGroups {
             ...GqlPoolFeaturedPoolGroup
         }
-        configGetNewsItems {
+        contentGetNewsItems {
             id
             text
             image
@@ -4473,7 +4414,7 @@ export type GetHomeFeaturedPoolsQueryResult = Apollo.QueryResult<
 >;
 export const GetHomeNewsItemsDocument = gql`
     query GetHomeNewsItems {
-        newsItems: configGetNewsItems {
+        newsItems: contentGetNewsItems {
             id
             text
             image

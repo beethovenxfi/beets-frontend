@@ -14,15 +14,14 @@ query GetAppGlobalData {
         address
     }
     beetsGetFbeetsRatio
-    beetsGetProtocolData {
+
+    protocolMetrics {
         totalLiquidity
+        totalSwapVolume
+        totalSwapFee
+        poolCount
         swapFee24h
         swapVolume24h
-        marketCap
-        circulatingSupply
-        poolCount
-        beetsPrice
-        fbeetsPrice
     }
 }
 
@@ -71,14 +70,12 @@ query GetFbeetsRatio {
 }
 
 query GetProtocolData {
-    protocolData: beetsGetProtocolData {
+    protocolData: protocolMetrics {
         totalLiquidity
+        totalSwapVolume
+        totalSwapFee
+        poolCount
         swapFee24h
         swapVolume24h
-        marketCap
-        circulatingSupply
-        poolCount
-        beetsPrice
-        fbeetsPrice
     }
 }

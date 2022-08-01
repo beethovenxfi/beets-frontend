@@ -344,15 +344,13 @@ export const GetAppGlobalData = gql`
             address
         }
         beetsGetFbeetsRatio
-        beetsGetProtocolData {
+        protocolMetrics {
             totalLiquidity
+            totalSwapVolume
+            totalSwapFee
+            poolCount
             swapFee24h
             swapVolume24h
-            marketCap
-            circulatingSupply
-            poolCount
-            beetsPrice
-            fbeetsPrice
         }
     }
 `;
@@ -406,15 +404,13 @@ export const GetFbeetsRatio = gql`
 `;
 export const GetProtocolData = gql`
     query GetProtocolData {
-        protocolData: beetsGetProtocolData {
+        protocolData: protocolMetrics {
             totalLiquidity
+            totalSwapVolume
+            totalSwapFee
+            poolCount
             swapFee24h
             swapVolume24h
-            marketCap
-            circulatingSupply
-            poolCount
-            beetsPrice
-            fbeetsPrice
         }
     }
 `;
@@ -455,7 +451,7 @@ export const GetHomeData = gql`
         poolGetFeaturedPoolGroups {
             ...GqlPoolFeaturedPoolGroup
         }
-        configGetNewsItems {
+        contentGetNewsItems {
             id
             text
             image
@@ -476,7 +472,7 @@ export const GetHomeFeaturedPools = gql`
 `;
 export const GetHomeNewsItems = gql`
     query GetHomeNewsItems {
-        newsItems: configGetNewsItems {
+        newsItems: contentGetNewsItems {
             id
             text
             image

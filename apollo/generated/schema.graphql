@@ -6,14 +6,7 @@ scalar BigInt
 
 scalar Bytes
 
-"""
-Date custom scalar type
-"""
 scalar Date
-
-type FbeetsApr {
-    apr: Float!
-}
 
 type GqlBalancePoolAprItem {
     apr: BigDecimal!
@@ -26,65 +19,18 @@ type GqlBalancePoolAprSubItem {
     title: String!
 }
 
-type GqlBeetsConfig {
-    blacklistedPools: [String!]!
-    blacklistedTokens: [String!]!
-    boostedPools: [String!]!
-    excludedPools: [String!]!
-    featuredPools: [String!]!
-    homeEducationItems: [GqlBeetsConfigNewsItem!]!
-    homeFeaturedPools: [GqlBeetsConfigFeaturedPool!]!
-    homeNewsItems: [GqlBeetsConfigNewsItem!]!
-    incentivizedPools: [String!]!
-    pausedPools: [String!]!
-    poolFilters: [GqlBeetsConfigPoolFilterItem!]!
-}
-
-type GqlBeetsConfigFeaturedPool {
-    description: String
-    image: String!
-    poolId: String!
-}
-
-type GqlBeetsConfigNewsItem {
-    description: String!
-    image: String!
-    publishDate: String!
-    title: String!
-    url: String!
-}
-
-type GqlBeetsConfigPoolFilterItem {
-    id: ID!
-    pools: [String!]!
-    title: String!
-}
-
-type GqlBeetsProtocolData {
-    beetsPrice: BigDecimal!
-    circulatingSupply: BigDecimal!
-    fbeetsPrice: BigDecimal!
-    marketCap: BigDecimal!
-    poolCount: BigInt!
-    swapFee24h: BigDecimal!
-    swapVolume24h: BigDecimal!
-    totalLiquidity: BigDecimal!
-    totalSwapFee: BigDecimal!
-    totalSwapVolume: BigDecimal!
-}
-
 scalar GqlBigNumber
 
-type GqlConfigNewsItem {
+type GqlContentNewsItem {
     id: ID!
     image: String
-    source: GqlConfigNewsItemSource!
+    source: GqlContentNewsItemSource!
     text: String!
     timestamp: String!
     url: String!
 }
 
-enum GqlConfigNewsItemSource {
+enum GqlContentNewsItemSource {
     discord
     medium
     twitter
@@ -754,6 +700,15 @@ type GqlPoolWithdrawOption {
     tokenOptions: [GqlPoolToken!]!
 }
 
+type GqlProtocolMetrics {
+    poolCount: BigInt!
+    swapFee24h: BigDecimal!
+    swapVolume24h: BigDecimal!
+    totalLiquidity: BigDecimal!
+    totalSwapFee: BigDecimal!
+    totalSwapVolume: BigDecimal!
+}
+
 type GqlSorGetSwapsResponse {
     effectivePrice: AmountHumanReadable!
     effectivePriceReversed: AmountHumanReadable!
@@ -945,7 +900,6 @@ scalar JSON
 
 type Mutation {
     beetsSyncFbeetsRatio: String!
-    beetsSyncProtocolData: String!
     cachePortfolioHistoryForDate(date: String!): Boolean!
     clearCacheAtBlock(block: Int!): Boolean!
     clearCachedPools: Boolean!
@@ -969,6 +923,7 @@ type Mutation {
     poolUpdateLiquidity24hAgoForAllPools: String!
     poolUpdateLiquidityValuesForAllPools: String!
     poolUpdateVolumeAndFeeValuesForAllPools: String!
+    protocolCacheMetrics: String!
     refreshLatestBlockCachedKey: Boolean!
     tokenInitChartData(tokenAddress: String!): String!
     tokenReloadTokenPrices: Boolean
@@ -982,13 +937,9 @@ type Mutation {
 }
 
 type Query {
-    beetsGetConfig: GqlBeetsConfig!
     beetsGetFbeetsRatio: String!
-    beetsGetProtocolData: GqlBeetsProtocolData!
     blocksGetAverageBlockTime: Float!
-    configGetNewsItems: [GqlConfigNewsItem!]!
-    fbeetsGetApr: FbeetsApr!
-    gnosisIsUserMultisigWallet: Boolean
+    contentGetNewsItems: [GqlContentNewsItem!]!
     lge(id: ID!): GqlLge!
     lges: [GqlLge!]!
     poolGetBatchSwaps(first: Int, skip: Int, where: GqlPoolSwapFilter): [GqlPoolBatchSwap!]!
@@ -1018,6 +969,7 @@ type Query {
     portfolioGetUserPortfolio: GqlUserPortfolioData!
     portfolioGetUserPortfolioHistory: [GqlUserPortfolioData!]!
     portfolioGetUserPortfolioHistoryAdmin: [GqlUserPortfolioData!]!
+    protocolMetrics: GqlProtocolMetrics!
     sorGetSwaps(
         swapAmount: BigDecimal!
         swapOptions: GqlSorSwapOptionsInput!
