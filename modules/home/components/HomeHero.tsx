@@ -57,9 +57,9 @@ export function HomeHero() {
                             </Button>
                         </NextLink>
                     </HStack>
-                    <Link color="beets.highlight" alignSelf="flex-start">
+                    {/*<Link color="beets.highlight" alignSelf="flex-start">
                         {"I'm new! Help me get started."}
-                    </Link>
+                    </Link>*/}
                 </Flex>
             </Flex>
             <Box flex="1" display={{ base: 'none', md: 'block' }} />
