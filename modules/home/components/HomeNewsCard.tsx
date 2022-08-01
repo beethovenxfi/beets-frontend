@@ -3,11 +3,11 @@ import { IconDiscord } from '~/components/icons/IconDiscord';
 import { capitalize } from 'lodash';
 import { IconTwitter } from '~/components/icons/IconTwitter';
 import { IconMedium } from '~/components/icons/IconMedium';
-import { GqlConfigNewsItem } from '~/apollo/generated/graphql-codegen-generated';
+import { GqlContentNewsItem } from '~/apollo/generated/graphql-codegen-generated';
 import { formatDistanceToNow } from 'date-fns';
 
 interface Props {
-    item: GqlConfigNewsItem;
+    item: GqlContentNewsItem;
 }
 
 export function HomeNewsCard({ item }: Props) {

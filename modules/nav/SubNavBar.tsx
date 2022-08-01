@@ -83,7 +83,7 @@ export function SubNavBar() {
                         <Skeleton height="16px" width="54px" />
                     ) : (
                         <Text fontWeight="semibold" fontSize={{ base: 'sm', lg: 'md' }}>
-                            {numeral(protocolData?.beetsPrice || '0').format('$0.00[00]')}
+                            {/*numeral(protocolData?.beetsPrice || '0').format('$0.00[00]')*/}$0.00
                         </Text>
                     )}
                 </HStack>
