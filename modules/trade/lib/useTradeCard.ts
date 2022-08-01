@@ -6,8 +6,6 @@ import { useEffect } from 'react';
 import { GqlSorSwapType } from '~/apollo/generated/graphql-codegen-generated';
 import { oldBnumToFixed } from '~/lib/services/pool/lib/old-big-number';
 import { useDebouncedCallback } from 'use-debounce';
-import { networkConfig } from '~/lib/config/network-config';
-import { isEth, isWeth } from '~/lib/services/token/token-util';
 
 const buyAmountVar = makeVar<AmountHumanReadable>('');
 const sellAmountVar = makeVar<AmountHumanReadable>('1');
@@ -153,15 +151,14 @@ export function useTradeCard() {
 
     const handleTokensSwitched = () => {
         const state = getLatestState();
-        const sellAmount = sellAmountVar();
         const buyAmount = buyAmountVar();
 
         tradeStateVar({ ...tradeStateVar(), sorResponse: null });
 
         setTokens({ tokenIn: state.tokenOut, tokenOut: state.tokenIn });
-        setBuyAmount(sellAmount);
         setSellAmount(buyAmount);
-        dFetchTrade('EXACT_IN', sellAmount);
+        setBuyAmount('');
+        dFetchTrade('EXACT_IN', buyAmount);
     };
 
     function refetchTrade() {
