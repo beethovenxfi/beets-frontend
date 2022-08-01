@@ -54,7 +54,7 @@ export default function BeetsInput({
                 width="full"
                 minHeight="20"
                 height="full"
-                fontSize="2xl"
+                fontSize="lg"
                 fontWeight="semibold"
                 borderColor="transparent"
                 border="2px"

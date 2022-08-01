@@ -23,8 +23,8 @@ export function TradeContainer() {
                        "chart-route"`,
                 xl: `"swap chart-route"`,
             }}
-            templateColumns={{ base: '1fr', xl: '400px 1fr' }}
-            gap="12"
+            templateColumns={{ base: '1fr', xl: '412px 1fr' }}
+            gap="10"
             pb="20"
             pt="8"
         >

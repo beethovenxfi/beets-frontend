@@ -11,6 +11,9 @@ import numeral from 'numeral';
 import { KeyboardEvent } from 'react';
 import { tokenInputBlockInvalidCharacters, tokenInputTruncateDecimalPlaces } from '~/lib/util/input-util';
 import { numberFormatLargeUsdValue } from '~/lib/util/number-formats';
+import { parseUnits } from 'ethers/lib/utils';
+import { oldBnumScaleAmount, oldBnumScaleDown } from '~/lib/services/pool/lib/old-big-number';
+import { formatFixed } from '@ethersproject/bignumber';
 
 type Props = {
     label?: string;
@@ -50,7 +53,9 @@ export default function TokenInput({
     };
 
     const handlePresetSelected = (preset: number) => {
-        handleOnChange({ currentTarget: { value: (parseFloat(userBalance) * preset).toString() } });
+        const scaledAmount = oldBnumScaleAmount(userBalance, token?.decimals).times(preset).toFixed(0);
+
+        handleOnChange({ currentTarget: { value: formatFixed(scaledAmount, token?.decimals) } });
     };
 
     return (
@@ -93,7 +98,7 @@ export default function TokenInput({
                         >
                             <HStack spacing="none">
                                 <TokenAvatar size="xs" address={address || ''} />
-                                <Text fontSize="1.15rem" paddingLeft="2">
+                                <Text fontSize="lg" paddingLeft="2">
                                     {token?.symbol}
                                 </Text>
                                 <Box marginLeft="1">
