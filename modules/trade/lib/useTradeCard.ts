@@ -6,12 +6,17 @@ import { useEffect } from 'react';
 import { GqlSorSwapType } from '~/apollo/generated/graphql-codegen-generated';
 import { oldBnumToFixed } from '~/lib/services/pool/lib/old-big-number';
 import { useDebouncedCallback } from 'use-debounce';
+import { useRouter } from 'next/router';
+import { isAddress } from 'ethers/lib/utils';
 
 const buyAmountVar = makeVar<AmountHumanReadable>('');
 const sellAmountVar = makeVar<AmountHumanReadable>('1');
 const tokenSelectedVar = makeVar<'tokenIn' | 'tokenOut'>('tokenIn');
 
 export function useTradeCard() {
+    const router = useRouter();
+    const { tokenIn: initialTokenIn, tokenOut: initialTokenOut } = router.query;
+
     const {
         reactiveTradeState,
         loadSwaps: _loadSwaps,
@@ -50,11 +55,27 @@ export function useTradeCard() {
     const isNotEnoughLiquidity = swapInfo && swapInfo.swaps.length === 0 && hasAmount;
 
     useEffect(() => {
-        //TODO: load token in/out from url if passed in
+        if (initialTokenIn || initialTokenOut) {
+            const tradeState = tradeStateVar();
+
+            //TODO: need to support importing of unknown tokens here
+            tradeStateVar({
+                ...tradeState,
+                sorResponse: null,
+                tokenIn:
+                    typeof initialTokenIn === 'string' && isAddress(initialTokenIn)
+                        ? initialTokenIn.toLowerCase()
+                        : tradeState.tokenIn,
+                tokenOut:
+                    typeof initialTokenOut === 'string' && isAddress(initialTokenOut)
+                        ? initialTokenOut.toLowerCase()
+                        : tradeState.tokenIn,
+            });
+        }
 
         setIsFetching.on();
         dFetchTrade('EXACT_IN', sellAmountVar());
-    }, []);
+    }, [initialTokenIn, initialTokenOut]);
 
     const fetchTrade = async (type: GqlSorSwapType, amount: string) => {
         setTradeConfig(type, amount);

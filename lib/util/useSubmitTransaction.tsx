@@ -73,21 +73,19 @@ export function useSubmitTransaction({
         {
             ...writeConfig,
             onSuccess(data, variables, context) {
-                if (transactionType !== 'SWAP') {
-                    toastIdRef.current = toast({
-                        position: 'bottom-left',
-                        render: ({ onClose }) => (
-                            <TransactionStatusToast
-                                type={transactionType}
-                                status="PENDING"
-                                text={toastText.current}
-                                onClose={onClose}
-                                txHash={data.hash}
-                            />
-                        ),
-                        duration: null,
-                    });
-                }
+                toastIdRef.current = toast({
+                    position: 'bottom-left',
+                    render: ({ onClose }) => (
+                        <TransactionStatusToast
+                            type={transactionType}
+                            status="PENDING"
+                            text={toastText.current}
+                            onClose={onClose}
+                            txHash={data.hash}
+                        />
+                    ),
+                    duration: null,
+                });
 
                 //TODO: need a better message here
                 addRecentTransaction({
@@ -116,20 +114,18 @@ export function useSubmitTransaction({
             txPendingVar(false);
 
             setTimeout(() => {
-                if (transactionType !== 'SWAP') {
-                    toast({
-                        position: 'bottom-left',
-                        render: ({ onClose }) => (
-                            <TransactionStatusToast
-                                type={transactionType}
-                                status={error ? 'ERROR' : 'CONFIRMED'}
-                                text={toastText.current}
-                                onClose={onClose}
-                                txHash={data?.transactionHash || ''}
-                            />
-                        ),
-                    });
-                }
+                toast({
+                    position: 'bottom-left',
+                    render: ({ onClose }) => (
+                        <TransactionStatusToast
+                            type={transactionType}
+                            status={error ? 'ERROR' : 'CONFIRMED'}
+                            text={toastText.current}
+                            onClose={onClose}
+                            txHash={data?.transactionHash || ''}
+                        />
+                    ),
+                });
             }, 500);
 
             if (waitForConfig?.onSettled) {

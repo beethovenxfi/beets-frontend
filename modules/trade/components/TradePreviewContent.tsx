@@ -30,6 +30,7 @@ import { etherscanGetTokenUrl } from '~/lib/util/etherscan';
 import { CoingeckoIcon } from '~/assets/icons/CoingeckoIcon';
 import { SubmitTransactionQuery } from '~/lib/util/useSubmitTransaction';
 import { GqlSorGetSwapsResponseFragment } from '~/apollo/generated/graphql-codegen-generated';
+import { transactionMessageFromError } from '~/lib/util/transaction-util';
 
 interface Props {
     query: Omit<SubmitTransactionQuery, 'submit' | 'submitAsync'> & {
@@ -73,6 +74,8 @@ export function TradePreviewContent({ query, onTransactionSubmitted }: Props) {
         diff >= 0
             ? `${numeral(Math.abs(diff)).format('%0.[00]')} cheaper`
             : `within ${numeral(Math.abs(diff)).format('%0.[00]')}`;
+
+    //console.log('query.submitError', query.submitError ? query.submitError.reason : null);
 
     return (
         <Box>
@@ -248,7 +251,7 @@ export function TradePreviewContent({ query, onTransactionSubmitted }: Props) {
             {query && query.submitError ? (
                 <Alert status="error" mt={4}>
                     <AlertIcon />
-                    An error occurred: {query.submitError.message}
+                    An error occurred: {transactionMessageFromError(query.submitError)}
                 </Alert>
             ) : null}
         </Box>
