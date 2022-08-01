@@ -1,0 +1,94 @@
+import { GqlPoolStaking } from '~/apollo/generated/graphql-codegen-generated';
+import { Box, HStack, Text, VStack } from '@chakra-ui/layout';
+import { InfoButton } from '~/components/info-button/InfoButton';
+import numeral from 'numeral';
+import { numberFormatUSDValue } from '~/lib/util/number-formats';
+import TokenAvatar from '~/components/token/TokenAvatar';
+import { BeetsSubmitTransactionButton } from '~/components/button/BeetsSubmitTransactionButton';
+import { usePoolUserPendingRewards } from '~/modules/pool/lib/usePoolUserPendingRewards';
+import { usePoolUserHarvestPendingRewards } from '~/modules/pool/lib/usePoolUserHarvestPendingRewards';
+import { useStakingTotalStakedBalance } from '~/lib/global/useStakingTotalStakedBalance';
+import { usePoolUserBptBalance } from '~/modules/pool/lib/usePoolUserBptBalance';
+import { Skeleton } from '@chakra-ui/react';
+
+interface Props {
+    poolAddress: string;
+    staking: GqlPoolStaking;
+}
+
+export function PoolUserStakedStats({ poolAddress, staking }: Props) {
+    const { pendingRewards, pendingRewardsTotalUSD } = usePoolUserPendingRewards();
+    const { harvest, ...harvestQuery } = usePoolUserHarvestPendingRewards();
+    const { data, isLoading: isLoadingTotalStakedBalance } = useStakingTotalStakedBalance(poolAddress, staking);
+    const { userStakedBptBalance, isLoading: isLoadingUserBptBalance } = usePoolUserBptBalance();
+    const isLoadingStake = isLoadingTotalStakedBalance || isLoadingUserBptBalance;
+
+    return (
+        <>
+            <VStack spacing="0" alignItems="flex-start" mb="4">
+                <InfoButton
+                    label="My staked share"
+                    infoText="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis pharetra, sapien eu ultrices mollis, metus libero maximus elit."
+                    labelProps={{
+                        lineHeight: '1rem',
+                        fontWeight: 'semibold',
+                        fontSize: 'sm',
+                        color: 'beets.base.50',
+                    }}
+                />
+                <VStack spacing="none" alignItems="flex-start">
+                    {isLoadingStake ? (
+                        <Skeleton height="34px" width="140px" mt="4px" mb="4px" />
+                    ) : (
+                        <Text color="white" fontSize="1.75rem">
+                            {numeral(userStakedBptBalance).format('0,0.0000')}{' '}
+                            <Text as="span" fontSize="md" color="beets.base.50">
+                                BPT
+                            </Text>
+                        </Text>
+                    )}
+                    {isLoadingStake ? (
+                        <Skeleton height="16px" width="45px" />
+                    ) : (
+                        <Text fontSize="1rem" lineHeight="1rem">
+                            {numeral(parseFloat(userStakedBptBalance) / parseFloat(data || '1')).format('0.00%')}
+                        </Text>
+                    )}
+                </VStack>
+            </VStack>
+            <VStack spacing="0" alignItems="flex-start" flex="1" mb="4">
+                <InfoButton
+                    label="Pending rewards"
+                    infoText="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis pharetra, sapien eu ultrices mollis, metus libero maximus elit."
+                    labelProps={{
+                        lineHeight: '1rem',
+                        fontWeight: 'semibold',
+                        fontSize: 'sm',
+                        color: 'beets.base.50',
+                    }}
+                />
+                <Text color="white" fontSize="1.75rem">
+                    {numberFormatUSDValue(pendingRewardsTotalUSD)}
+                </Text>
+                {pendingRewards.map((reward, index) => (
+                    <HStack key={index}>
+                        <Text fontSize="1rem" lineHeight="1rem">
+                            {numeral(reward.amount).format('0.0[0000]')}
+                        </Text>
+                        <TokenAvatar size="xs" address={reward.address} />
+                    </HStack>
+                ))}
+            </VStack>
+            <Box width="full">
+                <BeetsSubmitTransactionButton
+                    {...harvestQuery}
+                    isDisabled={pendingRewardsTotalUSD < 0.01}
+                    onClick={() => harvest()}
+                    width="full"
+                >
+                    Claim rewards
+                </BeetsSubmitTransactionButton>
+            </Box>
+        </>
+    );
+}
