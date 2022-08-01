@@ -2,15 +2,17 @@ import { usePool } from '~/modules/pool/lib/usePool';
 import { useReactiveVar } from '@apollo/client';
 import { withdrawStateVar } from '~/modules/pool/withdraw/lib/useWithdrawState';
 import { useQuery } from 'react-query';
+import numeral from 'numeral';
+import { networkConfig } from '~/lib/config/network-config';
 
 export function usePoolExitGetBptInForSingleAssetWithdraw() {
     const { poolService } = usePool();
     const { singleAsset } = useReactiveVar(withdrawStateVar);
 
-    return useQuery(
+    const query = useQuery(
         ['exitGetBptInForSingleAssetWithdraw', singleAsset],
         async () => {
-            if (!singleAsset || singleAsset.amount === '') {
+            if (!singleAsset || singleAsset.amount === '' || parseFloat(singleAsset.amount) === 0) {
                 return {
                     bptIn: '0',
                     priceImpact: 0,
@@ -21,4 +23,13 @@ export function usePoolExitGetBptInForSingleAssetWithdraw() {
         },
         { enabled: !!singleAsset },
     );
+
+    const bptOutAndPriceImpact = query.data;
+    const priceImpact = Math.abs(bptOutAndPriceImpact?.priceImpact || 0);
+    const hasHighPriceImpact = priceImpact > networkConfig.priceImpact.withdraw.high;
+    const hasMediumPriceImpact = !hasHighPriceImpact && priceImpact > networkConfig.priceImpact.withdraw.noticeable;
+
+    const formattedPriceImpact = numeral(priceImpact > 0.000001 ? priceImpact : 0).format('0.00%');
+
+    return { ...query, hasHighPriceImpact, hasMediumPriceImpact, formattedPriceImpact };
 }

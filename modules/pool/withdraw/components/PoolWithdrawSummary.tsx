@@ -18,8 +18,12 @@ export function PoolWithdrawSummary({ ...rest }: Props) {
     const { data, isLoading } = usePoolExitGetProportionalWithdrawEstimate();
     const { priceForAmount, formattedPrice } = useGetTokens();
     const totalValue = sum((data || []).map(priceForAmount));
-    const bptInForSingleAssetWithdraw = usePoolExitGetBptInForSingleAssetWithdraw();
-    const priceImpact = bptInForSingleAssetWithdraw.data?.priceImpact;
+    const {
+        hasHighPriceImpact,
+        hasMediumPriceImpact,
+        formattedPriceImpact,
+        isLoading: isLoadingSingleAsset,
+    } = usePoolExitGetBptInForSingleAssetWithdraw();
 
     return (
         <BeetsBox p="2" {...rest}>
@@ -40,21 +44,24 @@ export function PoolWithdrawSummary({ ...rest }: Props) {
                     ) : null}
                 </Box>
             </CardRow>
-            <CardRow mb="0">
+            <CardRow
+                mb="0"
+                style={hasHighPriceImpact ? { color: 'white', fontWeight: 'bold', backgroundColor: 'red' } : {}}
+            >
                 <Box flex="1">
                     <InfoButton
                         label="Price impact"
                         moreInfoUrl="https://docs.beets.fi"
-                        infoText="Nunc rutrum aliquet ligula ut tincidunt. Nulla ligula justo, laoreet laoreet convallis et, lacinia non turpis. Duis consectetur sem risus, in lobortis est congue id."
+                        infoText="‘Price Impact’ is the difference between the current market price and the price you will recieve from your withdraw influencing the balance and internal price of tokens within the pool. You are subject to the swap fees and potential losses associated with rebalancing."
                     />
                 </Box>
                 <Box>
                     {selectedWithdrawType === 'PROPORTIONAL' ? (
                         <Box>0.00%</Box>
-                    ) : bptInForSingleAssetWithdraw.isLoading ? (
+                    ) : isLoadingSingleAsset ? (
                         <Skeleton height="20px" width="64px" mb="4px" />
                     ) : (
-                        <Box>{numeral(priceImpact).format('0.00%')}</Box>
+                        <Box color={hasMediumPriceImpact ? 'orange' : 'current'}>{formattedPriceImpact}</Box>
                     )}
                 </Box>
             </CardRow>

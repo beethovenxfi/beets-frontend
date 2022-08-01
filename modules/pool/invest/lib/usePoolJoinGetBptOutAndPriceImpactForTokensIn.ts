@@ -15,7 +15,17 @@ export function usePoolJoinGetBptOutAndPriceImpactForTokensIn() {
 
     const query = useQuery(
         ['joinGetBptOutAndPriceImpactForTokensIn', tokenAmountsIn, slippage],
-        () => {
+        async () => {
+            tokenAmountsIn.map((t) => console.log(t));
+            if (
+                !tokenAmountsIn ||
+                tokenAmountsIn.every((tokenAmount) => !tokenAmount.amount || parseFloat(tokenAmount.amount) === 0)
+            ) {
+                return {
+                    bptOut: '0',
+                    priceImpact: 0,
+                };
+            }
             return poolService.joinGetBptOutAndPriceImpactForTokensIn(tokenAmountsIn, slippage);
         },
         { enabled: tokenAmountsIn.length > 0, staleTime: 0, cacheTime: 0 },
