@@ -1,4 +1,13 @@
-export type ToastTransactionType = 'SWAP' | 'JOIN' | 'EXIT' | 'HARVEST' | 'STAKE' | 'UNSTAKE' | 'APPROVE';
+export type ToastTransactionType =
+    | 'SWAP'
+    | 'JOIN'
+    | 'EXIT'
+    | 'HARVEST'
+    | 'STAKE'
+    | 'UNSTAKE'
+    | 'APPROVE'
+    | 'WRAP'
+    | 'UNWRAP';
 export type ToastTransactionStatus = 'PENDING' | 'CONFIRMED' | 'ERROR';
 
 export function toastGetTransactionStatusHeadline(type: ToastTransactionType, status: ToastTransactionStatus) {
@@ -85,6 +94,24 @@ export function toastGetTransactionStatusHeadline(type: ToastTransactionType, st
             case 'ERROR':
                 //return i18next.t('Toast - Headline - Trade error', 'Trade error');
                 return 'Approve error';
+        }
+    } else if (type === 'WRAP') {
+        switch (status) {
+            case 'PENDING':
+                return 'Wrap pending';
+            case 'CONFIRMED':
+                return 'Wrap confirmed';
+            case 'ERROR':
+                return 'Wrap error';
+        }
+    } else if (type === 'UNWRAP') {
+        switch (status) {
+            case 'PENDING':
+                return 'Unwrap pending';
+            case 'CONFIRMED':
+                return 'Unwrap confirmed';
+            case 'ERROR':
+                return 'Unwrap error';
         }
     }
 

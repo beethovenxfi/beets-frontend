@@ -6,6 +6,8 @@ import { useEffect } from 'react';
 import { GqlSorSwapType } from '~/apollo/generated/graphql-codegen-generated';
 import { oldBnumToFixed } from '~/lib/services/pool/lib/old-big-number';
 import { useDebouncedCallback } from 'use-debounce';
+import { networkConfig } from '~/lib/config/network-config';
+import { isEth, isWeth } from '~/lib/services/token/token-util';
 
 const buyAmountVar = makeVar<AmountHumanReadable>('');
 const sellAmountVar = makeVar<AmountHumanReadable>('1');
@@ -24,6 +26,8 @@ export function useTradeCard() {
         swapInfo,
         tradeStartPolling,
         tradeStopPolling,
+        isNativeAssetWrap,
+        isNativeAssetUnwrap,
     } = useTrade();
 
     // refetching the swapInfo may not always trigger the query loading state,
@@ -56,6 +60,19 @@ export function useTradeCard() {
 
     const fetchTrade = async (type: GqlSorSwapType, amount: string) => {
         setTradeConfig(type, amount);
+
+        if (isNativeAssetUnwrap || isNativeAssetWrap) {
+            if (type === 'EXACT_IN') {
+                setBuyAmount(amount);
+            } else {
+                setSellAmount(amount);
+            }
+
+            tradeStopPolling();
+            setIsFetching.off();
+
+            return;
+        }
 
         const trade = await _loadSwaps(type, amount);
         const resultAmount = trade?.returnAmount || '0';
@@ -173,5 +190,7 @@ export function useTradeCard() {
         refetchTrade,
         tradeStartPolling,
         tradeStopPolling,
+        isNativeAssetWrap,
+        isNativeAssetUnwrap,
     };
 }
