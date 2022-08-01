@@ -11,7 +11,7 @@ import { PoolWithdrawPreview } from '~/modules/pool/withdraw/components/PoolWith
 export function PoolWithdrawModal() {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const { pool, getPoolTypeName } = usePool();
-    const [modalState, setModalState] = useState<'start' | 'proportional' | 'single-asset' | 'preview'>('single-asset');
+    const [modalState, setModalState] = useState<'start' | 'proportional' | 'single-asset' | 'preview'>('start');
     const [type, setInvestType] = useState<'proportional' | 'single-asset' | null>(null);
     const initialRef = useRef(null);
 
