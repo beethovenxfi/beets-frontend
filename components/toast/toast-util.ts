@@ -1,4 +1,4 @@
-export type ToastTransactionType =
+export type BeetsTransactionType =
     | 'SWAP'
     | 'JOIN'
     | 'EXIT'
@@ -10,7 +10,7 @@ export type ToastTransactionType =
     | 'UNWRAP';
 export type ToastTransactionStatus = 'PENDING' | 'CONFIRMED' | 'ERROR';
 
-export function toastGetTransactionStatusHeadline(type: ToastTransactionType, status: ToastTransactionStatus) {
+export function toastGetTransactionStatusHeadline(type: BeetsTransactionType, status: ToastTransactionStatus) {
     if (type === 'JOIN') {
         switch (status) {
             case 'PENDING':

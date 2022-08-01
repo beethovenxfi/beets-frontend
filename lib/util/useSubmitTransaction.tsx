@@ -1,8 +1,8 @@
 import { useContractWrite, useSigner, useWaitForTransaction } from 'wagmi';
 import { WriteContractArgs, WriteContractConfig } from '@wagmi/core';
 import { UseContractWriteConfig } from 'wagmi/dist/declarations/src/hooks/contracts/useContractWrite';
-import { ToastId, useToast } from '@chakra-ui/toast';
-import { ToastTransactionType } from '~/components/toast/toast-util';
+import { ToastId, useToast } from '@chakra-ui/react';
+import { BeetsTransactionType } from '~/components/toast/toast-util';
 import { TransactionStatusToast } from '~/components/toast/TransactionStatusToast';
 import { networkConfig } from '~/lib/config/network-config';
 import { Vault__factory } from '@balancer-labs/typechain';
@@ -18,7 +18,7 @@ interface Props {
     functionName: string;
     writeConfig?: UseContractWriteConfig;
     waitForConfig?: UseWaitForTransactionConfig;
-    toastType: ToastTransactionType;
+    transactionType: BeetsTransactionType;
 }
 
 export interface SubmitTransactionQuery {
@@ -55,12 +55,12 @@ export function useSubmitTransaction({
     contractConfig,
     functionName,
     writeConfig,
-    toastType,
+    transactionType,
     waitForConfig,
 }: Props): SubmitTransactionQuery {
     const signer = useSigner();
     const toast = useToast();
-    const pendingToastIdRef = useRef<ToastId | undefined>();
+    const toastIdRef = useRef<ToastId | undefined>();
     const toastText = useRef<string>('');
     const addRecentTransaction = useAddRecentTransaction();
 
@@ -73,11 +73,21 @@ export function useSubmitTransaction({
         {
             ...writeConfig,
             onSuccess(data, variables, context) {
-                pendingToastIdRef.current = toast({
-                    position: 'bottom-left',
-                    render: () => <TransactionStatusToast type={toastType} status="PENDING" text={toastText.current} />,
-                    duration: null,
-                });
+                if (transactionType !== 'SWAP') {
+                    toastIdRef.current = toast({
+                        position: 'bottom-left',
+                        render: ({ onClose }) => (
+                            <TransactionStatusToast
+                                type={transactionType}
+                                status="PENDING"
+                                text={toastText.current}
+                                onClose={onClose}
+                                txHash={data.hash}
+                            />
+                        ),
+                        duration: null,
+                    });
+                }
 
                 //TODO: need a better message here
                 addRecentTransaction({
@@ -99,21 +109,28 @@ export function useSubmitTransaction({
         wait: contractWrite.data?.wait,
         ...waitForConfig,
         onSettled(data, error) {
-            if (pendingToastIdRef.current) {
-                toast.close(pendingToastIdRef.current);
+            if (toastIdRef.current) {
+                toast.close(toastIdRef.current);
             }
 
             txPendingVar(false);
-            toast({
-                position: 'bottom-left',
-                render: () => (
-                    <TransactionStatusToast
-                        type={toastType}
-                        status={error ? 'ERROR' : 'CONFIRMED'}
-                        text={toastText.current}
-                    />
-                ),
-            });
+
+            setTimeout(() => {
+                if (transactionType !== 'SWAP') {
+                    toast({
+                        position: 'bottom-left',
+                        render: ({ onClose }) => (
+                            <TransactionStatusToast
+                                type={transactionType}
+                                status={error ? 'ERROR' : 'CONFIRMED'}
+                                text={toastText.current}
+                                onClose={onClose}
+                                txHash={data?.transactionHash || ''}
+                            />
+                        ),
+                    });
+                }
+            }, 500);
 
             if (waitForConfig?.onSettled) {
                 return waitForConfig.onSettled(data, error);

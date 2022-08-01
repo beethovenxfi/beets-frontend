@@ -11,7 +11,7 @@ export function useWrapEth() {
             contractInterface: WETHAbi,
         },
         functionName: 'deposit',
-        toastType: 'WRAP',
+        transactionType: 'WRAP',
     });
 
     function wrap(amount: AmountHumanReadable) {

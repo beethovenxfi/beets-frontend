@@ -11,7 +11,7 @@ export function useUnwrapEth() {
             contractInterface: WETHAbi,
         },
         functionName: 'withdraw',
-        toastType: 'UNWRAP',
+        transactionType: 'UNWRAP',
     });
 
     function unwrap(amount: AmountHumanReadable) {

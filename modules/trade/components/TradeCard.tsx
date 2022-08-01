@@ -130,20 +130,13 @@ export function TradeCard() {
                                     : `Unwrap ${networkConfig.eth.symbol}`}
                             </BeetsSubmitTransactionButton>
                         ) : !hasApprovalForSellAmount && tokenInData ? (
-                            <Flex>
-                                <Box flex="1">
-                                    <BeetsTokenApprovalButton
-                                        tokenWithAmount={{ ...tokenInData, amount: sellAmount }}
-                                        onConfirmed={() => {
-                                            refetchAllowances();
-                                        }}
-                                        size="lg"
-                                    />
-                                </Box>
-                                <Button variant="primary" size="lg" flex="1" ml="4" isDisabled>
-                                    Review swap
-                                </Button>
-                            </Flex>
+                            <BeetsTokenApprovalButton
+                                tokenWithAmount={{ ...tokenInData, amount: sellAmount }}
+                                onConfirmed={() => {
+                                    refetchAllowances();
+                                }}
+                                size="lg"
+                            />
                         ) : (
                             <Button
                                 variant="primary"

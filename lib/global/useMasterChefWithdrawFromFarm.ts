@@ -13,7 +13,7 @@ export function useMasterChefWithdrawFromFarm() {
             contractInterface: BeethovenxMasterChefAbi,
         },
         functionName: 'withdrawAndHarvest',
-        toastType: 'UNSTAKE',
+        transactionType: 'UNSTAKE',
     });
 
     function withdraw(farmId: string, amount: AmountHumanReadable) {

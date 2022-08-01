@@ -16,7 +16,7 @@ export function useBatchSwap() {
     const { submit, submitAsync, ...rest } = useSubmitTransaction({
         contractConfig: vaultContractConfig,
         functionName: 'batchSwap',
-        toastType: 'SWAP',
+        transactionType: 'SWAP',
     });
 
     function batchSwap({

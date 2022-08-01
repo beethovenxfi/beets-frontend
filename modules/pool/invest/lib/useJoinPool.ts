@@ -11,7 +11,7 @@ export function useJoinPool(pool: GqlPoolUnion) {
     const { submit, submitAsync, ...rest } = useSubmitTransaction({
         contractConfig: vaultContractConfig,
         functionName: pool.__typename === 'GqlPoolPhantomStable' ? 'batchSwap' : 'joinPool',
-        toastType: 'JOIN',
+        transactionType: 'JOIN',
     });
 
     function joinPool(contractCallData: PoolJoinContractCallData, tokenAmountsIn: TokenAmountHumanReadable[]) {
