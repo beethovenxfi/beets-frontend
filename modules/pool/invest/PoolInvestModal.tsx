@@ -1,7 +1,7 @@
 import { Modal, ModalBody, ModalCloseButton, ModalContent } from '@chakra-ui/modal';
 import { Button, Heading, IconButton, ModalHeader, ModalOverlay, Text, useDisclosure } from '@chakra-ui/react';
 import { usePool } from '~/modules/pool/lib/usePool';
-import PoolInvestProportional from '~/modules/pool/invest/components/PoolInvestProportional';
+import { PoolInvestProportional } from '~/modules/pool/invest/components/PoolInvestProportional';
 import { ChevronLeft } from 'react-feather';
 import { PoolInvestPreview } from '~/modules/pool/invest/components/PoolInvestPreview';
 import { useRef, useState } from 'react';

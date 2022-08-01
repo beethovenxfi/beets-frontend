@@ -22,12 +22,11 @@ export function usePoolJoinGetBptOutAndPriceImpactForTokensIn() {
     );
 
     const bptOutAndPriceImpact = query.data;
-    const hasHighPriceImpact = Math.abs(bptOutAndPriceImpact?.priceImpact || 0) > networkConfig.priceImpact.invest.high;
-    const hasMediumPriceImpact =
-        !hasHighPriceImpact &&
-        Math.abs(bptOutAndPriceImpact?.priceImpact || 0) > networkConfig.priceImpact.invest.noticeable;
+    const priceImpact = Math.abs(bptOutAndPriceImpact?.priceImpact || 0);
+    const hasHighPriceImpact = priceImpact > networkConfig.priceImpact.invest.high;
+    const hasMediumPriceImpact = !hasHighPriceImpact && priceImpact > networkConfig.priceImpact.invest.noticeable;
 
-    const formattedPriceImpact = numeral(Math.abs(bptOutAndPriceImpact?.priceImpact || 0)).format('0.00%');
+    const formattedPriceImpact = numeral(priceImpact > 0.000001 ? priceImpact : 0).format('0.00%');
 
     return {
         ...query,

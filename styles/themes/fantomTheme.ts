@@ -251,5 +251,14 @@ export const fantomTheme: Partial<ChakraTheme> = {
                 endColor: 'gray.500',
             },
         },
+        Text: {
+            variants: {
+                cardHeadline: {
+                    fontWeight: 'semibold',
+                    fontSize: 'xl',
+                    color: 'white',
+                },
+            },
+        },
     },
 };

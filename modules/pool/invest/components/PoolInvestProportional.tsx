@@ -31,7 +31,7 @@ interface Props {
     onShowPreview(): void;
 }
 
-export default function PoolInvestProportional({ onShowPreview }: Props) {
+export function PoolInvestProportional({ onShowPreview }: Props) {
     const { pool } = usePool();
     const { priceForAmount, getToken } = useGetTokens();
     const investOptions = pool.investConfig.options;
@@ -127,7 +127,7 @@ export default function PoolInvestProportional({ onShowPreview }: Props) {
 
             <PoolInvestSummary mt="6" />
             <PoolInvestSettings mt="8" />
-            <Button variant="primary" isFullWidth mt="8" onClick={onShowPreview}>
+            <Button variant="primary" isFullWidth mt="8" onClick={onShowPreview} isDisabled={proportionalPercent === 0}>
                 Preview
             </Button>
         </Box>

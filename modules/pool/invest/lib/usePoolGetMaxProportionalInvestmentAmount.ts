@@ -1,17 +1,29 @@
 import { usePool } from '~/modules/pool/lib/usePool';
-import { useQuery } from 'react-query';
-import { useInvest } from '~/modules/pool/invest/lib/useInvest';
-import { sortBy } from 'lodash';
-import { isEth, isWeth, replaceEthWithWeth, replaceWethWithEth } from '~/lib/services/token/token-util';
 import { useUserAccount } from '~/lib/user/useUserAccount';
+import { orderBy, sortBy, sumBy } from 'lodash';
+import { isEth, isWeth, replaceEthWithWeth, replaceWethWithEth } from '~/lib/services/token/token-util';
+import { useQuery } from 'react-query';
+import { usePoolUserTokenBalancesInWallet } from '~/modules/pool/lib/usePoolUserTokenBalancesInWallet';
+import { useGetTokens } from '~/lib/global/useToken';
+import { TokenAmountHumanReadable } from '~/lib/services/token/token-types';
 
-export function usePoolJoinGetProportionalInvestmentAmount() {
+export function usePoolGetMaxProportionalInvestmentAmount() {
+    const { priceForAmount } = useGetTokens();
     const { poolService, pool } = usePool();
-    const { userInvestTokenBalances } = useInvest();
     const { userAddress } = useUserAccount();
+    const { getUserBalanceForToken } = usePoolUserTokenBalancesInWallet();
+    const tokenOptionsWithHighestValue: TokenAmountHumanReadable[] = pool.investConfig.options.map((option) => {
+        const tokenWithHighestValue = orderBy(
+            option.tokenOptions,
+            (tokenOption) => priceForAmount({ ...tokenOption, amount: getUserBalanceForToken(tokenOption.address) }),
+            'desc',
+        )[0].address;
+
+        return { address: tokenWithHighestValue, amount: getUserBalanceForToken(tokenWithHighestValue) };
+    });
 
     const tokenWithSmallestValue = sortBy(
-        userInvestTokenBalances.map((balance) => {
+        tokenOptionsWithHighestValue.map((balance) => {
             const token = pool.tokens.find((token) => token.address === replaceEthWithWeth(balance.address));
 
             return {
@@ -28,14 +40,14 @@ export function usePoolJoinGetProportionalInvestmentAmount() {
     return useQuery(
         [
             {
-                key: 'joinGetProportionalInvestmentAmount',
-                userInvestTokenBalances,
+                key: 'poolGetMaxProportionalInvestmentAmount',
+                tokenOptionsWithHighestValue,
                 tokenWithSmallestValue,
                 userAddress,
             },
         ],
         async ({ queryKey }) => {
-            const hasEth = !!userInvestTokenBalances.find((token) => isEth(token.address));
+            const hasEth = !!tokenOptionsWithHighestValue.find((token) => isEth(token.address));
             const fixedAmount = {
                 ...tokenWithSmallestValue,
                 address: replaceEthWithWeth(tokenWithSmallestValue.address),
@@ -47,12 +59,7 @@ export function usePoolJoinGetProportionalInvestmentAmount() {
 
             const result = await poolService.joinGetProportionalSuggestionForFixedAmount(fixedAmount);
 
-            return Object.fromEntries(
-                result.map((item) => [
-                    hasEth && isWeth(item.address) ? replaceWethWithEth(item.address) : item.address,
-                    item.amount,
-                ]),
-            );
+            return { maxAmount: sumBy(result, priceForAmount) };
         },
         { enabled: true, staleTime: 0, cacheTime: 0 },
     );
