@@ -251,7 +251,7 @@ export function TradePreviewContent({ query, onTransactionSubmitted }: Props) {
             {query && query.submitError ? (
                 <Alert status="error" mt={4}>
                     <AlertIcon />
-                    An error occurred: {transactionMessageFromError(query.submitError)}
+                    {transactionMessageFromError(query.submitError)}
                 </Alert>
             ) : null}
         </Box>

@@ -61,9 +61,6 @@ export function useBatchSwap() {
             return '0';
         });
 
-        console.log(tokenAddresses);
-        console.log(limits);
-
         submit({
             args: [
                 swapType === 'EXACT_IN' ? 0 : 1,
