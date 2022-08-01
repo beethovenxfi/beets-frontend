@@ -7,7 +7,7 @@ import { useGetTokens } from '~/lib/global/useToken';
 import { parseUnits } from 'ethers/lib/utils';
 import { oldBnumScaleAmount } from '~/lib/services/pool/lib/old-big-number';
 import { AddressZero, MaxUint256 } from '@ethersproject/constants';
-import { isEth } from '~/lib/services/token/token-util';
+import { isEth, tokenFormatAmount } from '~/lib/services/token/token-util';
 
 export function useBatchSwap() {
     const { getRequiredToken } = useGetTokens();
@@ -75,7 +75,9 @@ export function useBatchSwap() {
                 limits,
                 MaxUint256,
             ],
-            toastText: `${tokenInAmount} ${tokenInDefinition.symbol} -> ${tokenOutAmount} ${tokenOutDefinition.symbol}`,
+            toastText: `${tokenFormatAmount(tokenInAmount)} ${tokenInDefinition.symbol} -> ${tokenFormatAmount(
+                tokenOutAmount,
+            )} ${tokenOutDefinition.symbol}`,
             ...(isEth(tokenIn)
                 ? {
                       overrides: {
