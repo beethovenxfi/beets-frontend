@@ -15,6 +15,7 @@ import {
 import StarsIcon from '~/components/apr-tooltip/StarsIcon';
 import numeral from 'numeral';
 import { AprText } from '~/components/apr-tooltip/AprText';
+import { Info } from 'react-feather';
 
 interface Props {
     data: GqlPoolApr;
@@ -53,7 +54,16 @@ function AprTooltip({ data, textProps, onlySparkles, placement, aprLabel, sparkl
                         _active={{ outline: 'none' }}
                         _focus={{ outline: 'none' }}
                     >
-                        <StarsIcon width={sparklesSize === 'sm' ? 18 : 24} height={sparklesSize === 'sm' ? 19 : 25} />
+                        {data.hasRewardApr ? (
+                            <StarsIcon
+                                width={sparklesSize === 'sm' ? 18 : 24}
+                                height={sparklesSize === 'sm' ? 19 : 25}
+                            />
+                        ) : (
+                            <Box color="gray.200">
+                                <Info size={sparklesSize === 'sm' ? 18 : 24} />
+                            </Box>
+                        )}
                     </Button>
                 </PopoverTrigger>
             </HStack>
