@@ -112,12 +112,14 @@ export function PoolInvestModal() {
                             </motion.div>
                         ) : null}
                         {modalState === 'custom' ? (
-                            <PoolInvestCustom
-                                onShowPreview={() => {
-                                    setInvestType('custom');
-                                    setModalState('preview');
-                                }}
-                            />
+                            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+                                <PoolInvestCustom
+                                    onShowPreview={() => {
+                                        setInvestType('custom');
+                                        setModalState('preview');
+                                    }}
+                                />
+                            </motion.div>
                         ) : null}
                         {modalState === 'preview' ? (
                             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>

@@ -7,11 +7,10 @@ import { BeetsSubHeadline } from '~/components/typography/BeetsSubHeadline';
 export function HomeWhyUs(props: BoxProps) {
     return (
         <Box {...props}>
-            <BeetsHeadline mb="8">Beethoven X is for everyone</BeetsHeadline>
+            <BeetsHeadline mb="8">Built for the Future. Accessible. Innovative.</BeetsHeadline>
             <Box mr={{ base: '0', lg: '20' }}>
-                With a commitment to the principles of DeFi and blockchain decentralization, the Beethoven X project
-                provides the platform, tech and tools for anyone to participate, create and learn in a supportive
-                environment.
+                Designed to evolve, designed to adapt, Beethoven X provides all the tools necessary for anyone to
+                participate in the future of finance.
             </Box>
             <Box my="6" display="flex" justifyContent="center">
                 <NextImage src={WhyUsImage} width="657px" height="250px" />
@@ -20,15 +19,15 @@ export function HomeWhyUs(props: BoxProps) {
                 <GridItem>
                     <BeetsSubHeadline mb={{ base: '2', md: '6' }}>For Traders</BeetsSubHeadline>
                     <Box>
-                        Balancer V2 enables efficient trading by pooling crowdsourced liquidity from investor portfolios
-                        and using its unique Smart Order Router to find traders the best available price.
+                        Take advantage of optimal swap rates, minimal slippage and concentrated liquidity as the Smart
+                        Order Router (SOR) searches all of the Beethoven X pools to find the best price.
                     </Box>
                 </GridItem>
                 <GridItem>
                     <BeetsSubHeadline mb={{ base: '2', md: '6' }}>For Investors</BeetsSubHeadline>
                     <Box>
-                        Create a unique crypto index fund tailored to your desired asset allocations. Collect fees from
-                        traders who rebalance your funds by following arbitrage opportunities.
+                        Tailored portfolios that generate yield. Flip traditional finance on its head with unique crypto
+                        index funds; eliminate the middleman and earn portfolio rebalancing fees.
                     </Box>
                 </GridItem>
                 <GridItem>

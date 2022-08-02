@@ -13,7 +13,7 @@ export function PoolInvestSettings({ ...rest }: BoxProps) {
         <Box {...rest}>
             <ModalSectionHeadline headline={`Settings`} />
             <BeetsBox p="2">
-                <CardRow>
+                {/*<CardRow>
                     <Box flex="1">
                         <Flex alignItems="center">
                             <InfoButton
@@ -27,7 +27,7 @@ export function PoolInvestSettings({ ...rest }: BoxProps) {
                         </Text>
                     </Box>
                     <Switch id="zap-into-farm" colorScheme="green" isChecked={zapEnabled} onChange={toggleZapEnabled} />
-                </CardRow>
+                </CardRow>*/}
                 {/*<Collapse in={zapEnabled} animateOpacity>
                         <Flex mt="2" alignItems="center">
                             <Box flex="1">

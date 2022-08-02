@@ -27,7 +27,7 @@ export function PoolWithdrawTypeChoice({ onShowProportional, onShowSingleAsset }
 
     return (
         <Box>
-            <Flex mt="4" mb="4">
+            <Flex mt="4" mb="6">
                 <Box flex="1" mr="8">
                     <BeetsBox p="2" mb="6">
                         <Flex mb="4">

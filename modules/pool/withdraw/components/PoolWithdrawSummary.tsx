@@ -44,7 +44,10 @@ export function PoolWithdrawSummary({ ...rest }: Props) {
                     ) : null}
                 </Box>
             </CardRow>
-            <CardRow style={hasHighPriceImpact ? { color: 'white', fontWeight: 'bold', backgroundColor: 'red' } : {}}>
+            <CardRow
+                style={hasHighPriceImpact ? { color: 'white', fontWeight: 'bold', backgroundColor: 'red' } : {}}
+                mb="0"
+            >
                 <Box flex="1">
                     <InfoButton
                         label="Price impact"
@@ -62,12 +65,12 @@ export function PoolWithdrawSummary({ ...rest }: Props) {
                     )}
                 </Box>
             </CardRow>
-            <CardRow mb="0">
+            {/*<CardRow mb="0">
                 <Box flex="1">
                     <InfoButton label="Max slippage" infoText="Slippage defines the..." />
                 </Box>
                 <SlippageTextLinkMenu />
-            </CardRow>
+            </CardRow>*/}
         </BeetsBox>
     );
 }

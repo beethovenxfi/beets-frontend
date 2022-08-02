@@ -22,6 +22,7 @@ import { TokenSelectInline } from '~/components/token-select-inline/TokenSelectI
 import { PoolWithdrawSummary } from '~/modules/pool/withdraw/components/PoolWithdrawSummary';
 import { useEffectOnce } from '~/lib/util/custom-hooks';
 import { CardRow } from '~/components/card/CardRow';
+import { PoolWithdrawSettings } from '~/modules/pool/withdraw/components/PoolWithdrawSettings';
 
 interface Props extends BoxProps {
     onShowPreview: () => void;
@@ -119,6 +120,7 @@ export function PoolWithdrawProportional({ onShowPreview, ...rest }: Props) {
             </BeetsBox>
 
             <PoolWithdrawSummary mt="6" />
+            <PoolWithdrawSettings mt="6" />
             <Button variant="primary" isFullWidth mt="8" onClick={onShowPreview}>
                 Preview
             </Button>

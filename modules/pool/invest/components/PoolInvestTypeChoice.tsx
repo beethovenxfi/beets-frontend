@@ -9,6 +9,8 @@ import { usePoolUserTokenBalancesInWallet } from '~/modules/pool/lib/usePoolUser
 import { useInvest } from '~/modules/pool/invest/lib/useInvest';
 import { usePoolGetMaxProportionalInvestmentAmount } from '~/modules/pool/invest/lib/usePoolGetMaxProportionalInvestmentAmount';
 import { CardRow } from '~/components/card/CardRow';
+import { sumBy } from 'lodash';
+import numeral from 'numeral';
 
 interface Props {
     onShowProportional(): void;
@@ -21,6 +23,8 @@ export function PoolInvestTypeChoice({ onShowProportional, onShowCustom }: Props
     const { userPoolTokenBalances, investableAmount } = usePoolUserTokenBalancesInWallet();
     const { canInvestProportionally } = useInvest();
     const { data, isLoading } = usePoolGetMaxProportionalInvestmentAmount();
+    const isStablePool = pool.__typename === 'GqlPoolStable' || pool.__typename === 'GqlPoolPhantomStable';
+    //const totalTokenBalance = sumBy(pool.tokens, (token) => parseFloat(token.balance) * parseFloat(token.priceRate));
 
     return (
         <Box>
@@ -90,35 +94,76 @@ export function PoolInvestTypeChoice({ onShowProportional, onShowCustom }: Props
                     </BeetsBox>
                 </Box>
                 <Box flex="1">
-                    <BeetsBox px="4" py="2">
-                        We recommend investing proportionally into this pool. This ensures you will{' '}
-                        <Text as="span" fontWeight="bold">
-                            NOT
-                        </Text>{' '}
-                        be subject to potential fees caused by price impact.
-                        <br />
-                        <br />
-                        Alternatively, you can customize and invest in this pool in any proportion. Investing in this
-                        manner, however, may shift the pool out of balance and is therefore subject to price impact.
-                        <br />
-                        <br />
-                        When investing in a liquidity pool, you will receive pool tokens (BPT) which represent your
-                        share of the pool.
-                    </BeetsBox>
+                    {isStablePool ? (
+                        <BeetsBox px="4" py="2">
+                            Details about investing into stable pools. Lorem ipsum dolor sit amet, consectetur
+                            adipiscing elit. Curabitur pharetra enim lorem, et mattis justo finibus aliquam.
+                            <br />
+                            <br />
+                            Aenean blandit vitae ex eget iaculis. Nullam consectetur malesuada enim tempor venenatis.
+                            Morbi venenatis mi ut leo mollis, at ullamcorper enim sodales. Donec in tellus cursus,
+                            vulputate lorem nec, hendrerit urna.
+                            <br />
+                            <br />
+                            Sed at libero scelerisque, facilisis dui et, placerat neque. Fusce id arcu id justo sagittis
+                            volutpat.
+                        </BeetsBox>
+                    ) : (
+                        <BeetsBox px="4" py="2">
+                            We recommend investing proportionally into this pool. This ensures you will{' '}
+                            <Text as="span" fontWeight="bold">
+                                NOT
+                            </Text>{' '}
+                            be subject to potential fees caused by price impact.
+                            <br />
+                            <br />
+                            Alternatively, you can customize and invest in this pool in any proportion. Investing in
+                            this manner, however, may shift the pool out of balance and is therefore subject to price
+                            impact.
+                            <br />
+                            <br />
+                            When investing in a liquidity pool, you will receive pool tokens (BPT) which represent your
+                            share of the pool.
+                        </BeetsBox>
+                    )}
                 </Box>
             </Flex>
-            <Button
-                variant="primary"
-                isFullWidth
-                mb="3"
-                isDisabled={!canInvestProportionally}
-                onClick={onShowProportional}
-            >
-                Invest proportionally
-            </Button>
-            <Button isFullWidth variant="secondary" isDisabled={investableAmount === 0} onClick={onShowCustom}>
-                Customize my investment
-            </Button>
+            {isStablePool ? (
+                <>
+                    <Button
+                        isFullWidth
+                        variant="primary"
+                        isDisabled={investableAmount === 0}
+                        onClick={onShowCustom}
+                        mb="3"
+                    >
+                        Customize my investment
+                    </Button>
+                    <Button
+                        variant="secondary"
+                        isFullWidth
+                        isDisabled={!canInvestProportionally}
+                        onClick={onShowProportional}
+                    >
+                        Invest proportionally
+                    </Button>
+                </>
+            ) : (
+                <>
+                    <Button
+                        variant="primary"
+                        isFullWidth
+                        mb="3"
+                        isDisabled={!canInvestProportionally}
+                        onClick={onShowProportional}
+                    >
+                        Invest proportionally
+                    </Button>
+                    <Button isFullWidth variant="secondary" isDisabled={investableAmount === 0} onClick={onShowCustom}>
+                        Customize my investment
+                    </Button>
+                </>
+            )}
         </Box>
     );
 }
