@@ -1,17 +1,18 @@
-import { Box, HStack, Link, Popover, PopoverContent, PopoverTrigger, Text, Skeleton } from '@chakra-ui/react';
+import { Box, HStack, Link, Popover, PopoverContent, PopoverTrigger, Skeleton, Text } from '@chakra-ui/react';
 import { useGetProtocolDataQuery } from '~/apollo/generated/graphql-codegen-generated';
 import Image from 'next/image';
 import { Check, ChevronDown } from 'react-feather';
-import numeral from 'numeral';
 import { BeetsBox } from '~/components/box/BeetsBox';
 import TokenAvatar from '~/components/token/TokenAvatar';
 import { networkConfig } from '~/lib/config/network-config';
 import OptimismLogo from '~/assets/images/optimism.svg';
 import FantomLogo from '~/assets/images/fantom-logo.png';
-
+import numeral from 'numeral';
 import { SubNavBarStat } from '~/modules/nav/SubNavBarStat';
+import { useGetTokens } from '~/lib/global/useToken';
 
 export function SubNavBar() {
+    const { priceFor } = useGetTokens();
     const { data, error, loading } = useGetProtocolDataQuery({ pollInterval: 30000, fetchPolicy: 'cache-and-network' });
     const protocolData = data?.protocolData;
 
@@ -83,7 +84,7 @@ export function SubNavBar() {
                         <Skeleton height="16px" width="54px" />
                     ) : (
                         <Text fontWeight="semibold" fontSize={{ base: 'sm', lg: 'md' }}>
-                            {/*numeral(protocolData?.beetsPrice || '0').format('$0.00[00]')*/}$0.00
+                            {numeral(priceFor(networkConfig.beets.address)).format('$0.00[00]')}
                         </Text>
                     )}
                 </HStack>
