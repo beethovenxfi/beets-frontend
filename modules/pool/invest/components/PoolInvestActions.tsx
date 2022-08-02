@@ -11,6 +11,9 @@ import { TransactionSubmittedContent } from '~/components/transaction/Transactio
 import { Box, Text } from '@chakra-ui/react';
 import { FadeInBox } from '~/components/animation/FadeInBox';
 import { numberFormatUSDValue } from '~/lib/util/number-formats';
+import { usePoolUserTokenBalancesInWallet } from '~/modules/pool/lib/usePoolUserTokenBalancesInWallet';
+import { usePoolUserInvestedTokenBalances } from '~/modules/pool/lib/usePoolUserInvestedTokenBalances';
+import { usePoolUserBptBalance } from '~/modules/pool/lib/usePoolUserBptBalance';
 
 interface Props {
     onInvestComplete(): void;
@@ -29,6 +32,8 @@ export function PoolInvestActions({ onInvestComplete }: Props) {
     const [steps, setSteps] = useState<TransactionStep[] | null>(null);
     const { bptOutAndPriceImpact } = usePoolJoinGetBptOutAndPriceImpactForTokensIn();
     const { data: contractCallData } = usePoolJoinGetContractCallData(bptOutAndPriceImpact?.minBptReceived || null);
+    const { refetch: refetchUserTokenBalances } = usePoolUserTokenBalancesInWallet();
+    const { refetch: refetchUserBptBalance } = usePoolUserBptBalance();
 
     useEffect(() => {
         if (!isLoading) {
@@ -84,6 +89,9 @@ export function PoolInvestActions({ onInvestComplete }: Props) {
                     onConfirmed={(id) => {
                         if (id !== 'invest') {
                             refetchUserAllowances();
+                        } else {
+                            refetchUserTokenBalances();
+                            refetchUserBptBalance();
                         }
                     }}
                     queries={[{ ...joinQuery, id: 'invest' }]}
