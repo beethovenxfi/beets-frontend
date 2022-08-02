@@ -1,8 +1,10 @@
 import { makeVar, useReactiveVar } from '@apollo/client';
 import { AmountHumanReadable } from '~/lib/services/token/token-types';
 
-//TODO should preserve this in the browser cache and reload it
-const slippageVar = makeVar<AmountHumanReadable>('0.005');
+const SLIPPAGE_CACHE_KEY = 'SLIPPAGE';
+const cached = typeof window !== 'undefined' ? localStorage.getItem(SLIPPAGE_CACHE_KEY) : null;
+
+const slippageVar = makeVar<AmountHumanReadable>(cached || '0.005');
 
 export function useSlippage() {
     const slippage = useReactiveVar(slippageVar);
@@ -11,6 +13,8 @@ export function useSlippage() {
 
     function setSlippage(amount: AmountHumanReadable) {
         slippageVar(amount);
+
+        localStorage.setItem(SLIPPAGE_CACHE_KEY, amount);
     }
 
     return {
