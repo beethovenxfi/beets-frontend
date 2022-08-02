@@ -35,7 +35,7 @@ export function Navbar({ scrollY }: Props) {
                         <Box width="full" height="full" bg="beets.base.800" shadow="lg" />
                     </motion.div>
                     <Flex alignItems="center" mr="6" zIndex="2" cursor="pointer">
-                        <NextLink href="/">
+                        <NextLink href="/" chakraProps={{ _focus: { boxShadow: 'none' } }}>
                             <BeetsBalLogo width="132px" />
                         </NextLink>
                     </Flex>
