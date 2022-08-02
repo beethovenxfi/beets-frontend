@@ -17,6 +17,7 @@ export function useJoinPool(pool: GqlPoolUnion) {
     function joinPool(contractCallData: PoolJoinContractCallData, tokenAmountsIn: TokenAmountHumanReadable[]) {
         if (contractCallData.type === 'JoinPool') {
             const ethIndex = contractCallData.assets.findIndex((asset) => asset === AddressZero);
+            const amountsString = tokenAmountsConcatenatedString(tokenAmountsIn, pool.allTokens);
 
             submit({
                 args: [
@@ -30,7 +31,6 @@ export function useJoinPool(pool: GqlPoolUnion) {
                         fromInternalBalance: false,
                     },
                 ],
-                toastText: tokenAmountsConcatenatedString(tokenAmountsIn, pool.allTokens),
                 ...(ethIndex !== -1
                     ? {
                           overrides: {
@@ -38,6 +38,8 @@ export function useJoinPool(pool: GqlPoolUnion) {
                           },
                       }
                     : {}),
+                toastText: amountsString,
+                walletText: `Join ${pool.name} with ${amountsString}`,
             });
         }
     }

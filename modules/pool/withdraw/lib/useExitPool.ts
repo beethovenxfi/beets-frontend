@@ -3,6 +3,7 @@ import { GqlPoolUnion } from '~/apollo/generated/graphql-codegen-generated';
 import { PoolExitContractCallData } from '~/lib/services/pool/pool-types';
 import { useAccount } from 'wagmi';
 import { tokenAmountsConcatenatedString } from '~/lib/services/token/token-util';
+import { TokenAmountHumanReadable } from '~/lib/services/token/token-types';
 
 export function useExitPool(pool: GqlPoolUnion) {
     const { data: accountData } = useAccount();
@@ -12,8 +13,10 @@ export function useExitPool(pool: GqlPoolUnion) {
         transactionType: 'EXIT',
     });
 
-    function exitPool(contractCallData: PoolExitContractCallData) {
+    function exitPool(contractCallData: PoolExitContractCallData, withdrawAmounts: TokenAmountHumanReadable[]) {
         if (contractCallData.type === 'ExitPool') {
+            const amountsString = tokenAmountsConcatenatedString(withdrawAmounts, pool.allTokens);
+
             submit({
                 args: [
                     pool.id,
@@ -26,7 +29,8 @@ export function useExitPool(pool: GqlPoolUnion) {
                         toInternalBalance: false,
                     },
                 ],
-                toastText: tokenAmountsConcatenatedString([], pool.allTokens),
+                toastText: amountsString,
+                walletText: `Withdraw from ${pool.name} with ${amountsString}`,
             });
         }
     }

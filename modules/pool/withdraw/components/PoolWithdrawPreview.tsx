@@ -65,6 +65,7 @@ export function PoolWithdrawPreview({ onWithdrawComplete }: Props) {
                     confirmedMessage={`You've successfully withdrawn ${numberFormatUSDValue(totalValue)} from ${
                         pool.name
                     }.`}
+                    mb="6"
                 />
             </FadeInBox>
 
@@ -77,7 +78,7 @@ export function PoolWithdrawPreview({ onWithdrawComplete }: Props) {
                 }}
                 onSubmit={() => {
                     if (contractCallData) {
-                        exitPool(contractCallData);
+                        exitPool(contractCallData, withdrawAmounts);
                     }
                 }}
                 onConfirmed={async (id) => {}}

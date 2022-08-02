@@ -1,12 +1,10 @@
-import { Box, Flex, HStack, chakra } from '@chakra-ui/react';
+import { Box, chakra, Flex, HStack } from '@chakra-ui/react';
 import Image from 'next/image';
 import NextLink from 'next/link';
-import LogoFull from '~/assets/logo/beets-bal.svg';
 import NavbarWalletConnectButton from './NavbarWalletConnectButton';
 import { NavbarLink } from '~/modules/nav/NavbarLink';
 import { useRouter } from 'next/router';
 import { motion, MotionValue, useAnimation, useTransform } from 'framer-motion';
-import { NavbarAdditionalLinksMenu } from '~/modules/nav/NavbarAdditionalLinksMenu';
 import { useUserAccount } from '~/lib/user/useUserAccount';
 import { FadeInOutBox } from '~/components/animation/FadeInOutBox';
 import { NavbarPendingRewards } from '~/modules/nav/NavbarPendingRewards';
@@ -15,8 +13,6 @@ import { BeetsBalLogo } from '~/assets/logo/BeetsBalLogo';
 interface Props {
     scrollY: MotionValue<number>;
 }
-
-const ChakraImage = chakra(Image);
 
 const transition = { type: 'spring', stiffness: 250, damping: 25 };
 
@@ -50,10 +46,6 @@ export function Navbar({ scrollY }: Props) {
             });
         }
     });
-
-    /*function template({ scale, translateX }: { scale: number; translateX: number }) {
-        return `scale(${scale}) translateX(${translateX})`;
-    }*/
 
     return (
         <>
@@ -105,9 +97,9 @@ export function Navbar({ scrollY }: Props) {
                                 href={'/pools'}
                                 selected={router.asPath.startsWith('/pool')}
                                 text="Invest"
-                                mr={5}
+                                mr="5"
                             />
-                            <NavbarLink href={'/swap'} selected={router.asPath === '/swap'} text="Swap" mr={5} />
+                            <NavbarLink href={'/swap'} selected={router.asPath === '/swap'} text="Swap" mr="5" />
                             <NavbarLink href={'/pools'} text="Stake" mr={5} />
                             <NavbarLink href={'/pools'} text="Launch" mr={5} />
                             {/*<NavbarAdditionalLinksMenu />*/}

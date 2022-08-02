@@ -12,7 +12,6 @@ import { useRef } from 'react';
 import { useAddRecentTransaction } from '@rainbow-me/rainbowkit';
 import { makeVar } from '@apollo/client';
 import { TransactionReceipt, TransactionResponse } from '@ethersproject/providers';
-import { useClearRecentTransactions } from '@rainbow-me/rainbowkit/dist/transactions/useClearRecentTransactions';
 
 interface Props {
     contractConfig: Omit<WriteContractArgs, 'signerOrProvider'>;
@@ -23,8 +22,10 @@ interface Props {
 }
 
 export interface SubmitTransactionQuery {
-    submit: (config: WriteContractConfig & { toastText: string }) => void;
-    submitAsync: (config: WriteContractConfig & { toastText: string }) => Promise<TransactionResponse>;
+    submit: (config: WriteContractConfig & { toastText: string; walletText?: string }) => void;
+    submitAsync: (
+        config: WriteContractConfig & { toastText: string; walletText?: string },
+    ) => Promise<TransactionResponse>;
 
     isSubmitting: boolean;
     submitError: Error | null;
@@ -63,6 +64,7 @@ export function useSubmitTransaction({
     const toast = useToast();
     const toastIdRef = useRef<ToastId | undefined>();
     const toastText = useRef<string>('');
+    const walletText = useRef<string>('');
     const addRecentTransaction = useAddRecentTransaction();
 
     const contractWrite = useContractWrite(
@@ -88,11 +90,14 @@ export function useSubmitTransaction({
                     duration: null,
                 });
 
-                //TODO: need a better message here
-                addRecentTransaction({
-                    hash: data.hash,
-                    description: toastText.current,
-                });
+                try {
+                    addRecentTransaction({
+                        hash: data.hash,
+                        description: walletText.current,
+                    });
+                } catch {
+                    //TODO: need to handle this gracefully, can happen when user has too many recent transactions
+                }
 
                 txPendingVar(true);
 
@@ -135,13 +140,15 @@ export function useSubmitTransaction({
         },
     });
 
-    function submit(config: WriteContractConfig & { toastText: string }) {
+    function submit(config: WriteContractConfig & { toastText: string; walletText?: string }) {
         toastText.current = config.toastText;
+        walletText.current = config.walletText || config.toastText;
         contractWrite.write(config);
     }
 
-    async function submitAsync(config: WriteContractConfig & { toastText: string }) {
+    async function submitAsync(config: WriteContractConfig & { toastText: string; walletText?: string }) {
         toastText.current = config.toastText;
+        walletText.current = config.walletText || config.toastText;
         return contractWrite.writeAsync(config);
     }
 

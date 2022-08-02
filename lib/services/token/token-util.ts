@@ -27,6 +27,7 @@ export function tokenFindTokenAmountForAddress(
 
 export function tokenAmountsConcatenatedString(tokenAmounts: TokenAmountHumanReadable[], tokens: TokenBase[]): string {
     return tokenAmounts
+        .filter((tokenAmount) => parseFloat(tokenAmount.amount) > 0)
         .map((tokenAmount) => {
             const token = tokens.find((token) => token.address === tokenAmount.address);
 
