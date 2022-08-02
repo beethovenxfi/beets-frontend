@@ -107,7 +107,7 @@ export function Navbar({ scrollY }: Props) {
                                 text="Invest"
                                 mr={5}
                             />
-                            <NavbarLink href={'/trade'} selected={router.asPath === '/trade'} text="Swap" mr={5} />
+                            <NavbarLink href={'/swap'} selected={router.asPath === '/swap'} text="Swap" mr={5} />
                             <NavbarLink href={'/pools'} text="Stake" mr={5} />
                             <NavbarLink href={'/pools'} text="Launch" mr={5} />
                             {/*<NavbarAdditionalLinksMenu />*/}

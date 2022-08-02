@@ -22,13 +22,13 @@ export function Footer() {
                             <FooterLink href="/pools" linkType="internal">
                                 Invest
                             </FooterLink>
-                            <FooterLink href="/trade" linkType="internal">
+                            <FooterLink href="/swap" linkType="internal">
                                 Swap
                             </FooterLink>
-                            <FooterLink href="/trade" linkType="internal">
+                            <FooterLink href="/swap" linkType="internal">
                                 Stake
                             </FooterLink>
-                            <FooterLink href="/trade" linkType="internal">
+                            <FooterLink href="/swap" linkType="internal">
                                 Launch
                             </FooterLink>
                         </GridItem>

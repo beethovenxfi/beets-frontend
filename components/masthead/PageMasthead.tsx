@@ -10,11 +10,11 @@ export function PageMasthead({ title, image }: Props) {
     return (
         <Flex
             borderBottomWidth={5}
-            borderBottomColor="beets.base.400"
-            mb={{ base: '8', lg: '16' }}
+            borderBottomColor="beets.base.500"
+            mb={{ base: '6', lg: '8' }}
             alignItems="flex-end"
         >
-            <Text fontSize="4xl" fontWeight="bold" as="h1" flex="1" mb="4">
+            <Text fontSize="28px" fontWeight="semibold" as="h1" flex="1" mb="2">
                 {title}
             </Text>
             <Box alignItems="flex-end" display={{ base: 'none', md: 'flex' }}>

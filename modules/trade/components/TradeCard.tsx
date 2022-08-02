@@ -75,7 +75,7 @@ export function TradeCard() {
         <Box width="full" position="relative">
             <Card
                 animate={controls}
-                title="Swap"
+                //title="Swap"
                 position="relative"
                 shadow="lg"
                 topRight={sorResponse ? <TradeCardRefreshButton onClick={() => refetchTrade()} /> : null}

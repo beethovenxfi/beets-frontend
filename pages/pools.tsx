@@ -17,7 +17,7 @@ function Pools() {
             </Head>
             <PageMasthead
                 title="Invest & Farm"
-                image={<NextImage src={InvestMastheadImage} width="316px" height="103px" />}
+                image={<NextImage src={InvestMastheadImage} width="208.62px" height="68px" />}
             />
             <PoolList />
         </>
