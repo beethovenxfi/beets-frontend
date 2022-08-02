@@ -10,6 +10,8 @@ import { usePoolUserHarvestPendingRewards } from '~/modules/pool/lib/usePoolUser
 import { useStakingTotalStakedBalance } from '~/lib/global/useStakingTotalStakedBalance';
 import { usePoolUserBptBalance } from '~/modules/pool/lib/usePoolUserBptBalance';
 import { Skeleton } from '@chakra-ui/react';
+import { tokenFormatAmount } from '~/lib/services/token/token-util';
+import { usePoolUserTokenBalancesInWallet } from '~/modules/pool/lib/usePoolUserTokenBalancesInWallet';
 
 interface Props {
     poolAddress: string;
@@ -17,10 +19,17 @@ interface Props {
 }
 
 export function PoolUserStakedStats({ poolAddress, staking }: Props) {
-    const { pendingRewards, pendingRewardsTotalUSD } = usePoolUserPendingRewards();
+    const {
+        pendingRewards,
+        pendingRewardsTotalUSD,
+        hasPendingRewards,
+        refetch: refetchPendingRewards,
+        isLoading: isLoadingPendingRewards,
+    } = usePoolUserPendingRewards();
     const { harvest, ...harvestQuery } = usePoolUserHarvestPendingRewards();
     const { data, isLoading: isLoadingTotalStakedBalance } = useStakingTotalStakedBalance(poolAddress, staking);
     const { userStakedBptBalance, isLoading: isLoadingUserBptBalance } = usePoolUserBptBalance();
+    const { refetch: refetchUserTokenBalances } = usePoolUserTokenBalancesInWallet();
     const isLoadingStake = isLoadingTotalStakedBalance || isLoadingUserBptBalance;
 
     return (
@@ -68,22 +77,32 @@ export function PoolUserStakedStats({ poolAddress, staking }: Props) {
                     }}
                 />
                 <Text color="white" fontSize="1.75rem">
-                    {numberFormatUSDValue(pendingRewardsTotalUSD)}
+                    {isLoadingPendingRewards ? (
+                        <Skeleton height="34px" width="140px" mt="4px" mb="4px" />
+                    ) : (
+                        numberFormatUSDValue(pendingRewardsTotalUSD)
+                    )}
                 </Text>
                 {pendingRewards.map((reward, index) => (
-                    <HStack key={index}>
-                        <Text fontSize="1rem" lineHeight="1rem">
-                            {numeral(reward.amount).format('0.0[0000]')}
-                        </Text>
+                    <HStack key={index} spacing="1">
                         <TokenAvatar size="xs" address={reward.address} />
+                        <Skeleton isLoaded={!isLoadingPendingRewards}>
+                            <Text fontSize="1rem" lineHeight="1rem">
+                                {tokenFormatAmount(reward.amount)}
+                            </Text>
+                        </Skeleton>
                     </HStack>
                 ))}
             </VStack>
             <Box width="full">
                 <BeetsSubmitTransactionButton
                     {...harvestQuery}
-                    isDisabled={pendingRewardsTotalUSD < 0.01}
+                    isDisabled={!hasPendingRewards}
                     onClick={() => harvest()}
+                    onConfirmed={() => {
+                        refetchPendingRewards();
+                        refetchUserTokenBalances();
+                    }}
                     width="full"
                 >
                     Claim rewards

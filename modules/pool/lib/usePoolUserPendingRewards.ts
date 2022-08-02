@@ -27,9 +27,12 @@ export function usePoolUserPendingRewards() {
         return pending || { address: rewardToken, amount: '0' };
     });
 
+    const hasPendingRewards = pendingRewards.filter((item) => parseFloat(item.amount) > 0).length > 0;
+
     return {
         pendingRewards,
         pendingRewardsTotalUSD,
+        hasPendingRewards,
         ...rest,
         isLoading: isLoading || balancesLoading,
     };

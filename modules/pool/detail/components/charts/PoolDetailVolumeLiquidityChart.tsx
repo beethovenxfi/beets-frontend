@@ -26,7 +26,7 @@ export function PoolDetailVolumeLiquidityChart({ data }: Props) {
             },
             legend: {
                 show: false,
-                data: ['Liquidity', 'Daily Volume'],
+                data: ['TVL', 'Daily Volume'],
                 textStyle: {
                     color: colors.beets.base['50'],
                 },
@@ -110,7 +110,7 @@ export function PoolDetailVolumeLiquidityChart({ data }: Props) {
             series: [
                 {
                     data: data.map((item) => [item.timestamp * 1000, item.totalLiquidity]),
-                    name: 'Liquidity',
+                    name: 'TVL',
                     type: 'bar',
                     tooltip: {
                         valueFormatter: function (value) {
