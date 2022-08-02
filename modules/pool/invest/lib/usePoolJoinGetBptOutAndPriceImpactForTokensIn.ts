@@ -21,10 +21,11 @@ export function usePoolJoinGetBptOutAndPriceImpactForTokensIn() {
                 tokenAmountsIn.every((tokenAmount) => !tokenAmount.amount || parseFloat(tokenAmount.amount) === 0)
             ) {
                 return {
-                    bptOut: '0',
+                    minBptReceived: '0',
                     priceImpact: 0,
                 };
             }
+
             return poolService.joinGetBptOutAndPriceImpactForTokensIn(tokenAmountsIn, slippage);
         },
         { enabled: tokenAmountsIn.length > 0, staleTime: 0, cacheTime: 0 },
