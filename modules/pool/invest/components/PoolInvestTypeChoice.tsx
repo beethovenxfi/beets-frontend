@@ -1,4 +1,4 @@
-import { Box, Button, Flex, Heading, HStack, Skeleton, Text } from '@chakra-ui/react';
+import { Box, Button, Flex, Grid, GridItem, HStack, Skeleton, Text } from '@chakra-ui/react';
 import { BeetsBox } from '~/components/box/BeetsBox';
 import { numberFormatUSDValue } from '~/lib/util/number-formats';
 import { tokenFormatAmount, tokenGetAmountForAddress } from '~/lib/services/token/token-util';
@@ -9,8 +9,6 @@ import { usePoolUserTokenBalancesInWallet } from '~/modules/pool/lib/usePoolUser
 import { useInvest } from '~/modules/pool/invest/lib/useInvest';
 import { usePoolGetMaxProportionalInvestmentAmount } from '~/modules/pool/invest/lib/usePoolGetMaxProportionalInvestmentAmount';
 import { CardRow } from '~/components/card/CardRow';
-import { sumBy } from 'lodash';
-import numeral from 'numeral';
 
 interface Props {
     onShowProportional(): void;
@@ -28,8 +26,8 @@ export function PoolInvestTypeChoice({ onShowProportional, onShowCustom }: Props
 
     return (
         <Box>
-            <Flex mt="4" mb="6">
-                <Box flex="1" mr="8">
+            <Grid mt="4" mb="6" gap="8" templateColumns={{ base: '1fr', md: '1fr', lg: '1fr 1fr' }}>
+                <GridItem>
                     <BeetsBox p="2" mb="6">
                         <Flex fontSize="lg" fontWeight="semibold" mb="4">
                             <Text flex="1">You can invest</Text>
@@ -92,8 +90,8 @@ export function PoolInvestTypeChoice({ onShowProportional, onShowCustom }: Props
                             );
                         })}
                     </BeetsBox>
-                </Box>
-                <Box flex="1">
+                </GridItem>
+                <GridItem>
                     {isStablePool ? (
                         <BeetsBox px="4" py="2">
                             Details about investing into stable pools. Lorem ipsum dolor sit amet, consectetur
@@ -126,8 +124,8 @@ export function PoolInvestTypeChoice({ onShowProportional, onShowCustom }: Props
                             share of the pool.
                         </BeetsBox>
                     )}
-                </Box>
-            </Flex>
+                </GridItem>
+            </Grid>
             {isStablePool ? (
                 <>
                     <Button

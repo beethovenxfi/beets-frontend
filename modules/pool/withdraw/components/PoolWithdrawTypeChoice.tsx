@@ -1,4 +1,16 @@
-import { Alert, AlertIcon, Box, Button, Flex, Heading, HStack, Text, useDisclosure } from '@chakra-ui/react';
+import {
+    Alert,
+    AlertIcon,
+    Box,
+    Button,
+    Flex,
+    Grid,
+    GridItem,
+    Heading,
+    HStack,
+    Text,
+    useDisclosure,
+} from '@chakra-ui/react';
 import { BeetsBox } from '~/components/box/BeetsBox';
 import { numberFormatUSDValue } from '~/lib/util/number-formats';
 import { tokenFormatAmount } from '~/lib/services/token/token-util';
@@ -27,8 +39,8 @@ export function PoolWithdrawTypeChoice({ onShowProportional, onShowSingleAsset }
 
     return (
         <Box>
-            <Flex mt="4" mb="6">
-                <Box flex="1" mr="8">
+            <Grid mt="4" mb="6" gap="8" templateColumns={{ base: '1fr', md: '1fr', lg: '1fr 1fr' }}>
+                <GridItem>
                     <BeetsBox p="2" mb="6">
                         <Flex mb="4">
                             <Text fontSize="lg" fontWeight="semibold" flex="1">
@@ -88,8 +100,8 @@ export function PoolWithdrawTypeChoice({ onShowProportional, onShowSingleAsset }
                             );
                         })}
                     </BeetsBox>
-                </Box>
-                <Box flex="1">
+                </GridItem>
+                <GridItem>
                     <BeetsBox p="4">
                         Information about withdrawing proportionally vs custom. Lorem ipsum dolor sit amet, consectetur
                         adipiscing elit. Sed sit amet lectus viverra, lacinia erat a, consectetur ex. Praesent vel nulla
@@ -100,8 +112,8 @@ export function PoolWithdrawTypeChoice({ onShowProportional, onShowSingleAsset }
                         urna efficitur eu. Donec scelerisque consectetur enim, nec sodales diam tincidunt ut. Praesent
                         faucibus iaculis lacus, in sagittis erat euismod at.
                     </BeetsBox>
-                </Box>
-            </Flex>
+                </GridItem>
+            </Grid>
             {hasBptStaked && (
                 <Alert status="warning" borderRadius="md" mb="4">
                     <AlertIcon />
