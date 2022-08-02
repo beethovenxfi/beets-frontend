@@ -8,11 +8,11 @@ import { usePoolUserBptBalance } from '~/modules/pool/lib/usePoolUserBptBalance'
 
 export function usePoolExitGetProportionalWithdrawEstimate() {
     const { poolService, pool } = usePool();
-    const { userTotalBptBalance } = usePoolUserBptBalance();
+    const { userWalletBptBalance } = usePoolUserBptBalance();
     const { proportionalPercent } = useReactiveVar(withdrawStateVar);
 
     const userBptRatio = oldBnumToHumanReadable(
-        oldBnumScaleAmount(userTotalBptBalance).times(proportionalPercent / 100),
+        oldBnumScaleAmount(userWalletBptBalance).times(proportionalPercent / 100),
     );
 
     return useQuery(

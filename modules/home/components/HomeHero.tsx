@@ -51,7 +51,7 @@ export function HomeHero() {
                                 Invest
                             </Button>
                         </NextLink>
-                        <NextLink href="/trade" chakraProps={{ _hover: { textDecoration: 'none' } }}>
+                        <NextLink href="/swap" chakraProps={{ _hover: { textDecoration: 'none' } }}>
                             <Button width={{ base: '130px', lg: '160px' }} variant="secondary">
                                 Swap
                             </Button>

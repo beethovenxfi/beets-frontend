@@ -4,6 +4,7 @@ export const fantomNetworkConfig: NetworkConfig = {
     appName: 'Beethoven X',
     chainId: '250',
     networkName: 'Fantom Opera',
+    networkShortName: 'Fantom',
     etherscanName: 'FTM Scan',
     etherscanUrl: 'https://ftmscan.com',
     testnet: false,

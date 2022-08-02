@@ -93,7 +93,15 @@ function BeetsApp(props: AppProps) {
 
     return (
         <WagmiProvider client={wagmiClient}>
-            <RainbowKitProvider coolMode chains={networkChainDefinitions} showRecentTransactions={true}>
+            <RainbowKitProvider
+                coolMode
+                chains={networkChainDefinitions}
+                showRecentTransactions={true}
+                appInfo={{
+                    appName: 'Beethoven X',
+                    learnMoreUrl: 'https://docs.beets.fi',
+                }}
+            >
                 <ApolloProvider client={client}>
                     <ChakraProvider theme={chakraTheme}>
                         <BeetsFonts />

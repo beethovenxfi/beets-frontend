@@ -26,6 +26,7 @@ export function usePoolExitGetContractCallData() {
             proportionalPercent,
             proportionalAmountsOut,
             singleAssetWithdrawEstimate,
+            slippage,
         ],
         () => {
             if (type === 'PROPORTIONAL' && proportionalAmountsOut) {

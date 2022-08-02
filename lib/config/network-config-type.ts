@@ -2,6 +2,7 @@ export interface NetworkConfig {
     appName: string;
     chainId: string;
     networkName: string;
+    networkShortName: string;
     etherscanName: string;
     etherscanUrl: string;
     testnet: boolean;

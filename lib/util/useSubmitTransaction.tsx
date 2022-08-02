@@ -12,6 +12,7 @@ import { useRef } from 'react';
 import { useAddRecentTransaction } from '@rainbow-me/rainbowkit';
 import { makeVar } from '@apollo/client';
 import { TransactionReceipt, TransactionResponse } from '@ethersproject/providers';
+import { useClearRecentTransactions } from '@rainbow-me/rainbowkit/dist/transactions/useClearRecentTransactions';
 
 interface Props {
     contractConfig: Omit<WriteContractArgs, 'signerOrProvider'>;

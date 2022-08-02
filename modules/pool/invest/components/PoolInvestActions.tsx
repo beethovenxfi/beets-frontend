@@ -53,7 +53,7 @@ export function PoolInvestActions({ onInvestComplete }: Props) {
                     id: 'invest',
                     type: 'other',
                     buttonText: 'Invest',
-                    tooltipText: 'Confirm investment into this pool',
+                    tooltipText: 'Invest into this pool',
                 },
             ];
 

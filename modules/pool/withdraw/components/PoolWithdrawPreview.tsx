@@ -12,6 +12,11 @@ import { usePoolExitGetContractCallData } from '~/modules/pool/withdraw/lib/useP
 import { usePool } from '~/modules/pool/lib/usePool';
 import { BeetsTransactionStepsSubmit } from '~/components/button/BeetsTransactionStepsSubmit';
 import { CardRow } from '~/components/card/CardRow';
+import { FadeInBox } from '~/components/animation/FadeInBox';
+import { TransactionSubmittedContent } from '~/components/transaction/TransactionSubmittedContent';
+import { sum } from 'lodash';
+import { InfoButton } from '~/components/info-button/InfoButton';
+import { SlippageTextLinkMenu } from '~/components/slippage/SlippageTextLinkMenu';
 
 interface Props {
     onWithdrawComplete(): void;
@@ -25,6 +30,7 @@ export function PoolWithdrawPreview({ onWithdrawComplete }: Props) {
     const { priceForAmount } = useGetTokens();
     const { exitPool, ...exitPoolQuery } = useExitPool(pool);
     const { data: contractCallData } = usePoolExitGetContractCallData();
+    const totalValue = sum((data || []).map(priceForAmount));
 
     const withdrawAmounts =
         selectedWithdrawType === 'SINGLE_ASSET' && singleAssetWithdraw ? [singleAssetWithdraw] : data ? data : [];
@@ -34,7 +40,7 @@ export function PoolWithdrawPreview({ onWithdrawComplete }: Props) {
             <BeetsBox mt="4" p="2">
                 {withdrawAmounts.map((token, index) => {
                     return (
-                        <CardRow key={token.address} mb={index === withdrawAmounts.length - 1 ? '0' : '1'}>
+                        <CardRow key={token.address}>
                             <HStack spacing="1.5" flex="1">
                                 <TokenAvatar size="xs" address={token.address} />
                                 <Text>{getToken(token.address)?.symbol}</Text>
@@ -48,8 +54,29 @@ export function PoolWithdrawPreview({ onWithdrawComplete }: Props) {
                         </CardRow>
                     );
                 })}
+                <CardRow mb="0">
+                    <Box flex="1">
+                        <InfoButton
+                            label="Max slippage"
+                            moreInfoUrl="https://docs.beets.fi"
+                            infoText="The maximum amount of slippage that you're willing to accept for the transaction."
+                        />
+                    </Box>
+                    <SlippageTextLinkMenu />
+                </CardRow>
             </BeetsBox>
             <PoolWithdrawSummary mt="6" mb="8" />
+            <FadeInBox isVisible={exitPoolQuery.isConfirmed || exitPoolQuery.isPending || exitPoolQuery.isFailed}>
+                <Text fontSize="lg" fontWeight="semibold" mt="4" mb="2">
+                    Transaction details
+                </Text>
+                <TransactionSubmittedContent
+                    query={exitPoolQuery}
+                    confirmedMessage={`You've successfully withdrawn ${numberFormatUSDValue(totalValue)} from ${
+                        pool.name
+                    }.`}
+                />
+            </FadeInBox>
 
             <BeetsTransactionStepsSubmit
                 isLoading={false}

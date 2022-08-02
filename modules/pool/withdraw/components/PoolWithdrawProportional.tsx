@@ -19,11 +19,7 @@ import { usePoolExitGetProportionalWithdrawEstimate } from '~/modules/pool/withd
 import { tokenFormatAmount } from '~/lib/services/token/token-util';
 import { BeetsBox } from '~/components/box/BeetsBox';
 import { TokenSelectInline } from '~/components/token-select-inline/TokenSelectInline';
-import { BeetsBoxLineItem } from '~/components/box/BeetsBoxLineItem';
-
-import { PoolWithdrawSettings } from '~/modules/pool/withdraw/components/PoolWithdrawSettings';
 import { PoolWithdrawSummary } from '~/modules/pool/withdraw/components/PoolWithdrawSummary';
-
 import { useEffectOnce } from '~/lib/util/custom-hooks';
 import { CardRow } from '~/components/card/CardRow';
 
@@ -35,7 +31,7 @@ export function PoolWithdrawProportional({ onShowPreview, ...rest }: Props) {
     const { pool } = usePool();
     const { setProportionalPercent, proportionalPercent, setSelectedOption, selectedOptions, setProportionalWithdraw } =
         useWithdrawState();
-    const { formattedPrice, priceForAmount } = useGetTokens();
+    const { formattedPrice } = useGetTokens();
 
     useEffectOnce(() => {
         setProportionalWithdraw();
@@ -123,7 +119,6 @@ export function PoolWithdrawProportional({ onShowPreview, ...rest }: Props) {
             </BeetsBox>
 
             <PoolWithdrawSummary mt="6" />
-            <PoolWithdrawSettings mt="8" />
             <Button variant="primary" isFullWidth mt="8" onClick={onShowPreview}>
                 Preview
             </Button>

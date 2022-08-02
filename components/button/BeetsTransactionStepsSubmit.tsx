@@ -37,6 +37,7 @@ interface Props {
 
     steps: TransactionStep[];
     queries: (Omit<SubmitTransactionQuery, 'submit' | 'submitAsync'> & { id: string })[];
+    buttonSize?: string;
 }
 
 export function BeetsTransactionStepsSubmit({
@@ -49,6 +50,7 @@ export function BeetsTransactionStepsSubmit({
     onConfirmed,
     queries,
     isDisabled,
+    buttonSize = 'lg',
 }: Props) {
     const [currentStepIdx, setCurrentStepIdx] = useState<number>(0);
     const [stepStatuses, setStepStatuses] = useState<{ [id: string]: StepStatus }>({});
@@ -102,7 +104,13 @@ export function BeetsTransactionStepsSubmit({
                 />
             ) : null}
             {isLoading ? (
-                <Button variant="primary" isLoading={true} loadingText={loadingButtonText} isFullWidth>
+                <Button
+                    variant="primary"
+                    isLoading={true}
+                    loadingText={loadingButtonText}
+                    isFullWidth
+                    size={buttonSize}
+                >
                     {loadingButtonText}
                 </Button>
             ) : null}
@@ -115,6 +123,7 @@ export function BeetsTransactionStepsSubmit({
                     onPending={() => setStepStatus(currentStep.id, 'pending')}
                     onCanceled={() => setStepStatus(currentStep.id, 'current')}
                     isDisabled={isDisabled}
+                    size={buttonSize}
                 />
             ) : null}
             {currentStep && currentStep.type !== 'tokenApproval' && currentQuery && !complete ? (
@@ -127,6 +136,7 @@ export function BeetsTransactionStepsSubmit({
                     onCanceled={() => setStepStatus(currentStep.id, 'current')}
                     onConfirmed={internalOnConfirmed}
                     isDisabled={isDisabled}
+                    size={buttonSize}
                 >
                     {currentStep.buttonText}
                 </BeetsSubmitTransactionButton>
@@ -140,6 +150,7 @@ export function BeetsTransactionStepsSubmit({
                     }}
                     isFullWidth
                     variant="outline"
+                    size={buttonSize}
                 >
                     {completeButtonText}
                 </Button>
