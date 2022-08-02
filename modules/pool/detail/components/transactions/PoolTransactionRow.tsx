@@ -155,7 +155,6 @@ export default function PoolTransactionItem({ transaction, ...rest }: Props) {
                              "details value"`,
                 xl: `"action details value time"`,
             }}
-            mb="3"
             bgColor="rgba(255,255,255,0.05)"
             _hover={{ bg: '#100C3A' }}
         >

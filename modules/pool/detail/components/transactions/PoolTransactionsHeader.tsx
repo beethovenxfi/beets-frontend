@@ -1,4 +1,4 @@
-import { Box, Flex, Text } from '@chakra-ui/layout';
+import { Text } from '@chakra-ui/layout';
 import { Grid, GridItem } from '@chakra-ui/react';
 
 export default function PoolTransactionHeader() {
@@ -12,7 +12,7 @@ export default function PoolTransactionHeader() {
             bgColor="rgba(255,255,255,0.08)"
             borderBottom="2px"
             borderColor="beets.base.500"
-            mb={{ base: '4', lg: '3' }}
+            mb={{ base: '4', lg: '0' }}
             templateColumns={'200px 1fr 200px 200px'}
             gap="0"
             display={{ base: 'none', xl: 'grid' }}
