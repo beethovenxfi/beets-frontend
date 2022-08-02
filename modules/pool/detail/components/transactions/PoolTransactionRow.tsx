@@ -151,7 +151,7 @@ export default function PoolTransactionItem({ transaction, ...rest }: Props) {
                 xl: `"action details value time"`,
             }}
             mb="3"
-            bgColor={{ base: 'rgba(255,255,255,0.08)', xl: 'unset' }}
+            bgColor="rgba(255,255,255,0.05)"
         >
             <GridItem area="action">
                 <MobileLabel text="Action" />
