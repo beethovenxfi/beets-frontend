@@ -40,7 +40,7 @@ import {
 import { CanvasRenderer } from 'echarts/renderers';
 import { chakraTheme } from '~/styles/chakraTheme';
 import { WagmiProvider } from 'wagmi';
-import { RainbowKitProvider } from '@rainbow-me/rainbowkit';
+import { RainbowKitProvider, darkTheme, midnightTheme } from '@rainbow-me/rainbowkit';
 import { useRouter } from 'next/router';
 import { networkChainDefinitions, wagmiClient } from '~/lib/global/network';
 import { BeetsFonts } from '~/components/fonts/BeetsFonts';
@@ -101,6 +101,7 @@ function BeetsApp(props: AppProps) {
                     appName: 'Beethoven X',
                     learnMoreUrl: 'https://docs.beets.fi',
                 }}
+                theme={darkTheme()}
             >
                 <ApolloProvider client={client}>
                     <ChakraProvider theme={chakraTheme}>
