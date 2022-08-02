@@ -16,7 +16,7 @@ interface Props {
 export function PoolInvestCustom({ onShowPreview }: Props) {
     const { pool } = usePool();
     const { inputAmounts, setInputAmount, setSelectedOption } = useInvestState();
-    const { selectedInvestTokens, hasAllZeroTokenAmounts } = useInvest();
+    const { selectedInvestTokens, hasValidTokenAmount, hasValidUserInput } = useInvest();
     const { userPoolTokenBalances } = usePoolUserTokenBalancesInWallet();
     const { hasHighPriceImpact, formattedPriceImpact } = usePoolJoinGetBptOutAndPriceImpactForTokensIn();
     const [acknowledgeHighPriceImpact, { toggle: toggleAcknowledgeHighPriceImpact }] = useBoolean(false);
@@ -65,7 +65,7 @@ export function PoolInvestCustom({ onShowPreview }: Props) {
                 isFullWidth
                 mt="8"
                 onClick={onShowPreview}
-                isDisabled={hasAllZeroTokenAmounts || (hasHighPriceImpact && !acknowledgeHighPriceImpact)}
+                isDisabled={!hasValidUserInput || (hasHighPriceImpact && !acknowledgeHighPriceImpact)}
             >
                 Preview
             </Button>

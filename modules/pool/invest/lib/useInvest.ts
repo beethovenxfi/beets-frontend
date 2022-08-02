@@ -4,7 +4,7 @@ import { useInvestState } from '~/modules/pool/invest/lib/useInvestState';
 import { usePoolUserTokenBalancesInWallet } from '~/modules/pool/lib/usePoolUserTokenBalancesInWallet';
 import { isEth, tokenGetAmountForAddress } from '~/lib/services/token/token-util';
 import { GqlPoolToken } from '~/apollo/generated/graphql-codegen-generated';
-import { sumBy, every } from 'lodash';
+import { sumBy } from 'lodash';
 import { useGetTokens } from '~/lib/global/useToken';
 
 export function useInvest() {
@@ -31,6 +31,12 @@ export function useInvest() {
         amount: getUserBalanceForToken(token.address),
     }));
 
+    const hasValidUserInput =
+        !selectedInvestTokensWithAmounts.every((token) => parseFloat(token.amount) === 0) &&
+        selectedInvestTokensWithAmounts.every(
+            (token) => parseFloat(token.amount) < parseFloat(getUserBalanceForToken(token.address)),
+        );
+
     const canInvestProportionally =
         pool.investConfig.options.filter(
             (option) =>
@@ -41,7 +47,6 @@ export function useInvest() {
         ).length === pool.investConfig.options.length;
 
     const totalInvestValue = sumBy(selectedInvestTokensWithAmounts, priceForAmount);
-    const hasAllZeroTokenAmounts = every(selectedInvestTokensWithAmounts, (token) => parseFloat(token.amount) === 0);
     const isInvestingWithEth = !!selectedInvestTokens.find((token) => isEth(token.address));
 
     return {
@@ -50,7 +55,7 @@ export function useInvest() {
         userInvestTokenBalances,
         canInvestProportionally,
         totalInvestValue,
-        hasAllZeroTokenAmounts,
+        hasValidUserInput,
         isInvestingWithEth,
     };
 }
