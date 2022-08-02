@@ -2,7 +2,6 @@ import { Box, BoxProps, Skeleton } from '@chakra-ui/react';
 import { InfoButton } from '~/components/info-button/InfoButton';
 import { BeetsBox } from '~/components/box/BeetsBox';
 import { numberFormatUSDValue } from '~/lib/util/number-formats';
-import numeral from 'numeral';
 
 import { usePoolExitGetProportionalWithdrawEstimate } from '~/modules/pool/withdraw/lib/usePoolExitGetProportionalWithdrawEstimate';
 import { sum } from 'lodash';
@@ -10,6 +9,7 @@ import { useGetTokens } from '~/lib/global/useToken';
 import { usePoolExitGetBptInForSingleAssetWithdraw } from '~/modules/pool/withdraw/lib/usePoolExitGetBptInForSingleAssetWithdraw';
 import { useWithdrawState } from '~/modules/pool/withdraw/lib/useWithdrawState';
 import { CardRow } from '~/components/card/CardRow';
+import { SlippageTextLinkMenu } from '~/components/slippage/SlippageTextLinkMenu';
 
 interface Props extends BoxProps {}
 
@@ -44,10 +44,7 @@ export function PoolWithdrawSummary({ ...rest }: Props) {
                     ) : null}
                 </Box>
             </CardRow>
-            <CardRow
-                mb="0"
-                style={hasHighPriceImpact ? { color: 'white', fontWeight: 'bold', backgroundColor: 'red' } : {}}
-            >
+            <CardRow style={hasHighPriceImpact ? { color: 'white', fontWeight: 'bold', backgroundColor: 'red' } : {}}>
                 <Box flex="1">
                     <InfoButton
                         label="Price impact"
@@ -64,6 +61,12 @@ export function PoolWithdrawSummary({ ...rest }: Props) {
                         <Box color={hasMediumPriceImpact ? 'orange' : 'current'}>{formattedPriceImpact}</Box>
                     )}
                 </Box>
+            </CardRow>
+            <CardRow mb="0">
+                <Box flex="1">
+                    <InfoButton label="Max slippage" infoText="Slippage defines the..." />
+                </Box>
+                <SlippageTextLinkMenu />
             </CardRow>
         </BeetsBox>
     );

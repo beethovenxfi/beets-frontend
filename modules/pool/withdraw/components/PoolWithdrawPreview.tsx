@@ -40,7 +40,7 @@ export function PoolWithdrawPreview({ onWithdrawComplete }: Props) {
             <BeetsBox mt="4" p="2">
                 {withdrawAmounts.map((token, index) => {
                     return (
-                        <CardRow key={token.address}>
+                        <CardRow key={token.address} mb={withdrawAmounts.length - 1 === index ? '0' : '1'}>
                             <HStack spacing="1.5" flex="1">
                                 <TokenAvatar size="xs" address={token.address} />
                                 <Text>{getToken(token.address)?.symbol}</Text>
@@ -54,16 +54,6 @@ export function PoolWithdrawPreview({ onWithdrawComplete }: Props) {
                         </CardRow>
                     );
                 })}
-                <CardRow mb="0">
-                    <Box flex="1">
-                        <InfoButton
-                            label="Max slippage"
-                            moreInfoUrl="https://docs.beets.fi"
-                            infoText="The maximum amount of slippage that you're willing to accept for the transaction."
-                        />
-                    </Box>
-                    <SlippageTextLinkMenu />
-                </CardRow>
             </BeetsBox>
             <PoolWithdrawSummary mt="6" mb="8" />
             <FadeInBox isVisible={exitPoolQuery.isConfirmed || exitPoolQuery.isPending || exitPoolQuery.isFailed}>

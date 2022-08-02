@@ -1,5 +1,4 @@
 import { usePool } from '~/modules/pool/lib/usePool';
-import { usePoolUserTokenBalancesInWallet } from '~/modules/pool/lib/usePoolUserTokenBalancesInWallet';
 import { useReactiveVar } from '@apollo/client';
 import { withdrawStateVar } from '~/modules/pool/withdraw/lib/useWithdrawState';
 import { useQuery } from 'react-query';
@@ -10,15 +9,12 @@ export function usePoolExitGetProportionalWithdrawEstimate() {
     const { poolService, pool } = usePool();
     const { userWalletBptBalance } = usePoolUserBptBalance();
     const { proportionalPercent } = useReactiveVar(withdrawStateVar);
-
-    const userBptRatio = oldBnumToHumanReadable(
-        oldBnumScaleAmount(userWalletBptBalance).times(proportionalPercent / 100),
-    );
+    const bptIn = oldBnumToHumanReadable(oldBnumScaleAmount(userWalletBptBalance).times(proportionalPercent / 100));
 
     return useQuery(
-        ['exitGetProportionalWithdrawEstimate', pool.id, userBptRatio],
+        ['exitGetProportionalWithdrawEstimate', pool.id, bptIn],
         async () => {
-            const result = await poolService.exitGetProportionalWithdrawEstimate(userBptRatio);
+            const result = await poolService.exitGetProportionalWithdrawEstimate(bptIn);
 
             return result;
         },

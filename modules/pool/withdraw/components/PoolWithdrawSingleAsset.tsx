@@ -46,7 +46,7 @@ export function PoolWithdrawSingleAsset({ onShowPreview, ...rest }: Props) {
         (!hasHighPriceImpact || acknowledgeHighPriceImpact);
 
     return (
-        <Box py={4} {...rest}>
+        <Box pt={4} {...rest}>
             <Box mb="4">
                 <Text>
                     Select your desired asset, then drag the slider or enter an amount to configure your withdraw.
@@ -63,7 +63,7 @@ export function PoolWithdrawSingleAsset({ onShowPreview, ...rest }: Props) {
                 setSelectedTokenOption={setSingleAssetWithdraw}
             />
             <PoolWithdrawSummary mt="6" />
-            <PoolWithdrawSettings mt="8" />
+            {/*<PoolWithdrawSettings mt="8" />*/}
             <Collapse in={hasHighPriceImpact} animateOpacity>
                 <Alert status="error" borderRadius="md" mt="4">
                     <Checkbox
