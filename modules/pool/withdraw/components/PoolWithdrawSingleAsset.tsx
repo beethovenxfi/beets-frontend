@@ -1,8 +1,9 @@
-import { Box, Button, Text } from '@chakra-ui/react';
+import { Box, Button, Text, Collapse, Alert, Checkbox, useBoolean } from '@chakra-ui/react';
 import { useWithdrawState } from '~/modules/pool/withdraw/lib/useWithdrawState';
 import { usePool } from '~/modules/pool/lib/usePool';
 import { BoxProps } from '@chakra-ui/layout';
 import { usePoolExitGetSingleAssetWithdrawForBptIn } from '~/modules/pool/withdraw/lib/usePoolExitGetSingleAssetWithdrawForBptIn';
+import { usePoolExitGetBptInForSingleAssetWithdraw } from '~/modules/pool/withdraw/lib/usePoolExitGetBptInForSingleAssetWithdraw';
 import { useEffect } from 'react';
 import { PoolWithdrawSummary } from '~/modules/pool/withdraw/components/PoolWithdrawSummary';
 import { PoolWithdrawSettings } from '~/modules/pool/withdraw/components/PoolWithdrawSettings';
@@ -16,6 +17,8 @@ export function PoolWithdrawSingleAsset({ onShowPreview, ...rest }: Props) {
     const { allTokens, pool } = usePool();
     const { singleAssetWithdraw, setSingleAssetWithdrawAmount, setSingleAssetWithdraw } = useWithdrawState();
     const singleAssetWithdrawForBptIn = usePoolExitGetSingleAssetWithdrawForBptIn();
+    const { hasHighPriceImpact, formattedPriceImpact } = usePoolExitGetBptInForSingleAssetWithdraw();
+    const [acknowledgeHighPriceImpact, { toggle: toggleAcknowledgeHighPriceImpact }] = useBoolean(false);
 
     useEffect(() => {
         const defaultSingleAsset = pool.withdrawConfig.options[0]?.tokenOptions[0]?.address;
@@ -38,7 +41,9 @@ export function PoolWithdrawSingleAsset({ onShowPreview, ...rest }: Props) {
 
     //TODO: precision
     const isValid =
-        singleAssetWithdraw.amount === '' || parseFloat(singleAssetWithdraw.amount) <= parseFloat(maxAmount);
+        parseFloat(singleAssetWithdraw.amount) > 0 &&
+        parseFloat(singleAssetWithdraw.amount) <= parseFloat(maxAmount) &&
+        (!hasHighPriceImpact || acknowledgeHighPriceImpact);
 
     return (
         <Box py={4} {...rest}>
@@ -59,6 +64,22 @@ export function PoolWithdrawSingleAsset({ onShowPreview, ...rest }: Props) {
             />
             <PoolWithdrawSummary mt="6" />
             <PoolWithdrawSettings mt="8" />
+            <Collapse in={hasHighPriceImpact} animateOpacity>
+                <Alert status="error" borderRadius="md" mt="4">
+                    <Checkbox
+                        id="high-price-impact-acknowledge"
+                        isChecked={acknowledgeHighPriceImpact}
+                        colorScheme="red"
+                        onChange={toggleAcknowledgeHighPriceImpact}
+                        mt="1"
+                        mr="2"
+                    />
+                    <Box>
+                        I confirm that my single asset withdraw will result in a {formattedPriceImpact} price impact,
+                        subjecting me to fees.
+                    </Box>
+                </Alert>
+            </Collapse>
             <Button variant="primary" isFullWidth mt="8" onClick={onShowPreview} isDisabled={!isValid}>
                 Preview
             </Button>

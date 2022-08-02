@@ -92,5 +92,9 @@ export const fantomNetworkConfig: NetworkConfig = {
             noticeable: 0.01,
             high: 0.05,
         },
+        withdraw: {
+            noticeable: 0.005,
+            high: 0.01,
+        },
     },
 };

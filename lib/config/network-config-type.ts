@@ -54,5 +54,9 @@ export interface NetworkConfig {
             noticeable: number;
             high: number;
         };
+        withdraw: {
+            noticeable: number;
+            high: number;
+        };
     };
 }
