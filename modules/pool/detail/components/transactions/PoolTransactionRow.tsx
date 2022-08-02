@@ -157,6 +157,7 @@ export default function PoolTransactionItem({ transaction, ...rest }: Props) {
             }}
             mb="3"
             bgColor="rgba(255,255,255,0.05)"
+            _hover={{ bg: '#100C3A' }}
         >
             <Flex align={flexAlign}>
                 <GridItem area="action">
