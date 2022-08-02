@@ -63,7 +63,7 @@ export function PoolWithdrawTypeChoice({ onShowProportional, onShowSingleAsset }
                                 <CardRow
                                     key={token.address}
                                     mb={index === pool.tokens.length - 1 ? '0' : '1'}
-                                    alignItems="flex-start"
+                                    alignItems="center"
                                 >
                                     <HStack spacing="none" flex="1">
                                         <TokenAvatar size="xs" address={token.address} />

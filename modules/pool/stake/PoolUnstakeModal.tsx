@@ -20,16 +20,12 @@ import { capitalize } from 'lodash';
 import { tokenFormatAmount } from '~/lib/services/token/token-util';
 import { usePool } from '~/modules/pool/lib/usePool';
 import { useApproveToken } from '~/lib/util/useApproveToken';
-import { useMasterChefDepositIntoFarm } from '~/lib/global/useMasterChefDepositIntoFarm';
-
-import { usePoolUserStakingAllowance } from '~/modules/pool/stake/lib/usePoolUserStakingAllowance';
-import { BeetsTransactionStepsSubmit, TransactionStep } from '~/components/button/BeetsTransactionStepsSubmit';
-import { BeetsBoxLineItem } from '~/components/box/BeetsBoxLineItem';
+import { BeetsTransactionStepsSubmit } from '~/components/button/BeetsTransactionStepsSubmit';
 import { BeetsBox } from '~/components/box/BeetsBox';
 import { usePoolUserDepositBalance } from '~/modules/pool/lib/usePoolUserDepositBalance';
 import { oldBnumScaleAmount, oldBnumToHumanReadable } from '~/lib/services/pool/lib/old-big-number';
-import { BeetsSubmitTransactionButton } from '~/components/button/BeetsSubmitTransactionButton';
 import { useMasterChefWithdrawFromFarm } from '~/lib/global/useMasterChefWithdrawFromFarm';
+import { CardRow } from '~/components/card/CardRow';
 
 interface Props {
     isOpen: boolean;
@@ -111,34 +107,27 @@ export function PoolUnstakeModal({ isOpen, onOpen, onClose }: Props) {
                         </SliderMark>
                     </Slider>
 
-                    <BeetsBox mt="4" pt="0.5" mb="8">
-                        <BeetsBoxLineItem
-                            last={true}
-                            pl="3"
-                            center={true}
-                            leftContent={
-                                <Box flex="1">
-                                    <Text>Amount to unstake</Text>
-                                </Box>
-                            }
-                            rightContent={
-                                <Box display="flex" flexDirection="column" alignItems="flex-end">
-                                    {isLoadingBalances || isRefetchingBalances ? (
-                                        <>
-                                            <Skeleton height="20px" width="60px" mb="2" />
-                                            <Skeleton height="20px" width="40px" />
-                                        </>
-                                    ) : (
-                                        <>
-                                            <Box textAlign="right">{numberFormatUSDValue(amountValue)}</Box>
-                                            <Box textAlign="right" color="gray.200">
-                                                {tokenFormatAmount(amount)} BPT
-                                            </Box>
-                                        </>
-                                    )}
-                                </Box>
-                            }
-                        />
+                    <BeetsBox mt="4" p="2" mb="8">
+                        <CardRow mb="0">
+                            <Box flex="1">
+                                <Text>Amount to unstake</Text>
+                            </Box>
+                            <Box display="flex" flexDirection="column" alignItems="flex-end">
+                                {isLoadingBalances || isRefetchingBalances ? (
+                                    <>
+                                        <Skeleton height="20px" width="60px" mb="2" />
+                                        <Skeleton height="20px" width="40px" />
+                                    </>
+                                ) : (
+                                    <>
+                                        <Box textAlign="right">{numberFormatUSDValue(amountValue)}</Box>
+                                        <Box textAlign="right" color="gray.200">
+                                            {tokenFormatAmount(amount)} BPT
+                                        </Box>
+                                    </>
+                                )}
+                            </Box>
+                        </CardRow>
                     </BeetsBox>
                     <BeetsTransactionStepsSubmit
                         isLoading={loading}

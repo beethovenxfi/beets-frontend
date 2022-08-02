@@ -41,7 +41,7 @@ export function PoolInvestPreview({ onInvestComplete }: Props) {
                     );
                 })}
             </BeetsBox>
-            <PoolInvestSummary mt="6" mb="8" />
+            <PoolInvestSummary mt="6" />
             <PoolInvestActions onInvestComplete={onInvestComplete} />
         </Box>
     );

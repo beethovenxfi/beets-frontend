@@ -7,6 +7,11 @@ import { usePoolJoinGetBptOutAndPriceImpactForTokensIn } from '~/modules/pool/in
 import { usePoolJoinGetContractCallData } from '~/modules/pool/invest/lib/usePoolJoinGetContractCallData';
 import { useJoinPool } from '~/modules/pool/invest/lib/useJoinPool';
 import { BeetsTransactionStepsSubmit, TransactionStep } from '~/components/button/BeetsTransactionStepsSubmit';
+import { TradeSubmittedContent } from '~/modules/trade/components/TradeSubmittedContent';
+import { TransactionSubmittedContent } from '~/components/transaction/TransactionSubmittedContent';
+import { Box, Text } from '@chakra-ui/react';
+import { FadeInBox } from '~/components/animation/FadeInBox';
+import { numberFormatUSDValue } from '~/lib/util/number-formats';
 
 interface Props {
     onInvestComplete(): void;
@@ -14,7 +19,7 @@ interface Props {
 
 export function PoolInvestActions({ onInvestComplete }: Props) {
     const { pool } = usePool();
-    const { selectedInvestTokensWithAmounts } = useInvest();
+    const { selectedInvestTokensWithAmounts, totalInvestValue } = useInvest();
     const joinQuery = useJoinPool(pool);
     const allInvestTokens = pool.investConfig.options.map((option) => option.tokenOptions).flat();
     const {
@@ -53,23 +58,38 @@ export function PoolInvestActions({ onInvestComplete }: Props) {
     }, [isLoading]);
 
     return (
-        <BeetsTransactionStepsSubmit
-            isLoading={steps === null}
-            loadingButtonText="Invest"
-            completeButtonText="Return to pool"
-            onCompleteButtonClick={onInvestComplete}
-            steps={steps || []}
-            onSubmit={(id) => {
-                if (id === 'invest' && contractCallData) {
-                    joinQuery.joinPool(contractCallData, selectedInvestTokensWithAmounts);
-                }
-            }}
-            onConfirmed={(id) => {
-                if (id !== 'invest') {
-                    refetchUserAllowances();
-                }
-            }}
-            queries={[{ ...joinQuery, id: 'invest' }]}
-        />
+        <>
+            <FadeInBox isVisible={joinQuery.isConfirmed || joinQuery.isPending || joinQuery.isFailed}>
+                <Text fontSize="lg" fontWeight="semibold" mt="4" mb="2">
+                    Transaction details
+                </Text>
+                <TransactionSubmittedContent
+                    query={joinQuery}
+                    confirmedMessage={`You've successfully invested ${numberFormatUSDValue(totalInvestValue)} into ${
+                        pool.name
+                    }.`}
+                />
+            </FadeInBox>
+            <Box mt="6">
+                <BeetsTransactionStepsSubmit
+                    isLoading={steps === null}
+                    loadingButtonText="Invest"
+                    completeButtonText="Return to pool"
+                    onCompleteButtonClick={onInvestComplete}
+                    steps={steps || []}
+                    onSubmit={(id) => {
+                        if (id === 'invest' && contractCallData) {
+                            joinQuery.joinPool(contractCallData, selectedInvestTokensWithAmounts);
+                        }
+                    }}
+                    onConfirmed={(id) => {
+                        if (id !== 'invest') {
+                            refetchUserAllowances();
+                        }
+                    }}
+                    queries={[{ ...joinQuery, id: 'invest' }]}
+                />
+            </Box>
+        </>
     );
 }

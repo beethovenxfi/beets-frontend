@@ -30,7 +30,7 @@ export function tokenAmountsConcatenatedString(tokenAmounts: TokenAmountHumanRea
         .map((tokenAmount) => {
             const token = tokens.find((token) => token.address === tokenAmount.address);
 
-            return `${token?.symbol}: ${tokenAmount.amount}`;
+            return `${token?.symbol}: ${tokenFormatAmount(tokenAmount.amount)}`;
         })
         .join(', ');
 }

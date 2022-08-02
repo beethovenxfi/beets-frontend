@@ -2,11 +2,8 @@ import { Box } from '@chakra-ui/layout';
 import { EChartsOption, graphic } from 'echarts';
 import ReactECharts from 'echarts-for-react';
 import { useMemo } from 'react';
-
 import { GqlTokenPriceChartDataItem } from '~/apollo/generated/graphql-codegen-generated';
 import { useTheme } from '@chakra-ui/react';
-import numeral from 'numeral';
-import { numberFormatUSDValue } from '~/lib/util/number-formats';
 import { format } from 'date-fns';
 
 interface Props {

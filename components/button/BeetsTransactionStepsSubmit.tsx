@@ -6,6 +6,7 @@ import { Alert, AlertIcon, Box, Button, Flex, Skeleton } from '@chakra-ui/react'
 import { BeetsSubmitTransactionButton } from '~/components/button/BeetsSubmitTransactionButton';
 import { BeetsTokenApprovalButton } from '~/components/button/BeetsTokenApprovalButton';
 import { SubmitTransactionQuery } from '~/lib/util/useSubmitTransaction';
+import { transactionMessageFromError } from '~/lib/util/transaction-util';
 
 export type TransactionStep = TransactionTokenApprovalStep | TransactionOtherStep;
 
@@ -138,7 +139,7 @@ export function BeetsTransactionStepsSubmit({
                         onCompleteButtonClick();
                     }}
                     isFullWidth
-                    variant="secondary"
+                    variant="outline"
                 >
                     {completeButtonText}
                 </Button>
@@ -146,7 +147,7 @@ export function BeetsTransactionStepsSubmit({
             {currentQuery && currentQuery.submitError ? (
                 <Alert status="error" mt={4}>
                     <AlertIcon />
-                    An error occurred: {currentQuery.submitError.message}
+                    {transactionMessageFromError(currentQuery.submitError)}
                 </Alert>
             ) : null}
             {complete && (
