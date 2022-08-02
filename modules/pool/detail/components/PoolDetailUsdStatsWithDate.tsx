@@ -4,6 +4,7 @@ import { numberFormatLargeUsdValue } from '~/lib/util/number-formats';
 import { PercentChangeBadge } from '~/components/badge/PercentChangeBadge';
 import { format, formatDistanceToNow } from 'date-fns';
 import { CardRow } from '~/components/card/CardRow';
+import { Fragment } from 'react';
 
 interface Props {
     title: string;
@@ -21,8 +22,8 @@ export function PoolDetailUsdStatsWithDate({ title, stats }: Props) {
                     const date = new Date(timestamp * 1000);
 
                     return (
-                        <>
-                            <Flex key={`stat-${index}`}>
+                        <Fragment key={`stat-${index}`}>
+                            <Flex>
                                 <Box flex="1">{label}</Box>
                                 <VStack alignItems="flex-end" spacing="0.5">
                                     <Flex alignItems="center">
@@ -37,8 +38,8 @@ export function PoolDetailUsdStatsWithDate({ title, stats }: Props) {
                                     </Box>
                                 </VStack>
                             </Flex>
-                            {index < stats.length - 1 && <Divider key={`divider-${index}`} mt="2" mb="2" />}
-                        </>
+                            {index < stats.length - 1 && <Divider mt="2" mb="2" />}
+                        </Fragment>
                     );
                 })}
             </Box>

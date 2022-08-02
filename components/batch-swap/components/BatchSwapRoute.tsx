@@ -8,6 +8,7 @@ import {
 import { BatchSwapTokenAmount } from '~/components/batch-swap/components/BatchSwapTokenAmount';
 import { BatchSwapHop } from '~/components/batch-swap/components/BatchSwapHop';
 import { GqlSorSwapRouteFragment } from '~/apollo/generated/graphql-codegen-generated';
+import { Fragment } from 'react';
 
 interface Props {
     route: GqlSorSwapRouteFragment;
@@ -29,10 +30,10 @@ export function BatchSwapRoute({ route }: Props) {
                         {route.hops
                             .filter((hop) => hop.pool.type !== 'LINEAR')
                             .map((hop, index) => (
-                                <>
-                                    <BatchSwapHop key={index} hop={hop} />
-                                    <BatchSwapRouteDashedLineArrowSpacer key={`spacer-${index}`} />
-                                </>
+                                <Fragment key={index}>
+                                    <BatchSwapHop hop={hop} />
+                                    <BatchSwapRouteDashedLineArrowSpacer />
+                                </Fragment>
                             ))}
                     </Flex>
                     <BatchSwapTokenAmount address={route.tokenOut} amount={route.tokenOutAmount} />

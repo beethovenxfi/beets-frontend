@@ -33,6 +33,9 @@ export function BeetsSubmitTransactionButton({
     isConfirmed,
     isFailed,
     reset,
+    submitError,
+    txResponse,
+    txReceipt,
     ...rest
 }: BeetsSubmitTransactionButtonProps & ButtonOptions & ButtonProps & LinkProps) {
     useEffect(() => {

@@ -13,6 +13,7 @@ import { ExternalLink, User } from 'react-feather';
 import { tokenFormatAmount } from '~/lib/services/token/token-util';
 import { PercentChangeBadge } from '~/components/badge/PercentChangeBadge';
 import { etherscanGetAddressUrl, etherscanGetTxUrl } from '~/lib/util/etherscan';
+import { Fragment } from 'react';
 
 interface Props {
     batchSwap: GqlPoolBatchSwapFragment;
@@ -74,16 +75,14 @@ export function BatchSwapListItem({ tokenIn, tokenOut, tokenInPrice, tokenOutPri
                             bgColor="beets.base.700"
                         />
                         <Flex flex="1" height="64px" alignItems="center" position="relative" top="2px">
-                            <Box flex="1">
-                                <BatchSwapRouteDashedLineArrowSpacer />
-                            </Box>
+                            <BatchSwapRouteDashedLineArrowSpacer />
                             {batchSwap.swaps
                                 .filter((swap) => swap.pool.type !== 'LINEAR')
                                 .map((swap, index) => (
-                                    <>
-                                        <BatchSwapHop key={index} hop={swap} />
-                                        <BatchSwapRouteDashedLineArrowSpacer key={`spacer-${index}`} />
-                                    </>
+                                    <Fragment key={index}>
+                                        <BatchSwapHop hop={swap} />
+                                        <BatchSwapRouteDashedLineArrowSpacer />
+                                    </Fragment>
                                 ))}
                         </Flex>
                         <BatchSwapTokenAmount
