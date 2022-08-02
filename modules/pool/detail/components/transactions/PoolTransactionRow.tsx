@@ -136,6 +136,11 @@ export default function PoolTransactionItem({ transaction, ...rest }: Props) {
     const getFormattedValue = () => {
         return numeral(transaction.transaction.valueUSD).format('$0,0.000');
     };
+
+    const flexAlign = { base: 'flex-start', xl: 'center' };
+    const gridItemMb = { base: '4', xl: '0' };
+    const justifyContent = { base: 'flex-start', xl: 'flex-end' };
+
     return (
         <Grid
             px="4"
@@ -153,31 +158,37 @@ export default function PoolTransactionItem({ transaction, ...rest }: Props) {
             mb="3"
             bgColor="rgba(255,255,255,0.05)"
         >
-            <GridItem area="action">
-                <MobileLabel text="Action" />
-                <PoolTransactionAction {...transaction} />
-            </GridItem>
-            <GridItem area="details" mb={{ base: '4', xl: '0' }}>
+            <Flex align={flexAlign}>
+                <GridItem area="action">
+                    <MobileLabel text="Action" />
+                    <PoolTransactionAction {...transaction} />
+                </GridItem>
+            </Flex>
+            <GridItem area="details" mb={gridItemMb}>
                 <MobileLabel text="Details" />
                 <Pool {...transaction} />
             </GridItem>
-            <GridItem area="value" mb={{ base: '4', xl: '0' }}>
-                <MobileLabel text="Value" />
-                <Text fontSize="md">{getFormattedValue()}</Text>
-            </GridItem>
-            <GridItem area="time" mb={{ base: '4', xl: '0' }}>
-                <MobileLabel text="Time" />
-                <HStack width="full" justifyContent={{ base: 'flex-start', xl: 'flex-end' }}>
-                    <Text fontSize="md">
-                        {formatDistanceToNow(new Date(transaction.transaction.timestamp * 1000), {
-                            addSuffix: true,
-                        })}
-                    </Text>
-                    <Link href={etherscanGetTxUrl(transaction.transaction.tx)} isExternal>
-                        <ExternalLink size={14} />
-                    </Link>
-                </HStack>
-            </GridItem>
+            <Flex align={flexAlign}>
+                <GridItem area="value" mb={gridItemMb}>
+                    <MobileLabel text="Value" />
+                    <Text fontSize="md">{getFormattedValue()}</Text>
+                </GridItem>
+            </Flex>
+            <Flex align={flexAlign} justify={justifyContent}>
+                <GridItem area="time" mb={gridItemMb}>
+                    <MobileLabel text="Time" />
+                    <HStack width="full" justify={justifyContent}>
+                        <Text fontSize="md">
+                            {formatDistanceToNow(new Date(transaction.transaction.timestamp * 1000), {
+                                addSuffix: true,
+                            })}
+                        </Text>
+                        <Link href={etherscanGetTxUrl(transaction.transaction.tx)} isExternal>
+                            <ExternalLink size={14} />
+                        </Link>
+                    </HStack>
+                </GridItem>
+            </Flex>
         </Grid>
     );
 
