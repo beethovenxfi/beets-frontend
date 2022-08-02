@@ -12,7 +12,7 @@ export default function PoolTransactionHeader() {
             bgColor="rgba(255,255,255,0.08)"
             borderBottom="2px"
             borderColor="beets.base.500"
-            mb={{ base: '4', lg: '0' }}
+            mb={{ base: '4', lg: '3' }}
             templateColumns={'200px 1fr 200px 200px'}
             gap="0"
             display={{ base: 'none', xl: 'grid' }}
