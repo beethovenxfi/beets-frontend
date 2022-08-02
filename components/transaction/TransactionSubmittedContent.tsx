@@ -1,7 +1,7 @@
-import { Alert, AlertIcon, Box, BoxProps, Link, Spinner } from '@chakra-ui/react';
+import { Alert, AlertIcon, Box, BoxProps, Link, Spinner, Text } from '@chakra-ui/react';
 import { BeetsBox } from '~/components/box/BeetsBox';
 import { CardRow } from '~/components/card/CardRow';
-import { addressShortDisplayName } from '~/lib/util/address';
+import { addressShortDisplayName, isBatchRelayer, isVault } from '~/lib/util/address';
 import {
     etherscanGetAddressUrl,
     etherscanGetBlockUrl,
@@ -43,10 +43,12 @@ export function TransactionSubmittedContent({ query, confirmedMessage, ...rest }
                 {txResponse?.to && (
                     <CardRow>
                         <Box flex="1">Contract</Box>
-                        <Box>
+                        <Box alignItems="flex-end" display="flex" flexDirection="column">
                             <Link href={etherscanGetAddressUrl(txResponse.to)} target="_blank">
                                 {addressShortDisplayName(txResponse.to)}
                             </Link>
+                            {isVault(txResponse.to) && <Text color="gray.200">Vault</Text>}
+                            {isBatchRelayer(txResponse.to) && <Text color="gray.200">Batch relayer</Text>}
                         </Box>
                     </CardRow>
                 )}

@@ -7,7 +7,6 @@ import { usePoolJoinGetBptOutAndPriceImpactForTokensIn } from '~/modules/pool/in
 import { usePoolJoinGetContractCallData } from '~/modules/pool/invest/lib/usePoolJoinGetContractCallData';
 import { useJoinPool } from '~/modules/pool/invest/lib/useJoinPool';
 import { BeetsTransactionStepsSubmit, TransactionStep } from '~/components/button/BeetsTransactionStepsSubmit';
-import { TradeSubmittedContent } from '~/modules/trade/components/TradeSubmittedContent';
 import { TransactionSubmittedContent } from '~/components/transaction/TransactionSubmittedContent';
 import { Box, Text } from '@chakra-ui/react';
 import { FadeInBox } from '~/components/animation/FadeInBox';
