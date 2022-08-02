@@ -21,7 +21,7 @@ export function Pool() {
                     <PoolInvestModal />
                     <PoolWithdrawModal />
                 </Flex>
-                <Grid gap="4" templateColumns={{ base: '1fr', lg: '300px 1fr' }} width="full">
+                <Grid gap="4" templateColumns={{ base: '1fr', xl: '300px 1fr' }} width="full">
                     <GridItem>
                         <PoolStats />
                     </GridItem>

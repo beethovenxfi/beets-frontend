@@ -1,8 +1,8 @@
 import { GqlPoolJoinExit, GqlPoolSwap } from '~/apollo/generated/graphql-codegen-generated';
-import { Box, Flex, Text, Link } from '@chakra-ui/react';
+import { Box, Flex, Text, Link, Grid, GridItem, Stack, useBreakpointValue } from '@chakra-ui/react';
 import numeral from 'numeral';
 import { BoxProps, HStack } from '@chakra-ui/layout';
-import { ArrowRight, ExternalLink, Minus, Plus, Zap } from 'react-feather';
+import { ArrowDown, ArrowRight, ExternalLink, Minus, Plus, Zap } from 'react-feather';
 import { TokenAmountPill } from '~/components/token/TokenAmountPill';
 import { formatDistanceToNow } from 'date-fns';
 import { etherscanGetTxUrl } from '~/lib/util/etherscan';
@@ -68,8 +68,11 @@ function Pool(props: PoolTransaction) {
     const isJoinAction = props.type === PoolTransactionType.Join;
     const isExitAction = props.type === PoolTransactionType.Exit;
     const isSwapAction = props.type === PoolTransactionType.Swap;
+
+    const isMobile = useBreakpointValue({ base: true, xl: false });
+
     return (
-        <HStack spacing="2" alignItems="center">
+        <Stack spacing="2" alignItems={{ base: 'flex-start', xl: 'center' }} direction={{ base: 'column', xl: 'row' }}>
             {!props.isPhantomStable && (
                 <>
                     {isInvestAction &&
@@ -90,8 +93,8 @@ function Pool(props: PoolTransaction) {
                                 amount={(props.transaction as GqlPoolSwap).tokenAmountIn}
                                 address={(props.transaction as GqlPoolSwap).tokenIn}
                             />
-                            <Box mx={2}>
-                                <ArrowRight />
+                            <Box mx={{ base: 0, xl: 2 }} pl={{ base: 10, xl: 0 }}>
+                                {isMobile ? <ArrowDown /> : <ArrowRight />}
                             </Box>
                             <TokenAmountPill
                                 fontSize="md"
@@ -125,7 +128,7 @@ function Pool(props: PoolTransaction) {
                     )}
                 </>
             )}
-        </HStack>
+        </Stack>
     );
 }
 
@@ -134,30 +137,55 @@ export default function PoolTransactionItem({ transaction, ...rest }: Props) {
         return numeral(transaction.transaction.valueUSD).format('$0,0.000');
     };
     return (
-        <Box bg="rgba(255,255,255,0.05)" {...rest}>
-            <Flex px="4" py="4" cursor="pointer" alignItems={'center'} fontSize="lg" _hover={{ bg: '#100C3A' }}>
-                <Box width="200px">
-                    <PoolTransactionAction {...transaction} />
-                </Box>
-                <Box flex={1} textAlign="left">
-                    <Pool {...transaction} />
-                </Box>
-                <Box w="200px" textAlign="right">
-                    <Text fontSize="md">{getFormattedValue()}</Text>
-                </Box>
-                <Box w="200px" textAlign="right">
-                    <HStack width="full" justifyContent="flex-end">
-                        <Text fontSize="md">
-                            {formatDistanceToNow(new Date(transaction.transaction.timestamp * 1000), {
-                                addSuffix: true,
-                            })}
-                        </Text>
-                        <Link href={etherscanGetTxUrl(transaction.transaction.tx)} isExternal>
-                            <ExternalLink size={14} />
-                        </Link>
-                    </HStack>
-                </Box>
-            </Flex>
-        </Box>
+        <Grid
+            px="4"
+            py={{ base: '4', xl: '2' }}
+            templateColumns={{
+                base: '1fr 1fr',
+                xl: '200px 1fr 200px 200px',
+            }}
+            gap="0"
+            templateAreas={{
+                base: `"action time"
+                             "details value"`,
+                xl: `"action details value time"`,
+            }}
+            mb="3"
+            bgColor={{ base: 'rgba(255,255,255,0.08)', xl: 'unset' }}
+        >
+            <GridItem area="action">
+                <MobileLabel text="Action" />
+                <PoolTransactionAction {...transaction} />
+            </GridItem>
+            <GridItem area="details" mb={{ base: '4', xl: '0' }}>
+                <MobileLabel text="Details" />
+                <Pool {...transaction} />
+            </GridItem>
+            <GridItem area="value" mb={{ base: '4', xl: '0' }}>
+                <MobileLabel text="Value" />
+                <Text fontSize="md">{getFormattedValue()}</Text>
+            </GridItem>
+            <GridItem area="time" mb={{ base: '4', xl: '0' }}>
+                <MobileLabel text="Time" />
+                <HStack width="full" justifyContent={{ base: 'flex-start', xl: 'flex-end' }}>
+                    <Text fontSize="md">
+                        {formatDistanceToNow(new Date(transaction.transaction.timestamp * 1000), {
+                            addSuffix: true,
+                        })}
+                    </Text>
+                    <Link href={etherscanGetTxUrl(transaction.transaction.tx)} isExternal>
+                        <ExternalLink size={14} />
+                    </Link>
+                </HStack>
+            </GridItem>
+        </Grid>
     );
+
+    function MobileLabel({ text }: { text: string }) {
+        return (
+            <Text fontSize="xs" color="gray.200" display={{ base: 'block', xl: 'none' }}>
+                {text}
+            </Text>
+        );
+    }
 }
