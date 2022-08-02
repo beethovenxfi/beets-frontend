@@ -111,7 +111,6 @@ export default function TokenInput({
                 {isConnected && (
                     <HStack
                         position="absolute"
-                        zIndex="dropdown"
                         bottom=".75rem"
                         left=".75rem"
                         fontWeight="normal"
@@ -131,7 +130,6 @@ export default function TokenInput({
                 {estimatedTokenPrice > 0 && (
                     <Text
                         position="absolute"
-                        zIndex="dropdown"
                         bottom=".75rem"
                         right=".75rem"
                         fontWeight="normal"

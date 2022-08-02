@@ -24,7 +24,6 @@ export default function BeetsInput({
                 {label && (
                     <Heading
                         position="absolute"
-                        zIndex="dropdown"
                         top=".5rem"
                         left=".75rem"
                         fontWeight="normal"
