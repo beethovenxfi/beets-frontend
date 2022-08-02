@@ -1,4 +1,4 @@
-import { useGetUserDataQuery } from '~/apollo/generated/graphql-codegen-generated';
+import { useGetFbeetsRatioQuery, useGetUserDataQuery } from '~/apollo/generated/graphql-codegen-generated';
 import { useGetTokens } from '~/lib/global/useToken';
 import { sum } from 'lodash';
 import { networkConfig } from '~/lib/config/network-config';
@@ -11,6 +11,7 @@ const refetchingVar = makeVar(false);
 const currentUserAddressVar = makeVar<string | null>(null);
 
 export function useUserData() {
+    const { data: fbeetsRatioData } = useGetFbeetsRatioQuery();
     const { userAddress } = useUserAccount();
     const { data, loading, refetch, ...rest } = useGetUserDataQuery({
         pollInterval: 30000,
@@ -20,6 +21,7 @@ export function useUserData() {
     const { priceForAmount } = useGetTokens();
     const currentUserAddress = currentUserAddressVar();
     const userAddressChanged = userAddress !== currentUserAddress;
+    const fbeetsRatio = parseFloat(fbeetsRatioData?.ratio || '0');
 
     useAsyncEffect(async () => {
         if (!refetchingVar()) {
@@ -49,7 +51,15 @@ export function useUserData() {
         }) + sum(poolBalances.map((balance) => parseFloat(balance.stakedBalance) * balance.tokenPrice));
 
     function bptBalanceForPool(poolId: string): AmountHumanReadable {
-        return poolBalances.find((pool) => pool.poolId === poolId)?.totalBalance || '0';
+        const bptBalance = poolBalances.find((pool) => pool.poolId === poolId)?.totalBalance || '0';
+
+        if (poolId === networkConfig.fbeets.poolId) {
+            const bptInFbeets = parseFloat(fbeetsBalance.totalBalance) + fbeetsRatio;
+
+            return `${bptInFbeets + parseFloat(bptBalance)}`;
+        }
+
+        return bptBalance;
     }
 
     function usdBalanceForPool(poolId: string): number {
