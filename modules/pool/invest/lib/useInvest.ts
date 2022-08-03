@@ -34,7 +34,7 @@ export function useInvest() {
     const hasValidUserInput =
         !selectedInvestTokensWithAmounts.every((token) => parseFloat(token.amount) === 0) &&
         selectedInvestTokensWithAmounts.every(
-            (token) => parseFloat(token.amount) < parseFloat(getUserBalanceForToken(token.address)),
+            (token) => parseFloat(token.amount) <= parseFloat(getUserBalanceForToken(token.address)),
         );
 
     const canInvestProportionally =
