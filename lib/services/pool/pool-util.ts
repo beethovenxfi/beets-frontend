@@ -14,9 +14,11 @@ import { PoolPhantomStableService } from '~/lib/services/pool/pool-phantom-stabl
 import { PoolWeightedService } from '~/lib/services/pool/pool-weighted.service';
 import { PoolWeightedBoostedService } from '~/lib/services/pool/pool-weighted-boosted.service';
 import { rpcProviderService } from '~/lib/services/rpc-provider/rpc-provider.service';
-import { TokenAmountHumanReadable } from '~/lib/services/token/token-types';
+import { AmountHumanReadable, TokenAmountHumanReadable } from '~/lib/services/token/token-types';
 import { SwapV2 } from '@balancer-labs/sdk';
 import { parseUnits } from 'ethers/lib/utils';
+import { oldBnum } from '~/lib/services/pool/lib/old-big-number';
+import OldBigNumber from 'bignumber.js';
 
 export function poolGetTokensWithoutPhantomBpt(pool: GqlPoolUnion | GqlPoolPhantomStableNested | GqlPoolLinearNested) {
     return pool.tokens.filter((token) => token.address !== pool.address);
@@ -97,13 +99,7 @@ export function poolGetJoinSwaps({
             assets: [nestedToken.address, poolToken.address, poolAddress],
         };
     } else if (poolToken.__typename === 'GqlPoolTokenPhantomStable') {
-        const nestedPoolToken = poolToken.pool.tokens.find((token) => {
-            if (token.__typename === 'GqlPoolTokenLinear') {
-                return token.pool.tokens.find((linearPoolToken) => linearPoolToken.address === tokenIn);
-            }
-
-            return token.address === tokenIn;
-        });
+        const nestedPoolToken = poolFindNestedPoolTokenForToken(tokenIn, poolToken.pool.tokens);
 
         if (!nestedPoolToken) {
             throw new Error(`Token does not exist in pool token: ${tokenIn}`);
@@ -132,4 +128,104 @@ export function poolGetJoinSwaps({
     }
 
     throw new Error(`No available join swap path for poolId: ${poolId} and token: ${tokenIn}`);
+}
+
+export function poolGetExitSwaps({
+    poolId,
+    poolAddress,
+    bptIn,
+    poolToken,
+    tokenOut,
+}: {
+    poolId: string;
+    poolAddress: string;
+    bptIn: AmountHumanReadable;
+    tokenOut: string;
+    poolToken: GqlPoolTokenUnion;
+}): { swaps: SwapV2[]; assets: string[] } {
+    const bptInScaled = parseUnits(bptIn, 18).toString();
+
+    if (poolToken.address === tokenOut) {
+        return {
+            swaps: [{ poolId, assetInIndex: 0, assetOutIndex: 1, amount: bptInScaled, userData: '0x' }],
+            assets: [poolAddress, tokenOut],
+        };
+    } else if (poolToken.__typename === 'GqlPoolTokenLinear') {
+        const nestedToken = poolToken.pool.tokens.find((token) => token.address === tokenOut);
+
+        if (!nestedToken) {
+            throw new Error(`Token does not exist in pool token: ${tokenOut}`);
+        }
+
+        return {
+            swaps: [
+                { poolId, assetInIndex: 0, assetOutIndex: 1, amount: bptInScaled, userData: '0x' },
+                { poolId: poolToken.pool.id, assetInIndex: 1, assetOutIndex: 2, amount: '0', userData: '0x' },
+            ],
+            assets: [poolAddress, poolToken.address, nestedToken.address],
+        };
+    } else if (poolToken.__typename === 'GqlPoolTokenPhantomStable') {
+        const nestedPoolToken = poolFindNestedPoolTokenForToken(tokenOut, poolToken.pool.tokens);
+
+        if (!nestedPoolToken) {
+            throw new Error(`Token does not exist in pool token: ${tokenOut}`);
+        }
+
+        const { swaps, assets } = poolGetExitSwaps({
+            poolId: poolToken.pool.id,
+            poolAddress: poolToken.pool.address,
+            bptIn: '0',
+            poolToken: nestedPoolToken,
+            tokenOut,
+        });
+
+        return {
+            swaps: [
+                {
+                    poolId,
+                    assetInIndex: 0,
+                    assetOutIndex: 1,
+                    amount: bptInScaled,
+                    userData: '0x',
+                },
+                ...swaps.map((swap) => ({
+                    ...swap,
+                    assetInIndex: swap.assetInIndex + 1,
+                    assetOutIndex: swap.assetOutIndex + 1,
+                })),
+            ],
+            assets: [poolAddress, ...assets],
+        };
+    }
+
+    throw new Error(`No available join swap path for poolId: ${poolId} and token: ${tokenOut}`);
+}
+
+export function poolSumPoolTokenBalances(poolTokens: GqlPoolTokenUnion[]): OldBigNumber {
+    let totalBalance = oldBnum(0);
+
+    for (const token of poolTokens) {
+        totalBalance = totalBalance.plus(token.balance);
+    }
+
+    return totalBalance;
+}
+
+export function poolFindNestedPoolTokenForToken(
+    tokenAddress: string,
+    poolTokens: GqlPoolTokenPhantomStableNestedUnion[],
+) {
+    const nestedPoolToken = poolTokens.find((token) => {
+        if (token.__typename === 'GqlPoolTokenLinear') {
+            return token.pool.tokens.find((linearPoolToken) => linearPoolToken.address === tokenAddress);
+        }
+
+        return token.address === tokenAddress;
+    });
+
+    if (!nestedPoolToken) {
+        throw new Error('No nested pool token find for token address: ' + tokenAddress);
+    }
+
+    return nestedPoolToken;
 }

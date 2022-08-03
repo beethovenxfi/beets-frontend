@@ -15,14 +15,13 @@ import { CardRow } from '~/components/card/CardRow';
 import { FadeInBox } from '~/components/animation/FadeInBox';
 import { TransactionSubmittedContent } from '~/components/transaction/TransactionSubmittedContent';
 import { sum } from 'lodash';
-import { InfoButton } from '~/components/info-button/InfoButton';
-import { SlippageTextLinkMenu } from '~/components/slippage/SlippageTextLinkMenu';
 
 interface Props {
     onWithdrawComplete(): void;
+    onClose(): void;
 }
 
-export function PoolWithdrawPreview({ onWithdrawComplete }: Props) {
+export function PoolWithdrawPreview({ onWithdrawComplete, onClose }: Props) {
     const { pool } = usePool();
     const { getToken } = useGetTokens();
     const { selectedWithdrawType, singleAssetWithdraw } = useWithdrawState();
@@ -73,15 +72,17 @@ export function PoolWithdrawPreview({ onWithdrawComplete }: Props) {
                 isLoading={false}
                 loadingButtonText=""
                 completeButtonText="Return to pool"
-                onCompleteButtonClick={() => {
-                    onWithdrawComplete();
-                }}
+                onCompleteButtonClick={onClose}
                 onSubmit={() => {
                     if (contractCallData) {
                         exitPool(contractCallData, withdrawAmounts);
                     }
                 }}
-                onConfirmed={async (id) => {}}
+                onConfirmed={async (id) => {
+                    if (id === 'exit') {
+                        onWithdrawComplete();
+                    }
+                }}
                 steps={[{ id: 'exit', tooltipText: '', type: 'other', buttonText: 'Withdraw' }]}
                 queries={[{ ...exitPoolQuery, id: 'exit' }]}
             />

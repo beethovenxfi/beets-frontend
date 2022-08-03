@@ -135,6 +135,5 @@ export interface PoolExitBatchSwapContractCallData {
     kind: SwapKind;
     swaps: BatchSwapStep[];
     assets: string[];
-    funds: FundManagement;
     limits: BigNumberish[];
 }

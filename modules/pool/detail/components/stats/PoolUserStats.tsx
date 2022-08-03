@@ -11,6 +11,7 @@ import { PoolUserStakedStats } from '~/modules/pool/detail/components/stats/Pool
 export default function PoolUserStats() {
     const { pool } = usePool();
     const { userPoolBalanceUSD, isLoading } = usePoolUserDepositBalance();
+
     return (
         <Flex width="full" alignItems="flex-start" flex={1} flexDirection="column">
             <VStack spacing="0" alignItems="flex-start" mb="4">

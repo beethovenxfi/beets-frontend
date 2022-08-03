@@ -1,6 +1,7 @@
 import {
     GqlPoolInvestOption,
     GqlPoolPhantomStable,
+    GqlPoolToken,
     GqlPoolTokenUnion,
     GqlPoolWithdrawOption,
 } from '~/apollo/generated/graphql-codegen-generated';
@@ -16,7 +17,7 @@ import {
     PoolJoinEstimateOutput,
     PoolService,
 } from '~/lib/services/pool/pool-types';
-import { AmountHumanReadable, TokenAmountHumanReadable } from '~/lib/services/token/token-types';
+import { AmountHumanReadable, AmountScaledString, TokenAmountHumanReadable } from '~/lib/services/token/token-types';
 import {
     phantomStableBPTForTokensZeroPriceImpact as _bptForTokensZeroPriceImpact,
     SwapTypes,
@@ -30,12 +31,25 @@ import { AddressZero } from '@ethersproject/constants';
 import { BaseProvider } from '@ethersproject/providers';
 import { cloneDeep } from 'lodash';
 import VaultAbi from '../../abi/VaultAbi.json';
-import { poolGetJoinSwaps } from '~/lib/services/pool/pool-util';
+import {
+    poolFindNestedPoolTokenForToken,
+    poolGetExitSwaps,
+    poolGetJoinSwaps,
+    poolSumPoolTokenBalances,
+} from '~/lib/services/pool/pool-util';
 import { formatFixed } from '@ethersproject/bignumber';
-import { oldBnum, oldBnumFromBnum, oldBnumScaleAmount } from '~/lib/services/pool/lib/old-big-number';
+import {
+    oldBnum,
+    oldBnumFromBnum,
+    oldBnumScaleAmount,
+    oldBnumScaleDown,
+    oldBnumZero,
+} from '~/lib/services/pool/lib/old-big-number';
 import OldBigNumber from 'bignumber.js';
 import { SwapKind } from '@balancer-labs/balancer-js';
-import { poolScaleAmp } from '~/lib/services/pool/lib/pool-util';
+import { poolGetRequiredToken, poolScaleAmp } from '~/lib/services/pool/lib/pool-util';
+import { BigNumber } from 'ethers';
+import * as SDK from '@georgeroman/balancer-v2-pools';
 
 export class PoolPhantomStableService implements PoolService {
     private readonly baseService: PoolBaseService;
@@ -54,19 +68,13 @@ export class PoolPhantomStableService implements PoolService {
             throw new Error('unsupported join type');
         }
 
-        const joinSwaps = data.tokenAmountsIn.map((tokenAmountIn) => this.getJoinSwapsForTokenAmountIn(tokenAmountIn));
-        const batchedSwaps = this.batchSwaps(
-            joinSwaps.map((item) => item.assets),
-            joinSwaps.map((item) => item.swaps),
-        );
-
-        const deltas = await this.queryBatchSwap(SwapTypes.SwapExactIn, batchedSwaps.swaps, batchedSwaps.assets);
+        const { swaps, assets, deltas } = await this.getJoinSwaps(data.tokenAmountsIn);
 
         return {
             type: 'BatchSwap',
             kind: SwapKind.GivenIn,
-            swaps: batchedSwaps.swaps,
-            assets: batchedSwaps.assets,
+            swaps: swaps,
+            assets: assets,
             limits: deltas,
         };
     }
@@ -75,14 +83,8 @@ export class PoolPhantomStableService implements PoolService {
         tokenAmountsIn: TokenAmountHumanReadable[],
         slippage: AmountHumanReadable,
     ): Promise<PoolJoinEstimateOutput> {
-        const joinSwaps = tokenAmountsIn.map((tokenAmountIn) => this.getJoinSwapsForTokenAmountIn(tokenAmountIn));
-        const batchedSwaps = this.batchSwaps(
-            joinSwaps.map((item) => item.assets),
-            joinSwaps.map((item) => item.swaps),
-        );
-
-        const deltas = await this.queryBatchSwap(SwapTypes.SwapExactIn, batchedSwaps.swaps, batchedSwaps.assets);
-        const bptAmount = oldBnum(deltas[batchedSwaps.assets.indexOf(this.pool.address)] ?? '0').abs();
+        const { assets, deltas } = await this.getJoinSwaps(tokenAmountsIn);
+        const bptAmount = oldBnum(deltas[assets.indexOf(this.pool.address)] ?? '0').abs();
         const bptZeroPriceImpact = this.bptForTokensZeroPriceImpact(tokenAmountsIn);
 
         return {
@@ -93,52 +95,85 @@ export class PoolPhantomStableService implements PoolService {
         };
     }
 
-    public async exitEstimatePriceImpact(
-        input: PoolExitBPTInForExactTokensOut | PoolExitExactBPTInForOneTokenOut,
-    ): Promise<number> {
-        //TODO: implement
-        /*
-        // Single asset exit
-            if (opts.exactOut) {
-                bptAmount = bnum(opts.queryBPT);
-                bptZeroPriceImpact = this.bptForTokensZeroPriceImpact(tokenAmounts);
-            } else {
-                // Single asset max out case
-                bptAmount = parseUnits(this.calc.bptBalance, this.calc.poolDecimals).toString();
-                bptZeroPriceImpact = this.bptForTokensZeroPriceImpact(tokenAmounts);
-            }
-
-            return bnum(bptAmount).div(bptZeroPriceImpact).minus(1);
-         */
-
-        return 0;
-    }
-
     public async joinGetProportionalSuggestionForFixedAmount(
         fixedAmount: TokenAmountHumanReadable,
     ): Promise<TokenAmountHumanReadable[]> {
-        return [];
+        throw new Error('joinGetProportionalSuggestionForFixedAmount not supported for phantom stable');
     }
 
-    public async exitGetContractCallData(data: PoolExitData): Promise<PoolExitContractCallData> {
-        throw new Error('TODO: implement');
+    public async exitGetProportionalWithdrawEstimate(bptIn: AmountHumanReadable): Promise<TokenAmountHumanReadable[]> {
+        const bptInForTokensOut = this.getProportionallyWeightedBptAmountsForTokensOut(bptIn);
+        const { assets, deltas } = await this.getExitSwaps(bptInForTokensOut);
+
+        return this.pool.withdrawConfig.options.map((option) => {
+            const tokenOption = option.tokenOptions[0];
+            const assetIndex = assets.findIndex((asset) => isSameAddress(asset, tokenOption.address));
+
+            return {
+                address: tokenOption.address,
+                amount: oldBnumScaleDown(oldBnum(deltas[assetIndex]).abs(), tokenOption.decimals).toString(),
+            };
+        });
     }
 
     public async exitGetBptInForSingleAssetWithdraw(
         tokenAmount: TokenAmountHumanReadable,
     ): Promise<PoolExitBptInSingleAssetWithdrawOutput> {
-        throw new Error('TODO: implement');
+        const { poolToken, option, tokenOption } = this.getWithdrawOptionAndPoolTokenForTokenOut(tokenAmount.address);
+        const { swaps, deltas, assets } = await this.getJoinSwaps([tokenAmount]);
+
+        const bptIndex = assets.findIndex((asset) => isSameAddress(asset, this.pool.address));
+        const bptIn = oldBnumScaleDown(oldBnum(deltas[bptIndex]).abs(), 18).toString();
+
+        return {
+            priceImpact: 0,
+            bptIn,
+        };
     }
 
     public async exitGetSingleAssetWithdrawForBptIn(
         bptIn: AmountHumanReadable,
         tokenOutAddress: string,
     ): Promise<PoolExitSingleAssetWithdrawForBptInOutput> {
-        throw new Error('TODO: implement');
+        const { tokenOption } = this.getWithdrawOptionAndPoolTokenForTokenOut(tokenOutAddress);
+        const { assets, deltas } = await this.getExitSwaps([{ address: tokenOutAddress, amount: bptIn }]);
+
+        const assetIndex = assets.findIndex((asset) => isSameAddress(asset, tokenOutAddress));
+        const tokenAmount = oldBnumScaleDown(oldBnum(deltas[assetIndex]).abs(), tokenOption.decimals).toString();
+
+        return {
+            tokenAmount,
+            priceImpact: 0,
+        };
     }
 
-    public async exitGetProportionalWithdrawEstimate(bptIn: AmountHumanReadable): Promise<TokenAmountHumanReadable[]> {
-        return [];
+    public async exitGetContractCallData(data: PoolExitData): Promise<PoolExitContractCallData> {
+        if (data.kind === 'ExactBPTInForTokensOut') {
+            const bptInForTokensOut = this.getProportionallyWeightedBptAmountsForTokensOut(data.bptAmountIn);
+            const { swaps, assets, deltas } = await this.getExitSwaps(bptInForTokensOut);
+
+            return {
+                type: 'BatchSwap',
+                kind: SwapKind.GivenIn,
+                swaps: swaps,
+                assets: assets,
+                limits: deltas,
+            };
+        } else if (data.kind === 'ExactBPTInForOneTokenOut') {
+            const { swaps, assets, deltas } = await this.getExitSwaps([
+                { address: data.tokenOutAddress, amount: data.bptAmountIn },
+            ]);
+
+            return {
+                type: 'BatchSwap',
+                kind: SwapKind.GivenIn,
+                swaps: swaps,
+                assets: assets,
+                limits: deltas,
+            };
+        }
+
+        throw new Error('unsupported join type');
     }
 
     private bptForTokensZeroPriceImpact(tokenAmounts: TokenAmountHumanReadable[]): OldBigNumber {
@@ -161,25 +196,61 @@ export class PoolPhantomStableService implements PoolService {
         return oldBnumFromBnum(bptZeroImpact);
     }
 
-    private getJoinSwapsForTokenAmountIn(tokenAmountIn: TokenAmountHumanReadable): {
+    private async getJoinSwaps(tokenAmountsIn: TokenAmountHumanReadable[]): Promise<{
         swaps: SwapV2[];
         assets: string[];
-    } {
-        const poolToken = this.findPoolTokenFromOptions(
-            tokenAmountIn.address.toLowerCase(),
-            this.pool.investConfig.options,
+        deltas: AmountScaledString[];
+    }> {
+        const joinSwaps = tokenAmountsIn.map((tokenAmountIn) => {
+            const poolToken = this.findPoolTokenFromOptions(tokenAmountIn.address, this.pool.investConfig.options);
+
+            return poolGetJoinSwaps({
+                poolId: this.pool.id,
+                poolAddress: this.pool.address,
+                tokenAmountIn,
+                poolToken,
+            });
+        });
+
+        const { swaps, assets } = this.batchSwaps(
+            joinSwaps.map((item) => item.assets),
+            joinSwaps.map((item) => item.swaps),
         );
 
-        return poolGetJoinSwaps({
-            poolId: this.pool.id,
-            poolAddress: this.pool.address,
-            tokenAmountIn,
-            poolToken,
+        const deltas = await this.queryBatchSwap(SwapTypes.SwapExactIn, swaps, assets);
+
+        return { swaps, assets, deltas };
+    }
+
+    private async getExitSwaps(bptInForTokens: TokenAmountHumanReadable[]): Promise<{
+        swaps: SwapV2[];
+        assets: string[];
+        deltas: AmountScaledString[];
+    }> {
+        const exitSwaps = bptInForTokens.map((bptInForToken) => {
+            const poolToken = this.findPoolTokenFromOptions(bptInForToken.address, this.pool.withdrawConfig.options);
+
+            return poolGetExitSwaps({
+                poolId: this.pool.id,
+                poolAddress: this.pool.address,
+                poolToken,
+                tokenOut: bptInForToken.address,
+                bptIn: bptInForToken.amount,
+            });
         });
+
+        const { swaps, assets } = this.batchSwaps(
+            exitSwaps.map((item) => item.assets),
+            exitSwaps.map((item) => item.swaps),
+        );
+
+        const deltas = await this.queryBatchSwap(SwapTypes.SwapExactIn, swaps, assets);
+
+        return { swaps, assets, deltas };
     }
 
     private batchSwaps(assets: string[][], swaps: SwapV2[][]): { swaps: SwapV2[]; assets: string[] } {
-        // assest addresses without duplicates
+        // asset addresses without duplicates
         const joinedAssets = assets.flat();
         //create a deep copy to ensure we do not mutate the input
         const clonedSwaps = cloneDeep(swaps);
@@ -198,7 +269,7 @@ export class PoolPhantomStableService implements PoolService {
         return { swaps: batchedSwaps, assets: joinedAssets };
     }
 
-    private queryBatchSwap(swapType: SwapTypes, swaps: SwapV2[], assets: string[]): Promise<string[]> {
+    private async queryBatchSwap(swapType: SwapTypes, swaps: SwapV2[], assets: string[]): Promise<string[]> {
         const vaultContract = new Contract(networkConfig.balancer.vault, VaultAbi, this.provider);
         const funds: FundManagement = {
             sender: AddressZero,
@@ -207,7 +278,9 @@ export class PoolPhantomStableService implements PoolService {
             toInternalBalance: false,
         };
 
-        return vaultContract.queryBatchSwap(swapType, swaps, assets, funds);
+        const response = await vaultContract.queryBatchSwap(swapType, swaps, assets, funds);
+
+        return response.map((item: BigNumber) => item.toString());
     }
 
     private findPoolTokenFromOptions(
@@ -268,5 +341,54 @@ export class PoolPhantomStableService implements PoolService {
 
             return '0';
         });
+    }
+
+    private getProportionallyWeightedBptAmountsForTokensOut(bptIn: AmountHumanReadable): TokenAmountHumanReadable[] {
+        const totalBalance = poolSumPoolTokenBalances(this.pool.tokens);
+
+        return this.pool.withdrawConfig.options.map((option) => {
+            //currently we only support single option select here
+            const tokenOption = option.tokenOptions[0];
+            const poolToken = this.pool.tokens.find((poolToken) => poolToken.index === option.poolTokenIndex)!;
+            const poolTokenWeight = oldBnum(poolToken.balance).div(totalBalance);
+
+            if (poolToken.__typename === 'GqlPoolToken' || poolToken.__typename === 'GqlPoolTokenLinear') {
+                return {
+                    address: tokenOption.address,
+                    amount: oldBnum(bptIn).times(poolTokenWeight).toFixed(18).toString(),
+                };
+            }
+
+            const nestedTotalBalance = poolSumPoolTokenBalances(poolToken.pool.tokens);
+            const nestedPoolToken = poolFindNestedPoolTokenForToken(tokenOption.address, poolToken.pool.tokens);
+            const nestedWeight = oldBnum(nestedPoolToken.balance).div(nestedTotalBalance);
+
+            return {
+                address: tokenOption.address,
+                amount: oldBnum(bptIn).times(poolTokenWeight).times(nestedWeight).toFixed(18).toString(),
+            };
+        });
+    }
+
+    private getWithdrawOptionAndPoolTokenForTokenOut(tokenOutAddress: string): {
+        option: GqlPoolWithdrawOption;
+        poolToken: GqlPoolTokenUnion;
+        tokenOption: GqlPoolToken;
+    } {
+        const option = this.pool.withdrawConfig.options.find((option) =>
+            option.tokenOptions.find((tokenOption) => tokenOption.address === tokenOutAddress),
+        );
+
+        if (!option) {
+            throw new Error(`No option found for token ${tokenOutAddress}`);
+        }
+
+        const poolToken = this.pool.tokens.find((token) => token.index === option.poolTokenIndex);
+
+        if (!poolToken) {
+            throw new Error(`No pool token found for token ${tokenOutAddress}`);
+        }
+
+        return { option, poolToken, tokenOption: option.tokenOptions[0] };
     }
 }

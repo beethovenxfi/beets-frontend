@@ -15,6 +15,16 @@ export function PoolWithdrawModal() {
     const [modalState, setModalState] = useState<'start' | 'proportional' | 'single-asset' | 'preview'>('start');
     const [type, setInvestType] = useState<'proportional' | 'single-asset' | null>(null);
     const initialRef = useRef(null);
+    const [withdrawComplete, setWithdrawComplete] = useState(false);
+
+    function onModalClose() {
+        if (withdrawComplete) {
+            setModalState('start');
+            setInvestType(null);
+        }
+
+        onClose();
+    }
 
     return (
         <>
@@ -23,7 +33,7 @@ export function PoolWithdrawModal() {
             </Button>
             <Modal
                 isOpen={isOpen}
-                onClose={onClose}
+                onClose={onModalClose}
                 size={modalState === 'start' ? '3xl' : '2xl'}
                 initialFocusRef={initialRef}
             >
@@ -117,10 +127,9 @@ export function PoolWithdrawModal() {
                         <FadeInBox isVisible={modalState === 'preview'}>
                             <PoolWithdrawPreview
                                 onWithdrawComplete={() => {
-                                    setModalState('start');
-                                    setInvestType(null);
-                                    onClose();
+                                    setWithdrawComplete(true);
                                 }}
+                                onClose={onModalClose}
                             />
                         </FadeInBox>
                     </ModalBody>

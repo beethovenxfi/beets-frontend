@@ -71,11 +71,10 @@ export function PoolWithdrawProportional({ onShowPreview, ...rest }: Props) {
             <BeetsBox mt="4" p="2">
                 {withdrawOptions.map((option, index) => {
                     const tokenOption = option.tokenOptions[0];
-                    const poolToken = pool.tokens[option.poolTokenIndex];
                     const last = index === withdrawOptions.length - 1;
                     const proportionalAmount =
-                        proportionalAmounts.find((tokenAmount) => tokenAmount.address === poolToken.address)?.amount ||
-                        '0';
+                        proportionalAmounts.find((tokenAmount) => tokenAmount.address === tokenOption.address)
+                            ?.amount || '0';
 
                     return (
                         <CardRow key={index} mb={last ? '0' : '1'}>
