@@ -344,6 +344,7 @@ type GqlPoolLinear implements GqlPoolBase {
 
 type GqlPoolLinearNested {
     address: Bytes!
+    bptPriceRate: BigDecimal!
     createTime: Int!
     factory: Bytes
     id: ID!
@@ -481,12 +482,14 @@ type GqlPoolPhantomStable implements GqlPoolBase {
 
 type GqlPoolPhantomStableNested {
     address: Bytes!
+    amp: BigInt!
     createTime: Int!
     factory: Bytes
     id: ID!
     name: String!
     nestingType: GqlPoolNestingType!
     owner: Bytes!
+    swapFee: BigDecimal!
     symbol: String!
     tokens: [GqlPoolTokenPhantomStableNestedUnion!]!
     totalLiquidity: BigDecimal!
@@ -709,6 +712,12 @@ type GqlProtocolMetrics {
     totalSwapVolume: BigDecimal!
 }
 
+type GqlSorGetBatchSwapForTokensInResponse {
+    assets: [String!]!
+    swaps: [GqlSorSwap!]!
+    tokenOutAmount: AmountHumanReadable!
+}
+
 type GqlSorGetSwapsResponse {
     effectivePrice: AmountHumanReadable!
     effectivePriceReversed: AmountHumanReadable!
@@ -777,6 +786,11 @@ type GqlToken {
     priority: Int!
     symbol: String!
     tradable: Boolean!
+}
+
+input GqlTokenAmountHumanReadable {
+    address: String!
+    amount: AmountHumanReadable!
 }
 
 type GqlTokenCandlestickChartDataItem {
@@ -970,6 +984,11 @@ type Query {
     portfolioGetUserPortfolioHistory: [GqlUserPortfolioData!]!
     portfolioGetUserPortfolioHistoryAdmin: [GqlUserPortfolioData!]!
     protocolMetrics: GqlProtocolMetrics!
+    sorGetBatchSwapForTokensIn(
+        swapOptions: GqlSorSwapOptionsInput!
+        tokenOut: String!
+        tokensIn: [GqlTokenAmountHumanReadable!]!
+    ): GqlSorGetBatchSwapForTokensInResponse!
     sorGetSwaps(
         swapAmount: BigDecimal!
         swapOptions: GqlSorSwapOptionsInput!

@@ -22,6 +22,7 @@ export function PoolInvestTypeChoice({ onShowProportional, onShowCustom }: Props
     const { canInvestProportionally } = useInvest();
     const { data, isLoading } = usePoolGetMaxProportionalInvestmentAmount();
     const isStablePool = pool.__typename === 'GqlPoolStable' || pool.__typename === 'GqlPoolPhantomStable';
+    const proportionalEnabled = pool.investConfig.proportionalEnabled;
     //const totalTokenBalance = sumBy(pool.tokens, (token) => parseFloat(token.balance) * parseFloat(token.priceRate));
 
     return (
@@ -133,32 +134,36 @@ export function PoolInvestTypeChoice({ onShowProportional, onShowCustom }: Props
                         variant="primary"
                         isDisabled={investableAmount === 0}
                         onClick={onShowCustom}
-                        mb="3"
+                        mb={proportionalEnabled ? '3' : '0'}
                     >
-                        Customize my investment
+                        {proportionalEnabled ? 'Customize my investment' : 'Invest'}
                     </Button>
-                    <Button
-                        variant="secondary"
-                        isFullWidth
-                        isDisabled={!canInvestProportionally}
-                        onClick={onShowProportional}
-                    >
-                        Invest proportionally
-                    </Button>
+                    {pool.investConfig.proportionalEnabled && (
+                        <Button
+                            variant="secondary"
+                            isFullWidth
+                            isDisabled={!canInvestProportionally}
+                            onClick={onShowProportional}
+                        >
+                            Invest proportionally
+                        </Button>
+                    )}
                 </>
             ) : (
                 <>
-                    <Button
-                        variant="primary"
-                        isFullWidth
-                        mb="3"
-                        isDisabled={!canInvestProportionally}
-                        onClick={onShowProportional}
-                    >
-                        Invest proportionally
-                    </Button>
+                    {proportionalEnabled && (
+                        <Button
+                            variant="primary"
+                            isFullWidth
+                            mb="3"
+                            isDisabled={!canInvestProportionally}
+                            onClick={onShowProportional}
+                        >
+                            Invest proportionally
+                        </Button>
+                    )}
                     <Button isFullWidth variant="secondary" isDisabled={investableAmount === 0} onClick={onShowCustom}>
-                        Customize my investment
+                        {proportionalEnabled ? 'Customize my investment' : 'Invest'}
                     </Button>
                 </>
             )}

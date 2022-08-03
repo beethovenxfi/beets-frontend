@@ -39,7 +39,7 @@ interface PoolJoinBase {
 
 export interface PoolJoinEstimateOutput {
     priceImpact: number;
-    minBptReceived: string;
+    minBptReceived: AmountHumanReadable;
 }
 
 export interface PoolExitSingleAssetWithdrawForBptInOutput {
@@ -118,7 +118,6 @@ export interface PoolJoinBatchSwapContractCallData {
     kind: SwapKind;
     swaps: BatchSwapStep[];
     assets: string[];
-    funds: FundManagement;
     limits: BigNumberish[];
 }
 

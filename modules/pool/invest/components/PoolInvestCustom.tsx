@@ -26,22 +26,24 @@ export function PoolInvestCustom({ onShowPreview }: Props) {
             <Box mb="4">
                 <Text>Drag the slider or enter an amount to configure your investment.</Text>
             </Box>
-            {pool.investConfig.options.map((option, index) => (
-                <BeetsTokenInputWithSlider
-                    tokenOptions={option.tokenOptions}
-                    selectedTokenOption={selectedInvestTokens[index]}
-                    balance={
-                        userPoolTokenBalances.find(
-                            (userBalance) => userBalance.address === selectedInvestTokens[index].address,
-                        )?.amount || '0'
-                    }
-                    setInputAmount={(amount) => setInputAmount(option.poolTokenAddress, amount)}
-                    setSelectedTokenOption={(address) => setSelectedOption(option.poolTokenIndex, address)}
-                    value={inputAmounts[option.poolTokenAddress]}
-                    key={index}
-                    mb="4"
-                />
-            ))}
+            {pool.investConfig.options.map((option, index) => {
+                return (
+                    <BeetsTokenInputWithSlider
+                        tokenOptions={option.tokenOptions}
+                        selectedTokenOption={selectedInvestTokens[index]}
+                        balance={
+                            userPoolTokenBalances.find(
+                                (userBalance) => userBalance.address === selectedInvestTokens[index].address,
+                            )?.amount || '0'
+                        }
+                        setInputAmount={(amount) => setInputAmount(selectedInvestTokens[index].address, amount)}
+                        setSelectedTokenOption={(address) => setSelectedOption(option.poolTokenIndex, address)}
+                        value={inputAmounts[selectedInvestTokens[index].address]}
+                        key={index}
+                        mb="4"
+                    />
+                );
+            })}
             <PoolInvestSummary mt="6" />
             <PoolInvestSettings mt="8" />
             <Collapse in={hasHighPriceImpact} animateOpacity>

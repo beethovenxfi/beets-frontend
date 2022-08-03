@@ -8,10 +8,19 @@ import numeral from 'numeral';
 import { networkConfig } from '~/lib/config/network-config';
 
 export function usePoolJoinGetBptOutAndPriceImpactForTokensIn() {
-    const { poolService } = usePool();
-    const { inputAmounts } = useReactiveVar(investStateVar);
+    const { poolService, pool } = usePool();
+    const { inputAmounts, selectedOptions } = useReactiveVar(investStateVar);
     const { slippage } = useSlippage();
-    const tokenAmountsIn = tokenAmountsGetArrayFromMap(inputAmounts);
+    //map the input amounts to the token being invested
+    const tokenAmountsIn = tokenAmountsGetArrayFromMap(inputAmounts).map(({ amount, address }) => {
+        const poolTokenIndex = pool.tokens.findIndex((token) => token.address === address);
+        const investOption = pool.investConfig.options.find((option) => option.poolTokenIndex === poolTokenIndex);
+
+        return {
+            amount,
+            address: selectedOptions[`${poolTokenIndex}`] || investOption?.tokenOptions[0].address || address,
+        };
+    });
 
     const query = useQuery(
         ['joinGetBptOutAndPriceImpactForTokensIn', tokenAmountsIn, slippage],
@@ -20,10 +29,7 @@ export function usePoolJoinGetBptOutAndPriceImpactForTokensIn() {
                 !tokenAmountsIn ||
                 tokenAmountsIn.every((tokenAmount) => !tokenAmount.amount || parseFloat(tokenAmount.amount) === 0)
             ) {
-                return {
-                    minBptReceived: '0',
-                    priceImpact: 0,
-                };
+                return { minBptReceived: '0', priceImpact: 0 };
             }
 
             return poolService.joinGetBptOutAndPriceImpactForTokensIn(tokenAmountsIn, slippage);

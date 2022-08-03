@@ -134,6 +134,7 @@ export const GqlPoolTokenLinear = gql`
             lowerTarget
             totalShares
             totalLiquidity
+            bptPriceRate
             tokens {
                 ... on GqlPoolToken {
                     ...GqlPoolToken
@@ -165,6 +166,8 @@ export const GqlPoolTokenPhantomStable = gql`
             totalShares
             totalLiquidity
             nestingType
+            swapFee
+            amp
             tokens {
                 ... on GqlPoolToken {
                     ...GqlPoolToken

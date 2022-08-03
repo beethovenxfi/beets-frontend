@@ -221,6 +221,7 @@ fragment GqlPoolTokenLinear on GqlPoolTokenLinear {
         lowerTarget
         totalShares
         totalLiquidity
+        bptPriceRate
         tokens {
             ... on GqlPoolToken {
                 ...GqlPoolToken
@@ -250,6 +251,8 @@ fragment GqlPoolTokenPhantomStable on GqlPoolTokenPhantomStable {
         totalShares
         totalLiquidity
         nestingType
+        swapFee
+        amp
         tokens {
             ... on GqlPoolToken {
                 ...GqlPoolToken

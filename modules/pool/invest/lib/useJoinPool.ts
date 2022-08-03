@@ -4,9 +4,13 @@ import { PoolJoinContractCallData } from '~/lib/services/pool/pool-types';
 import { useAccount } from 'wagmi';
 import { TokenAmountHumanReadable } from '~/lib/services/token/token-types';
 import { tokenAmountsConcatenatedString } from '~/lib/services/token/token-util';
-import { AddressZero } from '@ethersproject/constants';
+import { AddressZero, MaxUint256 } from '@ethersproject/constants';
+import { isSameAddress } from '@balancer-labs/sdk';
+import { oldBnum } from '~/lib/services/pool/lib/old-big-number';
+import { useSlippage } from '~/lib/global/useSlippage';
 
 export function useJoinPool(pool: GqlPoolUnion) {
+    const { slippageDifference } = useSlippage();
     const { data: accountData } = useAccount();
     const { submit, submitAsync, ...rest } = useSubmitTransaction({
         contractConfig: vaultContractConfig,
@@ -15,9 +19,10 @@ export function useJoinPool(pool: GqlPoolUnion) {
     });
 
     function joinPool(contractCallData: PoolJoinContractCallData, tokenAmountsIn: TokenAmountHumanReadable[]) {
+        const amountsString = tokenAmountsConcatenatedString(tokenAmountsIn, pool.allTokens);
+
         if (contractCallData.type === 'JoinPool') {
             const ethIndex = contractCallData.assets.findIndex((asset) => asset === AddressZero);
-            const amountsString = tokenAmountsConcatenatedString(tokenAmountsIn, pool.allTokens);
 
             submit({
                 args: [
@@ -38,6 +43,35 @@ export function useJoinPool(pool: GqlPoolUnion) {
                           },
                       }
                     : {}),
+                toastText: amountsString,
+                walletText: `Join ${pool.name} with ${amountsString}`,
+            });
+        } else if (contractCallData.type === 'BatchSwap') {
+            const assets = contractCallData.assets;
+
+            //apply slippage to the bpt out
+            const limits = contractCallData.limits.map((limit, i) => {
+                if (isSameAddress(assets[i], pool.address)) {
+                    return oldBnum(limit.toString()).times(slippageDifference).times(-1).toFixed(0);
+                }
+
+                return limit;
+            });
+
+            submit({
+                args: [
+                    0,
+                    contractCallData.swaps,
+                    contractCallData.assets,
+                    {
+                        sender: accountData?.address,
+                        fromInternalBalance: false,
+                        recipient: accountData?.address,
+                        toInternalBalance: false,
+                    },
+                    limits,
+                    MaxUint256,
+                ],
                 toastText: amountsString,
                 walletText: `Join ${pool.name} with ${amountsString}`,
             });
