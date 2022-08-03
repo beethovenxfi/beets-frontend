@@ -76,13 +76,13 @@ export function PoolUserStakedStats({ poolAddress, staking }: Props) {
                         color: 'beets.base.50',
                     }}
                 />
-                <Text color="white" fontSize="1.75rem">
-                    {isLoadingPendingRewards ? (
-                        <Skeleton height="34px" width="140px" mt="4px" mb="4px" />
-                    ) : (
-                        numberFormatUSDValue(pendingRewardsTotalUSD)
-                    )}
-                </Text>
+                {isLoadingPendingRewards ? (
+                    <Skeleton height="34px" width="140px" mt="4px" mb="4px" />
+                ) : (
+                    <Text color="white" fontSize="1.75rem">
+                        {numberFormatUSDValue(pendingRewardsTotalUSD)}
+                    </Text>
+                )}
                 {pendingRewards.map((reward, index) => (
                     <HStack key={index} spacing="1">
                         <TokenAvatar size="xs" address={reward.address} />
