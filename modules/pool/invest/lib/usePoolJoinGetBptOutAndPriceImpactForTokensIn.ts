@@ -13,7 +13,7 @@ export function usePoolJoinGetBptOutAndPriceImpactForTokensIn() {
     const { slippage } = useSlippage();
     //map the input amounts to the token being invested
     const tokenAmountsIn = tokenAmountsGetArrayFromMap(inputAmounts).map(({ amount, address }) => {
-        const poolTokenIndex = pool.tokens.findIndex((token) => token.address === address);
+        const poolTokenIndex = pool.tokens.find((token) => token.address === address)?.index || -1;
         const investOption = pool.investConfig.options.find((option) => option.poolTokenIndex === poolTokenIndex);
 
         return {

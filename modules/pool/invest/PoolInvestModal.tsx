@@ -15,6 +15,16 @@ export function PoolInvestModal() {
     const [modalState, setModalState] = useState<'start' | 'proportional' | 'custom' | 'preview'>('start');
     const [type, setInvestType] = useState<'proportional' | 'custom' | null>(null);
     const initialRef = useRef(null);
+    const [investComplete, setInvestComplete] = useState(false);
+
+    function onModalClose() {
+        if (investComplete) {
+            setModalState('start');
+            setInvestType(null);
+        }
+
+        onClose();
+    }
 
     return (
         <>
@@ -23,7 +33,7 @@ export function PoolInvestModal() {
             </Button>
             <Modal
                 isOpen={isOpen}
-                onClose={onClose}
+                onClose={onModalClose}
                 size={modalState === 'start' ? '3xl' : '2xl'}
                 initialFocusRef={initialRef}
             >
@@ -125,10 +135,9 @@ export function PoolInvestModal() {
                             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
                                 <PoolInvestPreview
                                     onInvestComplete={() => {
-                                        setModalState('start');
-                                        setInvestType(null);
-                                        onClose();
+                                        setInvestComplete(true);
                                     }}
+                                    onClose={onModalClose}
                                 />
                             </motion.div>
                         ) : null}

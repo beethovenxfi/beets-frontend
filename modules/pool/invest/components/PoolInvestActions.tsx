@@ -12,14 +12,14 @@ import { Box, Text } from '@chakra-ui/react';
 import { FadeInBox } from '~/components/animation/FadeInBox';
 import { numberFormatUSDValue } from '~/lib/util/number-formats';
 import { usePoolUserTokenBalancesInWallet } from '~/modules/pool/lib/usePoolUserTokenBalancesInWallet';
-import { usePoolUserInvestedTokenBalances } from '~/modules/pool/lib/usePoolUserInvestedTokenBalances';
 import { usePoolUserBptBalance } from '~/modules/pool/lib/usePoolUserBptBalance';
 
 interface Props {
     onInvestComplete(): void;
+    onClose(): void;
 }
 
-export function PoolInvestActions({ onInvestComplete }: Props) {
+export function PoolInvestActions({ onInvestComplete, onClose }: Props) {
     const { pool } = usePool();
     const { selectedInvestTokensWithAmounts, totalInvestValue } = useInvest();
     const joinQuery = useJoinPool(pool);
@@ -79,7 +79,7 @@ export function PoolInvestActions({ onInvestComplete }: Props) {
                     isLoading={steps === null}
                     loadingButtonText="Invest"
                     completeButtonText="Return to pool"
-                    onCompleteButtonClick={onInvestComplete}
+                    onCompleteButtonClick={onClose}
                     steps={steps || []}
                     onSubmit={(id) => {
                         if (id === 'invest' && contractCallData) {
@@ -92,6 +92,7 @@ export function PoolInvestActions({ onInvestComplete }: Props) {
                         } else {
                             refetchUserTokenBalances();
                             refetchUserBptBalance();
+                            onInvestComplete();
                         }
                     }}
                     queries={[{ ...joinQuery, id: 'invest' }]}

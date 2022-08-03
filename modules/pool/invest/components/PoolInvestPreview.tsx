@@ -11,9 +11,10 @@ import { CardRow } from '~/components/card/CardRow';
 
 interface Props {
     onInvestComplete(): void;
+    onClose(): void;
 }
 
-export function PoolInvestPreview({ onInvestComplete }: Props) {
+export function PoolInvestPreview({ onInvestComplete, onClose }: Props) {
     const { priceForAmount } = useGetTokens();
     const { selectedInvestTokensWithAmounts } = useInvest();
 
@@ -42,7 +43,7 @@ export function PoolInvestPreview({ onInvestComplete }: Props) {
                 })}
             </BeetsBox>
             <PoolInvestSummary mt="6" />
-            <PoolInvestActions onInvestComplete={onInvestComplete} />
+            <PoolInvestActions onInvestComplete={onInvestComplete} onClose={onClose} />
         </Box>
     );
 }

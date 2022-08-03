@@ -217,7 +217,11 @@ export class PoolPhantomStableService implements PoolService {
         for (const option of options) {
             for (const tokenOption of option.tokenOptions) {
                 if (isSameAddress(tokenAddress, tokenOption.address)) {
-                    return this.pool.tokens[option.poolTokenIndex];
+                    const poolToken = this.pool.tokens.find((token) => token.index === option.poolTokenIndex);
+
+                    if (poolToken) {
+                        return poolToken;
+                    }
                 }
             }
         }
