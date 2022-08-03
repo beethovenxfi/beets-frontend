@@ -15,8 +15,7 @@ import { CardRow } from '~/components/card/CardRow';
 import { FadeInBox } from '~/components/animation/FadeInBox';
 import { TransactionSubmittedContent } from '~/components/transaction/TransactionSubmittedContent';
 import { sum } from 'lodash';
-import { InfoButton } from '~/components/info-button/InfoButton';
-import { SlippageTextLinkMenu } from '~/components/slippage/SlippageTextLinkMenu';
+import { PoolWithdrawSettings } from '~/modules/pool/withdraw/components/PoolWithdrawSettings';
 
 interface Props {
     onWithdrawComplete(): void;
@@ -55,7 +54,8 @@ export function PoolWithdrawPreview({ onWithdrawComplete }: Props) {
                     );
                 })}
             </BeetsBox>
-            <PoolWithdrawSummary mt="6" mb="8" />
+            <PoolWithdrawSummary mt="6" />
+            <PoolWithdrawSettings mt="6" mb="8" />
             <FadeInBox isVisible={exitPoolQuery.isConfirmed || exitPoolQuery.isPending || exitPoolQuery.isFailed}>
                 <Text fontSize="lg" fontWeight="semibold" mt="4" mb="2">
                     Transaction details

@@ -120,7 +120,7 @@ export function PoolWithdrawProportional({ onShowPreview, ...rest }: Props) {
             </BeetsBox>
 
             <PoolWithdrawSummary mt="6" />
-            <PoolWithdrawSettings mt="6" />
+            <PoolWithdrawSettings mt="8" />
             <Button variant="primary" isFullWidth mt="8" onClick={onShowPreview}>
                 Preview
             </Button>

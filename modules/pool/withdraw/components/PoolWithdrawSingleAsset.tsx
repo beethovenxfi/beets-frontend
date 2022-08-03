@@ -63,7 +63,7 @@ export function PoolWithdrawSingleAsset({ onShowPreview, ...rest }: Props) {
                 setSelectedTokenOption={setSingleAssetWithdraw}
             />
             <PoolWithdrawSummary mt="6" />
-            <PoolWithdrawSettings mt="6" />
+            <PoolWithdrawSettings mt="8" />
             <Collapse in={hasHighPriceImpact} animateOpacity>
                 <Alert status="error" borderRadius="md" mt="4">
                     <Checkbox

@@ -7,6 +7,7 @@ import { useGetTokens } from '~/lib/global/useToken';
 import { useInvest } from '~/modules/pool/invest/lib/useInvest';
 import { PoolInvestSummary } from '~/modules/pool/invest/components/PoolInvestSummary';
 import { PoolInvestActions } from '~/modules/pool/invest/components/PoolInvestActions';
+import { PoolInvestSettings } from '~/modules/pool/invest/components/PoolInvestSettings';
 import { CardRow } from '~/components/card/CardRow';
 
 interface Props {
@@ -43,6 +44,7 @@ export function PoolInvestPreview({ onInvestComplete, onClose }: Props) {
                 })}
             </BeetsBox>
             <PoolInvestSummary mt="6" />
+            <PoolInvestSettings mt="8" />
             <PoolInvestActions onInvestComplete={onInvestComplete} onClose={onClose} />
         </Box>
     );
