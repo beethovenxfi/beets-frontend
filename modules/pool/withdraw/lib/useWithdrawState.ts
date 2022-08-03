@@ -53,6 +53,15 @@ export function useWithdrawState() {
         });
     }
 
+    function clearWithdrawState() {
+        withdrawStateVar({
+            type: 'PROPORTIONAL',
+            proportionalPercent: 50,
+            singleAsset: null,
+            selectedOptions: {},
+        });
+    }
+
     const withdrawState = useReactiveVar(withdrawStateVar);
 
     return {
@@ -65,5 +74,6 @@ export function useWithdrawState() {
         setSingleAssetWithdraw,
         setSingleAssetWithdrawAmount,
         setSelectedOption,
+        clearWithdrawState,
     };
 }

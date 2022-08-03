@@ -2,12 +2,13 @@ import { Modal, ModalBody, ModalCloseButton, ModalContent } from '@chakra-ui/mod
 import { Button, Heading, IconButton, ModalHeader, ModalOverlay, Text, useDisclosure } from '@chakra-ui/react';
 import { usePool } from '~/modules/pool/lib/usePool';
 import { ChevronLeft } from 'react-feather';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { PoolWithdrawTypeChoice } from '~/modules/pool/withdraw/components/PoolWithdrawTypeChoice';
 import { PoolWithdrawProportional } from '~/modules/pool/withdraw/components/PoolWithdrawProportional';
 import { PoolWithdrawSingleAsset } from '~/modules/pool/withdraw/components/PoolWithdrawSingleAsset';
 import { PoolWithdrawPreview } from '~/modules/pool/withdraw/components/PoolWithdrawPreview';
 import { FadeInBox } from '~/components/animation/FadeInBox';
+import { useWithdrawState } from '~/modules/pool/withdraw/lib/useWithdrawState';
 
 export function PoolWithdrawModal() {
     const { isOpen, onOpen, onClose } = useDisclosure();
@@ -16,6 +17,12 @@ export function PoolWithdrawModal() {
     const [type, setInvestType] = useState<'proportional' | 'single-asset' | null>(null);
     const initialRef = useRef(null);
     const [withdrawComplete, setWithdrawComplete] = useState(false);
+    const { clearWithdrawState } = useWithdrawState();
+
+    useEffect(() => {
+        setModalState('start');
+        clearWithdrawState();
+    }, [pool.id]);
 
     function onModalClose() {
         if (withdrawComplete) {

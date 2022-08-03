@@ -47,10 +47,19 @@ export function useInvestState() {
         });
     }
 
+    function clearInvestState() {
+        investStateVar({
+            inputAmounts: {},
+            selectedOptions: {},
+            zapEnabled: false,
+        });
+    }
+
     return {
         setInputAmounts,
         setInputAmount,
         setSelectedOption,
+        clearInvestState,
         ...useReactiveVar(investStateVar),
     };
 }
