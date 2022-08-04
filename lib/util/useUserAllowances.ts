@@ -1,9 +1,10 @@
 import { useAccount } from 'wagmi';
 import { useAllowances } from '~/lib/util/useAllowances';
 import { TokenBase } from '~/lib/services/token/token-types';
+import { useUserAccount } from '~/lib/user/useUserAccount';
 
 export function useUserAllowances(tokens: TokenBase[], contractAddress?: string) {
-    const { data: accountData } = useAccount();
+    const { userAddress } = useUserAccount();
 
-    return useAllowances(accountData?.address || null, tokens, contractAddress);
+    return useAllowances(userAddress || null, tokens, contractAddress);
 }

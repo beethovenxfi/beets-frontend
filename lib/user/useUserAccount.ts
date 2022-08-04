@@ -14,15 +14,16 @@ export function useUserAccount() {
     }, []);
 
     useEffect(() => {
-        if (query.data?.address !== userAddressVar()) {
-            userAddressVar(query.data?.address);
+        if (query.address !== userAddressVar()) {
+            userAddressVar(query.address);
         }
-    }, [query.data?.address]);
+    }, [query.address]);
 
     return {
         ...query,
-        isLoading: query.isLoading || isFirstRender,
-        userAddress: query.data?.address,
-        isConnected: !!query.data?.address && !isFirstRender,
+        isLoading: query.isConnecting || isFirstRender,
+        isConnecting: query.isConnecting || isFirstRender,
+        userAddress: query.address,
+        isConnected: !!query.address && !isFirstRender,
     };
 }

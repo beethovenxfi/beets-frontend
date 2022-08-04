@@ -1,22 +1,22 @@
-import { useAccount } from 'wagmi';
 import { useSubmitTransaction } from '~/lib/util/useSubmitTransaction';
 import { networkConfig } from '~/lib/config/network-config';
 import BeethovenxMasterChefAbi from '~/lib/abi/BeethovenxMasterChef.json';
+import { useUserAccount } from '~/lib/user/useUserAccount';
 
 export function useMasterChefHarvestAllRewards() {
-    const { data: accountData } = useAccount();
+    const { userAddress } = useUserAccount();
     const { submit, submitAsync, ...rest } = useSubmitTransaction({
-        contractConfig: {
+        config: {
             addressOrName: networkConfig.masterChefContractAddress,
             contractInterface: BeethovenxMasterChefAbi,
+            functionName: 'harvestAll',
         },
-        functionName: 'harvestAll',
         transactionType: 'HARVEST',
     });
 
     function harvestAll(farmIds: string[]) {
         submit({
-            args: [farmIds, accountData?.address],
+            args: [farmIds, userAddress],
             toastText: 'Harvest all pending rewards',
         });
     }

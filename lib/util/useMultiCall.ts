@@ -20,27 +20,23 @@ export function useMultiCall({
     cacheTimeMs,
 }: UseMultiCallInput) {
     const contractInterface = new Interface(abi);
-    const contractRead = useContractRead(
-        {
-            addressOrName: networkConfig.multicall,
-            contractInterface: [
-                'function tryAggregate(bool requireSuccess, tuple(address, bytes)[] memory calls) public view returns (tuple(bool, bytes)[] memory returnData)',
-            ],
-        },
-        'tryAggregate',
-        {
-            enabled,
-            args: [
-                requireSuccess,
-                calls.map((call) => [
-                    call.address.toLowerCase(),
-                    contractInterface.encodeFunctionData(call.functionName, call.args),
-                ]),
-                options,
-            ],
-            cacheTime: cacheTimeMs,
-        },
-    );
+    const contractRead = useContractRead({
+        addressOrName: networkConfig.multicall,
+        contractInterface: [
+            'function tryAggregate(bool requireSuccess, tuple(address, bytes)[] memory calls) public view returns (tuple(bool, bytes)[] memory returnData)',
+        ],
+        enabled,
+        args: [
+            requireSuccess,
+            calls.map((call) => [
+                call.address.toLowerCase(),
+                contractInterface.encodeFunctionData(call.functionName, call.args),
+            ]),
+            options,
+        ],
+        cacheTime: cacheTimeMs,
+        functionName: 'tryAggregate',
+    });
 
     const response = contractRead.data?.map(([success, returnData], i) => {
         if (!success) {

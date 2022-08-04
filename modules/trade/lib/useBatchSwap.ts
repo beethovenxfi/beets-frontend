@@ -1,6 +1,5 @@
 import { useSubmitTransaction, vaultContractConfig } from '~/lib/util/useSubmitTransaction';
 import { GqlSorGetSwapsResponseFragment } from '~/apollo/generated/graphql-codegen-generated';
-import { useAccount } from 'wagmi';
 import { isSameAddress } from '@balancer-labs/sdk';
 import { useSlippage } from '~/lib/global/useSlippage';
 import { useGetTokens } from '~/lib/global/useToken';
@@ -8,14 +7,17 @@ import { parseUnits } from 'ethers/lib/utils';
 import { oldBnumScaleAmount } from '~/lib/services/pool/lib/old-big-number';
 import { AddressZero, MaxUint256 } from '@ethersproject/constants';
 import { isEth, tokenFormatAmount } from '~/lib/services/token/token-util';
+import { useUserAccount } from '~/lib/user/useUserAccount';
 
 export function useBatchSwap() {
     const { getRequiredToken } = useGetTokens();
-    const { data: accountData } = useAccount();
+    const { userAddress } = useUserAccount();
     const { slippageDifference, slippageAddition } = useSlippage();
     const { submit, submitAsync, ...rest } = useSubmitTransaction({
-        contractConfig: vaultContractConfig,
-        functionName: 'batchSwap',
+        config: {
+            ...vaultContractConfig,
+            functionName: 'batchSwap',
+        },
         transactionType: 'SWAP',
     });
 
@@ -67,9 +69,9 @@ export function useBatchSwap() {
                 swaps,
                 tokenAddresses,
                 {
-                    sender: accountData?.address,
+                    sender: userAddress,
                     fromInternalBalance: false,
-                    recipient: accountData?.address,
+                    recipient: userAddress,
                     toInternalBalance: false,
                 },
                 limits,

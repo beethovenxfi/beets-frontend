@@ -4,20 +4,21 @@ import {
     GqlPoolStakingGauge,
     GqlPoolStakingMasterChefFarm,
 } from '~/apollo/generated/graphql-codegen-generated';
-import { useAccount, useProvider } from 'wagmi';
+import { useProvider } from 'wagmi';
 import { masterChefService } from '~/lib/services/staking/master-chef.service';
 import { useGetTokens } from '~/lib/global/useToken';
 import { StakingPendingRewardAmount } from '~/lib/services/staking/staking-types';
 import { gaugeStakingService } from '~/lib/services/staking/gauge-staking.service';
+import { useUserAccount } from '~/lib/user/useUserAccount';
 
 export function useStakingPendingRewards(stakingItems: GqlPoolStaking[]) {
     const provider = useProvider();
-    const { data: accountData } = useAccount();
+    const { userAddress } = useUserAccount();
     const { tokens } = useGetTokens();
     const stakingIds = stakingItems.map((staking) => staking.id);
 
     return useQuery(
-        ['useStakingPendingRewards', accountData?.address, stakingIds],
+        ['useStakingPendingRewards', userAddress, stakingIds],
         async () => {
             let pendingRewards: StakingPendingRewardAmount[] = [];
             const farms = stakingItems
@@ -29,7 +30,7 @@ export function useStakingPendingRewards(stakingItems: GqlPoolStaking[]) {
                     farms,
                     provider,
                     tokens,
-                    userAddress: accountData?.address || '',
+                    userAddress: userAddress || '',
                 });
 
                 pendingRewards = [...pendingRewards, ...masterchefPendingRewards];
@@ -44,7 +45,7 @@ export function useStakingPendingRewards(stakingItems: GqlPoolStaking[]) {
                     gauges,
                     provider,
                     tokens,
-                    userAddress: accountData?.address || '',
+                    userAddress: userAddress || '',
                 });
 
                 pendingRewards = [...pendingRewards, ...gaugePendingRewards];
@@ -52,6 +53,6 @@ export function useStakingPendingRewards(stakingItems: GqlPoolStaking[]) {
 
             return pendingRewards;
         },
-        { enabled: !!accountData?.address && stakingItems.length > 0, refetchInterval: 15000 },
+        { enabled: !!userAddress && stakingItems.length > 0, refetchInterval: 15000 },
     );
 }

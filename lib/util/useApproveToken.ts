@@ -6,11 +6,11 @@ import { TokenBase } from '~/lib/services/token/token-types';
 
 export function useApproveToken(token: TokenBase) {
     const { submit, submitAsync, ...rest } = useSubmitTransaction({
-        contractConfig: {
+        config: {
             addressOrName: token.address || '',
             contractInterface: ERC20Abi,
+            functionName: 'approve',
         },
-        functionName: 'approve',
         transactionType: 'APPROVE',
     });
 

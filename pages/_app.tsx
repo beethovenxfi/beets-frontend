@@ -39,7 +39,7 @@ import {
 } from 'echarts/components';
 import { CanvasRenderer } from 'echarts/renderers';
 import { chakraTheme } from '~/styles/chakraTheme';
-import { WagmiProvider } from 'wagmi';
+import { WagmiConfig } from 'wagmi';
 import { RainbowKitProvider, darkTheme, midnightTheme } from '@rainbow-me/rainbowkit';
 import { useRouter } from 'next/router';
 import { networkChainDefinitions, wagmiClient } from '~/lib/global/network';
@@ -92,7 +92,7 @@ function BeetsApp(props: AppProps) {
     const client = useApollo(props.pageProps);
 
     return (
-        <WagmiProvider client={wagmiClient}>
+        <WagmiConfig client={wagmiClient}>
             <RainbowKitProvider
                 coolMode
                 chains={networkChainDefinitions}
@@ -113,7 +113,7 @@ function BeetsApp(props: AppProps) {
                     </ChakraProvider>
                 </ApolloProvider>
             </RainbowKitProvider>
-        </WagmiProvider>
+        </WagmiConfig>
     );
 }
 

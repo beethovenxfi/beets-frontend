@@ -6,11 +6,11 @@ import { parseUnits } from 'ethers/lib/utils';
 
 export function useWrapEth() {
     const { submit, submitAsync, ...rest } = useSubmitTransaction({
-        contractConfig: {
+        config: {
             addressOrName: networkConfig.wethAddress,
             contractInterface: WETHAbi,
+            functionName: 'deposit',
         },
-        functionName: 'deposit',
         transactionType: 'WRAP',
     });
 

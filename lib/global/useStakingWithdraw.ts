@@ -1,4 +1,3 @@
-import { useAccount } from 'wagmi';
 import { useSubmitTransaction } from '~/lib/util/useSubmitTransaction';
 import BeethovenxMasterChefAbi from '~/lib/abi/BeethovenxMasterChef.json';
 import LiquidityGaugeV5 from '~/lib/abi/LiquidityGaugeV5.json';
@@ -6,15 +5,16 @@ import { AmountHumanReadable } from '~/lib/services/token/token-types';
 import { parseUnits } from 'ethers/lib/utils';
 import { GqlPoolStaking } from '~/apollo/generated/graphql-codegen-generated';
 import { networkConfig } from '~/lib/config/network-config';
+import { useUserAccount } from '~/lib/user/useUserAccount';
 
 export function useStakingWithdraw(staking?: GqlPoolStaking | null) {
-    const { data: accountData } = useAccount();
+    const { userAddress } = useUserAccount();
     const { submit, submitAsync, ...rest } = useSubmitTransaction({
-        contractConfig: {
+        config: {
             addressOrName: staking?.type === 'GAUGE' ? staking?.address : networkConfig.masterChefContractAddress,
             contractInterface: staking?.type === 'GAUGE' ? LiquidityGaugeV5 : BeethovenxMasterChefAbi,
+            functionName: staking?.type === 'GAUGE' ? 'withdraw(uint256,bool)' : 'withdrawAndHarvest',
         },
-        functionName: staking?.type === 'GAUGE' ? 'withdraw(uint256,bool)' : 'withdrawAndHarvest',
         transactionType: 'UNSTAKE',
     });
 
@@ -24,7 +24,7 @@ export function useStakingWithdraw(staking?: GqlPoolStaking | null) {
                 case 'FRESH_BEETS':
                 case 'MASTER_CHEF':
                     return submit({
-                        args: [staking.farm?.id, parseUnits(amount, 18), accountData?.address],
+                        args: [staking.farm?.id, parseUnits(amount, 18), userAddress],
                         toastText: 'Withdraw and claim rewards',
                     });
                 case 'GAUGE':

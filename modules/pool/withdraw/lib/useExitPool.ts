@@ -1,20 +1,22 @@
 import { useSubmitTransaction, vaultContractConfig } from '~/lib/util/useSubmitTransaction';
 import { GqlPoolUnion } from '~/apollo/generated/graphql-codegen-generated';
 import { PoolExitContractCallData } from '~/lib/services/pool/pool-types';
-import { useAccount } from 'wagmi';
 import { tokenAmountsConcatenatedString } from '~/lib/services/token/token-util';
 import { TokenAmountHumanReadable } from '~/lib/services/token/token-types';
 import { isSameAddress } from '@balancer-labs/sdk';
 import { oldBnum } from '~/lib/services/pool/lib/old-big-number';
 import { MaxUint256 } from '@ethersproject/constants';
 import { useSlippage } from '~/lib/global/useSlippage';
+import { useUserAccount } from '~/lib/user/useUserAccount';
 
 export function useExitPool(pool: GqlPoolUnion) {
-    const { data: accountData } = useAccount();
+    const { userAddress } = useUserAccount();
     const { slippageDifference } = useSlippage();
     const { submit, submitAsync, ...rest } = useSubmitTransaction({
-        contractConfig: vaultContractConfig,
-        functionName: pool.__typename === 'GqlPoolPhantomStable' ? 'batchSwap' : 'exitPool',
+        config: {
+            ...vaultContractConfig,
+            functionName: pool.__typename === 'GqlPoolPhantomStable' ? 'batchSwap' : 'exitPool',
+        },
         transactionType: 'EXIT',
     });
 
@@ -25,8 +27,8 @@ export function useExitPool(pool: GqlPoolUnion) {
             submit({
                 args: [
                     pool.id,
-                    accountData?.address,
-                    accountData?.address,
+                    userAddress,
+                    userAddress,
                     {
                         assets: contractCallData.assets,
                         minAmountsOut: contractCallData.minAmountsOut,
@@ -55,9 +57,9 @@ export function useExitPool(pool: GqlPoolUnion) {
                     contractCallData.swaps,
                     contractCallData.assets,
                     {
-                        sender: accountData?.address,
+                        sender: userAddress,
                         fromInternalBalance: false,
-                        recipient: accountData?.address,
+                        recipient: userAddress,
                         toInternalBalance: false,
                     },
                     limits,

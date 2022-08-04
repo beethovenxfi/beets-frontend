@@ -1,11 +1,13 @@
-import { apiProvider, configureChains, getDefaultWallets } from '@rainbow-me/rainbowkit';
-import { createClient } from 'wagmi';
+import { getDefaultWallets } from '@rainbow-me/rainbowkit';
+import { configureChains, createClient } from 'wagmi';
 import { networkConfig } from '~/lib/config/network-config';
+import { jsonRpcProvider } from 'wagmi/providers/jsonRpc';
 
 const response = configureChains(
     [
         {
             id: parseInt(networkConfig.chainId),
+            network: networkConfig.networkShortName,
             name: networkConfig.networkName,
             nativeCurrency: {
                 name: networkConfig.eth.name,
@@ -28,7 +30,11 @@ const response = configureChains(
             testnet: networkConfig.testnet,
         },
     ],
-    [apiProvider.jsonRpc((_) => ({ rpcUrl: networkConfig.rpcUrl }))],
+    [
+        jsonRpcProvider({
+            rpc: (chain) => ({ http: networkConfig.rpcUrl }),
+        }),
+    ],
 );
 
 export const networkChainDefinitions = response.chains;

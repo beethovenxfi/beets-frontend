@@ -1,21 +1,21 @@
-import { useAccount } from 'wagmi';
 import { useSubmitTransaction } from '~/lib/util/useSubmitTransaction';
 import { networkConfig } from '~/lib/config/network-config';
 import BeethovenxMasterChefAbi from '~/lib/abi/BeethovenxMasterChef.json';
 import ChildChainGaugeRewardHelper from '~/lib/abi/ChildChainGaugeRewardHelper.json';
 import { GqlPoolStaking } from '~/apollo/generated/graphql-codegen-generated';
+import { useUserAccount } from '~/lib/user/useUserAccount';
 
 export function useStakingClaimRewards(staking: GqlPoolStaking | null) {
-    const { data: accountData } = useAccount();
+    const { userAddress } = useUserAccount();
     const { submit, submitAsync, ...rest } = useSubmitTransaction({
-        contractConfig: {
+        config: {
             addressOrName:
                 staking?.type === 'GAUGE'
                     ? networkConfig.gauge.rewardHelperAddress
                     : networkConfig.masterChefContractAddress,
             contractInterface: staking?.type === 'GAUGE' ? ChildChainGaugeRewardHelper : BeethovenxMasterChefAbi,
+            functionName: staking?.type === 'GAUGE' ? 'claimRewards' : 'harvest',
         },
-        functionName: staking?.type === 'GAUGE' ? 'claimRewards' : 'harvest',
         transactionType: 'HARVEST',
     });
 
@@ -25,12 +25,12 @@ export function useStakingClaimRewards(staking: GqlPoolStaking | null) {
                 case 'MASTER_CHEF':
                 case 'FRESH_BEETS':
                     return submit({
-                        args: [staking.farm?.id, accountData?.address],
+                        args: [staking.farm?.id, userAddress],
                         toastText: 'Claim pending rewards',
                     });
                 case 'GAUGE':
                     return submit({
-                        args: [staking.gauge?.gaugeAddress, accountData?.address],
+                        args: [staking.gauge?.gaugeAddress, userAddress],
                         toastText: 'Claim pending rewards',
                     });
             }

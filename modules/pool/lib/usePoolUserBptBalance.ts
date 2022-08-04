@@ -6,12 +6,13 @@ import { useUserBalances } from '~/lib/user/useUserBalances';
 import { parseUnits } from 'ethers/lib/utils';
 import { tokenGetAmountForAddress } from '~/lib/services/token/token-util';
 import { oldBnumScaleAmount } from '~/lib/services/pool/lib/old-big-number';
-import { useAccount, useProvider } from 'wagmi';
+import { useProvider } from 'wagmi';
 import { useQuery } from 'react-query';
 import { masterChefService } from '~/lib/services/staking/master-chef.service';
 import { freshBeetsService } from '~/lib/services/staking/fresh-beets.service';
 import { formatFixed } from '@ethersproject/bignumber';
 import { gaugeStakingService } from '~/lib/services/staking/gauge-staking.service';
+import { useUserAccount } from '~/lib/user/useUserAccount';
 
 export function usePoolUserBptBalance() {
     const { pool } = usePool();
@@ -74,34 +75,34 @@ function usePoolUserBptWalletBalance() {
 
 function usePoolUserStakedBalance() {
     const { pool } = usePool();
-    const { data: accountData } = useAccount();
+    const { userAddress } = useUserAccount();
     const provider = useProvider();
     const { data: fBeets } = useGetFbeetsRatioQuery();
 
     return useQuery(
-        ['poolUserStakedBalance', pool.id, pool.staking?.id || '', accountData?.address || ''],
+        ['poolUserStakedBalance', pool.id, pool.staking?.id || '', userAddress || ''],
         async (): Promise<AmountHumanReadable> => {
-            if (!accountData?.address || !pool.staking) {
+            if (!userAddress || !pool.staking) {
                 return '0';
             }
 
             switch (pool.staking.type) {
                 case 'MASTER_CHEF':
                     return masterChefService.getUserStakedBalance({
-                        userAddress: accountData.address,
+                        userAddress,
                         farmId: pool.staking.id,
                         provider,
                     });
                 case 'FRESH_BEETS':
                     return freshBeetsService.getUserStakedBalance({
-                        userAddress: accountData.address,
+                        userAddress,
                         farmId: pool.staking.id,
                         provider,
                         fBeetsRatio: fBeets?.ratio || '0',
                     });
                 case 'GAUGE':
                     return gaugeStakingService.getUserStakedBalance({
-                        userAddress: accountData.address,
+                        userAddress,
                         gaugeAddress: pool.staking.gauge?.gaugeAddress || '',
                         provider,
                     });

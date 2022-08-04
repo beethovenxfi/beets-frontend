@@ -1,6 +1,9 @@
 import { useContractWrite, useSigner, useWaitForTransaction } from 'wagmi';
-import { WriteContractArgs, WriteContractConfig } from '@wagmi/core';
-import { UseContractWriteConfig } from 'wagmi/dist/declarations/src/hooks/contracts/useContractWrite';
+import {
+    UseContractWriteArgs,
+    UseContractWriteConfig,
+    UseContractWriteMutationArgs,
+} from 'wagmi/dist/declarations/src/hooks/contracts/useContractWrite';
 import { ToastId, useToast } from '@chakra-ui/react';
 import { BeetsTransactionType } from '~/components/toast/toast-util';
 import { TransactionStatusToast } from '~/components/toast/TransactionStatusToast';
@@ -14,17 +17,15 @@ import { makeVar } from '@apollo/client';
 import { TransactionReceipt, TransactionResponse } from '@ethersproject/providers';
 
 interface Props {
-    contractConfig: Omit<WriteContractArgs, 'signerOrProvider'>;
-    functionName: string;
-    writeConfig?: UseContractWriteConfig;
+    config: Omit<UseContractWriteArgs & UseContractWriteConfig, 'signerOrProvider'>;
     waitForConfig?: UseWaitForTransactionConfig;
     transactionType: BeetsTransactionType;
 }
 
 export interface SubmitTransactionQuery {
-    submit: (config: WriteContractConfig & { toastText: string; walletText?: string }) => void;
+    submit: (config: UseContractWriteMutationArgs & { toastText: string; walletText?: string }) => void;
     submitAsync: (
-        config: WriteContractConfig & { toastText: string; walletText?: string },
+        config: UseContractWriteMutationArgs & { toastText: string; walletText?: string },
     ) => Promise<TransactionResponse>;
 
     isSubmitting: boolean;
@@ -53,13 +54,7 @@ export const batchRelayerContractConfig = {
 
 export const txPendingVar = makeVar(false);
 
-export function useSubmitTransaction({
-    contractConfig,
-    functionName,
-    writeConfig,
-    transactionType,
-    waitForConfig,
-}: Props): SubmitTransactionQuery {
+export function useSubmitTransaction({ config, transactionType, waitForConfig }: Props): SubmitTransactionQuery {
     const signer = useSigner();
     const toast = useToast();
     const toastIdRef = useRef<ToastId | undefined>();
@@ -67,46 +62,40 @@ export function useSubmitTransaction({
     const walletText = useRef<string>('');
     const addRecentTransaction = useAddRecentTransaction();
 
-    const contractWrite = useContractWrite(
-        {
-            signerOrProvider: signer.data,
-            ...contractConfig,
-        },
-        functionName,
-        {
-            ...writeConfig,
-            onSuccess(data, variables, context) {
-                toastIdRef.current = toast({
-                    position: 'bottom-left',
-                    render: ({ onClose }) => (
-                        <TransactionStatusToast
-                            type={transactionType}
-                            status="PENDING"
-                            text={toastText.current}
-                            onClose={onClose}
-                            txHash={data.hash}
-                        />
-                    ),
-                    duration: null,
+    const contractWrite = useContractWrite({
+        signerOrProvider: signer.data,
+        ...config,
+        onSuccess(data, variables, context) {
+            toastIdRef.current = toast({
+                position: 'bottom-left',
+                render: ({ onClose }) => (
+                    <TransactionStatusToast
+                        type={transactionType}
+                        status="PENDING"
+                        text={toastText.current}
+                        onClose={onClose}
+                        txHash={data.hash}
+                    />
+                ),
+                duration: null,
+            });
+
+            try {
+                addRecentTransaction({
+                    hash: data.hash,
+                    description: walletText.current,
                 });
+            } catch {
+                //TODO: need to handle this gracefully, can happen when user has too many recent transactions
+            }
 
-                try {
-                    addRecentTransaction({
-                        hash: data.hash,
-                        description: walletText.current,
-                    });
-                } catch {
-                    //TODO: need to handle this gracefully, can happen when user has too many recent transactions
-                }
+            txPendingVar(true);
 
-                txPendingVar(true);
-
-                if (writeConfig?.onSuccess) {
-                    return writeConfig.onSuccess(data, variables, context);
-                }
-            },
+            if (config?.onSuccess) {
+                return config.onSuccess(data, variables, context);
+            }
         },
-    );
+    });
 
     const waitForTransaction = useWaitForTransaction({
         hash: contractWrite.data?.hash,
@@ -140,13 +129,13 @@ export function useSubmitTransaction({
         },
     });
 
-    function submit(config: WriteContractConfig & { toastText: string; walletText?: string }) {
+    function submit(config: UseContractWriteMutationArgs & { toastText: string; walletText?: string }) {
         toastText.current = config.toastText;
         walletText.current = config.walletText || config.toastText;
         contractWrite.write(config);
     }
 
-    async function submitAsync(config: WriteContractConfig & { toastText: string; walletText?: string }) {
+    async function submitAsync(config: UseContractWriteMutationArgs & { toastText: string; walletText?: string }) {
         toastText.current = config.toastText;
         walletText.current = config.walletText || config.toastText;
         return contractWrite.writeAsync(config);
