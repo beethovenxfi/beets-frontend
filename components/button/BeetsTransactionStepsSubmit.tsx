@@ -91,7 +91,7 @@ export function BeetsTransactionStepsSubmit({
     return (
         <Box>
             {isLoading ? (
-                <Flex justifyContent="center">
+                <Flex justifyContent="center" mb="6">
                     <Skeleton height="30px" width="180px" />
                 </Flex>
             ) : steps && steps.length > 1 ? (
