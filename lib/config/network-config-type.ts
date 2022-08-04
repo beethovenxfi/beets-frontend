@@ -60,4 +60,7 @@ export interface NetworkConfig {
             high: number;
         };
     };
+    gauge: {
+        rewardHelperAddress: string;
+    };
 }

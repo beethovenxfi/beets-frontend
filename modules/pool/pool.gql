@@ -79,6 +79,15 @@ query GetPool($id: String!) {
                     rewardPerSecond
                 }
             }
+            gauge {
+                id
+                gaugeAddress
+                rewards {
+                    id
+                    rewardPerSecond
+                    tokenAddress
+                }
+            }
         }
         investConfig {
             singleAssetEnabled

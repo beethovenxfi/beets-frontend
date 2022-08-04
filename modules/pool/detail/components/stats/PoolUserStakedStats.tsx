@@ -31,6 +31,7 @@ export function PoolUserStakedStats({ poolAddress, staking }: Props) {
     const { userStakedBptBalance, isLoading: isLoadingUserBptBalance } = usePoolUserBptBalance();
     const { refetch: refetchUserTokenBalances } = usePoolUserTokenBalancesInWallet();
     const isLoadingStake = isLoadingTotalStakedBalance || isLoadingUserBptBalance;
+    const userShare = parseFloat(userStakedBptBalance) / parseFloat(data || '1');
 
     return (
         <>
@@ -50,7 +51,7 @@ export function PoolUserStakedStats({ poolAddress, staking }: Props) {
                         <Skeleton height="34px" width="140px" mt="4px" mb="4px" />
                     ) : (
                         <Text color="white" fontSize="1.75rem">
-                            {numeral(userStakedBptBalance).format('0,0.0000')}{' '}
+                            {numeral(userStakedBptBalance).format('0,0.00[00]')}{' '}
                             <Text as="span" fontSize="md" color="beets.base.50">
                                 BPT
                             </Text>
@@ -60,7 +61,7 @@ export function PoolUserStakedStats({ poolAddress, staking }: Props) {
                         <Skeleton height="16px" width="45px" />
                     ) : (
                         <Text fontSize="1rem" lineHeight="1rem">
-                            {numeral(parseFloat(userStakedBptBalance) / parseFloat(data || '1')).format('0.00%')}
+                            {userShare < 0.0001 ? '< 0.01%' : numeral(userShare).format('0.00%')}
                         </Text>
                     )}
                 </VStack>

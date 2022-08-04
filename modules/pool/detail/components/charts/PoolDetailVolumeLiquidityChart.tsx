@@ -106,7 +106,6 @@ export function PoolDetailVolumeLiquidityChart({ data }: Props) {
                     },
                 },
             ],
-            color: ['rgba(0,255,255, 1.0)'],
             series: [
                 {
                     data: data.map((item) => [item.timestamp * 1000, item.totalLiquidity]),

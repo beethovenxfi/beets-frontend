@@ -1,4 +1,5 @@
 import { NetworkConfig } from '~/lib/config/network-config-type';
+import { AddressZero } from '@ethersproject/constants';
 
 export const fantomNetworkConfig: NetworkConfig = {
     appName: 'Beethoven X',
@@ -97,5 +98,8 @@ export const fantomNetworkConfig: NetworkConfig = {
             noticeable: 0.005,
             high: 0.01,
         },
+    },
+    gauge: {
+        rewardHelperAddress: AddressZero,
     },
 };

@@ -1770,6 +1770,17 @@ export type GetPoolQuery = {
                           rewardPerSecond: string;
                       }> | null;
                   } | null;
+                  gauge?: {
+                      __typename: 'GqlPoolStakingGauge';
+                      id: string;
+                      gaugeAddress: string;
+                      rewards: Array<{
+                          __typename: 'GqlPoolStakingGaugeReward';
+                          id: string;
+                          rewardPerSecond: string;
+                          tokenAddress: string;
+                      }>;
+                  } | null;
               } | null;
               investConfig: {
                   __typename: 'GqlPoolInvestConfig';
@@ -1920,6 +1931,17 @@ export type GetPoolQuery = {
                           tokenAddress: string;
                           rewardPerSecond: string;
                       }> | null;
+                  } | null;
+                  gauge?: {
+                      __typename: 'GqlPoolStakingGauge';
+                      id: string;
+                      gaugeAddress: string;
+                      rewards: Array<{
+                          __typename: 'GqlPoolStakingGaugeReward';
+                          id: string;
+                          rewardPerSecond: string;
+                          tokenAddress: string;
+                      }>;
                   } | null;
               } | null;
               investConfig: {
@@ -2199,6 +2221,17 @@ export type GetPoolQuery = {
                           tokenAddress: string;
                           rewardPerSecond: string;
                       }> | null;
+                  } | null;
+                  gauge?: {
+                      __typename: 'GqlPoolStakingGauge';
+                      id: string;
+                      gaugeAddress: string;
+                      rewards: Array<{
+                          __typename: 'GqlPoolStakingGaugeReward';
+                          id: string;
+                          rewardPerSecond: string;
+                          tokenAddress: string;
+                      }>;
                   } | null;
               } | null;
               investConfig: {
@@ -2480,6 +2513,17 @@ export type GetPoolQuery = {
                           rewardPerSecond: string;
                       }> | null;
                   } | null;
+                  gauge?: {
+                      __typename: 'GqlPoolStakingGauge';
+                      id: string;
+                      gaugeAddress: string;
+                      rewards: Array<{
+                          __typename: 'GqlPoolStakingGaugeReward';
+                          id: string;
+                          rewardPerSecond: string;
+                          tokenAddress: string;
+                      }>;
+                  } | null;
               } | null;
               investConfig: {
                   __typename: 'GqlPoolInvestConfig';
@@ -2627,6 +2671,17 @@ export type GetPoolQuery = {
                           tokenAddress: string;
                           rewardPerSecond: string;
                       }> | null;
+                  } | null;
+                  gauge?: {
+                      __typename: 'GqlPoolStakingGauge';
+                      id: string;
+                      gaugeAddress: string;
+                      rewards: Array<{
+                          __typename: 'GqlPoolStakingGaugeReward';
+                          id: string;
+                          rewardPerSecond: string;
+                          tokenAddress: string;
+                      }>;
                   } | null;
               } | null;
               investConfig: {
@@ -2906,6 +2961,17 @@ export type GetPoolQuery = {
                           tokenAddress: string;
                           rewardPerSecond: string;
                       }> | null;
+                  } | null;
+                  gauge?: {
+                      __typename: 'GqlPoolStakingGauge';
+                      id: string;
+                      gaugeAddress: string;
+                      rewards: Array<{
+                          __typename: 'GqlPoolStakingGaugeReward';
+                          id: string;
+                          rewardPerSecond: string;
+                          tokenAddress: string;
+                      }>;
                   } | null;
               } | null;
               investConfig: {
@@ -4594,6 +4660,15 @@ export const GetPoolDocument = gql`
                         address
                         tokenAddress
                         rewardPerSecond
+                    }
+                }
+                gauge {
+                    id
+                    gaugeAddress
+                    rewards {
+                        id
+                        rewardPerSecond
+                        tokenAddress
                     }
                 }
             }

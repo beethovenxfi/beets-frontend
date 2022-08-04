@@ -567,6 +567,15 @@ export const GetPool = gql`
                         rewardPerSecond
                     }
                 }
+                gauge {
+                    id
+                    gaugeAddress
+                    rewards {
+                        id
+                        rewardPerSecond
+                        tokenAddress
+                    }
+                }
             }
             investConfig {
                 singleAssetEnabled

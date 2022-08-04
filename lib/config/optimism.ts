@@ -97,4 +97,7 @@ export const optimismNetworkConfig: NetworkConfig = {
             high: 0.01,
         },
     },
+    gauge: {
+        rewardHelperAddress: '0x299dcDF14350999496204c141A0c20A29d71AF3E',
+    },
 };

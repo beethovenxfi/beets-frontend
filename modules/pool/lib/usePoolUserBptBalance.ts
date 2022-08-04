@@ -11,6 +11,7 @@ import { useQuery } from 'react-query';
 import { masterChefService } from '~/lib/services/staking/master-chef.service';
 import { freshBeetsService } from '~/lib/services/staking/fresh-beets.service';
 import { formatFixed } from '@ethersproject/bignumber';
+import { gaugeStakingService } from '~/lib/services/staking/gauge-staking.service';
 
 export function usePoolUserBptBalance() {
     const { pool } = usePool();
@@ -99,8 +100,11 @@ function usePoolUserStakedBalance() {
                         fBeetsRatio: fBeets?.ratio || '0',
                     });
                 case 'GAUGE':
-                    //TODO: implement
-                    return '0';
+                    return gaugeStakingService.getUserStakedBalance({
+                        userAddress: accountData.address,
+                        gaugeAddress: pool.staking.gauge?.gaugeAddress || '',
+                        provider,
+                    });
             }
         },
         {},
