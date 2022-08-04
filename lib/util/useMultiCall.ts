@@ -47,9 +47,14 @@ export function useMultiCall({
             return null;
         }
 
-        const decodedResult = contractInterface.decodeFunctionResult(calls[i].functionName, returnData);
-        // Automatically unwrap any simple return values
-        return decodedResult.length > 1 ? decodedResult : decodedResult[0];
+        try {
+            const decodedResult = contractInterface.decodeFunctionResult(calls[i].functionName, returnData);
+            // Automatically unwrap any simple return values
+            return decodedResult.length > 1 ? decodedResult : decodedResult[0];
+        } catch (e) {
+            console.log('e', e);
+            return null;
+        }
     });
 
     return {

@@ -8,10 +8,14 @@ import { AddressZero } from '@ethersproject/constants';
 import { networkConfig } from '~/lib/config/network-config';
 import { GqlToken } from '~/apollo/generated/graphql-codegen-generated';
 
+interface TokenBaseWithChainId extends TokenBase {
+    chainId: number;
+}
+
 const USER_IMPORTED_CACHE_KEY = 'USER_IMPORTED_TOKENS';
 
 const cached = typeof window !== 'undefined' ? localStorage.getItem(USER_IMPORTED_CACHE_KEY) : null;
-const userImportedTokensVar = makeVar<TokenBase[]>(cached ? JSON.parse(cached) : []);
+const userImportedTokensVar = makeVar<TokenBaseWithChainId[]>(cached ? JSON.parse(cached) : []);
 
 export function useUserImportedTokens() {
     const [addressToLoad, setAddressToLoad] = useState<string | null>(null);
@@ -63,7 +67,10 @@ export function useUserImportedTokens() {
 
     function importToken() {
         if (tokenToImport && !getImportedToken(tokenToImport.address)) {
-            const updated = [...userImportedTokensVar(), tokenToImport];
+            const updated = [
+                ...userImportedTokensVar(),
+                { ...tokenToImport, chainId: parseInt(networkConfig.chainId) },
+            ];
             userImportedTokensVar(updated);
             localStorage.setItem(USER_IMPORTED_CACHE_KEY, JSON.stringify(updated));
 
@@ -83,16 +90,15 @@ export function useUserImportedTokens() {
         localStorage.setItem(USER_IMPORTED_CACHE_KEY, JSON.stringify([]));
     }
 
-    const userImportedTokens: (GqlToken & { imported?: boolean })[] = useReactiveVar(userImportedTokensVar).map(
-        (token) => ({
+    const userImportedTokens: (GqlToken & { imported?: boolean })[] = useReactiveVar(userImportedTokensVar)
+        .filter((token) => token.chainId === parseInt(networkConfig.chainId))
+        .map((token) => ({
             ...token,
             __typename: 'GqlToken',
             tradable: true,
-            chainId: parseInt(networkConfig.chainId),
             priority: 0,
             imported: true,
-        }),
-    );
+        }));
 
     return {
         getImportedToken,
