@@ -4,9 +4,10 @@ import { PoolDetailBptPriceChart } from '~/modules/pool/detail/components/charts
 import { usePool } from '~/modules/pool/lib/usePool';
 import { useState } from 'react';
 import { PoolDetailVolumeLiquidityChart } from '~/modules/pool/detail/components/charts/PoolDetailVolumeLiquidityChart';
+import { PoolDetailFeesChart } from '~/modules/pool/detail/components/charts/PoolDetailFeesChart';
 import { GqlPoolSnapshotDataRange, useGetPoolSnapshotsQuery } from '~/apollo/generated/graphql-codegen-generated';
 
-type ChartType = 'BPT_PRICE' | 'VOLUME_TVL';
+type ChartType = 'BPT_PRICE' | 'VOLUME_TVL' | 'FEES';
 
 export function PoolDetailCharts() {
     const { pool } = usePool();
@@ -25,6 +26,7 @@ export function PoolDetailCharts() {
                 >
                     <option value="BPT_PRICE">BPT price</option>
                     <option value="VOLUME_TVL">Volume / TVL</option>
+                    <option value="FEES">Fees</option>
                 </Select>
                 <Select
                     value={range}
@@ -48,6 +50,7 @@ export function PoolDetailCharts() {
                 />
             )}
             {chartType === 'VOLUME_TVL' && <PoolDetailVolumeLiquidityChart data={data?.snapshots || []} />}
+            {chartType === 'FEES' && <PoolDetailFeesChart data={data?.snapshots || []} />}
         </Card>
     );
 }
