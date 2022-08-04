@@ -124,14 +124,14 @@ export function BeetsTokenInputWithSlider({
                     }}
                 >
                     <SliderTrack bg="gray.400">
-                        <SliderFilledTrack bg="beets.base.200" />
+                        <SliderFilledTrack />
                     </SliderTrack>
                     <SliderThumb boxSize={3} boxShadow="xl" />
                     {changing ? (
                         <SliderMark
                             value={sliderValue}
                             textAlign="center"
-                            bg="beets.base.500"
+                            //bg="beets.base.500"
                             color="white"
                             mt="3"
                             ml="-20px"

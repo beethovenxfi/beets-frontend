@@ -64,7 +64,6 @@ export function PoolInvestProportional({ onShowPreview }: Props) {
                 <SliderMark
                     value={proportionalPercent}
                     textAlign="center"
-                    bg="beets.base.500"
                     color="white"
                     mt="-10"
                     ml="-30px"

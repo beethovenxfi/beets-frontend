@@ -21,9 +21,9 @@ export const optimismNetworkConfig: NetworkConfig = {
         platformId: 'optimism',
     },
     rpcUrl: 'https://mainnet.optimism.io',
-    multicall: '0x2DC0E2aa608532Da689e89e237dF582B783E552C',
+    multicall: '0x2dc0e2aa608532da689e89e237df582b783e552c',
     beets: {
-        address: '0x97513e975a7fA9072c72C92d8000B0dB90b163c5',
+        address: '0x97513e975a7fa9072c72c92d8000b0db90b163c5',
     },
     fbeets: {
         address: '',
@@ -31,12 +31,12 @@ export const optimismNetworkConfig: NetworkConfig = {
         poolId: '',
     },
     balancer: {
-        vault: '0xBA12222222228d8Ba445958a75a0704d566BF2C8',
+        vault: '0xba12222222228d8ba445958a75a0704d566bf2c8',
         batchRelayer: '0x0000000000000000000000000000000000000000',
     },
     beetsPoolOwnerAddress: '0xd9e2889ac8c6fff8e94c7c1beeade1352df1a513',
     masterChefContractAddress: '',
-    defaultTokenIn: '0x7F5c764cBc14f9669B88837ca1490cCa17c31607',
+    defaultTokenIn: '0x7f5c764cbc14f9669b88837ca1490cca17c31607',
     defaultTokenOut: '0x4200000000000000000000000000000000000006',
     farmTypeName: 'gauge',
     additionalLinks: [
@@ -98,6 +98,6 @@ export const optimismNetworkConfig: NetworkConfig = {
         },
     },
     gauge: {
-        rewardHelperAddress: '0x299dcDF14350999496204c141A0c20A29d71AF3E',
+        rewardHelperAddress: '0x299dcdf14350999496204c141a0c20a29d71af3e',
     },
 };
