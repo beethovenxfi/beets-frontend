@@ -7,6 +7,9 @@ const response = configureChains(
         {
             id: parseInt(networkConfig.chainId),
             name: networkConfig.networkName,
+            ...(networkConfig.chainId === '250' && {
+                iconUrl: 'https://assets.coingecko.com/coins/images/4001/large/Fantom.png?1558015016',
+            }),
             nativeCurrency: {
                 name: networkConfig.eth.name,
                 symbol: networkConfig.eth.symbol,
