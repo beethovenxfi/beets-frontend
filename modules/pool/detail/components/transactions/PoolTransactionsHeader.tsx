@@ -1,4 +1,4 @@
-import { Box, Flex, Text } from '@chakra-ui/layout';
+import { Text } from '@chakra-ui/layout';
 import { Grid, GridItem } from '@chakra-ui/react';
 
 export default function PoolTransactionHeader() {
