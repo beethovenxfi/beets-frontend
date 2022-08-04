@@ -43,7 +43,7 @@ export function HomeLearn(props: BoxProps) {
                     />
                 </GridItem>
                 <GridItem>
-                    <BeetsSubHeadline mb="8">DeFI 101</BeetsSubHeadline>
+                    <BeetsSubHeadline mb="8">DeFi 101</BeetsSubHeadline>
                     <HomeLearnItem
                         title="Getting started: What is DeFi?"
                         description="Discover a brand new way to manage your finances. Decentralized Finance (DeFi) is an emerging industry that removes the control banks and institutions have over financial services. Permissionless and decentralized, DeFi is revolutionizing the financial world as we know it."
