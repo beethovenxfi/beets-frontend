@@ -20,13 +20,11 @@ import { capitalize } from 'lodash';
 import { tokenFormatAmount } from '~/lib/services/token/token-util';
 import { usePool } from '~/modules/pool/lib/usePool';
 import { useApproveToken } from '~/lib/util/useApproveToken';
-import { useMasterChefDepositIntoFarm } from '~/lib/global/useMasterChefDepositIntoFarm';
+import { useStakingDeposit } from '~/lib/global/useStakingDeposit';
 
 import { usePoolUserStakingAllowance } from '~/modules/pool/stake/lib/usePoolUserStakingAllowance';
 import { BeetsTransactionStepsSubmit, TransactionStep } from '~/components/button/BeetsTransactionStepsSubmit';
-import { BeetsBoxLineItem } from '~/components/box/BeetsBoxLineItem';
 import { BeetsBox } from '~/components/box/BeetsBox';
-import { usePoolUserDepositBalance } from '~/modules/pool/lib/usePoolUserDepositBalance';
 import { oldBnumScaleAmount, oldBnumToHumanReadable } from '~/lib/services/pool/lib/old-big-number';
 import { CardRow } from '~/components/card/CardRow';
 
@@ -37,7 +35,6 @@ interface Props {
 }
 
 export function PoolStakeModal({ isOpen, onOpen, onClose }: Props) {
-    const { userPoolBalanceUSD } = usePoolUserDepositBalance();
     const [percent, setPercent] = useState(100);
     const {
         userWalletBptBalance,
@@ -46,19 +43,20 @@ export function PoolStakeModal({ isOpen, onOpen, onClose }: Props) {
         isRefetching: isRefetchingBalances,
         refetch: refetchBptBalances,
     } = usePoolUserBptBalance();
-    const amount = oldBnumToHumanReadable(oldBnumScaleAmount(userWalletBptBalance).times(percent).div(100));
-    const hasValue = hasBptInWallet && amount !== '' && percent !== 0;
-    const amountIsValid = !hasValue || parseFloat(userWalletBptBalance) >= parseFloat(amount);
-    const { pool } = usePool();
+    const { pool, bptPrice } = usePool();
     const {
         hasApprovalToStakeAmount,
         isLoading: isLoadingAllowances,
         refetch: refetchAllowances,
         isRefetching,
     } = usePoolUserStakingAllowance();
+    const amount = oldBnumToHumanReadable(oldBnumScaleAmount(userWalletBptBalance).times(percent).div(100));
+    const usdValue = bptPrice * parseFloat(amount);
+    const hasValue = hasBptInWallet && amount !== '' && percent !== 0;
+    const amountIsValid = !hasValue || parseFloat(userWalletBptBalance) >= parseFloat(amount);
 
     const { approve, ...approveQuery } = useApproveToken(pool);
-    const { stake, ...stakeQuery } = useMasterChefDepositIntoFarm();
+    const { stake, ...stakeQuery } = useStakingDeposit(pool.staking || null);
     const [steps, setSteps] = useState<TransactionStep[] | null>(null);
     const loading = isLoadingAllowances || isLoadingBalances;
 
@@ -146,9 +144,7 @@ export function PoolStakeModal({ isOpen, onOpen, onClose }: Props) {
                                     </>
                                 ) : (
                                     <>
-                                        <Box textAlign="right">
-                                            {numberFormatUSDValue(userPoolBalanceUSD * (percent / 100))}
-                                        </Box>
+                                        <Box textAlign="right">{numberFormatUSDValue(usdValue)}</Box>
                                         <Box textAlign="right" color="gray.200">
                                             {tokenFormatAmount(amount)} BPT
                                         </Box>
@@ -169,7 +165,7 @@ export function PoolStakeModal({ isOpen, onOpen, onClose }: Props) {
                             if (id === 'approve') {
                                 approve(pool.staking?.address || '');
                             } else if (id === 'stake') {
-                                stake(pool.staking?.id || '', amount || '0');
+                                stake(amount || '0');
                             }
                         }}
                         onConfirmed={async (id) => {
