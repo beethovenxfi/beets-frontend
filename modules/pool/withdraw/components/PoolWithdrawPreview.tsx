@@ -29,10 +29,10 @@ export function PoolWithdrawPreview({ onWithdrawComplete, onClose }: Props) {
     const { priceForAmount } = useGetTokens();
     const { exitPool, ...exitPoolQuery } = useExitPool(pool);
     const { data: contractCallData } = usePoolExitGetContractCallData();
-    const totalValue = sum((data || []).map(priceForAmount));
 
     const withdrawAmounts =
         selectedWithdrawType === 'SINGLE_ASSET' && singleAssetWithdraw ? [singleAssetWithdraw] : data ? data : [];
+    const totalWithdrawValue = sum(withdrawAmounts.map(priceForAmount));
 
     return (
         <Box>
@@ -61,7 +61,7 @@ export function PoolWithdrawPreview({ onWithdrawComplete, onClose }: Props) {
                 </Text>
                 <TransactionSubmittedContent
                     query={exitPoolQuery}
-                    confirmedMessage={`You've successfully withdrawn ${numberFormatUSDValue(totalValue)} from ${
+                    confirmedMessage={`You've successfully withdrawn ${numberFormatUSDValue(totalWithdrawValue)} from ${
                         pool.name
                     }.`}
                     mb="6"

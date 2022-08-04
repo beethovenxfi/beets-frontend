@@ -10,17 +10,7 @@ import { formatFixed } from '@ethersproject/bignumber';
 import { forEach } from 'lodash';
 import { Multicaller } from '~/lib/services/util/multicaller.service';
 import { GqlPoolStakingMasterChefFarm } from '~/apollo/generated/graphql-codegen-generated';
-
-interface MasterChefFarmPendingRewardAmount {
-    farmId: string;
-    address: string;
-    amount: AmountHumanReadable;
-}
-
-interface MasterchefRewarder {
-    farmId: string;
-    address: string;
-}
+import { StakingPendingRewardAmount } from '~/lib/services/staking/staking-types';
 
 const mergedAbi = Object.values(
     // Remove duplicate entries using their names
@@ -74,7 +64,7 @@ export class MasterChefService {
         userAddress: string;
         tokens: TokenBase[];
         provider: BaseProvider;
-    }): Promise<MasterChefFarmPendingRewardAmount[]> {
+    }): Promise<StakingPendingRewardAmount[]> {
         const multicaller = new Multicaller(this.chainId, provider, mergedAbi);
 
         for (const farm of farms) {
@@ -113,14 +103,14 @@ export class MasterChefService {
             };
         } = await multicaller.execute({});
 
-        const pendingRewardAmounts: MasterChefFarmPendingRewardAmount[] = [];
+        const pendingRewardAmounts: StakingPendingRewardAmount[] = [];
 
         forEach(result, ({ pendingRewards, pendingBeets }, farmId) => {
             if (pendingBeets && pendingBeets.gt(0)) {
                 pendingRewardAmounts.push({
                     address: this.beetsAddress.toLowerCase(),
                     amount: formatFixed(pendingBeets, 18),
-                    farmId,
+                    id: farmId,
                 });
             }
 
@@ -134,7 +124,7 @@ export class MasterChefService {
                         pendingRewardAmounts.push({
                             address: pendingRewards.rewardTokens[i].toLowerCase(),
                             amount: formatFixed(pendingRewards.rewardAmounts[i], token?.decimals || 18),
-                            farmId,
+                            id: farmId,
                         });
                     }
                 }

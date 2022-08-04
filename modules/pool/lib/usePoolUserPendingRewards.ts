@@ -1,4 +1,4 @@
-import { useMasterChefPendingRewards } from '~/lib/global/useMasterChefPendingRewards';
+import { useStakingPendingRewards } from '~/lib/global/useStakingPendingRewards';
 import { usePool } from '~/modules/pool/lib/usePool';
 import { useGetTokens } from '~/lib/global/useToken';
 import { sumBy, uniq } from 'lodash';
@@ -11,14 +11,16 @@ export function usePoolUserPendingRewards() {
     const { hasBpt, isLoading: balancesLoading } = usePoolUserBptBalance();
     const { priceForAmount } = useGetTokens();
     const farm = pool.staking?.farm;
+    const gauge = pool.staking?.gauge;
     const hasBeetsRewards = parseFloat(farm?.beetsPerBlock || '0') > 0;
 
-    const { data, isLoading, ...rest } = useMasterChefPendingRewards(farm && hasBpt ? [farm] : []);
+    const { data, isLoading, ...rest } = useStakingPendingRewards(pool.staking && hasBpt ? [pool.staking] : []);
 
     const pendingRewardsTotalUSD = sumBy(data || [], priceForAmount);
     const rewardTokens = uniq([
         ...(hasBeetsRewards ? [networkConfig.beets.address] : []),
         ...(farm?.rewarders || []).map((rewarder) => rewarder.tokenAddress),
+        ...(gauge?.rewards || []).map((reward) => reward.tokenAddress),
     ]);
 
     const pendingRewards: TokenAmountHumanReadable[] = rewardTokens.map((rewardToken) => {

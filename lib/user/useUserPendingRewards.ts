@@ -1,4 +1,4 @@
-import { useMasterChefPendingRewards } from '~/lib/global/useMasterChefPendingRewards';
+import { useStakingPendingRewards } from '~/lib/global/useStakingPendingRewards';
 import { useGetTokens } from '~/lib/global/useToken';
 import { groupBy, map, sumBy, uniq } from 'lodash';
 import { networkConfig } from '~/lib/config/network-config';
@@ -10,7 +10,7 @@ export function useUserPendingRewards() {
     const { poolBalances, fbeetsBalance, staking, ...userPoolBalancesQuery } = useUserData();
     const { priceForAmount } = useGetTokens();
     const farms = staking.filter((item) => item.farm).map((item) => item.farm) as GqlPoolStakingMasterChefFarm[];
-    const { data, isLoading, ...rest } = useMasterChefPendingRewards(farms);
+    const { data, isLoading, ...rest } = useStakingPendingRewards(farms);
     const pendingRewardsTotalUSD = sumBy(data || [], priceForAmount);
 
     const grouped = groupBy(data || [], 'address');

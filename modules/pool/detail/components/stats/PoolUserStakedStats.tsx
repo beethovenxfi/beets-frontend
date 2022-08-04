@@ -84,16 +84,18 @@ export function PoolUserStakedStats({ poolAddress, staking }: Props) {
                         {numberFormatUSDValue(pendingRewardsTotalUSD)}
                     </Text>
                 )}
-                {pendingRewards.map((reward, index) => (
-                    <HStack key={index} spacing="1">
-                        <TokenAvatar size="xs" address={reward.address} />
-                        <Skeleton isLoaded={!isLoadingPendingRewards}>
-                            <Text fontSize="1rem" lineHeight="1rem">
-                                {tokenFormatAmount(reward.amount)}
-                            </Text>
-                        </Skeleton>
-                    </HStack>
-                ))}
+                <Box>
+                    {pendingRewards.map((reward, index) => (
+                        <HStack key={index} spacing="1" mb="0.5">
+                            <TokenAvatar height="20px" width="20px" address={reward.address} />
+                            <Skeleton isLoaded={!isLoadingPendingRewards}>
+                                <Text fontSize="1rem" lineHeight="1rem">
+                                    {tokenFormatAmount(reward.amount)}
+                                </Text>
+                            </Skeleton>
+                        </HStack>
+                    ))}
+                </Box>
             </VStack>
             <Box width="full">
                 <BeetsSubmitTransactionButton

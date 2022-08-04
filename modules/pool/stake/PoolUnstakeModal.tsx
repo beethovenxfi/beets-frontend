@@ -24,7 +24,7 @@ import { BeetsTransactionStepsSubmit } from '~/components/button/BeetsTransactio
 import { BeetsBox } from '~/components/box/BeetsBox';
 import { usePoolUserDepositBalance } from '~/modules/pool/lib/usePoolUserDepositBalance';
 import { oldBnumScaleAmount, oldBnumToHumanReadable } from '~/lib/services/pool/lib/old-big-number';
-import { useMasterChefWithdrawFromFarm } from '~/lib/global/useMasterChefWithdrawFromFarm';
+import { useStakingWithdraw } from '~/lib/global/useStakingWithdraw';
 import { CardRow } from '~/components/card/CardRow';
 
 interface Props {
@@ -51,7 +51,7 @@ export function PoolUnstakeModal({ isOpen, onOpen, onClose }: Props) {
     const { pool } = usePool();
 
     const { approve, ...approveQuery } = useApproveToken(pool);
-    const { withdraw, ...unstakeQuery } = useMasterChefWithdrawFromFarm();
+    const { withdraw, ...unstakeQuery } = useStakingWithdraw(pool.staking);
     const loading = isLoadingBalances;
 
     useEffect(() => {
@@ -60,16 +60,14 @@ export function PoolUnstakeModal({ isOpen, onOpen, onClose }: Props) {
         }
     }, [isOpen]);
 
+    function onCloseModal() {
+        approveQuery.reset();
+        unstakeQuery.reset();
+        onClose();
+    }
+
     return (
-        <Modal
-            isOpen={isOpen}
-            onClose={() => {
-                approveQuery.reset();
-                unstakeQuery.reset();
-                onClose();
-            }}
-            size="xl"
-        >
+        <Modal isOpen={isOpen} onClose={onCloseModal} size="xl">
             <ModalOverlay />
             <ModalContent backgroundColor="black">
                 <ModalCloseButton />
@@ -133,11 +131,9 @@ export function PoolUnstakeModal({ isOpen, onOpen, onClose }: Props) {
                         isLoading={loading}
                         loadingButtonText="Loading balances..."
                         completeButtonText="Close"
-                        onCompleteButtonClick={() => {
-                            onClose();
-                        }}
+                        onCompleteButtonClick={onCloseModal}
                         onSubmit={() => {
-                            withdraw(pool.staking?.id || '', amount);
+                            withdraw(amount);
                         }}
                         onConfirmed={async (id) => {
                             refetchBptBalances();

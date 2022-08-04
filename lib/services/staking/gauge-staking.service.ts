@@ -8,18 +8,13 @@ import ERC20Abi from '~/lib/abi/ERC20.json';
 import { Multicaller } from '~/lib/services/util/multicaller.service';
 import { GqlPoolStakingGauge } from '~/apollo/generated/graphql-codegen-generated';
 import { networkConfig } from '~/lib/config/network-config';
+import { StakingPendingRewardAmount } from '~/lib/services/staking/staking-types';
 
 interface GetUserStakedBalanceInput {
     userAddress: string;
     gaugeAddress: string;
     provider: BaseProvider;
     decimals?: number;
-}
-
-interface GaugePendingRewardAmount {
-    gaugeId: string;
-    address: string;
-    amount: AmountHumanReadable;
 }
 
 export class GaugeStakingService {
@@ -64,7 +59,7 @@ export class GaugeStakingService {
         gauges: GqlPoolStakingGauge[];
         tokens: TokenBase[];
         provider: BaseProvider;
-    }): Promise<GaugePendingRewardAmount[]> {
+    }): Promise<StakingPendingRewardAmount[]> {
         const multicaller = new Multicaller(this.chainId, provider, ChildChainGaugeRewardHelper);
 
         for (const gauge of gauges) {
@@ -88,7 +83,7 @@ export class GaugeStakingService {
             };
         } = await multicaller.execute({});
 
-        const pendingRewardAmounts: GaugePendingRewardAmount[] = [];
+        const pendingRewardAmounts: StakingPendingRewardAmount[] = [];
 
         for (const gauge of gauges) {
             for (const reward of gauge.rewards) {
@@ -98,7 +93,7 @@ export class GaugeStakingService {
                     pendingRewardAmounts.push({
                         address: reward.tokenAddress,
                         amount: formatFixed(result[gauge.id][reward.tokenAddress], token?.decimals || 18),
-                        gaugeId: gauge.id,
+                        id: gauge.id,
                     });
                 }
             }
