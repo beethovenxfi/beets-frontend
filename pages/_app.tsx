@@ -83,7 +83,7 @@ echarts.use([
 /** End charting library setup */
 
 const TopProgressBar = dynamic(
-    () => {
+    function TopProgressBarFunc() {
         return import('../components/progress-bar/TopProgressBar');
     },
     { ssr: false },
