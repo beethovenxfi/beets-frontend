@@ -3,6 +3,7 @@ import { PoolStakeModal } from '~/modules/pool/stake/PoolStakeModal';
 import { usePoolUserBptBalance } from '~/modules/pool/lib/usePoolUserBptBalance';
 import { usePool } from '~/modules/pool/lib/usePool';
 import { numberFormatUSDValue } from '~/lib/util/number-formats';
+import { FadeInOutBox } from '~/components/animation/FadeInOutBox';
 
 export function PoolStakeInFarmWarning() {
     const { pool } = usePool();
@@ -14,8 +15,8 @@ export function PoolStakeInFarmWarning() {
 
     return (
         <>
-            {hasBptInWallet && (
-                <Alert status="warning" borderRadius="md" mb="4">
+            <FadeInOutBox isVisible={hasBptInWallet} containerStyle={{ width: '100%' }}>
+                <Alert status="warning" borderRadius="md" mb="4" width="full">
                     <AlertIcon />
                     <Box flex="1" mr="8">
                         You have {numberFormatUSDValue(valueInWallet)} worth of BPT in your wallet. This pool offers
@@ -26,7 +27,7 @@ export function PoolStakeInFarmWarning() {
                         Stake now
                     </Button>
                 </Alert>
-            )}
+            </FadeInOutBox>
             <PoolStakeModal isOpen={isOpen} onOpen={onOpen} onClose={onClose} />
         </>
     );
