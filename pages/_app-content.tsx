@@ -6,7 +6,7 @@ import { useRef } from 'react';
 import { useElementScroll } from 'framer-motion';
 import { Footer } from '~/modules/nav/Footer';
 import { NavbarMobile } from '~/modules/nav/NavbarMobile';
-import { GlobalRenderer } from '~/pages/_global-renderer';
+import { GlobalRenderer } from '~/modules/global/GlobalRenderer';
 
 export function AppContent({ Component, pageProps }: AppProps) {
     const ref = useRef(null);

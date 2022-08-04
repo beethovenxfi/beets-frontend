@@ -98,8 +98,6 @@ export default function NavbarWalletConnectButton() {
                                         bg="beets.base.700"
                                     >
                                         <HStack width="full" height="full" spacing="1">
-                                            {/* {account.displayBalance ? ` (${account.displayBalance})` : ''} */}
-                                            {/*<Box>{account.ensAvatar}</Box>*/}
                                             <HStack
                                                 justifyContent="center"
                                                 alignItems="center"
