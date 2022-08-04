@@ -3,6 +3,7 @@ import { useTradeChart } from '~/modules/trade/lib/useTradeChart';
 import { Box, Flex, HStack, Link, Skeleton } from '@chakra-ui/react';
 import { useTradeData } from '~/modules/trade/lib/useTradeData';
 import { tokenFormatAmount } from '~/lib/services/token/token-util';
+import { BeetsBox } from '~/components/box/BeetsBox';
 
 export function TradeChart() {
     const { setRange, range, data, loading, networkStatus } = useTradeChart();
@@ -13,7 +14,19 @@ export function TradeChart() {
 
     return (
         <Box>
-            {(loading && !data) || !tokenIn || !tokenOut ? (
+            {!loading && data && data.prices.length === 0 ? (
+                <BeetsBox
+                    height="150px"
+                    borderColor="gray.200"
+                    borderWidth={1}
+                    borderStyle="dashed"
+                    display="flex"
+                    justifyContent="center"
+                    alignItems="center"
+                >
+                    We were unable to find pricing data for the selected pair
+                </BeetsBox>
+            ) : (loading && !data) || !tokenIn || !tokenOut ? (
                 <Skeleton height="150px" />
             ) : (
                 <Box height="150px">
