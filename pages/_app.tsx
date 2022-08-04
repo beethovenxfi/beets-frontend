@@ -8,7 +8,7 @@ import type { AppProps } from 'next/app';
 import { useApollo } from '~/apollo/client';
 import { ApolloProvider } from '@apollo/client';
 
-import { ChakraProvider } from '@chakra-ui/react';
+import { ChakraProvider, Circle } from '@chakra-ui/react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 /** Start charting library setup */
 import * as echarts from 'echarts/core';
@@ -47,6 +47,7 @@ import { BeetsFonts } from '~/components/fonts/BeetsFonts';
 import { AppContent } from '~/pages/_app-content';
 import { useEffect } from 'react';
 import dynamic from 'next/dynamic';
+import { WalletUserAvatar } from '~/components/avatar/WalletUserAvatar';
 
 const queryClient = new QueryClient();
 
@@ -92,28 +93,29 @@ function BeetsApp(props: AppProps) {
     const client = useApollo(props.pageProps);
 
     return (
-        <WagmiConfig client={wagmiClient}>
-            <RainbowKitProvider
-                coolMode
-                chains={networkChainDefinitions}
-                showRecentTransactions={true}
-                appInfo={{
-                    appName: 'Beethoven X',
-                    learnMoreUrl: 'https://docs.beets.fi',
-                }}
-                theme={darkTheme()}
-            >
-                <ApolloProvider client={client}>
-                    <ChakraProvider theme={chakraTheme}>
-                        <BeetsFonts />
-                        <QueryClientProvider client={queryClient}>
+        <QueryClientProvider client={queryClient}>
+            <WagmiConfig client={wagmiClient}>
+                <RainbowKitProvider
+                    coolMode
+                    chains={networkChainDefinitions}
+                    showRecentTransactions={true}
+                    appInfo={{
+                        appName: 'Beethoven X',
+                        learnMoreUrl: 'https://docs.beets.fi',
+                    }}
+                    theme={darkTheme()}
+                    avatar={() => <WalletUserAvatar />}
+                >
+                    <ApolloProvider client={client}>
+                        <ChakraProvider theme={chakraTheme}>
+                            <BeetsFonts />
                             <TopProgressBar />
                             <AppContent {...props} />
-                        </QueryClientProvider>
-                    </ChakraProvider>
-                </ApolloProvider>
-            </RainbowKitProvider>
-        </WagmiConfig>
+                        </ChakraProvider>
+                    </ApolloProvider>
+                </RainbowKitProvider>
+            </WagmiConfig>
+        </QueryClientProvider>
     );
 }
 

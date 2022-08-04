@@ -7,12 +7,14 @@ import { txPendingVar } from '~/lib/util/useSubmitTransaction';
 import { IconWallet } from '~/components/icons/IconWallet';
 import { BarChart2 } from 'react-feather';
 import { useUserData } from '~/lib/user/useUserData';
-
+import { Image as ChakraImage } from '@chakra-ui/react';
 import { numberFormatLargeUsdValue } from '~/lib/util/number-formats';
+import { useEarlyLudwigNft } from '~/lib/global/useEarlyLudwigNft';
 
 export default function NavbarWalletConnectButton() {
     const txPending = useReactiveVar(txPendingVar);
     const { loading, portfolioValueUSD } = useUserData();
+    const { data: earlyLudwig } = useEarlyLudwigNft();
 
     return (
         <ConnectButton.Custom>
@@ -108,6 +110,13 @@ export default function NavbarWalletConnectButton() {
                                             >
                                                 {txPending ? (
                                                     <Spinner color="beets.green" />
+                                                ) : earlyLudwig ? (
+                                                    <ChakraImage
+                                                        src={earlyLudwig}
+                                                        width="24px"
+                                                        height="24px"
+                                                        rounded="xl"
+                                                    />
                                                 ) : (
                                                     <Image src={BeetsSmart} width="24" alt="your-profile" />
                                                 )}
