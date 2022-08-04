@@ -446,6 +446,15 @@ export const GetUserData = gql`
                     rewardPerSecond
                 }
             }
+            gauge {
+                id
+                gaugeAddress
+                rewards {
+                    id
+                    rewardPerSecond
+                    tokenAddress
+                }
+            }
         }
     }
 `;

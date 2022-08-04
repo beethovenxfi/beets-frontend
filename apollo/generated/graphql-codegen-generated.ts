@@ -1429,6 +1429,17 @@ export type GetUserDataQuery = {
                 rewardPerSecond: string;
             }> | null;
         } | null;
+        gauge?: {
+            __typename: 'GqlPoolStakingGauge';
+            id: string;
+            gaugeAddress: string;
+            rewards: Array<{
+                __typename: 'GqlPoolStakingGaugeReward';
+                id: string;
+                rewardPerSecond: string;
+                tokenAddress: string;
+            }>;
+        } | null;
     }>;
 };
 
@@ -4403,6 +4414,15 @@ export const GetUserDataDocument = gql`
                     address
                     tokenAddress
                     rewardPerSecond
+                }
+            }
+            gauge {
+                id
+                gaugeAddress
+                rewards {
+                    id
+                    rewardPerSecond
+                    tokenAddress
                 }
             }
         }

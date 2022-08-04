@@ -26,5 +26,14 @@ query GetUserData {
                 rewardPerSecond
             }
         }
+        gauge {
+            id
+            gaugeAddress
+            rewards {
+                id
+                rewardPerSecond
+                tokenAddress
+            }
+        }
     }
 }

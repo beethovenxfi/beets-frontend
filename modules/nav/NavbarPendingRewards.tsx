@@ -94,16 +94,20 @@ export function NavbarPendingRewards() {
                             in {staking.length} {stakingType === 'MASTER_CHEF' ? 'farm(s)' : 'gauge(s)'}
                         </Box>
                     </BeetsBox>
-                    <Box mt="4">
-                        <BeetsSubmitTransactionButton
-                            {...harvestQuery}
-                            isDisabled={pendingRewardsTotalUSD < 0.01}
-                            onClick={() => harvestAll(farmIds)}
-                            width="full"
-                        >
-                            Claim all rewards
-                        </BeetsSubmitTransactionButton>
-                    </Box>
+                    {stakingType === 'MASTER_CHEF' ? (
+                        <Box mt="4">
+                            <BeetsSubmitTransactionButton
+                                {...harvestQuery}
+                                isDisabled={pendingRewardsTotalUSD < 0.01}
+                                onClick={() => harvestAll(farmIds)}
+                                width="full"
+                            >
+                                Claim all rewards
+                            </BeetsSubmitTransactionButton>
+                        </Box>
+                    ) : (
+                        <Box mt="2" />
+                    )}
                 </PopoverBody>
             </PopoverContent>
         </Popover>

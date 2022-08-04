@@ -9,8 +9,7 @@ import { GqlPoolStakingMasterChefFarm } from '~/apollo/generated/graphql-codegen
 export function useUserPendingRewards() {
     const { poolBalances, fbeetsBalance, staking, ...userPoolBalancesQuery } = useUserData();
     const { priceForAmount } = useGetTokens();
-    const farms = staking.filter((item) => item.farm).map((item) => item.farm) as GqlPoolStakingMasterChefFarm[];
-    const { data, isLoading, ...rest } = useStakingPendingRewards(farms);
+    const { data, isLoading, ...rest } = useStakingPendingRewards(staking);
     const pendingRewardsTotalUSD = sumBy(data || [], priceForAmount);
 
     const grouped = groupBy(data || [], 'address');
