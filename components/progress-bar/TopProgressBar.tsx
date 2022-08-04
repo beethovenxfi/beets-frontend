@@ -4,7 +4,7 @@ import { useEffect, useRef } from 'react';
 
 const MIN_DELAY = 250;
 
-export default function () {
+export default function TopProgressBar() {
     const router = useRouter();
     const stateRef = useRef<'loading' | 'stop'>();
     const timerRef = useRef<any>();
