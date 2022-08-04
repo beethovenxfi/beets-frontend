@@ -9,6 +9,8 @@ import { usePoolUserTokenBalancesInWallet } from '~/modules/pool/lib/usePoolUser
 import { useInvest } from '~/modules/pool/invest/lib/useInvest';
 import { usePoolGetMaxProportionalInvestmentAmount } from '~/modules/pool/invest/lib/usePoolGetMaxProportionalInvestmentAmount';
 import { CardRow } from '~/components/card/CardRow';
+import { PoolInvestStablePoolDescription } from '~/modules/pool/invest/components/PoolInvestStablePoolDescription';
+import { PoolInvestWeightedPoolDescription } from '~/modules/pool/invest/components/PoolInvestWeightedPoolDescription';
 
 interface Props {
     onShowProportional(): void;
@@ -93,37 +95,9 @@ export function PoolInvestTypeChoice({ onShowProportional, onShowCustom }: Props
                     </BeetsBox>
                 </GridItem>
                 <GridItem>
-                    {isStablePool ? (
-                        <BeetsBox px="4" py="2">
-                            Due to the unique design of stable pools, you are able to invest with a single token without
-                            encountering significant price impact.
-                            <br />
-                            <br />
-                            Assuming you do not deposit large amounts of assets relative to the pool size, depositing in
-                            any ratio is possible.
-                            <br />
-                            <br />
-                            When investing in a liquidity pool, you will receive pool tokens (BPT) representing your
-                            share of the pool. Your share can be redeemed at any point in return for these tokens.
-                        </BeetsBox>
-                    ) : (
-                        <BeetsBox px="4" py="2">
-                            We recommend investing proportionally into this pool. This ensures you will{' '}
-                            <Text as="span" fontWeight="bold">
-                                NOT
-                            </Text>{' '}
-                            be subject to potential fees caused by price impact.
-                            <br />
-                            <br />
-                            Alternatively, you can customize and invest in this pool in any proportion. Investing in
-                            this manner, however, may shift the pool out of balance and is therefore subject to price
-                            impact.
-                            <br />
-                            <br />
-                            When investing in a liquidity pool, you will receive pool tokens (BPT) which represent your
-                            share of the pool.
-                        </BeetsBox>
-                    )}
+                    <BeetsBox px="4" py="2">
+                        {isStablePool ? <PoolInvestStablePoolDescription /> : <PoolInvestWeightedPoolDescription />}
+                    </BeetsBox>
                 </GridItem>
             </Grid>
             {isStablePool ? (
