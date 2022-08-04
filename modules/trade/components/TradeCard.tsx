@@ -54,7 +54,7 @@ export function TradeCard() {
         hasApprovalForAmount,
         isLoading: isLoadingAllowances,
         refetch: refetchAllowances,
-    } = useUserAllowances(tokens.filter((token) => token.address === tokenIn));
+    } = useUserAllowances(tokens.filter((token) => token.address === tokenIn.toLowerCase()));
 
     const tokenInData = getToken(tokenIn);
     const isAmountMoreThanUserBalance = !isAmountLessThanEqUserBalance({ address: tokenIn, amount: sellAmount });

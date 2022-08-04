@@ -1,4 +1,3 @@
-import { useAccount } from 'wagmi';
 import { useAllowances } from '~/lib/util/useAllowances';
 import { TokenBase } from '~/lib/services/token/token-types';
 import { useUserAccount } from '~/lib/user/useUserAccount';

@@ -15,7 +15,10 @@ export function useGetTokens() {
     const { data: pricesResponse } = useGetTokenPricesQuery({ fetchPolicy: 'cache-first' });
     const { userImportedTokens } = useUserImportedTokens();
 
-    const tokens: TokenWithImportedFlag[] = [...(tokensResponse?.tokens || []), ...userImportedTokens];
+    const tokens: TokenWithImportedFlag[] = [...(tokensResponse?.tokens || []), ...userImportedTokens].map((token) => ({
+        ...token,
+        address: token.address.toLowerCase(),
+    }));
     const prices = keyBy(pricesResponse?.tokenPrices || [], 'address');
 
     function getToken(address: string): GqlToken | null {

@@ -25,10 +25,10 @@ export function Footer() {
                             <FooterLink href="/swap" linkType="internal">
                                 Swap
                             </FooterLink>
-                            <FooterLink href="/swap" linkType="internal">
+                            <FooterLink href="https://beets.fi/#/stake" linkType="internal">
                                 Stake
                             </FooterLink>
-                            <FooterLink href="/swap" linkType="internal">
+                            <FooterLink href="https://beets.fi/#/launch" linkType="internal">
                                 Launch
                             </FooterLink>
                         </GridItem>

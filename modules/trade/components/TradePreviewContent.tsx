@@ -137,7 +137,7 @@ export function TradePreviewContent({ query, onTransactionSubmitted }: Props) {
                     <Box flex="1">
                         <InfoButton
                             label="Max slippage"
-                            infoText="Max slippage is the maximum change in the price you are willing to accept to account for external market movements"
+                            infoText="The maximum change in the price you are willing to accept to account for external market movements"
                         />
                     </Box>
 
@@ -194,7 +194,8 @@ export function TradePreviewContent({ query, onTransactionSubmitted }: Props) {
                     {exactIn ? (
                         <CardRow>
                             <Box flex="1">
-                                <InfoButton label="Minimum received" infoText="Lorem ipsum dolor...." />
+                                {/*<InfoButton label="Minimum received" infoText="Lorem ipsum dolor...." />*/}
+                                Minimum received
                             </Box>
                             <Box fontWeight="bold">
                                 {tokenFormatAmount(minAmountOut)}{' '}
