@@ -25,16 +25,9 @@ export default function PoolUserStats() {
             </VStack>
             <Divider mb="4" />
             <VStack spacing="0" alignItems="flex-start" mb="4">
-                <InfoButton
-                    label="My liquidity"
-                    infoText="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis pharetra, sapien eu ultrices mollis, metus libero maximus elit."
-                    labelProps={{
-                        lineHeight: '1rem',
-                        fontWeight: 'semibold',
-                        fontSize: 'sm',
-                        color: 'beets.base.50',
-                    }}
-                />
+                <Text lineHeight="1rem" fontWeight="semibold" fontSize="sm" color="beets.base.50">
+                    My liquidity
+                </Text>
                 {isLoading ? (
                     <Box>
                         <Skeleton height="34px" width="140px" mt="4px" mb="4px" />

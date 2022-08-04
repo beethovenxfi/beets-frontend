@@ -36,16 +36,9 @@ export function PoolUserStakedStats({ poolAddress, staking }: Props) {
     return (
         <>
             <VStack spacing="0" alignItems="flex-start" mb="4">
-                <InfoButton
-                    label="My staked share"
-                    infoText="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis pharetra, sapien eu ultrices mollis, metus libero maximus elit."
-                    labelProps={{
-                        lineHeight: '1rem',
-                        fontWeight: 'semibold',
-                        fontSize: 'sm',
-                        color: 'beets.base.50',
-                    }}
-                />
+                <Text lineHeight="1rem" fontWeight="semibold" fontSize="sm" color="beets.base.50">
+                    My staked share
+                </Text>
                 <VStack spacing="none" alignItems="flex-start">
                     {isLoadingStake ? (
                         <Skeleton height="34px" width="140px" mt="4px" mb="4px" />
@@ -67,16 +60,10 @@ export function PoolUserStakedStats({ poolAddress, staking }: Props) {
                 </VStack>
             </VStack>
             <VStack spacing="0" alignItems="flex-start" flex="1" mb="4">
-                <InfoButton
-                    label="Pending rewards"
-                    infoText="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis pharetra, sapien eu ultrices mollis, metus libero maximus elit."
-                    labelProps={{
-                        lineHeight: '1rem',
-                        fontWeight: 'semibold',
-                        fontSize: 'sm',
-                        color: 'beets.base.50',
-                    }}
-                />
+                <Text lineHeight="1rem" fontWeight="semibold" fontSize="sm" color="beets.base.50">
+                    Pending rewards
+                </Text>
+
                 {isLoadingPendingRewards ? (
                     <Skeleton height="34px" width="140px" mt="4px" mb="4px" />
                 ) : (

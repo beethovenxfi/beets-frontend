@@ -207,7 +207,8 @@ export function TradePreviewContent({ query, onTransactionSubmitted }: Props) {
                     ) : (
                         <CardRow>
                             <Box flex="1">
-                                <InfoButton label="Maximum spent" infoText="Lorem ipsum dolor...." />
+                                {/*<InfoButton label="Maximum spent" infoText="Lorem ipsum dolor...." />*/}
+                                Maximum spent
                             </Box>
                             <Box fontWeight="bold">
                                 {tokenFormatAmount(maxAmountIn)}
