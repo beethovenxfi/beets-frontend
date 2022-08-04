@@ -357,6 +357,22 @@ export const GetAppGlobalData = gql`
         }
     }
 `;
+export const GetAppGlobalPollingData = gql`
+    query GetAppGlobalPollingData {
+        tokenGetCurrentPrices {
+            price
+            address
+        }
+        protocolMetrics {
+            totalLiquidity
+            totalSwapVolume
+            totalSwapFee
+            poolCount
+            swapFee24h
+            swapVolume24h
+        }
+    }
+`;
 export const GetTokens = gql`
     query GetTokens {
         tokens: tokenGetTokens {

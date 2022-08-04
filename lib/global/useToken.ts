@@ -12,7 +12,7 @@ interface TokenWithImportedFlag extends GqlToken {
 
 export function useGetTokens() {
     const { data: tokensResponse } = useGetTokensQuery({ fetchPolicy: 'cache-first' });
-    const { data: pricesResponse } = useGetTokenPricesQuery({ pollInterval: 30000, fetchPolicy: 'cache-first' });
+    const { data: pricesResponse } = useGetTokenPricesQuery({ fetchPolicy: 'cache-first' });
     const { userImportedTokens } = useUserImportedTokens();
 
     const tokens: TokenWithImportedFlag[] = [...(tokensResponse?.tokens || []), ...userImportedTokens];

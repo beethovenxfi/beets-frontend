@@ -1324,6 +1324,22 @@ export type GetAppGlobalDataQuery = {
     };
 };
 
+export type GetAppGlobalPollingDataQueryVariables = Exact<{ [key: string]: never }>;
+
+export type GetAppGlobalPollingDataQuery = {
+    __typename: 'Query';
+    tokenGetCurrentPrices: Array<{ __typename: 'GqlTokenPrice'; price: number; address: string }>;
+    protocolMetrics: {
+        __typename: 'GqlProtocolMetrics';
+        totalLiquidity: string;
+        totalSwapVolume: string;
+        totalSwapFee: string;
+        poolCount: string;
+        swapFee24h: string;
+        swapVolume24h: string;
+    };
+};
+
 export type GetTokensQueryVariables = Exact<{ [key: string]: never }>;
 
 export type GetTokensQuery = {
@@ -4164,6 +4180,62 @@ export function useGetAppGlobalDataLazyQuery(
 export type GetAppGlobalDataQueryHookResult = ReturnType<typeof useGetAppGlobalDataQuery>;
 export type GetAppGlobalDataLazyQueryHookResult = ReturnType<typeof useGetAppGlobalDataLazyQuery>;
 export type GetAppGlobalDataQueryResult = Apollo.QueryResult<GetAppGlobalDataQuery, GetAppGlobalDataQueryVariables>;
+export const GetAppGlobalPollingDataDocument = gql`
+    query GetAppGlobalPollingData {
+        tokenGetCurrentPrices {
+            price
+            address
+        }
+        protocolMetrics {
+            totalLiquidity
+            totalSwapVolume
+            totalSwapFee
+            poolCount
+            swapFee24h
+            swapVolume24h
+        }
+    }
+`;
+
+/**
+ * __useGetAppGlobalPollingDataQuery__
+ *
+ * To run a query within a React component, call `useGetAppGlobalPollingDataQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAppGlobalPollingDataQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAppGlobalPollingDataQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetAppGlobalPollingDataQuery(
+    baseOptions?: Apollo.QueryHookOptions<GetAppGlobalPollingDataQuery, GetAppGlobalPollingDataQueryVariables>,
+) {
+    const options = { ...defaultOptions, ...baseOptions };
+    return Apollo.useQuery<GetAppGlobalPollingDataQuery, GetAppGlobalPollingDataQueryVariables>(
+        GetAppGlobalPollingDataDocument,
+        options,
+    );
+}
+export function useGetAppGlobalPollingDataLazyQuery(
+    baseOptions?: Apollo.LazyQueryHookOptions<GetAppGlobalPollingDataQuery, GetAppGlobalPollingDataQueryVariables>,
+) {
+    const options = { ...defaultOptions, ...baseOptions };
+    return Apollo.useLazyQuery<GetAppGlobalPollingDataQuery, GetAppGlobalPollingDataQueryVariables>(
+        GetAppGlobalPollingDataDocument,
+        options,
+    );
+}
+export type GetAppGlobalPollingDataQueryHookResult = ReturnType<typeof useGetAppGlobalPollingDataQuery>;
+export type GetAppGlobalPollingDataLazyQueryHookResult = ReturnType<typeof useGetAppGlobalPollingDataLazyQuery>;
+export type GetAppGlobalPollingDataQueryResult = Apollo.QueryResult<
+    GetAppGlobalPollingDataQuery,
+    GetAppGlobalPollingDataQueryVariables
+>;
 export const GetTokensDocument = gql`
     query GetTokens {
         tokens: tokenGetTokens {

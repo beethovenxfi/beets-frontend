@@ -14,9 +14,8 @@ export function useUserData() {
     const { data: fbeetsRatioData } = useGetFbeetsRatioQuery();
     const { userAddress } = useUserAccount();
     const { data, loading, refetch, ...rest } = useGetUserDataQuery({
-        pollInterval: 30000,
         notifyOnNetworkStatusChange: true,
-        fetchPolicy: 'cache-and-network',
+        fetchPolicy: 'cache-first',
     });
     const { priceForAmount } = useGetTokens();
     const currentUserAddress = currentUserAddressVar();

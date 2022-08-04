@@ -25,6 +25,21 @@ query GetAppGlobalData {
     }
 }
 
+query GetAppGlobalPollingData {
+    tokenGetCurrentPrices {
+        price
+        address
+    }
+    protocolMetrics {
+        totalLiquidity
+        totalSwapVolume
+        totalSwapFee
+        poolCount
+        swapFee24h
+        swapVolume24h
+    }
+}
+
 query GetTokens {
     tokens: tokenGetTokens {
         address

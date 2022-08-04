@@ -13,7 +13,7 @@ import { useGetTokens } from '~/lib/global/useToken';
 
 export function SubNavBar() {
     const { priceFor } = useGetTokens();
-    const { data, error, loading } = useGetProtocolDataQuery({ pollInterval: 30000, fetchPolicy: 'cache-and-network' });
+    const { data, error, loading } = useGetProtocolDataQuery({ fetchPolicy: 'cache-first' });
     const protocolData = data?.protocolData;
 
     return (
