@@ -39,13 +39,20 @@ export function Navbar({ scrollY }: Props) {
                             <BeetsBalLogo width="132px" />
                         </NextLink>
                     </Flex>
-                    <Flex alignItems="center" display={{ base: 'none', md: 'flex' }} flex="1" zIndex="2">
-                        <NavbarLink href={'/pools'} selected={router.asPath.startsWith('/pool')} text="Invest" mr="5" />
-                        <NavbarLink href={'/swap'} selected={router.asPath === '/swap'} text="Swap" mr="5" />
-                        <NavbarLink href="https://beets.fi/#/stake" text="Stake" mr={5} />
-                        <NavbarLink href="https://beets.fi/#/launch" text="Launch" mr={5} />
-                        {/*<NavbarAdditionalLinksMenu />*/}
-                    </Flex>
+                    <Box flex="1" zIndex="2">
+                        <Flex alignItems="center" display={{ base: 'none', md: 'flex' }}>
+                            <NavbarLink
+                                href={'/pools'}
+                                selected={router.asPath.startsWith('/pool')}
+                                text="Invest"
+                                mr="5"
+                            />
+                            <NavbarLink href={'/swap'} selected={router.asPath === '/swap'} text="Swap" mr="5" />
+                            <NavbarLink href="https://beets.fi/#/stake" text="Stake" mr={5} />
+                            <NavbarLink href="https://beets.fi/#/launch" text="Launch" mr={5} />
+                            {/*<NavbarAdditionalLinksMenu />*/}
+                        </Flex>
+                    </Box>
                     <FadeInOutBox mr="3" isVisible={isConnected}>
                         <HStack spacing="3">
                             <NavbarPendingRewards />
