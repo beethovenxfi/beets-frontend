@@ -49,12 +49,10 @@ export function PoolWithdrawSummary({ ...rest }: Props) {
                 mb="0"
             >
                 <Box flex="1">
-                    {/*<InfoButton
+                    <InfoButton
                         label="Price impact"
-                        moreInfoUrl="https://docs.beets.fi"
-                        infoText="‘Price Impact’ is the difference between the current market price and the price you will recieve from your withdraw influencing the balance and internal price of tokens within the pool. You are subject to the swap fees and potential losses associated with rebalancing."
-                    />*/}
-                    Price impact
+                        infoText="This is the difference between the current market price and the price you will pay due to your withdraw influencing the balance and internal price of tokens within the pool."
+                    />
                 </Box>
                 <Box>
                     {selectedWithdrawType === 'PROPORTIONAL' ? (

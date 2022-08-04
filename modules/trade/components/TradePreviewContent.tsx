@@ -137,7 +137,7 @@ export function TradePreviewContent({ query, onTransactionSubmitted }: Props) {
                     <Box flex="1">
                         <InfoButton
                             label="Max slippage"
-                            infoText="The maximum amount of slippage that you're willing to accept for this transaction."
+                            infoText="Max slippage is the maximum change in the price you are willing to accept to account for external market movements"
                         />
                     </Box>
 

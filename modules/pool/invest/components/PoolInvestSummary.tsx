@@ -27,12 +27,11 @@ export function PoolInvestSummary({ ...rest }: Props) {
             </CardRow>
             <CardRow style={hasHighPriceImpact ? { color: 'white', fontWeight: 'bold', backgroundColor: 'red' } : {}}>
                 <Box flex="1">
-                    {/*<InfoButton
+                    <InfoButton
                         label="Price impact"
                         moreInfoUrl="https://docs.beets.fi"
-                        infoText="‘Price Impact’ is the difference between the current market price and the price you will pay due to your investment influencing the balance and internal price of tokens within the pool. You are subject to the swap fees and potential losses associated with rebalancing."
-                    />*/}
-                    Price impact
+                        infoText="This is the difference between the current market price and the price you will pay due to your investment influencing the balance and internal price of tokens within the pool."
+                    />
                 </Box>
                 {isLoading ? (
                     <Skeleton height="24px" width="64px" />
@@ -45,7 +44,7 @@ export function PoolInvestSummary({ ...rest }: Props) {
                     <InfoButton
                         label="Potential weekly yield"
                         moreInfoUrl="https://docs.beets.fi"
-                        infoText="Nunc rutrum aliquet ligula ut tincidunt. Nulla ligula justo, laoreet laoreet convallis et, lacinia non turpis. Duis consectetur sem risus, in lobortis est congue id."
+                        infoText="This is your projected weekly yield based on the last 24 hours. The APR is a culmination of swap fees and additional incentives."
                     />
                 </Box>
                 <Flex alignItems="center">
