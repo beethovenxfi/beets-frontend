@@ -25,8 +25,8 @@ export function PoolDetailCharts() {
                     variant="filled"
                 >
                     <option value="BPT_PRICE">BPT price</option>
-                    <option value="FEES">Fees</option>
                     <option value="VOLUME_TVL">Volume / TVL</option>
+                    <option value="FEES">Fees</option>
                 </Select>
                 <Select
                     value={range}
@@ -49,8 +49,8 @@ export function PoolDetailCharts() {
                     }))}
                 />
             )}
-            {chartType === 'FEES' && <PoolDetailFeesChart data={data?.snapshots || []} />}
             {chartType === 'VOLUME_TVL' && <PoolDetailVolumeLiquidityChart data={data?.snapshots || []} />}
+            {chartType === 'FEES' && <PoolDetailFeesChart data={data?.snapshots || []} />}
         </Card>
     );
 }
