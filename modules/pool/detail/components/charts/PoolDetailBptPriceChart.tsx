@@ -6,6 +6,8 @@ import { format } from 'date-fns';
 import { numberFormatUSDValue } from '~/lib/util/number-formats';
 import ReactECharts from 'echarts-for-react';
 import { useTheme } from '@chakra-ui/react';
+import { chartGetPrimaryColor, chartGetSecondaryColor } from '~/modules/pool/detail/components/charts/chart-util';
+import { networkConfig } from '~/lib/config/network-config';
 
 interface Props {
     prices: { timestamp: number; price: string }[];
@@ -20,7 +22,7 @@ export function PoolDetailBptPriceChart({ prices }: Props) {
             tooltip: {
                 trigger: 'axis',
                 type: 'shadow',
-                backgroundColor: 'rgba(24, 24, 46, 0.95)',
+                backgroundColor: colors.beets.base['700'],
                 borderColor: 'transparent',
                 borderRadius: 8,
                 textStyle: {
@@ -31,7 +33,7 @@ export function PoolDetailBptPriceChart({ prices }: Props) {
                     animation: false,
                     type: 'cross',
                     lineStyle: {
-                        color: '#376df4',
+                        color: colors.beets.base['100'],
                         width: 2,
                         opacity: 1,
                     },
@@ -83,15 +85,14 @@ export function PoolDetailBptPriceChart({ prices }: Props) {
                     showSymbol: false,
                     data: prices.map((item) => [item.timestamp * 1000, item.price]),
                     itemStyle: {
-                        color: colors.beets.base['100'],
-                        borderColor: 'rgba(88, 95, 198, 1)',
+                        color: chartGetSecondaryColor(1),
                     },
                     areaStyle: {
-                        opacity: 0.2,
+                        opacity: networkConfig.chainId === '10' ? 0.75 : 0.2,
                         color: new graphic.LinearGradient(0, 0, 0, 1, [
-                            { offset: 0, color: 'rgba(88, 95, 198, 1)' },
-                            { offset: 0.5, color: 'rgba(88, 95, 198, 1)' },
-                            { offset: 1, color: 'rgba(88, 95, 198, 0.0)' },
+                            { offset: 0, color: chartGetPrimaryColor(1) },
+                            { offset: 0.5, color: chartGetPrimaryColor(1) },
+                            { offset: 1, color: chartGetPrimaryColor(0) },
                         ]),
                     },
                     axisLine: { show: false },

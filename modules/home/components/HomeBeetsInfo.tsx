@@ -6,13 +6,14 @@ import BeetsTokenInfoImage from '~/assets/images/beets-token-info.png';
 export function HomeBeetsInfo(props: BoxProps) {
     return (
         <Box {...props}>
-            <BeetsHeadline mb="8">The BEETS token</BeetsHeadline>
+            <BeetsHeadline mb="8">Governance redefined</BeetsHeadline>
             <Box display="flex" justifyContent="center" mb="8" alignItems="center">
                 <NextImage src={BeetsTokenInfoImage} width="466px" height="253px" />
             </Box>
             <Box mb="10">
-                The BEETS token launched in October 2021, providing our community with rewards value, incentives and
-                also utility with governance & gauge voting rights with the extended fBEETS token.
+                Bringing power back to the people: The BEETs token grants users the ability to influence the evolution
+                of the protocol through decentralized governance; make sure your voice is heard and have your say in
+                decisions that shape the future of Beethoven X.
             </Box>
             <Button variant="primary" as="a" href="https://docs.beets.fi/beets/tokenomics" target="_blank">
                 BEETS tokenomics

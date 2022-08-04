@@ -4,6 +4,7 @@ import { useMemo } from 'react';
 import { EChartsOption, graphic } from 'echarts';
 import numeral from 'numeral';
 import { format } from 'date-fns';
+import { chartGetPrimaryColor } from '~/modules/pool/detail/components/charts/chart-util';
 
 interface Props {
     data: { timestamp: number; totalLiquidity: string; volume24h: string }[];
@@ -120,9 +121,9 @@ export function PoolDetailVolumeLiquidityChart({ data }: Props) {
                         opacity: 1,
                         borderRadius: [5, 5, 0, 0],
                         color: new graphic.LinearGradient(0, 0, 0, 1, [
-                            { offset: 0, color: 'rgba(88, 95, 198, 1)' },
-                            { offset: 0.5, color: 'rgba(88, 95, 198, 0.7)' },
-                            { offset: 1, color: 'rgba(88, 95, 198, 0.0)' },
+                            { offset: 0, color: chartGetPrimaryColor(1) },
+                            { offset: 0.5, color: chartGetPrimaryColor(0.7) },
+                            { offset: 1, color: chartGetPrimaryColor(0) },
                         ]),
                     },
                 },

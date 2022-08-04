@@ -41,8 +41,7 @@ export function HomeHero() {
                         my={{ base: '6', lg: '10' }}
                         mr="8"
                     >
-                        Built for traders, investors and protocols, we are your complete automated portfolio manager and
-                        trading solution.
+                        The future of DeFi re-imagineered; Your next generation Decentralised Exchange.
                     </Text>
 
                     <HStack spacing="4" mb={{ base: '6', lg: '10' }}>
