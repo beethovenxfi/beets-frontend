@@ -6,12 +6,12 @@ import { numberFormatUSDValue } from '~/lib/util/number-formats';
 import TokenAvatar from '~/components/token/TokenAvatar';
 import { BeetsSubmitTransactionButton } from '~/components/button/BeetsSubmitTransactionButton';
 import { usePoolUserPendingRewards } from '~/modules/pool/lib/usePoolUserPendingRewards';
-import { usePoolUserHarvestPendingRewards } from '~/modules/pool/lib/usePoolUserHarvestPendingRewards';
 import { useStakingTotalStakedBalance } from '~/lib/global/useStakingTotalStakedBalance';
 import { usePoolUserBptBalance } from '~/modules/pool/lib/usePoolUserBptBalance';
 import { Skeleton } from '@chakra-ui/react';
 import { tokenFormatAmount } from '~/lib/services/token/token-util';
 import { usePoolUserTokenBalancesInWallet } from '~/modules/pool/lib/usePoolUserTokenBalancesInWallet';
+import { useStakingClaimRewards } from '~/lib/global/useStakingClaimRewards';
 
 interface Props {
     poolAddress: string;
@@ -26,7 +26,7 @@ export function PoolUserStakedStats({ poolAddress, staking }: Props) {
         refetch: refetchPendingRewards,
         isLoading: isLoadingPendingRewards,
     } = usePoolUserPendingRewards();
-    const { harvest, ...harvestQuery } = usePoolUserHarvestPendingRewards();
+    const { claim, ...harvestQuery } = useStakingClaimRewards(staking);
     const { data, isLoading: isLoadingTotalStakedBalance } = useStakingTotalStakedBalance(poolAddress, staking);
     const { userStakedBptBalance, isLoading: isLoadingUserBptBalance } = usePoolUserBptBalance();
     const { refetch: refetchUserTokenBalances } = usePoolUserTokenBalancesInWallet();
@@ -101,7 +101,7 @@ export function PoolUserStakedStats({ poolAddress, staking }: Props) {
                 <BeetsSubmitTransactionButton
                     {...harvestQuery}
                     isDisabled={!hasPendingRewards}
-                    onClick={() => harvest()}
+                    onClick={() => claim()}
                     onConfirmed={() => {
                         refetchPendingRewards();
                         refetchUserTokenBalances();
