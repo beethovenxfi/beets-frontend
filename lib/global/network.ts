@@ -2,6 +2,8 @@ import { getDefaultWallets } from '@rainbow-me/rainbowkit';
 import { configureChains, createClient } from 'wagmi';
 import { networkConfig } from '~/lib/config/network-config';
 import { jsonRpcProvider } from 'wagmi/providers/jsonRpc';
+import { StaticJsonRpcBatchProvider } from '~/lib/services/rpc-provider/static-json-rpc-batch-provier';
+import { batchJsonRpcProvider } from '~/lib/global/batchJsonRpcProvider';
 
 const response = configureChains(
     [
@@ -34,7 +36,7 @@ const response = configureChains(
         },
     ],
     [
-        jsonRpcProvider({
+        batchJsonRpcProvider({
             rpc: (chain) => ({ http: networkConfig.rpcUrl }),
         }),
     ],
