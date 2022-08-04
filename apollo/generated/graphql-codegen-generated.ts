@@ -573,8 +573,23 @@ export interface GqlPoolStaking {
     __typename: 'GqlPoolStaking';
     address: Scalars['String'];
     farm?: Maybe<GqlPoolStakingMasterChefFarm>;
+    gauge?: Maybe<GqlPoolStakingGauge>;
     id: Scalars['ID'];
     type: GqlPoolStakingType;
+}
+
+export interface GqlPoolStakingGauge {
+    __typename: 'GqlPoolStakingGauge';
+    gaugeAddress: Scalars['String'];
+    id: Scalars['ID'];
+    rewards: Array<GqlPoolStakingGaugeReward>;
+}
+
+export interface GqlPoolStakingGaugeReward {
+    __typename: 'GqlPoolStakingGaugeReward';
+    id: Scalars['ID'];
+    rewardPerSecond: Scalars['String'];
+    tokenAddress: Scalars['String'];
 }
 
 export interface GqlPoolStakingMasterChefFarm {

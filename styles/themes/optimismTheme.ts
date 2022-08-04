@@ -1,20 +1,20 @@
 import { ChakraTheme } from '@chakra-ui/theme';
 
-export const fantomTheme: Partial<ChakraTheme> = {
+export const optimismTheme: Partial<ChakraTheme> = {
     styles: {
         global: {
             html: {
                 background:
-                    'radial-gradient(ellipse at top, #030622a8, #000004), radial-gradient(ellipse at bottom, #000004, #000004) !important',
+                    'radial-gradient(ellipse at top, #111111, #020202), radial-gradient(ellipse at bottom, #020202, #020202) !important',
             },
             body: {
-                color: '#C1C1D1',
+                color: '#D3D3D3',
                 background:
                     'radial-gradient(ellipse at top, #111111, #020202), radial-gradient(ellipse at bottom, #020202, #020202) !important',
             },
             '.bg': {
-                background: `radial-gradient(ellipse at top, rgba(18, 14, 68, 1) 10%, transparent 80%),
-                             radial-gradient(ellipse at bottom, rgba(18, 14, 68, 1) 10%, transparent 80%) !important`,
+                background: `radial-gradient(ellipse at top, rgba(55, 55, 55, 1) 10%, transparent 80%),
+                             radial-gradient(ellipse at bottom, rgba(55, 55, 55, 1) 10%, transparent 80%) !important`,
             },
         },
     },
@@ -66,19 +66,20 @@ export const fantomTheme: Partial<ChakraTheme> = {
             letterSpacing: '-0.03rem',
         },
     },
+
     colors: {
         gray: {
-            '100': '#C1C1D1',
-            '200': '#828291',
-            '300': '#54546C',
-            '400': '#33334A',
-            '500': '#212138',
-            '600': '#141423',
-            '700': '#10101E',
-            '800': '#090911',
+            '100': '#D3D3D3',
+            '200': '#777777',
+            '300': '#505050',
+            '400': '#404040',
+            '500': '#303030',
+            '600': '#222222',
+            '700': '#191919',
+            '800': '#101010',
         },
         box: {
-            '300': 'rgba(27,20,100,0.25)',
+            '300': 'rgba(80,80,80,0.25)',
             '500': 'rgba(255,255,255,0.05)',
         },
         beets: {
@@ -86,24 +87,24 @@ export const fantomTheme: Partial<ChakraTheme> = {
             red: '#FF0000',
             highlight: '#00FFFF',
             base: {
-                '50': '#C3C5E9',
-                '100': '#8F93D6',
-                '200': '#585FC6',
-                '300': '#3D3FA9',
-                '400': '#292985',
-                '500': '#1B1464',
-                '600': '#1B1464',
-                '700': '#100A49',
-                '800': '#0B0737',
-                '900': '#030024',
+                '50': '#D3D3D3',
+                '100': '#777777',
+                '200': '#505050',
+                '300': '#484848',
+                '400': '#454545',
+                '500': '#424242',
+                '600': '#404040',
+                '700': '#282828',
+                '800': '#222222',
+                '900': '#151515',
             },
-            light: 'rgba(46,49,146, 1.0)',
+            light: 'rgba(80,80,80, 1.0)',
             lightAlpha: {
-                '50': 'rgba(46,49,146, 0.05)',
-                '100': 'rgba(46,49,146, 0.1)',
-                '200': 'rgba(46,49,146, 0.2)',
-                '300': 'rgba(46,49,146, 0.3)',
-                '500': 'rgba(46,49,146, 0.5)',
+                '50': 'rgba(80,80,80, 0.05)',
+                '100': 'rgba(80,80,80, 0.1)',
+                '200': 'rgba(80,80,80, 0.2)',
+                '300': 'rgba(80,80,80, 0.3)',
+                '500': 'rgba(80,80,80, 0.5)',
             },
             greenAlpha: {
                 '50': 'rgba(0,248,156, 0.05)',
@@ -141,7 +142,7 @@ export const fantomTheme: Partial<ChakraTheme> = {
                         bgColor: 'beets.lightAlpha.500',
                         borderColor: 'transparent',
                         _hover: {
-                            borderColor: 'beets.base.200',
+                            borderColor: 'beets.base.100',
                             bgColor: 'beets.lightAlpha.500',
                         },
                         _focus: {
@@ -161,12 +162,12 @@ export const fantomTheme: Partial<ChakraTheme> = {
                         borderColor: 'transparent',
                         //color: 'gray.100',
                         _hover: {
-                            borderColor: 'beets.base.200',
+                            borderColor: 'beets.base.100',
                             bgColor: 'beets.lightAlpha.500',
                         },
                         _focus: {
                             bgColor: 'beets.lightAlpha.500',
-                            borderColor: 'beets.base.200',
+                            borderColor: 'beets.base.100',
                         },
                         _placeholder: {
                             color: 'gray.200',

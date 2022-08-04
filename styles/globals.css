@@ -3,9 +3,6 @@ body {
     height: 100%;
     padding: 0;
     margin: 0;
-
-    background: radial-gradient(ellipse at top, #030622a8, #000004),
-        radial-gradient(ellipse at bottom, #000004, #000004) !important;
     background-blend-mode: normal;
 }
 
@@ -24,11 +21,6 @@ a {
 
 #__next > div {
     height: 100%;
-}
-
-.bg {
-    background: radial-gradient(ellipse at top, rgba(18, 14, 68, 1) 10%, transparent 80%),
-        radial-gradient(ellipse at bottom, rgba(18, 14, 68, 1) 10%, transparent 80%) !important;
 }
 
 .rc-pagination {
