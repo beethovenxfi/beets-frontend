@@ -137,8 +137,7 @@ export function TradePreviewContent({ query, onTransactionSubmitted }: Props) {
                     <Box flex="1">
                         <InfoButton
                             label="Max slippage"
-                            moreInfoUrl="https://docs.beets.fi"
-                            infoText="The maximum amount of slippage that you're willing to accept for the transaction."
+                            infoText="The maximum amount of slippage that you're willing to accept for this transaction."
                         />
                     </Box>
 
@@ -181,11 +180,12 @@ export function TradePreviewContent({ query, onTransactionSubmitted }: Props) {
                         fontWeight={hasHighPriceImpact ? 'bold' : 'normal'}
                     >
                         <Box flex="1" color={hasHighPriceImpact ? 'white' : 'current'}>
-                            <InfoButton
+                            {/*<InfoButton
                                 label="Price impact"
                                 moreInfoUrl="https://docs.beets.fi"
                                 infoText="Lorem ipsum dolor...."
-                            />
+                            />*/}
+                            Price impact
                         </Box>
                         <Box color={hasHighPriceImpact ? 'white' : hasNoticeablePriceImpact ? 'orange' : 'current'}>
                             {numeral(swapInfo.priceImpact).format('0.00%')}

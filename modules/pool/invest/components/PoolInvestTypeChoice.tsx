@@ -95,17 +95,16 @@ export function PoolInvestTypeChoice({ onShowProportional, onShowCustom }: Props
                 <GridItem>
                     {isStablePool ? (
                         <BeetsBox px="4" py="2">
-                            Details about investing into stable pools. Lorem ipsum dolor sit amet, consectetur
-                            adipiscing elit. Curabitur pharetra enim lorem, et mattis justo finibus aliquam.
+                            Due to the unique design of stable pools, you are able to invest with a single token without
+                            encountering significant price impact.
                             <br />
                             <br />
-                            Aenean blandit vitae ex eget iaculis. Nullam consectetur malesuada enim tempor venenatis.
-                            Morbi venenatis mi ut leo mollis, at ullamcorper enim sodales. Donec in tellus cursus,
-                            vulputate lorem nec, hendrerit urna.
+                            Assuming you do not deposit large amounts of assets relative to the pool size, depositing in
+                            any ratio is possible.
                             <br />
                             <br />
-                            Sed at libero scelerisque, facilisis dui et, placerat neque. Fusce id arcu id justo sagittis
-                            volutpat.
+                            When investing in a liquidity pool, you will receive pool tokens (BPT) representing your
+                            share of the pool. Your share can be redeemed at any point in return for these tokens.
                         </BeetsBox>
                     ) : (
                         <BeetsBox px="4" py="2">

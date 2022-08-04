@@ -27,11 +27,12 @@ export function PoolInvestSummary({ ...rest }: Props) {
             </CardRow>
             <CardRow style={hasHighPriceImpact ? { color: 'white', fontWeight: 'bold', backgroundColor: 'red' } : {}}>
                 <Box flex="1">
-                    <InfoButton
+                    {/*<InfoButton
                         label="Price impact"
                         moreInfoUrl="https://docs.beets.fi"
                         infoText="‘Price Impact’ is the difference between the current market price and the price you will pay due to your investment influencing the balance and internal price of tokens within the pool. You are subject to the swap fees and potential losses associated with rebalancing."
-                    />
+                    />*/}
+                    Price impact
                 </Box>
                 {isLoading ? (
                     <Skeleton height="24px" width="64px" />

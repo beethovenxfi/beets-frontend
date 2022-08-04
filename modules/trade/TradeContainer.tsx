@@ -63,7 +63,7 @@ export function TradeContainer() {
                                     Latest swaps
                                 </Text>
                                 <Text mb="4" color="gray.200">
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis molestie gravida.
+                                    The latest swaps for your selected token in / out pair.
                                 </Text>
                             </motion.div>
                             {tokenIn && tokenOut && (

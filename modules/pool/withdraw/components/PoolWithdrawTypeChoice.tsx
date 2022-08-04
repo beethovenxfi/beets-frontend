@@ -103,14 +103,18 @@ export function PoolWithdrawTypeChoice({ onShowProportional, onShowSingleAsset }
                 </GridItem>
                 <GridItem>
                     <BeetsBox p="4">
-                        Information about withdrawing proportionally vs custom. Lorem ipsum dolor sit amet, consectetur
-                        adipiscing elit. Sed sit amet lectus viverra, lacinia erat a, consectetur ex. Praesent vel nulla
-                        ac risus auctor mollis id vitae libero.
+                        Withdrawing proportionally from this pool ensures you will NOT be subject to the potential fees
+                        and/or impermanent loss caused by price impact.
                         <br />
                         <br />
-                        Nunc sollicitudin lectus aliquam turpis maximus mollis. Duis auctor euismod urna, vel blandit
-                        urna efficitur eu. Donec scelerisque consectetur enim, nec sodales diam tincidunt ut. Praesent
-                        faucibus iaculis lacus, in sagittis erat euismod at.
+                        Alternatively, you can withdraw a single asset. However, this action may shift the pool out of
+                        balance, impacting your withdrawal with possible fees and impermanent loss caused by price
+                        impact.
+                        <br />
+                        <br />
+                        {
+                            'When withdrawing from a liquidity pool, your BPT tokens are exchanged for the underlying pool assets.'
+                        }
                     </BeetsBox>
                 </GridItem>
             </Grid>

@@ -49,8 +49,7 @@ export function PoolInvestSettings({ ...rest }: BoxProps) {
                     <Box flex="1">
                         <InfoButton
                             label="Max slippage"
-                            moreInfoUrl="https://docs.beets.fi"
-                            infoText="The maximum amount of slippage that you're willing to accept for the transaction."
+                            infoText="The maximum amount of slippage that you're willing to accept for this transaction."
                         />
                     </Box>
                     <SlippageTextLinkMenu />
