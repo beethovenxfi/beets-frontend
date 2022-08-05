@@ -6,11 +6,9 @@ import {
     GqlPoolWithdrawOption,
 } from '~/apollo/generated/graphql-codegen-generated';
 import {
-    PoolExitBPTInForExactTokensOut,
     PoolExitBptInSingleAssetWithdrawOutput,
     PoolExitContractCallData,
     PoolExitData,
-    PoolExitExactBPTInForOneTokenOut,
     PoolExitSingleAssetWithdrawForBptInOutput,
     PoolJoinContractCallData,
     PoolJoinData,
@@ -34,28 +32,27 @@ import VaultAbi from '../../abi/VaultAbi.json';
 import {
     poolFindNestedPoolTokenForToken,
     poolGetExitSwaps,
-    poolGetJoinSwaps,
+    poolGetJoinSwapForToken,
     poolSumPoolTokenBalances,
 } from '~/lib/services/pool/pool-util';
 import { formatFixed } from '@ethersproject/bignumber';
-import {
-    oldBnum,
-    oldBnumFromBnum,
-    oldBnumScaleAmount,
-    oldBnumScaleDown,
-    oldBnumZero,
-} from '~/lib/services/pool/lib/old-big-number';
+import { oldBnum, oldBnumFromBnum, oldBnumScaleAmount, oldBnumScaleDown } from '~/lib/services/pool/lib/old-big-number';
 import OldBigNumber from 'bignumber.js';
 import { SwapKind } from '@balancer-labs/balancer-js';
-import { poolGetRequiredToken, poolScaleAmp } from '~/lib/services/pool/lib/pool-util';
+import { poolScaleAmp } from '~/lib/services/pool/lib/pool-util';
 import { BigNumber } from 'ethers';
-import * as SDK from '@georgeroman/balancer-v2-pools';
+import { BatchRelayerService } from '~/lib/services/batch-relayer/batch-relayer.service';
 
 export class PoolPhantomStableService implements PoolService {
     private readonly baseService: PoolBaseService;
 
-    constructor(private pool: GqlPoolPhantomStable, private readonly provider: BaseProvider) {
-        this.baseService = new PoolBaseService(pool);
+    constructor(
+        private pool: GqlPoolPhantomStable,
+        private batchRelayerService: BatchRelayerService,
+        private readonly wethAddress: string,
+        private readonly provider: BaseProvider,
+    ) {
+        this.baseService = new PoolBaseService(pool, wethAddress);
     }
 
     public updatePool(pool: GqlPoolPhantomStable) {
@@ -73,8 +70,8 @@ export class PoolPhantomStableService implements PoolService {
         return {
             type: 'BatchSwap',
             kind: SwapKind.GivenIn,
-            swaps: swaps,
-            assets: assets,
+            swaps,
+            assets: data.wethIsEth ? this.baseService.replaceWethWithAddressZero(assets) : assets,
             limits: deltas,
         };
     }
@@ -204,7 +201,7 @@ export class PoolPhantomStableService implements PoolService {
         const joinSwaps = tokenAmountsIn.map((tokenAmountIn) => {
             const poolToken = this.findPoolTokenFromOptions(tokenAmountIn.address, this.pool.investConfig.options);
 
-            return poolGetJoinSwaps({
+            return poolGetJoinSwapForToken({
                 poolId: this.pool.id,
                 poolAddress: this.pool.address,
                 tokenAmountIn,

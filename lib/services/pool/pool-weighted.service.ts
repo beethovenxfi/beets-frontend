@@ -2,10 +2,10 @@ import { GqlPoolWeighted } from '~/apollo/generated/graphql-codegen-generated';
 import * as SDK from '@georgeroman/balancer-v2-pools';
 import {
     oldBnum,
-    oldBnumScaleAmount,
     oldBnumFromBnum,
-    oldBnumToBnum,
+    oldBnumScaleAmount,
     oldBnumSubtractSlippage,
+    oldBnumToBnum,
 } from '~/lib/services/pool/lib/old-big-number';
 import { AmountHumanReadable, TokenAmountHumanReadable } from '~/lib/services/token/token-types';
 import {
@@ -31,12 +31,18 @@ import { formatFixed } from '@ethersproject/bignumber';
 import { WeightedPoolEncoder } from '@balancer-labs/balancer-js';
 import { PoolBaseService } from '~/lib/services/pool/lib/pool-base.service';
 import OldBigNumber from 'bignumber.js';
-import { replaceWethWithZeroAddress } from '~/lib/services/token/token-util';
+import { Zero } from '@ethersproject/constants';
+import { BatchRelayerService } from '~/lib/services/batch-relayer/batch-relayer.service';
+import { replaceEthWithZeroAddress } from '~/lib/services/token/token-util';
 
 export class PoolWeightedService implements PoolService {
     private baseService: PoolBaseService;
-    constructor(private pool: GqlPoolWeighted) {
-        this.baseService = new PoolBaseService(pool);
+    constructor(
+        private pool: GqlPoolWeighted,
+        private batchRelayerService: BatchRelayerService,
+        private readonly wethAddress: string,
+    ) {
+        this.baseService = new PoolBaseService(pool, wethAddress);
     }
 
     public updatePool(pool: GqlPoolWeighted) {
@@ -70,12 +76,48 @@ export class PoolWeightedService implements PoolService {
     }
 
     public async joinGetContractCallData(data: PoolJoinData): Promise<PoolJoinContractCallData> {
-        return {
-            type: 'JoinPool',
-            assets: this.pool.tokens.map((token) => token.address),
-            maxAmountsIn: poolScaleTokenAmounts(data.maxAmountsIn, this.pool.tokens),
-            userData: this.encodeJoinPool(data),
-        };
+        let assets = this.pool.tokens.map((token) => token.address);
+        assets = data.wethIsEth ? this.baseService.replaceWethWithAddressZero(assets) : assets;
+        const maxAmountsIn = poolScaleTokenAmounts(data.maxAmountsIn, this.pool.tokens);
+        const userData = this.encodeJoinPool(data);
+
+        if (data.zapIntoMasterchefFarm && this.pool.staking?.type === 'MASTER_CHEF' && this.pool.staking.farm) {
+            const ethAmount = data.wethIsEth
+                ? data.maxAmountsIn.find((amountIn) => amountIn.address === this.wethAddress)
+                : undefined;
+
+            const vaultEncodedJoinPool = this.batchRelayerService.vaultEncodeJoinPool({
+                poolId: this.pool.id,
+                poolKind: 0,
+                sender: data.userAddress,
+                recipient: this.batchRelayerService.batchRelayerAddress,
+                joinPoolRequest: {
+                    assets,
+                    maxAmountsIn,
+                    userData,
+                    fromInternalBalance: false,
+                },
+                value: ethAmount ? parseUnits(ethAmount.amount, 18).toString() : Zero,
+                outputReference: this.batchRelayerService.toChainedReference(0),
+            });
+
+            const masterChefDeposit = this.batchRelayerService.masterChefEncodeDeposit({
+                sender: this.batchRelayerService.batchRelayerAddress,
+                recipient: data.userAddress,
+                token: this.pool.address,
+                pid: parseInt(this.pool.staking.id),
+                amount: this.batchRelayerService.toChainedReference(0),
+                outputReference: Zero,
+            });
+
+            return {
+                type: 'BatchRelayer',
+                calls: [vaultEncodedJoinPool, masterChefDeposit],
+                ethValue: ethAmount ? parseUnits(ethAmount.amount).toString() : undefined,
+            };
+        }
+
+        return { type: 'JoinPool', assets: replaceEthWithZeroAddress(assets), maxAmountsIn, userData };
     }
 
     public async exitGetProportionalWithdrawEstimate(bptIn: AmountHumanReadable): Promise<TokenAmountHumanReadable[]> {

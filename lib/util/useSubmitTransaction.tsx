@@ -50,6 +50,7 @@ export const vaultContractConfig = {
 export const batchRelayerContractConfig = {
     addressOrName: networkConfig.balancer.batchRelayer,
     contractInterface: batchRelayerAbi,
+    functionName: 'multicall',
 };
 
 export const txPendingVar = makeVar(false);

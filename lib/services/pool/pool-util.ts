@@ -19,6 +19,8 @@ import { SwapV2 } from '@balancer-labs/sdk';
 import { parseUnits } from 'ethers/lib/utils';
 import { oldBnum } from '~/lib/services/pool/lib/old-big-number';
 import OldBigNumber from 'bignumber.js';
+import { batchRelayerService } from '~/lib/services/batch-relayer/batch-relayer.service';
+import { networkConfig } from '~/lib/config/network-config';
 
 export function poolGetTokensWithoutPhantomBpt(pool: GqlPoolUnion | GqlPoolPhantomStableNested | GqlPoolLinearNested) {
     return pool.tokens.filter((token) => token.address !== pool.address);
@@ -35,18 +37,23 @@ export function poolGetServiceForPool(pool: GqlPoolUnion): PoolService {
                 return new PoolWeightedBoostedService(pool);
             }
 
-            return new PoolWeightedService(pool);
+            return new PoolWeightedService(pool, batchRelayerService, networkConfig.wethAddress);
         }
         case 'GqlPoolStable':
-            return new PoolStableService(pool);
+            return new PoolStableService(pool, batchRelayerService, networkConfig.wethAddress);
         case 'GqlPoolPhantomStable':
-            return new PoolPhantomStableService(pool, rpcProviderService.getJsonProvider());
+            return new PoolPhantomStableService(
+                pool,
+                batchRelayerService,
+                networkConfig.wethAddress,
+                rpcProviderService.getJsonProvider(),
+            );
     }
 
     throw new Error('unsupported pool type');
 }
 
-export function poolGetJoinSwaps({
+export function poolGetJoinSwapForToken({
     poolId,
     poolAddress,
     tokenAmountIn,
@@ -105,7 +112,7 @@ export function poolGetJoinSwaps({
             throw new Error(`Token does not exist in pool token: ${tokenIn}`);
         }
 
-        const { swaps, assets } = poolGetJoinSwaps({
+        const { swaps, assets } = poolGetJoinSwapForToken({
             poolId: poolToken.pool.id,
             poolAddress: poolToken.pool.address,
             tokenAmountIn,

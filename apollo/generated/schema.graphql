@@ -794,11 +794,16 @@ type GqlToken {
     address: String!
     chainId: Int!
     decimals: Int!
+    description: String
+    discordUrl: String
     logoURI: String
     name: String!
     priority: Int!
     symbol: String!
+    telegramUrl: String
     tradable: Boolean!
+    twitterUsername: String
+    websiteUrl: String
 }
 
 input GqlTokenAmountHumanReadable {
@@ -875,49 +880,10 @@ type GqlUserPoolBalance {
     walletBalance: AmountHumanReadable!
 }
 
-type GqlUserPoolData {
-    id: String!
-    myFees: GqlBigNumber!
-    name: String!
-    percentOfPortfolio: Float!
-    percentShare: Float!
-    poolAddress: String!
-    poolId: String!
-    priceChange: GqlBigNumber!
-    priceChangePercent: Float!
-    pricePerShare: GqlBigNumber!
-    shares: GqlBigNumber!
-    swapFees: GqlBigNumber!
-    swapVolume: GqlBigNumber!
-    tokens: [GqlUserTokenData!]!
-    totalValue: GqlBigNumber!
-}
-
-type GqlUserPortfolioData {
-    myFees: GqlBigNumber!
-    pools: [GqlUserPoolData!]!
-    timestamp: Int!
-    tokens: [GqlUserTokenData!]!
-    totalSwapFees: GqlBigNumber!
-    totalSwapVolume: GqlBigNumber!
-    totalValue: GqlBigNumber!
-}
-
 input GqlUserSwapVolumeFilter {
     poolIdIn: [String!]
     tokenInIn: [String!]
     tokenOutIn: [String!]
-}
-
-type GqlUserTokenData {
-    address: String!
-    balance: GqlBigNumber!
-    id: String!
-    name: String!
-    percentOfPortfolio: Float!
-    pricePerToken: GqlBigNumber!
-    symbol: String!
-    totalValue: GqlBigNumber!
 }
 
 """
@@ -927,10 +893,6 @@ scalar JSON
 
 type Mutation {
     beetsSyncFbeetsRatio: String!
-    cachePortfolioHistoryForDate(date: String!): Boolean!
-    clearCacheAtBlock(block: Int!): Boolean!
-    clearCachedPools: Boolean!
-    clearCachedPortfolioHistories: Boolean!
     lgeCreate(lge: GqlLgeCreateInput!, signature: String!): GqlLge!
     poolLoadOnChainDataForAllPools: String!
     poolLoadOnChainDataForPoolsWithActiveUpdates: String!
@@ -951,7 +913,6 @@ type Mutation {
     poolUpdateLiquidityValuesForAllPools: String!
     poolUpdateVolumeAndFeeValuesForAllPools: String!
     protocolCacheMetrics: String!
-    refreshLatestBlockCachedKey: Boolean!
     tokenInitChartData(tokenAddress: String!): String!
     tokenReloadTokenPrices: Boolean
     tokenSyncTokenDefinitions: String!
@@ -993,9 +954,6 @@ type Query {
     poolGetSnapshots(id: String!, range: GqlPoolSnapshotDataRange!): [GqlPoolSnapshot!]!
     poolGetSwaps(first: Int, skip: Int, where: GqlPoolSwapFilter): [GqlPoolSwap!]!
     poolGetUserSwapVolume(first: Int, skip: Int, where: GqlUserSwapVolumeFilter): [GqlPoolUserSwapVolume!]!
-    portfolioGetUserPortfolio: GqlUserPortfolioData!
-    portfolioGetUserPortfolioHistory: [GqlUserPortfolioData!]!
-    portfolioGetUserPortfolioHistoryAdmin: [GqlUserPortfolioData!]!
     protocolMetrics: GqlProtocolMetrics!
     sorGetBatchSwapForTokensIn(
         swapOptions: GqlSorSwapOptionsInput!

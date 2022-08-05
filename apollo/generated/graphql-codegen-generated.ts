@@ -830,11 +830,16 @@ export interface GqlToken {
     address: Scalars['String'];
     chainId: Scalars['Int'];
     decimals: Scalars['Int'];
+    description?: Maybe<Scalars['String']>;
+    discordUrl?: Maybe<Scalars['String']>;
     logoURI?: Maybe<Scalars['String']>;
     name: Scalars['String'];
     priority: Scalars['Int'];
     symbol: Scalars['String'];
+    telegramUrl?: Maybe<Scalars['String']>;
     tradable: Scalars['Boolean'];
+    twitterUsername?: Maybe<Scalars['String']>;
+    websiteUrl?: Maybe<Scalars['String']>;
 }
 
 export interface GqlTokenAmountHumanReadable {
@@ -915,61 +920,15 @@ export interface GqlUserPoolBalance {
     walletBalance: Scalars['AmountHumanReadable'];
 }
 
-export interface GqlUserPoolData {
-    __typename: 'GqlUserPoolData';
-    id: Scalars['String'];
-    myFees: Scalars['GqlBigNumber'];
-    name: Scalars['String'];
-    percentOfPortfolio: Scalars['Float'];
-    percentShare: Scalars['Float'];
-    poolAddress: Scalars['String'];
-    poolId: Scalars['String'];
-    priceChange: Scalars['GqlBigNumber'];
-    priceChangePercent: Scalars['Float'];
-    pricePerShare: Scalars['GqlBigNumber'];
-    shares: Scalars['GqlBigNumber'];
-    swapFees: Scalars['GqlBigNumber'];
-    swapVolume: Scalars['GqlBigNumber'];
-    tokens: Array<GqlUserTokenData>;
-    totalValue: Scalars['GqlBigNumber'];
-}
-
-export interface GqlUserPortfolioData {
-    __typename: 'GqlUserPortfolioData';
-    myFees: Scalars['GqlBigNumber'];
-    pools: Array<GqlUserPoolData>;
-    timestamp: Scalars['Int'];
-    tokens: Array<GqlUserTokenData>;
-    totalSwapFees: Scalars['GqlBigNumber'];
-    totalSwapVolume: Scalars['GqlBigNumber'];
-    totalValue: Scalars['GqlBigNumber'];
-}
-
 export interface GqlUserSwapVolumeFilter {
     poolIdIn?: InputMaybe<Array<Scalars['String']>>;
     tokenInIn?: InputMaybe<Array<Scalars['String']>>;
     tokenOutIn?: InputMaybe<Array<Scalars['String']>>;
 }
 
-export interface GqlUserTokenData {
-    __typename: 'GqlUserTokenData';
-    address: Scalars['String'];
-    balance: Scalars['GqlBigNumber'];
-    id: Scalars['String'];
-    name: Scalars['String'];
-    percentOfPortfolio: Scalars['Float'];
-    pricePerToken: Scalars['GqlBigNumber'];
-    symbol: Scalars['String'];
-    totalValue: Scalars['GqlBigNumber'];
-}
-
 export interface Mutation {
     __typename: 'Mutation';
     beetsSyncFbeetsRatio: Scalars['String'];
-    cachePortfolioHistoryForDate: Scalars['Boolean'];
-    clearCacheAtBlock: Scalars['Boolean'];
-    clearCachedPools: Scalars['Boolean'];
-    clearCachedPortfolioHistories: Scalars['Boolean'];
     lgeCreate: GqlLge;
     poolLoadOnChainDataForAllPools: Scalars['String'];
     poolLoadOnChainDataForPoolsWithActiveUpdates: Scalars['String'];
@@ -990,7 +949,6 @@ export interface Mutation {
     poolUpdateLiquidityValuesForAllPools: Scalars['String'];
     poolUpdateVolumeAndFeeValuesForAllPools: Scalars['String'];
     protocolCacheMetrics: Scalars['String'];
-    refreshLatestBlockCachedKey: Scalars['Boolean'];
     tokenInitChartData: Scalars['String'];
     tokenReloadTokenPrices?: Maybe<Scalars['Boolean']>;
     tokenSyncTokenDefinitions: Scalars['String'];
@@ -1000,14 +958,6 @@ export interface Mutation {
     userInitWalletBalancesForPool: Scalars['String'];
     userSyncStakedBalances: Scalars['String'];
     userSyncWalletBalancesForAllPools: Scalars['String'];
-}
-
-export interface MutationCachePortfolioHistoryForDateArgs {
-    date: Scalars['String'];
-}
-
-export interface MutationClearCacheAtBlockArgs {
-    block: Scalars['Int'];
 }
 
 export interface MutationLgeCreateArgs {
@@ -1044,9 +994,6 @@ export interface Query {
     poolGetSnapshots: Array<GqlPoolSnapshot>;
     poolGetSwaps: Array<GqlPoolSwap>;
     poolGetUserSwapVolume: Array<GqlPoolUserSwapVolume>;
-    portfolioGetUserPortfolio: GqlUserPortfolioData;
-    portfolioGetUserPortfolioHistory: Array<GqlUserPortfolioData>;
-    portfolioGetUserPortfolioHistoryAdmin: Array<GqlUserPortfolioData>;
     protocolMetrics: GqlProtocolMetrics;
     sorGetBatchSwapForTokensIn: GqlSorGetBatchSwapForTokensInResponse;
     sorGetSwaps: GqlSorGetSwapsResponse;

@@ -22,8 +22,8 @@ interface Props {
 export function PoolInvestActions({ onInvestComplete, onClose }: Props) {
     const networkConfig = useNetworkConfig();
     const { pool } = usePool();
-    const { selectedInvestTokensWithAmounts, totalInvestValue } = useInvest();
-    const joinQuery = useJoinPool(pool);
+    const { selectedInvestTokensWithAmounts, totalInvestValue, zapEnabled } = useInvest();
+    const joinQuery = useJoinPool(pool, zapEnabled);
     const allInvestTokens = pool.investConfig.options.map((option) => option.tokenOptions).flat();
     const {
         hasApprovalForAmount,
@@ -32,7 +32,10 @@ export function PoolInvestActions({ onInvestComplete, onClose }: Props) {
     } = useUserAllowances(allInvestTokens, networkConfig.balancer.vault);
     const [steps, setSteps] = useState<TransactionStep[] | null>(null);
     const { bptOutAndPriceImpact } = usePoolJoinGetBptOutAndPriceImpactForTokensIn();
-    const { data: contractCallData } = usePoolJoinGetContractCallData(bptOutAndPriceImpact?.minBptReceived || null);
+    const { data: contractCallData } = usePoolJoinGetContractCallData(
+        bptOutAndPriceImpact?.minBptReceived || null,
+        zapEnabled,
+    );
     const { refetch: refetchUserTokenBalances } = usePoolUserTokenBalancesInWallet();
     const { refetch: refetchUserBptBalance } = usePoolUserBptBalance();
 
