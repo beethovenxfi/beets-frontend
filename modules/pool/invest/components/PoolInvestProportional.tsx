@@ -27,6 +27,7 @@ import { mapValues } from 'lodash';
 import { oldBnum } from '~/lib/services/pool/lib/old-big-number';
 import { useInvest } from '~/modules/pool/invest/lib/useInvest';
 import { CardRow } from '~/components/card/CardRow';
+import { useHasBatchRelayerApproval } from '~/lib/util/useHasBatchRelayerApproval';
 
 interface Props {
     onShowPreview(): void;
@@ -36,10 +37,11 @@ export function PoolInvestProportional({ onShowPreview }: Props) {
     const { pool } = usePool();
     const { priceForAmount, getToken } = useGetTokens();
     const investOptions = pool.investConfig.options;
-    const { setSelectedOption, selectedOptions, setInputAmounts } = useInvestState();
+    const { setSelectedOption, selectedOptions, setInputAmounts, zapEnabled } = useInvestState();
     const [proportionalPercent, setProportionalPercent] = useState(25);
     const { data } = usePoolJoinGetProportionalInvestmentAmount();
     const { selectedInvestTokens } = useInvest();
+    const { data: hasBatchRelayerApproval } = useHasBatchRelayerApproval();
 
     const scaledProportionalSuggestions = mapValues(data || {}, (val, address) =>
         oldBnum(val)
@@ -126,7 +128,13 @@ export function PoolInvestProportional({ onShowPreview }: Props) {
 
             <PoolInvestSummary mt="6" />
             <PoolInvestSettings mt="8" />
-            <Button variant="primary" isFullWidth mt="8" onClick={onShowPreview} isDisabled={proportionalPercent === 0}>
+            <Button
+                variant="primary"
+                isFullWidth
+                mt="8"
+                onClick={onShowPreview}
+                isDisabled={proportionalPercent === 0 || (!hasBatchRelayerApproval && zapEnabled)}
+            >
                 Preview
             </Button>
         </Box>

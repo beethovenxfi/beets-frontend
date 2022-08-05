@@ -47,6 +47,14 @@ export function useInvestState() {
         });
     }
 
+    function toggleZapEnabled() {
+        const state = investStateVar();
+        investStateVar({
+            ...state,
+            zapEnabled: !state.zapEnabled,
+        });
+    }
+
     function clearInvestState() {
         investStateVar({
             inputAmounts: {},
@@ -61,5 +69,6 @@ export function useInvestState() {
         setSelectedOption,
         clearInvestState,
         ...useReactiveVar(investStateVar),
+        toggleZapEnabled,
     };
 }

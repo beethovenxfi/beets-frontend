@@ -8,6 +8,7 @@ import { PoolInvestSettings } from '~/modules/pool/invest/components/PoolInvestS
 import { useInvest } from '~/modules/pool/invest/lib/useInvest';
 import { BeetsTokenInputWithSlider } from '~/components/inputs/BeetsTokenInputWithSlider';
 import { usePoolJoinGetBptOutAndPriceImpactForTokensIn } from '~/modules/pool/invest/lib/usePoolJoinGetBptOutAndPriceImpactForTokensIn';
+import { useHasBatchRelayerApproval } from '~/lib/util/useHasBatchRelayerApproval';
 
 interface Props {
     onShowPreview(): void;
@@ -15,11 +16,12 @@ interface Props {
 
 export function PoolInvestCustom({ onShowPreview }: Props) {
     const { pool } = usePool();
-    const { inputAmounts, setInputAmount, setSelectedOption } = useInvestState();
+    const { inputAmounts, setInputAmount, setSelectedOption, zapEnabled } = useInvestState();
     const { selectedInvestTokens, hasAllZeroTokenAmounts } = useInvest();
     const { userPoolTokenBalances } = usePoolUserTokenBalancesInWallet();
     const { hasHighPriceImpact, formattedPriceImpact } = usePoolJoinGetBptOutAndPriceImpactForTokensIn();
     const [acknowledgeHighPriceImpact, { toggle: toggleAcknowledgeHighPriceImpact }] = useBoolean(false);
+    const { data: hasBatchRelayerApproval } = useHasBatchRelayerApproval();
 
     return (
         <Box mt="4">
@@ -67,7 +69,11 @@ export function PoolInvestCustom({ onShowPreview }: Props) {
                 isFullWidth
                 mt="8"
                 onClick={onShowPreview}
-                isDisabled={hasAllZeroTokenAmounts || (hasHighPriceImpact && !acknowledgeHighPriceImpact)}
+                isDisabled={
+                    hasAllZeroTokenAmounts ||
+                    (hasHighPriceImpact && !acknowledgeHighPriceImpact) ||
+                    (!hasBatchRelayerApproval && zapEnabled)
+                }
             >
                 Preview
             </Button>

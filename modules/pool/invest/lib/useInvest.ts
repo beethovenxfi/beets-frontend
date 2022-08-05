@@ -9,7 +9,7 @@ import { useGetTokens } from '~/lib/global/useToken';
 
 export function useInvest() {
     const { pool } = usePool();
-    const { selectedOptions, inputAmounts } = useInvestState();
+    const { selectedOptions, inputAmounts, zapEnabled } = useInvestState();
     const { getUserBalanceForToken, userPoolTokenBalances } = usePoolUserTokenBalancesInWallet();
     const { priceForAmount } = useGetTokens();
 
@@ -52,5 +52,6 @@ export function useInvest() {
         totalInvestValue,
         hasAllZeroTokenAmounts,
         isInvestingWithEth,
+        zapEnabled,
     };
 }

@@ -1,49 +1,74 @@
-import { BeetsBoxLineItem } from '~/components/box/BeetsBoxLineItem';
 import { InfoButton } from '~/components/info-button/InfoButton';
-import { Box, BoxProps, Flex, Switch, Text, useBoolean } from '@chakra-ui/react';
+import { Box, BoxProps, Collapse, Flex, Switch, Text } from '@chakra-ui/react';
 import { BeetsBox } from '~/components/box/BeetsBox';
 import { ModalSectionHeadline } from '~/components/modal/ModalSectionHeadline';
 import { SlippageTextLinkMenu } from '~/components/slippage/SlippageTextLinkMenu';
 import { CardRow } from '~/components/card/CardRow';
+import { useInvestState } from '~/modules/pool/invest/lib/useInvestState';
+import { BeetsBatchRelayerApprovalButton } from '~/components/button/BeetsBatchRelayerApprovalButton';
+import { useHasBatchRelayerApproval } from '~/lib/util/useHasBatchRelayerApproval';
+import { usePool } from '~/modules/pool/lib/usePool';
+import { useEffect } from 'react';
 
 export function PoolInvestSettings({ ...rest }: BoxProps) {
-    const [zapEnabled, { toggle: toggleZapEnabled }] = useBoolean(true);
+    const { zapEnabled, toggleZapEnabled } = useInvestState();
+    const { data: hasBatchRelayerApproval } = useHasBatchRelayerApproval();
+    const { pool } = usePool();
+    const supportsZap =
+        (pool.__typename === 'GqlPoolWeighted' || pool.__typename === 'GqlPoolStable') &&
+        pool.staking?.type === 'MASTER_CHEF' &&
+        pool.staking.farm;
+
+    useEffect(() => {
+        if (!supportsZap && zapEnabled) {
+            toggleZapEnabled();
+        }
+    }, [supportsZap]);
 
     return (
         <Box {...rest}>
             <ModalSectionHeadline headline={`Settings`} />
             <BeetsBox p="2">
-                {/*<CardRow>
-                    <Box flex="1">
-                        <Flex alignItems="center">
-                            <InfoButton
-                                label="Zap into farm"
-                                moreInfoUrl="https://docs.beets.fi"
-                                infoText="With ZAP enabled, your investment BPTs are automatically deposited to the farm, saving time & maximizing yield."
-                            />
-                        </Flex>
-                        <Text color="gray.200" fontSize="sm">
-                            Deposit my BPTs directly into the farm with ZAP.
-                        </Text>
-                    </Box>
-                    <Switch id="zap-into-farm" colorScheme="green" isChecked={zapEnabled} onChange={toggleZapEnabled} />
-                </CardRow>*/}
-                {/*<Collapse in={zapEnabled} animateOpacity>
-                        <Flex mt="2" alignItems="center">
-                            <Box flex="1">
+                <CardRow flexDirection="column">
+                    <Flex>
+                        <Box flex="1">
+                            <Flex alignItems="center">
                                 <InfoButton
-                                    label="Batch Relayer"
-                                    moreInfoUrl="https://docs.beets.fi"
-                                    infoText="Nunc rutrum aliquet ligula ut tincidunt. Nulla ligula justo, laoreet laoreet convallis et, lacinia non turpis. Duis consectetur sem risus, in lobortis est congue id."
+                                    label="Zap into farm"
+                                    infoText="With ZAP enabled, your investment BPTs are automatically deposited to the farm, saving time & maximizing yield."
                                 />
-                            </Box>
-                            <Box>
-                                <Button variant="outline" size="xs" color="beets.green" borderColor="beets.green">
-                                    Approve
-                                </Button>
-                            </Box>
-                        </Flex>
-                    </Collapse>*/}
+                            </Flex>
+                            <Text color="gray.200" fontSize="sm">
+                                Deposit my BPTs directly into the farm with ZAP.
+                            </Text>
+                        </Box>
+                        <Switch
+                            id="zap-into-farm"
+                            colorScheme="green"
+                            isChecked={zapEnabled}
+                            onChange={toggleZapEnabled}
+                        />
+                    </Flex>
+                    {supportsZap && (
+                        <Collapse in={zapEnabled} animateOpacity>
+                            <Flex mt="2" alignItems="center">
+                                <Box flex="1">
+                                    <InfoButton
+                                        label="Batch Relayer"
+                                        infoText="The Batch Relayer is a smart contract that allows multiple individual actions to be grouped together into a single transaction. Zapping requires you to approve the Batch Relayer once."
+                                    />
+                                </Box>
+                                <Box>
+                                    {!hasBatchRelayerApproval ? (
+                                        <BeetsBatchRelayerApprovalButton />
+                                    ) : (
+                                        <Text color="green">Approved</Text>
+                                    )}
+                                </Box>
+                            </Flex>
+                        </Collapse>
+                    )}
+                </CardRow>
 
                 <CardRow mb="0">
                     <Box flex="1">
@@ -54,18 +79,6 @@ export function PoolInvestSettings({ ...rest }: BoxProps) {
                     </Box>
                     <SlippageTextLinkMenu />
                 </CardRow>
-
-                {/*<Flex px="3" py="2" alignItems="center">
-                            <Box flex="1">
-                                <InfoButton
-                                    label="Transaction speed"
-                                    moreInfoUrl="https://docs.beets.fi"
-                                    infoText="Nunc rutrum aliquet ligula ut tincidunt. Nulla ligula justo, laoreet laoreet convallis et, lacinia non turpis. Duis consectetur sem risus, in lobortis est congue id."
-                                />
-                            </Box>
-
-                            <Link color="beets.highlight">Normal</Link>
-                        </Flex>*/}
             </BeetsBox>
         </Box>
     );

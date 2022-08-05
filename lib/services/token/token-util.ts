@@ -112,3 +112,16 @@ export function replaceWethWithEth(address: string) {
 export function replaceWethWithZeroAddress(addresses: string[]): string[] {
     return addresses.map((address) => (address.toLowerCase() === networkConfig.wethAddress ? AddressZero : address));
 }
+
+export function replaceEthWithZeroAddress(addresses: string[]): string[] {
+    return addresses.map((address) => (isEth(address) ? AddressZero : address));
+}
+
+export function replaceEthWithZeroAddressInTokenAmounts(
+    tokenAmounts: TokenAmountHumanReadable[],
+): TokenAmountHumanReadable[] {
+    return tokenAmounts.map(({ address, amount }) => ({
+        amount,
+        address: isEth(address) ? AddressZero : address,
+    }));
+}

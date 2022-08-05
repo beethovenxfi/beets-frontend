@@ -1,4 +1,4 @@
-import { useSubmitTransaction, vaultContractConfig } from '~/lib/util/useSubmitTransaction';
+import { batchRelayerContractConfig, useSubmitTransaction, vaultContractConfig } from '~/lib/util/useSubmitTransaction';
 import { GqlPoolUnion } from '~/apollo/generated/graphql-codegen-generated';
 import { PoolJoinContractCallData } from '~/lib/services/pool/pool-types';
 import { TokenAmountHumanReadable } from '~/lib/services/token/token-types';
@@ -8,15 +8,18 @@ import { isSameAddress } from '@balancer-labs/sdk';
 import { oldBnum } from '~/lib/services/pool/lib/old-big-number';
 import { useSlippage } from '~/lib/global/useSlippage';
 import { useUserAccount } from '~/lib/user/useUserAccount';
+import { networkConfig } from '~/lib/config/network-config';
 
-export function useJoinPool(pool: GqlPoolUnion) {
+export function useJoinPool(pool: GqlPoolUnion, zapEnabled?: boolean) {
     const { slippageDifference } = useSlippage();
     const { userAddress } = useUserAccount();
     const { submit, submitAsync, ...rest } = useSubmitTransaction({
-        config: {
-            ...vaultContractConfig,
-            functionName: pool.__typename === 'GqlPoolPhantomStable' ? 'batchSwap' : 'joinPool',
-        },
+        config: zapEnabled
+            ? batchRelayerContractConfig
+            : {
+                  ...vaultContractConfig,
+                  functionName: pool.__typename === 'GqlPoolPhantomStable' ? 'batchSwap' : 'joinPool',
+              },
         transactionType: 'JOIN',
     });
 
@@ -24,6 +27,7 @@ export function useJoinPool(pool: GqlPoolUnion) {
         const amountsString = tokenAmountsConcatenatedString(tokenAmountsIn, pool.allTokens);
 
         if (contractCallData.type === 'JoinPool') {
+            //TODO: need to support slippage
             const ethIndex = contractCallData.assets.findIndex((asset) => asset === AddressZero);
 
             submit({
@@ -76,6 +80,20 @@ export function useJoinPool(pool: GqlPoolUnion) {
                 ],
                 toastText: amountsString,
                 walletText: `Join ${pool.name} with ${amountsString}`,
+            });
+        } else if (contractCallData.type === 'BatchRelayer') {
+            //TODO: need to support slippage
+            submit({
+                args: [contractCallData.calls],
+                toastText: `Zap into ${networkConfig.farmTypeName} with ${amountsString}`,
+                walletText: `Join ${pool.name} with ${amountsString} and Zap into the ${networkConfig.farmTypeName}.`,
+                ...(contractCallData.ethValue
+                    ? {
+                          overrides: {
+                              value: contractCallData.ethValue,
+                          },
+                      }
+                    : {}),
             });
         }
     }

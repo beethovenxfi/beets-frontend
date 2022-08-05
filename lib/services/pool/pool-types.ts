@@ -35,6 +35,8 @@ export type PoolJoinData =
 interface PoolJoinBase {
     maxAmountsIn: TokenAmountHumanReadable[];
     zapIntoMasterchefFarm?: boolean;
+    userAddress: string;
+    wethIsEth: boolean;
 }
 
 export interface PoolJoinEstimateOutput {
@@ -104,7 +106,10 @@ export interface PoolExitBPTInForExactTokensOut extends PoolExitBase {
 }
 
 //TODO: additional type will be batch relayer
-export type PoolJoinContractCallData = PoolJoinPoolContractCallData | PoolJoinBatchSwapContractCallData;
+export type PoolJoinContractCallData =
+    | PoolJoinPoolContractCallData
+    | PoolJoinBatchSwapContractCallData
+    | PoolJoinBatchRelayerContractCallData;
 
 export interface PoolJoinPoolContractCallData {
     type: 'JoinPool';
@@ -119,6 +124,12 @@ export interface PoolJoinBatchSwapContractCallData {
     swaps: BatchSwapStep[];
     assets: string[];
     limits: BigNumberish[];
+}
+
+export interface PoolJoinBatchRelayerContractCallData {
+    type: 'BatchRelayer';
+    calls: string[];
+    ethValue?: string;
 }
 
 export type PoolExitContractCallData = PoolExitPoolContractCallData | PoolExitBatchSwapContractCallData;

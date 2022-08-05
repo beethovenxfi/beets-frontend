@@ -26,7 +26,7 @@ export function TransactionSubmittedContent({ query, confirmedMessage, ...rest }
                 <CardRow>
                     <Box flex="1">Status</Box>
                     <Box color={isFailed ? 'beets.red' : isConfirmed ? 'beets.green' : 'orange'}>
-                        {isPending && <Spinner size="sm" mr="2" />}
+                        {/*isPending && <Spinner size="sm" mr="2" />*/}
                         {isFailed ? 'Failed' : isConfirmed ? 'Confirmed' : isPending ? 'Pending' : 'Unknown'}
                     </Box>
                 </CardRow>

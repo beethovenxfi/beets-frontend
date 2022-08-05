@@ -2,18 +2,16 @@ import { usePool } from '~/modules/pool/lib/usePool';
 import { useQuery } from 'react-query';
 import { useReactiveVar } from '@apollo/client';
 import { investStateVar } from '~/modules/pool/invest/lib/useInvestState';
-import {
-    replaceEthWithWeth,
-    replaceWethWithZeroAddress,
-    tokenAmountsGetArrayFromMap,
-} from '~/lib/services/token/token-util';
+import { replaceEthWithWeth, tokenAmountsGetArrayFromMap } from '~/lib/services/token/token-util';
 import { PoolJoinData } from '~/lib/services/pool/pool-types';
 import { AmountHumanReadable } from '~/lib/services/token/token-types';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
+import { useUserAccount } from '~/lib/user/useUserAccount';
 
-export function usePoolJoinGetContractCallData(minimumBpt: AmountHumanReadable | null) {
+export function usePoolJoinGetContractCallData(minimumBpt: AmountHumanReadable | null, zapEnabled?: boolean) {
+    const { userAddress } = useUserAccount();
     const networkConfig = useNetworkConfig();
-    const { poolService } = usePool();
+    const { poolService, pool } = usePool();
     const { inputAmounts } = useReactiveVar(investStateVar);
     const inputAmountsArray = tokenAmountsGetArrayFromMap(inputAmounts);
     const hasEth = networkConfig.eth.address.toLowerCase() in inputAmounts;
@@ -26,6 +24,9 @@ export function usePoolJoinGetContractCallData(minimumBpt: AmountHumanReadable |
         tokenAmountsIn,
         maxAmountsIn: tokenAmountsIn,
         minimumBpt: minimumBpt || '0',
+        userAddress: userAddress || '',
+        wethIsEth: hasEth,
+        zapIntoMasterchefFarm: !!pool.staking?.farm && zapEnabled,
     };
 
     return useQuery(
@@ -33,10 +34,7 @@ export function usePoolJoinGetContractCallData(minimumBpt: AmountHumanReadable |
         async () => {
             const contractCallData = await poolService.joinGetContractCallData(data);
 
-            return {
-                ...contractCallData,
-                assets: hasEth ? replaceWethWithZeroAddress(contractCallData.assets) : contractCallData.assets,
-            };
+            return contractCallData;
         },
         { enabled: tokenAmountsIn.length > 0 && minimumBpt !== null, staleTime: 0, cacheTime: 0 },
     );

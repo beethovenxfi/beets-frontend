@@ -4,9 +4,11 @@ import { oldBnum, oldBnumScaleAmount, oldBnumFromBnum, oldBnumZero } from '~/lib
 import { poolGetRequiredToken, poolScaleAmp } from '~/lib/services/pool/lib/pool-util';
 import { TokenAmountHumanReadable } from '~/lib/services/token/token-types';
 import { parseUnits } from 'ethers/lib/utils';
+import { isSameAddress } from '@balancer-labs/sdk';
+import { AddressZero } from '@ethersproject/constants';
 
 export class PoolBaseService {
-    constructor(private pool: GqlPoolUnion) {}
+    constructor(private pool: GqlPoolUnion, private readonly wethAddress: string) {}
 
     public updatePool(pool: GqlPoolUnion) {
         this.pool = pool;
@@ -84,5 +86,9 @@ export class PoolBaseService {
         const scaledAmount = parseUnits(normalizedAmount, token.decimals);
 
         return oldBnum(scaledAmount.toString());
+    }
+
+    public replaceWethWithAddressZero(addresses: string[]) {
+        return addresses.map((address) => (isSameAddress(address, this.wethAddress) ? AddressZero : address));
     }
 }
