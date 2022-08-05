@@ -17,11 +17,11 @@ export function PoolDetailCharts() {
 
     return (
         <Card height="full" minHeight="540px">
-            <HStack padding="4" pb="0" spacing="4">
+            <HStack padding={{ base: '2', lg: '4' }} pb="0" justify={{ base: 'space-between', lg: 'flex-start' }}>
                 <Select
                     value={chartType}
                     onChange={(e) => setChartType(e.currentTarget.value as ChartType)}
-                    width="180px"
+                    width="160px"
                     variant="filled"
                 >
                     <option value="BPT_PRICE">BPT price</option>
