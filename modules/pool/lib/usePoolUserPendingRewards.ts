@@ -2,11 +2,12 @@ import { useStakingPendingRewards } from '~/lib/global/useStakingPendingRewards'
 import { usePool } from '~/modules/pool/lib/usePool';
 import { useGetTokens } from '~/lib/global/useToken';
 import { sumBy, uniq } from 'lodash';
-import { networkConfig } from '~/lib/config/network-config';
 import { TokenAmountHumanReadable } from '~/lib/services/token/token-types';
 import { usePoolUserBptBalance } from '~/modules/pool/lib/usePoolUserBptBalance';
+import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 
 export function usePoolUserPendingRewards() {
+    const networkConfig = useNetworkConfig();
     const { pool } = usePool();
     const { hasBpt, isLoading: balancesLoading } = usePoolUserBptBalance();
     const { priceForAmount } = useGetTokens();

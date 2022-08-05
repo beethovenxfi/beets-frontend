@@ -1,11 +1,12 @@
 import { useSubmitTransaction } from '~/lib/util/useSubmitTransaction';
-import { networkConfig } from '~/lib/config/network-config';
 import BeethovenxMasterChefAbi from '~/lib/abi/BeethovenxMasterChef.json';
 import ChildChainGaugeRewardHelper from '~/lib/abi/ChildChainGaugeRewardHelper.json';
 import { GqlPoolStaking } from '~/apollo/generated/graphql-codegen-generated';
 import { useUserAccount } from '~/lib/user/useUserAccount';
+import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 
 export function useStakingClaimRewards(staking: GqlPoolStaking | null) {
+    const networkConfig = useNetworkConfig();
     const { userAddress } = useUserAccount();
     const { submit, submitAsync, ...rest } = useSubmitTransaction({
         config: {

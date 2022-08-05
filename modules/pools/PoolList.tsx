@@ -1,4 +1,4 @@
-import { Box, Flex, Link, Menu, MenuButton, MenuItem, MenuList } from '@chakra-ui/react';
+import { Box } from '@chakra-ui/react';
 import { NetworkStatus } from '@apollo/client';
 import { usePoolList } from './usePoolList';
 import { PoolListItem } from '~/modules/pools/components/PoolListItem';
@@ -8,8 +8,6 @@ import { PoolListTop } from '~/modules/pools/components/PoolListTop';
 import { useUserData } from '~/lib/user/useUserData';
 import { useEffect } from 'react';
 import { orderBy } from 'lodash';
-import { networkConfig } from '~/lib/config/network-config';
-import { NavbarPendingRewards } from '~/modules/nav/NavbarPendingRewards';
 import { PoolListMobileHeader } from '~/modules/pools/components/PoolListMobileHeader';
 
 function PoolList() {

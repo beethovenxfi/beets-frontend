@@ -1,16 +1,16 @@
 import { GqlToken, useGetTokenPricesQuery, useGetTokensQuery } from '~/apollo/generated/graphql-codegen-generated';
 import { keyBy } from 'lodash';
 import { TokenAmountHumanReadable } from '~/lib/services/token/token-types';
-import numeral from 'numeral';
-import { networkConfig } from '~/lib/config/network-config';
 import { useUserImportedTokens } from '~/lib/user/useUserImportedTokens';
 import { numberFormatUSDValue } from '~/lib/util/number-formats';
+import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 
 interface TokenWithImportedFlag extends GqlToken {
     imported?: boolean;
 }
 
 export function useGetTokens() {
+    const networkConfig = useNetworkConfig();
     const { data: tokensResponse } = useGetTokensQuery({ fetchPolicy: 'cache-first' });
     const { data: pricesResponse } = useGetTokenPricesQuery({ fetchPolicy: 'cache-first' });
     const { userImportedTokens } = useUserImportedTokens();

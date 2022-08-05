@@ -1,6 +1,6 @@
-import { networkConfig } from '~/lib/config/network-config';
 import { Interface } from '@ethersproject/abi';
 import { useContractRead } from 'wagmi';
+import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 
 interface UseMultiCallInput {
     abi: any[];
@@ -19,6 +19,7 @@ export function useMultiCall({
     enabled = true,
     cacheTimeMs,
 }: UseMultiCallInput) {
+    const networkConfig = useNetworkConfig();
     const contractInterface = new Interface(abi);
     const contractRead = useContractRead({
         addressOrName: networkConfig.multicall,

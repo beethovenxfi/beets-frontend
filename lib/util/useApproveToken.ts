@@ -1,10 +1,11 @@
 import { useSubmitTransaction } from '~/lib/util/useSubmitTransaction';
 import ERC20Abi from '../abi/ERC20.json';
-import { networkConfig } from '~/lib/config/network-config';
 import { MaxUint256 } from '@ethersproject/constants';
 import { TokenBase } from '~/lib/services/token/token-types';
+import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 
 export function useApproveToken(token: TokenBase) {
+    const networkConfig = useNetworkConfig();
     const { submit, submitAsync, ...rest } = useSubmitTransaction({
         config: {
             addressOrName: token.address || '',

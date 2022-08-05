@@ -1,7 +1,8 @@
 import { Box, Flex, Link, Menu, MenuButton, MenuItem, MenuList } from '@chakra-ui/react';
-import { networkConfig } from '~/lib/config/network-config';
+import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 
 export function NavbarAdditionalLinksMenu() {
+    const networkConfig = useNetworkConfig();
     return (
         <Menu>
             <MenuButton

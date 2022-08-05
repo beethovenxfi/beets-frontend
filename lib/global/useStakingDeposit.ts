@@ -1,5 +1,4 @@
 import { useSubmitTransaction } from '~/lib/util/useSubmitTransaction';
-import { networkConfig } from '~/lib/config/network-config';
 import BeethovenxMasterChefAbi from '~/lib/abi/BeethovenxMasterChef.json';
 import { AmountHumanReadable } from '~/lib/services/token/token-types';
 import { parseUnits } from 'ethers/lib/utils';
@@ -7,8 +6,10 @@ import { GqlPoolStaking } from '~/apollo/generated/graphql-codegen-generated';
 import LiquidityGaugeV5 from '~/lib/abi/LiquidityGaugeV5.json';
 import { tokenFormatAmount } from '~/lib/services/token/token-util';
 import { useUserAccount } from '~/lib/user/useUserAccount';
+import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 
 export function useStakingDeposit(staking: GqlPoolStaking | null) {
+    const networkConfig = useNetworkConfig();
     const { userAddress } = useUserAccount();
     const { submit, submitAsync, ...rest } = useSubmitTransaction({
         config: {

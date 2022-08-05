@@ -1,19 +1,18 @@
-import { useMemo, useState } from 'react';
-import { GqlTokenChartDataRange, useGetPoolBptPriceChartDataQuery } from '~/apollo/generated/graphql-codegen-generated';
-import { usePool } from '~/modules/pool/lib/usePool';
+import { useMemo } from 'react';
 import { EChartsOption, graphic } from 'echarts';
 import { format } from 'date-fns';
 import { numberFormatUSDValue } from '~/lib/util/number-formats';
 import ReactECharts from 'echarts-for-react';
 import { useTheme } from '@chakra-ui/react';
 import { chartGetPrimaryColor, chartGetSecondaryColor } from '~/modules/pool/detail/components/charts/chart-util';
-import { networkConfig } from '~/lib/config/network-config';
+import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 
 interface Props {
     prices: { timestamp: number; price: string }[];
 }
 
 export function PoolDetailBptPriceChart({ prices }: Props) {
+    const networkConfig = useNetworkConfig();
     const { colors } = useTheme();
     const max = Math.max(...prices.map((price) => parseFloat(price.price))) * 1.01;
 
@@ -85,14 +84,14 @@ export function PoolDetailBptPriceChart({ prices }: Props) {
                     showSymbol: false,
                     data: prices.map((item) => [item.timestamp * 1000, item.price]),
                     itemStyle: {
-                        color: chartGetSecondaryColor(1),
+                        color: chartGetSecondaryColor(networkConfig.chainId, 1),
                     },
                     areaStyle: {
                         opacity: networkConfig.chainId === '10' ? 0.75 : 0.2,
                         color: new graphic.LinearGradient(0, 0, 0, 1, [
-                            { offset: 0, color: chartGetPrimaryColor(1) },
-                            { offset: 0.5, color: chartGetPrimaryColor(1) },
-                            { offset: 1, color: chartGetPrimaryColor(0) },
+                            { offset: 0, color: chartGetPrimaryColor(networkConfig.chainId, 1) },
+                            { offset: 0.5, color: chartGetPrimaryColor(networkConfig.chainId, 1) },
+                            { offset: 1, color: chartGetPrimaryColor(networkConfig.chainId, 0) },
                         ]),
                     },
                     axisLine: { show: false },

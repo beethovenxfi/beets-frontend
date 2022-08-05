@@ -9,9 +9,10 @@ import {
 } from '~/lib/services/token/token-util';
 import { PoolJoinData } from '~/lib/services/pool/pool-types';
 import { AmountHumanReadable } from '~/lib/services/token/token-types';
-import { networkConfig } from '~/lib/config/network-config';
+import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 
 export function usePoolJoinGetContractCallData(minimumBpt: AmountHumanReadable | null) {
+    const networkConfig = useNetworkConfig();
     const { poolService } = usePool();
     const { inputAmounts } = useReactiveVar(investStateVar);
     const inputAmountsArray = tokenAmountsGetArrayFromMap(inputAmounts);

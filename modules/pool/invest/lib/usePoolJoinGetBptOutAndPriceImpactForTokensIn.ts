@@ -5,9 +5,10 @@ import { investStateVar } from '~/modules/pool/invest/lib/useInvestState';
 import { tokenAmountsGetArrayFromMap } from '~/lib/services/token/token-util';
 import { useSlippage } from '~/lib/global/useSlippage';
 import numeral from 'numeral';
-import { networkConfig } from '~/lib/config/network-config';
+import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 
 export function usePoolJoinGetBptOutAndPriceImpactForTokensIn() {
+    const networkConfig = useNetworkConfig();
     const { poolService, pool } = usePool();
     const { inputAmounts, selectedOptions } = useReactiveVar(investStateVar);
     const { slippage } = useSlippage();

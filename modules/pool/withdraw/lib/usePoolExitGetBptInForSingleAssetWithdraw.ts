@@ -3,9 +3,10 @@ import { useReactiveVar } from '@apollo/client';
 import { withdrawStateVar } from '~/modules/pool/withdraw/lib/useWithdrawState';
 import { useQuery } from 'react-query';
 import numeral from 'numeral';
-import { networkConfig } from '~/lib/config/network-config';
+import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 
 export function usePoolExitGetBptInForSingleAssetWithdraw() {
+    const networkConfig = useNetworkConfig();
     const { poolService } = usePool();
     const { singleAsset } = useReactiveVar(withdrawStateVar);
 

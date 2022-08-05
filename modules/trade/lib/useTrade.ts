@@ -1,4 +1,4 @@
-import { makeVar, NetworkStatus, useReactiveVar } from '@apollo/client';
+import { makeVar, useReactiveVar } from '@apollo/client';
 import {
     GqlSorGetSwapsResponseFragment,
     GqlSorSwapType,

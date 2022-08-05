@@ -1,6 +1,5 @@
 import { useUserAllowances } from '~/lib/util/useUserAllowances';
 import { usePool } from '~/modules/pool/lib/usePool';
-import { networkConfig } from '~/lib/config/network-config';
 import { useInvest } from '~/modules/pool/invest/lib/useInvest';
 import { useEffect, useState } from 'react';
 import { usePoolJoinGetBptOutAndPriceImpactForTokensIn } from '~/modules/pool/invest/lib/usePoolJoinGetBptOutAndPriceImpactForTokensIn';
@@ -13,6 +12,7 @@ import { FadeInBox } from '~/components/animation/FadeInBox';
 import { numberFormatUSDValue } from '~/lib/util/number-formats';
 import { usePoolUserTokenBalancesInWallet } from '~/modules/pool/lib/usePoolUserTokenBalancesInWallet';
 import { usePoolUserBptBalance } from '~/modules/pool/lib/usePoolUserBptBalance';
+import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 
 interface Props {
     onInvestComplete(): void;
@@ -20,6 +20,7 @@ interface Props {
 }
 
 export function PoolInvestActions({ onInvestComplete, onClose }: Props) {
+    const networkConfig = useNetworkConfig();
     const { pool } = usePool();
     const { selectedInvestTokensWithAmounts, totalInvestValue } = useInvest();
     const joinQuery = useJoinPool(pool);

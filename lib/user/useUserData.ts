@@ -1,16 +1,17 @@
 import { useGetFbeetsRatioQuery, useGetUserDataQuery } from '~/apollo/generated/graphql-codegen-generated';
 import { useGetTokens } from '~/lib/global/useToken';
 import { sum } from 'lodash';
-import { networkConfig } from '~/lib/config/network-config';
 import { AmountHumanReadable } from '~/lib/services/token/token-types';
 import { useUserAccount } from '~/lib/user/useUserAccount';
 import { makeVar } from '@apollo/client';
 import { useAsyncEffect } from '~/lib/util/custom-hooks';
+import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 
 const refetchingVar = makeVar(false);
 const currentUserAddressVar = makeVar<string | null>(null);
 
 export function useUserData() {
+    const networkConfig = useNetworkConfig();
     const { data: fbeetsRatioData } = useGetFbeetsRatioQuery();
     const { userAddress } = useUserAccount();
     const { data, loading, refetch, ...rest } = useGetUserDataQuery({

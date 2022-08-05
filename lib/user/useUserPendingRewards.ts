@@ -1,12 +1,12 @@
 import { useStakingPendingRewards } from '~/lib/global/useStakingPendingRewards';
 import { useGetTokens } from '~/lib/global/useToken';
-import { groupBy, map, sumBy, uniq } from 'lodash';
-import { networkConfig } from '~/lib/config/network-config';
+import { groupBy, map, sumBy } from 'lodash';
 import { TokenAmountHumanReadable } from '~/lib/services/token/token-types';
 import { useUserData } from '~/lib/user/useUserData';
-import { GqlPoolStakingMasterChefFarm } from '~/apollo/generated/graphql-codegen-generated';
+import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 
 export function useUserPendingRewards() {
+    const networkConfig = useNetworkConfig();
     const { poolBalances, fbeetsBalance, staking, ...userPoolBalancesQuery } = useUserData();
     const { priceForAmount } = useGetTokens();
     const { data, isLoading, ...rest } = useStakingPendingRewards(staking);

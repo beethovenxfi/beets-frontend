@@ -1,10 +1,11 @@
 import { useSubmitTransaction } from '~/lib/util/useSubmitTransaction';
 import WETHAbi from '../abi/WETH.json';
-import { networkConfig } from '~/lib/config/network-config';
 import { AmountHumanReadable } from '~/lib/services/token/token-types';
 import { parseUnits } from 'ethers/lib/utils';
+import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 
 export function useWrapEth() {
+    const networkConfig = useNetworkConfig();
     const { submit, submitAsync, ...rest } = useSubmitTransaction({
         config: {
             addressOrName: networkConfig.wethAddress,

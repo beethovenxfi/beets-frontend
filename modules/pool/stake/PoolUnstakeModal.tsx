@@ -15,7 +15,6 @@ import { useEffect, useState } from 'react';
 import { numberFormatUSDValue } from '~/lib/util/number-formats';
 import { usePoolUserBptBalance } from '~/modules/pool/lib/usePoolUserBptBalance';
 import { Modal, ModalBody, ModalCloseButton, ModalContent } from '@chakra-ui/modal';
-import { networkConfig } from '~/lib/config/network-config';
 import { capitalize } from 'lodash';
 import { tokenFormatAmount } from '~/lib/services/token/token-util';
 import { usePool } from '~/modules/pool/lib/usePool';
@@ -26,6 +25,7 @@ import { usePoolUserDepositBalance } from '~/modules/pool/lib/usePoolUserDeposit
 import { oldBnumScaleAmount, oldBnumToHumanReadable } from '~/lib/services/pool/lib/old-big-number';
 import { useStakingWithdraw } from '~/lib/global/useStakingWithdraw';
 import { CardRow } from '~/components/card/CardRow';
+import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 
 interface Props {
     isOpen: boolean;
@@ -34,6 +34,7 @@ interface Props {
 }
 
 export function PoolUnstakeModal({ isOpen, onOpen, onClose }: Props) {
+    const networkConfig = useNetworkConfig();
     const { userPoolBalanceUSD } = usePoolUserDepositBalance();
     const [percent, setPercent] = useState(100);
     const {

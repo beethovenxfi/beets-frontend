@@ -1,15 +1,13 @@
-import { networkConfig } from '~/lib/config/network-config';
-
-export function chartGetPrimaryColor(opacity: number) {
-    if (networkConfig.chainId === '10') {
+export function chartGetPrimaryColor(chainId: string, opacity: number) {
+    if (chainId === '10') {
         return `rgba(119, 119, 119, ${opacity})`;
     }
 
     return `rgba(88, 95, 198, ${opacity})`;
 }
 
-export function chartGetSecondaryColor(opacity: number) {
-    if (networkConfig.chainId === '10') {
+export function chartGetSecondaryColor(chainId: string, opacity: number) {
+    if (chainId === '10') {
         return `rgba(0, 255, 255, ${opacity})`;
     }
 

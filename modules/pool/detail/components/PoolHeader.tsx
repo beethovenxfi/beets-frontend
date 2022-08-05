@@ -1,24 +1,25 @@
 import {
     Box,
     Flex,
-    Text,
     HStack,
-    VStack,
     Popover,
     PopoverContent,
     PopoverTrigger as OrigPopoverTrigger,
-    WrapItem,
+    Text,
+    VStack,
     Wrap,
+    WrapItem,
 } from '@chakra-ui/react';
 import numeral from 'numeral';
 import { PoolTokenPill } from '~/components/token/PoolTokenPill';
 import { usePool } from '~/modules/pool/lib/usePool';
-import { networkConfig } from '~/lib/config/network-config';
 import PoolOwnerImage from '~/assets/images/pool-owner.png';
 import Image from 'next/image';
 import { HelpCircle } from 'react-feather';
+import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 
 function PoolHeader() {
+    const networkConfig = useNetworkConfig();
     const { pool, poolTokensWithoutPhantomBpt } = usePool();
 
     // temp fix: https://github.com/chakra-ui/chakra-ui/issues/5896#issuecomment-1104085557

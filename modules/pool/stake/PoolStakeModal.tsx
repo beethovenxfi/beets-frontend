@@ -15,7 +15,6 @@ import { useEffect, useState } from 'react';
 import { numberFormatUSDValue } from '~/lib/util/number-formats';
 import { usePoolUserBptBalance } from '~/modules/pool/lib/usePoolUserBptBalance';
 import { Modal, ModalBody, ModalCloseButton, ModalContent } from '@chakra-ui/modal';
-import { networkConfig } from '~/lib/config/network-config';
 import { capitalize } from 'lodash';
 import { tokenFormatAmount } from '~/lib/services/token/token-util';
 import { usePool } from '~/modules/pool/lib/usePool';
@@ -27,6 +26,7 @@ import { BeetsTransactionStepsSubmit, TransactionStep } from '~/components/butto
 import { BeetsBox } from '~/components/box/BeetsBox';
 import { oldBnumScaleAmount, oldBnumToHumanReadable } from '~/lib/services/pool/lib/old-big-number';
 import { CardRow } from '~/components/card/CardRow';
+import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 
 interface Props {
     isOpen: boolean;
@@ -35,6 +35,7 @@ interface Props {
 }
 
 export function PoolStakeModal({ isOpen, onOpen, onClose }: Props) {
+    const networkConfig = useNetworkConfig();
     const [percent, setPercent] = useState(100);
     const {
         userWalletBptBalance,

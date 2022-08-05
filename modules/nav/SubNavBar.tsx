@@ -4,7 +4,6 @@ import Image from 'next/image';
 import { Check, ChevronDown } from 'react-feather';
 import { BeetsBox } from '~/components/box/BeetsBox';
 import TokenAvatar from '~/components/token/TokenAvatar';
-import { networkConfig } from '~/lib/config/network-config';
 import OptimismLogo from '~/assets/images/optimism.svg';
 import FantomLogo from '~/assets/images/fantom-logo.png';
 import numeral from 'numeral';
@@ -13,6 +12,7 @@ import { useGetTokens } from '~/lib/global/useToken';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 
 export function SubNavBar() {
+    const networkConfig = useNetworkConfig();
     const { chainId } = useNetworkConfig();
     const { priceFor } = useGetTokens();
     const { data, error, loading } = useGetProtocolDataQuery({ fetchPolicy: 'cache-first' });

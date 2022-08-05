@@ -2,13 +2,14 @@ import { useMultiCall } from '~/lib/util/useMultiCall';
 import { TokenAmountHumanReadable, TokenBase } from '~/lib/services/token/token-types';
 import ERC20Abi from '../abi/ERC20.json';
 import { AddressZero } from '@ethersproject/constants';
-import { networkConfig } from '~/lib/config/network-config';
 import { useBalance } from 'wagmi';
 import { formatFixed } from '@ethersproject/bignumber';
+import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 
 const BALANCE_CACHE_TIME_MS = 15_000;
 
 export function useBalances(account: string | null, tokens: TokenBase[]) {
+    const networkConfig = useNetworkConfig();
     const containsEth = !!tokens.find((token) => token.address !== networkConfig.eth.address.toLowerCase());
     const filteredTokens = tokens.filter((token) => token.address !== networkConfig.eth.address.toLowerCase());
 

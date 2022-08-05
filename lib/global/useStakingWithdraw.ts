@@ -4,10 +4,11 @@ import LiquidityGaugeV5 from '~/lib/abi/LiquidityGaugeV5.json';
 import { AmountHumanReadable } from '~/lib/services/token/token-types';
 import { parseUnits } from 'ethers/lib/utils';
 import { GqlPoolStaking } from '~/apollo/generated/graphql-codegen-generated';
-import { networkConfig } from '~/lib/config/network-config';
 import { useUserAccount } from '~/lib/user/useUserAccount';
+import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 
 export function useStakingWithdraw(staking?: GqlPoolStaking | null) {
+    const networkConfig = useNetworkConfig();
     const { userAddress } = useUserAccount();
     const { submit, submitAsync, ...rest } = useSubmitTransaction({
         config: {

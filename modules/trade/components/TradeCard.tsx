@@ -1,4 +1,4 @@
-import { Box, Button, Flex, useDisclosure, VStack } from '@chakra-ui/react';
+import { Box, Button, useDisclosure, VStack } from '@chakra-ui/react';
 import { useAnimation } from 'framer-motion';
 import TokenInput from '~/components/inputs/TokenInput';
 import Card from '~/components/card/Card';
@@ -16,11 +16,12 @@ import { useUserAllowances } from '~/lib/util/useUserAllowances';
 import { BeetsTokenApprovalButton } from '~/components/button/BeetsTokenApprovalButton';
 import { TradeCardRefreshButton } from '~/modules/trade/components/TradeCardRefreshButton';
 import { BeetsSubmitTransactionButton } from '~/components/button/BeetsSubmitTransactionButton';
-import { networkConfig } from '~/lib/config/network-config';
 import { useWrapEth } from '~/lib/util/useWrapEth';
 import { useUnwrapEth } from '~/lib/util/useUnwrapEth';
+import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 
 export function TradeCard() {
+    const networkConfig = useNetworkConfig();
     const { isConnected } = useUserAccount();
     const { isAmountLessThanEqUserBalance, refetch: refetchUserBalances } = useUserTokenBalances();
     const controls = useAnimation();

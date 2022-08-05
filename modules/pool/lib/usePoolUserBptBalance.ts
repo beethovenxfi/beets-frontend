@@ -1,6 +1,5 @@
 import { AmountHumanReadable } from '~/lib/services/token/token-types';
 import { usePool } from '~/modules/pool/lib/usePool';
-import { networkConfig } from '~/lib/config/network-config';
 import { useGetFbeetsRatioQuery } from '~/apollo/generated/graphql-codegen-generated';
 import { useUserBalances } from '~/lib/user/useUserBalances';
 import { parseUnits } from 'ethers/lib/utils';
@@ -13,6 +12,7 @@ import { freshBeetsService } from '~/lib/services/staking/fresh-beets.service';
 import { formatFixed } from '@ethersproject/bignumber';
 import { gaugeStakingService } from '~/lib/services/staking/gauge-staking.service';
 import { useUserAccount } from '~/lib/user/useUserAccount';
+import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 
 export function usePoolUserBptBalance() {
     const { pool } = usePool();
@@ -47,6 +47,7 @@ export function usePoolUserBptBalance() {
 }
 
 function usePoolUserBptWalletBalance() {
+    const networkConfig = useNetworkConfig();
     const { pool } = usePool();
     const isFbeetsPool = pool.id === networkConfig.fbeets.poolId;
     const { data: fbeets } = useGetFbeetsRatioQuery();
