@@ -23,7 +23,7 @@ export function PoolUserStakedStats({ poolAddress, staking }: Props) {
         pendingRewards,
         pendingRewardsTotalUSD,
         hasPendingRewards,
-        refetch: refetchPendingRewards,
+        hardRefetch: refetchPendingRewards,
         isLoading: isLoadingPendingRewards,
     } = usePoolUserPendingRewards();
     const { claim, ...harvestQuery } = useStakingClaimRewards(staking);

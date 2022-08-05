@@ -8,12 +8,14 @@ import { FadeInOutBox } from '~/components/animation/FadeInOutBox';
 import { NavbarPendingRewards } from '~/modules/nav/NavbarPendingRewards';
 import { BeetsBalLogo } from '~/assets/logo/BeetsBalLogo';
 import { NextLink } from '~/components/link/NextLink';
+import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 
 interface Props {
     scrollY: MotionValue<number>;
 }
 
 export function Navbar({ scrollY }: Props) {
+    const { chainId } = useNetworkConfig();
     const router = useRouter();
     const opacity = useTransform(scrollY, [0, 32], [0, 1]);
     const { isConnected } = useUserAccount();
@@ -48,8 +50,12 @@ export function Navbar({ scrollY }: Props) {
                                 mr="5"
                             />
                             <NavbarLink href={'/swap'} selected={router.asPath === '/swap'} text="Swap" mr="5" />
-                            <NavbarLink href="https://beets.fi/#/stake" text="Stake" mr={5} />
-                            <NavbarLink href="https://beets.fi/#/launch" text="Launch" mr={5} />
+                            {chainId === '250' && (
+                                <>
+                                    <NavbarLink href="https://beets.fi/#/stake" text="Stake" mr={5} />
+                                    <NavbarLink href="https://beets.fi/#/launch" text="Launch" mr={5} />
+                                </>
+                            )}
                             {/*<NavbarAdditionalLinksMenu />*/}
                         </Flex>
                     </Box>

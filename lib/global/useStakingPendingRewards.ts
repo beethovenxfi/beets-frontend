@@ -10,14 +10,17 @@ import { useGetTokens } from '~/lib/global/useToken';
 import { StakingPendingRewardAmount } from '~/lib/services/staking/staking-types';
 import { gaugeStakingService } from '~/lib/services/staking/gauge-staking.service';
 import { useUserAccount } from '~/lib/user/useUserAccount';
+import { useEffect, useRef } from 'react';
 
 export function useStakingPendingRewards(stakingItems: GqlPoolStaking[]) {
     const provider = useProvider();
     const { userAddress } = useUserAccount();
     const { tokens } = useGetTokens();
     const stakingIds = stakingItems.map((staking) => staking.id);
+    const isHardRefetch = useRef(false);
+    const currentGaugePendingRewards = useRef<StakingPendingRewardAmount[]>([]);
 
-    return useQuery(
+    const query = useQuery(
         ['useStakingPendingRewards', userAddress, stakingIds],
         async () => {
             let pendingRewards: StakingPendingRewardAmount[] = [];
@@ -48,11 +51,35 @@ export function useStakingPendingRewards(stakingItems: GqlPoolStaking[]) {
                     userAddress: userAddress || '',
                 });
 
-                pendingRewards = [...pendingRewards, ...gaugePendingRewards];
+                //The reward helper contract can at times fail to return amounts despite there being pending rewards
+                //we try to preserve previous good results to prevent the UI from rendering 0s
+                //hardRefetch is called after a rewards claim, so we bypass the ref in those instances
+                const pendingRewardsHasAmount = !!gaugePendingRewards.find((item) => parseFloat(item.amount) > 0);
+
+                if (
+                    isHardRefetch.current ||
+                    currentGaugePendingRewards.current.length === 0 ||
+                    pendingRewardsHasAmount
+                ) {
+                    currentGaugePendingRewards.current = gaugePendingRewards;
+                }
+
+                pendingRewards = [...pendingRewards, ...currentGaugePendingRewards.current];
             }
 
             return pendingRewards;
         },
         { enabled: !!userAddress && stakingItems.length > 0, refetchInterval: 15000 },
     );
+
+    async function hardRefetch() {
+        isHardRefetch.current = true;
+        await query.refetch();
+        isHardRefetch.current = false;
+    }
+
+    return {
+        ...query,
+        hardRefetch,
+    };
 }
