@@ -1,15 +1,18 @@
 import { Box, Flex, Grid, GridItem, HStack, Link } from '@chakra-ui/react';
 import NextImage from 'next/image';
-//import BeetsLogo from '~/assets/logo/beets-logo.svg';
 import BeetsLogo from '~/assets/logo/beets-bal.svg';
 import DegenBand from '~/assets/images/degen-band.png';
+import FooterImageOp from '~/assets/images/footer-OP.png';
 import DiscordIcon from '~/assets/icons/discord.svg';
 import TwitterIcon from '~/assets/icons/twitter.svg';
 import MediumIcon from '~/assets/icons/medium.svg';
 import GithubIcon from '~/assets/icons/github.svg';
 import { FooterLink } from '~/modules/nav/FooterLink';
+import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 
 export function Footer() {
+    const { chainId } = useNetworkConfig();
+
     return (
         <Box width="full" px={{ base: '4', xl: '8' }} bgColor="beets.base.800" pt="24">
             <Flex>
@@ -82,7 +85,7 @@ export function Footer() {
                     </HStack>
                 </Box>
                 <Box flex="1" justifyContent="flex-end" display={{ base: 'none', lg: 'flex' }} ml="12">
-                    <NextImage src={DegenBand} width="472px" height="394.8px" />
+                    <NextImage src={chainId === '10' ? FooterImageOp : DegenBand} width="472px" height="394.8px" />
                 </Box>
             </Flex>
         </Box>

@@ -8,13 +8,10 @@ import type { AppProps } from 'next/app';
 import { useApollo } from '~/apollo/client';
 import { ApolloProvider } from '@apollo/client';
 
-import { ChakraProvider, Circle } from '@chakra-ui/react';
+import { ChakraProvider } from '@chakra-ui/react';
 import { QueryClient, QueryClientProvider } from 'react-query';
-/** Start charting library setup */
 import * as echarts from 'echarts/core';
-
 import { BarChart, CandlestickChart, LineChart, LinesChart, PieChart } from 'echarts/charts';
-
 import {
     AxisPointerComponent,
     BrushComponent,
@@ -40,12 +37,10 @@ import {
 import { CanvasRenderer } from 'echarts/renderers';
 import { chakraTheme } from '~/styles/chakraTheme';
 import { WagmiConfig } from 'wagmi';
-import { RainbowKitProvider, darkTheme, midnightTheme } from '@rainbow-me/rainbowkit';
-import { useRouter } from 'next/router';
+import { darkTheme, RainbowKitProvider } from '@rainbow-me/rainbowkit';
 import { networkChainDefinitions, wagmiClient } from '~/lib/global/network';
 import { BeetsFonts } from '~/components/fonts/BeetsFonts';
 import { AppContent } from '~/pages/_app-content';
-import { useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import { WalletUserAvatar } from '~/components/avatar/WalletUserAvatar';
 
@@ -80,8 +75,6 @@ echarts.use([
     CanvasRenderer,
 ]);
 
-/** End charting library setup */
-
 const TopProgressBar = dynamic(
     function TopProgressBarFunc() {
         return import('../components/progress-bar/TopProgressBar');
@@ -99,10 +92,7 @@ function BeetsApp(props: AppProps) {
                     coolMode
                     chains={networkChainDefinitions}
                     showRecentTransactions={true}
-                    appInfo={{
-                        appName: 'Beethoven X',
-                        learnMoreUrl: 'https://docs.beets.fi',
-                    }}
+                    appInfo={{ appName: 'Beethoven X', learnMoreUrl: 'https://docs.beets.fi' }}
                     theme={darkTheme()}
                     avatar={() => <WalletUserAvatar />}
                 >

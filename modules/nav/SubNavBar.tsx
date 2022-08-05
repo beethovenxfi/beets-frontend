@@ -10,8 +10,10 @@ import FantomLogo from '~/assets/images/fantom-logo.png';
 import numeral from 'numeral';
 import { SubNavBarStat } from '~/modules/nav/SubNavBarStat';
 import { useGetTokens } from '~/lib/global/useToken';
+import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 
 export function SubNavBar() {
+    const { chainId } = useNetworkConfig();
     const { priceFor } = useGetTokens();
     const { data, error, loading } = useGetProtocolDataQuery({ fetchPolicy: 'cache-first' });
     const protocolData = data?.protocolData;
@@ -24,8 +26,8 @@ export function SubNavBar() {
                     // @ts-ignore */}
                     <PopoverTrigger>
                         <HStack spacing="1" mr={6} cursor="pointer">
-                            <Image src={FantomLogo} width="20" height="20" />
-                            <Text fontWeight="bold">Fantom</Text>
+                            <Image src={chainId === '10' ? OptimismLogo : FantomLogo} width="20" height="20" />
+                            <Text fontWeight="bold">{chainId === '10' ? 'Optimism' : 'Fantom'}</Text>
                             <Box top="1px" position="relative">
                                 <ChevronDown size={18} />
                             </Box>
@@ -38,22 +40,22 @@ export function SubNavBar() {
                                 Select a network
                             </Box>
                             <Box>
-                                <Link href="https://beets.fi">
+                                <Link href="https://v2.beets.fi" color="white">
                                     <HStack spacing="2" pl="4" pb="2" pt="4" pr="2">
                                         <Image src={FantomLogo} width="20" height="20" />
                                         <Text flex="1" pr="2">
                                             Fantom
                                         </Text>
-                                        <Check />
+                                        {chainId === '250' && <Check />}
                                     </HStack>
                                 </Link>
-                                <Link href="https://op.beets.fi">
+                                <Link href="https://opv2.beets.fi" color="white">
                                     <HStack spacing="2" pl="4" pt="2" pb="4" pr="2">
                                         <Image src={OptimismLogo} width="20" height="20" />
                                         <Text flex="1" pr="2">
                                             Optimism
                                         </Text>
-                                        <Check />
+                                        {chainId === '10' && <Check />}
                                     </HStack>
                                 </Link>
                             </Box>

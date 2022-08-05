@@ -13,6 +13,7 @@ export const optimismNetworkConfig: NetworkConfig = {
         address: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
         symbol: 'ETH',
         decimals: 18,
+        iconUrl: '',
     },
     wethAddress: '0x4200000000000000000000000000000000000006',
     wethAddressFormatted: '0x4200000000000000000000000000000000000006',

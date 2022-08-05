@@ -1,9 +1,11 @@
 import { Box, Button, Flex, HStack, Link, Text, useTheme } from '@chakra-ui/react';
 
 import { NextLink } from '~/components/link/NextLink';
+import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 
 export function HomeHero() {
     const theme = useTheme();
+    const { chainId } = useNetworkConfig();
 
     return (
         <Flex
@@ -12,15 +14,21 @@ export function HomeHero() {
             overflow="hidden"
             minHeight="400px"
             backgroundImage={{
-                base: "url('/images/hero-image-fantom-mobile.png')",
-                md: "url('/images/hero-image-fantom.png')",
+                base:
+                    chainId === '10'
+                        ? "url('/images/hero-image-optimism-mobile.png')"
+                        : "url('/images/hero-image-fantom-mobile.png')",
+                md:
+                    chainId === '10'
+                        ? "url('/images/hero-image-optimism.jpg')"
+                        : "url('/images/hero-image-fantom.jpg')",
             }}
             backgroundPosition="center"
             backgroundRepeat="no-repeat"
             backgroundSize="cover"
             boxShadow="0px 0px 24px 0px rgba(0,0,0,0.25);"
         >
-            <Flex flex="1" mt="20" pl={{ base: '4', xl: '8' }} mb="12">
+            <Flex flex="1" mt="20" pl={{ base: '4', xl: '8' }} mb="12" alignItems="center">
                 <Flex flexDirection="column" width={{ base: 'auto', lg: '580px' }}>
                     <Text
                         as="h1"

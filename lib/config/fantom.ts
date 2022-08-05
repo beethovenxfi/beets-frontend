@@ -14,6 +14,7 @@ export const fantomNetworkConfig: NetworkConfig = {
         address: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
         symbol: 'FTM',
         decimals: 18,
+        iconUrl: 'https://assets.coingecko.com/coins/images/4001/large/Fantom.png?1558015016',
     },
     wethAddress: '0x21be370d5312f44cb42ce377bc9b8a0cef1a4c83',
     wethAddressFormatted: '0x21be370D5312f44cB42ce377BC9b8a0cEF1A4C83',

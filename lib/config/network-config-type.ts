@@ -11,6 +11,7 @@ export interface NetworkConfig {
         address: string;
         symbol: string;
         decimals: number;
+        iconUrl: string;
     };
     wethAddress: string;
     wethAddressFormatted: string;
