@@ -8,8 +8,11 @@ import Head from 'next/head';
 import { PageMasthead } from '~/components/masthead/PageMasthead';
 import NextImage from 'next/image';
 import InvestMastheadImage from '~/assets/images/invest-masthead-image.png';
+import InvestMastheadOpImage from '~/assets/images/invest-masthead-image-OP.png';
+import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 
 function Pools() {
+    const { chainId } = useNetworkConfig();
     return (
         <>
             <Head>
@@ -17,7 +20,13 @@ function Pools() {
             </Head>
             <PageMasthead
                 title="Invest & Farm"
-                image={<NextImage src={InvestMastheadImage} width="208.62px" height="68px" />}
+                image={
+                    <NextImage
+                        src={chainId === '10' ? InvestMastheadOpImage : InvestMastheadImage}
+                        width="208.62px"
+                        height="68px"
+                    />
+                }
             />
             <PoolList />
         </>

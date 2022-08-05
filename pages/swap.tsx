@@ -4,14 +4,26 @@ import { TradeContainer } from '~/modules/trade/TradeContainer';
 import { PageMasthead } from '~/components/masthead/PageMasthead';
 import NextImage from 'next/image';
 import SwapMastheadImage from '~/assets/images/swap-masthead-image.png';
+import SwapMastheadOpImage from '~/assets/images/swap-masthead-image-OP.png';
+import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 
 function Swap() {
+    const { chainId } = useNetworkConfig();
     return (
         <>
             <Head>
                 <title>Beethoven X | Swap</title>
             </Head>
-            <PageMasthead title="Swap" image={<NextImage src={SwapMastheadImage} width="213.71px" height="68px" />} />
+            <PageMasthead
+                title="Swap"
+                image={
+                    <NextImage
+                        src={chainId === '10' ? SwapMastheadOpImage : SwapMastheadImage}
+                        width="213.71px"
+                        height="68px"
+                    />
+                }
+            />
             <TradeContainer />
         </>
     );
