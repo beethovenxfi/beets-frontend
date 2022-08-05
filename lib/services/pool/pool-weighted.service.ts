@@ -76,48 +76,23 @@ export class PoolWeightedService implements PoolService {
     }
 
     public async joinGetContractCallData(data: PoolJoinData): Promise<PoolJoinContractCallData> {
-        let assets = this.pool.tokens.map((token) => token.address);
-        assets = data.wethIsEth ? this.baseService.replaceWethWithAddressZero(assets) : assets;
+        const assets = this.pool.tokens.map((token) =>
+            data.wethIsEth ? this.baseService.wethToZero(token.address) : token.address,
+        );
         const maxAmountsIn = poolScaleTokenAmounts(data.maxAmountsIn, this.pool.tokens);
         const userData = this.encodeJoinPool(data);
 
         if (data.zapIntoMasterchefFarm && this.pool.staking?.type === 'MASTER_CHEF' && this.pool.staking.farm) {
-            const ethAmount = data.wethIsEth
-                ? data.maxAmountsIn.find((amountIn) => amountIn.address === this.wethAddress)
-                : undefined;
-
-            const vaultEncodedJoinPool = this.batchRelayerService.vaultEncodeJoinPool({
-                poolId: this.pool.id,
-                poolKind: 0,
-                sender: data.userAddress,
-                recipient: this.batchRelayerService.batchRelayerAddress,
-                joinPoolRequest: {
-                    assets,
-                    maxAmountsIn,
-                    userData,
-                    fromInternalBalance: false,
-                },
-                value: ethAmount ? parseUnits(ethAmount.amount, 18).toString() : Zero,
-                outputReference: this.batchRelayerService.toChainedReference(0),
+            return this.batchRelayerService.encodeJoinPoolAndStakeInMasterChefFarm({
+                userData,
+                pool: this.pool,
+                assets,
+                maxAmountsIn,
+                userAddress: data.userAddress,
             });
-
-            const masterChefDeposit = this.batchRelayerService.masterChefEncodeDeposit({
-                sender: this.batchRelayerService.batchRelayerAddress,
-                recipient: data.userAddress,
-                token: this.pool.address,
-                pid: parseInt(this.pool.staking.id),
-                amount: this.batchRelayerService.toChainedReference(0),
-                outputReference: Zero,
-            });
-
-            return {
-                type: 'BatchRelayer',
-                calls: [vaultEncodedJoinPool, masterChefDeposit],
-                ethValue: ethAmount ? parseUnits(ethAmount.amount).toString() : undefined,
-            };
         }
 
-        return { type: 'JoinPool', assets: replaceEthWithZeroAddress(assets), maxAmountsIn, userData };
+        return { type: 'JoinPool', assets, maxAmountsIn, userData };
     }
 
     public async exitGetProportionalWithdrawEstimate(bptIn: AmountHumanReadable): Promise<TokenAmountHumanReadable[]> {

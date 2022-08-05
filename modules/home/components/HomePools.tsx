@@ -119,64 +119,6 @@ export function HomePools(props: BoxProps) {
                     />
                 </Box>
             ))}
-            {/*<Box mb="8">
-                <Flex mb="4">
-                    <NextImage src={PoolIcon1} />
-                    <BeetsSubHeadline ml="2">New & popular</BeetsSubHeadline>
-                </Flex>
-                <PoolCardCarousel
-                    items={[
-                        <PoolCard key="1" />,
-                        <PoolCard key="2" />,
-                        <PoolCard key="3" />,
-                        <PoolCard key="4" />,
-                        <PoolCard key="5" />,
-                        <PoolCard key="6" />,
-                        <PoolCard key="7" />,
-                        <PoolCard key="8" />,
-                    ]}
-                />
-            </Box>
-            <Box mb="8">
-                <Flex mb="4">
-                    <NextImage src={PoolIcon2} />
-                    <BeetsSubHeadline ml="2">Index fund pools</BeetsSubHeadline>
-                </Flex>
-                <PoolCardCarousel
-                    items={[<PoolCard key="1" />, <PoolCard key="2" />, <PoolCard key="3" />, <PoolCard key="4" />]}
-                />
-            </Box>
-            <Box mb="8">
-                <Flex mb="4">
-                    <NextImage src={PoolIcon3} />
-                    <BeetsSubHeadline ml="2">Boosted pools</BeetsSubHeadline>
-                </Flex>
-                <PoolCardCarousel
-                    items={[
-                        <PoolCard key="1" />,
-                        <PoolCard key="2" />,
-                        <Flex alignItems="flex-end" justifyContent="center" height="100%" key="3">
-                            <Image
-                                src="https://beethoven-assets.s3.eu-central-1.amazonaws.com/boosted-ludwig-min.png"
-                                width="full"
-                                position="absolute"
-                                top="0"
-                                left="0"
-                                bottom="0"
-                                right="0"
-                            />
-                            <Button variant="primary" onClick={() => {}}>What is a Boosted pool?</BeetsButton>
-                        </Flex>,
-                    ]}
-                />
-            </Box>
-            <Box>
-                <Flex mb="4">
-                    <NextImage src={PoolIcon3} />
-                    <BeetsSubHeadline ml="2">Stable pools</BeetsSubHeadline>
-                </Flex>
-                <PoolCardCarousel items={[<PoolCard key="1" />, <PoolCard key="2" />]} />
-            </Box>*/}
         </Box>
     );
 }

@@ -22,6 +22,8 @@ export function PoolInvestSettings({ ...rest }: BoxProps) {
     useEffect(() => {
         if (!supportsZap && zapEnabled) {
             toggleZapEnabled();
+        } else if (supportsZap && !zapEnabled) {
+            toggleZapEnabled();
         }
     }, [supportsZap]);
 

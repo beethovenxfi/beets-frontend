@@ -71,7 +71,7 @@ export class PoolPhantomStableService implements PoolService {
             type: 'BatchSwap',
             kind: SwapKind.GivenIn,
             swaps,
-            assets: data.wethIsEth ? this.baseService.replaceWethWithAddressZero(assets) : assets,
+            assets: data.wethIsEth ? this.baseService.wethToZero(assets) : assets,
             limits: deltas,
         };
     }

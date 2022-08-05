@@ -15,12 +15,17 @@ import {
     ExitPoolData,
 } from '~/lib/services/batch-relayer/relayer-types';
 import { BigNumber, BigNumberish } from '@ethersproject/bignumber';
+import { AddressZero, Zero } from '@ethersproject/constants';
+import { PoolJoinBatchRelayerContractCallData } from '~/lib/services/pool/pool-types';
+import { GqlPoolStable, GqlPoolWeighted } from '~/apollo/generated/graphql-codegen-generated';
+import { isSameAddress } from '@balancer-labs/sdk';
 
 export class BatchRelayerService {
     private readonly CHAINED_REFERENCE_PREFIX = 'ba10';
 
     constructor(
         public readonly batchRelayerAddress: string,
+        public readonly wethAddress: string,
         private readonly vaultActionsService: VaultActionsService,
         private readonly aaveWrappingService: AaveWrappingService,
         private readonly booMirrorWorldStaking: BooMirrorWorldStakingService,
@@ -61,10 +66,62 @@ export class BatchRelayerService {
     public masterChefEncodeWithdraw(params: EncodeMasterChefWithdrawInput): string {
         return this.masterChefStakingService.encodeWithdraw(params);
     }
+
+    public encodeJoinPoolAndStakeInMasterChefFarm({
+        userAddress,
+        pool,
+        userData,
+        assets,
+        maxAmountsIn,
+    }: {
+        userAddress: string;
+        pool: GqlPoolWeighted | GqlPoolStable;
+        userData: string;
+        assets: string[];
+        maxAmountsIn: BigNumberish[];
+    }): PoolJoinBatchRelayerContractCallData {
+        const ethIndex = assets.findIndex((asset) => asset === AddressZero);
+        const ethAmount = ethIndex !== -1 ? maxAmountsIn[ethIndex] : undefined;
+
+        const vaultEncodedJoinPool = this.vaultEncodeJoinPool({
+            poolId: pool.id,
+            poolKind: 0,
+            sender: userAddress,
+            recipient: this.batchRelayerAddress,
+            joinPoolRequest: {
+                assets,
+                maxAmountsIn,
+                userData,
+                fromInternalBalance: false,
+            },
+            value: ethAmount || Zero,
+            outputReference: this.toChainedReference(0),
+        });
+
+        const masterChefDeposit = this.masterChefEncodeDeposit({
+            sender: this.batchRelayerAddress,
+            recipient: userAddress,
+            token: pool.address,
+            pid: parseInt(pool.staking!.id),
+            amount: this.toChainedReference(0),
+            outputReference: Zero,
+        });
+
+        return {
+            type: 'BatchRelayer',
+            calls: [vaultEncodedJoinPool, masterChefDeposit],
+            ethValue: ethAmount ? ethAmount.toString() : undefined,
+        };
+    }
+
+    public replaceWethWithAddressZero(address: string) {
+        return isSameAddress(address, this.wethAddress) ? AddressZero : address;
+    }
 }
 
 export const batchRelayerService = new BatchRelayerService(
     networkConfig.balancer.batchRelayer,
+    networkConfig.wethAddress,
     new VaultActionsService(),
     new AaveWrappingService(),
     new BooMirrorWorldStakingService(),

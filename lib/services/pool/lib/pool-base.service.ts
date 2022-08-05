@@ -88,7 +88,7 @@ export class PoolBaseService {
         return oldBnum(scaledAmount.toString());
     }
 
-    public replaceWethWithAddressZero(addresses: string[]) {
-        return addresses.map((address) => (isSameAddress(address, this.wethAddress) ? AddressZero : address));
+    public wethToZero(address: string) {
+        return isSameAddress(address, this.wethAddress) ? AddressZero : address;
     }
 }
