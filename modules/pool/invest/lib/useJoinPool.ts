@@ -9,22 +9,26 @@ import { oldBnum } from '~/lib/services/pool/lib/old-big-number';
 import { useSlippage } from '~/lib/global/useSlippage';
 import { useUserAccount } from '~/lib/user/useUserAccount';
 import { networkConfig } from '~/lib/config/network-config';
+import { poolRequiresBatchRelayerOnJoin } from '~/lib/services/pool/pool-util';
 
 export function useJoinPool(pool: GqlPoolUnion, zapEnabled?: boolean) {
     const { slippageDifference } = useSlippage();
     const { userAddress } = useUserAccount();
     const { submit, submitAsync, ...rest } = useSubmitTransaction({
-        config: zapEnabled
-            ? batchRelayerContractConfig
-            : {
-                  ...vaultContractConfig,
-                  functionName: pool.__typename === 'GqlPoolPhantomStable' ? 'batchSwap' : 'joinPool',
-              },
+        config:
+            zapEnabled || poolRequiresBatchRelayerOnJoin(pool)
+                ? batchRelayerContractConfig
+                : {
+                      ...vaultContractConfig,
+                      functionName: pool.__typename === 'GqlPoolPhantomStable' ? 'batchSwap' : 'joinPool',
+                  },
         transactionType: 'JOIN',
     });
 
     function joinPool(contractCallData: PoolJoinContractCallData, tokenAmountsIn: TokenAmountHumanReadable[]) {
         const amountsString = tokenAmountsConcatenatedString(tokenAmountsIn, pool.allTokens);
+
+        console.log('contractCallData', contractCallData);
 
         if (contractCallData.type === 'JoinPool') {
             //TODO: need to support slippage

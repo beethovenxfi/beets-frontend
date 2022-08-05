@@ -31,9 +31,7 @@ import { formatFixed } from '@ethersproject/bignumber';
 import { WeightedPoolEncoder } from '@balancer-labs/balancer-js';
 import { PoolBaseService } from '~/lib/services/pool/lib/pool-base.service';
 import OldBigNumber from 'bignumber.js';
-import { Zero } from '@ethersproject/constants';
 import { BatchRelayerService } from '~/lib/services/batch-relayer/batch-relayer.service';
-import { replaceEthWithZeroAddress } from '~/lib/services/token/token-util';
 
 export class PoolWeightedService implements PoolService {
     private baseService: PoolBaseService;
@@ -235,7 +233,7 @@ export class PoolWeightedService implements PoolService {
         );
     }
 
-    private encodeJoinPool(data: PoolJoinData): string {
+    public encodeJoinPool(data: PoolJoinData): string {
         if (data.kind == 'Init') {
             return WeightedPoolEncoder.joinInit(poolScaleTokenAmounts(data.tokenAmountsIn, this.pool.tokens));
         } else if (data.kind == 'ExactTokensInForBPTOut') {

@@ -37,6 +37,7 @@ interface PoolJoinBase {
     zapIntoMasterchefFarm?: boolean;
     userAddress: string;
     wethIsEth: boolean;
+    slippage: string;
 }
 
 export interface PoolJoinEstimateOutput {
