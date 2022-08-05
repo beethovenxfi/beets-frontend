@@ -23,6 +23,7 @@ function PoolList() {
     }, [userPoolIdsStr, showMyInvestments]);
 
     const poolsToRender = showMyInvestments ? orderBy(pools, (pool) => usdBalanceForPool(pool.id), 'desc') : pools;
+    const poolCount = count || 0;
 
     return (
         <Box>
@@ -33,7 +34,8 @@ function PoolList() {
                 items={poolsToRender}
                 currentPage={state.skip / state.first + 1}
                 pageSize={state.first}
-                count={count || 0}
+                count={poolCount}
+                isShort={poolCount < 21}
                 onPageChange={(page) => {
                     refetch({ ...state, skip: state.first * (page - 1) });
                 }}

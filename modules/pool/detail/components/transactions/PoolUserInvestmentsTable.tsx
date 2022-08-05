@@ -38,6 +38,7 @@ export function PoolUserInvestmentsTable() {
     return (
         <PaginatedTable
             isInfinite
+            isShort={transactions.length < 11}
             width="full"
             items={transactions}
             loading={false}
