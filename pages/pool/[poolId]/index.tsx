@@ -21,6 +21,9 @@ const PoolPage = ({ pool }: Props) => {
         <>
             <Head>
                 <title>Beethoven X | {pool.name}</title>
+                <meta name="title" content={`Beethoven X | ${pool.name}`} />
+                <meta property="og:title" content={`Beethoven X | ${pool.name}`} />
+                <meta property="twitter:title" content={`Beethoven X | ${pool.name}`} />
             </Head>
             <PoolProvider pool={pool}>
                 <Pool />

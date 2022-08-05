@@ -17,6 +17,9 @@ function Pools() {
         <>
             <Head>
                 <title>Beethoven X | Investment pools</title>
+                <meta name="title" content="Beethoven X | Investment pools" />
+                <meta property="og:title" content="Beethoven X | Investment pools" />
+                <meta property="twitter:title" content="Beethoven X | Investment pools" />
             </Head>
             <PageMasthead
                 title="Invest & Farm"

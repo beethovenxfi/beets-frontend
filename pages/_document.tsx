@@ -7,10 +7,42 @@ class BeetsDocument extends Document {
         return (
             <Html>
                 <Head>
-                    {/*<link
-                        href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap"
-                        rel="stylesheet"
-                    />*/}
+                    <meta name="title" content="Beethoven X" />
+                    <meta name="description" content="Your spiritually symphonic decentralized investment platform" />
+
+                    <meta property="og:type" content="website" />
+                    <meta property="og:url" content={`${process.env.VERCEL_URL}`} />
+                    <meta property="og:title" content="Beethoven X" />
+                    <meta
+                        property="og:description"
+                        content="The future of DeFi re-imagineered; Your next generation Decentralised Exchange."
+                    />
+                    {/*<meta property="og:image" content="https://app.beets.fi/images/social-image.png?1632652506" />*/}
+
+                    <meta property="twitter:card" content="summary_large_image" />
+                    <meta property="twitter:url" content={`${process.env.VERCEL_URL}`} />
+                    <meta property="twitter:title" content="Beethoven X" />
+                    <meta
+                        property="twitter:description"
+                        content="The future of DeFi re-imagineered; Your next generation Decentralised Exchange."
+                    />
+                    {/*<meta property="twitter:image" content="https://app.beets.fi/images/social-image.png?1632652506" />*/}
+
+                    <script
+                        async
+                        src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID}`}
+                    />
+
+                    <script
+                        dangerouslySetInnerHTML={{
+                            __html: `
+                                window.dataLayer = window.dataLayer || [];
+                                function gtag(){dataLayer.push(arguments);}
+                                gtag('js', new Date());
+                                gtag('config', '${process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID}', { page_path: window.location.pathname });
+                            `,
+                        }}
+                    />
                 </Head>
                 <body>
                     <ColorModeScript initialColorMode={chakraTheme.config.initialColorMode} />

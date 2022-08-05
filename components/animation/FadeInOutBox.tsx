@@ -4,15 +4,15 @@ import { CSSObject } from '@chakra-ui/styled-system/src/system.types';
 
 interface Props extends BoxProps {
     isVisible: boolean;
-    containerStyle?: Object;
+    containerWidth?: string;
 }
 
-export function FadeInOutBox({ children, isVisible, containerStyle, ...rest }: Props) {
+export function FadeInOutBox({ children, isVisible, containerWidth, ...rest }: Props) {
     return (
         <AnimatePresence>
             {isVisible && (
                 <motion.div
-                    style={containerStyle}
+                    style={{ width: containerWidth }}
                     animate={{ opacity: 1 }}
                     initial={{ opacity: 0 }}
                     exit={{ opacity: 0 }}

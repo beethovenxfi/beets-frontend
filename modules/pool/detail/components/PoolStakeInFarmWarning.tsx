@@ -15,7 +15,7 @@ export function PoolStakeInFarmWarning() {
 
     return (
         <>
-            <FadeInOutBox isVisible={hasBptInWallet} containerStyle={{ width: '100%' }}>
+            <FadeInOutBox isVisible={hasBptInWallet} containerWidth="100%">
                 <Alert status="warning" borderRadius="md" mb="4" width="full">
                     <AlertIcon />
                     <Box flex="1" mr="8">
