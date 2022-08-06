@@ -7,19 +7,30 @@ import { useUserAccount } from '~/lib/user/useUserAccount';
 
 export function usePoolJoinGetProportionalInvestmentAmount() {
     const { poolService, pool } = usePool();
-    const { userInvestTokenBalances } = useInvest();
+    const { userInvestTokenBalances, selectedInvestTokens } = useInvest();
     const { userAddress } = useUserAccount();
 
     const tokenWithSmallestValue = sortBy(
         userInvestTokenBalances.map((balance) => {
-            const token = pool.tokens.find((token) => token.address === replaceEthWithWeth(balance.address));
+            const investOption = pool.investConfig.options.find((option) => {
+                const tokenOption = option.tokenOptions.find(
+                    (tokenOption) => tokenOption.address === replaceEthWithWeth(balance.address),
+                );
+
+                return !!tokenOption;
+            });
+
+            const poolToken = investOption ? pool.tokens[investOption.poolTokenIndex] : undefined;
+            //TODO: this is not exactly accurate as we assume here the invest token has a 1:priceRate ratio to the pool token, which is not the case
+            //TODO: as the invest token is often time nested deeper in linear pool of phantom stable
+            const scaledBalance = parseFloat(balance.amount) / parseFloat(poolToken?.priceRate || '1');
 
             return {
                 ...balance,
                 //this has precision errors, but its only used for sorting, not any operations
-                normalizedAmount: token?.weight
-                    ? (parseFloat(balance.amount) / parseFloat(token.balance)) * (1 / parseFloat(token.weight))
-                    : parseFloat(balance.amount),
+                normalizedAmount: poolToken?.weight
+                    ? (scaledBalance / parseFloat(poolToken.balance)) * (1 / parseFloat(poolToken.weight))
+                    : scaledBalance,
             };
         }),
         'normalizedAmount',
@@ -45,7 +56,10 @@ export function usePoolJoinGetProportionalInvestmentAmount() {
                 return {};
             }
 
-            const result = await poolService.joinGetProportionalSuggestionForFixedAmount(fixedAmount);
+            const result = await poolService.joinGetProportionalSuggestionForFixedAmount(
+                fixedAmount,
+                selectedInvestTokens.map((token) => token.address),
+            );
 
             return Object.fromEntries(
                 result.map((item) => [

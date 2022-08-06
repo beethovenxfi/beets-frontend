@@ -1,7 +1,7 @@
 import { GqlPoolBase, GqlPoolTokenBase, GqlPoolUnion } from '~/apollo/generated/graphql-codegen-generated';
 import OldBigNumber from 'bignumber.js';
 import { oldBnum, oldBnumScaleAmount, oldBnumFromBnum, oldBnumZero } from '~/lib/services/pool/lib/old-big-number';
-import { poolGetRequiredToken, poolScaleAmp } from '~/lib/services/pool/lib/pool-util';
+import { poolGetRequiredToken, poolScaleAmp } from '~/lib/services/pool/lib/util';
 import { TokenAmountHumanReadable } from '~/lib/services/token/token-types';
 import { parseUnits } from 'ethers/lib/utils';
 import { isSameAddress } from '@balancer-labs/sdk';

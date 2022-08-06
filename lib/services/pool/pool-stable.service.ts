@@ -14,7 +14,7 @@ import {
     poolGetProportionalJoinAmountsForFixedAmount,
     poolGetRequiredToken,
     poolScaleTokenAmounts,
-} from '~/lib/services/pool/lib/pool-util';
+} from '~/lib/services/pool/lib/util';
 import { stableBPTForTokensZeroPriceImpact } from '@balancer-labs/sdk';
 import { parseUnits } from 'ethers/lib/utils';
 import {
@@ -54,6 +54,7 @@ export class PoolStableService implements PoolService {
 
     public async joinGetProportionalSuggestionForFixedAmount(
         fixedAmount: TokenAmountHumanReadable,
+        tokensIn: string[],
     ): Promise<TokenAmountHumanReadable[]> {
         return poolGetProportionalJoinAmountsForFixedAmount(fixedAmount, this.pool.tokens);
     }

@@ -8,9 +8,9 @@ import { PoolStableService } from '~/lib/services/pool/pool-stable.service';
 import { PoolPhantomStableService } from '~/lib/services/pool/pool-phantom-stable.service';
 import { PoolWeightedService } from '~/lib/services/pool/pool-weighted.service';
 import { PoolWeightedBoostedService } from '~/lib/services/pool/pool-weighted-boosted.service';
-import { rpcProviderService } from '~/lib/services/rpc-provider/rpc-provider.service';
 import { batchRelayerService } from '~/lib/services/batch-relayer/batch-relayer.service';
 import { networkConfig } from '~/lib/config/network-config';
+import { networkProvider } from '~/lib/global/network';
 
 export function poolGetTokensWithoutPhantomBpt(pool: GqlPoolUnion | GqlPoolPhantomStableNested | GqlPoolLinearNested) {
     return pool.tokens.filter((token) => token.address !== pool.address);
@@ -35,7 +35,7 @@ export function poolGetServiceForPool(pool: GqlPoolUnion): PoolService {
                     pool,
                     batchRelayerService,
                     networkConfig.wethAddress,
-                    rpcProviderService.getJsonProvider(),
+                    networkProvider,
                 );
             }
 
@@ -44,12 +44,7 @@ export function poolGetServiceForPool(pool: GqlPoolUnion): PoolService {
         case 'GqlPoolStable':
             return new PoolStableService(pool, batchRelayerService, networkConfig.wethAddress);
         case 'GqlPoolPhantomStable':
-            return new PoolPhantomStableService(
-                pool,
-                batchRelayerService,
-                networkConfig.wethAddress,
-                rpcProviderService.getJsonProvider(),
-            );
+            return new PoolPhantomStableService(pool, batchRelayerService, networkConfig.wethAddress, networkProvider);
     }
 
     throw new Error('unsupported pool type');

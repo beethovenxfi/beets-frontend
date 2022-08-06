@@ -12,7 +12,6 @@ import { networkConfig } from '~/lib/config/network-config';
 import { poolRequiresBatchRelayerOnJoin } from '~/lib/services/pool/pool-util';
 
 export function useJoinPool(pool: GqlPoolUnion, zapEnabled?: boolean) {
-    const { slippageDifference } = useSlippage();
     const { userAddress } = useUserAccount();
     const { submit, submitAsync, ...rest } = useSubmitTransaction({
         config:
@@ -27,8 +26,6 @@ export function useJoinPool(pool: GqlPoolUnion, zapEnabled?: boolean) {
 
     function joinPool(contractCallData: PoolJoinContractCallData, tokenAmountsIn: TokenAmountHumanReadable[]) {
         const amountsString = tokenAmountsConcatenatedString(tokenAmountsIn, pool.allTokens);
-
-        console.log('contractCallData', contractCallData);
 
         if (contractCallData.type === 'JoinPool') {
             //TODO: need to support slippage
@@ -57,17 +54,6 @@ export function useJoinPool(pool: GqlPoolUnion, zapEnabled?: boolean) {
                 walletText: `Join ${pool.name} with ${amountsString}`,
             });
         } else if (contractCallData.type === 'BatchSwap') {
-            const assets = contractCallData.assets;
-
-            //apply slippage to the bpt out
-            const limits = contractCallData.limits.map((limit, i) => {
-                if (isSameAddress(assets[i], pool.address)) {
-                    return oldBnum(limit.toString()).times(slippageDifference).times(-1).toFixed(0);
-                }
-
-                return limit;
-            });
-
             submit({
                 args: [
                     0,
@@ -79,7 +65,7 @@ export function useJoinPool(pool: GqlPoolUnion, zapEnabled?: boolean) {
                         recipient: userAddress,
                         toInternalBalance: false,
                     },
-                    limits,
+                    contractCallData.limits,
                     MaxUint256,
                 ],
                 toastText: amountsString,

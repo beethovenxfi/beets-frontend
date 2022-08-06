@@ -21,13 +21,19 @@ import {
 } from '@balancer-labs/sor';
 import { parseUnits } from 'ethers/lib/utils';
 import { PoolBaseService } from '~/lib/services/pool/lib/pool-base.service';
-import { isSameAddress, SwapV2 } from '@balancer-labs/sdk';
+import { isSameAddress, Swaps, SwapType, SwapV2 } from '@balancer-labs/sdk';
 import { BaseProvider } from '@ethersproject/providers';
 import { formatFixed } from '@ethersproject/bignumber';
-import { oldBnum, oldBnumFromBnum, oldBnumScaleAmount, oldBnumScaleDown } from '~/lib/services/pool/lib/old-big-number';
+import {
+    oldBnum,
+    oldBnumFromBnum,
+    oldBnumScale,
+    oldBnumScaleAmount,
+    oldBnumScaleDown,
+} from '~/lib/services/pool/lib/old-big-number';
 import OldBigNumber from 'bignumber.js';
 import { SwapKind } from '@balancer-labs/balancer-js';
-import { poolScaleAmp } from '~/lib/services/pool/lib/pool-util';
+import { poolScaleAmp } from '~/lib/services/pool/lib/util';
 import { BatchRelayerService } from '~/lib/services/batch-relayer/batch-relayer.service';
 import {
     poolBatchSwaps,
@@ -61,14 +67,24 @@ export class PoolPhantomStableService implements PoolService {
             throw new Error('unsupported join type');
         }
 
-        const { swaps, assets, deltas } = await this.getJoinSwaps(data.tokenAmountsIn);
+        const { swaps, assets, deltas, tokensIn, tokensOut } = await this.getJoinSwaps(data.tokenAmountsIn);
+
+        const limits = Swaps.getLimitsForSlippage(
+            tokensIn,
+            tokensOut,
+            SwapType.SwapExactIn,
+            deltas,
+            assets,
+            //5%=50_000_000_000_000_000.
+            `${oldBnumScale(data.slippage, 16).toFixed(0)}`,
+        ).map((limit) => limit.toString());
 
         return {
             type: 'BatchSwap',
             kind: SwapKind.GivenIn,
             swaps,
             assets: data.wethIsEth ? assets.map((asset) => this.baseService.wethToZero(asset)) : assets,
-            limits: deltas,
+            limits,
         };
     }
 
@@ -86,12 +102,6 @@ export class PoolPhantomStableService implements PoolService {
                 : oldBnum(1).minus(bptAmount.div(bptZeroPriceImpact)).toNumber(),
             minBptReceived: formatFixed(bptAmount.toString(), 18),
         };
-    }
-
-    public async joinGetProportionalSuggestionForFixedAmount(
-        fixedAmount: TokenAmountHumanReadable,
-    ): Promise<TokenAmountHumanReadable[]> {
-        throw new Error('joinGetProportionalSuggestionForFixedAmount not supported for phantom stable');
     }
 
     public async exitGetProportionalWithdrawEstimate(bptIn: AmountHumanReadable): Promise<TokenAmountHumanReadable[]> {
@@ -193,13 +203,17 @@ export class PoolPhantomStableService implements PoolService {
         swaps: SwapV2[];
         assets: string[];
         deltas: AmountScaledString[];
+        tokensIn: string[];
+        tokensOut: string[];
     }> {
+        const tokensOut: string[] = [];
         const joinSwaps = tokenAmountsIn.map((tokenAmountIn) => {
             const poolToken = poolFindPoolTokenFromOptions(
                 tokenAmountIn.address,
                 this.pool.tokens,
                 this.pool.investConfig.options,
             );
+            tokensOut.push(poolToken.address);
 
             return poolGetJoinSwapForToken({
                 poolId: this.pool.id,
@@ -221,7 +235,9 @@ export class PoolPhantomStableService implements PoolService {
             provider: this.provider,
         });
 
-        return { swaps, assets, deltas };
+        const tokensIn = tokenAmountsIn.map((tokenAmountIn) => tokenAmountIn.address);
+
+        return { swaps, assets, deltas, tokensIn, tokensOut };
     }
 
     private async getExitSwaps(bptInForTokens: TokenAmountHumanReadable[]): Promise<{

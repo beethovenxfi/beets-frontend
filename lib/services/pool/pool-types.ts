@@ -8,6 +8,7 @@ export interface PoolService {
 
     joinGetProportionalSuggestionForFixedAmount?(
         fixedAmount: TokenAmountHumanReadable,
+        tokensIn: string[],
     ): Promise<TokenAmountHumanReadable[]>;
     joinGetBptOutAndPriceImpactForTokensIn(
         tokenAmountsIn: TokenAmountHumanReadable[],
