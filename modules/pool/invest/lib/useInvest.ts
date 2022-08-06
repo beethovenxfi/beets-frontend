@@ -34,14 +34,9 @@ export function useInvest() {
 
     const hasValidUserInput =
         !selectedInvestTokensWithAmounts.every((token) => parseFloat(token.amount) === 0) &&
-        selectedInvestTokensWithAmounts.every((token) => {
-            console.log(
-                token.amount,
-                getUserBalanceForToken(token.address),
-                oldBnum(token.amount).lte(getUserBalanceForToken(token.address)),
-            );
-            return oldBnum(token.amount).lte(getUserBalanceForToken(token.address));
-        });
+        selectedInvestTokensWithAmounts.every((token) =>
+            oldBnum(token.amount).lte(getUserBalanceForToken(token.address)),
+        );
 
     const canInvestProportionally =
         pool.investConfig.options.filter(
