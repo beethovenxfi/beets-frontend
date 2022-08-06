@@ -190,13 +190,29 @@ export class PoolWeightedBoostedService implements PoolService {
                 ...data,
                 amountsOut: withdrawAmounts,
             });
-        } else {
-            exitContractData = await this.weightedPoolService.exitGetContractCallData(data);
+        } else if (data.kind === 'ExactBPTInForOneTokenOut') {
+            const poolToken = poolFindPoolTokenFromOptions(
+                data.tokenOutAddress,
+                this.pool.tokens,
+                this.pool.withdrawConfig.options,
+            );
 
-            throw new Error('TODO');
+            const weightedExitData = await this.weightedPoolService.exitGetSingleAssetWithdrawForBptIn(
+                data.bptAmountIn,
+                poolToken.address,
+            );
+
+            exitAmountsOut = [{ address: poolToken.address, amount: weightedExitData.tokenAmount }];
+            exitContractData = await this.weightedPoolService.exitGetContractCallData({
+                ...data,
+                tokenOutAddress: poolToken.address,
+                amountOut: weightedExitData.tokenAmount,
+            });
+        } else {
+            throw new Error('Unsupported exit type: ' + data.kind);
         }
 
-        const exitMinAmountsOut = exitContractData.minAmountsOut.map((amount) => amount.toString());
+        //keep track of the output references for the batch swap out
         const outputReferences = exitContractData.assets.map((asset, index) => ({
             asset,
             index,
@@ -207,7 +223,7 @@ export class PoolWeightedBoostedService implements PoolService {
             poolId: this.pool.id,
             poolKind: 0,
             assets: exitContractData.assets,
-            minAmountsOut: exitMinAmountsOut,
+            minAmountsOut: exitContractData.minAmountsOut.map((amount) => amount.toString()),
             userData: exitContractData.userData,
             sender: data.userAddress,
             recipient: data.userAddress,
@@ -270,6 +286,8 @@ export class PoolWeightedBoostedService implements PoolService {
             outputReferences: [],
         });
 
+        //TODO need to add unwrap support
+
         return {
             type: 'BatchRelayer',
             calls: [poolExit, batchSwap],
@@ -279,14 +297,48 @@ export class PoolWeightedBoostedService implements PoolService {
     public async exitGetBptInForSingleAssetWithdraw(
         tokenAmount: TokenAmountHumanReadable,
     ): Promise<PoolExitBptInSingleAssetWithdrawOutput> {
-        throw new Error('TODO: implement');
+        const poolToken = poolFindPoolTokenFromOptions(
+            tokenAmount.address,
+            this.pool.tokens,
+            this.pool.withdrawConfig.options,
+        );
+
+        if (tokenAmount.address === poolToken.address) {
+            return this.weightedPoolService.exitGetBptInForSingleAssetWithdraw(tokenAmount);
+        }
+
+        const { tokenAmountsMappedToPoolTokens } = await this.getJoinSwaps([tokenAmount]);
+
+        return this.weightedPoolService.exitGetBptInForSingleAssetWithdraw(tokenAmountsMappedToPoolTokens[0]);
     }
 
     public async exitGetSingleAssetWithdrawForBptIn(
         bptIn: AmountHumanReadable,
         tokenOutAddress: string,
     ): Promise<PoolExitSingleAssetWithdrawForBptInOutput> {
-        throw new Error('TODO: implement');
+        const poolToken = poolFindPoolTokenFromOptions(
+            tokenOutAddress,
+            this.pool.tokens,
+            this.pool.withdrawConfig.options,
+        );
+
+        const weightedExitData = await this.weightedPoolService.exitGetSingleAssetWithdrawForBptIn(
+            bptIn,
+            poolToken.address,
+        );
+
+        if (poolToken.address === tokenOutAddress) {
+            return weightedExitData;
+        }
+
+        const { tokenOutAmounts } = await this.getExitSwaps([
+            { address: poolToken.address, amount: weightedExitData.tokenAmount, tokenOut: tokenOutAddress },
+        ]);
+
+        return {
+            priceImpact: weightedExitData.priceImpact,
+            tokenAmount: tokenOutAmounts[0].amount,
+        };
     }
 
     public async exitGetProportionalWithdrawEstimate(
