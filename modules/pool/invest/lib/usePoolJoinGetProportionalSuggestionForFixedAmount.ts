@@ -4,11 +4,13 @@ import { investStateVar } from '~/modules/pool/invest/lib/useInvestState';
 import { tokenAmountsGetArrayFromMap } from '~/lib/services/token/token-util';
 import { useQuery } from 'react-query';
 import { AmountHumanReadableMap } from '~/lib/services/token/token-types';
+import { useInvest } from '~/modules/pool/invest/lib/useInvest';
 
 export function usePoolJoinGetProportionalSuggestionForFixedAmount() {
     const { poolService } = usePool();
     const { inputAmounts } = useReactiveVar(investStateVar);
     const tokenAmountsIn = tokenAmountsGetArrayFromMap(inputAmounts);
+    const { selectedInvestTokens } = useInvest();
 
     return useQuery(
         [{ key: 'joinGetProportionalSuggestionForFixedAmount', tokenAmountsIn }],
@@ -19,7 +21,10 @@ export function usePoolJoinGetProportionalSuggestionForFixedAmount() {
                 return {};
             }
 
-            const result = await poolService.joinGetProportionalSuggestionForFixedAmount(fixedAmount);
+            const result = await poolService.joinGetProportionalSuggestionForFixedAmount(
+                fixedAmount,
+                selectedInvestTokens.map((token) => token.address),
+            );
             const proportionalSuggestion = Object.fromEntries(result.map((item) => [item.address, item.amount]));
 
             return isProportionalSuggestionValid(inputAmounts, proportionalSuggestion) ? proportionalSuggestion : {};
