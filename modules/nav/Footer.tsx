@@ -9,6 +9,7 @@ import MediumIcon from '~/assets/icons/medium.svg';
 import GithubIcon from '~/assets/icons/github.svg';
 import { FooterLink } from '~/modules/nav/FooterLink';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
+import { networkConfig } from '~/lib/config/network-config';
 
 export function Footer() {
     const { chainId } = useNetworkConfig();
@@ -39,6 +40,7 @@ export function Footer() {
                             <FooterLink href="https://snapshot.org/#/beets.eth">Vote</FooterLink>
                             <FooterLink href="https:/info.beets.fi">Analytics</FooterLink>
                             <FooterLink href="https:/docs.beets.fi">Docs & Help</FooterLink>
+                            <FooterLink href={networkConfig.createPoolUrl}>Compose a pool</FooterLink>
                         </GridItem>
                         <GridItem>
                             <FooterLink href="https://pro.olympusdao.finance/#/bond">Olympus Bonds</FooterLink>
