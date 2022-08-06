@@ -69,10 +69,10 @@ function Pool(props: PoolTransaction) {
     const isExitAction = props.type === PoolTransactionType.Exit;
     const isSwapAction = props.type === PoolTransactionType.Swap;
 
-    const isMobile = useBreakpointValue({ base: true, xl: false });
+    const isMobile = useBreakpointValue({ base: true, lg: false });
 
     return (
-        <Stack spacing="2" alignItems={{ base: 'flex-start', xl: 'center' }} direction={{ base: 'column', xl: 'row' }}>
+        <Stack spacing="2" alignItems={{ base: 'flex-start', lg: 'center' }} direction={{ base: 'column', lg: 'row' }}>
             {!props.isPhantomStable && (
                 <>
                     {isInvestAction &&
@@ -93,7 +93,7 @@ function Pool(props: PoolTransaction) {
                                 amount={(props.transaction as GqlPoolSwap).tokenAmountIn}
                                 address={(props.transaction as GqlPoolSwap).tokenIn}
                             />
-                            <Box mx={{ base: 0, xl: 2 }} pl={{ base: 10, xl: 0 }}>
+                            <Box mx={{ base: 0, lg: 2 }} pl={{ base: 10, lg: 0 }}>
                                 {isMobile ? <ArrowDown /> : <ArrowRight />}
                             </Box>
                             <TokenAmountPill
@@ -137,23 +137,23 @@ export default function PoolTransactionItem({ transaction, ...rest }: Props) {
         return numeral(transaction.transaction.valueUSD).format('$0,0.000');
     };
 
-    const flexAlign = { base: 'flex-start', xl: 'center' };
-    const gridItemMb = { base: '4', xl: '0' };
-    const justifyContent = { base: 'flex-start', xl: 'flex-end' };
+    const flexAlign = { base: 'flex-start', lg: 'center' };
+    const gridItemMb = { base: '4', lg: '0' };
+    const justifyContent = { base: 'flex-start', lg: 'flex-end' };
 
     return (
         <Grid
             px="4"
-            py={{ base: '4', xl: '2' }}
+            py={{ base: '4', lg: '2' }}
             templateColumns={{
                 base: '1fr 1fr',
-                xl: '200px 1fr 200px 200px',
+                lg: '200px 1fr 200px 200px',
             }}
             gap="0"
             templateAreas={{
                 base: `"action time"
                              "details value"`,
-                xl: `"action details value time"`,
+                lg: `"action details value time"`,
             }}
             bgColor="rgba(255,255,255,0.05)"
             _hover={{ bg: '#100C3A' }}
@@ -194,7 +194,7 @@ export default function PoolTransactionItem({ transaction, ...rest }: Props) {
 
     function MobileLabel({ text }: { text: string }) {
         return (
-            <Text fontSize="xs" color="gray.200" display={{ base: 'block', xl: 'none' }}>
+            <Text fontSize="xs" color="gray.200" display={{ base: 'block', lg: 'none' }}>
                 {text}
             </Text>
         );

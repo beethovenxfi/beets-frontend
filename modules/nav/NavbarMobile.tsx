@@ -1,9 +1,11 @@
 import { NavbarLink } from '~/modules/nav/NavbarLink';
 import { Box, Flex } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
+import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 
 export function NavbarMobile() {
     const router = useRouter();
+    const { chainId } = useNetworkConfig();
 
     return (
         <Box
@@ -21,8 +23,12 @@ export function NavbarMobile() {
             <Flex alignItems="center">
                 <NavbarLink href={'/pools'} selected={router.asPath.startsWith('/pool')} text="Invest" mr="1" px="4" />
                 <NavbarLink href={'/swap'} selected={router.asPath === '/swap'} text="Swap" mr="1" px="4" />
-                <NavbarLink href={'/pools'} text="Stake" mr="1" px="4" />
-                <NavbarLink href={'/pools'} text="Launch" px="4" />
+                {chainId === '250' && (
+                    <>
+                        <NavbarLink href={'/pools'} text="Stake" mr="1" px="4" />
+                        <NavbarLink href={'/pools'} text="Launch" px="4" />
+                    </>
+                )}
             </Flex>
         </Box>
     );
