@@ -101,4 +101,5 @@ export const optimismNetworkConfig: NetworkConfig = {
     gauge: {
         rewardHelperAddress: '0x299dcdf14350999496204c141a0c20a29d71af3e',
     },
+    createPoolUrl: 'https://op.beets.fi/#/pool-create',
 };

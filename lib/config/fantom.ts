@@ -103,4 +103,7 @@ export const fantomNetworkConfig: NetworkConfig = {
     gauge: {
         rewardHelperAddress: AddressZero,
     },
+    createPoolUrl: 'https://beets.fi/#/pool-create',
+    launchUrl: 'https://beets.fi/#/launch',
+    stakeUrl: 'https://beets.fi/#/stake',
 };

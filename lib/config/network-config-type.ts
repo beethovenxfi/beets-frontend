@@ -64,4 +64,8 @@ export interface NetworkConfig {
     gauge: {
         rewardHelperAddress: string;
     };
+
+    createPoolUrl: string;
+    launchUrl?: string;
+    stakeUrl?: string;
 }

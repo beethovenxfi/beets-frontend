@@ -1,4 +1,4 @@
-import { Box } from '@chakra-ui/react';
+import { Box, Button, Link, Text } from '@chakra-ui/react';
 import { NetworkStatus } from '@apollo/client';
 import { usePoolList } from './usePoolList';
 import { PoolListItem } from '~/modules/pools/components/PoolListItem';
@@ -9,6 +9,7 @@ import { useUserData } from '~/lib/user/useUserData';
 import { useEffect } from 'react';
 import { orderBy } from 'lodash';
 import { PoolListMobileHeader } from '~/modules/pools/components/PoolListMobileHeader';
+import { networkConfig } from '~/lib/config/network-config';
 
 function PoolList() {
     const { pools, refetch, loading, networkStatus, state, count, setPageSize, setPoolIds, showMyInvestments } =
@@ -57,6 +58,15 @@ function PoolList() {
                     );
                 }}
             />
+
+            <Box mt="10">
+                <Text fontSize="xl" color="white" mb="4">
+                    Can&apos;t find what you&apos;re looking for?
+                </Text>
+                <Button variant="primary" size="lg" as={Link} href={networkConfig.createPoolUrl}>
+                    Compose a pool
+                </Button>
+            </Box>
         </Box>
     );
 }
