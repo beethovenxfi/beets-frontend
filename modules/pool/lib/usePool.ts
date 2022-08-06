@@ -3,7 +3,11 @@ import { TokenBase } from '~/lib/services/token/token-types';
 import { uniqBy } from 'lodash';
 import { useContext, useEffect } from 'react';
 import { PoolContext } from '~/modules/pool/components/PoolProvider';
-import { poolGetServiceForPool, poolGetTokensWithoutPhantomBpt } from '~/lib/services/pool/pool-util';
+import {
+    poolGetServiceForPool,
+    poolGetTokensWithoutPhantomBpt,
+    poolRequiresBatchRelayerOnJoin,
+} from '~/lib/services/pool/pool-util';
 import { useEffectOnce } from '~/lib/util/custom-hooks';
 
 export function usePool() {
@@ -40,6 +44,11 @@ export function usePool() {
     ];
     const allTokens = uniqBy(allTokensWithDuplicates, (token) => token.address);
     const bptPrice = parseFloat(pool.dynamicData.totalLiquidity) / parseFloat(pool.dynamicData.totalShares);
+    const requiresBatchRelayerOnJoin = poolRequiresBatchRelayerOnJoin(pool);
+    const supportsZap =
+        (pool.__typename === 'GqlPoolWeighted' || pool.__typename === 'GqlPoolStable') &&
+        pool.staking?.type === 'MASTER_CHEF' &&
+        pool.staking.farm;
 
     function getPoolTypeName() {
         switch (pool.__typename) {
@@ -66,5 +75,7 @@ export function usePool() {
         totalApr: parseFloat(pool.dynamicData.apr.total),
         bptPrice,
         getPoolTypeName,
+        requiresBatchRelayerOnJoin,
+        supportsZap,
     };
 }

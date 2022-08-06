@@ -13,11 +13,7 @@ import { useEffect } from 'react';
 export function PoolInvestSettings({ ...rest }: BoxProps) {
     const { zapEnabled, toggleZapEnabled } = useInvestState();
     const { data: hasBatchRelayerApproval } = useHasBatchRelayerApproval();
-    const { pool } = usePool();
-    const supportsZap =
-        (pool.__typename === 'GqlPoolWeighted' || pool.__typename === 'GqlPoolStable') &&
-        pool.staking?.type === 'MASTER_CHEF' &&
-        pool.staking.farm;
+    const { pool, supportsZap, requiresBatchRelayerOnJoin } = usePool();
 
     useEffect(() => {
         if (!supportsZap && zapEnabled) {
@@ -27,19 +23,41 @@ export function PoolInvestSettings({ ...rest }: BoxProps) {
         }
     }, [supportsZap]);
 
+    const batchRelayerInfoButton = (
+        <InfoButton
+            label="Batch Relayer"
+            infoText="The Batch Relayer is a smart contract that allows multiple individual actions to be grouped together into a single transaction. Zapping requires you to approve the Batch Relayer once."
+        />
+    );
+
     return (
         <Box {...rest}>
             <ModalSectionHeadline headline={`Settings`} />
             <BeetsBox p="2">
+                {requiresBatchRelayerOnJoin && (
+                    <CardRow>
+                        <Box flex="1">
+                            {batchRelayerInfoButton}
+                            <Text color="gray.200" fontSize="sm">
+                                Investing into this pool requires the batch relayer.
+                            </Text>
+                        </Box>
+                        <Box>
+                            {!hasBatchRelayerApproval ? (
+                                <BeetsBatchRelayerApprovalButton />
+                            ) : (
+                                <Text color="green">Approved</Text>
+                            )}
+                        </Box>
+                    </CardRow>
+                )}
                 <CardRow flexDirection="column">
                     <Flex>
                         <Box flex="1">
-                            <Flex alignItems="center">
-                                <InfoButton
-                                    label="Zap into farm"
-                                    infoText="With ZAP enabled, your investment BPTs are automatically deposited to the farm, saving time & maximizing yield."
-                                />
-                            </Flex>
+                            <InfoButton
+                                label="Zap into farm"
+                                infoText="With ZAP enabled, your investment BPTs are automatically deposited to the farm, saving time & maximizing yield."
+                            />
                             <Text color="gray.200" fontSize="sm">
                                 Deposit my BPTs directly into the farm with ZAP.
                             </Text>
@@ -51,15 +69,10 @@ export function PoolInvestSettings({ ...rest }: BoxProps) {
                             onChange={toggleZapEnabled}
                         />
                     </Flex>
-                    {supportsZap && (
+                    {supportsZap && !requiresBatchRelayerOnJoin && (
                         <Collapse in={zapEnabled} animateOpacity>
                             <Flex mt="2" alignItems="center">
-                                <Box flex="1">
-                                    <InfoButton
-                                        label="Batch Relayer"
-                                        infoText="The Batch Relayer is a smart contract that allows multiple individual actions to be grouped together into a single transaction. Zapping requires you to approve the Batch Relayer once."
-                                    />
-                                </Box>
+                                <Box flex="1">{batchRelayerInfoButton}</Box>
                                 <Box>
                                     {!hasBatchRelayerApproval ? (
                                         <BeetsBatchRelayerApprovalButton />
