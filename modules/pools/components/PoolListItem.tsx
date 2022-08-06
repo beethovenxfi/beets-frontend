@@ -63,6 +63,7 @@ export function PoolListItem({ pool, userBalance, showUserBalance, ...rest }: Pr
                                 width={124}
                                 tokenData={tokenData}
                                 display={{ base: 'block', lg: 'none' }}
+                                maxAssetsPerLine={8}
                             />
                         </GridItem>
                         <GridItem area="name" mb={{ base: '4', lg: '0' }}>

@@ -18,6 +18,7 @@ interface Props<T> extends BoxProps {
     renderTableRow: (item: T, index: number) => React.ReactNode;
     onFetchMore?: () => void;
     isInfinite?: boolean;
+    isShort?: boolean;
 }
 
 export function PaginatedTable({
@@ -34,6 +35,7 @@ export function PaginatedTable({
     renderTableHeader,
     isInfinite,
     onFetchMore,
+    isShort,
     ...rest
 }: Props<any>) {
     const isLoadingRows = loading && items.length === 0;
@@ -62,7 +64,7 @@ export function PaginatedTable({
                         </AnimatedBox>
                     ))}
             </Box>
-            {!isInfinite && (
+            {!isShort && !isInfinite && (
                 <Flex>
                     <Flex flex={1} alignItems="center" justifyContent="flex-start">
                         {hidePageSizeChange ? null : (
@@ -124,7 +126,7 @@ export function PaginatedTable({
                     />
                 </Flex>
             )}
-            {isInfinite && (
+            {!isShort && isInfinite && (
                 <Flex justifyContent="center" width="full">
                     <Button variant="primary" isLoading={fetchingMore} onClick={onFetchMore}>
                         Load More
