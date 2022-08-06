@@ -51,39 +51,41 @@ export function PoolInvestSettings({ ...rest }: BoxProps) {
                         </Box>
                     </CardRow>
                 )}
-                <CardRow flexDirection="column">
-                    <Flex>
-                        <Box flex="1">
-                            <InfoButton
-                                label="Zap into farm"
-                                infoText="With ZAP enabled, your investment BPTs are automatically deposited to the farm, saving time & maximizing yield."
+                {supportsZap && (
+                    <CardRow flexDirection="column">
+                        <Flex>
+                            <Box flex="1">
+                                <InfoButton
+                                    label="Zap into farm"
+                                    infoText="With ZAP enabled, your investment BPTs are automatically deposited to the farm, saving time & maximizing yield."
+                                />
+                                <Text color="gray.200" fontSize="sm">
+                                    Deposit my BPTs directly into the farm with ZAP.
+                                </Text>
+                            </Box>
+                            <Switch
+                                id="zap-into-farm"
+                                colorScheme="green"
+                                isChecked={zapEnabled}
+                                onChange={toggleZapEnabled}
                             />
-                            <Text color="gray.200" fontSize="sm">
-                                Deposit my BPTs directly into the farm with ZAP.
-                            </Text>
-                        </Box>
-                        <Switch
-                            id="zap-into-farm"
-                            colorScheme="green"
-                            isChecked={zapEnabled}
-                            onChange={toggleZapEnabled}
-                        />
-                    </Flex>
-                    {supportsZap && !requiresBatchRelayerOnJoin && (
-                        <Collapse in={zapEnabled} animateOpacity>
-                            <Flex mt="2" alignItems="center">
-                                <Box flex="1">{batchRelayerInfoButton}</Box>
-                                <Box>
-                                    {!hasBatchRelayerApproval ? (
-                                        <BeetsBatchRelayerApprovalButton />
-                                    ) : (
-                                        <Text color="green">Approved</Text>
-                                    )}
-                                </Box>
-                            </Flex>
-                        </Collapse>
-                    )}
-                </CardRow>
+                        </Flex>
+                        {supportsZap && !requiresBatchRelayerOnJoin && (
+                            <Collapse in={zapEnabled} animateOpacity>
+                                <Flex mt="2" alignItems="center">
+                                    <Box flex="1">{batchRelayerInfoButton}</Box>
+                                    <Box>
+                                        {!hasBatchRelayerApproval ? (
+                                            <BeetsBatchRelayerApprovalButton />
+                                        ) : (
+                                            <Text color="green">Approved</Text>
+                                        )}
+                                    </Box>
+                                </Flex>
+                            </Collapse>
+                        )}
+                    </CardRow>
+                )}
 
                 <CardRow mb="0">
                     <Box flex="1">
