@@ -87,7 +87,8 @@ export type PoolExitData =
     | PoolExitBPTInForExactTokensOut;
 
 export interface PoolExitBase {
-    slippage: number;
+    slippage: string;
+    userAddress: string;
 }
 
 export interface PoolExitExactBPTInForOneTokenOut extends PoolExitBase {
@@ -137,7 +138,10 @@ export interface PoolJoinBatchRelayerContractCallData {
     ethValue?: string;
 }
 
-export type PoolExitContractCallData = PoolExitPoolContractCallData | PoolExitBatchSwapContractCallData;
+export type PoolExitContractCallData =
+    | PoolExitPoolContractCallData
+    | PoolExitBatchSwapContractCallData
+    | PoolExitBatchRelayerContractCallData;
 
 export interface PoolExitPoolContractCallData {
     type: 'ExitPool';
@@ -152,4 +156,9 @@ export interface PoolExitBatchSwapContractCallData {
     swaps: BatchSwapStep[];
     assets: string[];
     limits: BigNumberish[];
+}
+
+export interface PoolExitBatchRelayerContractCallData {
+    type: 'BatchRelayer';
+    calls: string[];
 }

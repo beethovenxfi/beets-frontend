@@ -8,6 +8,7 @@ import {
     PoolExitBptInSingleAssetWithdrawOutput,
     PoolExitContractCallData,
     PoolExitData,
+    PoolExitPoolContractCallData,
     PoolExitSingleAssetWithdrawForBptInOutput,
     PoolJoinContractCallData,
     PoolJoinData,
@@ -19,7 +20,7 @@ import { AmountHumanReadable, AmountScaledString, TokenAmountHumanReadable } fro
 import { BatchRelayerService } from '~/lib/services/batch-relayer/batch-relayer.service';
 import { PoolBaseService } from '~/lib/services/pool/lib/pool-base.service';
 import { PoolWeightedService } from '~/lib/services/pool/pool-weighted.service';
-import { Swaps, SwapType, SwapV2, WeightedPoolEncoder } from '@balancer-labs/sdk';
+import { isSameAddress, Swaps, SwapType, SwapV2, WeightedPoolEncoder } from '@balancer-labs/sdk';
 import {
     poolBatchSwaps,
     poolFindNestedPoolTokenForToken,
@@ -30,9 +31,12 @@ import {
 import { SwapTypes } from '@balancer-labs/sor';
 import { BaseProvider } from '@ethersproject/providers';
 import { parseUnits } from 'ethers/lib/utils';
-import { oldBnum, oldBnumScale } from '~/lib/services/pool/lib/old-big-number';
+import { oldBnum, oldBnumScale, oldBnumSubtractSlippage } from '~/lib/services/pool/lib/old-big-number';
 import { formatFixed } from '@ethersproject/bignumber';
-import { MaxUint256, Zero } from '@ethersproject/constants';
+import { MaxUint256, WeiPerEther, Zero } from '@ethersproject/constants';
+import { poolScaleTokenAmounts } from '~/lib/services/pool/lib/util';
+import { poolIsTokenPhantomBpt } from '~/lib/services/pool/pool-util';
+import { BigNumber } from 'ethers';
 
 export class PoolWeightedBoostedService implements PoolService {
     private baseService: PoolBaseService;
@@ -75,6 +79,8 @@ export class PoolWeightedBoostedService implements PoolService {
                 ethAmountScaled,
                 assets,
                 swaps,
+                fromInternalBalance: false,
+                toInternalBalance: true,
             }),
         );
 
@@ -84,6 +90,7 @@ export class PoolWeightedBoostedService implements PoolService {
                 data,
                 ethAmountScaled,
                 batchSwapAssets: assets,
+                fromInternalBalance: true,
             }),
         );
 
@@ -137,17 +144,9 @@ export class PoolWeightedBoostedService implements PoolService {
             };
         });
 
-        const { assets, deltas } = await this.getExitSwaps(exitAmounts);
+        const { tokenOutAmounts } = await this.getExitSwaps(exitAmounts);
 
-        return tokensIn.map((tokenIn) => {
-            const assetIndex = assets.findIndex((asset) => asset.toLowerCase() === tokenIn);
-            const token = this.pool.allTokens.find((token) => token.address === tokenIn)!;
-
-            return {
-                address: tokenIn,
-                amount: formatFixed(oldBnum(deltas[assetIndex]).abs().toString(), token.decimals),
-            };
-        });
+        return tokenOutAmounts;
     }
 
     //we're disregarding the price impact of entering the phantom stable.
@@ -173,7 +172,108 @@ export class PoolWeightedBoostedService implements PoolService {
     }
 
     public async exitGetContractCallData(data: PoolExitData): Promise<PoolExitContractCallData> {
-        throw new Error('TODO: implement');
+        const tokensOut =
+            data.kind === 'ExactBPTInForOneTokenOut'
+                ? [data.tokenOutAddress]
+                : data.amountsOut.map((amount) => amount.address);
+        let exitContractData: PoolExitPoolContractCallData;
+        let exitAmountsOut: TokenAmountHumanReadable[] = [];
+
+        if (data.kind === 'ExactBPTInForTokensOut') {
+            const withdrawAmounts = await this.weightedPoolService.exitGetProportionalWithdrawEstimate(
+                data.bptAmountIn,
+                this.pool.tokens.map((token) => token.address),
+            );
+
+            exitAmountsOut = withdrawAmounts;
+            exitContractData = await this.weightedPoolService.exitGetContractCallData({
+                ...data,
+                amountsOut: withdrawAmounts,
+            });
+        } else {
+            exitContractData = await this.weightedPoolService.exitGetContractCallData(data);
+
+            throw new Error('TODO');
+        }
+
+        const exitMinAmountsOut = exitContractData.minAmountsOut.map((amount) => amount.toString());
+        const outputReferences = exitContractData.assets.map((asset, index) => ({
+            asset,
+            index,
+            key: this.batchRelayerService.toChainedReference(index),
+        }));
+
+        const poolExit = this.batchRelayerService.vaultConstructExitCall({
+            poolId: this.pool.id,
+            poolKind: 0,
+            assets: exitContractData.assets,
+            minAmountsOut: exitMinAmountsOut,
+            userData: exitContractData.userData,
+            sender: data.userAddress,
+            recipient: data.userAddress,
+            outputReferences,
+            toInternalBalance: this.hasOnlyPhantomBpts,
+        });
+
+        const phantomBptTokensWithExits = this.phantomBptPoolTokens.filter((token) =>
+            exitAmountsOut.find((amountOut) => amountOut.address === token.address),
+        );
+
+        const batchSwapEntries = phantomBptTokensWithExits.map((poolToken) => {
+            const exitAmountOut = exitAmountsOut.find((amountOut) => amountOut.address === poolToken.address)!;
+            const option = this.pool.withdrawConfig.options.find(
+                (option) => option.poolTokenIndex === poolToken.index,
+            )!;
+            const tokenOut = option.tokenOptions.find((tokenOption) => tokensOut.includes(tokenOption.address))!;
+
+            return {
+                address: poolToken.address,
+                amount: exitAmountOut.amount,
+                tokenOut: tokenOut.address,
+            };
+        });
+
+        const { swaps, deltas, assets } = await this.getExitSwaps(batchSwapEntries);
+
+        // Update swap amounts with ref outputs from exitPool
+        swaps.forEach((swap) => {
+            const token = assets[swap.assetInIndex];
+            const index = outputReferences.findIndex((ref) => isSameAddress(ref.asset, token));
+
+            if (index !== -1) {
+                swap.amount = outputReferences[index].key.toString();
+            }
+        });
+
+        //apply the slippage to the amounts out for the batch swap
+        assets.forEach((asset, assetIdx) => {
+            if (tokensOut.includes(asset)) {
+                deltas[assetIdx] = oldBnum(deltas[assetIdx])
+                    .times(1 - parseFloat(data.slippage))
+                    .toFixed(0);
+            }
+        });
+
+        const batchSwap = this.batchRelayerService.vaultEncodeBatchSwap({
+            swapType: SwapType.SwapExactIn,
+            swaps,
+            assets,
+            funds: {
+                sender: data.userAddress,
+                recipient: data.userAddress,
+                fromInternalBalance: this.hasOnlyPhantomBpts,
+                toInternalBalance: false,
+            },
+            limits: deltas,
+            deadline: MaxUint256,
+            value: Zero,
+            outputReferences: [],
+        });
+
+        return {
+            type: 'BatchRelayer',
+            calls: [poolExit, batchSwap],
+        };
     }
 
     public async exitGetBptInForSingleAssetWithdraw(
@@ -197,6 +297,7 @@ export class PoolWeightedBoostedService implements PoolService {
             bptIn,
             this.pool.tokens.map((token) => token.address),
         );
+
         const exitAmounts = withdrawAmounts.map(({ amount, address }) => {
             const option = this.pool.withdrawConfig.options.find((option) => option.poolTokenAddress === address)!;
             const tokenOption = option.tokenOptions.find((tokenOption) => tokensOut.includes(tokenOption.address))!;
@@ -204,30 +305,9 @@ export class PoolWeightedBoostedService implements PoolService {
             return { address, amount, tokenOut: tokenOption.address };
         });
 
-        const { assets, deltas } = await this.getExitSwaps(exitAmounts);
+        const { tokenOutAmounts } = await this.getExitSwaps(exitAmounts);
 
-        console.log(
-            'testing',
-            tokensOut.map((tokenOut) => {
-                const assetIndex = assets.findIndex((asset) => asset.toLowerCase() === tokenOut);
-                const token = this.pool.allTokens.find((token) => token.address === tokenOut)!;
-
-                return {
-                    address: tokenOut,
-                    amount: formatFixed(oldBnum(deltas[assetIndex]).abs().toString(), token.decimals),
-                };
-            }),
-        );
-
-        return tokensOut.map((tokenOut) => {
-            const assetIndex = assets.findIndex((asset) => asset.toLowerCase() === tokenOut);
-            const token = this.pool.allTokens.find((token) => token.address === tokenOut)!;
-
-            return {
-                address: tokenOut,
-                amount: formatFixed(oldBnum(deltas[assetIndex]).abs().toString(), token.decimals),
-            };
-        });
+        return tokenOutAmounts;
     }
 
     private async getJoinSwaps(tokenAmountsIn: TokenAmountHumanReadable[]): Promise<{
@@ -308,14 +388,18 @@ export class PoolWeightedBoostedService implements PoolService {
         data,
         swaps,
         ethAmountScaled,
+        fromInternalBalance,
+        toInternalBalance,
     }: {
         tokensIn: string[];
         tokensOut: string[];
         swaps: SwapV2[];
         deltas: AmountScaledString[];
         assets: string[];
-        data: PoolJoinData;
+        data: PoolJoinData | PoolExitData;
         ethAmountScaled: AmountScaledString;
+        fromInternalBalance: boolean;
+        toInternalBalance: boolean;
     }): string {
         const limits = Swaps.getLimitsForSlippage(
             tokensIn,
@@ -334,8 +418,8 @@ export class PoolWeightedBoostedService implements PoolService {
             funds: {
                 sender: data.userAddress,
                 recipient: data.userAddress,
-                fromInternalBalance: false,
-                toInternalBalance: true,
+                fromInternalBalance,
+                toInternalBalance,
             },
             limits: limits.map((l) => l.toString()),
             deadline: MaxUint256,
@@ -352,11 +436,13 @@ export class PoolWeightedBoostedService implements PoolService {
         batchSwapAssets,
         data,
         ethAmountScaled,
+        fromInternalBalance,
     }: {
         deltas: AmountScaledString[];
         batchSwapAssets: string[];
         data: PoolJoinExactTokensInForBPTOut;
         ethAmountScaled: AmountScaledString;
+        fromInternalBalance: boolean;
     }): string {
         const joinHasNativeAsset =
             data.wethIsEth && this.pool.tokens.find((token) => token.address === this.wethAddress);
@@ -391,7 +477,7 @@ export class PoolWeightedBoostedService implements PoolService {
                 ),
                 maxAmountsIn: amountsIn,
                 userData: WeightedPoolEncoder.joinExactTokensInForBPTOut(amountsIn, parseUnits(data.minimumBpt, 18)),
-                fromInternalBalance: true,
+                fromInternalBalance,
             },
             value: joinHasNativeAsset ? ethAmountScaled : Zero,
             outputReference: data.zapIntoMasterchefFarm ? this.batchRelayerService.toChainedReference(0) : Zero,
@@ -402,9 +488,7 @@ export class PoolWeightedBoostedService implements PoolService {
         swaps: SwapV2[];
         assets: string[];
         deltas: AmountScaledString[];
-        /*tokenAmountsMappedToPoolTokens: TokenAmountHumanReadable[];
-        tokensIn: string[];
-        tokensOut: string[];*/
+        tokenOutAmounts: TokenAmountHumanReadable[];
     }> {
         const joinSwaps: { swaps: SwapV2[]; assets: string[] }[] = [];
 
@@ -439,31 +523,17 @@ export class PoolWeightedBoostedService implements PoolService {
             provider: this.provider,
         });
 
-        /*const tokensIn = tokenAmountsIn.map((tokenAmounIn) => tokenAmounIn.address);
-        const tokensOut: string[] = [];
-        const tokenAmountsMappedToPoolTokens = tokenAmountsIn.map((tokenAmountIn) => {
-            const poolToken = poolFindPoolTokenFromOptions(
-                tokenAmountIn.address,
-                this.pool.tokens,
-                this.pool.investConfig.options,
-            );
+        const tokenOutAmounts = exitAmounts.map(({ tokenOut }) => {
+            const assetIndex = assets.findIndex((asset) => asset.toLowerCase() === tokenOut);
+            const token = this.pool.allTokens.find((token) => token.address === tokenOut)!;
 
-            if (poolToken.__typename === 'GqlPoolTokenPhantomStable' || poolToken.__typename === 'GqlPoolTokenLinear') {
-                const assetIndex = assets.findIndex((asset) => asset === poolToken.address);
-                const delta = deltas[assetIndex];
+            return {
+                address: tokenOut,
+                amount: formatFixed(oldBnum(deltas[assetIndex]).abs().toString(), token.decimals),
+            };
+        });
 
-                tokensOut.push(poolToken.address);
-
-                return {
-                    address: poolToken.address,
-                    amount: formatFixed(oldBnum(delta).abs().toString(), 18),
-                };
-            }
-
-            return tokenAmountIn;
-        });*/
-
-        return { swaps, assets, deltas };
+        return { swaps, assets, deltas, tokenOutAmounts };
     }
 
     private phantomBptPoolTokenGetExitSwaps({
@@ -529,5 +599,13 @@ export class PoolWeightedBoostedService implements PoolService {
         }
 
         throw new Error(`No available join swap path for poolId: ${poolToken.address} and token: ${tokenOut}`);
+    }
+
+    private get hasOnlyPhantomBpts() {
+        return this.pool.nestingType === 'HAS_ONLY_PHANTOM_BPT';
+    }
+
+    private get phantomBptPoolTokens() {
+        return this.pool.tokens.filter(poolIsTokenPhantomBpt);
     }
 }

@@ -1,6 +1,7 @@
 import {
     GqlPoolLinearNested,
     GqlPoolPhantomStableNested,
+    GqlPoolTokenUnion,
     GqlPoolUnion,
 } from '~/apollo/generated/graphql-codegen-generated';
 import { PoolService } from '~/lib/services/pool/pool-types';
@@ -20,7 +21,18 @@ export function poolIsWeightedLikePool(pool: GqlPoolUnion) {
     return pool.__typename === 'GqlPoolWeighted' || pool.__typename === 'GqlPoolLiquidityBootstrapping';
 }
 
+export function poolIsTokenPhantomBpt(poolToken: GqlPoolTokenUnion) {
+    return poolToken.__typename === 'GqlPoolTokenLinear' || poolToken.__typename === 'GqlPoolTokenPhantomStable';
+}
+
 export function poolRequiresBatchRelayerOnJoin(pool: GqlPoolUnion) {
+    return (
+        pool.__typename === 'GqlPoolWeighted' &&
+        (pool.nestingType === 'HAS_SOME_PHANTOM_BPT' || pool.nestingType === 'HAS_ONLY_PHANTOM_BPT')
+    );
+}
+
+export function poolRequiresBatchRelayerOnExit(pool: GqlPoolUnion) {
     return (
         pool.__typename === 'GqlPoolWeighted' &&
         (pool.nestingType === 'HAS_SOME_PHANTOM_BPT' || pool.nestingType === 'HAS_ONLY_PHANTOM_BPT')
