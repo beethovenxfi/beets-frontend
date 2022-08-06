@@ -104,7 +104,10 @@ export class PoolPhantomStableService implements PoolService {
         };
     }
 
-    public async exitGetProportionalWithdrawEstimate(bptIn: AmountHumanReadable): Promise<TokenAmountHumanReadable[]> {
+    public async exitGetProportionalWithdrawEstimate(
+        bptIn: AmountHumanReadable,
+        tokensOut: string[],
+    ): Promise<TokenAmountHumanReadable[]> {
         const bptInForTokensOut = this.getProportionallyWeightedBptAmountsForTokensOut(bptIn);
         const { assets, deltas } = await this.getExitSwaps(bptInForTokensOut);
 

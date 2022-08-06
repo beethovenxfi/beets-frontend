@@ -23,6 +23,7 @@ import { PoolWithdrawSummary } from '~/modules/pool/withdraw/components/PoolWith
 import { useEffectOnce } from '~/lib/util/custom-hooks';
 import { CardRow } from '~/components/card/CardRow';
 import { PoolWithdrawSettings } from '~/modules/pool/withdraw/components/PoolWithdrawSettings';
+import { useWithdraw } from '~/modules/pool/withdraw/lib/useWithdraw';
 
 interface Props extends BoxProps {
     onShowPreview: () => void;
@@ -32,6 +33,7 @@ export function PoolWithdrawProportional({ onShowPreview, ...rest }: Props) {
     const { pool } = usePool();
     const { setProportionalPercent, proportionalPercent, setSelectedOption, selectedOptions, setProportionalWithdraw } =
         useWithdrawState();
+    const { selectedWithdrawTokenAddresses } = useWithdraw();
     const { formattedPrice } = useGetTokens();
 
     useEffectOnce(() => {
@@ -70,7 +72,10 @@ export function PoolWithdrawProportional({ onShowPreview, ...rest }: Props) {
             </Box>
             <BeetsBox mt="4" p="2">
                 {withdrawOptions.map((option, index) => {
-                    const tokenOption = option.tokenOptions[0];
+                    const tokenOption =
+                        option.tokenOptions.find((tokenOption) =>
+                            selectedWithdrawTokenAddresses.includes(tokenOption.address),
+                        ) || option.tokenOptions[0];
                     const last = index === withdrawOptions.length - 1;
                     const proportionalAmount =
                         proportionalAmounts.find((tokenAmount) => tokenAmount.address === tokenOption.address)

@@ -189,8 +189,45 @@ export class PoolWeightedBoostedService implements PoolService {
         throw new Error('TODO: implement');
     }
 
-    public async exitGetProportionalWithdrawEstimate(bptIn: AmountHumanReadable): Promise<TokenAmountHumanReadable[]> {
-        return [];
+    public async exitGetProportionalWithdrawEstimate(
+        bptIn: AmountHumanReadable,
+        tokensOut: string[],
+    ): Promise<TokenAmountHumanReadable[]> {
+        const withdrawAmounts = await this.weightedPoolService.exitGetProportionalWithdrawEstimate(
+            bptIn,
+            this.pool.tokens.map((token) => token.address),
+        );
+        const exitAmounts = withdrawAmounts.map(({ amount, address }) => {
+            const option = this.pool.withdrawConfig.options.find((option) => option.poolTokenAddress === address)!;
+            const tokenOption = option.tokenOptions.find((tokenOption) => tokensOut.includes(tokenOption.address))!;
+
+            return { address, amount, tokenOut: tokenOption.address };
+        });
+
+        const { assets, deltas } = await this.getExitSwaps(exitAmounts);
+
+        console.log(
+            'testing',
+            tokensOut.map((tokenOut) => {
+                const assetIndex = assets.findIndex((asset) => asset.toLowerCase() === tokenOut);
+                const token = this.pool.allTokens.find((token) => token.address === tokenOut)!;
+
+                return {
+                    address: tokenOut,
+                    amount: formatFixed(oldBnum(deltas[assetIndex]).abs().toString(), token.decimals),
+                };
+            }),
+        );
+
+        return tokensOut.map((tokenOut) => {
+            const assetIndex = assets.findIndex((asset) => asset.toLowerCase() === tokenOut);
+            const token = this.pool.allTokens.find((token) => token.address === tokenOut)!;
+
+            return {
+                address: tokenOut,
+                amount: formatFixed(oldBnum(deltas[assetIndex]).abs().toString(), token.decimals),
+            };
+        });
     }
 
     private async getJoinSwaps(tokenAmountsIn: TokenAmountHumanReadable[]): Promise<{

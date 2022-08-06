@@ -5,7 +5,6 @@ import { withdrawStateVar } from '~/modules/pool/withdraw/lib/useWithdrawState';
 import { usePoolExitGetProportionalWithdrawEstimate } from '~/modules/pool/withdraw/lib/usePoolExitGetProportionalWithdrawEstimate';
 import { usePoolExitGetBptInForSingleAssetWithdraw } from '~/modules/pool/withdraw/lib/usePoolExitGetBptInForSingleAssetWithdraw';
 import { oldBnumScaleAmount, oldBnumToHumanReadable } from '~/lib/services/pool/lib/old-big-number';
-import { usePoolUserTokenBalancesInWallet } from '~/modules/pool/lib/usePoolUserTokenBalancesInWallet';
 import { useSlippage } from '~/lib/global/useSlippage';
 import { usePoolUserBptBalance } from '~/modules/pool/lib/usePoolUserBptBalance';
 

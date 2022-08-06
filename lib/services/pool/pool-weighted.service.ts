@@ -94,7 +94,10 @@ export class PoolWeightedService implements PoolService {
         return { type: 'JoinPool', assets, maxAmountsIn, userData };
     }
 
-    public async exitGetProportionalWithdrawEstimate(bptIn: AmountHumanReadable): Promise<TokenAmountHumanReadable[]> {
+    public async exitGetProportionalWithdrawEstimate(
+        bptIn: AmountHumanReadable,
+        tokensOut: string[],
+    ): Promise<TokenAmountHumanReadable[]> {
         return poolGetProportionalExitAmountsForBptIn(bptIn, this.pool.tokens, this.pool.dynamicData.totalShares);
     }
 
