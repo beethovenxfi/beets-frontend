@@ -8,17 +8,17 @@ import { oldBnum } from '~/lib/services/pool/lib/old-big-number';
 import { MaxUint256 } from '@ethersproject/constants';
 import { useSlippage } from '~/lib/global/useSlippage';
 import { useUserAccount } from '~/lib/user/useUserAccount';
-import { poolRequiresBatchRelayerOnJoin } from '~/lib/services/pool/pool-util';
+import { poolRequiresBatchRelayerOnExit } from '~/lib/services/pool/pool-util';
 
 export function useExitPool(pool: GqlPoolUnion) {
     const { userAddress } = useUserAccount();
     const { slippageDifference } = useSlippage();
     const { submit, submitAsync, ...rest } = useSubmitTransaction({
-        config: poolRequiresBatchRelayerOnJoin(pool)
+        config: poolRequiresBatchRelayerOnExit(pool)
             ? batchRelayerContractConfig
             : {
                   ...vaultContractConfig,
-                  functionName: pool.__typename === 'GqlPoolPhantomStable' ? 'batchSwap' : 'joinPool',
+                  functionName: pool.__typename === 'GqlPoolPhantomStable' ? 'batchSwap' : 'exitPool',
               },
         transactionType: 'EXIT',
     });
