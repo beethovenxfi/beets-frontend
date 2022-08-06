@@ -18,13 +18,14 @@ interface Props {
 }
 
 export function PoolInvestTypeChoice({ onShowProportional, onShowCustom }: Props) {
-    const { pool } = usePool();
+    const { pool, poolService } = usePool();
     const { priceForAmount } = useGetTokens();
     const { userPoolTokenBalances, investableAmount } = usePoolUserTokenBalancesInWallet();
     const { canInvestProportionally } = useInvest();
     const { data, isLoading } = usePoolGetMaxProportionalInvestmentAmount();
     const isStablePool = pool.__typename === 'GqlPoolStable' || pool.__typename === 'GqlPoolPhantomStable';
-    const proportionalEnabled = pool.investConfig.proportionalEnabled;
+    const proportionalSupported =
+        poolService.joinGetProportionalSuggestionForFixedAmount && pool.investConfig.proportionalEnabled;
     //const totalTokenBalance = sumBy(pool.tokens, (token) => parseFloat(token.balance) * parseFloat(token.priceRate));
 
     return (
@@ -32,18 +33,21 @@ export function PoolInvestTypeChoice({ onShowProportional, onShowCustom }: Props
             <Grid mt="4" mb="6" gap="8" templateColumns={{ base: '1fr', md: '1fr', lg: '1fr 1fr' }}>
                 <GridItem>
                     <BeetsBox p="2" mb="6">
-                        <Flex fontSize="lg" fontWeight="semibold" mb="4">
+                        <Flex fontSize="lg" fontWeight="semibold" mb="1">
                             <Text flex="1">You can invest</Text>
                             <Text>{numberFormatUSDValue(investableAmount)}</Text>
                         </Flex>
-                        <CardRow alignItems="center" mb="0">
-                            <Text flex="1">Max proportional</Text>
-                            {typeof data?.maxAmount === 'number' && !isLoading ? (
-                                <Text>{numberFormatUSDValue(data.maxAmount)}</Text>
-                            ) : (
-                                <Skeleton height="20px" width="80px" />
-                            )}
-                        </CardRow>
+
+                        {proportionalSupported && (
+                            <CardRow alignItems="center" mt="4" mb="0">
+                                <Text flex="1">Max proportional</Text>
+                                {typeof data?.maxAmount === 'number' && !isLoading ? (
+                                    <Text>{numberFormatUSDValue(data.maxAmount)}</Text>
+                                ) : (
+                                    <Skeleton height="20px" width="80px" />
+                                )}
+                            </CardRow>
+                        )}
                     </BeetsBox>
                     <BeetsBox p="2">
                         <Text fontSize="lg" fontWeight="semibold" mb="4">
@@ -107,9 +111,9 @@ export function PoolInvestTypeChoice({ onShowProportional, onShowCustom }: Props
                         variant="primary"
                         isDisabled={investableAmount === 0}
                         onClick={onShowCustom}
-                        mb={proportionalEnabled ? '3' : '0'}
+                        mb={proportionalSupported ? '3' : '0'}
                     >
-                        {proportionalEnabled ? 'Customize my investment' : 'Invest'}
+                        {proportionalSupported ? 'Customize my investment' : 'Invest'}
                     </Button>
                     {pool.investConfig.proportionalEnabled && (
                         <Button
@@ -124,7 +128,7 @@ export function PoolInvestTypeChoice({ onShowProportional, onShowCustom }: Props
                 </>
             ) : (
                 <>
-                    {proportionalEnabled && (
+                    {proportionalSupported && (
                         <Button
                             variant="primary"
                             isFullWidth
@@ -136,7 +140,7 @@ export function PoolInvestTypeChoice({ onShowProportional, onShowCustom }: Props
                         </Button>
                     )}
                     <Button isFullWidth variant="secondary" isDisabled={investableAmount === 0} onClick={onShowCustom}>
-                        {proportionalEnabled ? 'Customize my investment' : 'Invest'}
+                        {proportionalSupported ? 'Customize my investment' : 'Invest'}
                     </Button>
                 </>
             )}

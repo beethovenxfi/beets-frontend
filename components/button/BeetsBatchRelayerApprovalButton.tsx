@@ -12,14 +12,14 @@ interface Props {
 }
 
 export function BeetsBatchRelayerApprovalButton({ ...rest }: Props) {
-    const query = useApproveBatchRelayer();
+    const { approve, ...query } = useApproveBatchRelayer();
 
     return (
         <BeetsSubmitTransactionButton
             {...query}
             isFullWidth
             onClick={() => {
-                query.approve();
+                approve();
             }}
             {...rest}
             variant="outline"

@@ -1,6 +1,6 @@
 import { Box, HStack, Text } from '@chakra-ui/react';
 import TokenAvatar from '~/components/token/TokenAvatar';
-import { tokenFormatAmount } from '~/lib/services/token/token-util';
+import { tokenFormatAmount, tokenFormatAmountPrecise } from '~/lib/services/token/token-util';
 import { numberFormatUSDValue } from '~/lib/util/number-formats';
 import { BeetsBox } from '~/components/box/BeetsBox';
 import { useGetTokens } from '~/lib/global/useToken';
@@ -33,7 +33,7 @@ export function PoolInvestPreview({ onInvestComplete, onClose }: Props) {
                                 <Text>{token.symbol}</Text>
                             </HStack>
                             <Box>
-                                <Box textAlign="right">{tokenFormatAmount(token.amount)}</Box>
+                                <Box textAlign="right">{tokenFormatAmountPrecise(token.amount, token.decimals)}</Box>
                                 <Box textAlign="right" fontSize="sm" color="gray.200">
                                     {numberFormatUSDValue(priceForAmount(token))}
                                 </Box>

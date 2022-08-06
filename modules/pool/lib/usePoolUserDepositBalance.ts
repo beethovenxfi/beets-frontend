@@ -3,16 +3,21 @@ import { useQuery } from 'react-query';
 import { useGetTokens } from '~/lib/global/useToken';
 import { sumBy } from 'lodash';
 import { usePoolUserBptBalance } from '~/modules/pool/lib/usePoolUserBptBalance';
+import { useWithdraw } from '~/modules/pool/withdraw/lib/useWithdraw';
 
 export function usePoolUserDepositBalance() {
     const { poolService, pool } = usePool();
     const { userTotalBptBalance, isError, isLoading, error } = usePoolUserBptBalance();
     const { priceForAmount } = useGetTokens();
+    const { selectedWithdrawTokenAddresses } = useWithdraw();
 
     const query = useQuery(
-        ['exitGetProportionalWithdrawEstimate', pool.id, userTotalBptBalance],
+        ['exitGetProportionalWithdrawEstimate', pool.id, userTotalBptBalance, selectedWithdrawTokenAddresses],
         async () => {
-            const result = await poolService.exitGetProportionalWithdrawEstimate(userTotalBptBalance);
+            const result = await poolService.exitGetProportionalWithdrawEstimate(
+                userTotalBptBalance,
+                selectedWithdrawTokenAddresses,
+            );
 
             return result;
         },

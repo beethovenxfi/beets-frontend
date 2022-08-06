@@ -23,7 +23,7 @@ export function PoolInvestActions({ onInvestComplete, onClose }: Props) {
     const networkConfig = useNetworkConfig();
     const { pool } = usePool();
     const { selectedInvestTokensWithAmounts, totalInvestValue, zapEnabled } = useInvest();
-    const joinQuery = useJoinPool(pool, zapEnabled);
+    const { joinPool, ...joinQuery } = useJoinPool(pool, zapEnabled);
     const allInvestTokens = pool.investConfig.options.map((option) => option.tokenOptions).flat();
     const {
         hasApprovalForAmount,
@@ -87,7 +87,7 @@ export function PoolInvestActions({ onInvestComplete, onClose }: Props) {
                     steps={steps || []}
                     onSubmit={(id) => {
                         if (id === 'invest' && contractCallData) {
-                            joinQuery.joinPool(contractCallData, selectedInvestTokensWithAmounts);
+                            joinPool(contractCallData, selectedInvestTokensWithAmounts);
                         }
                     }}
                     onConfirmed={(id) => {

@@ -56,7 +56,7 @@ export function oldBnumsToBigNumberish(nums: OldBigNumber[]) {
 export function oldBnumSubtractSlippage(
     amount: AmountHumanReadable,
     decimals: number,
-    slippage: number,
+    slippage: string | number,
 ): AmountHumanReadable {
     const amountScaled = oldBnumScaleAmount(amount, decimals);
 

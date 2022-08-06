@@ -1,5 +1,4 @@
 import {
-    GqlPoolInvestOption,
     GqlPoolPhantomStable,
     GqlPoolToken,
     GqlPoolTokenUnion,
@@ -22,26 +21,29 @@ import {
 } from '@balancer-labs/sor';
 import { parseUnits } from 'ethers/lib/utils';
 import { PoolBaseService } from '~/lib/services/pool/lib/pool-base.service';
-import { FundManagement, isSameAddress, SwapV2 } from '@balancer-labs/sdk';
-import { networkConfig } from '~/lib/config/network-config';
-import { Contract } from '@ethersproject/contracts';
-import { AddressZero } from '@ethersproject/constants';
+import { isSameAddress, Swaps, SwapType, SwapV2 } from '@balancer-labs/sdk';
 import { BaseProvider } from '@ethersproject/providers';
-import { cloneDeep } from 'lodash';
-import VaultAbi from '../../abi/VaultAbi.json';
-import {
-    poolFindNestedPoolTokenForToken,
-    poolGetExitSwaps,
-    poolGetJoinSwapForToken,
-    poolSumPoolTokenBalances,
-} from '~/lib/services/pool/pool-util';
 import { formatFixed } from '@ethersproject/bignumber';
-import { oldBnum, oldBnumFromBnum, oldBnumScaleAmount, oldBnumScaleDown } from '~/lib/services/pool/lib/old-big-number';
+import {
+    oldBnum,
+    oldBnumFromBnum,
+    oldBnumScale,
+    oldBnumScaleAmount,
+    oldBnumScaleDown,
+} from '~/lib/services/pool/lib/old-big-number';
 import OldBigNumber from 'bignumber.js';
 import { SwapKind } from '@balancer-labs/balancer-js';
-import { poolScaleAmp } from '~/lib/services/pool/lib/pool-util';
-import { BigNumber } from 'ethers';
+import { poolScaleAmp } from '~/lib/services/pool/lib/util';
 import { BatchRelayerService } from '~/lib/services/batch-relayer/batch-relayer.service';
+import {
+    poolBatchSwaps,
+    poolFindNestedPoolTokenForToken,
+    poolFindPoolTokenFromOptions,
+    poolGetExitSwaps,
+    poolGetJoinSwapForToken,
+    poolQueryBatchSwap,
+    poolSumPoolTokenBalances,
+} from '~/lib/services/pool/pool-phantom-stable-util';
 
 export class PoolPhantomStableService implements PoolService {
     private readonly baseService: PoolBaseService;
@@ -65,14 +67,24 @@ export class PoolPhantomStableService implements PoolService {
             throw new Error('unsupported join type');
         }
 
-        const { swaps, assets, deltas } = await this.getJoinSwaps(data.tokenAmountsIn);
+        const { swaps, assets, deltas, tokensIn, tokensOut } = await this.getJoinSwaps(data.tokenAmountsIn);
+
+        const limits = Swaps.getLimitsForSlippage(
+            tokensIn,
+            tokensOut,
+            SwapType.SwapExactIn,
+            deltas,
+            assets,
+            //5%=50_000_000_000_000_000.
+            `${oldBnumScale(data.slippage, 16).toFixed(0)}`,
+        ).map((limit) => limit.toString());
 
         return {
             type: 'BatchSwap',
             kind: SwapKind.GivenIn,
             swaps,
             assets: data.wethIsEth ? assets.map((asset) => this.baseService.wethToZero(asset)) : assets,
-            limits: deltas,
+            limits,
         };
     }
 
@@ -92,13 +104,10 @@ export class PoolPhantomStableService implements PoolService {
         };
     }
 
-    public async joinGetProportionalSuggestionForFixedAmount(
-        fixedAmount: TokenAmountHumanReadable,
+    public async exitGetProportionalWithdrawEstimate(
+        bptIn: AmountHumanReadable,
+        tokensOut: string[],
     ): Promise<TokenAmountHumanReadable[]> {
-        throw new Error('joinGetProportionalSuggestionForFixedAmount not supported for phantom stable');
-    }
-
-    public async exitGetProportionalWithdrawEstimate(bptIn: AmountHumanReadable): Promise<TokenAmountHumanReadable[]> {
         const bptInForTokensOut = this.getProportionallyWeightedBptAmountsForTokensOut(bptIn);
         const { assets, deltas } = await this.getExitSwaps(bptInForTokensOut);
 
@@ -197,9 +206,17 @@ export class PoolPhantomStableService implements PoolService {
         swaps: SwapV2[];
         assets: string[];
         deltas: AmountScaledString[];
+        tokensIn: string[];
+        tokensOut: string[];
     }> {
+        const tokensOut: string[] = [];
         const joinSwaps = tokenAmountsIn.map((tokenAmountIn) => {
-            const poolToken = this.findPoolTokenFromOptions(tokenAmountIn.address, this.pool.investConfig.options);
+            const poolToken = poolFindPoolTokenFromOptions(
+                tokenAmountIn.address,
+                this.pool.tokens,
+                this.pool.investConfig.options,
+            );
+            tokensOut.push(poolToken.address);
 
             return poolGetJoinSwapForToken({
                 poolId: this.pool.id,
@@ -209,14 +226,21 @@ export class PoolPhantomStableService implements PoolService {
             });
         });
 
-        const { swaps, assets } = this.batchSwaps(
+        const { swaps, assets } = poolBatchSwaps(
             joinSwaps.map((item) => item.assets),
             joinSwaps.map((item) => item.swaps),
         );
 
-        const deltas = await this.queryBatchSwap(SwapTypes.SwapExactIn, swaps, assets);
+        const deltas = await poolQueryBatchSwap({
+            swapType: SwapTypes.SwapExactIn,
+            swaps,
+            assets,
+            provider: this.provider,
+        });
 
-        return { swaps, assets, deltas };
+        const tokensIn = tokenAmountsIn.map((tokenAmountIn) => tokenAmountIn.address);
+
+        return { swaps, assets, deltas, tokensIn, tokensOut };
     }
 
     private async getExitSwaps(bptInForTokens: TokenAmountHumanReadable[]): Promise<{
@@ -225,7 +249,11 @@ export class PoolPhantomStableService implements PoolService {
         deltas: AmountScaledString[];
     }> {
         const exitSwaps = bptInForTokens.map((bptInForToken) => {
-            const poolToken = this.findPoolTokenFromOptions(bptInForToken.address, this.pool.withdrawConfig.options);
+            const poolToken = poolFindPoolTokenFromOptions(
+                bptInForToken.address,
+                this.pool.tokens,
+                this.pool.withdrawConfig.options,
+            );
 
             return poolGetExitSwaps({
                 poolId: this.pool.id,
@@ -236,67 +264,19 @@ export class PoolPhantomStableService implements PoolService {
             });
         });
 
-        const { swaps, assets } = this.batchSwaps(
+        const { swaps, assets } = poolBatchSwaps(
             exitSwaps.map((item) => item.assets),
             exitSwaps.map((item) => item.swaps),
         );
 
-        const deltas = await this.queryBatchSwap(SwapTypes.SwapExactIn, swaps, assets);
-
-        return { swaps, assets, deltas };
-    }
-
-    private batchSwaps(assets: string[][], swaps: SwapV2[][]): { swaps: SwapV2[]; assets: string[] } {
-        // asset addresses without duplicates
-        const joinedAssets = assets.flat();
-        //create a deep copy to ensure we do not mutate the input
-        const clonedSwaps = cloneDeep(swaps);
-
-        // Update indices of each swap to use new asset array
-        clonedSwaps.forEach((swap, i) => {
-            swap.forEach((poolSwap) => {
-                poolSwap.assetInIndex = joinedAssets.indexOf(assets[i][poolSwap.assetInIndex]);
-                poolSwap.assetOutIndex = joinedAssets.indexOf(assets[i][poolSwap.assetOutIndex]);
-            });
+        const deltas = await poolQueryBatchSwap({
+            swapType: SwapTypes.SwapExactIn,
+            swaps,
+            assets,
+            provider: this.provider,
         });
 
-        // Join Swaps into a single batchSwap
-        const batchedSwaps = clonedSwaps.flat();
-
-        return { swaps: batchedSwaps, assets: joinedAssets };
-    }
-
-    private async queryBatchSwap(swapType: SwapTypes, swaps: SwapV2[], assets: string[]): Promise<string[]> {
-        const vaultContract = new Contract(networkConfig.balancer.vault, VaultAbi, this.provider);
-        const funds: FundManagement = {
-            sender: AddressZero,
-            recipient: AddressZero,
-            fromInternalBalance: false,
-            toInternalBalance: false,
-        };
-
-        const response = await vaultContract.queryBatchSwap(swapType, swaps, assets, funds);
-
-        return response.map((item: BigNumber) => item.toString());
-    }
-
-    private findPoolTokenFromOptions(
-        tokenAddress: string,
-        options: (GqlPoolWithdrawOption | GqlPoolInvestOption)[],
-    ): GqlPoolTokenUnion {
-        for (const option of options) {
-            for (const tokenOption of option.tokenOptions) {
-                if (isSameAddress(tokenAddress, tokenOption.address)) {
-                    const poolToken = this.pool.tokens.find((token) => token.index === option.poolTokenIndex);
-
-                    if (poolToken) {
-                        return poolToken;
-                    }
-                }
-            }
-        }
-
-        throw new Error(`Token was not found in the provided options: ${tokenAddress}`);
+        return { swaps, assets, deltas };
     }
 
     private getDenormAmounts(tokenAmounts: TokenAmountHumanReadable[], poolTokens: GqlPoolTokenUnion[]) {

@@ -9,17 +9,18 @@ import { oldBnum } from '~/lib/services/pool/lib/old-big-number';
 import { useSlippage } from '~/lib/global/useSlippage';
 import { useUserAccount } from '~/lib/user/useUserAccount';
 import { networkConfig } from '~/lib/config/network-config';
+import { poolRequiresBatchRelayerOnJoin } from '~/lib/services/pool/pool-util';
 
 export function useJoinPool(pool: GqlPoolUnion, zapEnabled?: boolean) {
-    const { slippageDifference } = useSlippage();
     const { userAddress } = useUserAccount();
     const { submit, submitAsync, ...rest } = useSubmitTransaction({
-        config: zapEnabled
-            ? batchRelayerContractConfig
-            : {
-                  ...vaultContractConfig,
-                  functionName: pool.__typename === 'GqlPoolPhantomStable' ? 'batchSwap' : 'joinPool',
-              },
+        config:
+            zapEnabled || poolRequiresBatchRelayerOnJoin(pool)
+                ? batchRelayerContractConfig
+                : {
+                      ...vaultContractConfig,
+                      functionName: pool.__typename === 'GqlPoolPhantomStable' ? 'batchSwap' : 'joinPool',
+                  },
         transactionType: 'JOIN',
     });
 
@@ -53,17 +54,6 @@ export function useJoinPool(pool: GqlPoolUnion, zapEnabled?: boolean) {
                 walletText: `Join ${pool.name} with ${amountsString}`,
             });
         } else if (contractCallData.type === 'BatchSwap') {
-            const assets = contractCallData.assets;
-
-            //apply slippage to the bpt out
-            const limits = contractCallData.limits.map((limit, i) => {
-                if (isSameAddress(assets[i], pool.address)) {
-                    return oldBnum(limit.toString()).times(slippageDifference).times(-1).toFixed(0);
-                }
-
-                return limit;
-            });
-
             submit({
                 args: [
                     0,
@@ -75,7 +65,7 @@ export function useJoinPool(pool: GqlPoolUnion, zapEnabled?: boolean) {
                         recipient: userAddress,
                         toInternalBalance: false,
                     },
-                    limits,
+                    contractCallData.limits,
                     MaxUint256,
                 ],
                 toastText: amountsString,

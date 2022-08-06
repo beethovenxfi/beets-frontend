@@ -14,7 +14,7 @@ import {
     poolGetProportionalJoinAmountsForFixedAmount,
     poolGetRequiredToken,
     poolScaleTokenAmounts,
-} from '~/lib/services/pool/lib/pool-util';
+} from '~/lib/services/pool/lib/util';
 import { weightedBPTForTokensZeroPriceImpact } from '@balancer-labs/sdk';
 import { parseUnits } from 'ethers/lib/utils';
 import {
@@ -31,9 +31,7 @@ import { formatFixed } from '@ethersproject/bignumber';
 import { WeightedPoolEncoder } from '@balancer-labs/balancer-js';
 import { PoolBaseService } from '~/lib/services/pool/lib/pool-base.service';
 import OldBigNumber from 'bignumber.js';
-import { Zero } from '@ethersproject/constants';
 import { BatchRelayerService } from '~/lib/services/batch-relayer/batch-relayer.service';
-import { replaceEthWithZeroAddress } from '~/lib/services/token/token-util';
 
 export class PoolWeightedService implements PoolService {
     private baseService: PoolBaseService;
@@ -52,6 +50,7 @@ export class PoolWeightedService implements PoolService {
 
     public async joinGetProportionalSuggestionForFixedAmount(
         fixedAmount: TokenAmountHumanReadable,
+        tokensIn: string[],
     ): Promise<TokenAmountHumanReadable[]> {
         return poolGetProportionalJoinAmountsForFixedAmount(fixedAmount, this.pool.tokens);
     }
@@ -95,7 +94,10 @@ export class PoolWeightedService implements PoolService {
         return { type: 'JoinPool', assets, maxAmountsIn, userData };
     }
 
-    public async exitGetProportionalWithdrawEstimate(bptIn: AmountHumanReadable): Promise<TokenAmountHumanReadable[]> {
+    public async exitGetProportionalWithdrawEstimate(
+        bptIn: AmountHumanReadable,
+        tokensOut: string[],
+    ): Promise<TokenAmountHumanReadable[]> {
         return poolGetProportionalExitAmountsForBptIn(bptIn, this.pool.tokens, this.pool.dynamicData.totalShares);
     }
 
@@ -235,7 +237,7 @@ export class PoolWeightedService implements PoolService {
         );
     }
 
-    private encodeJoinPool(data: PoolJoinData): string {
+    public encodeJoinPool(data: PoolJoinData): string {
         if (data.kind == 'Init') {
             return WeightedPoolEncoder.joinInit(poolScaleTokenAmounts(data.tokenAmountsIn, this.pool.tokens));
         } else if (data.kind == 'ExactTokensInForBPTOut') {

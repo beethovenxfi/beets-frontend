@@ -89,7 +89,7 @@ export interface ExitAndBatchSwapExitItemInput {
     batchSwapTokenOut?: string;
 }
 
-export type ExitPoolData = ExitPoolRequest & EncodeExitPoolInput;
+export type ExitPoolData = ExitPoolRequest & Omit<EncodeExitPoolInput, 'exitPoolRequest'>;
 
 export interface NestedLinearPool {
     pool: SubgraphPoolBase;

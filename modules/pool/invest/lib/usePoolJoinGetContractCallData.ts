@@ -7,10 +7,12 @@ import { PoolJoinData } from '~/lib/services/pool/pool-types';
 import { AmountHumanReadable } from '~/lib/services/token/token-types';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 import { useUserAccount } from '~/lib/user/useUserAccount';
+import { useSlippage } from '~/lib/global/useSlippage';
 
 export function usePoolJoinGetContractCallData(minimumBpt: AmountHumanReadable | null, zapEnabled?: boolean) {
     const { userAddress } = useUserAccount();
     const networkConfig = useNetworkConfig();
+    const { slippage } = useSlippage();
     const { poolService, pool } = usePool();
     const { inputAmounts } = useReactiveVar(investStateVar);
     const inputAmountsArray = tokenAmountsGetArrayFromMap(inputAmounts);
@@ -27,6 +29,7 @@ export function usePoolJoinGetContractCallData(minimumBpt: AmountHumanReadable |
         userAddress: userAddress || '',
         wethIsEth: hasEth,
         zapIntoMasterchefFarm: !!pool.staking?.farm && zapEnabled,
+        slippage,
     };
 
     return useQuery(

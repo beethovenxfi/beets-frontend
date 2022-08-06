@@ -8,6 +8,7 @@ export interface PoolService {
 
     joinGetProportionalSuggestionForFixedAmount?(
         fixedAmount: TokenAmountHumanReadable,
+        tokensIn: string[],
     ): Promise<TokenAmountHumanReadable[]>;
     joinGetBptOutAndPriceImpactForTokensIn(
         tokenAmountsIn: TokenAmountHumanReadable[],
@@ -15,7 +16,10 @@ export interface PoolService {
     ): Promise<PoolJoinEstimateOutput>;
     joinGetContractCallData(data: PoolJoinData): Promise<PoolJoinContractCallData>;
 
-    exitGetProportionalWithdrawEstimate(bptIn: AmountHumanReadable): Promise<TokenAmountHumanReadable[]>;
+    exitGetProportionalWithdrawEstimate(
+        bptIn: AmountHumanReadable,
+        tokensIn: string[],
+    ): Promise<TokenAmountHumanReadable[]>;
     exitGetSingleAssetWithdrawForBptIn(
         bptIn: AmountHumanReadable,
         tokenOutAddress: string,
@@ -37,6 +41,7 @@ interface PoolJoinBase {
     zapIntoMasterchefFarm?: boolean;
     userAddress: string;
     wethIsEth: boolean;
+    slippage: string;
 }
 
 export interface PoolJoinEstimateOutput {
@@ -82,7 +87,8 @@ export type PoolExitData =
     | PoolExitBPTInForExactTokensOut;
 
 export interface PoolExitBase {
-    slippage: number;
+    slippage: string;
+    userAddress: string;
 }
 
 export interface PoolExitExactBPTInForOneTokenOut extends PoolExitBase {
@@ -132,7 +138,10 @@ export interface PoolJoinBatchRelayerContractCallData {
     ethValue?: string;
 }
 
-export type PoolExitContractCallData = PoolExitPoolContractCallData | PoolExitBatchSwapContractCallData;
+export type PoolExitContractCallData =
+    | PoolExitPoolContractCallData
+    | PoolExitBatchSwapContractCallData
+    | PoolExitBatchRelayerContractCallData;
 
 export interface PoolExitPoolContractCallData {
     type: 'ExitPool';
@@ -147,4 +156,9 @@ export interface PoolExitBatchSwapContractCallData {
     swaps: BatchSwapStep[];
     assets: string[];
     limits: BigNumberish[];
+}
+
+export interface PoolExitBatchRelayerContractCallData {
+    type: 'BatchRelayer';
+    calls: string[];
 }

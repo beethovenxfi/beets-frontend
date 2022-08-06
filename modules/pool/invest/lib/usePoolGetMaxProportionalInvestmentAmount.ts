@@ -6,12 +6,14 @@ import { useQuery } from 'react-query';
 import { usePoolUserTokenBalancesInWallet } from '~/modules/pool/lib/usePoolUserTokenBalancesInWallet';
 import { useGetTokens } from '~/lib/global/useToken';
 import { TokenAmountHumanReadable } from '~/lib/services/token/token-types';
+import { useInvest } from '~/modules/pool/invest/lib/useInvest';
 
 export function usePoolGetMaxProportionalInvestmentAmount() {
     const { priceForAmount } = useGetTokens();
     const { poolService, pool } = usePool();
     const { userAddress } = useUserAccount();
     const { getUserBalanceForToken } = usePoolUserTokenBalancesInWallet();
+    const { userInvestTokenBalances, selectedInvestTokens } = useInvest();
     const tokenOptionsWithHighestValue: TokenAmountHumanReadable[] = pool.investConfig.options.map((option) => {
         const tokenWithHighestValue = orderBy(
             option.tokenOptions,
@@ -23,15 +25,26 @@ export function usePoolGetMaxProportionalInvestmentAmount() {
     });
 
     const tokenWithSmallestValue = sortBy(
-        tokenOptionsWithHighestValue.map((balance) => {
-            const token = pool.tokens.find((token) => token.address === replaceEthWithWeth(balance.address));
+        userInvestTokenBalances.map((balance) => {
+            const investOption = pool.investConfig.options.find((option) => {
+                const tokenOption = option.tokenOptions.find(
+                    (tokenOption) => tokenOption.address === replaceEthWithWeth(balance.address),
+                );
+
+                return !!tokenOption;
+            });
+
+            const poolToken = investOption ? pool.tokens[investOption.poolTokenIndex] : undefined;
+            //TODO: this is not exactly accurate as we assume here the invest token has a 1:priceRate ratio to the pool token, which is not the case
+            //TODO: as the invest token is often time nested deeper in linear pool of phantom stable
+            const scaledBalance = parseFloat(balance.amount) / parseFloat(poolToken?.priceRate || '1');
 
             return {
                 ...balance,
                 //this has precision errors, but its only used for sorting, not any operations
-                normalizedAmount: token?.weight
-                    ? (parseFloat(balance.amount) / parseFloat(token.balance)) * (1 / parseFloat(token.weight))
-                    : parseFloat(balance.amount),
+                normalizedAmount: poolToken?.weight
+                    ? (scaledBalance / parseFloat(poolToken.balance)) * (1 / parseFloat(poolToken.weight))
+                    : scaledBalance,
             };
         }),
         'normalizedAmount',
@@ -57,7 +70,10 @@ export function usePoolGetMaxProportionalInvestmentAmount() {
                 return {};
             }
 
-            const result = await poolService.joinGetProportionalSuggestionForFixedAmount(fixedAmount);
+            const result = await poolService.joinGetProportionalSuggestionForFixedAmount(
+                fixedAmount,
+                selectedInvestTokens.map((token) => token.address),
+            );
 
             return { maxAmount: sumBy(result, priceForAmount) };
         },

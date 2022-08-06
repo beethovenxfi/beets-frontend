@@ -5,14 +5,15 @@ import { withdrawStateVar } from '~/modules/pool/withdraw/lib/useWithdrawState';
 import { usePoolExitGetProportionalWithdrawEstimate } from '~/modules/pool/withdraw/lib/usePoolExitGetProportionalWithdrawEstimate';
 import { usePoolExitGetBptInForSingleAssetWithdraw } from '~/modules/pool/withdraw/lib/usePoolExitGetBptInForSingleAssetWithdraw';
 import { oldBnumScaleAmount, oldBnumToHumanReadable } from '~/lib/services/pool/lib/old-big-number';
-import { usePoolUserTokenBalancesInWallet } from '~/modules/pool/lib/usePoolUserTokenBalancesInWallet';
 import { useSlippage } from '~/lib/global/useSlippage';
 import { usePoolUserBptBalance } from '~/modules/pool/lib/usePoolUserBptBalance';
+import { useUserAccount } from '~/lib/user/useUserAccount';
 
 export function usePoolExitGetContractCallData() {
+    const { userAddress } = useUserAccount();
     const { type, singleAsset, proportionalPercent } = useReactiveVar(withdrawStateVar);
     const { poolService, pool } = usePool();
-    const { userTotalBptBalance } = usePoolUserBptBalance();
+    const { userTotalBptBalance, userWalletBptBalance } = usePoolUserBptBalance();
     const { data: proportionalAmountsOut, error, isLoading } = usePoolExitGetProportionalWithdrawEstimate();
     const { data: singleAssetWithdrawEstimate } = usePoolExitGetBptInForSingleAssetWithdraw();
     const { slippage } = useSlippage();
@@ -31,14 +32,15 @@ export function usePoolExitGetContractCallData() {
         () => {
             if (type === 'PROPORTIONAL' && proportionalAmountsOut) {
                 const userBptRatio = oldBnumToHumanReadable(
-                    oldBnumScaleAmount(userTotalBptBalance).times(proportionalPercent / 100),
+                    oldBnumScaleAmount(userWalletBptBalance).times(proportionalPercent / 100),
                 );
 
                 return poolService.exitGetContractCallData({
                     kind: 'ExactBPTInForTokensOut',
                     amountsOut: proportionalAmountsOut,
                     bptAmountIn: userBptRatio,
-                    slippage: parseFloat(slippage),
+                    slippage,
+                    userAddress: userAddress || '',
                 });
             } else if (
                 type === 'SINGLE_ASSET' &&
@@ -51,8 +53,9 @@ export function usePoolExitGetContractCallData() {
                     bptAmountIn: singleAssetWithdrawEstimate.bptIn,
                     tokenOutAddress: singleAsset.address,
                     userBptBalance: userTotalBptBalance,
-                    slippage: parseFloat(slippage),
+                    slippage,
                     amountOut: singleAsset.amount,
+                    userAddress: userAddress || '',
                 });
             }
 

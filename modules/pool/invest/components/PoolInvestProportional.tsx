@@ -34,7 +34,7 @@ interface Props {
 }
 
 export function PoolInvestProportional({ onShowPreview }: Props) {
-    const { pool } = usePool();
+    const { pool, requiresBatchRelayerOnJoin } = usePool();
     const { priceForAmount, getToken } = useGetTokens();
     const investOptions = pool.investConfig.options;
     const { setSelectedOption, selectedOptions, setInputAmounts, zapEnabled } = useInvestState();
@@ -133,7 +133,10 @@ export function PoolInvestProportional({ onShowPreview }: Props) {
                 isFullWidth
                 mt="8"
                 onClick={onShowPreview}
-                isDisabled={proportionalPercent === 0 || (!hasBatchRelayerApproval && zapEnabled)}
+                isDisabled={
+                    proportionalPercent === 0 ||
+                    (!hasBatchRelayerApproval && (zapEnabled || requiresBatchRelayerOnJoin))
+                }
             >
                 Preview
             </Button>

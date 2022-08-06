@@ -61,25 +61,31 @@ export function tokenFormatAmount(amount: AmountHumanReadable | number) {
     return numeral(amount).format('0,0');
 }
 
-export function tokenFormatAmountPrecise(amount: AmountHumanReadable | number, precision: 4 | 6 | 12 = 12) {
+export function tokenFormatAmountPrecise(amount: AmountHumanReadable | number, precision: number = 12) {
     const amountNum = typeof amount === 'string' ? parseFloat(amount) : amount;
 
     if (amountNum === 0) {
         return '0.0';
     }
 
-    if (precision === 4) {
+    if (precision <= 4) {
         if (amountNum < 0.0001) {
             return '< 0.0001';
         }
 
         return numeral(amount).format('0,0.[0000]');
-    } else if (precision === 6) {
+    } else if (precision <= 6) {
         if (amountNum < 0.000001) {
             return '< 0.000001';
         }
 
         return numeral(amount).format('0,0.[000000]');
+    } else if (precision <= 8) {
+        if (amountNum < 0.000001) {
+            return amount;
+        }
+
+        return numeral(amount).format('0,0.[0000000000]');
     }
 
     return numeral(amount).format('0,0.[000000000000]');
