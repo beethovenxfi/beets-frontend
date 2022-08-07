@@ -7,7 +7,7 @@ export function PoolInvestWeightedPoolDescription() {
                 query={['Investing proportionally', 'not', 'price impact']}
                 styles={{ fontWeight: 'bold', color: 'white' }}
             >
-                Investing proportionally into this pool ensures you will not be subject to the swap fees associated with
+                Investing proportionally into this pool ensures you will not be subject to the fees associated with
                 price impact.
             </Highlight>
             <br />

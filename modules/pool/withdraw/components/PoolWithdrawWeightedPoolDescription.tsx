@@ -1,15 +1,24 @@
+import { Highlight } from '@chakra-ui/react';
+
 export function PoolWithdrawWeightedPoolDescription() {
     return (
         <>
-            Withdrawing proportionally from this pool ensures you will NOT be subject to the potential fees and/or
-            impermanent loss caused by price impact.
+            <Highlight
+                query={['Withdrawing proportionally', 'not', 'price impact']}
+                styles={{ fontWeight: 'bold', color: 'white' }}
+            >
+                Withdrawing proportionally from this pool ensures you will not be subject to the potential fees caused
+                by price impact.
+            </Highlight>
             <br />
             <br />
-            Alternatively, you can withdraw a single asset. However, this action may shift the pool out of balance,
-            impacting your withdrawal with possible fees and impermanent loss caused by price impact.
+            <Highlight query={['single asset', 'not', 'price impact']} styles={{ fontWeight: 'bold', color: 'white' }}>
+                Alternatively, you can withdraw a single asset. This is similar to swapping all other assets for the
+                selected asset, and is therefore subject to the fees associated with price impact.
+            </Highlight>
             <br />
             <br />
-            When withdrawing from a liquidity pool, your BPT tokens are exchanged for the underlying pool assets.
+            When withdrawing from any liquidity pool, your BPT tokens are exchanged for the underlying pool assets.
         </>
     );
 }
