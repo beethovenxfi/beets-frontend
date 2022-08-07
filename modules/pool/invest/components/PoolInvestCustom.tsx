@@ -17,7 +17,7 @@ interface Props {
 export function PoolInvestCustom({ onShowPreview }: Props) {
     const { pool, requiresBatchRelayerOnJoin } = usePool();
     const { inputAmounts, setInputAmount, setSelectedOption, zapEnabled } = useInvestState();
-    const { selectedInvestTokens, hasAllZeroTokenAmounts } = useInvest();
+    const { selectedInvestTokens, hasValidUserInput } = useInvest();
     const { userPoolTokenBalances } = usePoolUserTokenBalancesInWallet();
     const { hasHighPriceImpact, formattedPriceImpact } = usePoolJoinGetBptOutAndPriceImpactForTokensIn();
     const [acknowledgeHighPriceImpact, { toggle: toggleAcknowledgeHighPriceImpact }] = useBoolean(false);
@@ -70,7 +70,7 @@ export function PoolInvestCustom({ onShowPreview }: Props) {
                 mt="8"
                 onClick={onShowPreview}
                 isDisabled={
-                    hasAllZeroTokenAmounts ||
+                    !hasValidUserInput ||
                     (hasHighPriceImpact && !acknowledgeHighPriceImpact) ||
                     (!hasBatchRelayerApproval && (zapEnabled || requiresBatchRelayerOnJoin))
                 }
