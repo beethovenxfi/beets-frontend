@@ -13,13 +13,22 @@ import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 
 function Pools() {
     const { chainId } = useNetworkConfig();
+
+    const TITLE = 'Beethoven X | Investment pools';
+    const DESCRIPTION =
+        'Competitive yield with unmatched flexibility. Invest in a pool of your choice or create your own.';
+
     return (
         <>
             <Head>
-                <title>Beethoven X | Investment pools</title>
-                <meta name="title" content="Beethoven X | Investment pools" />
-                <meta property="og:title" content="Beethoven X | Investment pools" />
-                <meta property="twitter:title" content="Beethoven X | Investment pools" />
+                <title>{TITLE}</title>
+                <meta name="title" content={TITLE} />
+                <meta property="og:title" content={TITLE} />
+                <meta property="twitter:title" content={TITLE} />
+
+                <meta name="description" content={DESCRIPTION} />
+                <meta property="og:description" content={DESCRIPTION} />
+                <meta property="twitter:description" content={DESCRIPTION} />
             </Head>
             <PageMasthead
                 title="Invest & Farm"

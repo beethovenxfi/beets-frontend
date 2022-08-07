@@ -8,7 +8,10 @@ class BeetsDocument extends Document {
             <Html>
                 <Head>
                     <meta name="title" content="Beethoven X" />
-                    <meta name="description" content="Your spiritually symphonic decentralized investment platform" />
+                    <meta
+                        name="description"
+                        content="The future of DeFi re-imagineered; Your next generation Decentralised Exchange."
+                    />
 
                     <meta property="og:type" content="website" />
                     <meta property="og:url" content={`${process.env.VERCEL_URL}`} />

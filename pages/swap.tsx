@@ -9,15 +9,21 @@ import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 
 function Swap() {
     const { chainId } = useNetworkConfig();
-    console.log('${process.env.VERCEL_URL}/my/route', `${process.env.VERCEL_URL}/my/route`);
+
+    const TITLE = 'Beethoven X | Swap';
+    const DESCRIPTION = 'Intelligent trades at optimal prices. Swap your tokens with the Smart Order Router.';
 
     return (
         <>
             <Head>
-                <title>Beethoven X | Swap</title>
-                <meta name="title" content="Beethoven X | Swap" />
-                <meta property="og:title" content="Beethoven X | Swap" />
-                <meta property="twitter:title" content="Beethoven X | Swap" />
+                <title>{TITLE}</title>
+                <meta name="title" content={TITLE} />
+                <meta property="og:title" content={TITLE} />
+                <meta property="twitter:title" content={TITLE} />
+
+                <meta name="description" content={DESCRIPTION} />
+                <meta property="og:description" content={DESCRIPTION} />
+                <meta property="twitter:description" content={DESCRIPTION} />
             </Head>
             <PageMasthead
                 title="Swap"
