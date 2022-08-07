@@ -1,11 +1,14 @@
 import { useGetTokens } from '~/lib/global/useToken';
-import { useEffect } from 'react';
+import { createContext, ReactNode, useContext, useEffect } from 'react';
 import { AmountHumanReadable, TokenAmountHumanReadable, TokenBase } from '~/lib/services/token/token-types';
 import { useBalances } from '~/lib/util/useBalances';
 import { useUserAccount } from '~/lib/user/useUserAccount';
 import { parseUnits } from 'ethers/lib/utils';
+import { useUserTokenBalances } from './useUserTokenBalances';
 
-export function useUserBalances(addresses: string[], additionalTokens?: TokenBase[]) {
+export const UserBalancesContext = createContext<ReturnType<typeof _useUserBalances> | null>(null);
+
+export function _useUserBalances(addresses: string[], additionalTokens?: TokenBase[]) {
     const { tokens: whitelistedTokens } = useGetTokens();
     const { userAddress, isLoading: isUserAccountLoading } = useUserAccount();
 
@@ -53,3 +56,14 @@ export function useUserBalances(addresses: string[], additionalTokens?: TokenBas
         isRefetching,
     };
 }
+
+export function UserBalancesProvider(props: { children: ReactNode }) {
+    const { tokens } = useGetTokens();
+    const tokenAddresses = tokens.map((token) => token.address);
+
+    const balances = _useUserBalances(tokenAddresses);
+    console.log('rendering')
+    return <UserBalancesContext.Provider value={balances}>{props.children}</UserBalancesContext.Provider>;
+}
+
+export const useUserBalances = () => useContext(UserBalancesContext) as ReturnType<typeof _useUserBalances>;

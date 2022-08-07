@@ -1,9 +1,11 @@
 import { tokenFindTokenAmountForAddress } from '~/lib/services/token/token-util';
 import { TokenRow } from '~/components/token-select/TokenRow';
 import VirtualList from 'react-tiny-virtual-list';
-import { useGetTokens } from '~/lib/global/useToken';
+import { useGetTokens, useTokens } from '~/lib/global/useToken';
 import { useUserTokenBalances } from '~/lib/user/useUserTokenBalances';
 import { orderBy } from 'lodash';
+import useCVirtual from 'react-cool-virtual';
+import { useUserBalances } from '~/lib/user/useUserBalances';
 
 interface Props {
     listHeight: number;
@@ -12,8 +14,8 @@ interface Props {
 }
 
 export function TokenSelectTokenList({ listHeight, searchTerm, onTokenRowClick }: Props) {
-    const { tokens, priceForAmount } = useGetTokens();
-    const { userBalances, isLoading: userBalancesLoading } = useUserTokenBalances();
+    const { tokens, priceForAmount } = useTokens();
+    const { userBalances, isLoading: userBalancesLoading } = useUserBalances();
 
     const filteredTokens = searchTerm
         ? tokens.filter((token) => {
@@ -36,6 +38,11 @@ export function TokenSelectTokenList({ listHeight, searchTerm, onTokenRowClick }
         ['desc', 'desc'],
     );
 
+    const { outerRef, innerRef, items } = useCVirtual({
+        itemCount: filteredTokensByPrice.length, // Provide the total number for the list items
+        itemSize: 80, // The size of each item (default = 50)
+    });
+    return null;
     return (
         <VirtualList
             className="token-select-list"
