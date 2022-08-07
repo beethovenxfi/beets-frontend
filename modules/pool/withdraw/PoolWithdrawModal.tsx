@@ -12,7 +12,7 @@ import { useWithdrawState } from '~/modules/pool/withdraw/lib/useWithdrawState';
 
 export function PoolWithdrawModal() {
     const { isOpen, onOpen, onClose } = useDisclosure();
-    const { pool, getPoolTypeName } = usePool();
+    const { pool, formattedTypeName } = usePool();
     const [modalState, setModalState] = useState<'start' | 'proportional' | 'single-asset' | 'preview'>('start');
     const [type, setInvestType] = useState<'proportional' | 'single-asset' | null>(null);
     const initialRef = useRef(null);
@@ -79,7 +79,7 @@ export function PoolWithdrawModal() {
                                     Withdraw from {pool.name}
                                 </Heading>
                                 <Text color="gray.200" fontSize="md">
-                                    {getPoolTypeName()}
+                                    {formattedTypeName}
                                 </Text>
                             </>
                         ) : null}

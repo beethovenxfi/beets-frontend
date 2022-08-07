@@ -61,3 +61,18 @@ export function poolGetServiceForPool(pool: GqlPoolUnion): PoolService {
 
     throw new Error('unsupported pool type');
 }
+
+export function poolGetTypeName(pool: GqlPoolUnion) {
+    switch (pool.__typename) {
+        case 'GqlPoolWeighted':
+            return 'Weighted pool';
+        case 'GqlPoolStable':
+            return 'Stable pool';
+        case 'GqlPoolPhantomStable':
+            return 'Stable phantom pool';
+        case 'GqlPoolLiquidityBootstrapping':
+            return 'Liquidity bootstrapping pool';
+        default:
+            return 'unknown';
+    }
+}

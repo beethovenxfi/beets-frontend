@@ -26,8 +26,8 @@ export function PoolInvestTypeChoice({ onShowProportional, onShowCustom }: Props
     const isStablePool = pool.__typename === 'GqlPoolStable' || pool.__typename === 'GqlPoolPhantomStable';
     const proportionalSupported =
         poolService.joinGetProportionalSuggestionForFixedAmount && pool.investConfig.proportionalEnabled;
-    //const totalTokenBalance = sumBy(pool.tokens, (token) => parseFloat(token.balance) * parseFloat(token.priceRate));
 
+    console.log('PoolInvestTypeChoice render');
     return (
         <Box>
             <Grid mt="4" mb="6" gap="8" templateColumns={{ base: '1fr', md: '1fr', lg: '1fr 1fr' }}>

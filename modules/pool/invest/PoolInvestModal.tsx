@@ -12,7 +12,7 @@ import { useInvestState } from '~/modules/pool/invest/lib/useInvestState';
 
 export function PoolInvestModal() {
     const { isOpen, onOpen, onClose } = useDisclosure();
-    const { pool, getPoolTypeName } = usePool();
+    const { pool, formattedTypeName } = usePool();
     const [modalState, setModalState] = useState<'start' | 'proportional' | 'custom' | 'preview'>('start');
     const [type, setInvestType] = useState<'proportional' | 'custom' | null>(null);
     const initialRef = useRef(null);
@@ -20,7 +20,10 @@ export function PoolInvestModal() {
     const { clearInvestState } = useInvestState();
 
     useEffect(() => {
-        setModalState('start');
+        if (modalState !== 'start') {
+            setModalState('start');
+        }
+
         clearInvestState();
     }, [pool.id]);
 
@@ -79,7 +82,7 @@ export function PoolInvestModal() {
                                     Invest into {pool.name}
                                 </Heading>
                                 <Text color="gray.200" fontSize="md">
-                                    {getPoolTypeName()}
+                                    {formattedTypeName}
                                 </Text>
                             </>
                         ) : null}

@@ -17,16 +17,17 @@ import PoolOwnerImage from '~/assets/images/pool-owner.png';
 import Image from 'next/image';
 import { HelpCircle } from 'react-feather';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
+import { AddressZero } from '@ethersproject/constants';
 
 function PoolHeader() {
     const networkConfig = useNetworkConfig();
-    const { pool, poolTokensWithoutPhantomBpt } = usePool();
+    const { pool } = usePool();
 
     // temp fix: https://github.com/chakra-ui/chakra-ui/issues/5896#issuecomment-1104085557
     const PopoverTrigger: React.FC<{ children: React.ReactNode }> = OrigPopoverTrigger;
 
     const hasBeetsOwner = pool.owner === networkConfig.beetsPoolOwnerAddress;
-    const hasZeroOwner = pool.owner === '0x0000000000000000000000000000000000000000';
+    const hasZeroOwner = pool.owner === AddressZero;
     const swapFeeType = hasZeroOwner ? 'Fixed' : 'Dynamic';
     const tooltipText1 = `Liquidity providers earn ${swapFeeType.toLowerCase()} swap fees on every trade utilizing the liquidity in this pool.`;
     const tooltipText2 = `Dynamic swap fees are controlled by the ${
@@ -44,7 +45,7 @@ function PoolHeader() {
                         {pool.name}
                     </Text>
                 </WrapItem>
-                {poolTokensWithoutPhantomBpt.map((token, index) => (
+                {pool.tokens.map((token, index) => (
                     <WrapItem key={index}>
                         <PoolTokenPill token={token} />
                     </WrapItem>
