@@ -66,7 +66,7 @@ export function PoolInvestCustom({ onShowPreview }: Props) {
             </Collapse>
             <Button
                 variant="primary"
-                isFullWidth
+                width="full"
                 mt="8"
                 onClick={onShowPreview}
                 isDisabled={

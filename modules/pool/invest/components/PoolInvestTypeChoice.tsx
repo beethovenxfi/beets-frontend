@@ -107,7 +107,7 @@ export function PoolInvestTypeChoice({ onShowProportional, onShowCustom }: Props
             {isStablePool ? (
                 <>
                     <Button
-                        isFullWidth
+                        width="full"
                         variant="primary"
                         isDisabled={investableAmount === 0}
                         onClick={onShowCustom}
@@ -118,7 +118,7 @@ export function PoolInvestTypeChoice({ onShowProportional, onShowCustom }: Props
                     {pool.investConfig.proportionalEnabled && (
                         <Button
                             variant="secondary"
-                            isFullWidth
+                            width="full"
                             isDisabled={!canInvestProportionally}
                             onClick={onShowProportional}
                         >
@@ -131,7 +131,7 @@ export function PoolInvestTypeChoice({ onShowProportional, onShowCustom }: Props
                     {proportionalSupported && (
                         <Button
                             variant="primary"
-                            isFullWidth
+                            width="full"
                             mb="3"
                             isDisabled={!canInvestProportionally}
                             onClick={onShowProportional}
@@ -139,7 +139,7 @@ export function PoolInvestTypeChoice({ onShowProportional, onShowCustom }: Props
                             Invest proportionally
                         </Button>
                     )}
-                    <Button isFullWidth variant="secondary" isDisabled={investableAmount === 0} onClick={onShowCustom}>
+                    <Button width="full" variant="secondary" isDisabled={investableAmount === 0} onClick={onShowCustom}>
                         {proportionalSupported ? 'Customize my investment' : 'Invest'}
                     </Button>
                 </>

@@ -80,7 +80,7 @@ export function PoolWithdrawSingleAsset({ onShowPreview, ...rest }: Props) {
                     </Box>
                 </Alert>
             </Collapse>
-            <Button variant="primary" isFullWidth mt="8" onClick={onShowPreview} isDisabled={!isValid}>
+            <Button variant="primary" width="full" mt="8" onClick={onShowPreview} isDisabled={!isValid}>
                 Preview
             </Button>
         </Box>

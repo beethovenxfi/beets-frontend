@@ -17,7 +17,7 @@ export function BeetsBatchRelayerApprovalButton({ ...rest }: Props) {
     return (
         <BeetsSubmitTransactionButton
             {...query}
-            isFullWidth
+            width="full"
             onClick={() => {
                 approve();
             }}

@@ -1,5 +1,4 @@
-import { Avatar, Circle } from '@chakra-ui/react';
-import { AvatarProps } from '@chakra-ui/avatar/src/avatar';
+import { Avatar, AvatarProps, Circle } from '@chakra-ui/react';
 import { useGetTokens } from '~/lib/global/useToken';
 import Jazzicon, { jsNumberForAddress } from 'react-jazzicon';
 import { AddressZero } from '@ethersproject/constants';

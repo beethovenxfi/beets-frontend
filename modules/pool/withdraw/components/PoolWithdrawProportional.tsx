@@ -125,7 +125,7 @@ export function PoolWithdrawProportional({ onShowPreview, ...rest }: Props) {
 
             <PoolWithdrawSummary mt="6" />
             <PoolWithdrawSettings mt="6" />
-            <Button variant="primary" isFullWidth mt="8" onClick={onShowPreview}>
+            <Button variant="primary" width="full" mt="8" onClick={onShowPreview}>
                 Preview
             </Button>
         </Box>

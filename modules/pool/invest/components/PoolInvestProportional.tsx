@@ -130,7 +130,7 @@ export function PoolInvestProportional({ onShowPreview }: Props) {
             <PoolInvestSettings mt="8" />
             <Button
                 variant="primary"
-                isFullWidth
+                width="full"
                 mt="8"
                 onClick={onShowPreview}
                 isDisabled={

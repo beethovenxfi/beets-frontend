@@ -247,7 +247,7 @@ export function TradePreviewContent({ query, onTransactionSubmitted }: Props) {
                 onClick={() => query.batchSwap(swapInfo)}
                 onPending={onTransactionSubmitted}
                 onConfirmed={() => refetchUserBalances()}
-                isFullWidth
+                width="full"
                 size="lg"
                 marginTop="6"
             >

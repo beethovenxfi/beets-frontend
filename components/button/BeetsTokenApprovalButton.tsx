@@ -24,7 +24,7 @@ export function BeetsTokenApprovalButton({
     return (
         <BeetsSubmitTransactionButton
             {...query}
-            isFullWidth
+            width="full"
             onClick={() => {
                 query.approve(contractToApprove);
             }}

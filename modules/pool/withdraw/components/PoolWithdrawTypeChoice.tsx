@@ -165,10 +165,10 @@ export function PoolWithdrawTypeChoice({ onShowProportional, onShowSingleAsset }
                     </Button>
                 </Alert>
             )}
-            <Button variant="primary" isFullWidth mb="2" isDisabled={!hasBptInWallet} onClick={onShowProportional}>
+            <Button variant="primary" width="full" mb="2" isDisabled={!hasBptInWallet} onClick={onShowProportional}>
                 Withdraw proportionally
             </Button>
-            <Button variant="secondary" isFullWidth isDisabled={!hasBptInWallet} onClick={onShowSingleAsset}>
+            <Button variant="secondary" width="full" isDisabled={!hasBptInWallet} onClick={onShowSingleAsset}>
                 Single asset withdraw
             </Button>
 

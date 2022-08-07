@@ -103,7 +103,7 @@ export function TradeCard() {
                     />
                     <Box width="full" paddingTop="2">
                         {!isConnected ? (
-                            <WalletConnectButton isFullWidth size="lg" />
+                            <WalletConnectButton width="full" size="lg" />
                         ) : isNativeAssetWrap ? (
                             <BeetsSubmitTransactionButton
                                 {...wrapEthQuery}
@@ -146,7 +146,7 @@ export function TradeCard() {
                                     tradeStopPolling();
                                     tradePreviewDisclosure.onOpen();
                                 }}
-                                isFullWidth
+                                width="full"
                                 size="lg"
                             >
                                 {isNotEnoughLiquidity

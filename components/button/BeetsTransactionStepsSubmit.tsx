@@ -108,7 +108,7 @@ export function BeetsTransactionStepsSubmit({
                     variant="primary"
                     isLoading={true}
                     loadingText={loadingButtonText}
-                    isFullWidth
+                    width="full"
                     size={buttonSize}
                 >
                     {loadingButtonText}
@@ -129,7 +129,7 @@ export function BeetsTransactionStepsSubmit({
             {currentStep && currentStep.type !== 'tokenApproval' && currentQuery && !complete ? (
                 <BeetsSubmitTransactionButton
                     {...currentQuery}
-                    isFullWidth
+                    width="full"
                     onClick={() => onSubmit(currentStep.id)}
                     onSubmitting={() => setStepStatus(currentStep.id, 'submitting')}
                     onPending={() => setStepStatus(currentStep.id, 'pending')}
@@ -148,7 +148,7 @@ export function BeetsTransactionStepsSubmit({
                         setComplete(false);
                         onCompleteButtonClick();
                     }}
-                    isFullWidth
+                    width="full"
                     variant="outline"
                     size={buttonSize}
                 >
