@@ -1,4 +1,4 @@
-import { Box, Flex, HStack } from '@chakra-ui/react';
+import { Box, Button, Flex, HStack, Image, Skeleton } from '@chakra-ui/react';
 import NavbarWalletConnectButton from './NavbarWalletConnectButton';
 import { NavbarLink } from '~/modules/nav/NavbarLink';
 import { useRouter } from 'next/router';
@@ -10,6 +10,9 @@ import { BeetsBalLogo } from '~/assets/logo/BeetsBalLogo';
 import { NextLink } from '~/components/link/NextLink';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 import { networkConfig } from '~/lib/config/network-config';
+import StarsIcon from '~/components/apr-tooltip/StarsIcon';
+import numeral from 'numeral';
+import { NetworkSelectorPopover } from '~/modules/nav/NetworkSelectorPopover';
 
 interface Props {
     scrollY: MotionValue<number>;
@@ -60,6 +63,21 @@ export function Navbar({ scrollY }: Props) {
                     </Box>
                     <FadeInOutBox mr="3" isVisible={isConnected}>
                         <HStack spacing="3">
+                            <NetworkSelectorPopover>
+                                <Button
+                                    bgColor="beets.lightAlpha.200"
+                                    width="50px"
+                                    height="40px"
+                                    display="flex"
+                                    alignItems="center"
+                                    justifyContent="center"
+                                    flexDirection="column"
+                                    _hover={{ transform: 'scale(1.1)' }}
+                                    px="0"
+                                >
+                                    <Image width="24px" height="24px" src={networkConfig.eth.iconUrl} />
+                                </Button>
+                            </NetworkSelectorPopover>
                             <NavbarPendingRewards />
                             {/*<NavbarAlerts />*/}
                             {/*<NavbarPortfolioDrawer />*/}

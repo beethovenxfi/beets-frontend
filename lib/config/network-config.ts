@@ -8,3 +8,18 @@ const AllNetworkConfigs: { [chainId: string]: NetworkConfig } = {
 };
 
 export const networkConfig = AllNetworkConfigs[process.env.NEXT_PUBLIC_CHAIN_ID || '250'];
+
+export const networkList = [
+    {
+        name: fantomNetworkConfig.networkShortName,
+        chainId: fantomNetworkConfig.chainId,
+        url: 'https://v2.beets.fi',
+        iconUrl: fantomNetworkConfig.eth.iconUrl,
+    },
+    {
+        name: optimismNetworkConfig.networkShortName,
+        chainId: optimismNetworkConfig.chainId,
+        url: 'https://opv2.beets.fi',
+        iconUrl: optimismNetworkConfig.eth.iconUrl,
+    },
+];
