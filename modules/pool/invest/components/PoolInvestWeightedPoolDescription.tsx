@@ -1,20 +1,28 @@
-import { Text } from '@chakra-ui/react';
+import { Highlight } from '@chakra-ui/react';
 
 export function PoolInvestWeightedPoolDescription() {
     return (
         <>
-            We recommend investing proportionally into this pool. This ensures you will{' '}
-            <Text as="span" fontWeight="bold">
-                NOT
-            </Text>{' '}
-            be subject to potential fees caused by price impact.
+            <Highlight
+                query={['Investing proportionally', 'not', 'price impact']}
+                styles={{ fontWeight: 'bold', color: 'white' }}
+            >
+                Investing proportionally into this pool ensures you will not be subject to the swap fees associated with
+                price impact.
+            </Highlight>
             <br />
             <br />
-            Alternatively, you can customize and invest in this pool in any proportion. Investing in this manner,
-            however, may shift the pool out of balance and is therefore subject to price impact.
+            <Highlight
+                query={['customize your investment', 'price impact']}
+                styles={{ fontWeight: 'bold', color: 'white' }}
+            >
+                Alternatively, you can customize your investment and deposit in this pool with any tokens in your
+                wallet. However, investing in this manner may shift the pool out of balance and is therefore subject to
+                price impact.
+            </Highlight>
             <br />
             <br />
-            When investing in a liquidity pool, you will receive pool tokens (BPT) which represent your share of the
+            When investing in any liquidity pool, you will receive pool tokens (BPT) which represent your share of the
             pool.
         </>
     );
