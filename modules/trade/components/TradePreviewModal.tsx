@@ -46,6 +46,12 @@ export function TradePreviewModal({ isOpen, onClose }: Props) {
                     )*/}
                 </BeetsModalHeader>
                 <BeetsModalBody>
+                    {batchSwapQuery.isConfirmed && (
+                        <div className="fireworks">
+                            <div className="before" />
+                            <div className="after" />
+                        </div>
+                    )}
                     {!submitting && (
                         <TradePreviewContent
                             query={batchSwapQuery}
@@ -56,12 +62,6 @@ export function TradePreviewModal({ isOpen, onClose }: Props) {
                         <motion.div animate={{ opacity: 1 }} initial={{ opacity: 0 }}>
                             <TradeSubmittedContent query={batchSwapQuery} />
                         </motion.div>
-                    )}
-                    {batchSwapQuery.isConfirmed && (
-                        <div className="fireworks">
-                            <div className="before" />
-                            <div className="after" />
-                        </div>
                     )}
                 </BeetsModalBody>
             </BeetsModalContent>

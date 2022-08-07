@@ -216,6 +216,7 @@ export const GqlPoolMinimal = gql`
             isNested
             isPhantomBpt
             weight
+            symbol
         }
         staking {
             id

@@ -3335,6 +3335,7 @@ export type GetPoolsQuery = {
             isNested: boolean;
             isPhantomBpt: boolean;
             weight?: string | null;
+            symbol: string;
         }>;
         staking?: {
             __typename: 'GqlPoolStaking';
@@ -3400,6 +3401,7 @@ export type GqlPoolMinimalFragment = {
         isNested: boolean;
         isPhantomBpt: boolean;
         weight?: string | null;
+        symbol: string;
     }>;
     staking?: {
         __typename: 'GqlPoolStaking';
@@ -3915,6 +3917,7 @@ export const GqlPoolMinimalFragmentDoc = gql`
             isNested
             isPhantomBpt
             weight
+            symbol
         }
         staking {
             id

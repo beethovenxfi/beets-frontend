@@ -68,6 +68,7 @@ fragment GqlPoolMinimal on GqlPoolMinimal {
         isNested
         isPhantomBpt
         weight
+        symbol
     }
     staking {
         id

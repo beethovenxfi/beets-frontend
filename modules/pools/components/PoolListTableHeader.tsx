@@ -1,6 +1,7 @@
-import { Grid, GridItem, Text } from '@chakra-ui/react';
+import { Flex, Grid, GridItem, Text } from '@chakra-ui/react';
 import { usePoolList } from '../usePoolList';
 import PoolListSortLink from '~/modules/pools/components/PoolListSortLink';
+import { InfoButton } from '~/components/info-button/InfoButton';
 
 export function PoolListTableHeader() {
     const { state, changeSort, showMyInvestments } = usePoolList();
@@ -32,9 +33,12 @@ export function PoolListTableHeader() {
                 </GridItem>
                 {showMyInvestments && (
                     <GridItem textAlign="right">
-                        <Text fontSize="md" fontWeight="semibold" color="beets.base.100">
-                            My balance
-                        </Text>
+                        <Flex justifyContent="flex-end" color="beets.base.100">
+                            <Text fontSize="md" fontWeight="semibold">
+                                My balance
+                            </Text>
+                            <InfoButton infoText="To increase performance, your pool balances are cached for this list view. If you just made an invest or withdraw, it may take a few seconds for the change to be reflected here." />
+                        </Flex>
                     </GridItem>
                 )}
                 <GridItem textAlign="right">

@@ -10,8 +10,11 @@ import { useEffect } from 'react';
 import { orderBy } from 'lodash';
 import { PoolListMobileHeader } from '~/modules/pools/components/PoolListMobileHeader';
 import { networkConfig } from '~/lib/config/network-config';
+import { useGetTokens } from '~/lib/global/useToken';
+import { GqlPoolMinimalFragment } from '~/apollo/generated/graphql-codegen-generated';
 
 function PoolList() {
+    const { getToken } = useGetTokens();
     const { pools, refetch, loading, networkStatus, state, count, setPageSize, setPoolIds, showMyInvestments } =
         usePoolList();
     const { userPoolIds, usdBalanceForPool } = useUserData();
@@ -44,7 +47,7 @@ function PoolList() {
                 fetchingMore={networkStatus === NetworkStatus.refetch}
                 onPageSizeChange={setPageSize}
                 renderTableHeader={() => <PoolListTableHeader />}
-                renderTableRow={(item, index) => {
+                renderTableRow={(item: GqlPoolMinimalFragment, index) => {
                     return (
                         <PoolListItem
                             key={index}
@@ -54,6 +57,9 @@ function PoolList() {
                             borderBottomColor="beets.base.800"
                             borderBottomWidth={index === pools.length - 1 ? 0 : 1}
                             bg="box.500"
+                            tokens={item.allTokens
+                                .filter((token) => !token.isNested && !token.isPhantomBpt)
+                                .map((token) => ({ ...token, logoURI: getToken(token.address)?.logoURI || undefined }))}
                         />
                     );
                 }}

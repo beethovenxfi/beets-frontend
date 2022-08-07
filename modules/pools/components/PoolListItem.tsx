@@ -1,24 +1,25 @@
 import { GqlPoolMinimalFragment } from '~/apollo/generated/graphql-codegen-generated';
 import { Box, Grid, GridItem, GridItemProps, Text } from '@chakra-ui/react';
-import TokenAvatarSet from '~/components/token/TokenAvatarSet';
 import Link from 'next/link';
 import numeral from 'numeral';
 import AprTooltip from '~/components/apr-tooltip/AprTooltip';
 import { BoxProps } from '@chakra-ui/layout';
 import { AmountHumanReadable } from '~/lib/services/token/token-types';
 import { numberFormatUSDValue } from '~/lib/util/number-formats';
+import { TokenAvatarSetInList, TokenAvatarSetInListTokenData } from '~/components/token/TokenAvatarSetInList';
+import { memo } from 'react';
 
 interface Props extends BoxProps {
     pool: GqlPoolMinimalFragment;
     userBalance?: AmountHumanReadable;
     showUserBalance: boolean;
+    tokens: TokenAvatarSetInListTokenData[];
 }
 
-export function PoolListItem({ pool, userBalance, showUserBalance, ...rest }: Props) {
-    const tokenData = pool.allTokens
-        .filter((token) => !token.isNested && !token.isPhantomBpt)
-        .map((token) => ({ address: token.address, ...(token.weight && { weight: token.weight }) }));
+const MemoizedTokenAvatarSetInList = memo(TokenAvatarSetInList);
+const MemoizedAprTooltip = memo(AprTooltip);
 
+export function PoolListItem({ pool, userBalance, showUserBalance, tokens, ...rest }: Props) {
     return (
         <Box mb={{ base: '4', lg: '0' }} borderRadius={{ base: 'md', lg: '0' }} {...rest}>
             <Link href={`/pool/${pool.id}`} passHref>
@@ -52,18 +53,12 @@ export function PoolListItem({ pool, userBalance, showUserBalance, ...rest }: Pr
                         }
                     >
                         <GridItem area="icons">
-                            <TokenAvatarSet
+                            <MemoizedTokenAvatarSetInList
                                 imageSize={25}
                                 width={92}
-                                tokenData={tokenData}
+                                tokens={tokens}
                                 display={{ base: 'none', lg: 'block' }}
-                            />
-                            <TokenAvatarSet
-                                imageSize={32}
-                                width={124}
-                                tokenData={tokenData}
-                                display={{ base: 'block', lg: 'none' }}
-                                maxAssetsPerLine={8}
+                                //renderPopover={false}
                             />
                         </GridItem>
                         <GridItem area="name" mb={{ base: '4', lg: '0' }}>
@@ -105,7 +100,7 @@ export function PoolListItem({ pool, userBalance, showUserBalance, ...rest }: Pr
                             mr="4"
                         >
                             <MobileLabel text="APR" />
-                            <AprTooltip
+                            <MemoizedAprTooltip
                                 data={pool.dynamicData.apr}
                                 textProps={{ fontWeight: 'normal', fontSize: { base: 'xl', lg: 'md' } }}
                             />
