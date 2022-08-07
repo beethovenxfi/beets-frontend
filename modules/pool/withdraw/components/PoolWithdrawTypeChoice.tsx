@@ -26,6 +26,7 @@ import { useWithdraw } from '~/modules/pool/withdraw/lib/useWithdraw';
 import { TokenSelectInline } from '~/components/token-select-inline/TokenSelectInline';
 import { useWithdrawState } from '~/modules/pool/withdraw/lib/useWithdrawState';
 import { PoolWithdrawWeightedPoolDescription } from '~/modules/pool/withdraw/components/PoolWithdrawWeightedPoolDescription';
+import { PoolWithdrawStablePoolDescription } from '~/modules/pool/withdraw/components/PoolWithdrawStablePoolDescription';
 
 interface Props {
     onShowProportional(): void;
@@ -43,6 +44,7 @@ export function PoolWithdrawTypeChoice({ onShowProportional, onShowSingleAsset }
     const valueInWallet = (parseFloat(userWalletBptBalance) / parseFloat(userTotalBptBalance)) * userPoolBalanceUSD;
     const { selectedWithdrawTokenAddresses } = useWithdraw();
     const { selectedOptions, setSelectedOption } = useWithdrawState();
+    const isStablePool = pool.__typename === 'GqlPoolStable' || pool.__typename === 'GqlPoolPhantomStable';
 
     return (
         <Box>
@@ -139,7 +141,7 @@ export function PoolWithdrawTypeChoice({ onShowProportional, onShowSingleAsset }
                 </GridItem>
                 <GridItem>
                     <BeetsBox p="4">
-                        <PoolWithdrawWeightedPoolDescription />
+                        {isStablePool ? <PoolWithdrawStablePoolDescription /> : <PoolWithdrawWeightedPoolDescription />}
                     </BeetsBox>
                 </GridItem>
             </Grid>
