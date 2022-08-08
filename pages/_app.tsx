@@ -43,6 +43,9 @@ import { BeetsFonts } from '~/components/fonts/BeetsFonts';
 import { AppContent } from '~/pages/_app-content';
 import dynamic from 'next/dynamic';
 import { WalletUserAvatar } from '~/components/avatar/WalletUserAvatar';
+import Compose from '~/components/providers/Compose';
+import { TokensProvider, useGetTokens } from '~/lib/global/useToken';
+import { UserBalancesProvider } from '~/lib/user/useUserBalances';
 
 const queryClient = new QueryClient();
 
@@ -85,6 +88,8 @@ const TopProgressBar = dynamic(
 function BeetsApp(props: AppProps) {
     const client = useApollo(props.pageProps);
 
+    const dataProviders = [TokensProvider, UserBalancesProvider];
+
     return (
         <QueryClientProvider client={queryClient}>
             <WagmiConfig client={wagmiClient}>
@@ -98,9 +103,11 @@ function BeetsApp(props: AppProps) {
                 >
                     <ApolloProvider client={client}>
                         <ChakraProvider theme={chakraTheme}>
-                            <BeetsFonts />
-                            <TopProgressBar />
-                            <AppContent {...props} />
+                            <Compose providers={dataProviders}>
+                                <BeetsFonts />
+                                <TopProgressBar />
+                                <AppContent {...props} />
+                            </Compose>
                         </ChakraProvider>
                     </ApolloProvider>
                 </RainbowKitProvider>
