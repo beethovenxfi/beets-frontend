@@ -16,6 +16,7 @@ import { TransactionSubmittedContent } from '~/components/transaction/Transactio
 import { sum } from 'lodash';
 import { usePool } from '~/modules/pool/lib/usePool';
 import { usePoolUserBptBalance } from '~/modules/pool/lib/usePoolUserBptBalance';
+import { PoolWithdrawSettings } from '~/modules/pool/withdraw/components/PoolWithdrawSettings';
 
 interface Props {
     onWithdrawComplete(): void;
@@ -56,7 +57,8 @@ export function PoolWithdrawPreview({ onWithdrawComplete, onClose }: Props) {
                     );
                 })}
             </BeetsBox>
-            <PoolWithdrawSummary mt="6" mb="8" />
+            <PoolWithdrawSummary mt="6" />
+            <PoolWithdrawSettings mt="6" mb="8" />
             <FadeInBox isVisible={exitPoolQuery.isConfirmed || exitPoolQuery.isPending || exitPoolQuery.isFailed}>
                 <Text fontSize="lg" fontWeight="semibold" mt="4" mb="2">
                     Transaction details
