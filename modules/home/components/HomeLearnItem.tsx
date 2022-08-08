@@ -1,4 +1,4 @@
-import { Box, Link, Text } from '@chakra-ui/react';
+import { Box, Link } from '@chakra-ui/react';
 
 interface Props {
     title: string;

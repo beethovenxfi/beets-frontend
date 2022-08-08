@@ -85,7 +85,7 @@ export default function TokenInput({
                         </Box>
                     )}
                 </BeetsInput>
-                <Box position="absolute" left=".75rem" top="50%" transform="translateY(-50%)">
+                <Box position="absolute" left=".75rem" top="50%" transform="translateY(-50%)" zIndex="2">
                     <VStack spacing="none">
                         <Button
                             height="fit-content"
