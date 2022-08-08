@@ -1,7 +1,7 @@
 import { BigNumber, BigNumberish } from '@ethersproject/bignumber';
 import { getAddress } from '@ethersproject/address';
 import { formatUnits } from '@ethersproject/units';
-import { JsonRpcProvider } from '@ethersproject/providers';
+import { BaseProvider } from '@ethersproject/providers';
 import { multicall } from '~/lib/services/util/multicaller.service';
 import ERC20Abi from '../../../abi/ERC20.json';
 import { TokenBase } from '~/lib/services/token/token-types';
@@ -11,7 +11,7 @@ export type AllowanceMap = { [address: string]: string };
 export type ContractAllowancesMap = { [address: string]: AllowanceMap };
 
 export class AllowancesConcern {
-    constructor(private readonly jsonProvider: JsonRpcProvider, private readonly chainId: string) {}
+    constructor(private readonly jsonProvider: BaseProvider, private readonly chainId: string) {}
 
     public async getAllowancesForAccount(
         account: string,

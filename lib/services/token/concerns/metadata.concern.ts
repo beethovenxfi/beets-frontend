@@ -1,11 +1,11 @@
 import ERC20Abi from '../../../abi/ERC20.json';
 import { set } from 'lodash';
 import { Multicaller } from '~/lib/services/util/multicaller.service';
-import { JsonRpcProvider } from '@ethersproject/providers';
+import { BaseProvider } from '@ethersproject/providers';
 import { TokenBase } from '~/lib/services/token/token-types';
 
 export class MetadataConcern {
-    constructor(private readonly provider: JsonRpcProvider, private readonly chainId: string) {}
+    constructor(private readonly provider: BaseProvider, private readonly chainId: string) {}
 
     /**
      * Perform an onchain multicall to load tokenWithAmount data

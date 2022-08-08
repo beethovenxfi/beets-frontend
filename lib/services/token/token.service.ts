@@ -1,34 +1,25 @@
 import { MetadataConcern } from './concerns/metadata.concern';
 import { BalancesConcern } from './concerns/balances.concern';
 import { AllowancesConcern, ContractAllowancesMap } from './concerns/allowances.concern';
-import { rpcProviderService } from '~/lib/services/rpc-provider/rpc-provider.service';
 import { networkConfig } from '~/lib/config/network-config';
 import { parseUnits } from '@ethersproject/units';
 import { formatFixed } from '@ethersproject/bignumber';
 import { TokenAmountHumanReadable, TokenAmountScaled, TokenBase } from '~/lib/services/token/token-types';
-import { JsonRpcProvider, TransactionResponse } from '@ethersproject/providers';
-import { MaxUint256 } from '@ethersproject/constants';
-import { web3SendTransaction } from '~/lib/services/util/web3';
-import ERC20Abi from '../../abi/ERC20.json';
+import { BaseProvider, TransactionResponse } from '@ethersproject/providers';
+import { networkProvider } from '~/lib/global/network';
 
 export default class TokenService {
     private allTokens: Map<string, TokenBase> = new Map<string, TokenBase>();
 
     constructor(
-        private readonly provider: JsonRpcProvider,
+        private readonly provider: BaseProvider,
         private readonly metadataConcern: MetadataConcern,
         private readonly balancesConcern: BalancesConcern,
         private readonly allowancesConcern: AllowancesConcern,
     ) {}
 
     public async approveToken(spender: string, token: string): Promise<TransactionResponse> {
-        return web3SendTransaction({
-            web3: this.provider,
-            contractAddress: token,
-            abi: ERC20Abi,
-            action: 'approve',
-            params: [spender, MaxUint256.toString()],
-        });
+        throw new Error('TODO');
     }
 
     /**
@@ -93,11 +84,9 @@ export default class TokenService {
     }
 }
 
-const provider = rpcProviderService.getJsonProvider();
-
 export const tokenService = new TokenService(
-    provider,
-    new MetadataConcern(provider, networkConfig.chainId),
-    new BalancesConcern(provider, networkConfig.chainId, networkConfig.eth.address, networkConfig.eth.decimals),
-    new AllowancesConcern(provider, networkConfig.chainId),
+    networkProvider,
+    new MetadataConcern(networkProvider, networkConfig.chainId),
+    new BalancesConcern(networkProvider, networkConfig.chainId, networkConfig.eth.address, networkConfig.eth.decimals),
+    new AllowancesConcern(networkProvider, networkConfig.chainId),
 );
