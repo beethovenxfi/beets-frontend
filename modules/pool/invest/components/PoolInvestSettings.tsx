@@ -7,8 +7,8 @@ import { CardRow } from '~/components/card/CardRow';
 import { useInvestState } from '~/modules/pool/invest/lib/useInvestState';
 import { BeetsBatchRelayerApprovalButton } from '~/components/button/BeetsBatchRelayerApprovalButton';
 import { useHasBatchRelayerApproval } from '~/lib/util/useHasBatchRelayerApproval';
-import { usePool } from '~/modules/pool/lib/usePool';
 import { useEffect } from 'react';
+import { usePool } from '~/modules/pool/lib/usePool';
 
 export function PoolInvestSettings({ ...rest }: BoxProps) {
     const { zapEnabled, toggleZapEnabled } = useInvestState();

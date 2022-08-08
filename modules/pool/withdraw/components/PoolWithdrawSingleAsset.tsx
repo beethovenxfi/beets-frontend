@@ -1,6 +1,5 @@
 import { Box, Button, Text, Collapse, Alert, Checkbox, useBoolean } from '@chakra-ui/react';
 import { useWithdrawState } from '~/modules/pool/withdraw/lib/useWithdrawState';
-import { usePool } from '~/modules/pool/lib/usePool';
 import { BoxProps } from '@chakra-ui/layout';
 import { usePoolExitGetSingleAssetWithdrawForBptIn } from '~/modules/pool/withdraw/lib/usePoolExitGetSingleAssetWithdrawForBptIn';
 import { usePoolExitGetBptInForSingleAssetWithdraw } from '~/modules/pool/withdraw/lib/usePoolExitGetBptInForSingleAssetWithdraw';
@@ -8,6 +7,7 @@ import { useEffect } from 'react';
 import { PoolWithdrawSummary } from '~/modules/pool/withdraw/components/PoolWithdrawSummary';
 import { PoolWithdrawSettings } from '~/modules/pool/withdraw/components/PoolWithdrawSettings';
 import { BeetsTokenInputWithSlider } from '~/components/inputs/BeetsTokenInputWithSlider';
+import { usePool } from '~/modules/pool/lib/usePool';
 
 interface Props extends BoxProps {
     onShowPreview: () => void;

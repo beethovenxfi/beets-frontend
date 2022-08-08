@@ -1,4 +1,3 @@
-import { usePool } from '~/modules/pool/lib/usePool';
 import { Box, Button, HStack, Menu, MenuButton, MenuItem, MenuList, TabList, Tabs, VStack } from '@chakra-ui/react';
 import { BoxProps } from '@chakra-ui/layout';
 import BeetsTab from '~/components/tabs/BeetsTab';
@@ -9,6 +8,7 @@ import { PoolJoinExitsTable } from '~/modules/pool/detail/components/transaction
 import { PoolUserInvestmentsTable } from '~/modules/pool/detail/components/transactions/PoolUserInvestmentsTable';
 import { ChevronDown } from 'react-feather';
 import { PoolUserSwapsTable } from '~/modules/pool/detail/components/transactions/PoolUserSwapsTable';
+import { usePool } from '~/modules/pool/lib/usePool';
 
 type Props = {};
 

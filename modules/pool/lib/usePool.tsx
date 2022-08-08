@@ -1,4 +1,4 @@
-import { createContext, useEffect, useMemo } from 'react';
+import { createContext, useContext, useEffect, useMemo } from 'react';
 import { GqlPoolUnion, useGetPoolQuery } from '~/apollo/generated/graphql-codegen-generated';
 import { poolGetServiceForPool, poolGetTypeName, poolRequiresBatchRelayerOnJoin } from '~/lib/services/pool/pool-util';
 import { useEffectOnce } from '~/lib/util/custom-hooks';
@@ -21,12 +21,7 @@ export interface PoolContextType {
 
 export const PoolContext = createContext<PoolContextType | null>(null);
 
-interface Props {
-    pool: GqlPoolUnion;
-    children: any;
-}
-
-export function PoolProvider({ pool: poolFromProps, children }: Props) {
+export function PoolProvider({ pool: poolFromProps, children }: { pool: GqlPoolUnion; children: any }) {
     const { data, networkStatus, startPolling } = useGetPoolQuery({
         variables: { id: poolFromProps.id },
         notifyOnNetworkStatusChange: true,
@@ -89,4 +84,9 @@ export function PoolProvider({ pool: poolFromProps, children }: Props) {
             {children}
         </PoolContext.Provider>
     );
+}
+
+export function usePool() {
+    //we force cast here because the context will never be null
+    return useContext(PoolContext) as PoolContextType;
 }

@@ -1,4 +1,3 @@
-import { usePool } from '~/modules/pool/lib/usePool';
 import { useQuery } from 'react-query';
 import { useReactiveVar } from '@apollo/client';
 import { withdrawStateVar } from '~/modules/pool/withdraw/lib/useWithdrawState';
@@ -8,6 +7,7 @@ import { oldBnumScaleAmount, oldBnumToHumanReadable } from '~/lib/services/pool/
 import { useSlippage } from '~/lib/global/useSlippage';
 import { usePoolUserBptBalance } from '~/modules/pool/lib/usePoolUserBptBalance';
 import { useUserAccount } from '~/lib/user/useUserAccount';
+import { usePool } from '~/modules/pool/lib/usePool';
 
 export function usePoolExitGetContractCallData() {
     const { userAddress } = useUserAccount();

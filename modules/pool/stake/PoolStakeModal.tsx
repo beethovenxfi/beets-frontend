@@ -17,7 +17,6 @@ import { usePoolUserBptBalance } from '~/modules/pool/lib/usePoolUserBptBalance'
 import { Modal, ModalBody, ModalCloseButton, ModalContent } from '@chakra-ui/modal';
 import { capitalize } from 'lodash';
 import { tokenFormatAmount } from '~/lib/services/token/token-util';
-import { usePool } from '~/modules/pool/lib/usePool';
 import { useApproveToken } from '~/lib/util/useApproveToken';
 import { useStakingDeposit } from '~/lib/global/useStakingDeposit';
 
@@ -27,6 +26,7 @@ import { BeetsBox } from '~/components/box/BeetsBox';
 import { oldBnumScaleAmount, oldBnumToHumanReadable } from '~/lib/services/pool/lib/old-big-number';
 import { CardRow } from '~/components/card/CardRow';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
+import { usePool } from '~/modules/pool/lib/usePool';
 
 interface Props {
     isOpen: boolean;

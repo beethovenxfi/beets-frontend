@@ -1,9 +1,9 @@
 import { Badge, Divider, HStack, Text, VStack } from '@chakra-ui/layout';
-import { usePool } from '../../../lib/usePool';
 import numeral from 'numeral';
 import AprTooltip from '~/components/apr-tooltip/AprTooltip';
 import { PercentChangeBadge } from '~/components/badge/PercentChangeBadge';
 import { numberFormatUSDValue } from '~/lib/util/number-formats';
+import { usePool } from '~/modules/pool/lib/usePool';
 
 export default function PoolOverallStats() {
     const { pool } = usePool();

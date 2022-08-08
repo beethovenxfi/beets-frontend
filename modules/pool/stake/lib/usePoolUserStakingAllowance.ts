@@ -1,6 +1,6 @@
 import { useUserAllowances } from '~/lib/util/useUserAllowances';
-import { usePool } from '~/modules/pool/lib/usePool';
 import { AmountHumanReadable } from '~/lib/services/token/token-types';
+import { usePool } from '~/modules/pool/lib/usePool';
 
 export function usePoolUserStakingAllowance() {
     const { pool } = usePool();

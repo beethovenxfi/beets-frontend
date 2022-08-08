@@ -12,12 +12,12 @@ import {
 } from '@chakra-ui/react';
 import numeral from 'numeral';
 import { PoolTokenPill } from '~/components/token/PoolTokenPill';
-import { usePool } from '~/modules/pool/lib/usePool';
 import PoolOwnerImage from '~/assets/images/pool-owner.png';
 import Image from 'next/image';
 import { HelpCircle } from 'react-feather';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 import { AddressZero } from '@ethersproject/constants';
+import { usePool } from '~/modules/pool/lib/usePool';
 
 function PoolHeader() {
     const networkConfig = useNetworkConfig();

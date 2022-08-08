@@ -4,7 +4,6 @@ import { AmountHumanReadable, TokenAmountHumanReadable, TokenBase } from '~/lib/
 import { useBalances } from '~/lib/util/useBalances';
 import { useUserAccount } from '~/lib/user/useUserAccount';
 import { parseUnits } from 'ethers/lib/utils';
-import { useUserTokenBalances } from './useUserTokenBalances';
 
 export const UserBalancesContext = createContext<ReturnType<typeof _useUserBalances> | null>(null);
 
@@ -62,7 +61,7 @@ export function UserBalancesProvider(props: { children: ReactNode }) {
     const tokenAddresses = tokens.map((token) => token.address);
 
     const balances = _useUserBalances(tokenAddresses);
-    console.log('rendering')
+
     return <UserBalancesContext.Provider value={balances}>{props.children}</UserBalancesContext.Provider>;
 }
 

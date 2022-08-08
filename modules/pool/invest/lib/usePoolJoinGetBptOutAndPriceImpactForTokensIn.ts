@@ -1,4 +1,3 @@
-import { usePool } from '~/modules/pool/lib/usePool';
 import { useQuery } from 'react-query';
 import { useReactiveVar } from '@apollo/client';
 import { investStateVar } from '~/modules/pool/invest/lib/useInvestState';
@@ -6,6 +5,7 @@ import { tokenAmountsGetArrayFromMap } from '~/lib/services/token/token-util';
 import { useSlippage } from '~/lib/global/useSlippage';
 import numeral from 'numeral';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
+import { usePool } from '~/modules/pool/lib/usePool';
 
 export function usePoolJoinGetBptOutAndPriceImpactForTokensIn() {
     const networkConfig = useNetworkConfig();

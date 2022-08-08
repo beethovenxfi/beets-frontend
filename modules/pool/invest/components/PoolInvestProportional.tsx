@@ -10,7 +10,6 @@ import {
     Text,
 } from '@chakra-ui/react';
 
-import { usePool } from '~/modules/pool/lib/usePool';
 import { useInvestState } from '~/modules/pool/invest/lib/useInvestState';
 import { tokenFormatAmount } from '~/lib/services/token/token-util';
 import { PoolInvestSettings } from '~/modules/pool/invest/components/PoolInvestSettings';
@@ -28,6 +27,7 @@ import { oldBnum } from '~/lib/services/pool/lib/old-big-number';
 import { useInvest } from '~/modules/pool/invest/lib/useInvest';
 import { CardRow } from '~/components/card/CardRow';
 import { useHasBatchRelayerApproval } from '~/lib/util/useHasBatchRelayerApproval';
+import { usePool } from '~/modules/pool/lib/usePool';
 
 interface Props {
     onShowPreview(): void;

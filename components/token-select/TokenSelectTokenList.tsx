@@ -14,7 +14,7 @@ interface Props {
 }
 
 export function TokenSelectTokenList({ listHeight, searchTerm, onTokenRowClick }: Props) {
-    const { tokens, priceForAmount } = useTokens();
+    const { tokens, priceForAmount } = useGetTokens();
     const { userBalances, isLoading: userBalancesLoading } = useUserBalances();
 
     const filteredTokens = searchTerm

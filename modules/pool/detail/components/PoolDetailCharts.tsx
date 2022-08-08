@@ -1,11 +1,11 @@
 import { HStack, Select } from '@chakra-ui/react';
 import Card from '~/components/card/Card';
 import { PoolDetailBptPriceChart } from '~/modules/pool/detail/components/charts/PoolDetailBptPriceChart';
-import { usePool } from '~/modules/pool/lib/usePool';
 import { useState } from 'react';
 import { PoolDetailVolumeLiquidityChart } from '~/modules/pool/detail/components/charts/PoolDetailVolumeLiquidityChart';
 import { PoolDetailFeesChart } from '~/modules/pool/detail/components/charts/PoolDetailFeesChart';
 import { GqlPoolSnapshotDataRange, useGetPoolSnapshotsQuery } from '~/apollo/generated/graphql-codegen-generated';
+import { usePool } from '~/modules/pool/lib/usePool';
 
 type ChartType = 'BPT_PRICE' | 'VOLUME_TVL' | 'FEES';
 

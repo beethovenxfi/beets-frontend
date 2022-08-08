@@ -1,4 +1,3 @@
-import { usePool } from '~/modules/pool/lib/usePool';
 import { useInvestState } from '~/modules/pool/invest/lib/useInvestState';
 import { usePoolUserTokenBalancesInWallet } from '~/modules/pool/lib/usePoolUserTokenBalancesInWallet';
 import { Alert, Box, Button, Checkbox, Collapse, Text, useBoolean } from '@chakra-ui/react';
@@ -9,6 +8,7 @@ import { useInvest } from '~/modules/pool/invest/lib/useInvest';
 import { BeetsTokenInputWithSlider } from '~/components/inputs/BeetsTokenInputWithSlider';
 import { usePoolJoinGetBptOutAndPriceImpactForTokensIn } from '~/modules/pool/invest/lib/usePoolJoinGetBptOutAndPriceImpactForTokensIn';
 import { useHasBatchRelayerApproval } from '~/lib/util/useHasBatchRelayerApproval';
+import { usePool } from '~/modules/pool/lib/usePool';
 
 interface Props {
     onShowPreview(): void;

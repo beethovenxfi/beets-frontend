@@ -1,7 +1,6 @@
 import { AmountHumanReadable } from '~/lib/services/token/token-types';
-import { usePool } from '~/modules/pool/lib/usePool';
 import { useGetFbeetsRatioQuery } from '~/apollo/generated/graphql-codegen-generated';
-import { useUserBalances } from '~/lib/user/useUserBalances';
+import { _useUserBalances } from '~/lib/user/useUserBalances';
 import { parseUnits } from 'ethers/lib/utils';
 import { tokenGetAmountForAddress } from '~/lib/services/token/token-util';
 import { oldBnumScaleAmount } from '~/lib/services/pool/lib/old-big-number';
@@ -13,8 +12,10 @@ import { formatFixed } from '@ethersproject/bignumber';
 import { gaugeStakingService } from '~/lib/services/staking/gauge-staking.service';
 import { useUserAccount } from '~/lib/user/useUserAccount';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
+import { usePool } from '~/modules/pool/lib/usePool';
+import { createContext, ReactNode, useContext } from 'react';
 
-export function usePoolUserBptBalance() {
+export function _usePoolUserBptBalance() {
     const { pool } = usePool();
     const { userWalletBptBalance, ...userWalletBalanceQuery } = usePoolUserBptWalletBalance();
     const { data: userStakedBptBalance, ...userStakedBalanceQuery } = usePoolUserStakedBalance();
@@ -52,7 +53,7 @@ function usePoolUserBptWalletBalance() {
     const isFbeetsPool = pool.id === networkConfig.fbeets.poolId;
     const { data: fbeets } = useGetFbeetsRatioQuery();
 
-    const { userBalances, ...userBalancesQuery } = useUserBalances(
+    const { userBalances, ...userBalancesQuery } = _useUserBalances(
         isFbeetsPool ? [pool.address, networkConfig.fbeets.address] : [pool.address],
         [pool],
     );
@@ -111,4 +112,16 @@ function usePoolUserStakedBalance() {
         },
         {},
     );
+}
+
+export const PoolUserBptBalanceContext = createContext<ReturnType<typeof _usePoolUserBptBalance> | null>(null);
+
+export function PoolUserBptBalanceProvider(props: { children: ReactNode }) {
+    const value = _usePoolUserBptBalance();
+
+    return <PoolUserBptBalanceContext.Provider value={value}>{props.children}</PoolUserBptBalanceContext.Provider>;
+}
+
+export function usePoolUserBptBalance() {
+    return useContext(PoolUserBptBalanceContext) as ReturnType<typeof _usePoolUserBptBalance>;
 }

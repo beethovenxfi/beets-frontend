@@ -1,5 +1,4 @@
 import { Box, Divider, HStack, Text, VStack } from '@chakra-ui/layout';
-import { usePool } from '../../../lib/usePool';
 import numeral from 'numeral';
 import AprTooltip from '~/components/apr-tooltip/AprTooltip';
 import { InfoButton } from '~/components/info-button/InfoButton';
@@ -7,6 +6,7 @@ import { numberFormatUSDValue } from '~/lib/util/number-formats';
 import { usePoolUserDepositBalance } from '~/modules/pool/lib/usePoolUserDepositBalance';
 import { Flex, Skeleton } from '@chakra-ui/react';
 import { PoolUserStakedStats } from '~/modules/pool/detail/components/stats/PoolUserStakedStats';
+import { usePool } from '~/modules/pool/lib/usePool';
 
 export default function PoolUserStats() {
     const { pool } = usePool();

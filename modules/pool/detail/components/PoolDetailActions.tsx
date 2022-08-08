@@ -1,9 +1,9 @@
 import { BeetsBox } from '~/components/box/BeetsBox';
 import { BoxProps, Button, Flex } from '@chakra-ui/react';
-import { usePool } from '~/modules/pool/lib/usePool';
 
 import NextLink from 'next/link';
 import { PoolDetailPossibleYieldText } from '~/modules/pool/detail/components/PoolDetailPossibleYieldText';
+import { usePool } from '~/modules/pool/lib/usePool';
 
 interface Props extends BoxProps {}
 
