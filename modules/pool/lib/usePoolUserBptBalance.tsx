@@ -1,6 +1,6 @@
 import { AmountHumanReadable } from '~/lib/services/token/token-types';
 import { useGetFbeetsRatioQuery } from '~/apollo/generated/graphql-codegen-generated';
-import { _useUserBalances } from '~/lib/user/useUserBalances';
+import { useUserBalances } from '~/lib/user/useUserBalances';
 import { parseUnits } from 'ethers/lib/utils';
 import { tokenGetAmountForAddress } from '~/lib/services/token/token-util';
 import { oldBnumScaleAmount } from '~/lib/services/pool/lib/old-big-number';
@@ -53,7 +53,7 @@ function usePoolUserBptWalletBalance() {
     const isFbeetsPool = pool.id === networkConfig.fbeets.poolId;
     const { data: fbeets } = useGetFbeetsRatioQuery();
 
-    const { userBalances, ...userBalancesQuery } = _useUserBalances(
+    const { userBalances, ...userBalancesQuery } = useUserBalances(
         isFbeetsPool ? [pool.address, networkConfig.fbeets.address] : [pool.address],
         [pool],
     );

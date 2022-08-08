@@ -44,8 +44,7 @@ import { AppContent } from '~/pages/_app-content';
 import dynamic from 'next/dynamic';
 import { WalletUserAvatar } from '~/components/avatar/WalletUserAvatar';
 import Compose from '~/components/providers/Compose';
-import { TokensProvider, useGetTokens } from '~/lib/global/useToken';
-import { UserBalancesProvider } from '~/lib/user/useUserBalances';
+import { TokensProvider } from '~/lib/global/useToken';
 
 const queryClient = new QueryClient();
 
@@ -88,7 +87,7 @@ const TopProgressBar = dynamic(
 function BeetsApp(props: AppProps) {
     const client = useApollo(props.pageProps);
 
-    const dataProviders = [TokensProvider, UserBalancesProvider];
+    const dataProviders = [TokensProvider];
 
     return (
         <QueryClientProvider client={queryClient}>

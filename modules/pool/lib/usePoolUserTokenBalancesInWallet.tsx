@@ -1,4 +1,4 @@
-import { _useUserBalances } from '~/lib/user/useUserBalances';
+import { useUserBalances } from '~/lib/user/useUserBalances';
 import { sumBy } from 'lodash';
 import { useGetTokens } from '~/lib/global/useToken';
 import { AmountHumanReadable } from '~/lib/services/token/token-types';
@@ -9,7 +9,7 @@ export function _usePoolUserTokenBalancesInWallet() {
     const { priceForAmount } = useGetTokens();
     const { allTokens, allTokenAddresses, pool } = usePool();
 
-    const { userBalances, getUserBalance, ...userBalancesQuery } = _useUserBalances(allTokenAddresses, allTokens);
+    const { userBalances, getUserBalance, ...userBalancesQuery } = useUserBalances(allTokenAddresses, allTokens);
 
     const investTokens = pool.investConfig.options.map((option) => option.tokenOptions).flat();
     const investableAmount = sumBy(investTokens, (token) =>
