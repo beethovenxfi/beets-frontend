@@ -37,9 +37,9 @@ export function useUserImportedTokens() {
         if (addressToLoad && data && tokenToImport?.address !== addressToLoad && !getImportedToken(addressToLoad)) {
             setTokenToImport({
                 address: addressToLoad,
-                symbol: data[0],
-                decimals: data[1],
-                name: data[2],
+                symbol: data[0] as string,
+                decimals: data[1] as number,
+                name: data[2] as string,
             });
         }
     }, [(data || [])[0]]);

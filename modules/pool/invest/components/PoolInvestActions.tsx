@@ -1,5 +1,4 @@
 import { useUserAllowances } from '~/lib/util/useUserAllowances';
-import { usePool } from '~/modules/pool/lib/usePool';
 import { useInvest } from '~/modules/pool/invest/lib/useInvest';
 import { useEffect, useState } from 'react';
 import { usePoolJoinGetBptOutAndPriceImpactForTokensIn } from '~/modules/pool/invest/lib/usePoolJoinGetBptOutAndPriceImpactForTokensIn';
@@ -13,6 +12,7 @@ import { numberFormatUSDValue } from '~/lib/util/number-formats';
 import { usePoolUserTokenBalancesInWallet } from '~/modules/pool/lib/usePoolUserTokenBalancesInWallet';
 import { usePoolUserBptBalance } from '~/modules/pool/lib/usePoolUserBptBalance';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
+import { usePool } from '~/modules/pool/lib/usePool';
 
 interface Props {
     onInvestComplete(): void;

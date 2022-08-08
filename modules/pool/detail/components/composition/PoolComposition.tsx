@@ -27,9 +27,9 @@ import numeral from 'numeral';
 import { poolGetTokensWithoutPhantomBpt } from '~/lib/services/pool/pool-util';
 import { tokenFormatAmount } from '~/lib/services/token/token-util';
 import { useGetTokens } from '~/lib/global/useToken';
-import { usePool } from '~/modules/pool/lib/usePool';
 import { usePoolUserBptBalance } from '~/modules/pool/lib/usePoolUserBptBalance';
 import { usePoolUserInvestedTokenBalances } from '~/modules/pool/lib/usePoolUserInvestedTokenBalances';
+import { usePool } from '~/modules/pool/lib/usePool';
 
 interface PoolCompositionTableProps {
     columns: any;

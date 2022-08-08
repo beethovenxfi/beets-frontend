@@ -3,7 +3,6 @@ import { BeetsBox } from '~/components/box/BeetsBox';
 import { numberFormatUSDValue } from '~/lib/util/number-formats';
 import { tokenFormatAmount, tokenGetAmountForAddress } from '~/lib/services/token/token-util';
 import TokenAvatar from '~/components/token/TokenAvatar';
-import { usePool } from '~/modules/pool/lib/usePool';
 import { useGetTokens } from '~/lib/global/useToken';
 import { usePoolUserTokenBalancesInWallet } from '~/modules/pool/lib/usePoolUserTokenBalancesInWallet';
 import { useInvest } from '~/modules/pool/invest/lib/useInvest';
@@ -11,6 +10,7 @@ import { usePoolGetMaxProportionalInvestmentAmount } from '~/modules/pool/invest
 import { CardRow } from '~/components/card/CardRow';
 import { PoolInvestStablePoolDescription } from '~/modules/pool/invest/components/PoolInvestStablePoolDescription';
 import { PoolInvestWeightedPoolDescription } from '~/modules/pool/invest/components/PoolInvestWeightedPoolDescription';
+import { usePool } from '~/modules/pool/lib/usePool';
 
 interface Props {
     onShowProportional(): void;
@@ -26,7 +26,6 @@ export function PoolInvestTypeChoice({ onShowProportional, onShowCustom }: Props
     const isStablePool = pool.__typename === 'GqlPoolStable' || pool.__typename === 'GqlPoolPhantomStable';
     const proportionalSupported =
         poolService.joinGetProportionalSuggestionForFixedAmount && pool.investConfig.proportionalEnabled;
-    //const totalTokenBalance = sumBy(pool.tokens, (token) => parseFloat(token.balance) * parseFloat(token.priceRate));
 
     return (
         <Box>

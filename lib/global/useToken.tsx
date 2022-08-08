@@ -4,12 +4,14 @@ import { TokenAmountHumanReadable } from '~/lib/services/token/token-types';
 import { useUserImportedTokens } from '~/lib/user/useUserImportedTokens';
 import { numberFormatUSDValue } from '~/lib/util/number-formats';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
+import { createContext, ReactNode, useContext } from 'react';
 
+export const TokensContext = createContext<ReturnType<typeof _useGetTokens> | null>(null);
 interface TokenWithImportedFlag extends GqlToken {
     imported?: boolean;
 }
 
-export function useGetTokens() {
+export function _useGetTokens() {
     const networkConfig = useNetworkConfig();
     const { data: tokensResponse } = useGetTokensQuery({ fetchPolicy: 'cache-first' });
     const { data: pricesResponse } = useGetTokenPricesQuery({ fetchPolicy: 'cache-first' });
@@ -77,3 +79,10 @@ export function useGetTokens() {
         priceForAmount,
     };
 }
+
+export function TokensProvider(props: { children: ReactNode }) {
+    const tokens = _useGetTokens();
+    return <TokensContext.Provider value={tokens}>{props.children}</TokensContext.Provider>;
+}
+
+export const useGetTokens = () => useContext(TokensContext) as ReturnType<typeof _useGetTokens>;

@@ -1,12 +1,13 @@
 import { useStakingPendingRewards } from '~/lib/global/useStakingPendingRewards';
-import { usePool } from '~/modules/pool/lib/usePool';
 import { useGetTokens } from '~/lib/global/useToken';
 import { sumBy, uniq } from 'lodash';
 import { TokenAmountHumanReadable } from '~/lib/services/token/token-types';
 import { usePoolUserBptBalance } from '~/modules/pool/lib/usePoolUserBptBalance';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
+import { usePool } from '~/modules/pool/lib/usePool';
+import { createContext, ReactNode, useContext } from 'react';
 
-export function usePoolUserPendingRewards() {
+export function _usePoolUserPendingRewards() {
     const networkConfig = useNetworkConfig();
     const { pool } = usePool();
     const { hasBpt, isLoading: balancesLoading } = usePoolUserBptBalance();
@@ -39,4 +40,18 @@ export function usePoolUserPendingRewards() {
         ...rest,
         isLoading: isLoading || balancesLoading,
     };
+}
+
+export const PoolUserPendingRewardsContext = createContext<ReturnType<typeof _usePoolUserPendingRewards> | null>(null);
+
+export function PoolUserPendingRewardsProvider(props: { children: ReactNode }) {
+    const value = _usePoolUserPendingRewards();
+
+    return (
+        <PoolUserPendingRewardsContext.Provider value={value}>{props.children}</PoolUserPendingRewardsContext.Provider>
+    );
+}
+
+export function usePoolUserPendingRewards() {
+    return useContext(PoolUserPendingRewardsContext) as ReturnType<typeof _usePoolUserPendingRewards>;
 }

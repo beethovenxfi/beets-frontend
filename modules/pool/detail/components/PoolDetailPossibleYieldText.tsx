@@ -1,8 +1,8 @@
 import { Flex, Link, Text } from '@chakra-ui/react';
 import numeral from 'numeral';
-import { usePool } from '~/modules/pool/lib/usePool';
 import { usePoolUserTokenBalancesInWallet } from '~/modules/pool/lib/usePoolUserTokenBalancesInWallet';
 import { usePoolUserDepositBalance } from '~/modules/pool/lib/usePoolUserDepositBalance';
+import { usePool } from '~/modules/pool/lib/usePool';
 
 const DEFAULT_AMOUNT = 2000;
 

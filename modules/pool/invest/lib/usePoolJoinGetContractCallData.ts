@@ -1,4 +1,3 @@
-import { usePool } from '~/modules/pool/lib/usePool';
 import { useQuery } from 'react-query';
 import { useReactiveVar } from '@apollo/client';
 import { investStateVar } from '~/modules/pool/invest/lib/useInvestState';
@@ -8,6 +7,7 @@ import { AmountHumanReadable } from '~/lib/services/token/token-types';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 import { useUserAccount } from '~/lib/user/useUserAccount';
 import { useSlippage } from '~/lib/global/useSlippage';
+import { usePool } from '~/modules/pool/lib/usePool';
 
 export function usePoolJoinGetContractCallData(minimumBpt: AmountHumanReadable | null, zapEnabled?: boolean) {
     const { userAddress } = useUserAccount();

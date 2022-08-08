@@ -1,6 +1,5 @@
 import { GqlPoolStaking } from '~/apollo/generated/graphql-codegen-generated';
 import { Box, HStack, Text, VStack } from '@chakra-ui/layout';
-import { InfoButton } from '~/components/info-button/InfoButton';
 import numeral from 'numeral';
 import { numberFormatUSDValue } from '~/lib/util/number-formats';
 import TokenAvatar from '~/components/token/TokenAvatar';

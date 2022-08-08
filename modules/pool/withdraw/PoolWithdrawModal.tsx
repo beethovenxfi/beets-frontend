@@ -1,6 +1,5 @@
 import { Modal, ModalBody, ModalCloseButton, ModalContent } from '@chakra-ui/modal';
 import { Button, Heading, IconButton, ModalHeader, ModalOverlay, Text, useDisclosure } from '@chakra-ui/react';
-import { usePool } from '~/modules/pool/lib/usePool';
 import { ChevronLeft } from 'react-feather';
 import { useEffect, useRef, useState } from 'react';
 import { PoolWithdrawTypeChoice } from '~/modules/pool/withdraw/components/PoolWithdrawTypeChoice';
@@ -9,10 +8,11 @@ import { PoolWithdrawSingleAsset } from '~/modules/pool/withdraw/components/Pool
 import { PoolWithdrawPreview } from '~/modules/pool/withdraw/components/PoolWithdrawPreview';
 import { FadeInBox } from '~/components/animation/FadeInBox';
 import { useWithdrawState } from '~/modules/pool/withdraw/lib/useWithdrawState';
+import { usePool } from '~/modules/pool/lib/usePool';
 
 export function PoolWithdrawModal() {
     const { isOpen, onOpen, onClose } = useDisclosure();
-    const { pool, getPoolTypeName } = usePool();
+    const { pool, formattedTypeName } = usePool();
     const [modalState, setModalState] = useState<'start' | 'proportional' | 'single-asset' | 'preview'>('start');
     const [type, setInvestType] = useState<'proportional' | 'single-asset' | null>(null);
     const initialRef = useRef(null);
@@ -79,7 +79,7 @@ export function PoolWithdrawModal() {
                                     Withdraw from {pool.name}
                                 </Heading>
                                 <Text color="gray.200" fontSize="md">
-                                    {getPoolTypeName()}
+                                    {formattedTypeName}
                                 </Text>
                             </>
                         ) : null}

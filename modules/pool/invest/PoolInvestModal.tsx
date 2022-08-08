@@ -1,6 +1,5 @@
 import { Modal, ModalBody, ModalCloseButton, ModalContent } from '@chakra-ui/modal';
 import { Button, Heading, IconButton, ModalHeader, ModalOverlay, Text, useDisclosure } from '@chakra-ui/react';
-import { usePool } from '~/modules/pool/lib/usePool';
 import { PoolInvestProportional } from '~/modules/pool/invest/components/PoolInvestProportional';
 import { ChevronLeft } from 'react-feather';
 import { PoolInvestPreview } from '~/modules/pool/invest/components/PoolInvestPreview';
@@ -9,10 +8,11 @@ import { PoolInvestTypeChoice } from '~/modules/pool/invest/components/PoolInves
 import { PoolInvestCustom } from '~/modules/pool/invest/components/PoolInvestCustom';
 import { motion } from 'framer-motion';
 import { useInvestState } from '~/modules/pool/invest/lib/useInvestState';
+import { usePool } from '~/modules/pool/lib/usePool';
 
 export function PoolInvestModal() {
     const { isOpen, onOpen, onClose } = useDisclosure();
-    const { pool, getPoolTypeName } = usePool();
+    const { pool, formattedTypeName } = usePool();
     const [modalState, setModalState] = useState<'start' | 'proportional' | 'custom' | 'preview'>('start');
     const [type, setInvestType] = useState<'proportional' | 'custom' | null>(null);
     const initialRef = useRef(null);
@@ -20,7 +20,10 @@ export function PoolInvestModal() {
     const { clearInvestState } = useInvestState();
 
     useEffect(() => {
-        setModalState('start');
+        if (modalState !== 'start') {
+            setModalState('start');
+        }
+
         clearInvestState();
     }, [pool.id]);
 
@@ -79,7 +82,7 @@ export function PoolInvestModal() {
                                     Invest into {pool.name}
                                 </Heading>
                                 <Text color="gray.200" fontSize="md">
-                                    {getPoolTypeName()}
+                                    {formattedTypeName}
                                 </Text>
                             </>
                         ) : null}

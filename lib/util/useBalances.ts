@@ -1,12 +1,12 @@
 import { useMultiCall } from '~/lib/util/useMultiCall';
 import { TokenAmountHumanReadable, TokenBase } from '~/lib/services/token/token-types';
 import ERC20Abi from '../abi/ERC20.json';
-import { AddressZero } from '@ethersproject/constants';
 import { useBalance } from 'wagmi';
 import { formatFixed } from '@ethersproject/bignumber';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
+import { BigNumber } from 'ethers';
 
-const BALANCE_CACHE_TIME_MS = 15_000;
+const BALANCE_CACHE_TIME_MS = 30_000;
 
 export function useBalances(account: string | null, tokens: TokenBase[]) {
     const networkConfig = useNetworkConfig();
@@ -19,14 +19,14 @@ export function useBalances(account: string | null, tokens: TokenBase[]) {
         cacheTime: BALANCE_CACHE_TIME_MS,
     });
 
-    const multicall = useMultiCall({
+    const multicall = useMultiCall<BigNumber>({
         abi: ERC20Abi,
         calls: filteredTokens.map((token) => ({
             address: token.address,
             functionName: 'balanceOf',
-            args: [account || AddressZero],
+            args: [account],
         })),
-        enabled: account !== null,
+        enabled: account !== null && filteredTokens.length > 0,
         cacheTimeMs: BALANCE_CACHE_TIME_MS,
     });
 
@@ -43,7 +43,7 @@ export function useBalances(account: string | null, tokens: TokenBase[]) {
                   address: token.address,
                   amount:
                       multicall.data && multicall.data[index]
-                          ? formatFixed(multicall.data[index], token.decimals)
+                          ? formatFixed(multicall.data[index] || '0', token.decimals)
                           : '0',
               };
           })

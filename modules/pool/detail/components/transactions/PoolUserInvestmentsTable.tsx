@@ -1,10 +1,10 @@
-import { usePool } from '~/modules/pool/lib/usePool';
 import { PaginatedTable } from '~/components/table/PaginatedTable';
 import { useGetPoolUserJoinExitsQuery } from '~/apollo/generated/graphql-codegen-generated';
 import PoolTransactionItem, { PoolTransactionType } from './PoolTransactionRow';
 import { useMemo } from 'react';
 import PoolTransactionHeader from './PoolTransactionsHeader';
 import { NetworkStatus } from '@apollo/client';
+import { usePool } from '~/modules/pool/lib/usePool';
 
 export function PoolUserInvestmentsTable() {
     const { pool } = usePool();

@@ -16,7 +16,6 @@ import { BeetsBox } from '~/components/box/BeetsBox';
 import { numberFormatUSDValue } from '~/lib/util/number-formats';
 import { tokenFormatAmount } from '~/lib/services/token/token-util';
 import TokenAvatar from '~/components/token/TokenAvatar';
-import { usePool } from '~/modules/pool/lib/usePool';
 import { useGetTokens } from '~/lib/global/useToken';
 import { usePoolUserDepositBalance } from '~/modules/pool/lib/usePoolUserDepositBalance';
 import { usePoolUserBptBalance } from '~/modules/pool/lib/usePoolUserBptBalance';
@@ -27,6 +26,7 @@ import { TokenSelectInline } from '~/components/token-select-inline/TokenSelectI
 import { useWithdrawState } from '~/modules/pool/withdraw/lib/useWithdrawState';
 import { PoolWithdrawWeightedPoolDescription } from '~/modules/pool/withdraw/components/PoolWithdrawWeightedPoolDescription';
 import { PoolWithdrawStablePoolDescription } from '~/modules/pool/withdraw/components/PoolWithdrawStablePoolDescription';
+import { usePool } from '~/modules/pool/lib/usePool';
 
 interface Props {
     onShowProportional(): void;

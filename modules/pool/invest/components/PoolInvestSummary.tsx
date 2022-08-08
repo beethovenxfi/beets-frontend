@@ -2,13 +2,13 @@ import { Box, BoxProps, Flex, Skeleton } from '@chakra-ui/react';
 import { InfoButton } from '~/components/info-button/InfoButton';
 import AprTooltip from '~/components/apr-tooltip/AprTooltip';
 import { BeetsBox } from '~/components/box/BeetsBox';
-import { usePool } from '~/modules/pool/lib/usePool';
 import { numberFormatUSDValue } from '~/lib/util/number-formats';
 import { useInvest } from '~/modules/pool/invest/lib/useInvest';
 import { usePoolJoinGetBptOutAndPriceImpactForTokensIn } from '~/modules/pool/invest/lib/usePoolJoinGetBptOutAndPriceImpactForTokensIn';
 import numeral from 'numeral';
 
 import { CardRow } from '~/components/card/CardRow';
+import { usePool } from '~/modules/pool/lib/usePool';
 
 interface Props extends BoxProps {}
 

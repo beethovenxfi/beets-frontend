@@ -1,6 +1,7 @@
 import { Box, Center, Circle, Flex, FlexProps, HStack, Spinner, Tooltip, useTheme } from '@chakra-ui/react';
 import { IconWallet } from '~/components/icons/IconWallet';
 import { Check } from 'react-feather';
+import { Fragment } from 'react';
 
 export type StepStatus = 'current' | 'idle' | 'submitting' | 'pending' | 'complete';
 
@@ -18,8 +19,8 @@ export function HorizontalSteps({ steps, ...rest }: Props) {
         <Flex justifyContent="center" {...rest}>
             <HStack spacing="0">
                 {steps.map(({ status, tooltipText }, index) => (
-                    <>
-                        <Tooltip label={tooltipText} key={`step-${index}`}>
+                    <Fragment key={`step-${index}`}>
+                        <Tooltip label={tooltipText}>
                             {status === 'pending' ? (
                                 <Box position="relative" height="30px" width="30px">
                                     <Spinner
@@ -70,14 +71,9 @@ export function HorizontalSteps({ steps, ...rest }: Props) {
                             )}
                         </Tooltip>
                         {index < steps.length - 1 ? (
-                            <Box
-                                height="1px"
-                                width={steps.length > 5 ? '32px' : '40px'}
-                                bgColor="gray.300"
-                                key={`line-${index}`}
-                            />
+                            <Box height="1px" width={steps.length > 5 ? '32px' : '40px'} bgColor="gray.300" />
                         ) : null}
-                    </>
+                    </Fragment>
                 ))}
             </HStack>
         </Flex>

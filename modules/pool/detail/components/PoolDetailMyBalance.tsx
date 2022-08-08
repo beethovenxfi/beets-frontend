@@ -1,11 +1,11 @@
 import { BeetsBox } from '~/components/box/BeetsBox';
 import { Box, BoxProps, Flex, Skeleton, Text } from '@chakra-ui/react';
-import { usePool } from '~/modules/pool/lib/usePool';
 import numeral from 'numeral';
 import TokenAvatar from '~/components/token/TokenAvatar';
 import { tokenFormatAmount } from '~/lib/services/token/token-util';
 import { usePoolUserDepositBalance } from '~/modules/pool/lib/usePoolUserDepositBalance';
 import { useGetTokens } from '~/lib/global/useToken';
+import { usePool } from '~/modules/pool/lib/usePool';
 
 interface Props extends BoxProps {}
 

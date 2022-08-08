@@ -6,6 +6,7 @@ import NextImage from 'next/image';
 import SwapMastheadImage from '~/assets/images/swap-masthead-image.png';
 import SwapMastheadOpImage from '~/assets/images/swap-masthead-image-OP.png';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
+import { UserTokenBalancesProvider } from '~/lib/user/useUserTokenBalances';
 
 function Swap() {
     const { chainId } = useNetworkConfig();
@@ -25,17 +26,19 @@ function Swap() {
                 <meta property="og:description" content={DESCRIPTION} />
                 <meta property="twitter:description" content={DESCRIPTION} />
             </Head>
-            <PageMasthead
-                title="Swap"
-                image={
-                    <NextImage
-                        src={chainId === '10' ? SwapMastheadOpImage : SwapMastheadImage}
-                        width="213.71px"
-                        height="68px"
-                    />
-                }
-            />
-            <TradeContainer />
+            <UserTokenBalancesProvider>
+                <PageMasthead
+                    title="Swap"
+                    image={
+                        <NextImage
+                            src={chainId === '10' ? SwapMastheadOpImage : SwapMastheadImage}
+                            width="213.71px"
+                            height="68px"
+                        />
+                    }
+                />
+                <TradeContainer />
+            </UserTokenBalancesProvider>
         </>
     );
 }

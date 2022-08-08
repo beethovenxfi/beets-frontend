@@ -13,7 +13,6 @@ import {
 import TokenAvatar from '~/components/token/TokenAvatar';
 import { BoxProps } from '@chakra-ui/layout';
 import { useWithdrawState } from '~/modules/pool/withdraw/lib/useWithdrawState';
-import { usePool } from '~/modules/pool/lib/usePool';
 import { useGetTokens } from '~/lib/global/useToken';
 import { usePoolExitGetProportionalWithdrawEstimate } from '~/modules/pool/withdraw/lib/usePoolExitGetProportionalWithdrawEstimate';
 import { tokenFormatAmount } from '~/lib/services/token/token-util';
@@ -24,6 +23,7 @@ import { useEffectOnce } from '~/lib/util/custom-hooks';
 import { CardRow } from '~/components/card/CardRow';
 import { PoolWithdrawSettings } from '~/modules/pool/withdraw/components/PoolWithdrawSettings';
 import { useWithdraw } from '~/modules/pool/withdraw/lib/useWithdraw';
+import { usePool } from '~/modules/pool/lib/usePool';
 
 interface Props extends BoxProps {
     onShowPreview: () => void;

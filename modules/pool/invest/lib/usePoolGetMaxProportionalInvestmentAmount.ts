@@ -1,4 +1,3 @@
-import { usePool } from '~/modules/pool/lib/usePool';
 import { useUserAccount } from '~/lib/user/useUserAccount';
 import { orderBy, sortBy, sumBy } from 'lodash';
 import { isEth, isWeth, replaceEthWithWeth, replaceWethWithEth } from '~/lib/services/token/token-util';
@@ -7,6 +6,7 @@ import { usePoolUserTokenBalancesInWallet } from '~/modules/pool/lib/usePoolUser
 import { useGetTokens } from '~/lib/global/useToken';
 import { TokenAmountHumanReadable } from '~/lib/services/token/token-types';
 import { useInvest } from '~/modules/pool/invest/lib/useInvest';
+import { usePool } from '~/modules/pool/lib/usePool';
 
 export function usePoolGetMaxProportionalInvestmentAmount() {
     const { priceForAmount } = useGetTokens();

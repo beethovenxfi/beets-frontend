@@ -3,9 +3,14 @@ import { GetPoolQuery, GetPoolQueryVariables, GqlPoolUnion } from '~/apollo/gene
 import { initializeApolloClient, loadApolloState } from '~/apollo/client';
 import { GetPool } from '~/apollo/generated/operations';
 import { Pool } from '~/modules/pool/detail/Pool';
-import { PoolProvider } from '~/modules/pool/components/PoolProvider';
+import { PoolProvider } from '~/modules/pool/lib/usePool';
 import Head from 'next/head';
 import { FallbackPlaceholder } from '~/components/fallback/FallbackPlaceholder';
+import { PoolUserBptBalanceProvider } from '~/modules/pool/lib/usePoolUserBptBalance';
+import { PoolUserDepositBalanceProvider } from '~/modules/pool/lib/usePoolUserDepositBalance';
+import { PoolUserInvestedTokenBalanceProvider } from '~/modules/pool/lib/usePoolUserInvestedTokenBalances';
+import { PoolUserPendingRewardsProvider } from '~/modules/pool/lib/usePoolUserPendingRewards';
+import { PoolUserTokenBalancesInWalletProvider } from '~/modules/pool/lib/usePoolUserTokenBalancesInWallet';
 
 interface Props {
     pool: GqlPoolUnion;
@@ -26,7 +31,17 @@ const PoolPage = ({ pool }: Props) => {
                 <meta property="twitter:title" content={`Beethoven X | ${pool.name}`} />
             </Head>
             <PoolProvider pool={pool}>
-                <Pool />
+                <PoolUserBptBalanceProvider>
+                    <PoolUserDepositBalanceProvider>
+                        <PoolUserInvestedTokenBalanceProvider>
+                            <PoolUserPendingRewardsProvider>
+                                <PoolUserTokenBalancesInWalletProvider>
+                                    <Pool />
+                                </PoolUserTokenBalancesInWalletProvider>
+                            </PoolUserPendingRewardsProvider>
+                        </PoolUserInvestedTokenBalanceProvider>
+                    </PoolUserDepositBalanceProvider>
+                </PoolUserBptBalanceProvider>
             </PoolProvider>
         </>
     );

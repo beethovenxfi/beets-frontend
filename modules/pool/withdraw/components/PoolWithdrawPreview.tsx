@@ -9,12 +9,13 @@ import { usePoolExitGetProportionalWithdrawEstimate } from '~/modules/pool/withd
 import { PoolWithdrawSummary } from '~/modules/pool/withdraw/components/PoolWithdrawSummary';
 import { useExitPool } from '~/modules/pool/withdraw/lib/useExitPool';
 import { usePoolExitGetContractCallData } from '~/modules/pool/withdraw/lib/usePoolExitGetContractCallData';
-import { usePool } from '~/modules/pool/lib/usePool';
 import { BeetsTransactionStepsSubmit } from '~/components/button/BeetsTransactionStepsSubmit';
 import { CardRow } from '~/components/card/CardRow';
 import { FadeInBox } from '~/components/animation/FadeInBox';
 import { TransactionSubmittedContent } from '~/components/transaction/TransactionSubmittedContent';
 import { sum } from 'lodash';
+import { usePool } from '~/modules/pool/lib/usePool';
+import { usePoolUserBptBalance } from '~/modules/pool/lib/usePoolUserBptBalance';
 
 interface Props {
     onWithdrawComplete(): void;
@@ -29,6 +30,7 @@ export function PoolWithdrawPreview({ onWithdrawComplete, onClose }: Props) {
     const { priceForAmount } = useGetTokens();
     const { exitPool, ...exitPoolQuery } = useExitPool(pool);
     const { data: contractCallData } = usePoolExitGetContractCallData();
+    const { refetch } = usePoolUserBptBalance();
 
     const withdrawAmounts =
         selectedWithdrawType === 'SINGLE_ASSET' && singleAssetWithdraw ? [singleAssetWithdraw] : data ? data : [];
@@ -81,6 +83,7 @@ export function PoolWithdrawPreview({ onWithdrawComplete, onClose }: Props) {
                 onConfirmed={async (id) => {
                     if (id === 'exit') {
                         onWithdrawComplete();
+                        refetch();
                     }
                 }}
                 steps={[{ id: 'exit', tooltipText: '', type: 'other', buttonText: 'Withdraw' }]}

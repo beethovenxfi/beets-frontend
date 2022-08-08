@@ -1,5 +1,4 @@
 import { TokenAmountHumanReadable } from '~/lib/services/token/token-types';
-import { usePool } from '~/modules/pool/lib/usePool';
 import { useInvestState } from '~/modules/pool/invest/lib/useInvestState';
 import { usePoolUserTokenBalancesInWallet } from '~/modules/pool/lib/usePoolUserTokenBalancesInWallet';
 import { isEth, tokenGetAmountForAddress } from '~/lib/services/token/token-util';
@@ -7,6 +6,7 @@ import { GqlPoolToken } from '~/apollo/generated/graphql-codegen-generated';
 import { sumBy } from 'lodash';
 import { useGetTokens } from '~/lib/global/useToken';
 import { oldBnum } from '~/lib/services/pool/lib/old-big-number';
+import { usePool } from '~/modules/pool/lib/usePool';
 
 export function useInvest() {
     const { pool } = usePool();

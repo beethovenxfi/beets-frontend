@@ -1,9 +1,9 @@
-import { usePool } from '~/modules/pool/lib/usePool';
 import { useQuery } from 'react-query';
 import { useInvest } from '~/modules/pool/invest/lib/useInvest';
 import { sortBy } from 'lodash';
 import { isEth, isWeth, replaceEthWithWeth, replaceWethWithEth } from '~/lib/services/token/token-util';
 import { useUserAccount } from '~/lib/user/useUserAccount';
+import { usePool } from '~/modules/pool/lib/usePool';
 
 export function usePoolJoinGetProportionalInvestmentAmount() {
     const { poolService, pool } = usePool();

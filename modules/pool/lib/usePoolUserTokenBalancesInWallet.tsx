@@ -1,11 +1,11 @@
-import { usePool } from '~/modules/pool/lib/usePool';
 import { useUserBalances } from '~/lib/user/useUserBalances';
 import { sumBy } from 'lodash';
 import { useGetTokens } from '~/lib/global/useToken';
-import { tokenGetAmountForAddress } from '~/lib/services/token/token-util';
-import { AmountHumanReadable, TokenAmountHumanReadable } from '~/lib/services/token/token-types';
+import { AmountHumanReadable } from '~/lib/services/token/token-types';
+import { usePool } from '~/modules/pool/lib/usePool';
+import { createContext, ReactNode, useContext } from 'react';
 
-export function usePoolUserTokenBalancesInWallet() {
+export function _usePoolUserTokenBalancesInWallet() {
     const { priceForAmount } = useGetTokens();
     const { allTokens, allTokenAddresses, pool } = usePool();
 
@@ -26,4 +26,22 @@ export function usePoolUserTokenBalancesInWallet() {
         investableAmount,
         getUserBalanceForToken,
     };
+}
+
+export const PoolUserTokenBalancesInWalletContext = createContext<ReturnType<
+    typeof _usePoolUserTokenBalancesInWallet
+> | null>(null);
+
+export function PoolUserTokenBalancesInWalletProvider(props: { children: ReactNode }) {
+    const value = _usePoolUserTokenBalancesInWallet();
+
+    return (
+        <PoolUserTokenBalancesInWalletContext.Provider value={value}>
+            {props.children}
+        </PoolUserTokenBalancesInWalletContext.Provider>
+    );
+}
+
+export function usePoolUserTokenBalancesInWallet() {
+    return useContext(PoolUserTokenBalancesInWalletContext) as ReturnType<typeof _usePoolUserTokenBalancesInWallet>;
 }

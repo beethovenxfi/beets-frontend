@@ -32,6 +32,7 @@
         "@types/numeral": "^2.0.1",
         "@types/react": "18.0.8",
         "@types/react-dom": "18.0.3",
+        "@types/react-portal": "^4.0.4",
         "@types/react-table": "^7.7.12",
         "bignumber.js": "^9.0.2",
         "chakra-react-select": "^4.0.0",
@@ -54,20 +55,16 @@
         "prettier": "^2.6.2",
         "rc-pagination": "^3.1.16",
         "react": "18.1.0",
-        "react-cool-virtual": "^0.7.0",
         "react-dom": "18.1.0",
         "react-feather": "^2.0.9",
         "react-jazzicon": "^1.0.3",
+        "react-portal": "^4.2.2",
         "react-query": "^3.39.0",
         "react-table": "^7.8.0",
-        "react-virtual": "^2.10.4",
-        "react-virtual-list": "^2.3.0",
         "swiper": "^8.2.4",
         "typescript": "4.6.4",
         "use-debounce": "^8.0.1",
-        "wagmi": "^0.5.12"
-    },
-    "dependencies": {
+        "wagmi": "^0.5.12",
         "react-tiny-virtual-list": "^2.2.0"
     }
 }

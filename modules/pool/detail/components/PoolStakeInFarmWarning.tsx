@@ -1,9 +1,9 @@
 import { Alert, AlertIcon, Box, Button, Link, useDisclosure } from '@chakra-ui/react';
 import { PoolStakeModal } from '~/modules/pool/stake/PoolStakeModal';
 import { usePoolUserBptBalance } from '~/modules/pool/lib/usePoolUserBptBalance';
-import { usePool } from '~/modules/pool/lib/usePool';
 import { numberFormatUSDValue } from '~/lib/util/number-formats';
 import { FadeInOutBox } from '~/components/animation/FadeInOutBox';
+import { usePool } from '~/modules/pool/lib/usePool';
 
 export function PoolStakeInFarmWarning() {
     const { pool } = usePool();

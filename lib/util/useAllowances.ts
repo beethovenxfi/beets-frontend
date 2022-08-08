@@ -5,6 +5,7 @@ import { networkConfig } from '~/lib/config/network-config';
 import { formatFixed } from '@ethersproject/bignumber';
 import { AddressZero, MaxUint256 } from '@ethersproject/constants';
 import { parseUnits } from 'ethers/lib/utils';
+import { BigNumber } from 'ethers';
 
 //TODO: ideally we refetch anytime an allowance changes, so this could theoretically be very long living
 const ALLOWANCES_CACHE_TIME_MS = 30_000;
@@ -13,7 +14,7 @@ export function useAllowances(account: string | null, tokens: TokenBase[], contr
     const containsEth = tokens.filter((token) => token.address === networkConfig.eth.address.toLowerCase()).length > 0;
     const filteredTokens = tokens.filter((token) => token.address !== networkConfig.eth.address.toLowerCase());
 
-    const { data, ...rest } = useMultiCall({
+    const { data, ...rest } = useMultiCall<BigNumber>({
         abi: ERC20Abi,
         calls: filteredTokens.map((token) => ({
             address: token.address,
@@ -28,7 +29,7 @@ export function useAllowances(account: string | null, tokens: TokenBase[], contr
         ? filteredTokens.map((token, index) => {
               return {
                   address: token.address,
-                  amount: data && data[index] ? formatFixed(data[index], token.decimals) : '0',
+                  amount: data && data[index] ? formatFixed(data[index] || '0', token.decimals) : '0',
               };
           })
         : [];

@@ -1,4 +1,3 @@
-import { usePool } from '~/modules/pool/lib/usePool';
 import { Box, Flex, Grid, GridItem, HStack, Link, Text } from '@chakra-ui/react';
 import Card from '~/components/card/Card';
 import { ExternalLink } from 'react-feather';
@@ -12,6 +11,7 @@ import { PoolDetailUsdStatsWithDate } from '~/modules/pool/detail/components/Poo
 import { useGetTokens } from '~/lib/global/useToken';
 import { useGetPoolTokensDynamicDataQuery } from '~/apollo/generated/graphql-codegen-generated';
 import { PoolDetailTokenInfoCard } from '~/modules/pool/detail/components/PoolDetailTokenInfoCard';
+import { usePool } from '~/modules/pool/lib/usePool';
 
 export function PoolDetailAboutThisPool() {
     const { pool } = usePool();
