@@ -3,6 +3,8 @@ import { ChainProviderFn } from 'wagmi';
 import { JsonRpcProviderConfig } from '@wagmi/core/dist/declarations/src/providers/jsonRpc';
 import { StaticJsonRpcBatchProvider } from '~/lib/services/rpc-provider/static-json-rpc-batch-provier';
 
+const providerCache: { [chainId: string]: StaticJsonRpcBatchProvider } = {};
+
 export function batchJsonRpcProvider({
     priority,
     rpc,
@@ -22,11 +24,16 @@ export function batchJsonRpcProvider({
                 },
             },
             provider: () => {
-                const provider = new StaticJsonRpcBatchProvider(rpcConfig.http, {
-                    ensAddress: chain.ens?.address,
-                    chainId: chain.id,
-                    name: chain.network,
-                });
+                if (!providerCache[chain.id]) {
+                    providerCache[chain.id] = new StaticJsonRpcBatchProvider(rpcConfig.http, {
+                        ensAddress: chain.ens?.address,
+                        chainId: chain.id,
+                        name: chain.network,
+                    });
+                }
+
+                const provider = providerCache[chain.id];
+
                 return Object.assign(provider, { priority, stallTimeout, weight });
             },
             ...(rpcConfig.webSocket && {
