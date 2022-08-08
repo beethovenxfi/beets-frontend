@@ -29,6 +29,6 @@ export function useEarlyLudwigNft() {
 
             return `https://ipfs.io/ipfs/${imageCid}`;
         },
-        { enabled: isConnected },
+        { enabled: isConnected, staleTime: Infinity },
     );
 }
