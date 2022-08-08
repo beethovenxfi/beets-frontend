@@ -1,7 +1,7 @@
 import { tokenFindTokenAmountForAddress } from '~/lib/services/token/token-util';
 import { TokenRow } from '~/components/token-select/TokenRow';
 import VirtualList from 'react-tiny-virtual-list';
-import { useGetTokens, useTokens } from '~/lib/global/useToken';
+import { useGetTokens } from '~/lib/global/useToken';
 import { useUserTokenBalances } from '~/lib/user/useUserTokenBalances';
 import { orderBy } from 'lodash';
 import useCVirtual from 'react-cool-virtual';

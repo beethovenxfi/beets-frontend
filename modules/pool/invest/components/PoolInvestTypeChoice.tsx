@@ -27,7 +27,6 @@ export function PoolInvestTypeChoice({ onShowProportional, onShowCustom }: Props
     const proportionalSupported =
         poolService.joinGetProportionalSuggestionForFixedAmount && pool.investConfig.proportionalEnabled;
 
-    console.log('PoolInvestTypeChoice render');
     return (
         <Box>
             <Grid mt="4" mb="6" gap="8" templateColumns={{ base: '1fr', md: '1fr', lg: '1fr 1fr' }}>
