@@ -8,7 +8,7 @@ import {
     BeetsModalSubHeadline,
 } from '~/components/modal/BeetsModal';
 import { TradePreviewContent } from '~/modules/trade/components/TradePreviewContent';
-import { Modal, ModalOverlay } from '@chakra-ui/react';
+import { Box, Modal, ModalOverlay, Portal } from '@chakra-ui/react';
 import { ModalCloseButton } from '@chakra-ui/modal';
 import { motion } from 'framer-motion';
 import { TradeSubmittedContent } from '~/modules/trade/components/TradeSubmittedContent';
@@ -47,10 +47,14 @@ export function TradePreviewModal({ isOpen, onClose }: Props) {
                 </BeetsModalHeader>
                 <BeetsModalBody>
                     {batchSwapQuery.isConfirmed && (
-                        <div className="fireworks">
-                            <div className="before" />
-                            <div className="after" />
-                        </div>
+                        <Portal>
+                            <Box position="absolute" top="0" left="0" width="full">
+                                <div className="fireworks">
+                                    <div className="before" />
+                                    <div className="after" />
+                                </div>
+                            </Box>
+                        </Portal>
                     )}
                     {!submitting && (
                         <TradePreviewContent
