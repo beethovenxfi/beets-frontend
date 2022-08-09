@@ -10,7 +10,7 @@ class BeetsDocument extends Document {
                     <meta name="title" content="Beethoven X" />
                     <meta
                         name="description"
-                        content="The future of DeFi re-imagineered; Your next generation Decentralised Exchange."
+                        content="The future of DeFi re-imagineered. Your next generation Decentralised Exchange."
                     />
 
                     <meta property="og:type" content="website" />
@@ -18,7 +18,7 @@ class BeetsDocument extends Document {
                     <meta property="og:title" content="Beethoven X" />
                     <meta
                         property="og:description"
-                        content="The future of DeFi re-imagineered; Your next generation Decentralised Exchange."
+                        content="The future of DeFi re-imagineered. Your next generation Decentralised Exchange."
                     />
                     {/*<meta property="og:image" content="https://app.beets.fi/images/social-image.png?1632652506" />*/}
 
@@ -27,7 +27,7 @@ class BeetsDocument extends Document {
                     <meta property="twitter:title" content="Beethoven X" />
                     <meta
                         property="twitter:description"
-                        content="The future of DeFi re-imagineered; Your next generation Decentralised Exchange."
+                        content="The future of DeFi re-imagineered. Your next generation Decentralised Exchange."
                     />
                     {/*<meta property="twitter:image" content="https://app.beets.fi/images/social-image.png?1632652506" />*/}
 

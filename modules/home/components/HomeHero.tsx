@@ -49,7 +49,7 @@ export function HomeHero() {
                         my={{ base: '6', lg: '10' }}
                         mr="8"
                     >
-                        The future of DeFi re-imagineered; Your next generation Decentralised Exchange.
+                        The future of DeFi re-imagineered. Your next generation Decentralised Exchange.
                     </Text>
 
                     <HStack spacing="4" mb={{ base: '6', lg: '10' }}>
