@@ -29,18 +29,6 @@ export function HomeNews(props: BoxProps) {
                         </GridItem>
                     ))}
                 </Grid>
-                {/*<Box maxHeight={!expanded ? '6xl' : undefined} overflowY={!expanded ? 'hidden' : undefined}>
-                    {newsItems.map((newsItem) => (
-                        <HomeNewsCard key={newsItem.id} item={newsItem} />
-                    ))}
-                </Box>*/}
-                {/*!expanded ? (
-                    <Flex justifyContent="center" mt="8">
-                        <Button variant="secondary" onClick={on}>
-                            View more
-                        </Button>
-                    </Flex>
-                ) : null*/}
             </Box>
         </Box>
     );

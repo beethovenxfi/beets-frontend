@@ -484,6 +484,7 @@ export const GetHomeData = gql`
             url
             source
             timestamp
+            discussionUrl
         }
     }
     ${GqlPoolFeaturedPoolGroup}
@@ -505,6 +506,7 @@ export const GetHomeNewsItems = gql`
             url
             source
             timestamp
+            discussionUrl
         }
     }
 `;

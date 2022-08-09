@@ -11,7 +11,7 @@ interface Props {
 }
 
 export function HomeNewsCard({ item }: Props) {
-    const { image, source, text, timestamp, url } = item;
+    const { image, source, text, timestamp, url, discussionUrl } = item;
 
     return (
         <Box bgColor="whiteAlpha.100" borderRadius="md" p="4">
@@ -28,6 +28,13 @@ export function HomeNewsCard({ item }: Props) {
                 {source === 'medium' && <IconMedium />}
             </Flex>
             <Box whiteSpace="pre-line">{text}</Box>
+            {discussionUrl && (
+                <Box mt="2">
+                    <Link href={discussionUrl} target="_blank">
+                        Join the discussion
+                    </Link>
+                </Box>
+            )}
         </Box>
     );
 }

@@ -1478,6 +1478,7 @@ export type GetHomeDataQuery = {
         url: string;
         source: GqlContentNewsItemSource;
         timestamp: string;
+        discussionUrl?: string | null;
     }>;
 };
 
@@ -1551,6 +1552,7 @@ export type GetHomeNewsItemsQuery = {
         url: string;
         source: GqlContentNewsItemSource;
         timestamp: string;
+        discussionUrl?: string | null;
     }>;
 };
 
@@ -4535,6 +4537,7 @@ export const GetHomeDataDocument = gql`
             url
             source
             timestamp
+            discussionUrl
         }
     }
     ${GqlPoolFeaturedPoolGroupFragmentDoc}
@@ -4627,6 +4630,7 @@ export const GetHomeNewsItemsDocument = gql`
             url
             source
             timestamp
+            discussionUrl
         }
     }
 `;

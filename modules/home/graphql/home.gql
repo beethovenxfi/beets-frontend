@@ -9,6 +9,7 @@ query GetHomeData {
         url
         source
         timestamp
+        discussionUrl
     }
 }
 
@@ -26,6 +27,7 @@ query GetHomeNewsItems {
         url
         source
         timestamp
+        discussionUrl
     }
 }
 
