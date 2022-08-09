@@ -156,7 +156,7 @@ export default function PoolTransactionItem({ transaction, ...rest }: Props) {
                 lg: `"action details value time"`,
             }}
             bgColor="rgba(255,255,255,0.05)"
-            _hover={{ bg: '#100C3A' }}
+            _hover={{ bg: 'beets.base.800' }}
         >
             <Flex align={flexAlign}>
                 <GridItem area="action">
