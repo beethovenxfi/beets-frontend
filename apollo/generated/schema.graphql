@@ -22,6 +22,7 @@ type GqlBalancePoolAprSubItem {
 scalar GqlBigNumber
 
 type GqlContentNewsItem {
+    discussionUrl: String
     id: ID!
     image: String
     source: GqlContentNewsItemSource!
@@ -920,6 +921,7 @@ type Mutation {
     userInitStakedBalances: String!
     userInitWalletBalancesForAllPools: String!
     userInitWalletBalancesForPool(poolId: String!): String!
+    userSyncBalance(poolId: String!): String!
     userSyncStakedBalances: String!
     userSyncWalletBalancesForAllPools: String!
 }

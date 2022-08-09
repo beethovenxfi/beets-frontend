@@ -27,6 +27,7 @@ import { oldBnumScaleAmount, oldBnumToHumanReadable } from '~/lib/services/pool/
 import { CardRow } from '~/components/card/CardRow';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 import { usePool } from '~/modules/pool/lib/usePool';
+import { useUserSyncBalanceMutation } from '~/apollo/generated/graphql-codegen-generated';
 
 interface Props {
     isOpen: boolean;
@@ -51,6 +52,7 @@ export function PoolStakeModal({ isOpen, onOpen, onClose }: Props) {
         refetch: refetchAllowances,
         isRefetching,
     } = usePoolUserStakingAllowance();
+    const [userSyncBalance] = useUserSyncBalanceMutation();
     const amount = oldBnumToHumanReadable(oldBnumScaleAmount(userWalletBptBalance).times(percent).div(100));
     const usdValue = bptPrice * parseFloat(amount);
     const hasValue = hasBptInWallet && amount !== '' && percent !== 0;
@@ -174,6 +176,7 @@ export function PoolStakeModal({ isOpen, onOpen, onClose }: Props) {
                                 refetchAllowances();
                             } else if (id === 'stake') {
                                 refetchBptBalances();
+                                userSyncBalance({ variables: { poolId: pool.id } });
                             }
                         }}
                         steps={steps || []}

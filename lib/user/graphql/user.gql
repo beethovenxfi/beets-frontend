@@ -37,3 +37,7 @@ query GetUserData {
         }
     }
 }
+
+mutation UserSyncBalance($poolId: String!) {
+    userSyncBalance(poolId: $poolId)
+}

@@ -13,6 +13,7 @@ import { usePoolUserTokenBalancesInWallet } from '~/modules/pool/lib/usePoolUser
 import { usePoolUserBptBalance } from '~/modules/pool/lib/usePoolUserBptBalance';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 import { usePool } from '~/modules/pool/lib/usePool';
+import { useUserSyncBalanceMutation } from '~/apollo/generated/graphql-codegen-generated';
 
 interface Props {
     onInvestComplete(): void;
@@ -38,6 +39,7 @@ export function PoolInvestActions({ onInvestComplete, onClose }: Props) {
     );
     const { refetch: refetchUserTokenBalances } = usePoolUserTokenBalancesInWallet();
     const { refetch: refetchUserBptBalance } = usePoolUserBptBalance();
+    const [userSyncBalance, { loading }] = useUserSyncBalanceMutation();
 
     useEffect(() => {
         if (!isLoading) {
@@ -96,6 +98,7 @@ export function PoolInvestActions({ onInvestComplete, onClose }: Props) {
                         } else {
                             refetchUserTokenBalances();
                             refetchUserBptBalance();
+                            userSyncBalance({ variables: { poolId: pool.id } });
                             onInvestComplete();
                         }
                     }}

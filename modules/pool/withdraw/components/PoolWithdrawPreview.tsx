@@ -16,6 +16,7 @@ import { TransactionSubmittedContent } from '~/components/transaction/Transactio
 import { sum } from 'lodash';
 import { usePool } from '~/modules/pool/lib/usePool';
 import { usePoolUserBptBalance } from '~/modules/pool/lib/usePoolUserBptBalance';
+import { useUserSyncBalanceMutation } from '~/apollo/generated/graphql-codegen-generated';
 
 interface Props {
     onWithdrawComplete(): void;
@@ -31,6 +32,7 @@ export function PoolWithdrawPreview({ onWithdrawComplete, onClose }: Props) {
     const { exitPool, ...exitPoolQuery } = useExitPool(pool);
     const { data: contractCallData } = usePoolExitGetContractCallData();
     const { refetch } = usePoolUserBptBalance();
+    const [userSyncBalance, { loading }] = useUserSyncBalanceMutation();
 
     const withdrawAmounts =
         selectedWithdrawType === 'SINGLE_ASSET' && singleAssetWithdraw ? [singleAssetWithdraw] : data ? data : [];
@@ -84,6 +86,7 @@ export function PoolWithdrawPreview({ onWithdrawComplete, onClose }: Props) {
                     if (id === 'exit') {
                         onWithdrawComplete();
                         refetch();
+                        userSyncBalance({ variables: { poolId: pool.id } });
                     }
                 }}
                 steps={[{ id: 'exit', tooltipText: '', type: 'other', buttonText: 'Withdraw' }]}

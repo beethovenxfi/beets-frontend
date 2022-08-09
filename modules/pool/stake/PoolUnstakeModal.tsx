@@ -26,6 +26,7 @@ import { useStakingWithdraw } from '~/lib/global/useStakingWithdraw';
 import { CardRow } from '~/components/card/CardRow';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 import { usePool } from '~/modules/pool/lib/usePool';
+import { useUserSyncBalanceMutation } from '~/apollo/generated/graphql-codegen-generated';
 
 interface Props {
     isOpen: boolean;
@@ -45,6 +46,7 @@ export function PoolUnstakeModal({ isOpen, onOpen, onClose }: Props) {
         isRefetching: isRefetchingBalances,
         refetch: refetchBptBalances,
     } = usePoolUserBptBalance();
+    const [userSyncBalance] = useUserSyncBalanceMutation();
     const amount = oldBnumToHumanReadable(oldBnumScaleAmount(userStakedBptBalance).times(percent).div(100));
     const hasValue = hasBptStaked && amount !== '' && percent !== 0;
     const amountIsValid = !hasValue || parseFloat(userStakedBptBalance) >= parseFloat(amount);
@@ -138,6 +140,7 @@ export function PoolUnstakeModal({ isOpen, onOpen, onClose }: Props) {
                         }}
                         onConfirmed={async (id) => {
                             refetchBptBalances();
+                            userSyncBalance({ variables: { poolId: pool.id } });
                         }}
                         steps={[{ id: 'unstake', tooltipText: '', type: 'other', buttonText: 'Unstake BPT' }]}
                         queries={[{ ...unstakeQuery, id: 'unstake' }]}

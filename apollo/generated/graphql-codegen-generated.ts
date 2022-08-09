@@ -39,6 +39,7 @@ export interface GqlBalancePoolAprSubItem {
 
 export interface GqlContentNewsItem {
     __typename: 'GqlContentNewsItem';
+    discussionUrl?: Maybe<Scalars['String']>;
     id: Scalars['ID'];
     image?: Maybe<Scalars['String']>;
     source: GqlContentNewsItemSource;
@@ -956,6 +957,7 @@ export interface Mutation {
     userInitStakedBalances: Scalars['String'];
     userInitWalletBalancesForAllPools: Scalars['String'];
     userInitWalletBalancesForPool: Scalars['String'];
+    userSyncBalance: Scalars['String'];
     userSyncStakedBalances: Scalars['String'];
     userSyncWalletBalancesForAllPools: Scalars['String'];
 }
@@ -974,6 +976,10 @@ export interface MutationTokenInitChartDataArgs {
 }
 
 export interface MutationUserInitWalletBalancesForPoolArgs {
+    poolId: Scalars['String'];
+}
+
+export interface MutationUserSyncBalanceArgs {
     poolId: Scalars['String'];
 }
 
@@ -1405,6 +1411,12 @@ export type GetUserDataQuery = {
         } | null;
     }>;
 };
+
+export type UserSyncBalanceMutationVariables = Exact<{
+    poolId: Scalars['String'];
+}>;
+
+export type UserSyncBalanceMutation = { __typename: 'Mutation'; userSyncBalance: string };
 
 export type GetHomeDataQueryVariables = Exact<{ [key: string]: never }>;
 
@@ -4481,6 +4493,48 @@ export function useGetUserDataLazyQuery(
 export type GetUserDataQueryHookResult = ReturnType<typeof useGetUserDataQuery>;
 export type GetUserDataLazyQueryHookResult = ReturnType<typeof useGetUserDataLazyQuery>;
 export type GetUserDataQueryResult = Apollo.QueryResult<GetUserDataQuery, GetUserDataQueryVariables>;
+export const UserSyncBalanceDocument = gql`
+    mutation UserSyncBalance($poolId: String!) {
+        userSyncBalance(poolId: $poolId)
+    }
+`;
+export type UserSyncBalanceMutationFn = Apollo.MutationFunction<
+    UserSyncBalanceMutation,
+    UserSyncBalanceMutationVariables
+>;
+
+/**
+ * __useUserSyncBalanceMutation__
+ *
+ * To run a mutation, you first call `useUserSyncBalanceMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUserSyncBalanceMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [userSyncBalanceMutation, { data, loading, error }] = useUserSyncBalanceMutation({
+ *   variables: {
+ *      poolId: // value for 'poolId'
+ *   },
+ * });
+ */
+export function useUserSyncBalanceMutation(
+    baseOptions?: Apollo.MutationHookOptions<UserSyncBalanceMutation, UserSyncBalanceMutationVariables>,
+) {
+    const options = { ...defaultOptions, ...baseOptions };
+    return Apollo.useMutation<UserSyncBalanceMutation, UserSyncBalanceMutationVariables>(
+        UserSyncBalanceDocument,
+        options,
+    );
+}
+export type UserSyncBalanceMutationHookResult = ReturnType<typeof useUserSyncBalanceMutation>;
+export type UserSyncBalanceMutationResult = Apollo.MutationResult<UserSyncBalanceMutation>;
+export type UserSyncBalanceMutationOptions = Apollo.BaseMutationOptions<
+    UserSyncBalanceMutation,
+    UserSyncBalanceMutationVariables
+>;
 export const GetHomeDataDocument = gql`
     query GetHomeData {
         poolGetFeaturedPoolGroups {

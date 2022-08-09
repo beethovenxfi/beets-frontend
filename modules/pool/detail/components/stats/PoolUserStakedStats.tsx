@@ -49,13 +49,13 @@ export function PoolUserStakedStats({ poolAddress, staking }: Props) {
                             </Text>
                         </Text>
                     )}
-                    {isLoadingStake ? (
+                    {/*isLoadingStake ? (
                         <Skeleton height="16px" width="45px" />
                     ) : (
                         <Text fontSize="1rem" lineHeight="1rem">
                             {userShare < 0.0001 ? '< 0.01%' : numeral(userShare).format('0.00%')}
                         </Text>
-                    )}
+                    )*/}
                 </VStack>
             </VStack>
             <VStack spacing="0" alignItems="flex-start" flex="1" mb="4">

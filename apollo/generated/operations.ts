@@ -475,6 +475,11 @@ export const GetUserData = gql`
         }
     }
 `;
+export const UserSyncBalance = gql`
+    mutation UserSyncBalance($poolId: String!) {
+        userSyncBalance(poolId: $poolId)
+    }
+`;
 export const GetHomeData = gql`
     query GetHomeData {
         poolGetFeaturedPoolGroups {
