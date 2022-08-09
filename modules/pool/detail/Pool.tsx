@@ -8,15 +8,19 @@ import { PoolDetailCharts } from '~/modules/pool/detail/components/PoolDetailCha
 import { PoolInvestModal } from '~/modules/pool/invest/PoolInvestModal';
 import { PoolWithdrawModal } from '~/modules/pool/withdraw/PoolWithdrawModal';
 import { usePool } from '~/modules/pool/lib/usePool';
+import { usePoolUserBptBalance } from '~/modules/pool/lib/usePoolUserBptBalance';
+import { PoolFbeetsWarning } from '~/modules/pool/detail/components/PoolFbeetsWarning';
 
 export function Pool() {
-    const { pool } = usePool();
+    const { pool, isFbeetsPool } = usePool();
+    const { hasBpt } = usePoolUserBptBalance();
 
     return (
         <Box marginBottom="8">
             <PoolHeader />
             <VStack width="full" spacing="4">
-                {pool.staking && <PoolStakeInFarmWarning />}
+                {pool.staking && !isFbeetsPool && <PoolStakeInFarmWarning />}
+                {hasBpt && <PoolFbeetsWarning />}
                 <Flex width="full" justifyContent="flex-end">
                     <PoolInvestModal />
                     <PoolWithdrawModal />

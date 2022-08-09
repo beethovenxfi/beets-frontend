@@ -14,7 +14,6 @@ import { useInvestState } from '~/modules/pool/invest/lib/useInvestState';
 import { tokenFormatAmount } from '~/lib/services/token/token-util';
 import { PoolInvestSettings } from '~/modules/pool/invest/components/PoolInvestSettings';
 import { BeetsBox } from '~/components/box/BeetsBox';
-import { BeetsBoxLineItem } from '~/components/box/BeetsBoxLineItem';
 import { TokenSelectInline } from '~/components/token-select-inline/TokenSelectInline';
 import TokenAvatar from '~/components/token/TokenAvatar';
 import { numberFormatUSDValue } from '~/lib/util/number-formats';
@@ -40,7 +39,7 @@ export function PoolInvestProportional({ onShowPreview }: Props) {
     const { setSelectedOption, selectedOptions, setInputAmounts, zapEnabled } = useInvestState();
     const [proportionalPercent, setProportionalPercent] = useState(25);
     const { data } = usePoolJoinGetProportionalInvestmentAmount();
-    const { selectedInvestTokens } = useInvest();
+    const { selectedInvestTokens, userInvestTokenBalances } = useInvest();
     const { data: hasBatchRelayerApproval } = useHasBatchRelayerApproval();
 
     const scaledProportionalSuggestions = mapValues(data || {}, (val, address) =>
@@ -54,6 +53,13 @@ export function PoolInvestProportional({ onShowPreview }: Props) {
     useEffect(() => {
         setInputAmounts(scaledProportionalSuggestions);
     }, [JSON.stringify(scaledProportionalSuggestions)]);
+
+    /*useEffect(() => {
+        investOptions.forEach((investOption, index) => {
+            const tokenOption = selectedInvestTokens[index];
+            const amount = scaledProportionalSuggestions[tokenOption.address];
+        });
+    }, []);*/
 
     return (
         <Box mt="4">

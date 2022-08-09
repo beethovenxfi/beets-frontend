@@ -5,6 +5,7 @@ import { useEffectOnce } from '~/lib/util/custom-hooks';
 import { PoolService } from '~/lib/services/pool/pool-types';
 import { TokenBase } from '~/lib/services/token/token-types';
 import { uniqBy } from 'lodash';
+import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 
 export interface PoolContextType {
     pool: GqlPoolUnion;
@@ -17,11 +18,13 @@ export interface PoolContextType {
     supportsZap: boolean;
     formattedTypeName: string;
     totalApr: number;
+    isFbeetsPool: boolean;
 }
 
 export const PoolContext = createContext<PoolContextType | null>(null);
 
 export function PoolProvider({ pool: poolFromProps, children }: { pool: GqlPoolUnion; children: any }) {
+    const networkConfig = useNetworkConfig();
     const { data, networkStatus, startPolling } = useGetPoolQuery({
         variables: { id: poolFromProps.id },
         notifyOnNetworkStatusChange: true,
@@ -79,6 +82,7 @@ export function PoolProvider({ pool: poolFromProps, children }: { pool: GqlPoolU
                 supportsZap,
                 formattedTypeName: poolGetTypeName(pool),
                 totalApr: parseFloat(pool.dynamicData.apr.total),
+                isFbeetsPool: pool.id === networkConfig.fbeets.poolId,
             }}
         >
             {children}

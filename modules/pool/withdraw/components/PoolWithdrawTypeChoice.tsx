@@ -35,7 +35,7 @@ interface Props {
 
 export function PoolWithdrawTypeChoice({ onShowProportional, onShowSingleAsset }: Props) {
     const unstakeDisclosure = useDisclosure();
-    const { pool } = usePool();
+    const { pool, isFbeetsPool } = usePool();
     const { priceForAmount } = useGetTokens();
     const { userPoolBalanceUSD, data, isLoading } = usePoolUserDepositBalance();
     const { userTotalBptBalance, userWalletBptBalance, userStakedBptBalance, hasBptInWallet, hasBptStaked } =
@@ -145,7 +145,7 @@ export function PoolWithdrawTypeChoice({ onShowProportional, onShowSingleAsset }
                     </BeetsBox>
                 </GridItem>
             </Grid>
-            {hasBptStaked && (
+            {hasBptStaked && !isFbeetsPool && (
                 <Alert status="warning" borderRadius="md" mb="4">
                     <AlertIcon />
                     <Box flex="1" mr="4">
