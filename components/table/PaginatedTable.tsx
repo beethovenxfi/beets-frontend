@@ -39,6 +39,7 @@ export function PaginatedTable({
     ...rest
 }: Props<any>) {
     const isLoadingRows = loading && items.length === 0;
+
     return (
         <Box {...rest}>
             {renderTableHeader()}
@@ -64,7 +65,7 @@ export function PaginatedTable({
                         </AnimatedBox>
                     ))}
             </Box>
-            {!isShort && !isInfinite && (
+            {!isInfinite && (
                 <Flex>
                     <Flex flex={1} alignItems="center" justifyContent="flex-start">
                         {hidePageSizeChange ? null : (

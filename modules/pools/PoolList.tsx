@@ -39,7 +39,6 @@ function PoolList() {
                 currentPage={state.skip / state.first + 1}
                 pageSize={state.first}
                 count={poolCount}
-                isShort={poolCount < 21}
                 onPageChange={(page) => {
                     refetch({ ...state, skip: state.first * (page - 1) });
                 }}
