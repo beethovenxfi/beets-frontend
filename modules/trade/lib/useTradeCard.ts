@@ -8,6 +8,8 @@ import { oldBnumToFixed } from '~/lib/services/pool/lib/old-big-number';
 import { useDebouncedCallback } from 'use-debounce';
 import { useRouter } from 'next/router';
 import { isAddress } from 'ethers/lib/utils';
+import { tokenInputTruncateDecimalPlaces } from '~/lib/util/input-util';
+import { useGetTokens } from '~/lib/global/useToken';
 
 const buyAmountVar = makeVar<AmountHumanReadable>('');
 const sellAmountVar = makeVar<AmountHumanReadable>('1');
@@ -16,6 +18,7 @@ const tokenSelectedVar = makeVar<'tokenIn' | 'tokenOut'>('tokenIn');
 export function useTradeCard() {
     const router = useRouter();
     const { tokenIn: initialTokenIn, tokenOut: initialTokenOut } = router.query;
+    const { getToken } = useGetTokens();
 
     const {
         reactiveTradeState,
@@ -153,7 +156,11 @@ export function useTradeCard() {
     function handleTokenSelected(address: string) {
         const tradeState = tradeStateVar();
         const tokenSelectKey = tokenSelectedVar();
-        const sellAmount = sellAmountVar();
+
+        const token = getToken(address || '');
+        const sellAmount = tokenInputTruncateDecimalPlaces(sellAmountVar(), token ? token.decimals : 18);
+        setSellAmount(sellAmount);
+
         const isTokenIn = tokenSelectKey === 'tokenIn';
         const otherToken = isTokenIn ? tradeState.tokenOut : tradeState.tokenIn;
         const currentToken = isTokenIn ? tradeState.tokenIn : tradeState.tokenOut;
