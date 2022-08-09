@@ -6,11 +6,12 @@ import { useUserAccount } from '~/lib/user/useUserAccount';
 import { makeVar } from '@apollo/client';
 import { useAsyncEffect } from '~/lib/util/custom-hooks';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
+import { createContext, ReactNode, useContext } from 'react';
 
 const refetchingVar = makeVar(false);
 const currentUserAddressVar = makeVar<string | null>(null);
 
-export function useUserData() {
+export function _useUserData() {
     const networkConfig = useNetworkConfig();
     const { data: fbeetsRatioData } = useGetFbeetsRatioQuery();
     const { userAddress } = useUserAccount();
@@ -96,4 +97,16 @@ export function useUserData() {
         usdBalanceForPool,
         stakedValueUSD,
     };
+}
+
+export const UserDataContext = createContext<ReturnType<typeof _useUserData> | null>(null);
+
+export function UserDataProvider(props: { children: ReactNode }) {
+    const value = _useUserData();
+
+    return <UserDataContext.Provider value={value}>{props.children}</UserDataContext.Provider>;
+}
+
+export function useUserData() {
+    return useContext(UserDataContext) as ReturnType<typeof _useUserData>;
 }

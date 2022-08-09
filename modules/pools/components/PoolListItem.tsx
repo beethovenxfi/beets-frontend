@@ -57,7 +57,6 @@ export function PoolListItem({ pool, userBalance, showUserBalance, tokens, ...re
                                 imageSize={25}
                                 width={92}
                                 tokens={tokens}
-                                display={{ base: 'none', lg: 'block' }}
                                 //renderPopover={false}
                             />
                         </GridItem>

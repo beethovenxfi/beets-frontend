@@ -8,6 +8,7 @@ import {
 } from '~/apollo/generated/graphql-codegen-generated';
 import { useBoolean } from '@chakra-ui/hooks';
 import { eq } from 'lodash';
+import { createContext, ReactNode, useContext } from 'react';
 
 interface PoolsQueryVariables extends GetPoolsQueryVariables {
     first: number;
@@ -30,7 +31,7 @@ const poolListStateVar = makeVar<PoolsQueryVariables>(DEFAULT_POOL_LIST_QUERY_VA
 const showMyInvestmentsVar = makeVar(false);
 const showFiltersVar = makeVar(false);
 
-export function usePoolList() {
+export function _usePoolList() {
     const state = useReactiveVar(poolListStateVar);
     const showMyInvestments = useReactiveVar(showMyInvestmentsVar);
     const [isSearching, isSearchingToggle] = useBoolean();
@@ -154,4 +155,16 @@ export function usePoolList() {
         setPoolIds,
         clearPoolIds,
     };
+}
+
+export const PoolListContext = createContext<ReturnType<typeof _usePoolList> | null>(null);
+
+export function PoolListProvider(props: { children: ReactNode }) {
+    const value = _usePoolList();
+
+    return <PoolListContext.Provider value={value}>{props.children}</PoolListContext.Provider>;
+}
+
+export function usePoolList() {
+    return useContext(PoolListContext) as ReturnType<typeof _usePoolList>;
 }

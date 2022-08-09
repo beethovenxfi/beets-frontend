@@ -2,7 +2,7 @@ import PoolList from '../modules/pools/PoolList';
 import { initializeApolloClient, loadApolloState } from '~/apollo/client';
 import { GetPoolFilters, GetPools } from '~/apollo/generated/operations';
 import { GetPoolsQuery, GetPoolsQueryVariables } from '~/apollo/generated/graphql-codegen-generated';
-import { DEFAULT_POOL_LIST_QUERY_VARS } from '~/modules/pools/usePoolList';
+import { DEFAULT_POOL_LIST_QUERY_VARS, PoolListProvider } from '~/modules/pools/usePoolList';
 import Head from 'next/head';
 import { PageMasthead } from '~/components/masthead/PageMasthead';
 import NextImage from 'next/image';
@@ -29,17 +29,19 @@ function Pools() {
                 <meta property="og:description" content={DESCRIPTION} />
                 <meta property="twitter:description" content={DESCRIPTION} />
             </Head>
-            <PageMasthead
-                title="Invest & Farm"
-                image={
-                    <NextImage
-                        src={chainId === '10' ? InvestMastheadOpImage : InvestMastheadImage}
-                        width="208.62px"
-                        height="68px"
-                    />
-                }
-            />
-            <PoolList />
+            <PoolListProvider>
+                <PageMasthead
+                    title="Invest & Farm"
+                    image={
+                        <NextImage
+                            src={chainId === '10' ? InvestMastheadOpImage : InvestMastheadImage}
+                            width="208.62px"
+                            height="68px"
+                        />
+                    }
+                />
+                <PoolList />
+            </PoolListProvider>
         </>
     );
 }
