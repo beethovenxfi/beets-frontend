@@ -931,6 +931,7 @@ export interface Mutation {
     __typename: 'Mutation';
     beetsSyncFbeetsRatio: Scalars['String'];
     lgeCreate: GqlLge;
+    poolInitializeSnapshotsForBoostedPool: Scalars['String'];
     poolLoadOnChainDataForAllPools: Scalars['String'];
     poolLoadOnChainDataForPoolsWithActiveUpdates: Scalars['String'];
     poolLoadSnapshotsForAllPools: Scalars['String'];
@@ -965,6 +966,10 @@ export interface Mutation {
 export interface MutationLgeCreateArgs {
     lge: GqlLgeCreateInput;
     signature: Scalars['String'];
+}
+
+export interface MutationPoolInitializeSnapshotsForBoostedPoolArgs {
+    poolId: Scalars['String'];
 }
 
 export interface MutationPoolSyncLatestSnapshotsForAllPoolsArgs {
@@ -1266,15 +1271,6 @@ export type GetAppGlobalDataQuery = {
         tradable: boolean;
     }>;
     tokenGetCurrentPrices: Array<{ __typename: 'GqlTokenPrice'; price: number; address: string }>;
-    protocolMetrics: {
-        __typename: 'GqlProtocolMetrics';
-        totalLiquidity: string;
-        totalSwapVolume: string;
-        totalSwapFee: string;
-        poolCount: string;
-        swapFee24h: string;
-        swapVolume24h: string;
-    };
 };
 
 export type GetAppGlobalPollingDataQueryVariables = Exact<{ [key: string]: never }>;
@@ -4098,14 +4094,6 @@ export const GetAppGlobalDataDocument = gql`
             address
         }
         beetsGetFbeetsRatio
-        protocolMetrics {
-            totalLiquidity
-            totalSwapVolume
-            totalSwapFee
-            poolCount
-            swapFee24h
-            swapVolume24h
-        }
     }
 `;
 

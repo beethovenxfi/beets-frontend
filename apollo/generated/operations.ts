@@ -348,14 +348,6 @@ export const GetAppGlobalData = gql`
             address
         }
         beetsGetFbeetsRatio
-        protocolMetrics {
-            totalLiquidity
-            totalSwapVolume
-            totalSwapFee
-            poolCount
-            swapFee24h
-            swapVolume24h
-        }
     }
 `;
 export const GetAppGlobalPollingData = gql`

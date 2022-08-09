@@ -14,15 +14,6 @@ query GetAppGlobalData {
         address
     }
     beetsGetFbeetsRatio
-
-    protocolMetrics {
-        totalLiquidity
-        totalSwapVolume
-        totalSwapFee
-        poolCount
-        swapFee24h
-        swapVolume24h
-    }
 }
 
 query GetAppGlobalPollingData {
