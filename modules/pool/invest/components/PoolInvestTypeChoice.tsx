@@ -1,4 +1,4 @@
-import { Box, Button, Flex, Grid, GridItem, HStack, Skeleton, Text } from '@chakra-ui/react';
+import { Alert, Box, Button, Flex, Grid, GridItem, HStack, Skeleton, Text, AlertIcon } from '@chakra-ui/react';
 import { BeetsBox } from '~/components/box/BeetsBox';
 import { numberFormatUSDValue } from '~/lib/util/number-formats';
 import { tokenFormatAmount, tokenGetAmountForAddress } from '~/lib/services/token/token-util';
@@ -101,8 +101,15 @@ export function PoolInvestTypeChoice({ onShowProportional, onShowCustom }: Props
                     <BeetsBox px="4" py="2">
                         {isStablePool ? <PoolInvestStablePoolDescription /> : <PoolInvestWeightedPoolDescription />}
                     </BeetsBox>
+                    {!isStablePool && !canInvestProportionally && (
+                        <Alert status="warning" mt="4">
+                            <AlertIcon />
+                            Investing proportionally is only possible when you have all pool tokens in your wallet.
+                        </Alert>
+                    )}
                 </GridItem>
             </Grid>
+
             {isStablePool ? (
                 <>
                     <Button
@@ -138,7 +145,12 @@ export function PoolInvestTypeChoice({ onShowProportional, onShowCustom }: Props
                             Invest proportionally
                         </Button>
                     )}
-                    <Button width="full" variant="secondary" isDisabled={investableAmount === 0} onClick={onShowCustom}>
+                    <Button
+                        width="full"
+                        variant={canInvestProportionally ? 'secondary' : 'primary'}
+                        isDisabled={investableAmount === 0}
+                        onClick={onShowCustom}
+                    >
                         {proportionalSupported ? 'Customize my investment' : 'Invest'}
                     </Button>
                 </>
