@@ -1,4 +1,4 @@
-import { Box, Button, Flex, HStack, Image, Skeleton } from '@chakra-ui/react';
+import { Box, Button, Flex, HStack, Image } from '@chakra-ui/react';
 import NavbarWalletConnectButton from './NavbarWalletConnectButton';
 import { NavbarLink } from '~/modules/nav/NavbarLink';
 import { useRouter } from 'next/router';
@@ -10,8 +10,6 @@ import { BeetsBalLogo } from '~/assets/logo/BeetsBalLogo';
 import { NextLink } from '~/components/link/NextLink';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 import { networkConfig } from '~/lib/config/network-config';
-import StarsIcon from '~/components/apr-tooltip/StarsIcon';
-import numeral from 'numeral';
 import { NetworkSelectorPopover } from '~/modules/nav/NetworkSelectorPopover';
 
 interface Props {

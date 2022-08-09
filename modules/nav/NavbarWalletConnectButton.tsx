@@ -1,5 +1,5 @@
 import { ConnectButton } from '@rainbow-me/rainbowkit';
-import { Box, Button, HStack, Skeleton, Spinner, Text } from '@chakra-ui/react';
+import { Box, Button, HStack, Skeleton, Spinner, Text, Tooltip } from '@chakra-ui/react';
 import Image from 'next/image';
 import BeetsSmart from '~/assets/icons/beetx-smarts.svg';
 import { useReactiveVar } from '@apollo/client';
@@ -74,7 +74,9 @@ export default function NavbarWalletConnectButton() {
                                             <Skeleton height="10px" width="41px" />
                                         ) : (
                                             <Box fontSize="sm" fontWeight="semibold">
-                                                {numberFormatLargeUsdValue(portfolioValueUSD)}
+                                                <Tooltip label="Your portfolio value is cached to improve app performance. If you just made a deposit in may take up to a minute for the value to be reflected here.">
+                                                    {numberFormatLargeUsdValue(portfolioValueUSD)}
+                                                </Tooltip>
                                             </Box>
                                         )}
                                     </HStack>

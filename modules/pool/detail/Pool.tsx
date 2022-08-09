@@ -1,4 +1,4 @@
-import { Box, Flex, Grid, GridItem, HStack, VStack } from '@chakra-ui/react';
+import { Box, Flex, Grid, GridItem, VStack } from '@chakra-ui/react';
 import PoolHeader from '~/modules/pool/detail/components/PoolHeader';
 import { PoolComposition } from '~/modules/pool/detail/components/composition/PoolComposition';
 import PoolStats from './components/stats/PoolStats';
