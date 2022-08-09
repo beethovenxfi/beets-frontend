@@ -1,21 +1,9 @@
-import {
-    Alert,
-    AlertDescription,
-    AlertIcon,
-    AlertTitle,
-    Box,
-    Checkbox,
-    Flex,
-    Link,
-    Text,
-    useCheckbox,
-} from '@chakra-ui/react';
-import { useRef, useState } from 'react';
+import { Alert, AlertIcon, Box, Checkbox, Flex, Link, Text } from '@chakra-ui/react';
+import { useState } from 'react';
 import Card from '~/components/card/Card';
 import { BeetsSubmitTransactionButton } from '~/components/button/BeetsSubmitTransactionButton';
 import { useTrade } from '~/modules/trade/lib/useTrade';
 import { useGetTokens } from '~/lib/global/useToken';
-import { useBatchSwap } from '~/modules/trade/lib/useBatchSwap';
 import { useSlippage } from '~/lib/global/useSlippage';
 import { tokenFormatAmount, tokenFormatAmountPrecise } from '~/lib/services/token/token-util';
 import { oldBnum } from '~/lib/services/pool/lib/old-big-number';
