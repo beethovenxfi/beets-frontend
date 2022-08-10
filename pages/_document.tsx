@@ -20,7 +20,10 @@ class BeetsDocument extends Document {
                         property="og:description"
                         content="The future of DeFi re-imagineered. Your next generation Decentralised Exchange."
                     />
-                    {/*<meta property="og:image" content="https://app.beets.fi/images/social-image.png?1632652506" />*/}
+                    <meta
+                        property="og:image"
+                        content="https://beethoven-assets.s3.eu-central-1.amazonaws.com/social-image.png"
+                    />
 
                     <meta property="twitter:card" content="summary_large_image" />
                     <meta property="twitter:url" content={`${process.env.VERCEL_URL}`} />
@@ -29,7 +32,10 @@ class BeetsDocument extends Document {
                         property="twitter:description"
                         content="The future of DeFi re-imagineered. Your next generation Decentralised Exchange."
                     />
-                    {/*<meta property="twitter:image" content="https://app.beets.fi/images/social-image.png?1632652506" />*/}
+                    <meta
+                        property="twitter:image"
+                        content="https://beethoven-assets.s3.eu-central-1.amazonaws.com/social-image.png"
+                    />
 
                     <script
                         async
