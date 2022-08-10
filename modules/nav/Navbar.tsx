@@ -1,4 +1,4 @@
-import { Box, Button, Flex, HStack, Image } from '@chakra-ui/react';
+import { Box, Button, Flex, HStack, Image, Tooltip } from '@chakra-ui/react';
 import NavbarWalletConnectButton from './NavbarWalletConnectButton';
 import { NavbarLink } from '~/modules/nav/NavbarLink';
 import { useRouter } from 'next/router';
@@ -11,6 +11,7 @@ import { NextLink } from '~/components/link/NextLink';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 import { networkConfig } from '~/lib/config/network-config';
 import { NetworkSelectorPopover } from '~/modules/nav/NetworkSelectorPopover';
+import { Badge } from '@chakra-ui/layout';
 
 interface Props {
     scrollY: MotionValue<number>;
@@ -56,6 +57,10 @@ export function Navbar({ scrollY }: Props) {
                             {networkConfig.launchUrl && (
                                 <NavbarLink href={networkConfig.launchUrl} text="Launch" mr={5} />
                             )}
+
+                            <Tooltip label="Welcome to the new Beethoven X UI. No new smart contracts have been introduced. We've done a complete overhaul of the UI and infrastructure that supports it. We hope you enjoy it, and please reach out to us on discord if you run into any issues.">
+                                <Badge colorScheme="orange">UI BETA</Badge>
+                            </Tooltip>
                             {/*<NavbarAdditionalLinksMenu />*/}
                         </Flex>
                     </Box>
