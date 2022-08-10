@@ -58,7 +58,7 @@ export function Navbar({ scrollY }: Props) {
                                 <NavbarLink href={networkConfig.launchUrl} text="Launch" mr={5} />
                             )}
 
-                            <Tooltip label="Welcome to the new Beethoven X UI. No new smart contracts have been introduced. We've done a complete overhaul of the UI and infrastructure that supports it. We hope you enjoy it, and please reach out to us on discord if you run into any issues.">
+                            <Tooltip label="Welcome to the new Beethoven X UI. No new smart contracts have been introduced. We've done a complete overhaul of the UI and infrastructure that supports it. Please reach out to us on discord if you run into any issues.">
                                 <Badge colorScheme="orange">UI BETA</Badge>
                             </Tooltip>
                             {/*<NavbarAdditionalLinksMenu />*/}
