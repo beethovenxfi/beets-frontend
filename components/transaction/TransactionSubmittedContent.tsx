@@ -15,9 +15,10 @@ import { transactionMessageFromError } from '~/lib/util/transaction-util';
 interface Props extends BoxProps {
     query: Omit<SubmitTransactionQuery, 'submit' | 'submitAsync'>;
     confirmedMessage?: string;
+    showSpinnerOnPending?: boolean;
 }
 
-export function TransactionSubmittedContent({ query, confirmedMessage, ...rest }: Props) {
+export function TransactionSubmittedContent({ query, confirmedMessage, showSpinnerOnPending, ...rest }: Props) {
     const { isConfirmed, isFailed, isPending, error, txReceipt, txResponse } = query;
 
     return (
@@ -26,7 +27,7 @@ export function TransactionSubmittedContent({ query, confirmedMessage, ...rest }
                 <CardRow>
                     <Box flex="1">Status</Box>
                     <Box color={isFailed ? 'beets.red' : isConfirmed ? 'beets.green' : 'orange'}>
-                        {/*isPending && <Spinner size="sm" mr="2" />*/}
+                        {isPending && showSpinnerOnPending && <Spinner size="sm" mr="2" />}
                         {isFailed ? 'Failed' : isConfirmed ? 'Confirmed' : isPending ? 'Pending' : 'Unknown'}
                     </Box>
                 </CardRow>

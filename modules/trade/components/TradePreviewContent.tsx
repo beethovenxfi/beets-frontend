@@ -29,6 +29,7 @@ interface Props {
 }
 
 export function TradePreviewContent({ query, onTransactionSubmitted }: Props) {
+    const { batchSwap, ...batchSwapQuery } = query;
     const { reactiveTradeState, hasNoticeablePriceImpact, hasHighPriceImpact, priceImpact } = useTrade();
     const { getToken, formattedPrice, priceForAmount, priceFor } = useGetTokens();
     const { slippage } = useSlippage();
@@ -230,9 +231,9 @@ export function TradePreviewContent({ query, onTransactionSubmitted }: Props) {
                 </Alert>
             )}
             <BeetsSubmitTransactionButton
-                {...query}
+                {...batchSwapQuery}
                 isDisabled={hasHighPriceImpact && !highPiAccepted}
-                onClick={() => query.batchSwap(swapInfo)}
+                onClick={() => batchSwap(swapInfo)}
                 onPending={onTransactionSubmitted}
                 onConfirmed={() => refetchUserBalances()}
                 width="full"
@@ -241,10 +242,10 @@ export function TradePreviewContent({ query, onTransactionSubmitted }: Props) {
             >
                 Swap
             </BeetsSubmitTransactionButton>
-            {query && query.submitError ? (
+            {batchSwapQuery && batchSwapQuery.submitError ? (
                 <Alert status="error" mt={4}>
                     <AlertIcon />
-                    {transactionMessageFromError(query.submitError)}
+                    {transactionMessageFromError(batchSwapQuery.submitError)}
                 </Alert>
             ) : null}
         </Box>
