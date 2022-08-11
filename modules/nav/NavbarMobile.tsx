@@ -2,11 +2,10 @@ import { NavbarLink } from '~/modules/nav/NavbarLink';
 import { Box, Flex } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
-import { networkConfig } from '~/lib/config/network-config';
 
 export function NavbarMobile() {
     const router = useRouter();
-    const { chainId } = useNetworkConfig();
+    const networkConfig = useNetworkConfig();
 
     return (
         <Box
