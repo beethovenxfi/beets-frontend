@@ -17,31 +17,24 @@ import {
     Thead,
     Tr,
 } from '@chakra-ui/react';
-import { ChevronDown, ChevronUp, CornerDownRight } from 'react-feather';
+import { CornerDownRight } from 'react-feather';
 import { useExpanded, useTable } from 'react-table';
 
 import Card from '~/components/card/Card';
 import React from 'react';
 import TokenAvatar from '~/components/token/TokenAvatar';
 import numeral from 'numeral';
-import { poolGetTokensWithoutPhantomBpt } from '~/lib/services/pool/pool-util';
 import { tokenFormatAmount } from '~/lib/services/token/token-util';
 import { useGetTokens } from '~/lib/global/useToken';
 import { usePoolUserBptBalance } from '~/modules/pool/lib/usePoolUserBptBalance';
 import { usePoolUserInvestedTokenBalances } from '~/modules/pool/lib/usePoolUserInvestedTokenBalances';
 import { usePool } from '~/modules/pool/lib/usePool';
-
-interface PoolCompositionTableProps {
-    columns: any;
-    data: any;
-    hasNestedTokens: boolean;
-    hasBpt: boolean;
-}
+import { GqlPoolTokenUnion } from '~/apollo/generated/graphql-codegen-generated';
 
 interface TableDataTemplate {
     symbol: string;
     name: string;
-    weight: number;
+    weight: string | number;
     myBalance: string;
     myValue: string;
     balance: string;
@@ -63,7 +56,7 @@ enum Columns {
     Value = 'value',
 }
 
-const PoolCompositionTable = ({ columns, data, hasBpt, hasNestedTokens }: any) => {
+function PoolCompositionTable({ columns, data, hasBpt, hasNestedTokens }: any) {
     const {
         getTableProps,
         getTableBodyProps,
@@ -189,55 +182,50 @@ const PoolCompositionTable = ({ columns, data, hasBpt, hasNestedTokens }: any) =
             </TableContainer>
         </>
     );
-};
+}
 
 export function PoolComposition() {
     const { pool } = usePool();
     const { hasBpt } = usePoolUserBptBalance();
     const { getUserInvestedBalance } = usePoolUserInvestedTokenBalances();
     const { priceFor } = useGetTokens();
-    const poolTokens = poolGetTokensWithoutPhantomBpt(pool);
-    const hasNestedTokens = poolTokens.some((token) =>
+    const hasNestedTokens = pool.tokens.some((token) =>
         ['GqlPoolTokenLinear', 'GqlPoolTokenPhantomStable'].includes(token.__typename),
     );
 
-    const columns = React.useMemo(
-        () => [
-            {
-                Header: 'Symbol',
-                accessor: Columns.Symbol,
-            },
-            {
-                Header: 'Name',
-                accessor: Columns.Name,
-            },
-            {
-                Header: 'Weight',
-                accessor: Columns.Weight,
-            },
-            {
-                Header: 'My balance',
-                accessor: Columns.MyBalance,
-            },
-            {
-                Header: 'My value',
-                accessor: Columns.MyValue,
-            },
-            {
-                Header: 'Balance',
-                accessor: Columns.Balance,
-            },
-            {
-                Header: 'Value',
-                accessor: Columns.Value,
-            },
-        ],
-        [],
-    );
+    const columns = [
+        {
+            Header: 'Symbol',
+            accessor: Columns.Symbol,
+        },
+        {
+            Header: 'Name',
+            accessor: Columns.Name,
+        },
+        {
+            Header: 'Weight',
+            accessor: Columns.Weight,
+        },
+        {
+            Header: 'My balance',
+            accessor: Columns.MyBalance,
+        },
+        {
+            Header: 'My value',
+            accessor: Columns.MyValue,
+        },
+        {
+            Header: 'Balance',
+            accessor: Columns.Balance,
+        },
+        {
+            Header: 'Value',
+            accessor: Columns.Value,
+        },
+    ];
 
-    // TODO: need to type
-    const getTokenData = (tokens: any[]): TableData[] => {
-        return tokens?.map((token: any) => {
+    const getTokenData = (tokens: GqlPoolTokenUnion[]): TableData[] => {
+        return tokens.map((token) => {
             const userBalance = getUserInvestedBalance(token.address);
             const tokenPrice = priceFor(token.address);
             const totalTokenValue = parseFloat(token.balance) * tokenPrice;
@@ -249,16 +237,21 @@ export function PoolComposition() {
                 myValue: numeral(parseFloat(userBalance) * tokenPrice).format('$0,0.00a'),
                 balance: tokenFormatAmount(token.balance),
                 value: numeral(totalTokenValue).format('$0,0.00a'),
-                ...(hasNestedTokens && { subRows: getTokenData(token.pool?.tokens) }),
+                ...(hasNestedTokens && 'pool' in token && { subRows: getTokenData(token.pool.tokens) }),
             };
         });
     };
 
-    const data = () => [...getTokenData(pool.tokens)];
+    const data = getTokenData(pool.tokens);
 
     return (
         <Card px="2" py="2" mt={4} width="full">
-            <PoolCompositionTable columns={columns} data={data()} hasBpt={hasBpt} hasNestedTokens={hasNestedTokens} />
+            <PoolCompositionTable
+                columns={columns}
+                data={data}
+                hasBpt={hasBpt && !hasNestedTokens}
+                hasNestedTokens={hasNestedTokens}
+            />
         </Card>
     );
 }
