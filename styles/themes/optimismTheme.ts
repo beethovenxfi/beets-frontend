@@ -70,7 +70,7 @@ export const optimismTheme: Partial<ChakraTheme> = {
     colors: {
         gray: {
             '100': '#D3D3D3',
-            '200': '#777777',
+            '200': '#999999',
             '300': '#505050',
             '400': '#404040',
             '500': '#303030',

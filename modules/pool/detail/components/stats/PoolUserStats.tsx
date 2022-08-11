@@ -1,7 +1,6 @@
 import { Box, Divider, HStack, Text, VStack } from '@chakra-ui/layout';
 import numeral from 'numeral';
 import AprTooltip from '~/components/apr-tooltip/AprTooltip';
-import { InfoButton } from '~/components/info-button/InfoButton';
 import { numberFormatUSDValue } from '~/lib/util/number-formats';
 import { usePoolUserDepositBalance } from '~/modules/pool/lib/usePoolUserDepositBalance';
 import { Flex, Skeleton } from '@chakra-ui/react';
@@ -9,12 +8,12 @@ import { PoolUserStakedStats } from '~/modules/pool/detail/components/stats/Pool
 import { usePool } from '~/modules/pool/lib/usePool';
 
 export default function PoolUserStats() {
-    const { pool } = usePool();
+    const { pool, totalApr } = usePool();
     const { userPoolBalanceUSD, isLoading } = usePoolUserDepositBalance();
 
     return (
         <Flex width="full" alignItems="flex-start" flex={1} flexDirection="column">
-            <VStack spacing="0" alignItems="flex-start" mb="4">
+            <VStack spacing="0" alignItems="flex-start" mb="4" px="2">
                 <Text lineHeight="1rem" fontWeight="semibold" fontSize="sm" color="beets.base.50">
                     My APR
                 </Text>
@@ -23,8 +22,11 @@ export default function PoolUserStats() {
                     <AprTooltip onlySparkles data={pool.dynamicData.apr} />
                 </HStack>
             </VStack>
-            <Divider mb="4" />
-            <VStack spacing="0" alignItems="flex-start" mb="4">
+
+            <Box px="2" width="full">
+                <Divider mb="4" />
+            </Box>
+            <VStack spacing="0" alignItems="flex-start" mb="4" px="2">
                 <Text lineHeight="1rem" fontWeight="semibold" fontSize="sm" color="beets.base.50">
                     My liquidity
                 </Text>
@@ -38,7 +40,15 @@ export default function PoolUserStats() {
                     </Text>
                 )}
             </VStack>
-            {pool.staking && <PoolUserStakedStats poolAddress={pool.address} staking={pool.staking} />}
+            {pool.staking && (
+                <PoolUserStakedStats
+                    poolAddress={pool.address}
+                    staking={pool.staking}
+                    totalApr={totalApr}
+                    userPoolBalanceUSD={userPoolBalanceUSD}
+                />
+            )}
+            {/*<PoolDetailPossibleYieldText />*/}
         </Flex>
     );
 }

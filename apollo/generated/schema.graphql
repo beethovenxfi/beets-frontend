@@ -930,6 +930,9 @@ type Mutation {
 type Query {
     beetsGetFbeetsRatio: String!
     blocksGetAverageBlockTime: Float!
+    blocksGetBlocksPerDay: Float!
+    blocksGetBlocksPerSecond: Float!
+    blocksGetBlocksPerYear: Float!
     contentGetNewsItems: [GqlContentNewsItem!]!
     lge(id: ID!): GqlLge!
     lges: [GqlLge!]!

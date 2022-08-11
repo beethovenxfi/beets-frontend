@@ -348,6 +348,8 @@ export const GetAppGlobalData = gql`
             address
         }
         beetsGetFbeetsRatio
+        blocksGetBlocksPerDay
+        blocksGetAverageBlockTime
     }
 `;
 export const GetAppGlobalPollingData = gql`
@@ -364,6 +366,8 @@ export const GetAppGlobalPollingData = gql`
             swapFee24h
             swapVolume24h
         }
+        blocksGetBlocksPerDay
+        blocksGetAverageBlockTime
     }
 `;
 export const GetTokens = gql`
@@ -424,6 +428,12 @@ export const GetProtocolData = gql`
             swapFee24h
             swapVolume24h
         }
+    }
+`;
+export const GetBlocksPerDay = gql`
+    query GetBlocksPerDay {
+        blocksPerDay: blocksGetBlocksPerDay
+        avgBlockTime: blocksGetAverageBlockTime
     }
 `;
 export const GetUserData = gql`
