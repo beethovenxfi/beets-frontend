@@ -80,6 +80,12 @@ export function _useUserData() {
         return balance.tokenPrice * parseFloat(balance.totalBalance);
     }
 
+    function hasBptInWalletForPool(poolId: string): boolean {
+        const bptBalance = poolBalances.find((pool) => pool.poolId === poolId);
+
+        return parseFloat(bptBalance?.walletBalance || '0') > 0;
+    }
+
     return {
         ...rest,
         loading: loading || userAddressChanged,
@@ -95,6 +101,7 @@ export function _useUserData() {
         ],
         bptBalanceForPool,
         usdBalanceForPool,
+        hasBptInWalletForPool,
         stakedValueUSD,
     };
 }
