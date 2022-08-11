@@ -33,6 +33,7 @@ export function oldBnumSum(amounts: string[]): OldBigNumber {
     return amounts.reduce((a, b) => oldBnum(a).plus(b), oldBnum(0));
 }
 
+//TODO: look into why this sometimes returns numbers like 1+e21
 export function oldBnumScaleAmount(amountHumanReadable: AmountHumanReadable, decimals: number = 18): OldBigNumber {
     return oldBnum(parseUnits(amountHumanReadable, decimals).toString());
 }
