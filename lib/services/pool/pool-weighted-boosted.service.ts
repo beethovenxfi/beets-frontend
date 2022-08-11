@@ -350,16 +350,22 @@ export class PoolWeightedBoostedService implements PoolService {
             this.pool.tokens.map((token) => token.address),
         );
 
-        const exitAmounts = withdrawAmounts.map(({ amount, address }) => {
-            const option = this.pool.withdrawConfig.options.find((option) => option.poolTokenAddress === address)!;
-            const tokenOption = option.tokenOptions.find((tokenOption) => tokensOut.includes(tokenOption.address))!;
+        const poolTokenAddresses = this.pool.tokens.map((token) => token.address);
+        const exitAmounts = withdrawAmounts
+            .filter((withdrawAmount) => withdrawAmount.address)
+            .map(({ amount, address }) => {
+                const option = this.pool.withdrawConfig.options.find((option) => option.poolTokenAddress === address)!;
+                const tokenOption = option.tokenOptions.find((tokenOption) => tokensOut.includes(tokenOption.address))!;
 
-            return { address, amount, tokenOut: tokenOption.address };
-        });
+                return { address, amount, tokenOut: tokenOption.address };
+            });
 
-        const { tokenOutAmounts } = await this.getExitSwaps(exitAmounts);
+        const nestedExitAmounts = exitAmounts.filter((amount) => !poolTokenAddresses.includes(amount.address));
+        const poolTokenExitAmounts = exitAmounts.filter((amount) => poolTokenAddresses.includes(amount.address));
 
-        return tokenOutAmounts;
+        const { tokenOutAmounts } = await this.getExitSwaps(nestedExitAmounts);
+
+        return [...poolTokenExitAmounts, ...tokenOutAmounts];
     }
 
     private async getJoinSwaps(tokenAmountsIn: TokenAmountHumanReadable[]): Promise<{
