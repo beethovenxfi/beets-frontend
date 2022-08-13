@@ -92,7 +92,7 @@ function PoolCompositionTable({ columns, data, hasNestedTokens }: PoolCompositio
         if (cell.column.id === Columns.Expander && !hasNestedTokens) {
             cell.column.toggleHidden(true);
         } else if (cell.column.id === Columns.Symbol) {
-            const [symbol, address] = cell.value.split('--'); // here we split the 'symbol' & 'address' values to use the separately
+            const [symbol, address] = cell.value.split('--');
             return (
                 <HStack>
                     {cell.row.depth > 0 ? (
