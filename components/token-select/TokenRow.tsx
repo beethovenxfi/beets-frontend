@@ -36,7 +36,7 @@ export function TokenRow({
             fontWeight="normal"
             color="gray.100"
         >
-            <HStack width="full" paddingY="4" justifyContent="space-between">
+            <HStack px='3' width="full" paddingY="4" justifyContent="space-between">
                 <HStack>
                     <TokenAvatar address={address} size="xs" />
                     <Text fontSize="lg">{symbol}</Text>

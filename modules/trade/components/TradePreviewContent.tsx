@@ -1,5 +1,18 @@
-import { Alert, AlertIcon, Box, Checkbox, Flex, Link, Text } from '@chakra-ui/react';
-import { useState } from 'react';
+import {
+    Alert,
+    AlertIcon,
+    Box,
+    Checkbox,
+    Container,
+    Divider,
+    Flex,
+    HStack,
+    Link,
+    StackDivider,
+    Text,
+    VStack,
+} from '@chakra-ui/react';
+import React, { useState } from 'react';
 import Card from '~/components/card/Card';
 import { BeetsSubmitTransactionButton } from '~/components/button/BeetsSubmitTransactionButton';
 import { useTrade } from '~/modules/trade/lib/useTrade';
@@ -13,7 +26,7 @@ import { SlippageTextLinkMenu } from '~/components/slippage/SlippageTextLinkMenu
 import numeral from 'numeral';
 import { BeetsBox } from '~/components/box/BeetsBox';
 import TokenAvatar from '~/components/token/TokenAvatar';
-import { ExternalLink } from 'react-feather';
+import { ChevronRight, ExternalLink } from 'react-feather';
 import { etherscanGetTokenUrl } from '~/lib/util/etherscan';
 import { CoingeckoIcon } from '~/assets/icons/CoingeckoIcon';
 import { SubmitTransactionQuery } from '~/lib/util/useSubmitTransaction';
@@ -69,9 +82,129 @@ export function TradePreviewContent({ query, onTransactionSubmitted }: Props) {
     //console.log('query.submitError', query.submitError ? query.submitError.reason : null);
 
     return (
-        <Box>
-            <BeetsBox p="2">
-                <CardRow>
+        <VStack width="full">
+            <Box width="full" p="4" pt="0" pb="2">
+                <BeetsBox width="full" p="2" px="4">
+                    <VStack divider={<StackDivider borderColor="whiteAlpha.200" />} spacing="4" alignItems="flex-start">
+                        <HStack justifyContent="space-between" width="full">
+                            <HStack>
+                                <TokenAvatar width="40px" height="40px" address={swapInfo.tokenIn} />
+                                <Text>
+                                    You sell
+                                    <HStack spacing="1">
+                                        <Text fontWeight="bold">{tokenIn?.symbol}</Text>
+                                        <Link href={etherscanGetTokenUrl(swapInfo.tokenIn)} target="_blank" ml="1.5">
+                                            <ExternalLink size={14} />
+                                        </Link>
+                                    </HStack>
+                                </Text>
+                            </HStack>
+                            <VStack alignItems="flex-end" spacing="0">
+                                <Text>{swapInfo.tokenInAmount}</Text>
+                                <Text fontSize='sm' color="beets.base.100">
+                                    ~
+                                    {formattedPrice({
+                                        address: swapInfo.tokenIn,
+                                        amount: swapInfo.tokenInAmount,
+                                    })}
+                                </Text>
+                            </VStack>
+                        </HStack>
+                        <HStack justifyContent="space-between" width="full">
+                            <HStack>
+                                <TokenAvatar width="40px" height="40px" address={swapInfo.tokenOut} />
+                                <Text>
+                                    to receive
+                                    <HStack spacing='1'>
+                                        <Text fontWeight="bold">{tokenOut?.symbol}</Text>
+                                        <Link href={etherscanGetTokenUrl(swapInfo.tokenOut)} target="_blank" ml="1.5">
+                                            <ExternalLink size={14} />
+                                        </Link>
+                                    </HStack>
+                                </Text>
+                            </HStack>
+                            <VStack alignItems="flex-end" spacing="0">
+                                <Text>{swapInfo.tokenOutAmount}</Text>
+                                <Text fontSize='sm' color="beets.base.100">
+                                    ~
+                                    {formattedPrice({
+                                        address: swapInfo.tokenOut,
+                                        amount: swapInfo.tokenOutAmount,
+                                    })}
+                                </Text>
+                            </VStack>
+                        </HStack>
+                    </VStack>
+                </BeetsBox>
+                <BeetsBox mt="4" p="2" px="4">
+                    <VStack>
+                        <HStack width="full" justifyContent="space-between">
+                            <InfoButton
+                                labelProps={{ fontSize: 'sm' }}
+                                label="Max slippage"
+                                infoText="The maximum change in the price you are willing to accept to account for external market movements"
+                            />
+                            <SlippageTextLinkMenu />
+                        </HStack>
+                        <HStack width="full" justifyContent="space-between">
+                            <Text color="gray.100" fontSize=".85rem">
+                                Minimum received
+                            </Text>
+                            <Text fontSize=".85rem" color="white">
+                                {swapInfo?.tokenOutAmount} {tokenOut?.symbol}
+                            </Text>
+                        </HStack>
+                    </VStack>
+                </BeetsBox>
+                {/* <BeetsBox marginTop="4">
+                    <VStack py="2">
+                        <HStack>
+                            <HStack>
+                                <TokenAvatar width="24px" height="24px" address={swapInfo.tokenIn} />
+                                <Text>1 {tokenIn?.symbol}</Text>
+                            </HStack>
+                            <ChevronRight size="16" />
+                            <HStack>
+                                <TokenAvatar width="24px" height="24px" address={swapInfo.tokenOut} />
+                                <Text>1 {tokenOut?.symbol}</Text>
+                            </HStack>
+                        </HStack>
+                    </VStack>
+                </BeetsBox> */}
+                <VStack width="full" spacing="4">
+                    {hasHighPriceImpact && (
+                        <Alert status="error" mt="4" display="flex" alignItems="flex-start">
+                            <Checkbox
+                                colorScheme="red"
+                                mt="1"
+                                mr="4"
+                                isChecked={highPiAccepted}
+                                onChange={() => setHighPiAccepted(!highPiAccepted)}
+                            />
+                            <Box>I understand that this trade will significantly move the market price.</Box>
+                        </Alert>
+                    )}
+                    {batchSwapQuery && batchSwapQuery.submitError ? (
+                        <Alert status="error" mt={4}>
+                            <AlertIcon />
+                            {transactionMessageFromError(batchSwapQuery.submitError)}
+                        </Alert>
+                    ) : null}
+                    <BeetsSubmitTransactionButton
+                        {...batchSwapQuery}
+                        isDisabled={hasHighPriceImpact && !highPiAccepted}
+                        onClick={() => batchSwap(swapInfo)}
+                        onPending={onTransactionSubmitted}
+                        onConfirmed={() => refetchUserBalances()}
+                        width="full"
+                        size="lg"
+                        marginTop="6"
+                    >
+                        Swap
+                    </BeetsSubmitTransactionButton>
+                </VStack>
+            </Box>
+            {/* <CardRow>
                     <Box flex="1">
                         <Flex alignItems="center">
                             <Box mr="1">Selling</Box>
@@ -94,8 +227,8 @@ export function TradePreviewContent({ query, onTransactionSubmitted }: Props) {
                             {formattedPrice({ address: swapInfo.tokenIn, amount: swapInfo.tokenInAmount })}
                         </Box>
                     </Box>
-                </CardRow>
-                <CardRow>
+                </CardRow> */}
+            {/* <CardRow>
                     <Box flex="1">
                         <Flex alignItems="center">
                             <Box mr="1">Buying</Box>
@@ -121,8 +254,8 @@ export function TradePreviewContent({ query, onTransactionSubmitted }: Props) {
                             })}
                         </Box>
                     </Box>
-                </CardRow>
-                <CardRow mb="0">
+                </CardRow> */}
+            {/* <CardRow mb="0">
                     <Box flex="1">
                         <InfoButton
                             label="Max slippage"
@@ -131,14 +264,9 @@ export function TradePreviewContent({ query, onTransactionSubmitted }: Props) {
                     </Box>
 
                     <SlippageTextLinkMenu />
-                </CardRow>
-            </BeetsBox>
-            <Box mt="6">
-                <Box fontWeight="semibold" fontSize="lg" mb="2">
-                    Transaction details
-                </Box>
+                </CardRow> */}
 
-                <Card p="2">
+            {/* <Card p="2">
                     <CardRow>
                         <Box flex="1">Effective price</Box>
                         <Box>
@@ -169,11 +297,7 @@ export function TradePreviewContent({ query, onTransactionSubmitted }: Props) {
                         fontWeight={hasHighPriceImpact ? 'bold' : 'normal'}
                     >
                         <Box flex="1" color={hasHighPriceImpact ? 'white' : 'current'}>
-                            {/*<InfoButton
-                                label="Price impact"
-                                moreInfoUrl="https://docs.beets.fi"
-                                infoText="Lorem ipsum dolor...."
-                            />*/}
+     
                             Price impact
                         </Box>
                         <Box color={hasHighPriceImpact ? 'white' : hasNoticeablePriceImpact ? 'orange' : 'current'}>
@@ -183,7 +307,6 @@ export function TradePreviewContent({ query, onTransactionSubmitted }: Props) {
                     {exactIn ? (
                         <CardRow>
                             <Box flex="1">
-                                {/*<InfoButton label="Minimum received" infoText="Lorem ipsum dolor...." />*/}
                                 Minimum received
                             </Box>
                             <Box fontWeight="bold">
@@ -196,7 +319,6 @@ export function TradePreviewContent({ query, onTransactionSubmitted }: Props) {
                     ) : (
                         <CardRow>
                             <Box flex="1">
-                                {/*<InfoButton label="Maximum spent" infoText="Lorem ipsum dolor...." />*/}
                                 Maximum spent
                             </Box>
                             <Box fontWeight="bold">
@@ -247,7 +369,50 @@ export function TradePreviewContent({ query, onTransactionSubmitted }: Props) {
                     <AlertIcon />
                     {transactionMessageFromError(batchSwapQuery.submitError)}
                 </Alert>
-            ) : null}
-        </Box>
+            ) : null} */}
+
+            <VStack width="full" py="4" backgroundColor="whiteAlpha.50" px="5">
+                <HStack width="full" justifyContent="space-between">
+                    <Text color="gray.100" fontSize=".85rem">
+                        Price impact
+                    </Text>
+                    <Text
+                        fontSize=".85rem"
+                        color={hasHighPriceImpact ? 'beets.red' : hasNoticeablePriceImpact ? 'orange' : 'white'}
+                    >
+                        {numeral(priceImpact).format('0.00%')}
+                    </Text>
+                </HStack>
+                <HStack width="full" justifyContent="space-between">
+                    <Text color="gray.100" fontSize=".85rem">
+                        1 {tokenIn?.symbol} is
+                    </Text>
+                    <Text fontSize=".85rem" color="white">
+                        {tokenFormatAmount(swapInfo.effectivePriceReversed)} {tokenOut?.symbol}
+                    </Text>
+                </HStack>
+                <HStack width="full" justifyContent="space-between">
+                    <Text color="gray.100" fontSize=".85rem">
+                        1 {tokenOut?.symbol} is
+                    </Text>
+                    <Text fontSize=".85rem" color="white">
+                        {tokenFormatAmount(swapInfo.effectivePrice)} {tokenIn?.symbol}
+                    </Text>
+                </HStack>
+                <HStack width="full" justifyContent="space-between">
+                    <HStack alignItems="center" spacing="1">
+                        <Text color="gray.100" fontSize=".85rem">
+                            Compared to
+                        </Text>
+                        <Flex alignItems="center" height="full">
+                            <CoingeckoIcon width="16px" height="16px" />
+                        </Flex>
+                    </HStack>
+                    <Text color="white" fontSize=".85rem">
+                        {coingeckoVariationText}
+                    </Text>
+                </HStack>
+            </VStack>
+        </VStack>
     );
 }

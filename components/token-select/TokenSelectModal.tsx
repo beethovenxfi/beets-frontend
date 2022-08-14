@@ -33,55 +33,63 @@ export function TokenSelectModal({ isOpen, onClose }: Props) {
     }
 
     return (
-        <Modal isOpen={isOpen} onClose={onClose} size="xl" isCentered>
-            <ModalOverlay />
-            <ModalContent backgroundColor="black">
-                <ModalCloseButton />
-                <ModalHeader className="bg">
-                    Select a token to {tokenSelectKey === 'tokenIn' ? 'sell' : 'buy'}
-                </ModalHeader>
-                <ModalBody className="bg" p="0" position="relative">
-                    <Box px="6" boxShadow="dark-lg" pt="1" pb="6" borderBottomWidth={1} borderBottomColor="gray.600">
-                        <TokenSelectSearchInput
-                            placeholder="Search by symbol or address..."
-                            value={searchTerm}
-                            setValue={(value) => {
-                                setSearchTerm(value);
+        <Modal isOpen={isOpen} onClose={onClose} size="lg" isCentered>
+            <ModalOverlay bg="blackAlpha.800" />
+            <ModalContent borderWidth={1} borderColor="beets.base.600">
+                <Box bg="blackAlpha.400">
+                    <Box className="bg">
+                        <ModalCloseButton />
+                        <ModalHeader>Select a token to {tokenSelectKey === 'tokenIn' ? 'sell' : 'buy'}</ModalHeader>
+                        <ModalBody p="0" position="relative">
+                            <Box
+                                px="6"
+                                pb="6"
+                                boxShadow="2xl"
+                                borderBottomWidth={1}
+                                borderBottomColor="beets.base.500"
+                            >
+                                <TokenSelectSearchInput
+                                    placeholder="Search by symbol or address..."
+                                    value={searchTerm}
+                                    setValue={(value) => {
+                                        setSearchTerm(value);
 
-                                if (isAddress(value) && !getTradableToken(value)) {
-                                    loadToken(value);
-                                } else if (addressToLoad || tokenToImport) {
-                                    clearTokenImport();
-                                }
-                            }}
-                        />
-                    </Box>
-                    {tokenToImport ? (
-                        <Box height={`${listHeight}px`}>
-                            <TokenActionRow
-                                {...tokenToImport}
-                                index={0}
-                                action="import"
-                                onClick={alertDisclosure.onOpen}
+                                        if (isAddress(value) && !getTradableToken(value)) {
+                                            loadToken(value);
+                                        } else if (addressToLoad || tokenToImport) {
+                                            clearTokenImport();
+                                        }
+                                    }}
+                                />
+                            </Box>
+                            {tokenToImport ? (
+                                <Box height={`${listHeight}px`}>
+                                    <TokenActionRow
+                                        {...tokenToImport}
+                                        index={0}
+                                        action="import"
+                                        onClick={alertDisclosure.onOpen}
+                                    />
+                                </Box>
+                            ) : (
+                                <TokenSelectTokenList
+                                    listHeight={listHeight}
+                                    searchTerm={searchTerm}
+                                    onTokenRowClick={(address) => onTokenRowClick(address)}
+                                />
+                            )}
+                            <TokenImportAlertDialog
+                                isOpen={alertDisclosure.isOpen}
+                                onClose={alertDisclosure.onClose}
+                                onImport={() => {
+                                    importToken();
+                                    alertDisclosure.onClose();
+                                }}
                             />
-                        </Box>
-                    ) : (
-                        <TokenSelectTokenList
-                            listHeight={listHeight}
-                            searchTerm={searchTerm}
-                            onTokenRowClick={(address) => onTokenRowClick(address)}
-                        />
-                    )}
-                    <TokenImportAlertDialog
-                        isOpen={alertDisclosure.isOpen}
-                        onClose={alertDisclosure.onClose}
-                        onImport={() => {
-                            importToken();
-                            alertDisclosure.onClose();
-                        }}
-                    />
-                    <Box height="40px" boxShadow="dark-lg" borderTopWidth={1} borderTopColor="gray.600" />
-                </ModalBody>
+                            <Box height="20px" boxShadow="dark-lg" borderTopWidth={1} borderTopColor="beets.base.600" />
+                        </ModalBody>
+                    </Box>
+                </Box>
             </ModalContent>
         </Modal>
     );

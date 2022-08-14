@@ -27,14 +27,14 @@ export function TradePreviewModal({ isOpen, onClose }: Props) {
         <Modal
             isOpen={isOpen}
             onClose={onClose}
-            size="xl"
+            size="lg"
             initialFocusRef={initialRef}
             onCloseComplete={() => {
                 batchSwapQuery.reset();
                 setSubmitting(false);
             }}
         >
-            <ModalOverlay />
+            <ModalOverlay bg="blackAlpha.900" />
             <BeetsModalContent>
                 <ModalCloseButton />
                 <BeetsModalHeader>
@@ -45,7 +45,7 @@ export function TradePreviewModal({ isOpen, onClose }: Props) {
                         </BeetsModalSubHeadline>
                     )*/}
                 </BeetsModalHeader>
-                <BeetsModalBody>
+                <BeetsModalBody p='0'>
                     {batchSwapQuery.isConfirmed && (
                         <Portal>
                             <Box position="absolute" top="0" left="0" width="full">
