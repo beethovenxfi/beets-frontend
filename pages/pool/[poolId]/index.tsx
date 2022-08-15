@@ -11,6 +11,7 @@ import { PoolUserDepositBalanceProvider } from '~/modules/pool/lib/usePoolUserDe
 import { PoolUserInvestedTokenBalanceProvider } from '~/modules/pool/lib/usePoolUserInvestedTokenBalances';
 import { PoolUserPendingRewardsProvider } from '~/modules/pool/lib/usePoolUserPendingRewards';
 import { PoolUserTokenBalancesInWalletProvider } from '~/modules/pool/lib/usePoolUserTokenBalancesInWallet';
+import { GetServerSideProps } from 'next';
 
 interface Props {
     pool: GqlPoolUnion;
@@ -47,29 +48,26 @@ const PoolPage = ({ pool }: Props) => {
     );
 };
 
-export async function getStaticPaths() {
-    return {
-        paths: [],
-        fallback: true,
-    };
-}
 
-export async function getStaticProps({ params }: { params: { poolId: string } }) {
+export const getServerSideProps: GetServerSideProps<any, {poolId: string}> = async ({res, params } ) => {
+    // we cache for 15 sec and return a stale version while refetching for maximum 1 minute
+    // see https://nextjs.org/docs/going-to-production#caching
+    res.setHeader(
+        'Cache-Control',
+        'public, s-maxage=15, stale-while-revalidate=59'
+    )
     const client = initializeApolloClient();
     const { data } = await client.query<GetPoolQuery, GetPoolQueryVariables>({
         query: GetPool,
-        variables: { id: params.poolId },
+        variables: { id: params!.poolId },
     });
 
-    //pre-load the fbeets ratio for fidelio duetto
-    /*if (params.poolId === networkConfig.fbeets.poolId) {
-        await client.query({ query: GetFbeetsRatio });
-    }*/
 
-    return loadApolloState({
-        client,
-        props: { pool: data.pool },
-    });
+    return {
+        props: {
+           pool: data.pool
+        }
+    }
 }
 
 export default PoolPage;
