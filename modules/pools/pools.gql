@@ -53,9 +53,11 @@ fragment GqlPoolMinimal on GqlPoolMinimal {
             swapApr
             total
             items {
+                id
                 title
                 apr
                 subItems {
+                    id
                     title
                     apr
                 }
