@@ -22,7 +22,7 @@ export const DEFAULT_POOL_LIST_QUERY_VARS: PoolsQueryVariables = {
     orderDirection: 'desc',
     where: {
         categoryIn: ['INCENTIVIZED'],
-        poolTypeIn: ['WEIGHTED', 'STABLE', 'PHANTOM_STABLE'],
+        poolTypeIn: ['WEIGHTED', 'STABLE', 'PHANTOM_STABLE', 'META_STABLE'],
     },
     textSearch: null,
 };
