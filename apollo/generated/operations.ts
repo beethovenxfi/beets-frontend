@@ -56,9 +56,11 @@ export const GqlPoolCardData = gql`
                 swapApr
                 total
                 items {
+                    id
                     title
                     apr
                     subItems {
+                        id
                         title
                         apr
                     }
@@ -201,9 +203,11 @@ export const GqlPoolMinimal = gql`
                 swapApr
                 total
                 items {
+                    id
                     title
                     apr
                     subItems {
+                        id
                         title
                         apr
                     }
@@ -570,9 +574,11 @@ export const GetPool = gql`
                     swapApr
                     total
                     items {
+                        id
                         title
                         apr
                         subItems {
+                            id
                             title
                             apr
                         }
@@ -653,6 +659,14 @@ export const GetPool = gql`
                 }
             }
             ... on GqlPoolStable {
+                amp
+                tokens {
+                    ... on GqlPoolToken {
+                        ...GqlPoolToken
+                    }
+                }
+            }
+            ... on GqlPoolMetaStable {
                 amp
                 tokens {
                     ... on GqlPoolToken {

@@ -19,6 +19,7 @@ export interface PoolContextType {
     formattedTypeName: string;
     totalApr: number;
     isFbeetsPool: boolean;
+    isStablePool: boolean;
 }
 
 export const PoolContext = createContext<PoolContextType | null>(null);
@@ -61,6 +62,11 @@ export function PoolProvider({ pool: poolFromProps, children }: { pool: GqlPoolU
         [pool.id],
     );
 
+    const isStablePool =
+        pool.__typename === 'GqlPoolStable' ||
+        pool.__typename === 'GqlPoolPhantomStable' ||
+        pool.__typename === 'GqlPoolMetaStable';
+
     useEffectOnce(() => {
         startPolling(30_000);
     });
@@ -83,6 +89,7 @@ export function PoolProvider({ pool: poolFromProps, children }: { pool: GqlPoolU
                 formattedTypeName: poolGetTypeName(pool),
                 totalApr: parseFloat(pool.dynamicData.apr.total),
                 isFbeetsPool: pool.id === networkConfig.fbeets.poolId,
+                isStablePool,
             }}
         >
             {children}

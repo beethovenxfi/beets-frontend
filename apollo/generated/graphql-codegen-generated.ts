@@ -27,6 +27,7 @@ export interface Scalars {
 export interface GqlBalancePoolAprItem {
     __typename: 'GqlBalancePoolAprItem';
     apr: Scalars['BigDecimal'];
+    id: Scalars['ID'];
     subItems?: Maybe<Array<GqlBalancePoolAprSubItem>>;
     title: Scalars['String'];
 }
@@ -34,6 +35,7 @@ export interface GqlBalancePoolAprItem {
 export interface GqlBalancePoolAprSubItem {
     __typename: 'GqlBalancePoolAprSubItem';
     apr: Scalars['BigDecimal'];
+    id: Scalars['ID'];
     title: Scalars['String'];
 }
 
@@ -68,6 +70,13 @@ export interface GqlHistoricalTokenPriceEntry {
     __typename: 'GqlHistoricalTokenPriceEntry';
     price: Scalars['Float'];
     timestamp: Scalars['String'];
+}
+
+export interface GqlLatestSyncedBlocks {
+    __typename: 'GqlLatestSyncedBlocks';
+    poolSyncBlock: Scalars['BigInt'];
+    userStakeSyncBlock: Scalars['BigInt'];
+    userWalletSyncBlock: Scalars['BigInt'];
 }
 
 export interface GqlLge {
@@ -290,7 +299,7 @@ export interface GqlPoolFilter {
     tokensNotIn?: InputMaybe<Array<Scalars['String']>>;
 }
 
-export type GqlPoolFilterCategory = 'INCENTIVIZED';
+export type GqlPoolFilterCategory = 'BLACK_LISTED' | 'INCENTIVIZED';
 
 export interface GqlPoolFilterDefinition {
     __typename: 'GqlPoolFilterDefinition';
@@ -442,6 +451,25 @@ export interface GqlPoolLiquidityBootstrapping extends GqlPoolBase {
     staking?: Maybe<GqlPoolStaking>;
     symbol: Scalars['String'];
     tokens: Array<GqlPoolTokenUnion>;
+    withdrawConfig: GqlPoolWithdrawConfig;
+}
+
+export interface GqlPoolMetaStable extends GqlPoolBase {
+    __typename: 'GqlPoolMetaStable';
+    address: Scalars['Bytes'];
+    allTokens: Array<GqlPoolTokenExpanded>;
+    amp: Scalars['BigInt'];
+    createTime: Scalars['Int'];
+    decimals: Scalars['Int'];
+    dynamicData: GqlPoolDynamicData;
+    factory?: Maybe<Scalars['Bytes']>;
+    id: Scalars['ID'];
+    investConfig: GqlPoolInvestConfig;
+    name: Scalars['String'];
+    owner: Scalars['Bytes'];
+    staking?: Maybe<GqlPoolStaking>;
+    symbol: Scalars['String'];
+    tokens: Array<GqlPoolToken>;
     withdrawConfig: GqlPoolWithdrawConfig;
 }
 
@@ -706,6 +734,7 @@ export type GqlPoolUnion =
     | GqlPoolElement
     | GqlPoolLinear
     | GqlPoolLiquidityBootstrapping
+    | GqlPoolMetaStable
     | GqlPoolPhantomStable
     | GqlPoolStable
     | GqlPoolWeighted;
@@ -931,7 +960,7 @@ export interface Mutation {
     __typename: 'Mutation';
     beetsSyncFbeetsRatio: Scalars['String'];
     lgeCreate: GqlLge;
-    poolInitializeSnapshotsForBoostedPool: Scalars['String'];
+    poolInitializeSnapshotsForPool: Scalars['String'];
     poolLoadOnChainDataForAllPools: Scalars['String'];
     poolLoadOnChainDataForPoolsWithActiveUpdates: Scalars['String'];
     poolLoadSnapshotsForAllPools: Scalars['String'];
@@ -940,6 +969,7 @@ export interface Mutation {
     poolSyncAllPoolsFromSubgraph: Array<Scalars['String']>;
     poolSyncLatestSnapshotsForAllPools: Scalars['String'];
     poolSyncNewPoolsFromSubgraph: Array<Scalars['String']>;
+    poolSyncPool: Scalars['String'];
     poolSyncPoolAllTokensRelationship: Scalars['String'];
     poolSyncSanityPoolData: Scalars['String'];
     poolSyncStakingForPools: Scalars['String'];
@@ -959,6 +989,7 @@ export interface Mutation {
     userInitWalletBalancesForAllPools: Scalars['String'];
     userInitWalletBalancesForPool: Scalars['String'];
     userSyncBalance: Scalars['String'];
+    userSyncBalanceAllPools: Scalars['String'];
     userSyncStakedBalances: Scalars['String'];
     userSyncWalletBalancesForAllPools: Scalars['String'];
 }
@@ -968,12 +999,16 @@ export interface MutationLgeCreateArgs {
     signature: Scalars['String'];
 }
 
-export interface MutationPoolInitializeSnapshotsForBoostedPoolArgs {
+export interface MutationPoolInitializeSnapshotsForPoolArgs {
     poolId: Scalars['String'];
 }
 
 export interface MutationPoolSyncLatestSnapshotsForAllPoolsArgs {
     daysToSync?: InputMaybe<Scalars['Int']>;
+}
+
+export interface MutationPoolSyncPoolArgs {
+    poolId: Scalars['String'];
 }
 
 export interface MutationTokenInitChartDataArgs {
@@ -996,6 +1031,7 @@ export interface Query {
     blocksGetBlocksPerSecond: Scalars['Float'];
     blocksGetBlocksPerYear: Scalars['Float'];
     contentGetNewsItems: Array<GqlContentNewsItem>;
+    latestSyncedBlocks: GqlLatestSyncedBlocks;
     lge: GqlLge;
     lges: Array<GqlLge>;
     poolGetBatchSwaps: Array<GqlPoolBatchSwap>;
@@ -1460,10 +1496,12 @@ export type GetHomeDataQuery = {
                           total: string;
                           items: Array<{
                               __typename: 'GqlBalancePoolAprItem';
+                              id: string;
                               title: string;
                               apr: string;
                               subItems?: Array<{
                                   __typename: 'GqlBalancePoolAprSubItem';
+                                  id: string;
                                   title: string;
                                   apr: string;
                               }> | null;
@@ -1528,10 +1566,12 @@ export type GetHomeFeaturedPoolsQuery = {
                           total: string;
                           items: Array<{
                               __typename: 'GqlBalancePoolAprItem';
+                              id: string;
                               title: string;
                               apr: string;
                               subItems?: Array<{
                                   __typename: 'GqlBalancePoolAprSubItem';
+                                  id: string;
                                   title: string;
                                   apr: string;
                               }> | null;
@@ -1598,10 +1638,12 @@ export type GqlPoolFeaturedPoolGroupFragment = {
                       total: string;
                       items: Array<{
                           __typename: 'GqlBalancePoolAprItem';
+                          id: string;
                           title: string;
                           apr: string;
                           subItems?: Array<{
                               __typename: 'GqlBalancePoolAprSubItem';
+                              id: string;
                               title: string;
                               apr: string;
                           }> | null;
@@ -1638,9 +1680,15 @@ export type GqlPoolCardDataFragment = {
             total: string;
             items: Array<{
                 __typename: 'GqlBalancePoolAprItem';
+                id: string;
                 title: string;
                 apr: string;
-                subItems?: Array<{ __typename: 'GqlBalancePoolAprSubItem'; title: string; apr: string }> | null;
+                subItems?: Array<{
+                    __typename: 'GqlBalancePoolAprSubItem';
+                    id: string;
+                    title: string;
+                    apr: string;
+                }> | null;
             }>;
         };
     };
@@ -1728,10 +1776,12 @@ export type GetPoolQuery = {
                       total: string;
                       items: Array<{
                           __typename: 'GqlBalancePoolAprItem';
+                          id: string;
                           title: string;
                           apr: string;
                           subItems?: Array<{
                               __typename: 'GqlBalancePoolAprSubItem';
+                              id: string;
                               title: string;
                               apr: string;
                           }> | null;
@@ -1890,10 +1940,12 @@ export type GetPoolQuery = {
                       total: string;
                       items: Array<{
                           __typename: 'GqlBalancePoolAprItem';
+                          id: string;
                           title: string;
                           apr: string;
                           subItems?: Array<{
                               __typename: 'GqlBalancePoolAprSubItem';
+                              id: string;
                               title: string;
                               apr: string;
                           }> | null;
@@ -2180,10 +2232,173 @@ export type GetPoolQuery = {
                       total: string;
                       items: Array<{
                           __typename: 'GqlBalancePoolAprItem';
+                          id: string;
                           title: string;
                           apr: string;
                           subItems?: Array<{
                               __typename: 'GqlBalancePoolAprSubItem';
+                              id: string;
+                              title: string;
+                              apr: string;
+                          }> | null;
+                      }>;
+                  };
+              };
+              allTokens: Array<{
+                  __typename: 'GqlPoolTokenExpanded';
+                  id: string;
+                  address: string;
+                  name: string;
+                  symbol: string;
+                  decimals: number;
+                  isNested: boolean;
+                  isPhantomBpt: boolean;
+              }>;
+              staking?: {
+                  __typename: 'GqlPoolStaking';
+                  id: string;
+                  type: GqlPoolStakingType;
+                  address: string;
+                  farm?: {
+                      __typename: 'GqlPoolStakingMasterChefFarm';
+                      id: string;
+                      beetsPerBlock: string;
+                      rewarders?: Array<{
+                          __typename: 'GqlPoolStakingMasterChefFarmRewarder';
+                          id: string;
+                          address: string;
+                          tokenAddress: string;
+                          rewardPerSecond: string;
+                      }> | null;
+                  } | null;
+                  gauge?: {
+                      __typename: 'GqlPoolStakingGauge';
+                      id: string;
+                      gaugeAddress: string;
+                      rewards: Array<{
+                          __typename: 'GqlPoolStakingGaugeReward';
+                          id: string;
+                          rewardPerSecond: string;
+                          tokenAddress: string;
+                      }>;
+                  } | null;
+              } | null;
+              investConfig: {
+                  __typename: 'GqlPoolInvestConfig';
+                  singleAssetEnabled: boolean;
+                  proportionalEnabled: boolean;
+                  options: Array<{
+                      __typename: 'GqlPoolInvestOption';
+                      poolTokenIndex: number;
+                      poolTokenAddress: string;
+                      tokenOptions: Array<{
+                          __typename: 'GqlPoolToken';
+                          id: string;
+                          index: number;
+                          name: string;
+                          symbol: string;
+                          balance: string;
+                          address: string;
+                          priceRate: string;
+                          decimals: number;
+                          weight?: string | null;
+                      }>;
+                  }>;
+              };
+              withdrawConfig: {
+                  __typename: 'GqlPoolWithdrawConfig';
+                  singleAssetEnabled: boolean;
+                  proportionalEnabled: boolean;
+                  options: Array<{
+                      __typename: 'GqlPoolWithdrawOption';
+                      poolTokenIndex: number;
+                      poolTokenAddress: string;
+                      tokenOptions: Array<{
+                          __typename: 'GqlPoolToken';
+                          id: string;
+                          index: number;
+                          name: string;
+                          symbol: string;
+                          balance: string;
+                          address: string;
+                          priceRate: string;
+                          decimals: number;
+                          weight?: string | null;
+                      }>;
+                  }>;
+              };
+          }
+        | {
+              __typename: 'GqlPoolMetaStable';
+              amp: string;
+              id: string;
+              address: string;
+              name: string;
+              owner: string;
+              decimals: number;
+              factory?: string | null;
+              symbol: string;
+              createTime: number;
+              tokens: Array<{
+                  __typename: 'GqlPoolToken';
+                  id: string;
+                  index: number;
+                  name: string;
+                  symbol: string;
+                  balance: string;
+                  address: string;
+                  priceRate: string;
+                  decimals: number;
+                  weight?: string | null;
+              }>;
+              dynamicData: {
+                  __typename: 'GqlPoolDynamicData';
+                  poolId: string;
+                  swapEnabled: boolean;
+                  totalLiquidity: string;
+                  totalLiquidity24hAgo: string;
+                  totalShares: string;
+                  totalShares24hAgo: string;
+                  fees24h: string;
+                  swapFee: string;
+                  volume24h: string;
+                  fees48h: string;
+                  volume48h: string;
+                  lifetimeVolume: string;
+                  lifetimeSwapFees: string;
+                  holdersCount: string;
+                  swapsCount: string;
+                  sharePriceAth: string;
+                  sharePriceAthTimestamp: number;
+                  sharePriceAtl: string;
+                  sharePriceAtlTimestamp: number;
+                  totalLiquidityAth: string;
+                  totalLiquidityAthTimestamp: number;
+                  totalLiquidityAtl: string;
+                  totalLiquidityAtlTimestamp: number;
+                  volume24hAth: string;
+                  volume24hAthTimestamp: number;
+                  volume24hAtl: string;
+                  volume24hAtlTimestamp: number;
+                  fees24hAth: string;
+                  fees24hAthTimestamp: number;
+                  fees24hAtl: string;
+                  fees24hAtlTimestamp: number;
+                  apr: {
+                      __typename: 'GqlPoolApr';
+                      hasRewardApr: boolean;
+                      thirdPartyApr: string;
+                      nativeRewardApr: string;
+                      swapApr: string;
+                      total: string;
+                      items: Array<{
+                          __typename: 'GqlBalancePoolAprItem';
+                          id: string;
+                          title: string;
+                          apr: string;
+                          subItems?: Array<{
+                              __typename: 'GqlBalancePoolAprSubItem';
+                              id: string;
                               title: string;
                               apr: string;
                           }> | null;
@@ -2471,10 +2686,12 @@ export type GetPoolQuery = {
                       total: string;
                       items: Array<{
                           __typename: 'GqlBalancePoolAprItem';
+                          id: string;
                           title: string;
                           apr: string;
                           subItems?: Array<{
                               __typename: 'GqlBalancePoolAprSubItem';
+                              id: string;
                               title: string;
                               apr: string;
                           }> | null;
@@ -2630,10 +2847,12 @@ export type GetPoolQuery = {
                       total: string;
                       items: Array<{
                           __typename: 'GqlBalancePoolAprItem';
+                          id: string;
                           title: string;
                           apr: string;
                           subItems?: Array<{
                               __typename: 'GqlBalancePoolAprSubItem';
+                              id: string;
                               title: string;
                               apr: string;
                           }> | null;
@@ -2920,10 +3139,12 @@ export type GetPoolQuery = {
                       total: string;
                       items: Array<{
                           __typename: 'GqlBalancePoolAprItem';
+                          id: string;
                           title: string;
                           apr: string;
                           subItems?: Array<{
                               __typename: 'GqlBalancePoolAprSubItem';
+                              id: string;
                               title: string;
                               apr: string;
                           }> | null;
@@ -3343,9 +3564,15 @@ export type GetPoolsQuery = {
                 total: string;
                 items: Array<{
                     __typename: 'GqlBalancePoolAprItem';
+                    id: string;
                     title: string;
                     apr: string;
-                    subItems?: Array<{ __typename: 'GqlBalancePoolAprSubItem'; title: string; apr: string }> | null;
+                    subItems?: Array<{
+                        __typename: 'GqlBalancePoolAprSubItem';
+                        id: string;
+                        title: string;
+                        apr: string;
+                    }> | null;
                 }>;
             };
         };
@@ -3409,9 +3636,15 @@ export type GqlPoolMinimalFragment = {
             total: string;
             items: Array<{
                 __typename: 'GqlBalancePoolAprItem';
+                id: string;
                 title: string;
                 apr: string;
-                subItems?: Array<{ __typename: 'GqlBalancePoolAprSubItem'; title: string; apr: string }> | null;
+                subItems?: Array<{
+                    __typename: 'GqlBalancePoolAprSubItem';
+                    id: string;
+                    title: string;
+                    apr: string;
+                }> | null;
             }>;
         };
     };
@@ -3778,9 +4011,11 @@ export const GqlPoolCardDataFragmentDoc = gql`
                 swapApr
                 total
                 items {
+                    id
                     title
                     apr
                     subItems {
+                        id
                         title
                         apr
                     }
@@ -3923,9 +4158,11 @@ export const GqlPoolMinimalFragmentDoc = gql`
                 swapApr
                 total
                 items {
+                    id
                     title
                     apr
                     subItems {
+                        id
                         title
                         apr
                     }
@@ -4770,9 +5007,11 @@ export const GetPoolDocument = gql`
                     swapApr
                     total
                     items {
+                        id
                         title
                         apr
                         subItems {
+                            id
                             title
                             apr
                         }
@@ -4853,6 +5092,14 @@ export const GetPoolDocument = gql`
                 }
             }
             ... on GqlPoolStable {
+                amp
+                tokens {
+                    ... on GqlPoolToken {
+                        ...GqlPoolToken
+                    }
+                }
+            }
+            ... on GqlPoolMetaStable {
                 amp
                 tokens {
                     ... on GqlPoolToken {

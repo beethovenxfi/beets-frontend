@@ -18,12 +18,11 @@ interface Props {
 }
 
 export function PoolInvestTypeChoice({ onShowProportional, onShowCustom }: Props) {
-    const { pool, poolService } = usePool();
+    const { pool, poolService, isStablePool } = usePool();
     const { priceForAmount } = useGetTokens();
     const { userPoolTokenBalances, investableAmount } = usePoolUserTokenBalancesInWallet();
     const { canInvestProportionally } = useInvest();
     const { data, isLoading } = usePoolGetMaxProportionalInvestmentAmount();
-    const isStablePool = pool.__typename === 'GqlPoolStable' || pool.__typename === 'GqlPoolPhantomStable';
     const proportionalSupported =
         poolService.joinGetProportionalSuggestionForFixedAmount && pool.investConfig.proportionalEnabled;
 

@@ -4,6 +4,7 @@
             "GqlPoolElement",
             "GqlPoolLinear",
             "GqlPoolLiquidityBootstrapping",
+            "GqlPoolMetaStable",
             "GqlPoolPhantomStable",
             "GqlPoolStable",
             "GqlPoolWeighted"
@@ -17,6 +18,7 @@
             "GqlPoolElement",
             "GqlPoolLinear",
             "GqlPoolLiquidityBootstrapping",
+            "GqlPoolMetaStable",
             "GqlPoolPhantomStable",
             "GqlPoolStable",
             "GqlPoolWeighted"

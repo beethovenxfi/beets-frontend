@@ -139,6 +139,14 @@ query GetPool($id: String!) {
                 }
             }
         }
+        ... on GqlPoolMetaStable {
+            amp
+            tokens {
+                ... on GqlPoolToken {
+                    ...GqlPoolToken
+                }
+            }
+        }
         ... on GqlPoolElement {
             unitSeconds
             principalToken
