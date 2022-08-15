@@ -198,7 +198,7 @@ export function TradePreviewContent({ query, onTransactionSubmitted }: Props) {
                         onConfirmed={() => refetchUserBalances()}
                         width="full"
                         size="lg"
-                        marginTop="6"
+                        marginTop="4"
                     >
                         Swap
                     </BeetsSubmitTransactionButton>
