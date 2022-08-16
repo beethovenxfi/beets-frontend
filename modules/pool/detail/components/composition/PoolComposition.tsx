@@ -18,7 +18,7 @@ import {
     Tr,
 } from '@chakra-ui/react';
 import { CornerDownRight } from 'react-feather';
-import { Column, TableOptions, useExpanded, useTable } from 'react-table';
+import { Cell, Column, TableOptions, useExpanded, useTable } from 'react-table';
 
 import Card from '~/components/card/Card';
 import React from 'react';
@@ -87,7 +87,7 @@ function PoolCompositionTable({ columns, data, hasNestedTokens }: PoolCompositio
         setHiddenColumns([]);
     }, [data]);
 
-    function parseCell(cell: any) {
+    function parseCell(cell: Cell<TableDataTemplate>) {
         // hide the 'collapse all' button when there are NO tokens in the pool have nested tokens
         if (cell.column.id === Columns.Expander && !hasNestedTokens) {
             cell.column.toggleHidden(true);
