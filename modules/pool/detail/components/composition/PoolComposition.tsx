@@ -200,7 +200,7 @@ function PoolCompositionTable({ columns, data, hasNestedTokens }: PoolCompositio
 
 export function PoolComposition() {
     const { pool } = usePool();
-    const { getUserInvestedBalance } = usePoolUserInvestedTokenBalances();
+    const { getUserInvestedBalance, data: userInvestedBalances } = usePoolUserInvestedTokenBalances();
     const { priceFor } = useGetTokens();
     const hasNestedTokens = pool.tokens.some((token) =>
         ['GqlPoolTokenLinear', 'GqlPoolTokenPhantomStable'].includes(token.__typename),
@@ -240,7 +240,7 @@ export function PoolComposition() {
         [],
     );
 
-    const getTokenData = (tokens: GqlPoolTokenUnion[]): TableData[] => {
+    function getTokenData(tokens: GqlPoolTokenUnion[]): TableData[] {
         return tokens.map((token) => {
             const userBalance = getUserInvestedBalance(token.address);
             const tokenPrice = priceFor(token.address);
@@ -256,10 +256,12 @@ export function PoolComposition() {
                 ...(hasNestedTokens && 'pool' in token && { subRows: getTokenData(token.pool.tokens) }),
             };
         });
-    };
+    }
 
-    const memoData = getTokenData(pool.tokens);
-    const data = React.useMemo((): TableDataTemplate[] => memoData, [JSON.stringify(memoData)]);
+    const data = React.useMemo(
+        (): TableDataTemplate[] => getTokenData(pool.tokens),
+        [JSON.stringify(pool.tokens), JSON.stringify(userInvestedBalances)],
+    );
 
     return (
         <Card px="2" py="2" mt={4} width="full">
