@@ -106,4 +106,5 @@ export const fantomNetworkConfig: NetworkConfig = {
     createPoolUrl: 'https://beets.fi/#/pool-create',
     launchUrl: 'https://beets.fi/#/launch',
     stakeUrl: 'https://beets.fi/#/stake',
+    minimumDustValueUSD: 0.001,
 };

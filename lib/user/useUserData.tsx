@@ -34,22 +34,30 @@ export function _useUserData() {
     }, [userAddress]);
 
     const fbeetsBalance = data?.fbeetsBalance || { totalBalance: '0', stakedBalance: '0', walletBalance: '0' };
-    const poolBalances = data?.balances || [];
-    const staking = data?.staking || [];
 
     const fbeetsValueUSD = priceForAmount({
         address: networkConfig.fbeets.address,
         amount: fbeetsBalance.totalBalance,
     });
 
-    const portfolioValueUSD =
-        fbeetsValueUSD + sum(poolBalances.map((balance) => parseFloat(balance.totalBalance) * balance.tokenPrice));
+    const poolBalances =
+        data?.balances
+            .map((balance) => {
+                return {
+                    ...balance,
+                    totalBalanceUSD:
+                        parseFloat(balance.totalBalance) * balance.tokenPrice +
+                        (balance.poolId === networkConfig.fbeets.poolId ? fbeetsValueUSD : 0),
+                };
+            })
+            .filter((balance) => balance.totalBalanceUSD > networkConfig.minimumDustValueUSD) || [];
+
+    const staking = data?.staking || [];
+
+    const portfolioValueUSD = sum(poolBalances.map((balance) => balance.totalBalanceUSD));
 
     const stakedValueUSD =
-        priceForAmount({
-            address: networkConfig.fbeets.address,
-            amount: fbeetsBalance.stakedBalance,
-        }) + sum(poolBalances.map((balance) => parseFloat(balance.stakedBalance) * balance.tokenPrice));
+        fbeetsValueUSD + sum(poolBalances.map((balance) => parseFloat(balance.stakedBalance) * balance.tokenPrice));
 
     function bptBalanceForPool(poolId: string): AmountHumanReadable {
         const bptBalance = poolBalances.find((pool) => pool.poolId === poolId)?.totalBalance || '0';
@@ -64,20 +72,8 @@ export function _useUserData() {
     }
 
     function usdBalanceForPool(poolId: string): number {
-        if (poolId === networkConfig.fbeets.poolId) {
-            const bptBalance = poolBalances.find((pool) => pool.poolId === poolId);
-            const bptValueUSD = bptBalance ? bptBalance.tokenPrice * parseFloat(bptBalance.totalBalance) : 0;
-
-            return fbeetsValueUSD + bptValueUSD;
-        }
-
-        const balance = poolBalances.find((pool) => pool.poolId === poolId);
-
-        if (!balance) {
-            return 0;
-        }
-
-        return balance.tokenPrice * parseFloat(balance.totalBalance);
+        const balanceUSD = poolBalances.find((pool) => pool.poolId === poolId)?.totalBalanceUSD;
+        return balanceUSD || 0;
     }
 
     function hasBptInWalletForPool(poolId: string): boolean {

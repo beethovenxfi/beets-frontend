@@ -68,4 +68,5 @@ export interface NetworkConfig {
     createPoolUrl: string;
     launchUrl?: string;
     stakeUrl?: string;
+    minimumDustValueUSD: number;
 }
