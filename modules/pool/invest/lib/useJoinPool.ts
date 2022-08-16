@@ -28,7 +28,6 @@ export function useJoinPool(pool: GqlPoolUnion, zapEnabled?: boolean) {
         const amountsString = tokenAmountsConcatenatedString(tokenAmountsIn, pool.allTokens);
 
         if (contractCallData.type === 'JoinPool') {
-            //TODO: need to support slippage
             const ethIndex = contractCallData.assets.findIndex((asset) => asset === AddressZero);
 
             submit({
@@ -72,7 +71,6 @@ export function useJoinPool(pool: GqlPoolUnion, zapEnabled?: boolean) {
                 walletText: `Join ${pool.name} with ${amountsString}`,
             });
         } else if (contractCallData.type === 'BatchRelayer') {
-            //TODO: need to support slippage
             submit({
                 args: [contractCallData.calls],
                 toastText: `Zap into ${networkConfig.farmTypeName} with ${amountsString}`,
