@@ -1,6 +1,5 @@
 import { Box, Flex, Grid, GridItem, HStack, Link } from '@chakra-ui/react';
 import NextImage from 'next/image';
-import BeetsLogo from '~/assets/logo/beets-bal.svg';
 import DegenBand from '~/assets/images/degen-band.png';
 import FooterImageOp from '~/assets/images/footer-OP.png';
 import DiscordIcon from '~/assets/icons/discord.svg';
@@ -10,6 +9,8 @@ import GithubIcon from '~/assets/icons/github.svg';
 import { FooterLink } from '~/modules/nav/FooterLink';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 import { networkConfig } from '~/lib/config/network-config';
+import { BeetsBalLogo } from '~/assets/logo/BeetsBalLogo';
+import { BeetsLogo } from '~/assets/logo/BeetsLogo';
 
 export function Footer() {
     const { chainId } = useNetworkConfig();
@@ -18,9 +19,7 @@ export function Footer() {
         <Box width="full" px={{ base: '4', xl: '8' }} bgColor="beets.base.800" pt="24">
             <Flex>
                 <Box flex="1">
-                    <Box mb="12">
-                        <NextImage src={BeetsLogo} />
-                    </Box>
+                    <Box mb="12">{chainId === '10' ? <BeetsBalLogo /> : <BeetsLogo />}</Box>
                     <Grid templateColumns={{ base: 'repeat(2, 1fr)', lg: 'repeat(3, 1fr)' }} gap="8">
                         <GridItem>
                             <FooterLink href="/pools" linkType="internal">

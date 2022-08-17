@@ -922,6 +922,7 @@ scalar JSON
 
 type Mutation {
     beetsSyncFbeetsRatio: String!
+    cacheAverageBlockTime: String!
     lgeCreate(lge: GqlLgeCreateInput!, signature: String!): GqlLge!
     poolInitializeSnapshotsForPool(poolId: String!): String!
     poolLoadOnChainDataForAllPools: String!

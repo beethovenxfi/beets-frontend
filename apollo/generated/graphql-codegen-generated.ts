@@ -959,6 +959,7 @@ export interface GqlUserSwapVolumeFilter {
 export interface Mutation {
     __typename: 'Mutation';
     beetsSyncFbeetsRatio: Scalars['String'];
+    cacheAverageBlockTime: Scalars['String'];
     lgeCreate: GqlLge;
     poolInitializeSnapshotsForPool: Scalars['String'];
     poolLoadOnChainDataForAllPools: Scalars['String'];

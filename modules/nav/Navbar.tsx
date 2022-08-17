@@ -12,6 +12,7 @@ import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 import { networkConfig } from '~/lib/config/network-config';
 import { NetworkSelectorPopover } from '~/modules/nav/NetworkSelectorPopover';
 import { Badge } from '@chakra-ui/layout';
+import { BeetsLogo } from '~/assets/logo/BeetsLogo';
 
 interface Props {
     scrollY: MotionValue<number>;
@@ -41,7 +42,13 @@ export function Navbar({ scrollY }: Props) {
                     </motion.div>
                     <Flex alignItems="center" mr="6" zIndex="2" cursor="pointer">
                         <NextLink href="/" chakraProps={{ _focus: { boxShadow: 'none' } }}>
-                            <BeetsBalLogo width="132px" />
+                            {chainId === '10' ? (
+                                <BeetsBalLogo width="132px" />
+                            ) : (
+                                <Box mb="2">
+                                    <BeetsLogo width="132px" />
+                                </Box>
+                            )}
                         </NextLink>
                     </Flex>
                     <Box flex="1" zIndex="2">
