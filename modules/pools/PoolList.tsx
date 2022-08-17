@@ -1,4 +1,4 @@
-import { Box, Button, Link, Text } from '@chakra-ui/react';
+import { Alert, AlertIcon, Box, Button, Link, Text, Highlight } from '@chakra-ui/react';
 import { NetworkStatus } from '@apollo/client';
 import { usePoolList } from './usePoolList';
 import { PoolListItem } from '~/modules/pools/components/PoolListItem';
@@ -17,7 +17,7 @@ function PoolList() {
     const { getToken } = useGetTokens();
     const { pools, refetch, loading, networkStatus, state, count, setPageSize, setPoolIds, showMyInvestments } =
         usePoolList();
-    const { userPoolIds, usdBalanceForPool } = useUserData();
+    const { userPoolIds, usdBalanceForPool, hasBptInWalletForPool } = useUserData();
     const userPoolIdsStr = userPoolIds.join();
 
     useEffect(() => {
@@ -28,12 +28,22 @@ function PoolList() {
 
     const poolsToRender = showMyInvestments ? orderBy(pools, (pool) => usdBalanceForPool(pool.id), 'desc') : pools;
     const poolCount = count || 0;
+    const hasUnstakedBpt =
+        showMyInvestments &&
+        pools.filter((pool) => pool.dynamicData.apr.hasRewardApr && hasBptInWalletForPool(pool.id)).length > 0;
 
     return (
         <Box>
             <PoolListMobileHeader />
             <PoolListTop />
 
+            {hasUnstakedBpt && (
+                <Alert status="warning" mb="4">
+                    <AlertIcon />
+                    You have unstaked BPT in your wallet. Incentivized pools offer additional rewards that will
+                    accumulate over time when your BPT are staked.
+                </Alert>
+            )}
             <PaginatedTable
                 items={poolsToRender}
                 currentPage={state.skip / state.first + 1}
@@ -59,6 +69,7 @@ function PoolList() {
                             tokens={item.allTokens
                                 .filter((token) => !token.isNested && !token.isPhantomBpt)
                                 .map((token) => ({ ...token, logoURI: getToken(token.address)?.logoURI || undefined }))}
+                            hasUnstakedBpt={item.dynamicData.apr.hasRewardApr && hasBptInWalletForPool(item.id)}
                         />
                     );
                 }}

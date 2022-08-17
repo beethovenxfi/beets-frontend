@@ -10,12 +10,14 @@ scalar Date
 
 type GqlBalancePoolAprItem {
     apr: BigDecimal!
+    id: ID!
     subItems: [GqlBalancePoolAprSubItem!]
     title: String!
 }
 
 type GqlBalancePoolAprSubItem {
     apr: BigDecimal!
+    id: ID!
     title: String!
 }
 
@@ -52,6 +54,12 @@ type GqlHistoricalTokenPrice {
 type GqlHistoricalTokenPriceEntry {
     price: Float!
     timestamp: String!
+}
+
+type GqlLatestSyncedBlocks {
+    poolSyncBlock: BigInt!
+    userStakeSyncBlock: BigInt!
+    userWalletSyncBlock: BigInt!
 }
 
 type GqlLge {
@@ -265,6 +273,7 @@ input GqlPoolFilter {
 }
 
 enum GqlPoolFilterCategory {
+    BLACK_LISTED
     INCENTIVIZED
 }
 
@@ -411,6 +420,24 @@ type GqlPoolLiquidityBootstrapping implements GqlPoolBase {
     staking: GqlPoolStaking
     symbol: String!
     tokens: [GqlPoolTokenUnion!]!
+    withdrawConfig: GqlPoolWithdrawConfig!
+}
+
+type GqlPoolMetaStable implements GqlPoolBase {
+    address: Bytes!
+    allTokens: [GqlPoolTokenExpanded!]!
+    amp: BigInt!
+    createTime: Int!
+    decimals: Int!
+    dynamicData: GqlPoolDynamicData!
+    factory: Bytes
+    id: ID!
+    investConfig: GqlPoolInvestConfig!
+    name: String!
+    owner: Bytes!
+    staking: GqlPoolStaking
+    symbol: String!
+    tokens: [GqlPoolToken!]!
     withdrawConfig: GqlPoolWithdrawConfig!
 }
 
@@ -678,6 +705,7 @@ union GqlPoolUnion =
       GqlPoolElement
     | GqlPoolLinear
     | GqlPoolLiquidityBootstrapping
+    | GqlPoolMetaStable
     | GqlPoolPhantomStable
     | GqlPoolStable
     | GqlPoolWeighted
@@ -894,8 +922,9 @@ scalar JSON
 
 type Mutation {
     beetsSyncFbeetsRatio: String!
+    cacheAverageBlockTime: String!
     lgeCreate(lge: GqlLgeCreateInput!, signature: String!): GqlLge!
-    poolInitializeSnapshotsForBoostedPool(poolId: String!): String!
+    poolInitializeSnapshotsForPool(poolId: String!): String!
     poolLoadOnChainDataForAllPools: String!
     poolLoadOnChainDataForPoolsWithActiveUpdates: String!
     poolLoadSnapshotsForAllPools: String!
@@ -904,6 +933,7 @@ type Mutation {
     poolSyncAllPoolsFromSubgraph: [String!]!
     poolSyncLatestSnapshotsForAllPools(daysToSync: Int): String!
     poolSyncNewPoolsFromSubgraph: [String!]!
+    poolSyncPool(poolId: String!): String!
     poolSyncPoolAllTokensRelationship: String!
     poolSyncSanityPoolData: String!
     poolSyncStakingForPools: String!
@@ -923,6 +953,7 @@ type Mutation {
     userInitWalletBalancesForAllPools: String!
     userInitWalletBalancesForPool(poolId: String!): String!
     userSyncBalance(poolId: String!): String!
+    userSyncBalanceAllPools: String!
     userSyncStakedBalances: String!
     userSyncWalletBalancesForAllPools: String!
 }
@@ -930,7 +961,11 @@ type Mutation {
 type Query {
     beetsGetFbeetsRatio: String!
     blocksGetAverageBlockTime: Float!
+    blocksGetBlocksPerDay: Float!
+    blocksGetBlocksPerSecond: Float!
+    blocksGetBlocksPerYear: Float!
     contentGetNewsItems: [GqlContentNewsItem!]!
+    latestSyncedBlocks: GqlLatestSyncedBlocks!
     lge(id: ID!): GqlLge!
     lges: [GqlLge!]!
     poolGetBatchSwaps(first: Int, skip: Int, where: GqlPoolSwapFilter): [GqlPoolBatchSwap!]!

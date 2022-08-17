@@ -56,9 +56,11 @@ export const GqlPoolCardData = gql`
                 swapApr
                 total
                 items {
+                    id
                     title
                     apr
                     subItems {
+                        id
                         title
                         apr
                     }
@@ -201,9 +203,11 @@ export const GqlPoolMinimal = gql`
                 swapApr
                 total
                 items {
+                    id
                     title
                     apr
                     subItems {
+                        id
                         title
                         apr
                     }
@@ -348,6 +352,8 @@ export const GetAppGlobalData = gql`
             address
         }
         beetsGetFbeetsRatio
+        blocksGetBlocksPerDay
+        blocksGetAverageBlockTime
     }
 `;
 export const GetAppGlobalPollingData = gql`
@@ -364,6 +370,8 @@ export const GetAppGlobalPollingData = gql`
             swapFee24h
             swapVolume24h
         }
+        blocksGetBlocksPerDay
+        blocksGetAverageBlockTime
     }
 `;
 export const GetTokens = gql`
@@ -424,6 +432,12 @@ export const GetProtocolData = gql`
             swapFee24h
             swapVolume24h
         }
+    }
+`;
+export const GetBlocksPerDay = gql`
+    query GetBlocksPerDay {
+        blocksPerDay: blocksGetBlocksPerDay
+        avgBlockTime: blocksGetAverageBlockTime
     }
 `;
 export const GetUserData = gql`
@@ -560,9 +574,11 @@ export const GetPool = gql`
                     swapApr
                     total
                     items {
+                        id
                         title
                         apr
                         subItems {
+                            id
                             title
                             apr
                         }
@@ -643,6 +659,14 @@ export const GetPool = gql`
                 }
             }
             ... on GqlPoolStable {
+                amp
+                tokens {
+                    ... on GqlPoolToken {
+                        ...GqlPoolToken
+                    }
+                }
+            }
+            ... on GqlPoolMetaStable {
                 amp
                 tokens {
                     ... on GqlPoolToken {

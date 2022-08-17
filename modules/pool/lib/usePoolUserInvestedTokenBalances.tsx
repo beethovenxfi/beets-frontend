@@ -6,7 +6,7 @@ import { createContext, ReactNode, useContext } from 'react';
 
 export function _usePoolUserInvestedTokenBalances() {
     const { poolService, pool } = usePool();
-    const { userTotalBptBalance } = usePoolUserBptBalance();
+    const { userTotalBptBalance, hasBpt } = usePoolUserBptBalance();
     const { selectedWithdrawTokenAddresses } = useWithdraw();
 
     const query = useQuery(
@@ -19,7 +19,7 @@ export function _usePoolUserInvestedTokenBalances() {
 
             return result;
         },
-        {},
+        { enabled: hasBpt },
     );
 
     function getUserInvestedBalance(tokenAddress: string) {

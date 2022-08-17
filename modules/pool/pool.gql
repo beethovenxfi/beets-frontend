@@ -47,9 +47,11 @@ query GetPool($id: String!) {
                 swapApr
                 total
                 items {
+                    id
                     title
                     apr
                     subItems {
+                        id
                         title
                         apr
                     }
@@ -130,6 +132,14 @@ query GetPool($id: String!) {
             }
         }
         ... on GqlPoolStable {
+            amp
+            tokens {
+                ... on GqlPoolToken {
+                    ...GqlPoolToken
+                }
+            }
+        }
+        ... on GqlPoolMetaStable {
             amp
             tokens {
                 ... on GqlPoolToken {

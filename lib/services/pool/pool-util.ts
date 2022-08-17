@@ -12,6 +12,7 @@ import { PoolWeightedBoostedService } from '~/lib/services/pool/pool-weighted-bo
 import { batchRelayerService } from '~/lib/services/batch-relayer/batch-relayer.service';
 import { networkConfig } from '~/lib/config/network-config';
 import { networkProvider } from '~/lib/global/network';
+import { PoolMetaStableService } from '~/lib/services/pool/pool-meta-stable.service';
 
 export function poolGetTokensWithoutPhantomBpt(pool: GqlPoolUnion | GqlPoolPhantomStableNested | GqlPoolLinearNested) {
     return pool.tokens.filter((token) => token.address !== pool.address);
@@ -57,6 +58,8 @@ export function poolGetServiceForPool(pool: GqlPoolUnion): PoolService {
             return new PoolStableService(pool, batchRelayerService, networkConfig.wethAddress);
         case 'GqlPoolPhantomStable':
             return new PoolPhantomStableService(pool, batchRelayerService, networkConfig.wethAddress, networkProvider);
+        case 'GqlPoolMetaStable':
+            return new PoolMetaStableService(pool, batchRelayerService, networkConfig.wethAddress);
     }
 
     throw new Error('unsupported pool type');
@@ -72,6 +75,8 @@ export function poolGetTypeName(pool: GqlPoolUnion) {
             return 'Stable phantom pool';
         case 'GqlPoolLiquidityBootstrapping':
             return 'Liquidity bootstrapping pool';
+        case 'GqlPoolMetaStable':
+            return 'MetaStable pool';
         default:
             return 'unknown';
     }

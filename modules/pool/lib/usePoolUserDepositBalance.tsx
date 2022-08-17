@@ -13,7 +13,7 @@ export function _usePoolUserDepositBalance() {
     const { selectedWithdrawTokenAddresses } = useWithdraw();
 
     const query = useQuery(
-        ['exitGetProportionalWithdrawEstimate', pool.id, userTotalBptBalance, selectedWithdrawTokenAddresses],
+        ['usePoolUserDepositBalance', pool.id, userTotalBptBalance, selectedWithdrawTokenAddresses],
         async () => {
             const result = await poolService.exitGetProportionalWithdrawEstimate(
                 userTotalBptBalance,
@@ -22,7 +22,7 @@ export function _usePoolUserDepositBalance() {
 
             return result;
         },
-        {},
+        { enabled: parseFloat(userTotalBptBalance) > 0 },
     );
 
     return {

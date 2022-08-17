@@ -43,7 +43,7 @@ export function useBatchSwap() {
         const limits = tokenAddresses.map((tokenAddress, i) => {
             if (swapType === 'EXACT_IN') {
                 if (isSameAddress(tokenAddress, tokenIn) || (isEth(tokenIn) && tokenAddress === AddressZero)) {
-                    return oldBnumScaleAmount(tokenInAmount, tokenInDefinition.decimals).toString();
+                    return parseUnits(tokenInAmount, tokenInDefinition.decimals).toString();
                 } else if (isSameAddress(tokenAddress, tokenOut) || (isEth(tokenOut) && tokenAddress === AddressZero)) {
                     return oldBnumScaleAmount(tokenOutAmount, tokenOutDefinition.decimals)
                         .times(slippageDifference)
@@ -56,7 +56,7 @@ export function useBatchSwap() {
                         .times(slippageAddition)
                         .toFixed(0);
                 } else if (isSameAddress(tokenAddress, tokenOut) || (isEth(tokenOut) && tokenAddress === AddressZero)) {
-                    return oldBnumScaleAmount(tokenOutAmount, tokenOutDefinition.decimals).toString();
+                    return parseUnits(tokenOutAmount, tokenOutDefinition.decimals).toString();
                 }
             }
 

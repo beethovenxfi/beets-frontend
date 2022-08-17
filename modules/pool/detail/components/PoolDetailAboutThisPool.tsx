@@ -128,7 +128,7 @@ export function PoolDetailAboutThisPool() {
                         <Box flex="1" fontWeight="semibold">
                             Number of investors
                         </Box>
-                        <Box>{numberFormatLargeValue(dynamicData.holdersCount)}</Box>
+                        <Box>{numberFormatLargeValue(parseInt(dynamicData.holdersCount) - 1)}</Box>
                     </CardRow>
                 </Card>
 

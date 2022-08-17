@@ -15,10 +15,10 @@ export default function PoolStats() {
         setActiveTab(tabIndex);
     };
     return (
-        <Card padding="4" height="full">
+        <Card px="2" py="4" height="full">
             <VStack height="full" spacing="4">
                 {hasBpt && (
-                    <Tabs width="full" variant="soft-rounded" display="flex" onChange={handleTabChanged}>
+                    <Tabs width="full" variant="soft-rounded" display="flex" onChange={handleTabChanged} px="2">
                         <TabList>
                             <HStack spacing="2">
                                 <BeetsTab paddingX="4" paddingY="2" fontSize="xs">

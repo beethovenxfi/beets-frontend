@@ -14,14 +14,20 @@ interface Props extends BoxProps {
     userBalance?: AmountHumanReadable;
     showUserBalance: boolean;
     tokens: TokenAvatarSetInListTokenData[];
+    hasUnstakedBpt?: boolean;
 }
 
 const MemoizedTokenAvatarSetInList = memo(TokenAvatarSetInList);
 const MemoizedAprTooltip = memo(AprTooltip);
 
-export function PoolListItem({ pool, userBalance, showUserBalance, tokens, ...rest }: Props) {
+export function PoolListItem({ pool, userBalance, showUserBalance, tokens, hasUnstakedBpt, ...rest }: Props) {
     return (
-        <Box mb={{ base: '4', lg: '0' }} borderRadius={{ base: 'md', lg: '0' }} {...rest}>
+        <Box
+            mb={{ base: '4', lg: '0' }}
+            borderRadius={{ base: 'md', lg: '0' }}
+            {...rest}
+            bgColor={showUserBalance && hasUnstakedBpt ? 'rgba(251, 211, 141, 0.16)' : undefined}
+        >
             <Link href={`/pool/${pool.id}`} passHref>
                 <a>
                     <Grid
