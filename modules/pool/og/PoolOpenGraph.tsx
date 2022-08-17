@@ -29,7 +29,10 @@ export function PoolOpenGraph() {
                 <meta property="og:url" content="https://beets.fi/" />
                 <meta property="og:title" content={pool.name} />
                 <meta property="og:description" content="A nice pool to get started with..." />
-                <meta property="og:image" content={`https://beets-frontend-iota.vercel.app/images/${pool.id}.png`} />
+                <meta
+                    property="og:image"
+                    content={`https://beets-frontend-git-feature-og-poc-beethovenx.vercel.app/images/${pool.id}.png`}
+                />
 
                 <meta property="twitter:card" content="summary_large_image" />
                 <meta property="twitter:url" content="https://app.beets.fi/" />
@@ -37,7 +40,7 @@ export function PoolOpenGraph() {
                 <meta property="twitter:description" content="A nice pool to get started with..." />
                 <meta
                     property="twitter:image"
-                    content={`https://beets-frontend-iota.vercel.app/images/${pool.id}.png`}
+                    content={`https://beets-frontend-git-feature-og-poc-beethovenx.vercel.app/images/${pool.id}.png`}
                 />
             </Head>
             <Grid
