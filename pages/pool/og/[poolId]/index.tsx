@@ -20,10 +20,25 @@ const PoolPageOpenGraph = ({ pool }: Props) => {
     return (
         <>
             <Head>
-                <title>Beethoven X | {pool.name}</title>
-                <meta name="title" content={`Beethoven X | ${pool.name}`} />
-                <meta property="og:title" content={`Beethoven X | ${pool.name}`} />
-                <meta property="twitter:title" content={`Beethoven X | ${pool.name}`} />
+                <title>{pool.name}</title>
+                <meta name="title" content={pool.name} />
+                <meta name="description" content="A nice pool to get started with..." />
+                <meta property="og:type" content="website" />
+                <meta property="og:url" content="https://beets.fi/" />
+                <meta property="og:title" content={pool.name} />
+                <meta property="og:description" content="A nice pool to get started with..." />
+                <meta
+                    property="og:image"
+                    content={`https://beets-frontend-git-feature-og-poc-beethovenx.vercel.app/images/${pool.id}.png`}
+                />
+                <meta property="twitter:card" content="summary_large_image" />
+                <meta property="twitter:url" content="https://app.beets.fi/" />
+                <meta property="twitter:title" content={pool.name} />
+                <meta property="twitter:description" content="A nice pool to get started with..." />
+                <meta
+                    property="twitter:image"
+                    content={`https://beets-frontend-git-feature-og-poc-beethovenx.vercel.app/images/${pool.id}.png`}
+                />
             </Head>
             <PoolProvider pool={pool}>
                 <PoolOpenGraph />
