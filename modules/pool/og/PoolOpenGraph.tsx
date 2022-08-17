@@ -1,6 +1,41 @@
-import { Box, Wrap, Text, WrapItem, Grid, GridItem, VStack } from '@chakra-ui/react';
+import { Box, Wrap, Text, WrapItem, Grid, GridItem, VStack, Flex } from '@chakra-ui/react';
+import numeral from 'numeral';
+import { BeetsBox } from '~/components/box/BeetsBox';
+import TokenAvatar from '~/components/token/TokenAvatar';
+import { useGetTokens } from '~/lib/global/useToken';
 import { usePool } from '../lib/usePool';
-import { PoolTokenPill } from '~/components/token/PoolTokenPill';
+
+interface Token {
+    address: string;
+    weight?: string | null;
+}
+
+interface Props {
+    token: Token;
+    size?: string;
+}
+
+export function PoolTokenPill({ token }: Props) {
+    const { getToken } = useGetTokens();
+
+    return (
+        <BeetsBox p="2" width="250px">
+            <Flex alignItems="center" justifyContent="space-evenly">
+                <TokenAvatar address={token.address} size="xl" />
+                <VStack>
+                    {token.weight ? (
+                        <Text ml="2" fontWeight="bold" fontSize="2rem">
+                            {numeral(token.weight).format('%')}
+                        </Text>
+                    ) : null}
+                    <Text ml="2" fontWeight="bold" fontSize="2rem">
+                        {getToken(token.address)?.symbol}
+                    </Text>
+                </VStack>
+            </Flex>
+        </BeetsBox>
+    );
+}
 
 export function PoolOpenGraph() {
     const { pool } = usePool();
@@ -16,7 +51,7 @@ export function PoolOpenGraph() {
                         <Wrap>
                             {pool.tokens.map((token, index) => (
                                 <WrapItem key={index}>
-                                    <PoolTokenPill token={token} size="xl" />
+                                    <PoolTokenPill token={token} />
                                 </WrapItem>
                             ))}
                         </Wrap>
