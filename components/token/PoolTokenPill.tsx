@@ -11,15 +11,16 @@ interface Token {
 
 interface Props {
     token: Token;
+    size?: string;
 }
 
-export function PoolTokenPill({ token }: Props) {
+export function PoolTokenPill({ token, size = 'xs' }: Props) {
     const { getToken } = useGetTokens();
 
     return (
         <BeetsBox p="2">
-            <Flex alignItems="center">
-                <TokenAvatar address={token.address} size="xs" />
+            <Flex alignItems="center" justify="center">
+                <TokenAvatar address={token.address} size={size} />
                 <Text ml="2">{getToken(token.address)?.symbol}</Text>
                 {token.weight ? <Text ml="2">{numeral(token.weight).format('%')}</Text> : null}
             </Flex>
