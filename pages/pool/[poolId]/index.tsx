@@ -48,26 +48,21 @@ const PoolPage = ({ pool }: Props) => {
     );
 };
 
-
-export const getServerSideProps: GetServerSideProps<any, {poolId: string}> = async ({res, params } ) => {
-    // we cache for 15 sec and return a stale version while refetching for maximum 1 minute
+export const getServerSideProps: GetServerSideProps<any, { poolId: string }> = async ({ res, params }) => {
+    // we cache for 15 sec and return a stale version while refetching for maximum 5min15s
     // see https://nextjs.org/docs/going-to-production#caching
-    res.setHeader(
-        'Cache-Control',
-        'public, s-maxage=15, stale-while-revalidate=59'
-    )
+    res.setHeader('Cache-Control', 'public, s-maxage=15, stale-while-revalidate=300');
     const client = initializeApolloClient();
     const { data } = await client.query<GetPoolQuery, GetPoolQueryVariables>({
         query: GetPool,
         variables: { id: params!.poolId },
     });
 
+    const { props } = await loadApolloState({ client, props: { pool: data.pool } });
 
     return {
-        props: {
-           pool: data.pool
-        }
-    }
-}
+        props,
+    };
+};
 
 export default PoolPage;
