@@ -22,28 +22,27 @@ const PoolPage = ({ pool }: Props) => {
         return <FallbackPlaceholder />;
     }
 
+    const TITLE = `Beethoven X | ${pool.name}`;
+    const DESCRIPTION = 'The future of DeFi re-imagineered. Your next generation Decentralised Exchange.';
+    const URL = `${process.env.VERCEL_URL}/pool/${pool.id}`;
+    const IMG_URL = `${process.env.VERCEL_URL}/images/${pool.id}.png`;
+
     return (
         <>
             <Head>
-                <title>Beethoven X | {pool.name}</title>
-                <meta name="title" content={`Beethoven X | ${pool.name}`} />
-                <meta name="description" content="A nice pool to get started with..." />
+                <title>{TITLE}</title>
+                <meta name="title" content={TITLE} />
+                <meta name="description" content={DESCRIPTION} />
                 <meta property="og:type" content="website" />
-                <meta property="og:url" content="https://beets.fi/" />
-                <meta property="og:title" content={`Beethoven X | ${pool.name}`} />
-                <meta property="og:description" content="A nice pool to get started with..." />
-                <meta
-                    property="og:image"
-                    content={`https://beets-frontend-git-feature-og-poc-beethovenx.vercel.app/images/${pool.id}.png`}
-                />
+                <meta property="og:url" content={URL} />
+                <meta property="og:title" content={TITLE} />
+                <meta property="og:description" content={DESCRIPTION} />
+                <meta property="og:image" content={IMG_URL} />
                 <meta property="twitter:card" content="summary_large_image" />
-                <meta property="twitter:url" content="https://app.beets.fi/" />
-                <meta property="twitter:title" content={`Beethoven X | ${pool.name}`} />
-                <meta property="twitter:description" content="A nice pool to get started with..." />
-                <meta
-                    property="twitter:image"
-                    content={`https://beets-frontend-git-feature-og-poc-beethovenx.vercel.app/images/${pool.id}.png`}
-                />
+                <meta property="twitter:url" content={URL} />
+                <meta property="twitter:title" content={TITLE} />
+                <meta property="twitter:description" content={DESCRIPTION} />
+                <meta property="twitter:image" content={IMG_URL} />
             </Head>
             <PoolProvider pool={pool}>
                 <PoolUserBptBalanceProvider>

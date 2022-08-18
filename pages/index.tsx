@@ -4,39 +4,27 @@ import { initializeApolloClient, loadApolloState } from '~/apollo/client';
 import { GetHomeData } from '~/apollo/generated/operations';
 
 function HomePage() {
+    const TITLE = 'Beethoven X';
+    const DESCRIPTION = 'The future of DeFi re-imagineered. Your next generation Decentralised Exchange.';
+    const URL = `${process.env.VERCEL_URL}`;
+    const IMG_URL = 'https://beethoven-assets.s3.eu-central-1.amazonaws.com/social-image.png';
+
     return (
         <>
             <Head>
-                <meta name="title" content="Beethoven X" />
-                <meta
-                    name="description"
-                    content="The future of DeFi re-imagineered. Your next generation Decentralised Exchange."
-                />
-
+                <meta name="title" content={TITLE} />
+                <meta name="description" content={DESCRIPTION} />
                 <meta property="og:type" content="website" />
-                <meta property="og:url" content={`${process.env.VERCEL_URL}`} />
-                <meta property="og:title" content="Beethoven X" />
-                <meta
-                    property="og:description"
-                    content="The future of DeFi re-imagineered. Your next generation Decentralised Exchange."
-                />
-                <meta
-                    property="og:image"
-                    content="https://beethoven-assets.s3.eu-central-1.amazonaws.com/social-image.png"
-                />
-
+                <meta property="og:url" content={URL} />
+                <meta property="og:title" content={TITLE} />
+                <meta property="og:description" content={DESCRIPTION} />
+                <meta property="og:image" content={IMG_URL} />
                 <meta property="twitter:card" content="summary_large_image" />
-                <meta property="twitter:url" content={`${process.env.VERCEL_URL}`} />
-                <meta property="twitter:title" content="Beethoven X" />
-                <meta
-                    property="twitter:description"
-                    content="The future of DeFi re-imagineered. Your next generation Decentralised Exchange."
-                />
-                <meta
-                    property="twitter:image"
-                    content="https://beethoven-assets.s3.eu-central-1.amazonaws.com/social-image.png"
-                />
-                <title>Beethoven X</title>
+                <meta property="twitter:url" content={URL} />
+                <meta property="twitter:title" content={TITLE} />
+                <meta property="twitter:description" content={DESCRIPTION} />
+                <meta property="twitter:image" content={IMG_URL} />
+                <title>{TITLE}</title>
             </Head>
             <Home />
         </>
