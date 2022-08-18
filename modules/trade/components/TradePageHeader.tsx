@@ -6,9 +6,9 @@ import { PercentChangeBadge } from '~/components/badge/PercentChangeBadge';
 import { InfoButton } from '~/components/info-button/InfoButton';
 
 export function TradePageHeader() {
-    const { tokenOut, tokenIn, currentRatio } = useTradeData();
+    const { tokenOut, tokenIn, currentRatio, reverseRatio } = useTradeData();
     const { startingRatio, range } = useTradeChart();
-    const percentChange = startingRatio ? (currentRatio - startingRatio) / startingRatio : null;
+    const percentChange = startingRatio ? (reverseRatio - startingRatio) / startingRatio : null;
 
     return (
         <>
@@ -17,13 +17,13 @@ export function TradePageHeader() {
                     1
                     <Text as="span" fontSize="lg" fontWeight="normal" color="gray.100">
                         {' '}
-                        {tokenOut?.symbol}
+                        {tokenIn?.symbol}
                         {' = '}
                     </Text>
-                    {tokenFormatAmount(currentRatio)}
+                    {tokenFormatAmount(reverseRatio)}
                     <Text as="span" fontSize="lg" fontWeight="normal" color="gray.100">
                         {' '}
-                        {tokenIn?.symbol}
+                        {tokenOut?.symbol}
                     </Text>
                 </Text>
                 <Box display="flex" alignItems="flex-end" mb="6px" ml="1">

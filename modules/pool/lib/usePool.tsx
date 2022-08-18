@@ -26,7 +26,7 @@ export const PoolContext = createContext<PoolContextType | null>(null);
 
 export function PoolProvider({ pool: poolFromProps, children }: { pool: GqlPoolUnion; children: any }) {
     const networkConfig = useNetworkConfig();
-    const { data, networkStatus, startPolling } = useGetPoolQuery({
+    const { data, networkStatus, startPolling, refetch } = useGetPoolQuery({
         variables: { id: poolFromProps.id },
         notifyOnNetworkStatusChange: true,
     });
@@ -72,6 +72,7 @@ export function PoolProvider({ pool: poolFromProps, children }: { pool: GqlPoolU
     });
 
     useEffect(() => {
+        refetch();
         poolService.updatePool(pool);
     }, [networkStatus]);
 
