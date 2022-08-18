@@ -909,6 +909,18 @@ type GqlUserPoolBalance {
     walletBalance: AmountHumanReadable!
 }
 
+type GqlUserPoolSnapshot {
+    farmBalance: AmountHumanReadable!
+    fees24h: AmountHumanReadable!
+    gaugeBalance: AmountHumanReadable!
+    id: ID!
+    percentShare: Float!
+    timestamp: Int!
+    totalBalance: AmountHumanReadable!
+    valueUSD: AmountHumanReadable!
+    walletBalance: AmountHumanReadable!
+}
+
 input GqlUserSwapVolumeFilter {
     poolIdIn: [String!]
     tokenInIn: [String!]
@@ -929,6 +941,7 @@ type Mutation {
     poolLoadOnChainDataForPoolsWithActiveUpdates: String!
     poolLoadSnapshotsForAllPools: String!
     poolReloadAllPoolAprs: String!
+    poolReloadPoolNestedTokens(poolId: String!): String!
     poolReloadStakingForAllPools: String!
     poolSyncAllPoolsFromSubgraph: [String!]!
     poolSyncLatestSnapshotsForAllPools(daysToSync: Int): String!
@@ -945,6 +958,7 @@ type Mutation {
     poolUpdateLiquidityValuesForAllPools: String!
     poolUpdateVolumeAndFeeValuesForAllPools: String!
     protocolCacheMetrics: String!
+    tokenDeletePrice(timestamp: Int!, tokenAddress: String!): Boolean!
     tokenInitChartData(tokenAddress: String!): String!
     tokenReloadTokenPrices: Boolean
     tokenSyncTokenDefinitions: String!
@@ -959,6 +973,7 @@ type Mutation {
 }
 
 type Query {
+    beetsGetBeetsPrice: String!
     beetsGetFbeetsRatio: String!
     blocksGetAverageBlockTime: Float!
     blocksGetBlocksPerDay: Float!
@@ -1022,6 +1037,7 @@ type Query {
     userGetFbeetsBalance: GqlUserFbeetsBalance!
     userGetPoolBalances: [GqlUserPoolBalance!]!
     userGetPoolJoinExits(first: Int = 10, poolId: String!, skip: Int = 0): [GqlPoolJoinExit!]!
+    userGetPoolSnapshots(numDays: Int!, poolId: String!): [GqlUserPoolSnapshot!]!
     userGetStaking: [GqlPoolStaking!]!
     userGetSwaps(first: Int = 10, poolId: String!, skip: Int = 0): [GqlPoolSwap!]!
 }

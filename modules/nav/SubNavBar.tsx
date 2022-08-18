@@ -5,15 +5,14 @@ import { BeetsBox } from '~/components/box/BeetsBox';
 import TokenAvatar from '~/components/token/TokenAvatar';
 import numeral from 'numeral';
 import { SubNavBarStat } from '~/modules/nav/SubNavBarStat';
-import { useGetTokens } from '~/lib/global/useToken';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 import { NetworkSelectorPopover } from '~/modules/nav/NetworkSelectorPopover';
 
 export function SubNavBar() {
     const networkConfig = useNetworkConfig();
-    const { priceFor } = useGetTokens();
     const { data, loading } = useGetProtocolDataQuery({ fetchPolicy: 'cache-first' });
     const protocolData = data?.protocolData;
+    const beetsPrice = data?.beetsPrice;
 
     return (
         <HStack px={{ base: '4', xl: '8' }}>
@@ -48,11 +47,11 @@ export function SubNavBar() {
                 />
                 <HStack>
                     <TokenAvatar address={networkConfig.beets.address} style={{ width: '20px', height: '20px' }} />
-                    {loading && !protocolData ? (
+                    {loading && !beetsPrice ? (
                         <Skeleton height="16px" width="54px" />
                     ) : (
                         <Text fontWeight="semibold" fontSize={{ base: 'sm', lg: 'md' }}>
-                            {numeral(priceFor(networkConfig.beets.address)).format('$0.00[00]')}
+                            {numeral(beetsPrice).format('$0.00[00]')}
                         </Text>
                     )}
                 </HStack>

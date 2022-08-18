@@ -33,6 +33,7 @@ query GetAppGlobalPollingData {
     }
     blocksGetBlocksPerDay
     blocksGetAverageBlockTime
+    beetsGetBeetsPrice
 }
 
 query GetTokens {
@@ -88,9 +89,14 @@ query GetProtocolData {
         swapFee24h
         swapVolume24h
     }
+    beetsPrice: beetsGetBeetsPrice
 }
 
 query GetBlocksPerDay {
     blocksPerDay: blocksGetBlocksPerDay
     avgBlockTime: blocksGetAverageBlockTime
+}
+
+query GetBeetsPrice {
+    beetsPrice: beetsGetBeetsPrice
 }

@@ -950,6 +950,19 @@ export interface GqlUserPoolBalance {
     walletBalance: Scalars['AmountHumanReadable'];
 }
 
+export interface GqlUserPoolSnapshot {
+    __typename: 'GqlUserPoolSnapshot';
+    farmBalance: Scalars['AmountHumanReadable'];
+    fees24h: Scalars['AmountHumanReadable'];
+    gaugeBalance: Scalars['AmountHumanReadable'];
+    id: Scalars['ID'];
+    percentShare: Scalars['Float'];
+    timestamp: Scalars['Int'];
+    totalBalance: Scalars['AmountHumanReadable'];
+    valueUSD: Scalars['AmountHumanReadable'];
+    walletBalance: Scalars['AmountHumanReadable'];
+}
+
 export interface GqlUserSwapVolumeFilter {
     poolIdIn?: InputMaybe<Array<Scalars['String']>>;
     tokenInIn?: InputMaybe<Array<Scalars['String']>>;
@@ -966,6 +979,7 @@ export interface Mutation {
     poolLoadOnChainDataForPoolsWithActiveUpdates: Scalars['String'];
     poolLoadSnapshotsForAllPools: Scalars['String'];
     poolReloadAllPoolAprs: Scalars['String'];
+    poolReloadPoolNestedTokens: Scalars['String'];
     poolReloadStakingForAllPools: Scalars['String'];
     poolSyncAllPoolsFromSubgraph: Array<Scalars['String']>;
     poolSyncLatestSnapshotsForAllPools: Scalars['String'];
@@ -982,6 +996,7 @@ export interface Mutation {
     poolUpdateLiquidityValuesForAllPools: Scalars['String'];
     poolUpdateVolumeAndFeeValuesForAllPools: Scalars['String'];
     protocolCacheMetrics: Scalars['String'];
+    tokenDeletePrice: Scalars['Boolean'];
     tokenInitChartData: Scalars['String'];
     tokenReloadTokenPrices?: Maybe<Scalars['Boolean']>;
     tokenSyncTokenDefinitions: Scalars['String'];
@@ -1004,12 +1019,21 @@ export interface MutationPoolInitializeSnapshotsForPoolArgs {
     poolId: Scalars['String'];
 }
 
+export interface MutationPoolReloadPoolNestedTokensArgs {
+    poolId: Scalars['String'];
+}
+
 export interface MutationPoolSyncLatestSnapshotsForAllPoolsArgs {
     daysToSync?: InputMaybe<Scalars['Int']>;
 }
 
 export interface MutationPoolSyncPoolArgs {
     poolId: Scalars['String'];
+}
+
+export interface MutationTokenDeletePriceArgs {
+    timestamp: Scalars['Int'];
+    tokenAddress: Scalars['String'];
 }
 
 export interface MutationTokenInitChartDataArgs {
@@ -1026,6 +1050,7 @@ export interface MutationUserSyncBalanceArgs {
 
 export interface Query {
     __typename: 'Query';
+    beetsGetBeetsPrice: Scalars['String'];
     beetsGetFbeetsRatio: Scalars['String'];
     blocksGetAverageBlockTime: Scalars['Float'];
     blocksGetBlocksPerDay: Scalars['Float'];
@@ -1061,6 +1086,7 @@ export interface Query {
     userGetFbeetsBalance: GqlUserFbeetsBalance;
     userGetPoolBalances: Array<GqlUserPoolBalance>;
     userGetPoolJoinExits: Array<GqlPoolJoinExit>;
+    userGetPoolSnapshots: Array<GqlUserPoolSnapshot>;
     userGetStaking: Array<GqlPoolStaking>;
     userGetSwaps: Array<GqlPoolSwap>;
 }
@@ -1174,6 +1200,11 @@ export interface QueryUserGetPoolJoinExitsArgs {
     first?: InputMaybe<Scalars['Int']>;
     poolId: Scalars['String'];
     skip?: InputMaybe<Scalars['Int']>;
+}
+
+export interface QueryUserGetPoolSnapshotsArgs {
+    numDays: Scalars['Int'];
+    poolId: Scalars['String'];
 }
 
 export interface QueryUserGetSwapsArgs {
@@ -1321,6 +1352,7 @@ export type GetAppGlobalPollingDataQuery = {
     __typename: 'Query';
     blocksGetBlocksPerDay: number;
     blocksGetAverageBlockTime: number;
+    beetsGetBeetsPrice: string;
     tokenGetCurrentPrices: Array<{ __typename: 'GqlTokenPrice'; price: number; address: string }>;
     protocolMetrics: {
         __typename: 'GqlProtocolMetrics';
@@ -1391,6 +1423,7 @@ export type GetProtocolDataQueryVariables = Exact<{ [key: string]: never }>;
 
 export type GetProtocolDataQuery = {
     __typename: 'Query';
+    beetsPrice: string;
     protocolData: {
         __typename: 'GqlProtocolMetrics';
         totalLiquidity: string;
@@ -1405,6 +1438,10 @@ export type GetProtocolDataQuery = {
 export type GetBlocksPerDayQueryVariables = Exact<{ [key: string]: never }>;
 
 export type GetBlocksPerDayQuery = { __typename: 'Query'; blocksPerDay: number; avgBlockTime: number };
+
+export type GetBeetsPriceQueryVariables = Exact<{ [key: string]: never }>;
+
+export type GetBeetsPriceQuery = { __typename: 'Query'; beetsPrice: string };
 
 export type GetUserDataQueryVariables = Exact<{ [key: string]: never }>;
 
@@ -4399,6 +4436,7 @@ export const GetAppGlobalPollingDataDocument = gql`
         }
         blocksGetBlocksPerDay
         blocksGetAverageBlockTime
+        beetsGetBeetsPrice
     }
 `;
 
@@ -4631,6 +4669,7 @@ export const GetProtocolDataDocument = gql`
             swapFee24h
             swapVolume24h
         }
+        beetsPrice: beetsGetBeetsPrice
     }
 `;
 
@@ -4701,6 +4740,42 @@ export function useGetBlocksPerDayLazyQuery(
 export type GetBlocksPerDayQueryHookResult = ReturnType<typeof useGetBlocksPerDayQuery>;
 export type GetBlocksPerDayLazyQueryHookResult = ReturnType<typeof useGetBlocksPerDayLazyQuery>;
 export type GetBlocksPerDayQueryResult = Apollo.QueryResult<GetBlocksPerDayQuery, GetBlocksPerDayQueryVariables>;
+export const GetBeetsPriceDocument = gql`
+    query GetBeetsPrice {
+        beetsPrice: beetsGetBeetsPrice
+    }
+`;
+
+/**
+ * __useGetBeetsPriceQuery__
+ *
+ * To run a query within a React component, call `useGetBeetsPriceQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetBeetsPriceQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetBeetsPriceQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetBeetsPriceQuery(
+    baseOptions?: Apollo.QueryHookOptions<GetBeetsPriceQuery, GetBeetsPriceQueryVariables>,
+) {
+    const options = { ...defaultOptions, ...baseOptions };
+    return Apollo.useQuery<GetBeetsPriceQuery, GetBeetsPriceQueryVariables>(GetBeetsPriceDocument, options);
+}
+export function useGetBeetsPriceLazyQuery(
+    baseOptions?: Apollo.LazyQueryHookOptions<GetBeetsPriceQuery, GetBeetsPriceQueryVariables>,
+) {
+    const options = { ...defaultOptions, ...baseOptions };
+    return Apollo.useLazyQuery<GetBeetsPriceQuery, GetBeetsPriceQueryVariables>(GetBeetsPriceDocument, options);
+}
+export type GetBeetsPriceQueryHookResult = ReturnType<typeof useGetBeetsPriceQuery>;
+export type GetBeetsPriceLazyQueryHookResult = ReturnType<typeof useGetBeetsPriceLazyQuery>;
+export type GetBeetsPriceQueryResult = Apollo.QueryResult<GetBeetsPriceQuery, GetBeetsPriceQueryVariables>;
 export const GetUserDataDocument = gql`
     query GetUserData {
         balances: userGetPoolBalances {
