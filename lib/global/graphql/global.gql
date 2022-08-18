@@ -9,10 +9,10 @@ query GetAppGlobalData {
         priority
         tradable
     }
-    tokenGetCurrentPrices {
-        price
-        address
-    }
+    #tokenGetCurrentPrices {
+    #    price
+    #    address
+    #}
     beetsGetFbeetsRatio
     blocksGetBlocksPerDay
     blocksGetAverageBlockTime

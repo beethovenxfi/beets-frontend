@@ -347,10 +347,6 @@ export const GetAppGlobalData = gql`
             priority
             tradable
         }
-        tokenGetCurrentPrices {
-            price
-            address
-        }
         beetsGetFbeetsRatio
         blocksGetBlocksPerDay
         blocksGetAverageBlockTime

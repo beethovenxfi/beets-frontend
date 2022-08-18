@@ -1343,7 +1343,6 @@ export type GetAppGlobalDataQuery = {
         priority: number;
         tradable: boolean;
     }>;
-    tokenGetCurrentPrices: Array<{ __typename: 'GqlTokenPrice'; price: number; address: string }>;
 };
 
 export type GetAppGlobalPollingDataQueryVariables = Exact<{ [key: string]: never }>;
@@ -4376,10 +4375,6 @@ export const GetAppGlobalDataDocument = gql`
             logoURI
             priority
             tradable
-        }
-        tokenGetCurrentPrices {
-            price
-            address
         }
         beetsGetFbeetsRatio
         blocksGetBlocksPerDay
