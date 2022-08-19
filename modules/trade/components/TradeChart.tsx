@@ -34,7 +34,7 @@ export function TradeChart() {
                         prices={data?.prices || []}
                         label={``}
                         priceValueFormatter={(value) =>
-                            `1 ${tokenOut?.symbol} = ${tokenFormatAmount(value)} ${tokenIn?.symbol}`
+                            `1 ${tokenIn?.symbol} = ${tokenFormatAmount(value)} ${tokenOut?.symbol}`
                         }
                     />
                 </Box>
