@@ -68,11 +68,11 @@ export function PoolProvider({ pool: poolFromProps, children }: { pool: GqlPoolU
         pool.__typename === 'GqlPoolMetaStable';
 
     useEffectOnce(() => {
+        refetch();
         startPolling(30_000);
     });
 
     useEffect(() => {
-        refetch();
         poolService.updatePool(pool);
     }, [networkStatus]);
 
