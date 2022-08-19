@@ -28,49 +28,61 @@ export function Footer() {
                             <FooterLink href="/swap" linkType="internal">
                                 Swap
                             </FooterLink>
-                            {networkConfig.stakeUrl && <FooterLink href={networkConfig.stakeUrl}>Stake</FooterLink>}
-                            {networkConfig.launchUrl && <FooterLink href={networkConfig.launchUrl}>Launch</FooterLink>}
+                            {networkConfig.stakeUrl && (
+                                <FooterLink href={networkConfig.stakeUrl}>Stake (FTM)</FooterLink>
+                            )}
+                            {networkConfig.launchUrl && (
+                                <FooterLink href={networkConfig.launchUrl}>Launch (FTM)</FooterLink>
+                            )}
                         </GridItem>
                         <GridItem>
-                            {networkConfig.additionalLinks.slice(0, 3).map((link, index) => (
-                                <FooterLink key={index} href={link.url}>
-                                    {link.title}
-                                </FooterLink>
-                            ))}
+                            <FooterLink href="https://snapshot.org/#/beets.eth">Vote</FooterLink>
+                            <FooterLink href="https://info.beets.fi">Analytics</FooterLink>
+                            <FooterLink href="https://docs.beets.fi">Docs & Help</FooterLink>
                             <FooterLink href={networkConfig.createPoolUrl}>Compose a pool</FooterLink>
                         </GridItem>
                         <GridItem>
-                            {networkConfig.additionalLinks.slice(7, 10).map((link, index) => (
-                                <FooterLink key={index} href={link.url}>
-                                    {link.title}
-                                </FooterLink>
-                            ))}
+                            <FooterLink href="https://pro.olympusdao.finance/#/bond">Olympus Bonds</FooterLink>
+                            <FooterLink href="https://app.multichain.org/#/router">Multichain Bridge</FooterLink>
+                            <FooterLink href="https://app.allbridge.io/bridge?from=SOL&to=FTM&asset=SOL">
+                                AllBridge
+                            </FooterLink>
                         </GridItem>
                     </Grid>
 
                     <HStack spacing="6" mt="24">
-                        {networkConfig.additionalLinks.slice(3, 7).map((link, index) => {
-                            function renderIcon() {
-                                switch (link.title) {
-                                    case 'Discord':
-                                        return <NextImage src={DiscordIcon} />;
-                                    case 'Twitter':
-                                        return <NextImage src={TwitterIcon} />;
-                                    case 'Github':
-                                        return <NextImage src={GithubIcon} />;
-                                    case 'Medium':
-                                        return <NextImage src={MediumIcon} />;
-                                }
-                            }
-
-                            return (
-                                <Box key={index}>
-                                    <Link href={link.url} target="_blank" _active={{ boxShadow: 'none' }}>
-                                        {renderIcon()}
-                                    </Link>
-                                </Box>
-                            );
-                        })}
+                        <Box>
+                            <Link href="https://discord.gg/jedS4zGk28" target="_blank" _active={{ boxShadow: 'none' }}>
+                                <NextImage src={DiscordIcon} />
+                            </Link>
+                        </Box>
+                        <Box>
+                            <Link
+                                href="https://twitter.com/beethoven_x"
+                                target="_blank"
+                                _active={{ boxShadow: 'none' }}
+                            >
+                                <NextImage src={TwitterIcon} />
+                            </Link>
+                        </Box>
+                        <Box>
+                            <Link
+                                href="https://github.com/beethovenxfi"
+                                target="_blank"
+                                _active={{ boxShadow: 'none' }}
+                            >
+                                <NextImage src={GithubIcon} />
+                            </Link>
+                        </Box>
+                        <Box>
+                            <Link
+                                href="https://beethovenxio.medium.com/"
+                                target="_blank"
+                                _active={{ boxShadow: 'none' }}
+                            >
+                                <NextImage src={MediumIcon} />
+                            </Link>
+                        </Box>
                     </HStack>
                 </Box>
                 <Box flex="1" justifyContent="flex-end" display={{ base: 'none', lg: 'flex' }} ml="12">
