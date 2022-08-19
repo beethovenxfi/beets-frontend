@@ -102,4 +102,6 @@ export const optimismNetworkConfig: NetworkConfig = {
         rewardHelperAddress: '0x299dcdf14350999496204c141a0c20a29d71af3e',
     },
     createPoolUrl: 'https://opv1.beets.fi/#/pool-create',
+    launchUrl: 'https://v1.beets.fi/#/launch',
+    stakeUrl: 'https://v1.beets.fi/#/stake',
 };
