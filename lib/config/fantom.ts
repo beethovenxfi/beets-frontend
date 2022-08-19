@@ -56,8 +56,8 @@ export const fantomNetworkConfig: NetworkConfig = {
             url: 'https://docs.beets.fi',
         },
         {
-            title: 'Github',
-            url: 'https://github.com/beethovenxfi',
+            title: 'Discord',
+            url: 'https://discord.gg/jedS4zGk28',
         },
         {
             title: 'Twitter',
@@ -68,8 +68,8 @@ export const fantomNetworkConfig: NetworkConfig = {
             url: 'https://beethovenxio.medium.com/',
         },
         {
-            title: 'Discord',
-            url: 'https://discord.gg/jedS4zGk28',
+            title: 'Github',
+            url: 'https://github.com/beethovenxfi',
         },
         {
             title: 'Olympus Bonds',
