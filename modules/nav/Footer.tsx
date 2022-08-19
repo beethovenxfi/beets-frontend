@@ -1,4 +1,4 @@
-import { Box, Flex, Grid, GridItem, HStack, Link } from '@chakra-ui/react';
+import { Box, Flex, Grid, GridItem, HStack, Link, Text } from '@chakra-ui/react';
 import NextImage from 'next/image';
 import DegenBand from '~/assets/images/degen-band.png';
 import FooterImageOp from '~/assets/images/footer-OP.png';
@@ -28,17 +28,25 @@ export function Footer() {
                             <FooterLink href="/swap" linkType="internal">
                                 Swap
                             </FooterLink>
-                            <FooterLink href="https://beets.fi/#/stake" linkType="internal">
+                            <FooterLink href="https://v1.beets.fi/#/stake" linkType="internal">
                                 Stake
+                                <Text as="span" fontSize="2xs">
+                                    {' '}
+                                    (FTM)
+                                </Text>
                             </FooterLink>
-                            <FooterLink href="https://beets.fi/#/launch" linkType="internal">
+                            <FooterLink href="https://v1.beets.fi/#/launch" linkType="internal">
                                 Launch
+                                <Text as="span" fontSize="2xs">
+                                    {' '}
+                                    (FTM)
+                                </Text>
                             </FooterLink>
                         </GridItem>
                         <GridItem>
                             <FooterLink href="https://snapshot.org/#/beets.eth">Vote</FooterLink>
-                            <FooterLink href="https:/info.beets.fi">Analytics</FooterLink>
-                            <FooterLink href="https:/docs.beets.fi">Docs & Help</FooterLink>
+                            <FooterLink href="https://info.beets.fi">Analytics</FooterLink>
+                            <FooterLink href="https://docs.beets.fi">Docs & Help</FooterLink>
                             <FooterLink href={networkConfig.createPoolUrl}>Compose a pool</FooterLink>
                         </GridItem>
                         <GridItem>
