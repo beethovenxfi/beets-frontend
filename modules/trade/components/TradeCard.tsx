@@ -158,7 +158,7 @@ export function TradeCard() {
                         )}
                     </Box>
                 </VStack>
-                <TradeCardSwapBreakdown />
+                {!isNativeAssetWrap && !isNativeAssetUnwrap && <TradeCardSwapBreakdown />}
             </Card>
             <TokenSelectModal
                 isOpen={tokenSelectDisclosure.isOpen}
