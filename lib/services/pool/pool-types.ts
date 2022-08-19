@@ -95,7 +95,6 @@ export interface PoolExitExactBPTInForOneTokenOut extends PoolExitBase {
     kind: 'ExactBPTInForOneTokenOut';
     bptAmountIn: AmountHumanReadable;
     tokenOutAddress: string;
-    userBptBalance: AmountHumanReadable;
     amountOut: AmountHumanReadable;
 }
 

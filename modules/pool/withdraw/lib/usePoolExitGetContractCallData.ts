@@ -8,14 +8,16 @@ import { useSlippage } from '~/lib/global/useSlippage';
 import { usePoolUserBptBalance } from '~/modules/pool/lib/usePoolUserBptBalance';
 import { useUserAccount } from '~/lib/user/useUserAccount';
 import { usePool } from '~/modules/pool/lib/usePool';
+import { usePoolExitGetSingleAssetWithdrawForBptIn } from '~/modules/pool/withdraw/lib/usePoolExitGetSingleAssetWithdrawForBptIn';
 
 export function usePoolExitGetContractCallData() {
     const { userAddress } = useUserAccount();
     const { type, singleAsset, proportionalPercent } = useReactiveVar(withdrawStateVar);
     const { poolService, pool } = usePool();
-    const { userTotalBptBalance, userWalletBptBalance } = usePoolUserBptBalance();
+    const { userWalletBptBalance } = usePoolUserBptBalance();
     const { data: proportionalAmountsOut, error, isLoading } = usePoolExitGetProportionalWithdrawEstimate();
     const { data: singleAssetWithdrawEstimate } = usePoolExitGetBptInForSingleAssetWithdraw();
+    const { data: singleAssetWithdrawForMaxBptIn } = usePoolExitGetSingleAssetWithdrawForBptIn();
     const { slippage } = useSlippage();
 
     return useQuery(
@@ -48,11 +50,12 @@ export function usePoolExitGetContractCallData() {
                 singleAssetWithdrawEstimate &&
                 singleAsset.amount !== ''
             ) {
+                const isSingleAssetMax = singleAsset.amount === singleAssetWithdrawForMaxBptIn?.tokenAmount;
+
                 return poolService.exitGetContractCallData({
                     kind: 'ExactBPTInForOneTokenOut',
-                    bptAmountIn: singleAssetWithdrawEstimate.bptIn,
+                    bptAmountIn: isSingleAssetMax ? userWalletBptBalance : singleAssetWithdrawEstimate.bptIn,
                     tokenOutAddress: singleAsset.address,
-                    userBptBalance: userTotalBptBalance,
                     slippage,
                     amountOut: singleAsset.amount,
                     userAddress: userAddress || '',

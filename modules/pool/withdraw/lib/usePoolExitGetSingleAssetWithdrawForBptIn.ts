@@ -7,10 +7,10 @@ import { usePool } from '~/modules/pool/lib/usePool';
 export function usePoolExitGetSingleAssetWithdrawForBptIn() {
     const { poolService } = usePool();
     const { singleAsset } = useReactiveVar(withdrawStateVar);
-    const { userTotalBptBalance } = usePoolUserBptBalance();
+    const { userWalletBptBalance } = usePoolUserBptBalance();
 
     return useQuery(
-        ['exitGetSingleAssetWithdrawForBptIn', userTotalBptBalance, singleAsset?.address],
+        ['exitGetSingleAssetWithdrawForBptIn', userWalletBptBalance, singleAsset?.address],
         async () => {
             if (!singleAsset) {
                 return {
@@ -19,7 +19,7 @@ export function usePoolExitGetSingleAssetWithdrawForBptIn() {
                 };
             }
 
-            return poolService.exitGetSingleAssetWithdrawForBptIn(userTotalBptBalance, singleAsset.address);
+            return poolService.exitGetSingleAssetWithdrawForBptIn(userWalletBptBalance, singleAsset.address);
         },
         { enabled: !!singleAsset },
     );
