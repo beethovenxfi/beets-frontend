@@ -5,13 +5,13 @@ import { FadeInOutBox } from '~/components/animation/FadeInOutBox';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 
 export function PoolFbeetsWarning() {
-    const { hasBptInWallet } = usePoolUserBptBalance();
+    const { hasBpt } = usePoolUserBptBalance();
     const { isOpen, onOpen, onClose } = useDisclosure();
     const networkConfig = useNetworkConfig();
 
     return (
         <>
-            <FadeInOutBox isVisible={hasBptInWallet} containerWidth="100%">
+            <FadeInOutBox isVisible={hasBpt} containerWidth="100%">
                 <Alert status="warning" borderRadius="md" mb="4" width="full">
                     <Flex width="full" alignItems="center">
                         <AlertIcon />
