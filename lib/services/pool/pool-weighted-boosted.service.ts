@@ -360,8 +360,8 @@ export class PoolWeightedBoostedService implements PoolService {
                 return { address, amount, tokenOut: tokenOption.address };
             });
 
-        const nestedExitAmounts = exitAmounts.filter((amount) => !poolTokenAddresses.includes(amount.address));
-        const poolTokenExitAmounts = exitAmounts.filter((amount) => poolTokenAddresses.includes(amount.address));
+        const nestedExitAmounts = exitAmounts.filter((amount) => !poolTokenAddresses.includes(amount.tokenOut));
+        const poolTokenExitAmounts = exitAmounts.filter((amount) => poolTokenAddresses.includes(amount.tokenOut));
 
         const { tokenOutAmounts } = await this.getExitSwaps(nestedExitAmounts);
 
