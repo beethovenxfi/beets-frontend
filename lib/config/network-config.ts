@@ -13,13 +13,13 @@ export const networkList = [
     {
         name: fantomNetworkConfig.networkShortName,
         chainId: fantomNetworkConfig.chainId,
-        url: 'https://beta.beets.fi',
+        url: 'https://beets.fi',
         iconUrl: fantomNetworkConfig.eth.iconUrl,
     },
     {
         name: optimismNetworkConfig.networkShortName,
         chainId: optimismNetworkConfig.chainId,
-        url: 'https://opbeta.beets.fi',
+        url: 'https://op.beets.fi',
         iconUrl: optimismNetworkConfig.eth.iconUrl,
     },
 ];
