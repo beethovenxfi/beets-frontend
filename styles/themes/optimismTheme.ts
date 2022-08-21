@@ -13,8 +13,8 @@ export const optimismTheme: Partial<ChakraTheme> = {
                     'radial-gradient(ellipse at top, #111111, #020202), radial-gradient(ellipse at bottom, #020202, #020202) !important',
             },
             '.bg': {
-                background: `radial-gradient(ellipse at top, rgba(55, 55, 55, 1) 10%, transparent 80%),
-                             radial-gradient(ellipse at bottom, rgba(55, 55, 55, 1) 10%, transparent 80%) !important`,
+                background: `radial-gradient(ellipse at top, #282828 10%, transparent 80%),
+                             radial-gradient(ellipse at bottom, #282828 10%, transparent 80%) !important`,
             },
         },
     },
@@ -80,7 +80,7 @@ export const optimismTheme: Partial<ChakraTheme> = {
         },
         box: {
             '300': 'rgba(80,80,80,0.25)',
-            '500': 'rgba(255,255,255,0.05)',
+            '500': 'rgba(119,119,119,0.3)',
         },
         beets: {
             green: '#00F89C',
