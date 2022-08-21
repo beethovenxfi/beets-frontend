@@ -8,7 +8,7 @@ import {
     BeetsModalSubHeadline,
 } from '~/components/modal/BeetsModal';
 import { TradePreviewContent } from '~/modules/trade/components/TradePreviewContent';
-import { Box, Modal, ModalOverlay, Portal } from '@chakra-ui/react';
+import { Box, Modal, ModalOverlay, Portal, Text } from '@chakra-ui/react';
 import { ModalCloseButton } from '@chakra-ui/modal';
 import { motion } from 'framer-motion';
 import { TradeSubmittedContent } from '~/modules/trade/components/TradeSubmittedContent';
@@ -39,13 +39,8 @@ export function TradePreviewModal({ isOpen, onClose }: Props) {
                 <ModalCloseButton />
                 <BeetsModalHeader>
                     <BeetsModalHeadline>{!submitting ? 'Review swap' : 'Swap transaction details'}</BeetsModalHeadline>
-                    {/*!submitting && (
-                        <BeetsModalSubHeadline>
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed eu leo vestibulum
-                        </BeetsModalSubHeadline>
-                    )*/}
                 </BeetsModalHeader>
-                <BeetsModalBody p='0'>
+                <BeetsModalBody p="0">
                     {batchSwapQuery.isConfirmed && (
                         <Portal>
                             <Box position="absolute" top="0" left="0" width="full">
@@ -57,10 +52,10 @@ export function TradePreviewModal({ isOpen, onClose }: Props) {
                         </Portal>
                     )}
                     {!submitting && (
-                        <TradePreviewContent
-                            query={batchSwapQuery}
-                            onTransactionSubmitted={() => setSubmitting(true)}
-                        />
+                            <TradePreviewContent
+                                query={batchSwapQuery}
+                                onTransactionSubmitted={() => setSubmitting(true)}
+                            />
                     )}
                     {submitting && (
                         <motion.div animate={{ opacity: 1 }} initial={{ opacity: 0 }}>
