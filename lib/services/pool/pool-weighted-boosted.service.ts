@@ -580,11 +580,13 @@ export class PoolWeightedBoostedService implements PoolService {
             assets,
             provider: this.provider,
         });
-
-        const tokenOutAmounts = exitAmounts.map(({ tokenOut }) => {
+        const tokenOutAmounts = exitAmounts.map(({ tokenOut, amount }) => {
             const assetIndex = assets.findIndex((asset) => asset.toLowerCase() === tokenOut);
             const token = this.pool.allTokens.find((token) => token.address === tokenOut)!;
 
+            if (assetIndex === -1) {
+                return { address: tokenOut, amount: amount };
+            }
             return {
                 address: tokenOut,
                 amount: formatFixed(oldBnum(deltas[assetIndex]).abs().toString(), token.decimals),
