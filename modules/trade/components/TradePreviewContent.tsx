@@ -374,7 +374,7 @@ export function TradePreviewContent({ query, onTransactionSubmitted }: Props) {
                 </Alert>
             ) : null} */}
 
-            <VStack width="full" py="4" backgroundColor="whiteAlpha.50" px="5">
+            <VStack width="full" py="4" backgroundColor="blackAlpha.500" px="5">
                 <HStack width="full" justifyContent="space-between">
                     <Text color="gray.100" fontSize=".85rem">
                         Price impact

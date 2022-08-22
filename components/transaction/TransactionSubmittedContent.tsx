@@ -68,7 +68,7 @@ export function TransactionSubmittedContent({ query, confirmedMessage, showSpinn
                 </Box>
             </VStack>
 
-            <VStack width="full" py="4" backgroundColor="whiteAlpha.50" px="5">
+            <VStack width="full" py="4" backgroundColor="blackAlpha.500" px="5">
                 {txResponse?.hash && (
                     <HStack width="full" justifyContent="space-between">
                         <Text color="gray.100" fontSize=".85rem">
