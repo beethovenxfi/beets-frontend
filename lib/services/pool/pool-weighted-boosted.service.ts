@@ -350,7 +350,6 @@ export class PoolWeightedBoostedService implements PoolService {
             this.pool.tokens.map((token) => token.address),
         );
 
-        const poolTokenAddresses = this.pool.tokens.map((token) => token.address);
         const exitAmounts = withdrawAmounts
             .filter((withdrawAmount) => withdrawAmount.address)
             .map(({ amount, address }) => {
@@ -360,12 +359,9 @@ export class PoolWeightedBoostedService implements PoolService {
                 return { address, amount, tokenOut: tokenOption.address };
             });
 
-        const nestedExitAmounts = exitAmounts.filter((amount) => !poolTokenAddresses.includes(amount.tokenOut));
-        const poolTokenExitAmounts = exitAmounts.filter((amount) => poolTokenAddresses.includes(amount.tokenOut));
+        const { tokenOutAmounts } = await this.getExitSwaps(exitAmounts);
 
-        const { tokenOutAmounts } = await this.getExitSwaps(nestedExitAmounts);
-
-        return [...poolTokenExitAmounts, ...tokenOutAmounts];
+        return tokenOutAmounts;
     }
 
     private async getJoinSwaps(tokenAmountsIn: TokenAmountHumanReadable[]): Promise<{
@@ -580,10 +576,18 @@ export class PoolWeightedBoostedService implements PoolService {
             assets,
             provider: this.provider,
         });
+        const tokenOutAmounts = exitAmounts.map(({ address, tokenOut, amount }) => {
+            //this is a non nested (base) token, no swaps required.
+            if (address === tokenOut) {
+                return { address: tokenOut, amount: amount };
+            }
 
-        const tokenOutAmounts = exitAmounts.map(({ tokenOut }) => {
             const assetIndex = assets.findIndex((asset) => asset.toLowerCase() === tokenOut);
             const token = this.pool.allTokens.find((token) => token.address === tokenOut)!;
+
+            if (assetIndex === -1) {
+                throw new Error(`getExitSwaps: Nested BPT missing in assets array ${tokenOut}`);
+            }
 
             return {
                 address: tokenOut,
