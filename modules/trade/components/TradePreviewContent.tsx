@@ -51,6 +51,8 @@ export function TradePreviewContent({ query, onTransactionSubmitted }: Props) {
     const tokenOut = getToken(swapInfo?.tokenOut || '');
     const [highPiAccepted, setHighPiAccepted] = useState(false);
     const { refetch: refetchUserBalances } = useUserTokenBalances();
+    const tokenInPrecision = Math.min(tokenIn?.decimals || 18, 12);
+    const tokenOutPrecision = Math.min(tokenOut?.decimals || 18, 12);
 
     if (!swapInfo) {
         //TODO: handle
@@ -79,8 +81,6 @@ export function TradePreviewContent({ query, onTransactionSubmitted }: Props) {
             ? `${numeral(Math.abs(diff)).format('%0.[00]')} cheaper`
             : `within ${numeral(Math.abs(diff)).format('%0.[00]')}`;
 
-    //console.log('query.submitError', query.submitError ? query.submitError.reason : null);
-
     return (
         <VStack width="full">
             <Box width="full" p="4" pt="0" pb="2">
@@ -100,8 +100,8 @@ export function TradePreviewContent({ query, onTransactionSubmitted }: Props) {
                                 </Text>
                             </HStack>
                             <VStack alignItems="flex-end" spacing="0">
-                                <Text>{swapInfo.tokenInAmount}</Text>
-                                <Text fontSize='sm' color="beets.base.100">
+                                <Text>{tokenFormatAmountPrecise(swapInfo.tokenInAmount, tokenInPrecision)}</Text>
+                                <Text fontSize="sm" color="beets.base.100">
                                     ~
                                     {formattedPrice({
                                         address: swapInfo.tokenIn,
@@ -115,7 +115,7 @@ export function TradePreviewContent({ query, onTransactionSubmitted }: Props) {
                                 <TokenAvatar width="40px" height="40px" address={swapInfo.tokenOut} />
                                 <Text>
                                     to receive
-                                    <HStack spacing='1'>
+                                    <HStack spacing="1">
                                         <Text fontWeight="bold">{tokenOut?.symbol}</Text>
                                         <Link href={etherscanGetTokenUrl(swapInfo.tokenOut)} target="_blank" ml="1.5">
                                             <ExternalLink size={14} />
@@ -124,8 +124,8 @@ export function TradePreviewContent({ query, onTransactionSubmitted }: Props) {
                                 </Text>
                             </HStack>
                             <VStack alignItems="flex-end" spacing="0">
-                                <Text>{swapInfo.tokenOutAmount}</Text>
-                                <Text fontSize='sm' color="beets.base.100">
+                                <Text>{tokenFormatAmountPrecise(swapInfo.tokenOutAmount, tokenOutPrecision)}</Text>
+                                <Text fontSize="sm" color="beets.base.100">
                                     ~
                                     {formattedPrice({
                                         address: swapInfo.tokenOut,
@@ -140,20 +140,23 @@ export function TradePreviewContent({ query, onTransactionSubmitted }: Props) {
                     <VStack>
                         <HStack width="full" justifyContent="space-between">
                             <InfoButton
-                                labelProps={{ fontSize: 'sm' }}
+                                //labelProps={{ fontSize: 'sm' }}
                                 label="Max slippage"
-                                infoText="The maximum change in the price you are willing to accept to account for external market movements"
+                                infoText="The maximum change in the price you are willing to accept to account for external market movements."
                             />
                             <SlippageTextLinkMenu />
                         </HStack>
-                        <HStack width="full" justifyContent="space-between">
-                            <Text color="gray.100" fontSize=".85rem">
-                                Minimum received
-                            </Text>
-                            <Text fontSize=".85rem" color="white">
-                                {swapInfo?.tokenOutAmount} {tokenOut?.symbol}
-                            </Text>
-                        </HStack>
+                        {exactIn ? (
+                            <HStack width="full" justifyContent="space-between">
+                                <Text>Min {tokenOut?.symbol} received</Text>
+                                <Text>{tokenFormatAmountPrecise(minAmountOut, tokenOutPrecision)}</Text>
+                            </HStack>
+                        ) : (
+                            <HStack width="full" justifyContent="space-between">
+                                <Text>Max {tokenIn?.symbol} spent</Text>
+                                <Text>{tokenFormatAmountPrecise(maxAmountIn, tokenInPrecision)}</Text>
+                            </HStack>
+                        )}
                     </VStack>
                 </BeetsBox>
                 {/* <BeetsBox marginTop="4">

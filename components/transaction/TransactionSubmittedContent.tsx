@@ -1,4 +1,4 @@
-import { Alert, AlertIcon, Box, BoxProps, Link, Spinner, Text, VStack, HStack } from '@chakra-ui/react';
+import { Alert, AlertIcon, Box, BoxProps, Link, Spinner, Text, VStack, HStack, Flex } from '@chakra-ui/react';
 import { addressShortDisplayName, isBatchRelayer, isVault } from '~/lib/util/address';
 import {
     etherscanGetAddressUrl,
@@ -18,7 +18,7 @@ interface Props extends BoxProps {
 }
 
 export function TransactionSubmittedContent({ query, confirmedMessage, showSpinnerOnPending, ...rest }: Props) {
-    const { isConfirmed, isFailed, isPending, error, txReceipt, txResponse } = query;
+    const { isFailed, error, txReceipt, txResponse, isConfirmed, isPending } = query;
 
     const getContractName = (to: string) => {
         if (isVault(to)) return 'Vault';
@@ -29,16 +29,24 @@ export function TransactionSubmittedContent({ query, confirmedMessage, showSpinn
     const getTransactionStatus = () => {
         if (isFailed) return 'Failed';
         if (isConfirmed) return '';
-        if (isPending) return 'Pending';
+        if (isPending) return 'Your transaction is pending';
         return 'Unknown transaction state...';
     };
 
     return (
-        <VStack {...rest} width="full" spacing='4'>
-            <Box color={isFailed ? 'beets.red' : isConfirmed ? 'beets.green' : 'orange'}>
-                {isPending && showSpinnerOnPending && <Spinner size="sm" mr="2" />}
-                <Text>{getTransactionStatus()}</Text>
-            </Box>
+        <VStack {...rest} width="full" spacing="4">
+            {isFailed && (
+                <Flex color="beets.red" alignItems="center">
+                    {isPending && showSpinnerOnPending && <Spinner size="sm" mr="2" />}
+                    <Text>{getTransactionStatus()}</Text>
+                </Flex>
+            )}
+            {isPending && (
+                <Flex color="orange" alignItems="center">
+                    {showSpinnerOnPending && <Spinner size="sm" mr="2" />}
+                    <Text>{getTransactionStatus()}</Text>
+                </Flex>
+            )}
             <VStack px="4" width="full">
                 {error ? (
                     <Box width="full">
