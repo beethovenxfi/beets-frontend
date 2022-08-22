@@ -576,12 +576,17 @@ export class PoolWeightedBoostedService implements PoolService {
             assets,
             provider: this.provider,
         });
-        const tokenOutAmounts = exitAmounts.map(({ tokenOut, amount }) => {
+        const tokenOutAmounts = exitAmounts.map(({ address, tokenOut, amount }) => {
+            //this is a non nested (base) token, no swaps required.
+            if (address === tokenOut) {
+                return { address: tokenOut, amount: amount };
+            }
+
             const assetIndex = assets.findIndex((asset) => asset.toLowerCase() === tokenOut);
             const token = this.pool.allTokens.find((token) => token.address === tokenOut)!;
 
             if (assetIndex === -1) {
-                return { address: tokenOut, amount: amount };
+                throw new Error(`getExitSwaps: Nested BPT missing in assets array ${tokenOut}`);
             }
 
             return {
