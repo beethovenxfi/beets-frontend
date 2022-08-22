@@ -29,6 +29,7 @@ export function TokenSelectModal({ isOpen, onClose }: Props) {
 
         setTimeout(() => {
             handleTokenSelected(address);
+            setSearchTerm('');
         });
     }
 
@@ -41,13 +42,7 @@ export function TokenSelectModal({ isOpen, onClose }: Props) {
                         <ModalCloseButton />
                         <ModalHeader>Select a token to {tokenSelectKey === 'tokenIn' ? 'sell' : 'buy'}</ModalHeader>
                         <ModalBody p="0" position="relative">
-                            <Box
-                                px="6"
-                                pb="6"
-                                boxShadow="2xl"
-                                borderBottomWidth={1}
-                                borderBottomColor="beets.base.500"
-                            >
+                            <Box px="6" pb="6" boxShadow="2xl" borderBottomWidth={1} borderBottomColor="beets.base.500">
                                 <TokenSelectSearchInput
                                     placeholder="Search by symbol or address..."
                                     value={searchTerm}
