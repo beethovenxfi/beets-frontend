@@ -34,7 +34,7 @@ export function TokenSelectModal({ isOpen, onClose }: Props) {
     }
 
     return (
-        <Modal isOpen={isOpen} onClose={onClose} size="lg" isCentered>
+        <Modal isOpen={isOpen} onClose={onClose} size="lg">
             <ModalOverlay bg="blackAlpha.800" />
             <ModalContent borderWidth={1} borderColor="beets.base.600">
                 <Box bg="blackAlpha.400">
