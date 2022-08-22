@@ -350,7 +350,6 @@ export class PoolWeightedBoostedService implements PoolService {
             this.pool.tokens.map((token) => token.address),
         );
 
-        const poolTokenAddresses = this.pool.tokens.map((token) => token.address);
         const exitAmounts = withdrawAmounts
             .filter((withdrawAmount) => withdrawAmount.address)
             .map(({ amount, address }) => {
@@ -360,12 +359,9 @@ export class PoolWeightedBoostedService implements PoolService {
                 return { address, amount, tokenOut: tokenOption.address };
             });
 
-        const nestedExitAmounts = exitAmounts.filter((amount) => !poolTokenAddresses.includes(amount.tokenOut));
-        const poolTokenExitAmounts = exitAmounts.filter((amount) => poolTokenAddresses.includes(amount.tokenOut));
+        const { tokenOutAmounts } = await this.getExitSwaps(exitAmounts);
 
-        const { tokenOutAmounts } = await this.getExitSwaps(nestedExitAmounts);
-
-        return [...poolTokenExitAmounts, ...tokenOutAmounts];
+        return tokenOutAmounts;
     }
 
     private async getJoinSwaps(tokenAmountsIn: TokenAmountHumanReadable[]): Promise<{
@@ -587,6 +583,7 @@ export class PoolWeightedBoostedService implements PoolService {
             if (assetIndex === -1) {
                 return { address: tokenOut, amount: amount };
             }
+
             return {
                 address: tokenOut,
                 amount: formatFixed(oldBnum(deltas[assetIndex]).abs().toString(), token.decimals),
