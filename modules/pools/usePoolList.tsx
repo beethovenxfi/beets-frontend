@@ -30,11 +30,12 @@ export const DEFAULT_POOL_LIST_QUERY_VARS: PoolsQueryVariables = {
 const poolListStateVar = makeVar<PoolsQueryVariables>(DEFAULT_POOL_LIST_QUERY_VARS);
 const showMyInvestmentsVar = makeVar(false);
 const showFiltersVar = makeVar(false);
+const searchTextVar = makeVar('');
 
 export function _usePoolList() {
     const state = useReactiveVar(poolListStateVar);
     const showMyInvestments = useReactiveVar(showMyInvestmentsVar);
-    const [isSearching, isSearchingToggle] = useBoolean();
+    const searchText = useReactiveVar(searchTextVar);
     const [isSorting, isSortingToggle] = useBoolean();
 
     const {
@@ -103,6 +104,10 @@ export function _usePoolList() {
         showMyInvestmentsVar(show);
     }
 
+    function setSearchText(text: string) {
+        searchTextVar(text);
+    }
+
     function toggleFilterVisibility() {
         showFiltersVar(!showFiltersVar());
     }
@@ -154,6 +159,8 @@ export function _usePoolList() {
         showFilters: useReactiveVar(showFiltersVar),
         setPoolIds,
         clearPoolIds,
+        searchText,
+        setSearchText,
     };
 }
 

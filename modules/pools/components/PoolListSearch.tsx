@@ -3,17 +3,20 @@ import { Search, X } from 'react-feather';
 import { usePoolList } from '~/modules/pools/usePoolList';
 import { useBoolean } from '@chakra-ui/hooks';
 import { debounce } from 'lodash';
-import { useState } from 'react';
+import { useEffect } from 'react';
 
 export function PoolListSearch() {
     const [isSearching, { on, off }] = useBoolean();
-    const { refetch, state } = usePoolList();
-    const [searchText, setSearchText] = useState('');
+    const { refetch, state, searchText, setSearchText } = usePoolList();
 
     const submitSearch = debounce(async () => {
-        await refetch({ ...state, textSearch: searchText || null, skip: 0 });
+        await refetch({ ...state, textSearch: searchText, skip: 0 });
         off();
     }, 250);
+
+    useEffect(() => {
+        submitSearch();
+    }, [searchText]);
 
     return (
         <InputGroup size="md">
@@ -23,11 +26,7 @@ export function PoolListSearch() {
                 value={searchText}
                 onChange={(e) => {
                     setSearchText(e.target.value);
-                    if (!isSearching) {
-                        on();
-                    }
-
-                    submitSearch();
+                    if (!isSearching) on();
                 }}
             />
             <InputRightElement>
@@ -39,10 +38,7 @@ export function PoolListSearch() {
                     isLoading={isSearching}
                     _loading={{ color: 'white' }}
                     onClick={() => {
-                        if (searchText !== '') {
-                            setSearchText('');
-                            refetch({ ...state, textSearch: null, skip: 0 });
-                        }
+                        if (searchText !== '') setSearchText('');
                     }}
                 />
             </InputRightElement>
