@@ -73,11 +73,11 @@ export class MasterChefService {
                 userAddress,
             ]);
 
-            const rewardersWithRewards = farm.rewarders || [];
+            const farmRewarders = farm.rewarders || [];
 
-            if (rewardersWithRewards.length > 0) {
+            if (farmRewarders.length > 0) {
                 //a farm will only ever have one rewarder, but the rewarder can have many tokens
-                multicaller.call(`${farm.id}.pendingRewards`, rewardersWithRewards[0].address, 'pendingTokens', [
+                multicaller.call(`${farm.id}.pendingRewards`, farmRewarders[0].address, 'pendingTokens', [
                     farm.id,
                     userAddress,
                     0,
