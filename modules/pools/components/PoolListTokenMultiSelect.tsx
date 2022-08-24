@@ -36,8 +36,8 @@ export function PoolListTokenMultiSelect() {
                     label: token.symbol,
                     imageUrl: token.logoURI,
                     icon: <TokenAvatar address={token.address} size="xs" mr={2} />,
-                    bal: token.userBalance,
-                    bal2: token.userBalanceUSD,
+                    balance: token.userBalance,
+                    balanceUSD: token.userBalanceUSD,
                 }))}
                 value={filteredTokensByUserBalance
                     .filter((token) => selected.includes(token.address))
@@ -46,39 +46,35 @@ export function PoolListTokenMultiSelect() {
                         label: token.symbol,
                         imageUrl: token.logoURI,
                         icon: <TokenAvatar address={token.address} size="xs" mr={2} />,
-                        bal: token.userBalance,
-                        bal2: token.userBalanceUSD,
+                        balance: token.userBalance,
+                        balanceUSD: token.userBalanceUSD,
                     }))}
                 renderOption={(data, children) => (
-                    <HStack width="full" paddingY="0" justifyContent="space-between">
+                    <HStack width="full" justifyContent="space-between">
                         <HStack>
                             <TokenAvatar address={data.value} size="xs" />
                             <Text fontSize="md">{data.label}</Text>
                         </HStack>
-                        <Box marginTop="1px" display="flex" flexDirection="column">
+                        <Box display="flex" flexDirection="column">
                             {userBalancesLoading ? (
                                 <>
-                                    <Skeleton width="12" height="3" mb="1" />
-                                    <Skeleton width="12" height="3" />
+                                    <Skeleton width="10" height="4" mb="1" />
+                                    <Skeleton width="10" height="2" />
                                 </>
                             ) : (
                                 <>
-                                    <Text textAlign="right">
-                                        {parseFloat(data.bal.amount) > 0
-                                            ? tokenFormatAmountPrecise(data.bal.amount, 4)
-                                            : 'X'}
+                                    <Text textAlign="right" fontSize="sm">
+                                        {parseFloat(data.balance.amount) > 0
+                                            ? tokenFormatAmountPrecise(data.balance.amount, 4)
+                                            : '-'}
                                     </Text>
                                     <Text color="gray.200" textAlign="right" fontSize="xs">
-                                        {data.bal2 > 0 ? numberFormatUSDValue(data.bal2) : 'Y'}
+                                        {data.balanceUSD > 0 ? numberFormatUSDValue(data.balanceUSD) : '-'}
                                     </Text>
                                 </>
                             )}
                         </Box>
                     </HStack>
-                    // <>
-                    //     {data.icon} <Text fontSize="lg">{data.label}</Text>
-                    //     <Text>{data.bal2}</Text>
-                    // </>
                 )}
                 renderMultiValue={(data, children) => (
                     <Flex alignItems="center">
