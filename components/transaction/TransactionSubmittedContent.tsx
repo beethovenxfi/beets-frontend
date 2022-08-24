@@ -1,6 +1,4 @@
-import { Alert, AlertIcon, Box, BoxProps, Link, Spinner, Text } from '@chakra-ui/react';
-import { BeetsBox } from '~/components/box/BeetsBox';
-import { CardRow } from '~/components/card/CardRow';
+import { Alert, AlertIcon, Box, BoxProps, Link, Spinner, Text, VStack, HStack, Flex } from '@chakra-ui/react';
 import { addressShortDisplayName, isBatchRelayer, isVault } from '~/lib/util/address';
 import {
     etherscanGetAddressUrl,
@@ -11,6 +9,7 @@ import {
 import { SubmitTransactionQuery } from '~/lib/util/useSubmitTransaction';
 import { FadeInBox } from '~/components/animation/FadeInBox';
 import { transactionMessageFromError } from '~/lib/util/transaction-util';
+import { ExternalLink } from 'react-feather';
 
 interface Props extends BoxProps {
     query: Omit<SubmitTransactionQuery, 'submit' | 'submitAsync'>;
@@ -19,65 +18,97 @@ interface Props extends BoxProps {
 }
 
 export function TransactionSubmittedContent({ query, confirmedMessage, showSpinnerOnPending, ...rest }: Props) {
-    const { isConfirmed, isFailed, isPending, error, txReceipt, txResponse } = query;
+    const { isFailed, error, txReceipt, txResponse, isConfirmed, isPending } = query;
+
+    const getContractName = (to: string) => {
+        if (isVault(to)) return 'Vault';
+        if (isBatchRelayer(to)) return 'Batch relayer';
+        return addressShortDisplayName(to);
+    };
+
+    const getTransactionStatus = () => {
+        if (isFailed) return 'Failed';
+        if (isConfirmed) return '';
+        if (isPending) return 'Your transaction is pending';
+        return 'Unknown transaction state...';
+    };
 
     return (
-        <Box {...rest}>
-            <BeetsBox width="full" p="2">
-                <CardRow>
-                    <Box flex="1">Status</Box>
-                    <Box color={isFailed ? 'beets.red' : isConfirmed ? 'beets.green' : 'orange'}>
-                        {isPending && showSpinnerOnPending && <Spinner size="sm" mr="2" />}
-                        {isFailed ? 'Failed' : isConfirmed ? 'Confirmed' : isPending ? 'Pending' : 'Unknown'}
+        <VStack {...rest} width="full" spacing="4">
+            {isFailed && (
+                <Flex color="beets.red" alignItems="center">
+                    {isPending && showSpinnerOnPending && <Spinner size="sm" mr="2" />}
+                    <Text>{getTransactionStatus()}</Text>
+                </Flex>
+            )}
+            {isPending && (
+                <Flex color="orange" alignItems="center">
+                    {showSpinnerOnPending && <Spinner size="sm" mr="2" />}
+                    <Text>{getTransactionStatus()}</Text>
+                </Flex>
+            )}
+            <VStack px="4" width="full">
+                {error ? (
+                    <Box width="full">
+                        <Alert width="full" status="error">
+                            <AlertIcon />
+                            {transactionMessageFromError(error)}
+                        </Alert>
                     </Box>
-                </CardRow>
+                ) : null}
+                <Box>
+                    {confirmedMessage && (
+                        <FadeInBox isVisible={query.isConfirmed}>
+                            <Alert status="success" borderRadius="md">
+                                <AlertIcon />
+                                {confirmedMessage}
+                            </Alert>
+                        </FadeInBox>
+                    )}
+                </Box>
+            </VStack>
+
+            <VStack width="full" py="4" backgroundColor="blackAlpha.500" px="5">
                 {txResponse?.hash && (
-                    <CardRow>
-                        <Box flex="1">Transaction hash</Box>
-                        <Box>
-                            <Link href={etherscanGetTxUrl(txResponse.hash)} target="_blank">
-                                {etherscanTxShortenForDisplay(txResponse.hash)}
-                            </Link>
-                        </Box>
-                    </CardRow>
+                    <HStack width="full" justifyContent="space-between">
+                        <Text color="gray.100" fontSize=".85rem">
+                            Transaction Hash
+                        </Text>
+                        <Link href={etherscanGetTxUrl(txResponse.hash)} target="_blank">
+                            <HStack>
+                                <Text fontSize=".85rem">{etherscanTxShortenForDisplay(txResponse.hash)}</Text>
+                                <ExternalLink size="16" />
+                            </HStack>
+                        </Link>
+                    </HStack>
                 )}
                 {txResponse?.to && (
-                    <CardRow>
-                        <Box flex="1">Contract</Box>
-                        <Box alignItems="flex-end" display="flex" flexDirection="column">
-                            <Link href={etherscanGetAddressUrl(txResponse.to)} target="_blank">
-                                {addressShortDisplayName(txResponse.to)}
-                            </Link>
-                            {isVault(txResponse.to) && <Text color="gray.200">Vault</Text>}
-                            {isBatchRelayer(txResponse.to) && <Text color="gray.200">Batch relayer</Text>}
-                        </Box>
-                    </CardRow>
+                    <HStack width="full" justifyContent="space-between">
+                        <Text color="gray.100" fontSize=".85rem">
+                            Contract
+                        </Text>
+                        <Link href={etherscanGetAddressUrl(txResponse.to)} target="_blank">
+                            <HStack>
+                                <Text fontSize=".85rem">{getContractName(txResponse.to)}</Text>
+                                <ExternalLink size="16" />
+                            </HStack>
+                        </Link>
+                    </HStack>
                 )}
                 {txReceipt?.blockNumber && (
-                    <CardRow mb="0">
-                        <Box flex="1">Block number</Box>
-                        <Box>
-                            <Link href={etherscanGetBlockUrl(txReceipt.blockNumber)} target="_blank">
-                                {txReceipt.blockNumber}
-                            </Link>
-                        </Box>
-                    </CardRow>
+                    <HStack width="full" justifyContent="space-between">
+                        <Text color="gray.100" fontSize=".85rem">
+                            Block number
+                        </Text>
+                        <Link href={etherscanGetBlockUrl(txReceipt.blockNumber)} target="_blank">
+                            <HStack>
+                                <Text fontSize=".85rem">{txReceipt.blockNumber}</Text>
+                                <ExternalLink size="16" />
+                            </HStack>
+                        </Link>
+                    </HStack>
                 )}
-                {error ? (
-                    <Alert status="error" mt={4}>
-                        <AlertIcon />
-                        {transactionMessageFromError(error)}
-                    </Alert>
-                ) : null}
-            </BeetsBox>
-            {confirmedMessage && (
-                <FadeInBox isVisible={query.isConfirmed}>
-                    <Alert status="success" borderRadius="md" mt="4">
-                        <AlertIcon />
-                        {confirmedMessage}
-                    </Alert>
-                </FadeInBox>
-            )}
-        </Box>
+            </VStack>
+        </VStack>
     );
 }

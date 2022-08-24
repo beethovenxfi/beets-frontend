@@ -25,7 +25,11 @@ export function TradeSubmittedContent({ query }: Props) {
 
     return (
         <Box pt="4">
-            {reactiveTradeState.sorResponse && <BatchSwapSorRoute swapInfo={reactiveTradeState.sorResponse} />}
+            {reactiveTradeState.sorResponse && (
+                <Box px='4'>
+                    <BatchSwapSorRoute swapInfo={reactiveTradeState.sorResponse} />{' '}
+                </Box>
+            )}
             <TransactionSubmittedContent
                 query={query}
                 confirmedMessage="Your swap was successfully executed"

@@ -8,7 +8,7 @@ import {
     BeetsModalSubHeadline,
 } from '~/components/modal/BeetsModal';
 import { TradePreviewContent } from '~/modules/trade/components/TradePreviewContent';
-import { Box, Modal, ModalOverlay, Portal } from '@chakra-ui/react';
+import { Box, Modal, ModalOverlay, Portal, Text } from '@chakra-ui/react';
 import { ModalCloseButton } from '@chakra-ui/modal';
 import { motion } from 'framer-motion';
 import { TradeSubmittedContent } from '~/modules/trade/components/TradeSubmittedContent';
@@ -27,25 +27,20 @@ export function TradePreviewModal({ isOpen, onClose }: Props) {
         <Modal
             isOpen={isOpen}
             onClose={onClose}
-            size="xl"
+            size="lg"
             initialFocusRef={initialRef}
             onCloseComplete={() => {
                 batchSwapQuery.reset();
                 setSubmitting(false);
             }}
         >
-            <ModalOverlay />
+            <ModalOverlay bg="blackAlpha.900" />
             <BeetsModalContent>
                 <ModalCloseButton />
                 <BeetsModalHeader>
                     <BeetsModalHeadline>{!submitting ? 'Review swap' : 'Swap transaction details'}</BeetsModalHeadline>
-                    {/*!submitting && (
-                        <BeetsModalSubHeadline>
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed eu leo vestibulum
-                        </BeetsModalSubHeadline>
-                    )*/}
                 </BeetsModalHeader>
-                <BeetsModalBody>
+                <BeetsModalBody p="0">
                     {batchSwapQuery.isConfirmed && (
                         <Portal>
                             <Box position="absolute" top="0" left="0" width="full">

@@ -1,17 +1,23 @@
 import { ModalBody, ModalBodyProps, ModalContent, ModalContentProps, ModalHeaderProps } from '@chakra-ui/modal';
 import { Heading, ModalHeader, Text, TextProps } from '@chakra-ui/react';
-import { HeadingProps } from '@chakra-ui/layout';
+import { Box, HeadingProps } from '@chakra-ui/layout';
 
 export function BeetsModalContent(props: ModalContentProps) {
-    return <ModalContent backgroundColor="black" {...props} />;
+    return (
+        <ModalContent {...props}>
+            <Box bg="blackAlpha.400">
+                <Box className="bg">{props.children}</Box>
+            </Box>
+        </ModalContent>
+    );
 }
 
 export function BeetsModalHeader(props: ModalHeaderProps) {
-    return <ModalHeader className="bg" {...props} />;
+    return <ModalHeader px="4" {...props} />;
 }
 
 export function BeetsModalBody(props: ModalBodyProps) {
-    return <ModalBody className="bg" pb="6" {...props} />;
+    return <ModalBody px="4" pb="6" {...props} />;
 }
 
 export function BeetsModalHeadline(props: HeadingProps) {

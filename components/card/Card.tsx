@@ -38,8 +38,6 @@ export default function Card({
         () => (
             <Flex
                 justifyContent="space-between"
-                //borderBottom="1px"
-                //borderColor="gray.400"
                 width="full"
                 padding="4"
                 alignItems="center"
