@@ -75,7 +75,9 @@ export class PoolMetaStableService implements PoolService {
         const bptZeroPriceImpact = this.bptForTokensZeroPriceImpact(tokenAmountsIn);
 
         return {
-            priceImpact: oldBnum(1).minus(bptAmount.div(bptZeroPriceImpact)).toNumber(),
+            priceImpact: bptZeroPriceImpact.lt(bptAmount)
+                ? 0
+                : oldBnum(1).minus(bptAmount.div(bptZeroPriceImpact)).toNumber(),
             minBptReceived: formatFixed(bptAmount.toString(), 18),
         };
     }
