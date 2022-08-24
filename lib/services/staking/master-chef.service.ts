@@ -68,20 +68,16 @@ export class MasterChefService {
         const multicaller = new Multicaller(this.chainId, provider, mergedAbi);
 
         for (const farm of farms) {
-            if (parseFloat(farm.beetsPerBlock) > 0) {
-                multicaller.call(`${farm.id}.pendingBeets`, this.masterChefContractAddress, 'pendingBeets', [
-                    farm.id,
-                    userAddress,
-                ]);
-            }
+            multicaller.call(`${farm.id}.pendingBeets`, this.masterChefContractAddress, 'pendingBeets', [
+                farm.id,
+                userAddress,
+            ]);
 
-            const rewardersWithRewards = (farm.rewarders || []).filter(
-                (rewarder) => parseFloat(rewarder.rewardPerSecond) > 0,
-            );
+            const farmRewarders = farm.rewarders || [];
 
-            if (rewardersWithRewards.length > 0) {
+            if (farmRewarders.length > 0) {
                 //a farm will only ever have one rewarder, but the rewarder can have many tokens
-                multicaller.call(`${farm.id}.pendingRewards`, rewardersWithRewards[0].address, 'pendingTokens', [
+                multicaller.call(`${farm.id}.pendingRewards`, farmRewarders[0].address, 'pendingTokens', [
                     farm.id,
                     userAddress,
                     0,
