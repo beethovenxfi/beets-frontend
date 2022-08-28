@@ -39,7 +39,7 @@ export function PoolInvestProportional({ onShowPreview }: Props) {
     const { setSelectedOption, selectedOptions, setInputAmounts, zapEnabled } = useInvestState();
     const [proportionalPercent, setProportionalPercent] = useState(25);
     const { data } = usePoolJoinGetProportionalInvestmentAmount();
-    const { selectedInvestTokens, userInvestTokenBalances } = useInvest();
+    const { selectedInvestTokens } = useInvest();
     const { data: hasBatchRelayerApproval } = useHasBatchRelayerApproval();
 
     const scaledProportionalSuggestions = mapValues(data || {}, (val, address) =>
@@ -53,13 +53,6 @@ export function PoolInvestProportional({ onShowPreview }: Props) {
     useEffect(() => {
         setInputAmounts(scaledProportionalSuggestions);
     }, [JSON.stringify(scaledProportionalSuggestions)]);
-
-    /*useEffect(() => {
-        investOptions.forEach((investOption, index) => {
-            const tokenOption = selectedInvestTokens[index];
-            const amount = scaledProportionalSuggestions[tokenOption.address];
-        });
-    }, []);*/
 
     return (
         <Box mt="4">
@@ -100,10 +93,7 @@ export function PoolInvestProportional({ onShowPreview }: Props) {
                                     <Box flex="1">
                                         <TokenSelectInline
                                             tokenOptions={option.tokenOptions}
-                                            selectedAddress={
-                                                selectedOptions[`${option.poolTokenIndex}`] ||
-                                                option.tokenOptions[0].address
-                                            }
+                                            selectedAddress={selectedOptions[`${option.poolTokenIndex}`]}
                                             onOptionSelect={(address) =>
                                                 setSelectedOption(option.poolTokenIndex, address)
                                             }

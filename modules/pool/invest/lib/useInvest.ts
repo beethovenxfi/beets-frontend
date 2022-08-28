@@ -1,26 +1,28 @@
+import { useEffect } from 'react';
 import { TokenAmountHumanReadable } from '~/lib/services/token/token-types';
 import { useInvestState } from '~/modules/pool/invest/lib/useInvestState';
 import { usePoolUserTokenBalancesInWallet } from '~/modules/pool/lib/usePoolUserTokenBalancesInWallet';
 import { isEth, tokenGetAmountForAddress } from '~/lib/services/token/token-util';
 import { GqlPoolToken } from '~/apollo/generated/graphql-codegen-generated';
-import { sumBy } from 'lodash';
+import { sumBy, isEmpty } from 'lodash';
 import { useGetTokens } from '~/lib/global/useToken';
 import { oldBnum } from '~/lib/services/pool/lib/old-big-number';
 import { usePool } from '~/modules/pool/lib/usePool';
 
 export function useInvest() {
     const { pool } = usePool();
-    const { selectedOptions, inputAmounts, zapEnabled } = useInvestState();
-    const { getUserBalanceForToken, userPoolTokenBalances } = usePoolUserTokenBalancesInWallet();
+    const { setSelectedOption, selectedOptions, inputAmounts, zapEnabled } = useInvestState();
+    const { getUserBalanceForToken, userPoolTokenBalances, getUserBalanceUSDForToken } =
+        usePoolUserTokenBalancesInWallet();
     const { priceForAmount } = useGetTokens();
 
-    const selectedInvestTokens: GqlPoolToken[] = pool.investConfig.options.map((option) =>
-        selectedOptions[`${option.poolTokenIndex}`]
+    const selectedInvestTokens: GqlPoolToken[] = pool.investConfig.options.map((option) => {
+        return selectedOptions[`${option.poolTokenIndex}`]
             ? option.tokenOptions.find(
                   (tokenOption) => tokenOption.address === selectedOptions[`${option.poolTokenIndex}`],
               )!
-            : option.tokenOptions[0],
-    );
+            : option.tokenOptions[0];
+    });
 
     const selectedInvestTokensWithAmounts = selectedInvestTokens.map((token) => ({
         ...token,
@@ -46,6 +48,25 @@ export function useInvest() {
                         parseFloat(tokenGetAmountForAddress(tokenOption.address, userPoolTokenBalances)) > 0,
                 ).length > 0,
         ).length === pool.investConfig.options.length;
+
+    //set inital selected options if not set, for tokens with more than 1 tokenOption
+    useEffect(() => {
+        if (isEmpty(selectedOptions)) {
+            pool.investConfig.options.map((option, index) => {
+                if (option.tokenOptions.length > 1) {
+                    const tokensOptionsWithAmounts = option.tokenOptions.map((token) => ({
+                        ...token,
+                        amount: getUserBalanceUSDForToken(token.address),
+                    }));
+
+                    const largestUSDtokenAddress = tokensOptionsWithAmounts.reduce((previous, current) =>
+                        previous.amount > current.amount ? previous : current,
+                    ).address;
+                    setSelectedOption(index, largestUSDtokenAddress);
+                }
+            });
+        }
+    }, []);
 
     const totalInvestValue = sumBy(selectedInvestTokensWithAmounts, priceForAmount);
     const isInvestingWithEth = !!selectedInvestTokens.find((token) => isEth(token.address));
