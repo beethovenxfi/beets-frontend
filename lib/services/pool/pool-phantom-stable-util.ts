@@ -17,6 +17,7 @@ import { BigNumber } from 'ethers';
 import OldBigNumber from 'bignumber.js';
 import { oldBnum } from '~/lib/services/pool/lib/old-big-number';
 import { cloneDeep } from 'lodash';
+import { isEth, replaceEthWithWeth } from '~/lib/services/token/token-util';
 
 export function poolGetJoinSwapForToken({
     poolId,
@@ -29,7 +30,9 @@ export function poolGetJoinSwapForToken({
     tokenAmountIn: TokenAmountHumanReadable;
     poolToken: GqlPoolTokenUnion;
 }): { swaps: SwapV2[]; assets: string[] } {
-    const tokenIn = tokenAmountIn.address.toLowerCase();
+    const tokenIn = isEth(tokenAmountIn.address.toLowerCase())
+        ? replaceEthWithWeth(tokenAmountIn.address.toLowerCase())
+        : tokenAmountIn.address.toLowerCase();
 
     if (poolToken.address === tokenIn) {
         return {

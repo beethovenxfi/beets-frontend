@@ -37,6 +37,7 @@ import { MaxUint256, WeiPerEther, Zero } from '@ethersproject/constants';
 import { poolScaleTokenAmounts } from '~/lib/services/pool/lib/util';
 import { poolIsTokenPhantomBpt } from '~/lib/services/pool/pool-util';
 import { BigNumber } from 'ethers';
+import { isEth, replaceEthWithWeth } from '~/lib/services/token/token-util';
 
 export class PoolWeightedBoostedService implements PoolService {
     private baseService: PoolBaseService;
@@ -140,7 +141,7 @@ export class PoolWeightedBoostedService implements PoolService {
 
             return {
                 ...suggestion,
-                tokenOut: tokenOption.address,
+                tokenOut: isEth(tokenOption.address) ? replaceEthWithWeth(tokenOption.address) : tokenOption.address,
             };
         });
 
