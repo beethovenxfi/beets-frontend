@@ -21,7 +21,8 @@ import { PoolInvestSummary } from '~/modules/pool/invest/components/PoolInvestSu
 import { useGetTokens } from '~/lib/global/useToken';
 import { useEffect, useState } from 'react';
 import { usePoolJoinGetProportionalInvestmentAmount } from '~/modules/pool/invest/lib/usePoolJoinGetProportionalInvestmentAmount';
-import { mapValues } from 'lodash';
+import { usePoolGetMaxProportionalInvestmentAmount } from '~/modules/pool/invest/lib/usePoolGetMaxProportionalInvestmentAmount';
+import { mapValues, isEmpty } from 'lodash';
 import { oldBnum } from '~/lib/services/pool/lib/old-big-number';
 import { useInvest } from '~/modules/pool/invest/lib/useInvest';
 import { CardRow } from '~/components/card/CardRow';
@@ -41,6 +42,7 @@ export function PoolInvestProportional({ onShowPreview }: Props) {
     const { data } = usePoolJoinGetProportionalInvestmentAmount();
     const { selectedInvestTokens } = useInvest();
     const { data: hasBatchRelayerApproval } = useHasBatchRelayerApproval();
+    const { tokenOptionsWithHighestValue } = usePoolGetMaxProportionalInvestmentAmount();
 
     const scaledProportionalSuggestions = mapValues(data || {}, (val, address) =>
         oldBnum(val)
@@ -53,6 +55,17 @@ export function PoolInvestProportional({ onShowPreview }: Props) {
     useEffect(() => {
         setInputAmounts(scaledProportionalSuggestions);
     }, [JSON.stringify(scaledProportionalSuggestions)]);
+
+    //set inital selected options if not set, for tokens with more than 1 tokenOption
+    useEffect(() => {
+        if (isEmpty(selectedOptions)) {
+            tokenOptionsWithHighestValue.map((token, index) => {
+                if (token.hasMultipleTokenOptions) {
+                    setSelectedOption(index, token.address);
+                }
+            });
+        }
+    }, []);
 
     return (
         <Box mt="4">

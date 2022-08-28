@@ -49,25 +49,6 @@ export function useInvest() {
                 ).length > 0,
         ).length === pool.investConfig.options.length;
 
-    //set inital selected options if not set, for tokens with more than 1 tokenOption
-    useEffect(() => {
-        if (isEmpty(selectedOptions)) {
-            pool.investConfig.options.map((option, index) => {
-                if (option.tokenOptions.length > 1) {
-                    const tokensOptionsWithAmounts = option.tokenOptions.map((token) => ({
-                        ...token,
-                        amount: getUserBalanceUSDForToken(token.address),
-                    }));
-
-                    const largestUSDtokenAddress = tokensOptionsWithAmounts.reduce((previous, current) =>
-                        previous.amount > current.amount ? previous : current,
-                    ).address;
-                    setSelectedOption(index, largestUSDtokenAddress);
-                }
-            });
-        }
-    }, []);
-
     const totalInvestValue = sumBy(selectedInvestTokensWithAmounts, priceForAmount);
     const isInvestingWithEth = !!selectedInvestTokens.find((token) => isEth(token.address));
 

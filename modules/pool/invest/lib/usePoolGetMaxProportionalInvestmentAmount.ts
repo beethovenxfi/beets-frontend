@@ -14,14 +14,18 @@ export function usePoolGetMaxProportionalInvestmentAmount() {
     const { userAddress } = useUserAccount();
     const { getUserBalanceForToken } = usePoolUserTokenBalancesInWallet();
     const { userInvestTokenBalances, selectedInvestTokens } = useInvest();
-    const tokenOptionsWithHighestValue: TokenAmountHumanReadable[] = pool.investConfig.options.map((option) => {
+    const tokenOptionsWithHighestValue = pool.investConfig.options.map((option) => {
         const tokenWithHighestValue = orderBy(
             option.tokenOptions,
             (tokenOption) => priceForAmount({ ...tokenOption, amount: getUserBalanceForToken(tokenOption.address) }),
             'desc',
         )[0].address;
 
-        return { address: tokenWithHighestValue, amount: getUserBalanceForToken(tokenWithHighestValue) };
+        return {
+            address: tokenWithHighestValue,
+            amount: getUserBalanceForToken(tokenWithHighestValue),
+            hasMultipleTokenOptions: option.tokenOptions.length > 1,
+        };
     });
 
     const tokenWithSmallestValue = sortBy(
@@ -50,7 +54,7 @@ export function usePoolGetMaxProportionalInvestmentAmount() {
         'normalizedAmount',
     )[0];
 
-    return useQuery(
+    const query = useQuery(
         [
             {
                 key: 'poolGetMaxProportionalInvestmentAmount',
@@ -79,4 +83,6 @@ export function usePoolGetMaxProportionalInvestmentAmount() {
         },
         { enabled: true, staleTime: 0, cacheTime: 0 },
     );
+
+    return { ...query, tokenOptionsWithHighestValue };
 }
