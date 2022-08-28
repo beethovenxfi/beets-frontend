@@ -21,7 +21,7 @@ import { PoolInvestSummary } from '~/modules/pool/invest/components/PoolInvestSu
 import { useGetTokens } from '~/lib/global/useToken';
 import { useEffect, useState } from 'react';
 import { usePoolJoinGetProportionalInvestmentAmount } from '~/modules/pool/invest/lib/usePoolJoinGetProportionalInvestmentAmount';
-import { usePoolGetMaxProportionalInvestmentAmount } from '~/modules/pool/invest/lib/usePoolGetMaxProportionalInvestmentAmount';
+import { usePoolUserTokenBalancesInWallet } from '~/modules/pool/lib/usePoolUserTokenBalancesInWallet';
 import { mapValues, isEmpty } from 'lodash';
 import { oldBnum } from '~/lib/services/pool/lib/old-big-number';
 import { useInvest } from '~/modules/pool/invest/lib/useInvest';
@@ -42,7 +42,7 @@ export function PoolInvestProportional({ onShowPreview }: Props) {
     const { data } = usePoolJoinGetProportionalInvestmentAmount();
     const { selectedInvestTokens } = useInvest();
     const { data: hasBatchRelayerApproval } = useHasBatchRelayerApproval();
-    const { tokenOptionsWithHighestValue } = usePoolGetMaxProportionalInvestmentAmount();
+    const { tokenOptionsWithHighestValue } = usePoolUserTokenBalancesInWallet();
 
     const scaledProportionalSuggestions = mapValues(data || {}, (val, address) =>
         oldBnum(val)
