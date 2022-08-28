@@ -20,16 +20,11 @@ export function _usePoolUserTokenBalancesInWallet() {
         return userBalances.find((balance) => address === balance.address)?.amount || '0';
     }
 
-    function getUserBalanceUSDForToken(address: string): number {
-        return priceForAmount({ address: address, amount: getUserBalance(address) });
-    }
-
     return {
         ...userBalancesQuery,
         userPoolTokenBalances: userBalances,
         investableAmount,
         getUserBalanceForToken,
-        getUserBalanceUSDForToken,
     };
 }
 

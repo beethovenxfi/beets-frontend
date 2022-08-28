@@ -11,8 +11,7 @@ import { usePool } from '~/modules/pool/lib/usePool';
 export function useInvest() {
     const { pool } = usePool();
     const { selectedOptions, inputAmounts, zapEnabled } = useInvestState();
-    const { getUserBalanceForToken, userPoolTokenBalances, getUserBalanceUSDForToken } =
-        usePoolUserTokenBalancesInWallet();
+    const { getUserBalanceForToken, userPoolTokenBalances } = usePoolUserTokenBalancesInWallet();
     const { priceForAmount } = useGetTokens();
 
     const selectedInvestTokens: GqlPoolToken[] = pool.investConfig.options.map((option) =>
