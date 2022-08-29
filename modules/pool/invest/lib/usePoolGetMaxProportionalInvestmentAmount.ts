@@ -1,6 +1,6 @@
 import { useUserAccount } from '~/lib/user/useUserAccount';
 import { sortBy, sumBy } from 'lodash';
-import { isEth, replaceEthWithWeth } from '~/lib/services/token/token-util';
+import { replaceEthWithWeth } from '~/lib/services/token/token-util';
 import { useQuery } from 'react-query';
 import { usePoolUserTokenBalancesInWallet } from '~/modules/pool/lib/usePoolUserTokenBalancesInWallet';
 import { useGetTokens } from '~/lib/global/useToken';
@@ -40,7 +40,7 @@ export function usePoolGetMaxProportionalInvestmentAmount() {
         'normalizedAmount',
     )[0];
 
-    const query = useQuery(
+    return useQuery(
         [
             {
                 key: 'poolGetMaxProportionalInvestmentAmount',
@@ -52,9 +52,7 @@ export function usePoolGetMaxProportionalInvestmentAmount() {
         async ({ queryKey }) => {
             const fixedAmount = {
                 ...tokenWithSmallestValue,
-                address: isEth(tokenWithSmallestValue.address)
-                    ? replaceEthWithWeth(tokenWithSmallestValue.address)
-                    : tokenWithSmallestValue.address,
+                address: replaceEthWithWeth(tokenWithSmallestValue.address),
             };
 
             if (!poolService.joinGetProportionalSuggestionForFixedAmount) {
@@ -70,6 +68,4 @@ export function usePoolGetMaxProportionalInvestmentAmount() {
         },
         { enabled: true, staleTime: 0, cacheTime: 0 },
     );
-
-    return { ...query };
 }

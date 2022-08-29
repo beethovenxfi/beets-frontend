@@ -106,7 +106,10 @@ export function PoolInvestProportional({ onShowPreview }: Props) {
                                     <Box flex="1">
                                         <TokenSelectInline
                                             tokenOptions={option.tokenOptions}
-                                            selectedAddress={selectedOptions[`${option.poolTokenIndex}`]}
+                                            selectedAddress={
+                                                selectedOptions[`${option.poolTokenIndex}`] ||
+                                                option.tokenOptions[0].address
+                                            }
                                             onOptionSelect={(address) =>
                                                 setSelectedOption(option.poolTokenIndex, address)
                                             }
