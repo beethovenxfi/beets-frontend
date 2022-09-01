@@ -5,6 +5,9 @@ import { AmountHumanReadable, TokenBase } from '~/lib/services/token/token-types
 import { tokenFormatAmountPrecise } from '~/lib/services/token/token-util';
 import { numberFormatUSDValue } from '~/lib/util/number-formats';
 import { Badge, Circle, Skeleton } from '@chakra-ui/react';
+import { PlusCircle } from 'react-feather';
+import { useGetTokens } from '~/lib/global/useToken';
+import { addTokenToWallet } from '~/lib/util/web3';
 
 type TokenRowProps = TokenBase & {
     userBalance: AmountHumanReadable;
@@ -23,6 +26,8 @@ export function TokenRow({
     imported,
 }: TokenRowProps & ButtonProps) {
     const hasBalance = parseFloat(userBalance) > 0;
+    const { getToken } = useGetTokens();
+    const token = getToken(address);
 
     return (
         <Button
@@ -36,7 +41,7 @@ export function TokenRow({
             fontWeight="normal"
             color="gray.100"
         >
-            <HStack px='3' width="full" paddingY="4" justifyContent="space-between">
+            <HStack px="3" width="full" paddingY="4" justifyContent="space-between">
                 <HStack>
                     <TokenAvatar address={address} size="xs" />
                     <Text fontSize="lg">{symbol}</Text>
@@ -45,6 +50,12 @@ export function TokenRow({
                             Imported
                         </Badge>
                     )}
+                    <PlusCircle
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            addTokenToWallet(token);
+                        }}
+                    />
                 </HStack>
                 <Box marginTop="2px" display="flex" flexDirection="column">
                     {loading ? (
