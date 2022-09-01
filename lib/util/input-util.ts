@@ -5,15 +5,19 @@ export function tokenInputBlockInvalidCharacters(event: KeyboardEvent<HTMLInputE
 }
 
 export function tokenInputTruncateDecimalPlaces(value: string, decimalPlaces: number): string {
+    const maxChars = 21;
     if (value.includes('.')) {
         const [leftDigits, rightDigits] = value.split('.');
 
-        if (rightDigits && rightDigits.length > decimalPlaces) {
-            const maxLength = leftDigits.length + decimalPlaces + 1;
+        const rightDigitsNew =
+            rightDigits && rightDigits.length > decimalPlaces ? rightDigits.slice(0, decimalPlaces) : rightDigits;
 
-            return value.slice(0, maxLength);
+        if (leftDigits.length + rightDigitsNew.length + 1 > maxChars) {
+            return value.slice(0, maxChars);
+        } else {
+            return `${leftDigits}.${rightDigitsNew}`;
         }
     }
 
-    return value;
+    return value.slice(0, maxChars);
 }
