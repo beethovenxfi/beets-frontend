@@ -16,7 +16,7 @@ export function PoolInvestStablePoolDescription() {
             <br />
 
             <Highlight query={['impermanent loss']} styles={{ fontWeight: 'bold', color: 'white' }}>
-                In instances where one asset in the pool looses its peg, it&apos;s possible to incur severe impermanent
+                In instances where one asset in the pool loses its peg, it&apos;s possible to incur severe impermanent
                 loss.
             </Highlight>
         </>
