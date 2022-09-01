@@ -6,7 +6,7 @@ import { isAddress } from 'ethers/lib/utils';
 import { TokenActionRow } from '~/components/token-select/TokenActionRow';
 import { TokenSelectTokenList } from '~/components/token-select/TokenSelectTokenList';
 import { TokenImportAlertDialog } from '~/components/token-select/TokenImportAlertDialog';
-import { useState } from 'react';
+import { RefObject, useState } from 'react';
 import { useGetTokens } from '~/lib/global/useToken';
 import { useUserImportedTokens } from '~/lib/user/useUserImportedTokens';
 
@@ -14,9 +14,10 @@ interface Props {
     isOpen: boolean;
     onOpen(): void;
     onClose(): void;
+    finalFocusRef: RefObject<HTMLInputElement>;
 }
 
-export function TokenSelectModal({ isOpen, onClose }: Props) {
+export function TokenSelectModal({ isOpen, onClose, finalFocusRef }: Props) {
     const listHeight = 500;
     const [searchTerm, setSearchTerm] = useState('');
     const { handleTokenSelected, tokenSelectKey } = useTradeCard();
@@ -34,7 +35,7 @@ export function TokenSelectModal({ isOpen, onClose }: Props) {
     }
 
     return (
-        <Modal isOpen={isOpen} onClose={onClose} size="lg">
+        <Modal isOpen={isOpen} onClose={onClose} size="lg" finalFocusRef={finalFocusRef}>
             <ModalOverlay bg="blackAlpha.800" />
             <ModalContent borderWidth={1} borderColor="beets.base.600">
                 <Box bg="blackAlpha.400">
