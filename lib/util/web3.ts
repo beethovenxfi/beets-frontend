@@ -1,6 +1,6 @@
 import { GqlToken } from '~/apollo/generated/graphql-codegen-generated';
 
-export const addTokenToWallet = async (token: GqlToken | null) => {
+export async function addTokenToWallet(token: GqlToken | null) {
     const provider = window.ethereum as any;
     try {
         // wasAdded is a boolean. Like any RPC method, an error may be thrown.
@@ -19,4 +19,4 @@ export const addTokenToWallet = async (token: GqlToken | null) => {
     } catch (error) {
         console.log(error);
     }
-};
+}
