@@ -1,6 +1,6 @@
 import { Box, Button, useDisclosure, VStack } from '@chakra-ui/react';
 import { useAnimation } from 'framer-motion';
-import TokenInput from '~/components/inputs/TokenInput';
+import { TokenInput } from '~/components/inputs/TokenInput';
 import Card from '~/components/card/Card';
 
 import { TokenInputSwapButton } from '~/modules/trade/components/TokenInputSwapButton';
@@ -19,6 +19,7 @@ import { BeetsSubmitTransactionButton } from '~/components/button/BeetsSubmitTra
 import { useWrapEth } from '~/lib/util/useWrapEth';
 import { useUnwrapEth } from '~/lib/util/useUnwrapEth';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
+import { useRef } from 'react';
 
 export function TradeCard() {
     const networkConfig = useNetworkConfig();
@@ -46,6 +47,7 @@ export function TradeCard() {
         tradeStopPolling,
         isNativeAssetWrap,
         isNativeAssetUnwrap,
+        tokenSelectKey,
     } = useTradeCard();
 
     const wrapEthQuery = useWrapEth();
@@ -67,6 +69,9 @@ export function TradeCard() {
     const hasApprovalForSellAmount =
         isLoadingAllowances || !isConnected || (isConnected && hasApprovalForAmount(tokenIn, sellAmount));
 
+    const finalRefTokenIn = useRef(null);
+    const finalRefTokenOut = useRef(null);
+
     function showTokenSelect(tokenKey: 'tokenIn' | 'tokenOut') {
         setTokenSelectKey(tokenKey);
         tokenSelectDisclosure.onOpen();
@@ -83,6 +88,7 @@ export function TradeCard() {
                 <VStack spacing="2" padding="4" width="full">
                     <Box position="relative" width="full">
                         <TokenInput
+                            ref={finalRefTokenIn}
                             label="Sell"
                             address={tokenIn}
                             toggleTokenSelect={() => showTokenSelect('tokenIn')}
@@ -94,6 +100,7 @@ export function TradeCard() {
                     </Box>
                     <TokenInputSwapButton onSwap={handleTokensSwitched} isLoading={isLoadingOrFetching} />
                     <TokenInput
+                        ref={finalRefTokenOut}
                         label="Buy"
                         address={tokenOut}
                         toggleTokenSelect={() => showTokenSelect('tokenOut')}
@@ -160,6 +167,7 @@ export function TradeCard() {
                 {!isNativeAssetWrap && !isNativeAssetUnwrap && <TradeCardSwapBreakdown />}
             </Card>
             <TokenSelectModal
+                finalFocusRef={tokenSelectKey === 'tokenIn' ? finalRefTokenIn : finalRefTokenOut}
                 isOpen={tokenSelectDisclosure.isOpen}
                 onOpen={tokenSelectDisclosure.onOpen}
                 onClose={tokenSelectDisclosure.onClose}
