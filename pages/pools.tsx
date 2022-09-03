@@ -9,6 +9,7 @@ import NextImage from 'next/image';
 import InvestMastheadImage from '~/assets/images/invest-masthead-image.png';
 import InvestMastheadOpImage from '~/assets/images/invest-masthead-image-OP.png';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
+import { UserTokenBalancesProvider } from '~/lib/user/useUserTokenBalances';
 
 function Pools() {
     const { chainId } = useNetworkConfig();
@@ -30,17 +31,19 @@ function Pools() {
                 <meta property="twitter:description" content={DESCRIPTION} />
             </Head>
             <PoolListProvider>
-                <PageMasthead
-                    title="Invest & Farm"
-                    image={
-                        <NextImage
-                            src={chainId === '10' ? InvestMastheadOpImage : InvestMastheadImage}
-                            width="208.62px"
-                            height="68px"
-                        />
-                    }
-                />
-                <PoolList />
+                <UserTokenBalancesProvider>
+                    <PageMasthead
+                        title="Invest & Farm"
+                        image={
+                            <NextImage
+                                src={chainId === '10' ? InvestMastheadOpImage : InvestMastheadImage}
+                                width="208.62px"
+                                height="68px"
+                            />
+                        }
+                    />
+                    <PoolList />
+                </UserTokenBalancesProvider>
             </PoolListProvider>
         </>
     );

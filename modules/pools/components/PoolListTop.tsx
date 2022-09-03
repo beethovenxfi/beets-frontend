@@ -4,8 +4,6 @@ import { PoolListSearch } from '~/modules/pools/components/PoolListSearch';
 import { Filter } from 'react-feather';
 import { PoolListTokenMultiSelect } from '~/modules/pools/components/PoolListTokenMultiSelect';
 import { PoolListFilterMultiSelect } from '~/modules/pools/components/PoolListFilterMultiSelect';
-import { PoolListAttributeMultiSelect } from '~/modules/pools/components/PoolListAttributeMultiSelect';
-import { useBoolean } from '@chakra-ui/hooks';
 import { usePoolList } from '~/modules/pools/usePoolList';
 import { FadeInOutBox } from '~/components/animation/FadeInOutBox';
 

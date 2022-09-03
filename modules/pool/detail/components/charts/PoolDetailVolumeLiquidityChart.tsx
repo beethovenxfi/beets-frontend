@@ -9,9 +9,10 @@ import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 
 interface Props {
     data: { timestamp: number; totalLiquidity: string; volume24h: string }[];
+    hideVolume?: boolean;
 }
 
-export function PoolDetailVolumeLiquidityChart({ data }: Props) {
+export function PoolDetailVolumeLiquidityChart({ data, hideVolume = false }: Props) {
     const { colors } = useTheme();
     const networkConfig = useNetworkConfig();
 
@@ -130,7 +131,7 @@ export function PoolDetailVolumeLiquidityChart({ data }: Props) {
                     },
                 },
                 {
-                    data: data.map((item) => [item.timestamp * 1000, item.volume24h]),
+                    data: hideVolume ? [] : data.map((item) => [item.timestamp * 1000, item.volume24h]),
                     name: 'Daily Volume',
                     type: 'line',
                     yAxisIndex: 1,

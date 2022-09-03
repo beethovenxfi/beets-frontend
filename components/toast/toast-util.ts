@@ -39,13 +39,13 @@ export function toastGetTransactionStatusHeadline(type: BeetsTransactionType, st
         switch (status) {
             case 'PENDING':
                 //return i18next.t('Toast - Headline - Trade pending', 'Trade pending');
-                return 'Trade pending';
+                return 'Swap pending';
             case 'CONFIRMED':
                 //return i18next.t('Toast - Headline - Trade confirmed', 'Trade confirmed');
-                return 'Trade confirmed';
+                return 'Swap confirmed';
             case 'ERROR':
                 //return i18next.t('Toast - Headline - Trade error', 'Trade error');
-                return 'Trade error';
+                return 'Swap error';
         }
     } else if (type === 'HARVEST') {
         switch (status) {

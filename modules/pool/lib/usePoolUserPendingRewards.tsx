@@ -14,9 +14,12 @@ export function _usePoolUserPendingRewards() {
     const { priceForAmount } = useGetTokens();
     const farm = pool.staking?.farm;
     const gauge = pool.staking?.gauge;
-    const hasBeetsRewards = parseFloat(farm?.beetsPerBlock || '0') > 0;
 
     const { data, isLoading, ...rest } = useStakingPendingRewards(pool.staking && hasBpt ? [pool.staking] : []);
+
+    const hasBeetsRewards =
+        (data || []).filter((item) => item.address === networkConfig.beets.address && parseFloat(item.amount) > 0)
+            .length > 0;
 
     const pendingRewardsTotalUSD = sumBy(data || [], priceForAmount);
     const rewardTokens = uniq([
@@ -27,7 +30,6 @@ export function _usePoolUserPendingRewards() {
 
     const pendingRewards: TokenAmountHumanReadable[] = rewardTokens.map((rewardToken) => {
         const pending = (data || []).find((data) => data.address === rewardToken);
-
         return pending || { address: rewardToken, amount: '0' };
     });
 
