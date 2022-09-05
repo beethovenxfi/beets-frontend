@@ -17,14 +17,14 @@ export function PoolInvestModal() {
     const [type, setInvestType] = useState<'proportional' | 'custom' | null>(null);
     const initialRef = useRef(null);
     const [investComplete, setInvestComplete] = useState(false);
-    const { clearInvestState } = useInvestState();
+    const { setInitialInvestState } = useInvestState();
 
     useEffect(() => {
         if (modalState !== 'start') {
             setModalState('start');
         }
 
-        clearInvestState();
+        setInitialInvestState();
     }, [pool.id]);
 
     function onModalClose() {

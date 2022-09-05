@@ -1,10 +1,8 @@
 import { useUserAccount } from '~/lib/user/useUserAccount';
-import { orderBy, sortBy, sumBy } from 'lodash';
-import { isEth, isWeth, replaceEthWithWeth, replaceWethWithEth } from '~/lib/services/token/token-util';
+import { sortBy, sumBy } from 'lodash';
+import { replaceEthWithWeth } from '~/lib/services/token/token-util';
 import { useQuery } from 'react-query';
-import { usePoolUserTokenBalancesInWallet } from '~/modules/pool/lib/usePoolUserTokenBalancesInWallet';
 import { useGetTokens } from '~/lib/global/useToken';
-import { TokenAmountHumanReadable } from '~/lib/services/token/token-types';
 import { useInvest } from '~/modules/pool/invest/lib/useInvest';
 import { usePool } from '~/modules/pool/lib/usePool';
 
@@ -12,21 +10,7 @@ export function usePoolGetMaxProportionalInvestmentAmount() {
     const { priceForAmount } = useGetTokens();
     const { poolService, pool } = usePool();
     const { userAddress } = useUserAccount();
-    const { getUserBalanceForToken } = usePoolUserTokenBalancesInWallet();
     const { userInvestTokenBalances, selectedInvestTokens } = useInvest();
-    const tokenOptionsWithHighestValue = pool.investConfig.options.map((option) => {
-        const tokenWithHighestValue = orderBy(
-            option.tokenOptions,
-            (tokenOption) => priceForAmount({ ...tokenOption, amount: getUserBalanceForToken(tokenOption.address) }),
-            'desc',
-        )[0].address;
-
-        return {
-            address: tokenWithHighestValue,
-            amount: getUserBalanceForToken(tokenWithHighestValue),
-            hasMultipleTokenOptions: option.tokenOptions.length > 1,
-        };
-    });
 
     const tokenWithSmallestValue = sortBy(
         userInvestTokenBalances.map((balance) => {
@@ -58,13 +42,11 @@ export function usePoolGetMaxProportionalInvestmentAmount() {
         [
             {
                 key: 'poolGetMaxProportionalInvestmentAmount',
-                tokenOptionsWithHighestValue,
                 tokenWithSmallestValue,
                 userAddress,
             },
         ],
         async ({ queryKey }) => {
-            const hasEth = !!tokenOptionsWithHighestValue.find((token) => isEth(token.address));
             const fixedAmount = {
                 ...tokenWithSmallestValue,
                 address: replaceEthWithWeth(tokenWithSmallestValue.address),
@@ -84,5 +66,5 @@ export function usePoolGetMaxProportionalInvestmentAmount() {
         { enabled: true, staleTime: 0, cacheTime: 0 },
     );
 
-    return { ...query, tokenOptionsWithHighestValue };
+    return { ...query };
 }

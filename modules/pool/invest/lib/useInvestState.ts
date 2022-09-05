@@ -1,5 +1,6 @@
 import { makeVar, useReactiveVar } from '@apollo/client';
 import { AmountHumanReadable, AmountHumanReadableMap } from '~/lib/services/token/token-types';
+import { usePoolUserTokenBalancesInWallet } from '~/modules/pool/lib/usePoolUserTokenBalancesInWallet';
 
 interface InvestState {
     inputAmounts: AmountHumanReadableMap;
@@ -14,6 +15,8 @@ export const investStateVar = makeVar<InvestState>({
 });
 
 export function useInvestState() {
+    const { tokenOptionsWithHighestValue } = usePoolUserTokenBalancesInWallet();
+
     function setInputAmounts(inputAmounts: AmountHumanReadableMap) {
         const state = investStateVar();
 
@@ -55,10 +58,19 @@ export function useInvestState() {
         });
     }
 
-    function clearInvestState() {
+    function setInitialInvestState() {
+        console.log('clearInvestState');
+        let initialSelectedOptions = {};
+
+        for (let i = 0; i < tokenOptionsWithHighestValue.length; i++) {
+            if (tokenOptionsWithHighestValue[i].hasMultipleTokenOptions) {
+                initialSelectedOptions = { ...initialSelectedOptions, [i]: tokenOptionsWithHighestValue[i].address };
+            }
+        }
+
         investStateVar({
             inputAmounts: {},
-            selectedOptions: {},
+            selectedOptions: initialSelectedOptions,
             zapEnabled: false,
         });
     }
@@ -67,7 +79,7 @@ export function useInvestState() {
         setInputAmounts,
         setInputAmount,
         setSelectedOption,
-        clearInvestState,
+        setInitialInvestState,
         ...useReactiveVar(investStateVar),
         toggleZapEnabled,
     };
