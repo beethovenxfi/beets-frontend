@@ -9,9 +9,9 @@ export function PoolCreate() {
 
     return (
         <Grid
-            templateColumns="200px 1fr 275px"
-            templateAreas={`"left middle right"
-        "left buttons right"`}
+            templateColumns="200px 1fr"
+            templateAreas={`"left right"
+        "left buttons"`}
             gap="6"
             w="1024px"
         >
@@ -26,12 +26,7 @@ export function PoolCreate() {
                     <ListItem>??</ListItem>
                 </OrderedList>
             </GridItem>
-            <GridItem area="right" border="1px" borderRadius="lg" p="10px" ml="50px">
-                <Text as="h2" textStyle="h2" mb="20px">
-                    Title Right
-                </Text>
-            </GridItem>
-            <GridItem area="middle">
+            <GridItem area="right">
                 {state === 'details' && <PoolCreateDetails />}
                 {state === 'tokens' && <PoolCreateTokens />}
             </GridItem>
