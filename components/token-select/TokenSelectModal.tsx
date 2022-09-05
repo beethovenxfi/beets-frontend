@@ -25,7 +25,7 @@ export function TokenSelectModal({ isOpen, onClose, finalFocusRef }: Props) {
     const alertDisclosure = useDisclosure();
     const { loadToken, clearTokenImport, tokenToImport, addressToLoad, importToken } = useUserImportedTokens();
 
-    const initialRef = useRef(null);
+    const initialFocusRef = useRef(null);
 
     function onTokenRowClick(address: string) {
         onClose();
@@ -37,7 +37,13 @@ export function TokenSelectModal({ isOpen, onClose, finalFocusRef }: Props) {
     }
 
     return (
-        <Modal isOpen={isOpen} onClose={onClose} size="lg" initialFocusRef={initialRef} finalFocusRef={finalFocusRef}>
+        <Modal
+            isOpen={isOpen}
+            onClose={onClose}
+            size="lg"
+            initialFocusRef={initialFocusRef}
+            finalFocusRef={finalFocusRef}
+        >
             <ModalOverlay bg="blackAlpha.800" />
             <ModalContent borderWidth={1} borderColor="beets.base.600">
                 <Box bg="blackAlpha.400">
@@ -47,7 +53,7 @@ export function TokenSelectModal({ isOpen, onClose, finalFocusRef }: Props) {
                         <ModalBody p="0" position="relative">
                             <Box px="6" pb="6" boxShadow="2xl" borderBottomWidth={1} borderBottomColor="beets.base.500">
                                 <TokenSelectSearchInput
-                                    ref={initialRef}
+                                    ref={initialFocusRef}
                                     placeholder="Search by symbol or address..."
                                     value={searchTerm}
                                     setValue={(value: string) => {
