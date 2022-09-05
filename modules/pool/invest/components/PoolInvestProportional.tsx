@@ -21,7 +21,7 @@ import { PoolInvestSummary } from '~/modules/pool/invest/components/PoolInvestSu
 import { useGetTokens } from '~/lib/global/useToken';
 import { useEffect, useState } from 'react';
 import { usePoolJoinGetProportionalInvestmentAmount } from '~/modules/pool/invest/lib/usePoolJoinGetProportionalInvestmentAmount';
-import { mapValues, isEmpty } from 'lodash';
+import { mapValues } from 'lodash';
 import { oldBnum } from '~/lib/services/pool/lib/old-big-number';
 import { useInvest } from '~/modules/pool/invest/lib/useInvest';
 import { CardRow } from '~/components/card/CardRow';
@@ -93,7 +93,10 @@ export function PoolInvestProportional({ onShowPreview }: Props) {
                                     <Box flex="1">
                                         <TokenSelectInline
                                             tokenOptions={option.tokenOptions}
-                                            selectedAddress={selectedOptions[`${option.poolTokenIndex}`]}
+                                            selectedAddress={
+                                                selectedOptions[`${option.poolTokenIndex}`] ||
+                                                option.tokenOptions[0].address
+                                            }
                                             onOptionSelect={(address) =>
                                                 setSelectedOption(option.poolTokenIndex, address)
                                             }

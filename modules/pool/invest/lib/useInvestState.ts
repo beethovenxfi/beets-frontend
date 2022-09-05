@@ -59,7 +59,6 @@ export function useInvestState() {
     }
 
     function setInitialInvestState() {
-        console.log('clearInvestState');
         let initialSelectedOptions = {};
 
         for (let i = 0; i < tokenOptionsWithHighestValue.length; i++) {
