@@ -38,7 +38,7 @@ export function usePoolGetMaxProportionalInvestmentAmount() {
         'normalizedAmount',
     )[0];
 
-    const query = useQuery(
+    return useQuery(
         [
             {
                 key: 'poolGetMaxProportionalInvestmentAmount',
@@ -65,6 +65,4 @@ export function usePoolGetMaxProportionalInvestmentAmount() {
         },
         { enabled: true, staleTime: 0, cacheTime: 0 },
     );
-
-    return { ...query };
 }
