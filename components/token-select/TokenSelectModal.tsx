@@ -6,7 +6,7 @@ import { isAddress } from 'ethers/lib/utils';
 import { TokenActionRow } from '~/components/token-select/TokenActionRow';
 import { TokenSelectTokenList } from '~/components/token-select/TokenSelectTokenList';
 import { TokenImportAlertDialog } from '~/components/token-select/TokenImportAlertDialog';
-import { RefObject, useState } from 'react';
+import { RefObject, useRef, useState } from 'react';
 import { useGetTokens } from '~/lib/global/useToken';
 import { useUserImportedTokens } from '~/lib/user/useUserImportedTokens';
 
@@ -25,6 +25,8 @@ export function TokenSelectModal({ isOpen, onClose, finalFocusRef }: Props) {
     const alertDisclosure = useDisclosure();
     const { loadToken, clearTokenImport, tokenToImport, addressToLoad, importToken } = useUserImportedTokens();
 
+    const initialFocusRef = useRef(null);
+
     function onTokenRowClick(address: string) {
         onClose();
 
@@ -35,7 +37,13 @@ export function TokenSelectModal({ isOpen, onClose, finalFocusRef }: Props) {
     }
 
     return (
-        <Modal isOpen={isOpen} onClose={onClose} size="lg" finalFocusRef={finalFocusRef}>
+        <Modal
+            isOpen={isOpen}
+            onClose={onClose}
+            size="lg"
+            initialFocusRef={initialFocusRef}
+            finalFocusRef={finalFocusRef}
+        >
             <ModalOverlay bg="blackAlpha.800" />
             <ModalContent borderWidth={1} borderColor="beets.base.600">
                 <Box bg="blackAlpha.400">
@@ -45,9 +53,10 @@ export function TokenSelectModal({ isOpen, onClose, finalFocusRef }: Props) {
                         <ModalBody p="0" position="relative">
                             <Box px="6" pb="6" boxShadow="2xl" borderBottomWidth={1} borderBottomColor="beets.base.500">
                                 <TokenSelectSearchInput
+                                    ref={initialFocusRef}
                                     placeholder="Search by symbol or address..."
                                     value={searchTerm}
-                                    setValue={(value) => {
+                                    setValue={(value: string) => {
                                         setSearchTerm(value);
 
                                         if (isAddress(value) && !getTradableToken(value)) {
