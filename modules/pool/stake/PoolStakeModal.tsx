@@ -64,12 +64,19 @@ export function PoolStakeModal({ isOpen, onOpen, onClose }: Props) {
     const loading = isLoadingAllowances || isLoadingBalances;
 
     useEffect(() => {
-        if (!loading && steps === null) {
+        if (!loading) {
             const hasApproval = hasApprovalToStakeAmount(userWalletBptBalance);
 
             setSteps([
                 ...(!hasApproval
-                    ? [{ id: 'approve', type: 'other' as const, buttonText: 'Approve BPT', tooltipText: 'Approve BPT' }]
+                    ? [
+                          {
+                              id: 'approve',
+                              type: 'other' as const,
+                              buttonText: 'Approve BPT',
+                              tooltipText: 'Approve BPT',
+                          },
+                      ]
                     : []),
                 {
                     id: 'stake',
@@ -79,7 +86,7 @@ export function PoolStakeModal({ isOpen, onOpen, onClose }: Props) {
                 },
             ]);
         }
-    }, [loading]);
+    }, [loading, isOpen]);
 
     useEffect(() => {
         if (isOpen && userWalletBptBalance) {
