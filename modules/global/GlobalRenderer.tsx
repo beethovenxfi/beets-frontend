@@ -13,7 +13,7 @@ export function GlobalRenderer() {
     });
 
     useEffectOnce(() => {
-        startPollingAppData(30_000);
+        startPollingAppData(45_000);
     });
 
     useEffect(() => {
