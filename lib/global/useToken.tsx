@@ -7,7 +7,7 @@ import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 import { createContext, ReactNode, useContext } from 'react';
 
 export const TokensContext = createContext<ReturnType<typeof _useGetTokens> | null>(null);
-interface TokenWithImportedFlag extends GqlToken {
+export interface TokenWithImportedFlag extends GqlToken {
     imported?: boolean;
 }
 

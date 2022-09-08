@@ -3,6 +3,7 @@ import { PoolCreateDetails } from './components/PoolCreateDetails';
 import { ChevronLeft, ChevronRight } from 'react-feather';
 import { useState } from 'react';
 import { PoolCreateTokens } from './components/PoolCreateTokens';
+import Card from '~/components/card/Card';
 
 export function PoolCreate() {
     const [state, setState] = useState<'details' | 'tokens'>('details');
@@ -15,16 +16,18 @@ export function PoolCreate() {
             gap="6"
             w="1024px"
         >
-            <GridItem area="left" border="1px" borderRadius="lg" p="10px">
-                <Text as="h2" textStyle="h2" mb="20px">
-                    Title Left
-                </Text>
-                <OrderedList>
-                    <ListItem>Pool details</ListItem>
-                    <ListItem>Tokens & weights</ListItem>
-                    <ListItem>??</ListItem>
-                    <ListItem>??</ListItem>
-                </OrderedList>
+            <GridItem area="left">
+                <Card p="20px">
+                    <Text as="h2" textStyle="h2" mb="20px">
+                        Title
+                    </Text>
+                    <OrderedList>
+                        <ListItem>Pool details</ListItem>
+                        <ListItem>Tokens & weights</ListItem>
+                        <ListItem>??</ListItem>
+                        <ListItem>??</ListItem>
+                    </OrderedList>
+                </Card>
             </GridItem>
             <GridItem area="right">
                 {state === 'details' && <PoolCreateDetails />}

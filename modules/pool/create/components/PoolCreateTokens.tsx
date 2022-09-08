@@ -1,15 +1,24 @@
-import { Grid, GridItem } from '@chakra-ui/react';
-import { PoolCreateTokenSelect } from './token-select/PoolCreateTokenSelect';
+import { Box, useDisclosure } from '@chakra-ui/react';
+import { PoolCreateTokenSelectModal } from './token-select/PoolCreateTokenSelectModal';
+import { usePoolCreate } from '../../lib/usePoolCreate';
+import { Plus } from 'react-feather';
 
 export function PoolCreateTokens() {
+    const tokenSelectDisclosure = useDisclosure();
+
+    const { tokensSelected } = usePoolCreate();
+
     return (
         <>
-            <Grid gap="6" templateColumns="1fr 1fr">
-                <GridItem>token input</GridItem>
-                <GridItem>
-                    <PoolCreateTokenSelect />
-                </GridItem>
-            </Grid>
+            <Box>{tokensSelected.length === 0 ? 'No tokens selected' : tokensSelected}</Box>
+            <Box>
+                <Plus onClick={() => tokenSelectDisclosure.onOpen()} />
+            </Box>
+            <PoolCreateTokenSelectModal
+                isOpen={tokenSelectDisclosure.isOpen}
+                onOpen={tokenSelectDisclosure.onOpen}
+                onClose={tokenSelectDisclosure.onClose}
+            />
         </>
     );
 }
