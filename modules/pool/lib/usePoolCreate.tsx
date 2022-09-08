@@ -6,8 +6,7 @@ export function usePoolCreate() {
     const tokensSelected = useReactiveVar(tokensSelectedVar);
 
     function setTokensSelected(selected: string) {
-        tokensSelected.push(selected);
-        tokensSelectedVar(tokensSelected);
+        tokensSelectedVar([...tokensSelected, selected]);
     }
 
     return {
