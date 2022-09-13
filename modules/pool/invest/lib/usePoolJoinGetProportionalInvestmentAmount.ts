@@ -58,14 +58,11 @@ export function usePoolJoinGetProportionalInvestmentAmount() {
 
             const result = await poolService.joinGetProportionalSuggestionForFixedAmount(
                 fixedAmount,
-                selectedInvestTokens.map((token) => token.address),
+                selectedInvestTokens.map((token) => replaceEthWithWeth(token.address)),
             );
 
             return Object.fromEntries(
-                result.map((item) => [
-                    hasEth && isWeth(item.address) ? replaceWethWithEth(item.address) : item.address,
-                    item.amount,
-                ]),
+                result.map((item) => [hasEth ? replaceWethWithEth(item.address) : item.address, item.amount]),
             );
         },
         { enabled: true, staleTime: 0, cacheTime: 0 },

@@ -60,7 +60,6 @@ export function usePoolGetMaxProportionalInvestmentAmount() {
             },
         ],
         async ({ queryKey }) => {
-            const hasEth = !!tokenOptionsWithHighestValue.find((token) => isEth(token.address));
             const fixedAmount = {
                 ...tokenWithSmallestValue,
                 address: replaceEthWithWeth(tokenWithSmallestValue.address),
@@ -72,7 +71,7 @@ export function usePoolGetMaxProportionalInvestmentAmount() {
 
             const result = await poolService.joinGetProportionalSuggestionForFixedAmount(
                 fixedAmount,
-                selectedInvestTokens.map((token) => token.address),
+                selectedInvestTokens.map((token) => replaceEthWithWeth(token.address)),
             );
 
             return { maxAmount: sumBy(result, priceForAmount) };
