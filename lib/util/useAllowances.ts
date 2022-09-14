@@ -39,13 +39,12 @@ export function useAllowances(account: string | null, tokens: TokenBase[], contr
     }
 
     function hasApprovalForAmount(address: string, amount: AmountHumanReadable) {
+        if (amount === '') return true;
+
         const allowance = allowances.find((allowance) => allowance.address === address.toLowerCase())?.amount || '0';
+        if (parseFloat(allowance) === 0) return false;
+
         const decimals = tokens.find((token) => token.address === address)?.decimals || 18;
-
-        if (amount === '') {
-            return true;
-        }
-
         return parseUnits(allowance, decimals).gte(parseUnits(amount, decimals));
     }
 
