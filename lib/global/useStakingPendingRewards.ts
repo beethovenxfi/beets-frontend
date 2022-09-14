@@ -18,7 +18,6 @@ export function useStakingPendingRewards(stakingItems: GqlPoolStaking[]) {
     const { tokens } = useGetTokens();
     const stakingIds = stakingItems.map((staking) => staking.id);
     const isHardRefetch = useRef(false);
-    const currentGaugePendingRewards = useRef<StakingPendingRewardAmount[]>([]);
 
     const query = useQuery(
         ['useStakingPendingRewards', userAddress, stakingIds],
@@ -50,26 +49,14 @@ export function useStakingPendingRewards(stakingItems: GqlPoolStaking[]) {
                     tokens,
                     userAddress: userAddress || '',
                 });
-
-                //The reward helper contract can at times fail to return amounts despite there being pending rewards
-                //we try to preserve previous good results to prevent the UI from rendering 0s
-                //hardRefetch is called after a rewards claim, so we bypass the ref in those instances
-                const pendingRewardsHasAmount = !!gaugePendingRewards.find((item) => parseFloat(item.amount) > 0);
-
-                if (
-                    isHardRefetch.current ||
-                    currentGaugePendingRewards.current.length === 0 ||
-                    pendingRewardsHasAmount
-                ) {
-                    currentGaugePendingRewards.current = gaugePendingRewards;
-                }
-
-                pendingRewards = [...pendingRewards, ...currentGaugePendingRewards.current];
+                pendingRewards = [...pendingRewards, ...gaugePendingRewards];
+            } else {
+                console.log('we have a rpbopems');
             }
 
             return pendingRewards;
         },
-        { enabled: !!userAddress && stakingItems.length > 0, refetchInterval: 15000 },
+        { enabled: !!userAddress && stakingItems.length > 0, refetchInterval: 1000 },
     );
 
     async function hardRefetch() {
