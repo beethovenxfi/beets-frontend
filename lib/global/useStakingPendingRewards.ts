@@ -50,8 +50,6 @@ export function useStakingPendingRewards(stakingItems: GqlPoolStaking[]) {
                     userAddress: userAddress || '',
                 });
                 pendingRewards = [...pendingRewards, ...gaugePendingRewards];
-            } else {
-                console.log('we have a rpbopems');
             }
 
             return pendingRewards;
