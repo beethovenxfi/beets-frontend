@@ -25,7 +25,7 @@ export function _usePoolUserTokenBalancesInWallet() {
         .map((option) => {
             const tokenOptionWithLargestBalance = orderBy(
                 option.tokenOptions,
-                (tokenOption) => getUserBalance(tokenOption.address),
+                (tokenOption) => parseFloat(getUserBalance(tokenOption.address)),
                 'desc',
             )[0];
 
