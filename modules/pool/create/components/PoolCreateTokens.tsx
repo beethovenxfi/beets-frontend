@@ -1,4 +1,16 @@
-import { Box, Button, HStack, useDisclosure, VStack, Text, FormControl, FormLabel, Input } from '@chakra-ui/react';
+import {
+    Box,
+    Button,
+    HStack,
+    useDisclosure,
+    VStack,
+    Text,
+    FormControl,
+    FormLabel,
+    Input,
+    InputGroup,
+    InputRightElement,
+} from '@chakra-ui/react';
 import { PoolCreateTokenSelectModal } from './token-select/PoolCreateTokenSelectModal';
 import { usePoolCreate } from '../../lib/usePoolCreate';
 import { ArrowLeft, ArrowRight } from 'react-feather';
@@ -6,6 +18,7 @@ import { useGetTokens } from '~/lib/global/useToken';
 import { SetStateAction } from 'react';
 import { PoolCreateState } from '../PoolCreate';
 import { Formik, Field, FieldArray } from 'formik';
+import TokenAvatar from '~/components/token/TokenAvatar';
 
 interface Props {
     changeState: (state: SetStateAction<PoolCreateState>) => void;
@@ -22,76 +35,79 @@ export function PoolCreateTokens({ changeState }: Props) {
         tokens: tokens,
     };
 
-    console.log(tokens);
-
     return (
         <>
-            <VStack minHeight="500px" height="full" width="full" alignItems="flex-start" justifyContent="space-between">
-                {tokens.length === 0 ? (
-                    <Box>No tokens selected yet</Box>
-                ) : (
-                    <Formik
-                        initialValues={initialValues}
-                        onSubmit={(values) => {
-                            console.log(values);
-                        }}
-                    >
-                        {({ handleSubmit, values, errors, touched }) => (
-                            <>
-                                <Box>
-                                    {values.tokens.map((token) => (
-                                        <Text>{token.name}</Text>
-                                    ))}
-                                </Box>
-                                <form onSubmit={handleSubmit}>
-                                    {/* <FieldArray name="tokens">
-            {({ insert, remove, push }) => (
-                                {values.tokens.map((token, index) => (
-                                    <FormControl key={index}>
-                                        <FormLabel>{`tokens.${index}.name`}</FormLabel>
-                                        <Field
-                                            as={Input}
-                                            id={`tokens.${index}.weight`}
-                                            name={`tokens.${index}.weight`}
-                                            variant="flushed"
-                                            type="number"
-                                        />
-                                    </FormControl>
-                                ))})}
-                                </FieldArray> */}
+            <Formik
+                enableReinitialize
+                initialValues={initialValues}
+                onSubmit={(values) => {
+                    console.log(values);
+                }}
+            >
+                {({ handleSubmit, values, errors, touched }) => (
+                    <form onSubmit={handleSubmit}>
+                        <VStack minHeight="500px" height="full" width="full" justifyContent="space-between">
+                            <VStack alignItems="flex-start" width="full">
+                                {tokens.length === 0 ? (
+                                    <Box>No tokens selected yet</Box>
+                                ) : (
+                                    <FieldArray name="tokens">
+                                        {({ insert, remove, push }) =>
+                                            values.tokens.map((token, index) => (
+                                                <HStack key={index} width="full" justifyContent="space-between">
+                                                    <HStack>
+                                                        <TokenAvatar address={token?.address} size="xs" />
+                                                        <Text ml="2">{token?.symbol}</Text>
+                                                    </HStack>
 
-                                    <HStack alignSelf="end" justifyContent="space-between" width="full">
-                                        <Button
-                                            variant="primary"
-                                            type="submit"
-                                            width="25%"
-                                            onClick={() => changeState('details')}
-                                        >
-                                            <HStack alignContent="space-evenly">
-                                                <ArrowLeft size={16} />
-                                                <Text>Previous</Text>
-                                            </HStack>
-                                        </Button>
-                                        <Button
-                                            variant="primary"
-                                            width="25%"
-                                            onClick={() => tokenSelectDisclosure.onOpen()}
-                                        >
-                                            Select tokens
-                                        </Button>
-                                        <Button variant="primary" type="submit" width="25%">
-                                            <HStack alignContent="space-evenly">
-                                                <Text>Next</Text>
-                                                <ArrowRight size={16} />
-                                            </HStack>
-                                        </Button>
+                                                    <FormControl width="75%">
+                                                        <InputGroup>
+                                                            <Input
+                                                                style={{ textAlign: 'right' }}
+                                                                as={Field}
+                                                                id={`tokens.${index}.weight`}
+                                                                name={`tokens.${index}.weight`}
+                                                                variant="flushed"
+                                                                type="number"
+                                                            />
+                                                            <InputRightElement pointerEvents="none">
+                                                                <Text>%</Text>
+                                                            </InputRightElement>
+                                                        </InputGroup>
+                                                    </FormControl>
+                                                </HStack>
+                                            ))
+                                        }
+                                    </FieldArray>
+                                )}
+                            </VStack>
+
+                            <HStack alignSelf="end" justifyContent="space-between" width="full">
+                                <Button
+                                    variant="primary"
+                                    type="submit"
+                                    width="25%"
+                                    onClick={() => changeState('details')}
+                                >
+                                    <HStack alignContent="space-evenly">
+                                        <ArrowLeft size={16} />
+                                        <Text>Previous</Text>
                                     </HStack>
-                                </form>
-                            </>
-                        )}
-                    </Formik>
+                                </Button>
+                                <Button variant="primary" width="25%" onClick={() => tokenSelectDisclosure.onOpen()}>
+                                    Select tokens
+                                </Button>
+                                <Button variant="primary" type="submit" width="25%">
+                                    <HStack alignContent="space-evenly">
+                                        <Text>Next</Text>
+                                        <ArrowRight size={16} />
+                                    </HStack>
+                                </Button>
+                            </HStack>
+                        </VStack>
+                    </form>
                 )}
-            </VStack>
+            </Formik>
 
             <PoolCreateTokenSelectModal
                 isOpen={tokenSelectDisclosure.isOpen}

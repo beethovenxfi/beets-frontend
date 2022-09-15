@@ -34,7 +34,7 @@ export function PoolCreateDetails({ changeState }: Props) {
         >
             {({ handleSubmit, errors, touched }) => (
                 <form onSubmit={handleSubmit}>
-                    <VStack minHeight="500px" justifyContent="space-between">
+                    <VStack minHeight="500px" alignItems="flex-start" justifyContent="space-between" width="full">
                         <VStack spacing={4} width="full">
                             <FormControl>
                                 <FormLabel>Pool name</FormLabel>
@@ -62,7 +62,14 @@ export function PoolCreateDetails({ changeState }: Props) {
                             <FormControl>
                                 <FormLabel>Swap fee percentage</FormLabel>
                                 <InputGroup>
-                                    <Field as={Input} id="fee" name="fee" variant="flushed" type="number" />
+                                    <Input
+                                        as={Field}
+                                        id="fee"
+                                        name="fee"
+                                        variant="flushed"
+                                        type="number"
+                                        style={{ textAlign: 'right' }}
+                                    />
                                     <InputRightElement pointerEvents="none">
                                         <Text>%</Text>
                                     </InputRightElement>
