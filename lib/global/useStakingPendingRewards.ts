@@ -10,7 +10,7 @@ import { useGetTokens } from '~/lib/global/useToken';
 import { StakingPendingRewardAmount } from '~/lib/services/staking/staking-types';
 import { gaugeStakingService } from '~/lib/services/staking/gauge-staking.service';
 import { useUserAccount } from '~/lib/user/useUserAccount';
-import { useEffect, useRef } from 'react';
+import { useRef } from 'react';
 
 export function useStakingPendingRewards(stakingItems: GqlPoolStaking[]) {
     const provider = useProvider();
@@ -54,7 +54,7 @@ export function useStakingPendingRewards(stakingItems: GqlPoolStaking[]) {
 
             return pendingRewards;
         },
-        { enabled: !!userAddress && stakingItems.length > 0, refetchInterval: 1000 },
+        { enabled: !!userAddress && stakingItems.length > 0, refetchInterval: 15000 },
     );
 
     async function hardRefetch() {
