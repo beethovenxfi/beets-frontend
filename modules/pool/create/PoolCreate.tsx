@@ -1,70 +1,34 @@
-import { Grid, GridItem, HStack, IconButton, ListItem, OrderedList, Text } from '@chakra-ui/react';
+import { Grid, GridItem, ListItem, OrderedList, Text } from '@chakra-ui/react';
 import { PoolCreateDetails } from './components/PoolCreateDetails';
-import { ChevronLeft, ChevronRight } from 'react-feather';
-import { useState } from 'react';
+import { SetStateAction, useState } from 'react';
 import { PoolCreateTokens } from './components/PoolCreateTokens';
 import Card from '~/components/card/Card';
 
+export type PoolCreateState = 'details' | 'tokens';
+
 export function PoolCreate() {
-    const [state, setState] = useState<'details' | 'tokens'>('details');
+    const [state, setState] = useState<PoolCreateState>('details');
+
+    const changeState = (state: SetStateAction<PoolCreateState>) => setState(state);
 
     return (
-        <Grid
-            templateColumns="200px 1fr"
-            templateAreas={`"left right"
-        "left buttons"`}
-            gap="6"
-            w="1024px"
-        >
+        <Grid templateColumns="200px 1fr" templateAreas={`"left right"`} gap="6" w="1024px">
             <GridItem area="left">
-                <Card p="20px">
+                <Card p="20px" height="full">
                     <Text as="h2" textStyle="h2" mb="20px">
                         Title
                     </Text>
                     <OrderedList>
                         <ListItem>Pool details</ListItem>
                         <ListItem>Tokens & weights</ListItem>
-                        <ListItem>??</ListItem>
-                        <ListItem>??</ListItem>
+                        <ListItem>Summary</ListItem>
+                        <ListItem>Done</ListItem>
                     </OrderedList>
                 </Card>
             </GridItem>
             <GridItem area="right">
-                {state === 'details' && <PoolCreateDetails />}
-                {state === 'tokens' && <PoolCreateTokens />}
-            </GridItem>
-            <GridItem area="buttons">
-                <HStack justify="space-between">
-                    <IconButton
-                        aria-label={'back-button'}
-                        icon={<ChevronLeft />}
-                        variant="ghost"
-                        disabled={state === 'details'}
-                        p="0"
-                        width="32px"
-                        height="32px"
-                        minWidth="32px"
-                        onClick={() => {
-                            if (state === 'tokens') {
-                                setState('details');
-                            }
-                        }}
-                    />
-                    <IconButton
-                        aria-label={'next-button'}
-                        icon={<ChevronRight />}
-                        variant="ghost"
-                        p="0"
-                        width="32px"
-                        height="32px"
-                        minWidth="32px"
-                        onClick={() => {
-                            if (state === 'details') {
-                                setState('tokens');
-                            }
-                        }}
-                    />
-                </HStack>
+                {state === 'details' && <PoolCreateDetails changeState={changeState} />}
+                {state === 'tokens' && <PoolCreateTokens changeState={changeState} />}
             </GridItem>
         </Grid>
     );
