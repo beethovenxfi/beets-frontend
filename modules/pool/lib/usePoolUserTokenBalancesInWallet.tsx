@@ -1,5 +1,5 @@
 import { useUserBalances } from '~/lib/user/useUserBalances';
-import { sumBy } from 'lodash';
+import { sumBy, orderBy } from 'lodash';
 import { useGetTokens } from '~/lib/global/useToken';
 import { AmountHumanReadable } from '~/lib/services/token/token-types';
 import { usePool } from '~/modules/pool/lib/usePool';
@@ -20,11 +20,24 @@ export function _usePoolUserTokenBalancesInWallet() {
         return userBalances.find((balance) => address === balance.address)?.amount || '0';
     }
 
+    const optionsWithLargestBalances = pool.investConfig.options
+        .filter((option) => option.tokenOptions.length > 1)
+        .map((option) => {
+            const tokenOptionWithLargestBalance = orderBy(
+                option.tokenOptions,
+                (tokenOption) => parseFloat(getUserBalance(tokenOption.address)),
+                'desc',
+            )[0];
+
+            return { poolTokenIndex: option.poolTokenIndex, tokenAddress: tokenOptionWithLargestBalance.address };
+        });
+
     return {
         ...userBalancesQuery,
         userPoolTokenBalances: userBalances,
         investableAmount,
         getUserBalanceForToken,
+        optionsWithLargestBalances,
     };
 }
 
