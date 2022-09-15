@@ -31,12 +31,10 @@ import {
 import { SwapTypes } from '@balancer-labs/sor';
 import { BaseProvider } from '@ethersproject/providers';
 import { parseUnits } from 'ethers/lib/utils';
-import { oldBnum, oldBnumScale, oldBnumSubtractSlippage } from '~/lib/services/pool/lib/old-big-number';
+import { oldBnum, oldBnumScale } from '~/lib/services/pool/lib/old-big-number';
 import { formatFixed } from '@ethersproject/bignumber';
-import { MaxUint256, WeiPerEther, Zero } from '@ethersproject/constants';
-import { poolScaleTokenAmounts } from '~/lib/services/pool/lib/util';
+import { MaxUint256, Zero } from '@ethersproject/constants';
 import { poolIsTokenPhantomBpt } from '~/lib/services/pool/pool-util';
-import { BigNumber } from 'ethers';
 
 export class PoolWeightedBoostedService implements PoolService {
     private baseService: PoolBaseService;
@@ -81,6 +79,7 @@ export class PoolWeightedBoostedService implements PoolService {
                 swaps,
                 fromInternalBalance: false,
                 toInternalBalance: true,
+                wethIsEth: data.wethIsEth,
             }),
         );
 
@@ -110,7 +109,7 @@ export class PoolWeightedBoostedService implements PoolService {
         return {
             type: 'BatchRelayer',
             calls,
-            ethValue: ethAmount ? ethAmount.toString() : undefined,
+            ethValue: ethAmount ? ethAmountScaled : undefined,
         };
     }
 
@@ -444,6 +443,7 @@ export class PoolWeightedBoostedService implements PoolService {
         ethAmountScaled,
         fromInternalBalance,
         toInternalBalance,
+        wethIsEth,
     }: {
         tokensIn: string[];
         tokensOut: string[];
@@ -454,6 +454,7 @@ export class PoolWeightedBoostedService implements PoolService {
         ethAmountScaled: AmountScaledString;
         fromInternalBalance: boolean;
         toInternalBalance: boolean;
+        wethIsEth: boolean;
     }): string {
         const limits = Swaps.getLimitsForSlippage(
             tokensIn,
@@ -468,7 +469,7 @@ export class PoolWeightedBoostedService implements PoolService {
         return this.batchRelayerService.vaultEncodeBatchSwap({
             swapType: SwapType.SwapExactIn,
             swaps,
-            assets,
+            assets: wethIsEth ? assets.map((asset) => this.baseService.wethToZero(asset)) : assets,
             funds: {
                 sender: data.userAddress,
                 recipient: data.userAddress,

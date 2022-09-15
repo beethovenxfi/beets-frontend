@@ -1,7 +1,7 @@
 import { useQuery } from 'react-query';
 import { useReactiveVar } from '@apollo/client';
 import { investStateVar } from '~/modules/pool/invest/lib/useInvestState';
-import { tokenAmountsGetArrayFromMap } from '~/lib/services/token/token-util';
+import { replaceEthWithWeth, tokenAmountsGetArrayFromMap } from '~/lib/services/token/token-util';
 import { useSlippage } from '~/lib/global/useSlippage';
 import numeral from 'numeral';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
@@ -33,7 +33,14 @@ export function usePoolJoinGetBptOutAndPriceImpactForTokensIn() {
                 return { minBptReceived: '0', priceImpact: 0 };
             }
 
-            return poolService.joinGetBptOutAndPriceImpactForTokensIn(tokenAmountsIn, slippage);
+            const replacedWethTokenAmountsIn = tokenAmountsIn.map((token) => {
+                return {
+                    amount: token.amount,
+                    address: replaceEthWithWeth(token.address),
+                };
+            });
+
+            return poolService.joinGetBptOutAndPriceImpactForTokensIn(replacedWethTokenAmountsIn, slippage);
         },
         { enabled: tokenAmountsIn.length > 0, staleTime: 0, cacheTime: 0 },
     );

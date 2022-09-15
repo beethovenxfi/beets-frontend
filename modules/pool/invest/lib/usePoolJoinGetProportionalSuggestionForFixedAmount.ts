@@ -1,6 +1,11 @@
 import { useReactiveVar } from '@apollo/client';
 import { investStateVar } from '~/modules/pool/invest/lib/useInvestState';
-import { tokenAmountsGetArrayFromMap } from '~/lib/services/token/token-util';
+import {
+    isEth,
+    replaceEthWithWeth,
+    replaceWethWithEth,
+    tokenAmountsGetArrayFromMap,
+} from '~/lib/services/token/token-util';
 import { useQuery } from 'react-query';
 import { AmountHumanReadableMap } from '~/lib/services/token/token-types';
 import { useInvest } from '~/modules/pool/invest/lib/useInvest';
@@ -15,6 +20,7 @@ export function usePoolJoinGetProportionalSuggestionForFixedAmount() {
     return useQuery(
         [{ key: 'joinGetProportionalSuggestionForFixedAmount', tokenAmountsIn }],
         async ({ queryKey }) => {
+            const hasEth = !!selectedInvestTokens.find((token) => isEth(token.address));
             const fixedAmount = tokenAmountsIn[0];
 
             if (!poolService.joinGetProportionalSuggestionForFixedAmount) {
@@ -23,9 +29,11 @@ export function usePoolJoinGetProportionalSuggestionForFixedAmount() {
 
             const result = await poolService.joinGetProportionalSuggestionForFixedAmount(
                 fixedAmount,
-                selectedInvestTokens.map((token) => token.address),
+                selectedInvestTokens.map((token) => replaceEthWithWeth(token.address)),
             );
-            const proportionalSuggestion = Object.fromEntries(result.map((item) => [item.address, item.amount]));
+            const proportionalSuggestion = Object.fromEntries(
+                result.map((item) => [hasEth ? replaceWethWithEth(item.address) : item.address, item.amount]),
+            );
 
             return isProportionalSuggestionValid(inputAmounts, proportionalSuggestion) ? proportionalSuggestion : {};
         },
