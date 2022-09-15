@@ -33,7 +33,7 @@ export const optimismNetworkConfig: NetworkConfig = {
     },
     balancer: {
         vault: '0xba12222222228d8ba445958a75a0704d566bf2c8',
-        batchRelayer: '0x0000000000000000000000000000000000000000',
+        batchRelayer: '0x195CcCBE464EF9073d1f7A1ba1C9Bf0f56dfFFff',
     },
     beetsPoolOwnerAddress: '0xd9e2889ac8c6fff8e94c7c1beeade1352df1a513',
     masterChefContractAddress: '',
