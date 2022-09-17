@@ -12,7 +12,7 @@ import { gaugeStakingService } from '~/lib/services/staking/gauge-staking.servic
 import { useUserAccount } from '~/lib/user/useUserAccount';
 import { useRef } from 'react';
 
-export function useStakingPendingRewards(stakingItems: GqlPoolStaking[]) {
+export function useStakingPendingRewards(stakingItems: GqlPoolStaking[], hookName: string) {
     const provider = useProvider();
     const { userAddress } = useUserAccount();
     const { tokens } = useGetTokens();
@@ -20,7 +20,7 @@ export function useStakingPendingRewards(stakingItems: GqlPoolStaking[]) {
     const isHardRefetch = useRef(false);
 
     const query = useQuery(
-        ['useStakingPendingRewards', userAddress, stakingIds],
+        ['useStakingPendingRewards', hookName, userAddress, stakingIds],
         async () => {
             let pendingRewards: StakingPendingRewardAmount[] = [];
             const farms = stakingItems
