@@ -1,9 +1,11 @@
 import { GqlPoolTokenBase } from '~/apollo/generated/graphql-codegen-generated';
-import { AmountHumanReadable, TokenAmountHumanReadable } from '~/lib/services/token/token-types';
-import { oldBnum, oldBnumScaleAmount, oldBnumZero } from '~/lib/services/pool/lib/old-big-number';
+import { AmountHumanReadable, AmountScaledString, TokenAmountHumanReadable } from '~/lib/services/token/token-types';
+import { oldBnum, oldBnumScale, oldBnumScaleAmount, oldBnumZero } from '~/lib/services/pool/lib/old-big-number';
 import OldBigNumber from 'bignumber.js';
 import { BigNumber } from 'ethers';
 import { formatUnits, parseUnits } from '@ethersproject/units';
+import { PoolJoinExactTokensInForBPTOut } from '~/lib/services/pool/pool-types';
+import { Zero } from '@ethersproject/constants';
 
 export function poolScaleAmp(amp: string): BigNumber {
     // amp is stored with 3 decimals of precision
@@ -82,4 +84,21 @@ export function poolGetProportionalExitAmountsForBptIn(
             amount: formatUnits(tokenProportionalAmount, token.decimals),
         };
     });
+}
+
+export function poolScaleSlippage(slippage: number | string) {
+    //5%=50_000_000_000_000_000.
+    return `${oldBnumScale(`${slippage}`, 16).toFixed(0)}`;
+}
+
+export function poolGetEthAmountFromJoinData(
+    data: PoolJoinExactTokensInForBPTOut,
+    wethAddress: string,
+): { ethAmount: AmountHumanReadable | undefined; ethAmountScaled: AmountScaledString } {
+    const ethAmount = data.wethIsEth
+        ? data.tokenAmountsIn.find((tokenAmountIn) => tokenAmountIn.address === wethAddress)
+        : undefined;
+    const ethAmountScaled = (ethAmount ? parseUnits(ethAmount.amount, 18) : Zero).toString();
+
+    return { ethAmount: ethAmount?.amount, ethAmountScaled };
 }

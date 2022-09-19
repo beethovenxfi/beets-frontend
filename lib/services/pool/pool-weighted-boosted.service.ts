@@ -22,11 +22,9 @@ import { PoolBaseService } from '~/lib/services/pool/lib/pool-base.service';
 import { PoolWeightedService } from '~/lib/services/pool/pool-weighted.service';
 import { isSameAddress, Swaps, SwapType, SwapV2, WeightedPoolEncoder } from '@balancer-labs/sdk';
 import {
-    poolBatchSwaps,
     poolFindNestedPoolTokenForToken,
     poolFindPoolTokenFromOptions,
     poolGetJoinSwapForToken,
-    poolQueryBatchSwap,
 } from '~/lib/services/pool/pool-phantom-stable-util';
 import { SwapTypes } from '@balancer-labs/sor';
 import { BaseProvider } from '@ethersproject/providers';
@@ -37,6 +35,7 @@ import { MaxUint256, WeiPerEther, Zero } from '@ethersproject/constants';
 import { poolScaleTokenAmounts } from '~/lib/services/pool/lib/util';
 import { poolIsTokenPhantomBpt } from '~/lib/services/pool/pool-util';
 import { BigNumber } from 'ethers';
+import { poolBatchSwaps, poolQueryBatchSwap } from '~/lib/services/pool/lib/composable-util';
 
 export class PoolWeightedBoostedService implements PoolService {
     private baseService: PoolBaseService;

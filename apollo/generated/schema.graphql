@@ -642,6 +642,7 @@ type GqlPoolToken implements GqlPoolTokenBase {
     name: String!
     priceRate: BigDecimal!
     symbol: String!
+    totalBalance: BigDecimal!
     weight: BigDecimal
 }
 
@@ -654,6 +655,7 @@ interface GqlPoolTokenBase {
     name: String!
     priceRate: BigDecimal!
     symbol: String!
+    totalBalance: BigDecimal!
     weight: BigDecimal
 }
 
@@ -679,6 +681,7 @@ type GqlPoolTokenLinear implements GqlPoolTokenBase {
     pool: GqlPoolLinearNested!
     priceRate: BigDecimal!
     symbol: String!
+    totalBalance: BigDecimal!
     totalMainTokenBalance: BigDecimal!
     weight: BigDecimal
     wrappedTokenBalance: BigDecimal!
@@ -694,6 +697,7 @@ type GqlPoolTokenPhantomStable implements GqlPoolTokenBase {
     pool: GqlPoolPhantomStableNested!
     priceRate: BigDecimal!
     symbol: String!
+    totalBalance: BigDecimal!
     weight: BigDecimal
 }
 
@@ -968,8 +972,8 @@ type Mutation {
     userInitWalletBalancesForPool(poolId: String!): String!
     userSyncBalance(poolId: String!): String!
     userSyncBalanceAllPools: String!
-    userSyncStakedBalances: String!
-    userSyncWalletBalancesForAllPools: String!
+    userSyncChangedStakedBalances: String!
+    userSyncChangedWalletBalancesForAllPools: String!
 }
 
 type Query {
@@ -983,6 +987,7 @@ type Query {
     latestSyncedBlocks: GqlLatestSyncedBlocks!
     lge(id: ID!): GqlLge!
     lges: [GqlLge!]!
+    poolGetAllPoolsSnapshots(range: GqlPoolSnapshotDataRange!): [GqlPoolSnapshot!]!
     poolGetBatchSwaps(first: Int, skip: Int, where: GqlPoolSwapFilter): [GqlPoolBatchSwap!]!
     poolGetFeaturedPoolGroups: [GqlPoolFeaturedPoolGroup!]!
     poolGetJoinExits(first: Int, skip: Int, where: GqlPoolJoinExitFilter): [GqlPoolJoinExit!]!

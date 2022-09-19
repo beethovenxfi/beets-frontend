@@ -5,6 +5,8 @@ import {
     GqlPoolWithdrawOption,
 } from '~/apollo/generated/graphql-codegen-generated';
 import {
+    ComposablePoolJoinProcessedStepsOutput,
+    ComposablePoolJoinStep,
     PoolExitBptInSingleAssetWithdrawOutput,
     PoolExitContractCallData,
     PoolExitData,
@@ -15,25 +17,12 @@ import {
     PoolService,
 } from '~/lib/services/pool/pool-types';
 import { AmountHumanReadable, AmountScaledString, TokenAmountHumanReadable } from '~/lib/services/token/token-types';
-import {
-    phantomStableBPTForTokensZeroPriceImpact as _bptForTokensZeroPriceImpact,
-    SwapTypes,
-} from '@balancer-labs/sor';
-import { parseUnits } from 'ethers/lib/utils';
+import { SwapTypes } from '@balancer-labs/sor';
 import { PoolBaseService } from '~/lib/services/pool/lib/pool-base.service';
-import { isSameAddress, Swaps, SwapType, SwapV2 } from '@balancer-labs/sdk';
+import { isSameAddress, SwapV2 } from '@balancer-labs/sdk';
 import { BaseProvider } from '@ethersproject/providers';
-import { formatFixed } from '@ethersproject/bignumber';
-import {
-    oldBnum,
-    oldBnumFromBnum,
-    oldBnumScale,
-    oldBnumScaleAmount,
-    oldBnumScaleDown,
-} from '~/lib/services/pool/lib/old-big-number';
-import OldBigNumber from 'bignumber.js';
+import { oldBnum, oldBnumScaleDown } from '~/lib/services/pool/lib/old-big-number';
 import { SwapKind } from '@balancer-labs/balancer-js';
-import { poolScaleAmp } from '~/lib/services/pool/lib/util';
 import { BatchRelayerService } from '~/lib/services/batch-relayer/batch-relayer.service';
 import {
     poolFindNestedPoolTokenForToken,
@@ -42,10 +31,17 @@ import {
     poolGetJoinSwapForToken,
     poolSumPoolTokenBalances,
 } from '~/lib/services/pool/pool-phantom-stable-util';
-import { poolBatchSwaps, poolQueryBatchSwap } from '~/lib/services/pool/lib/composable-util';
+import {
+    poolBatchSwaps,
+    poolGetJoinSteps,
+    poolJoinGetContractCallData,
+    poolProcessJoinSteps,
+    poolQueryBatchSwap,
+} from '~/lib/services/pool/lib/composable-util';
 
-export class PoolPhantomStableService implements PoolService {
+export class PoolComposableStableService implements PoolService {
     private readonly baseService: PoolBaseService;
+    private readonly joinSteps: ComposablePoolJoinStep[];
 
     constructor(
         private pool: GqlPoolPhantomStable,
@@ -54,6 +50,7 @@ export class PoolPhantomStableService implements PoolService {
         private readonly provider: BaseProvider,
     ) {
         this.baseService = new PoolBaseService(pool, wethAddress);
+        this.joinSteps = poolGetJoinSteps(this.pool);
     }
 
     public updatePool(pool: GqlPoolPhantomStable) {
@@ -65,42 +62,42 @@ export class PoolPhantomStableService implements PoolService {
         if (data.kind !== 'ExactTokensInForBPTOut') {
             throw new Error('unsupported join type');
         }
+        const { processedSteps } = await this.getJoinData(data.tokenAmountsIn, data.slippage);
 
-        const { swaps, assets, deltas, tokensIn, tokensOut } = await this.getJoinSwaps(data.tokenAmountsIn);
-
-        const limits = Swaps.getLimitsForSlippage(
-            tokensIn,
-            tokensOut,
-            SwapType.SwapExactIn,
-            deltas,
-            assets,
-            //5%=50_000_000_000_000_000.
-            `${oldBnumScale(data.slippage, 16).toFixed(0)}`,
-        ).map((limit) => limit.toString());
-
-        return {
-            type: 'BatchSwap',
-            kind: SwapKind.GivenIn,
-            swaps,
-            assets: data.wethIsEth ? assets.map((asset) => this.baseService.wethToZero(asset)) : assets,
-            limits,
-        };
+        return poolJoinGetContractCallData({
+            data,
+            processedSteps,
+            wethAddress: this.wethAddress,
+        });
     }
 
     public async joinGetBptOutAndPriceImpactForTokensIn(
         tokenAmountsIn: TokenAmountHumanReadable[],
         slippage: AmountHumanReadable,
     ): Promise<PoolJoinEstimateOutput> {
-        const { assets, deltas } = await this.getJoinSwaps(tokenAmountsIn);
-        const bptAmount = oldBnum(deltas[assets.indexOf(this.pool.address)] ?? '0').abs();
-        const bptZeroPriceImpact = this.bptForTokensZeroPriceImpact(tokenAmountsIn);
+        const { priceImpact, minBptReceived, nestedPriceImpacts } = await this.getJoinData(tokenAmountsIn, slippage);
 
         return {
-            priceImpact: bptZeroPriceImpact.lt(bptAmount)
-                ? 0
-                : oldBnum(1).minus(bptAmount.div(bptZeroPriceImpact)).toNumber(),
-            minBptReceived: formatFixed(bptAmount.toString(), 18),
+            priceImpact,
+            minBptReceived,
+            nestedPriceImpacts,
         };
+    }
+
+    private async getJoinData(
+        tokenAmountsIn: TokenAmountHumanReadable[],
+        slippage: AmountHumanReadable,
+    ): Promise<ComposablePoolJoinProcessedStepsOutput> {
+        const data = await poolProcessJoinSteps({
+            pool: this.pool,
+            steps: this.joinSteps,
+            tokenAmountsIn,
+            provider: this.provider,
+            slippage,
+        });
+
+        //TODO: cache data while tokenAmountsIn and slippage are constant
+        return data;
     }
 
     public async exitGetProportionalWithdrawEstimate(
@@ -181,26 +178,6 @@ export class PoolPhantomStableService implements PoolService {
         throw new Error('unsupported join type');
     }
 
-    private bptForTokensZeroPriceImpact(tokenAmounts: TokenAmountHumanReadable[]): OldBigNumber {
-        const denormAmounts = this.getDenormAmounts(tokenAmounts, this.pool.tokens);
-
-        // This function should use pool balances (i.e. without rate conversion)
-        const poolTokenBalances = this.pool.tokens.map((token) => parseUnits(token.balance, token.decimals));
-        const poolTokenDecimals = this.pool.tokens.map((token) => token.decimals);
-
-        const bptZeroImpact = _bptForTokensZeroPriceImpact(
-            poolTokenBalances,
-            poolTokenDecimals,
-            denormAmounts,
-            this.baseService.totalSharesScaled.toString(),
-            this.baseService.ampScaled.toString(),
-            this.baseService.swapFeeScaled.toString(),
-            this.baseService.priceRatesScaled.map((priceRate) => priceRate.toString()),
-        );
-
-        return oldBnumFromBnum(bptZeroImpact);
-    }
-
     private async getJoinSwaps(tokenAmountsIn: TokenAmountHumanReadable[]): Promise<{
         swaps: SwapV2[];
         assets: string[];
@@ -276,47 +253,6 @@ export class PoolPhantomStableService implements PoolService {
         });
 
         return { swaps, assets, deltas };
-    }
-
-    private getDenormAmounts(tokenAmounts: TokenAmountHumanReadable[], poolTokens: GqlPoolTokenUnion[]) {
-        return poolTokens.map((poolToken) => {
-            if (poolToken.__typename === 'GqlPoolToken') {
-                const tokenAmount = tokenAmounts.find((amount) => amount.address === poolToken.address);
-
-                return tokenAmount ? parseUnits(tokenAmount.amount, poolToken.decimals).toString() : '0';
-            } else if (poolToken.__typename === 'GqlPoolTokenLinear') {
-                const linearPool = poolToken.pool;
-                const mainToken = linearPool.tokens.find((token) => token.index === linearPool.mainIndex);
-                const mainTokenAmount = tokenAmounts.find((amount) => amount.address === mainToken?.address);
-
-                if (!mainToken || !mainTokenAmount) {
-                    return '0';
-                }
-
-                return parseUnits(mainTokenAmount.amount, 18).toString();
-            } else if (poolToken.__typename === 'GqlPoolTokenPhantomStable') {
-                //we calc the bpt for zero price impact assuming an independent invest into the phantom stable
-                const phantomStable = poolToken.pool;
-                const denormAmounts = this.getDenormAmounts(tokenAmounts, poolToken.pool.tokens);
-
-                const balances = phantomStable.tokens.map((token) => parseUnits(token.balance, token.decimals));
-                const decimals = phantomStable.tokens.map((token) => token.decimals);
-
-                const bptZeroImpact = _bptForTokensZeroPriceImpact(
-                    balances,
-                    decimals,
-                    denormAmounts,
-                    oldBnumScaleAmount(poolToken.balance).toString(),
-                    oldBnumFromBnum(poolScaleAmp(phantomStable.amp)).toString(),
-                    oldBnumScaleAmount(phantomStable.swapFee).toString(),
-                    phantomStable.tokens.map((token) => oldBnumScaleAmount(token.priceRate, 18).toString()),
-                );
-
-                return bptZeroImpact.toString();
-            }
-
-            return '0';
-        });
     }
 
     private getProportionallyWeightedBptAmountsForTokensOut(bptIn: AmountHumanReadable): TokenAmountHumanReadable[] {

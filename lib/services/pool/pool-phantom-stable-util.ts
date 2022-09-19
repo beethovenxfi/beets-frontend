@@ -5,18 +5,10 @@ import {
     GqlPoolTokenUnion,
     GqlPoolWithdrawOption,
 } from '~/apollo/generated/graphql-codegen-generated';
-import { FundManagement, isSameAddress, SwapV2 } from '@balancer-labs/sdk';
+import { isSameAddress, SwapV2 } from '@balancer-labs/sdk';
 import { parseUnits } from 'ethers/lib/utils';
-import { BaseProvider } from '@ethersproject/providers';
-import { SwapTypes } from '@balancer-labs/sor';
-import { Contract } from '@ethersproject/contracts';
-import { networkConfig } from '~/lib/config/network-config';
-import VaultAbi from '~/lib/abi/VaultAbi.json';
-import { AddressZero } from '@ethersproject/constants';
-import { BigNumber } from 'ethers';
 import OldBigNumber from 'bignumber.js';
 import { oldBnum } from '~/lib/services/pool/lib/old-big-number';
-import { cloneDeep } from 'lodash';
 
 export function poolGetJoinSwapForToken({
     poolId,
@@ -200,50 +192,6 @@ export function poolFindNestedPoolTokenForToken(
     }
 
     return nestedPoolToken;
-}
-
-export async function poolQueryBatchSwap({
-    provider,
-    swaps,
-    swapType,
-    assets,
-}: {
-    provider: BaseProvider;
-    swapType: SwapTypes;
-    swaps: SwapV2[];
-    assets: string[];
-}): Promise<string[]> {
-    const vaultContract = new Contract(networkConfig.balancer.vault, VaultAbi, provider);
-    const funds: FundManagement = {
-        sender: AddressZero,
-        recipient: AddressZero,
-        fromInternalBalance: false,
-        toInternalBalance: false,
-    };
-
-    const response = await vaultContract.queryBatchSwap(swapType, swaps, assets, funds);
-
-    return response.map((item: BigNumber) => item.toString());
-}
-
-export function poolBatchSwaps(assets: string[][], swaps: SwapV2[][]): { swaps: SwapV2[]; assets: string[] } {
-    // asset addresses without duplicates
-    const joinedAssets = assets.flat();
-    //create a deep copy to ensure we do not mutate the input
-    const clonedSwaps = cloneDeep(swaps);
-
-    // Update indices of each swap to use new asset array
-    clonedSwaps.forEach((swap, i) => {
-        swap.forEach((poolSwap) => {
-            poolSwap.assetInIndex = joinedAssets.indexOf(assets[i][poolSwap.assetInIndex]);
-            poolSwap.assetOutIndex = joinedAssets.indexOf(assets[i][poolSwap.assetOutIndex]);
-        });
-    });
-
-    // Join Swaps into a single batchSwap
-    const batchedSwaps = clonedSwaps.flat();
-
-    return { swaps: batchedSwaps, assets: joinedAssets };
 }
 
 export function poolFindPoolTokenFromOptions(

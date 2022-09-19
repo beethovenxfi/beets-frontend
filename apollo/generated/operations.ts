@@ -106,6 +106,7 @@ export const GqlPoolToken = gql`
         priceRate
         decimals
         weight
+        totalBalance
     }
 `;
 export const GqlPoolTokenLinear = gql`
@@ -122,6 +123,7 @@ export const GqlPoolTokenLinear = gql`
         mainTokenBalance
         wrappedTokenBalance
         totalMainTokenBalance
+        totalBalance
         pool {
             id
             name
@@ -157,6 +159,7 @@ export const GqlPoolTokenPhantomStable = gql`
         weight
         priceRate
         decimals
+        totalBalance
         pool {
             id
             name

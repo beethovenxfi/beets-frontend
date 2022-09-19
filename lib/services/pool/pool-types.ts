@@ -1,7 +1,13 @@
-import { AmountHumanReadable, TokenAmountHumanReadable } from '~/lib/services/token/token-types';
+import { AmountHumanReadable, AmountScaledString, TokenAmountHumanReadable } from '~/lib/services/token/token-types';
 import { BigNumberish } from 'ethers';
 import { SwapKind, BatchSwapStep, FundManagement } from '@balancer-labs/balancer-js';
-import { GqlPoolUnion } from '~/apollo/generated/graphql-codegen-generated';
+import {
+    GqlPoolPhantomStable,
+    GqlPoolPhantomStableNested,
+    GqlPoolUnion,
+    GqlPoolWeighted,
+} from '~/apollo/generated/graphql-codegen-generated';
+import { SwapV2 } from '@balancer-labs/sor';
 
 export interface PoolService {
     updatePool(pool: GqlPoolUnion): void;
@@ -45,6 +51,13 @@ interface PoolJoinBase {
 }
 
 export interface PoolJoinEstimateOutput {
+    priceImpact: number;
+    minBptReceived: AmountHumanReadable;
+    nestedPriceImpacts?: PoolJoinEstimateOutputNestedPriceImpact[];
+}
+
+export interface PoolJoinEstimateOutputNestedPriceImpact {
+    poolId: string;
     priceImpact: number;
     minBptReceived: AmountHumanReadable;
 }
@@ -160,4 +173,50 @@ export interface PoolExitBatchSwapContractCallData {
 export interface PoolExitBatchRelayerContractCallData {
     type: 'BatchRelayer';
     calls: string[];
+}
+
+export interface ComposablePoolJoinBatchSwapStep {
+    type: 'BatchSwap';
+    swaps: {
+        poolId: string;
+        tokenIn: string;
+        tokenOut: string;
+    }[];
+    tokensIn: string[];
+}
+
+export interface ComposablePoolJoinPoolStep {
+    type: 'Join';
+    pool: GqlPoolWeighted | GqlPoolPhantomStable | GqlPoolPhantomStableNested;
+    tokensIn: string[];
+}
+
+export type ComposablePoolJoinStep = ComposablePoolJoinBatchSwapStep | ComposablePoolJoinPoolStep;
+
+export interface ComposablePoolJoinProcessedBatchSwapStep {
+    type: 'BatchSwap';
+    swaps: SwapV2[];
+    assets: string[];
+    deltas: AmountScaledString[];
+    tokenAmountsOut: TokenAmountHumanReadable[];
+    tokenAmountsIn: TokenAmountHumanReadable[];
+}
+
+export interface ComposablePoolJoinProcessedJoinPoolStep {
+    type: 'Join';
+    pool: GqlPoolWeighted | GqlPoolPhantomStable | GqlPoolPhantomStableNested;
+    priceImpact: number;
+    minBptReceived: AmountHumanReadable;
+    tokenAmountsIn: TokenAmountHumanReadable[];
+}
+
+export type ComposablePoolProcessedJoinStep =
+    | ComposablePoolJoinProcessedBatchSwapStep
+    | ComposablePoolJoinProcessedJoinPoolStep;
+
+export interface ComposablePoolJoinProcessedStepsOutput {
+    processedSteps: ComposablePoolProcessedJoinStep[];
+    priceImpact: number;
+    minBptReceived: AmountHumanReadable;
+    nestedPriceImpacts: PoolJoinEstimateOutputNestedPriceImpact[];
 }

@@ -13,6 +13,8 @@ import { batchRelayerService } from '~/lib/services/batch-relayer/batch-relayer.
 import { networkConfig } from '~/lib/config/network-config';
 import { networkProvider } from '~/lib/global/network';
 import { PoolMetaStableService } from '~/lib/services/pool/pool-meta-stable.service';
+import { isSameAddress } from '@balancer-labs/sdk';
+import { PoolComposableStableService } from '~/lib/services/pool/pool-composable-stable.service';
 
 export function poolGetTokensWithoutPhantomBpt(pool: GqlPoolUnion | GqlPoolPhantomStableNested | GqlPoolLinearNested) {
     return pool.tokens.filter((token) => token.address !== pool.address);
@@ -28,8 +30,9 @@ export function poolIsTokenPhantomBpt(poolToken: GqlPoolTokenUnion) {
 
 export function poolRequiresBatchRelayerOnJoin(pool: GqlPoolUnion) {
     return (
-        pool.__typename === 'GqlPoolWeighted' &&
-        (pool.nestingType === 'HAS_SOME_PHANTOM_BPT' || pool.nestingType === 'HAS_ONLY_PHANTOM_BPT')
+        (pool.__typename === 'GqlPoolWeighted' &&
+            (pool.nestingType === 'HAS_SOME_PHANTOM_BPT' || pool.nestingType === 'HAS_ONLY_PHANTOM_BPT')) ||
+        pool.factory === networkConfig.balancer.composableStableFactory
     );
 }
 
@@ -56,8 +59,18 @@ export function poolGetServiceForPool(pool: GqlPoolUnion): PoolService {
         }
         case 'GqlPoolStable':
             return new PoolStableService(pool, batchRelayerService, networkConfig.wethAddress);
-        case 'GqlPoolPhantomStable':
+        case 'GqlPoolPhantomStable': {
+            if (isSameAddress(pool.factory || '', networkConfig.balancer.composableStableFactory)) {
+                return new PoolComposableStableService(
+                    pool,
+                    batchRelayerService,
+                    networkConfig.wethAddress,
+                    networkProvider,
+                );
+            }
+
             return new PoolPhantomStableService(pool, batchRelayerService, networkConfig.wethAddress, networkProvider);
+        }
         case 'GqlPoolMetaStable':
             return new PoolMetaStableService(pool, batchRelayerService, networkConfig.wethAddress);
     }

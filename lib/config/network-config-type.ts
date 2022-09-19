@@ -40,6 +40,7 @@ export interface NetworkConfig {
     balancer: {
         vault: string;
         batchRelayer: string;
+        composableStableFactory: string;
     };
     beetsPoolOwnerAddress: string;
     masterChefContractAddress: string;
