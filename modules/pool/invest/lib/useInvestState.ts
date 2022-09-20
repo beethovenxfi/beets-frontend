@@ -1,5 +1,6 @@
 import { makeVar, useReactiveVar } from '@apollo/client';
 import { AmountHumanReadable, AmountHumanReadableMap } from '~/lib/services/token/token-types';
+import { keyBy, mapValues } from 'lodash';
 
 interface InvestState {
     inputAmounts: AmountHumanReadableMap;
@@ -47,6 +48,18 @@ export function useInvestState() {
         });
     }
 
+    function setSelectedOptions(options: { poolTokenIndex: number; tokenAddress: string }[]) {
+        const state = investStateVar();
+
+        investStateVar({
+            ...state,
+            selectedOptions: mapValues(
+                keyBy(options, ({ poolTokenIndex }) => `${poolTokenIndex}`),
+                'tokenAddress',
+            ),
+        });
+    }
+
     function toggleZapEnabled() {
         const state = investStateVar();
         investStateVar({
@@ -63,12 +76,16 @@ export function useInvestState() {
         });
     }
 
+    const state = useReactiveVar(investStateVar);
+
     return {
         setInputAmounts,
         setInputAmount,
         setSelectedOption,
+        setSelectedOptions,
         clearInvestState,
-        ...useReactiveVar(investStateVar),
         toggleZapEnabled,
+        ...state,
+        hasSelectedOptions: Object.keys(state.selectedOptions).length > 0,
     };
 }

@@ -15,7 +15,10 @@ export function _usePoolUserPendingRewards() {
     const farm = pool.staking?.farm;
     const gauge = pool.staking?.gauge;
 
-    const { data, isLoading, ...rest } = useStakingPendingRewards(pool.staking && hasBpt ? [pool.staking] : []);
+    const { data, isLoading, ...rest } = useStakingPendingRewards(
+        pool.staking && hasBpt ? [pool.staking] : [],
+        'usePoolUserPendingRewards',
+    );
 
     const hasBeetsRewards =
         (data || []).filter((item) => item.address === networkConfig.beets.address && parseFloat(item.amount) > 0)

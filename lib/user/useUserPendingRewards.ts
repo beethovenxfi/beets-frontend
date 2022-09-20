@@ -9,7 +9,7 @@ export function useUserPendingRewards() {
     const networkConfig = useNetworkConfig();
     const { poolBalances, fbeetsBalance, staking, ...userPoolBalancesQuery } = useUserData();
     const { priceForAmount } = useGetTokens();
-    const { data, isLoading, ...rest } = useStakingPendingRewards(staking);
+    const { data, isLoading, ...rest } = useStakingPendingRewards(staking, 'useUserPendingRewards');
     const pendingRewardsTotalUSD = sumBy(data || [], priceForAmount);
 
     const grouped = groupBy(data || [], 'address');

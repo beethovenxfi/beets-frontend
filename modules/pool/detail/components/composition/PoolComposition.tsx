@@ -5,6 +5,7 @@ import {
     Flex,
     FormLabel,
     HStack,
+    Link,
     Progress,
     Spacer,
     Switch,
@@ -17,7 +18,7 @@ import {
     Thead,
     Tr,
 } from '@chakra-ui/react';
-import { CornerDownRight } from 'react-feather';
+import { CornerDownRight, ExternalLink } from 'react-feather';
 import { Cell, Column, TableOptions, useExpanded, useTable } from 'react-table';
 
 import Card from '~/components/card/Card';
@@ -30,6 +31,7 @@ import { usePoolUserBptBalance } from '~/modules/pool/lib/usePoolUserBptBalance'
 import { usePoolUserInvestedTokenBalances } from '~/modules/pool/lib/usePoolUserInvestedTokenBalances';
 import { usePool } from '~/modules/pool/lib/usePool';
 import { GqlPoolTokenUnion } from '~/apollo/generated/graphql-codegen-generated';
+import { etherscanGetTokenUrl } from '~/lib/util/etherscan';
 
 interface PoolCompositionTableProps {
     columns: Column<TableDataTemplate>[];
@@ -101,9 +103,14 @@ function PoolCompositionTable({ columns, data, hasNestedTokens }: PoolCompositio
                         </Box>
                     ) : null}
                     <TokenAvatar size="xs" address={address} />
-                    <Text fontSize="sm" color="beets.base.50">
-                        {symbol}
-                    </Text>
+                    <HStack spacing="1">
+                        <Text fontSize="sm" color="beets.base.50">
+                            {symbol}
+                        </Text>
+                        <Link href={etherscanGetTokenUrl(address)} target="_blank">
+                            <ExternalLink size={14} />
+                        </Link>
+                    </HStack>
                 </HStack>
             );
         } else if (cell.column.id === Columns.Weight) {
