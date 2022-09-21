@@ -235,25 +235,11 @@ export interface ComposablePoolJoinProcessedStepsOutput {
 
 export type PoolWithPossibleNesting = GqlPoolWeighted | GqlPoolPhantomStable;
 
-export interface ComposablePoolExitBatchSwapStep {
-    type: 'BatchSwap';
-    nestedLinearPools: ComposablePoolExitNestedLinearPool[];
-    tokensOut: string[];
-}
-
 export interface ComposablePoolExitNestedLinearPool {
     linearPoolToken: GqlPoolTokenLinear;
     mainToken: GqlPoolToken;
     wrappedToken: GqlPoolToken;
 }
-
-export interface ComposablePoolExitPoolStep {
-    type: 'Exit';
-    pool: GqlPoolWeighted | GqlPoolPhantomStable | GqlPoolPhantomStableNested;
-    tokensOut: string[];
-}
-
-export type ComposablePoolExitStep = ComposablePoolExitBatchSwapStep | ComposablePoolExitPoolStep;
 
 export interface ComposablePoolSingleAssetExit {
     tokenOut: GqlPoolTokenExpanded;

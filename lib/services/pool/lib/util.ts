@@ -477,3 +477,13 @@ export function poolGetPoolTokenForPossiblyNestedTokenOut(
         }
     });
 }
+
+export function poolHasOnlyLinearBpts(pool: GqlPoolWeighted | GqlPoolPhantomStable | GqlPoolPhantomStableNested) {
+    for (const token of pool.tokens) {
+        if (token.__typename !== 'GqlPoolTokenLinear') {
+            return false;
+        }
+    }
+
+    return true;
+}

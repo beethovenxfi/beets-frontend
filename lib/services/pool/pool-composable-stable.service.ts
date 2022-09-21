@@ -113,7 +113,7 @@ export class PoolComposableStableService implements PoolService {
 
     public async exitGetContractCallData(data: PoolExitData): Promise<PoolExitContractCallData> {
         if (data.kind === 'ExactBPTInForTokensOut') {
-            const bptInForTokensOut = this.getProportionallyWeightedBptAmountsForTokensOut(data.bptAmountIn);
+            /*const bptInForTokensOut = this.getProportionallyWeightedBptAmountsForTokensOut(data.bptAmountIn);
             const { swaps, assets, deltas } = await this.getExitSwaps(bptInForTokensOut);
 
             return {
@@ -122,7 +122,8 @@ export class PoolComposableStableService implements PoolService {
                 swaps: swaps,
                 assets: assets,
                 limits: deltas,
-            };
+            };*/
+            return this.composableExitService.exitExactBPTInForTokensOutGetContractCallData(data);
         } else if (data.kind === 'ExactBPTInForOneTokenOut') {
             /*const { swaps, assets, deltas } = await this.getExitSwaps([
                 { address: data.tokenOutAddress, amount: data.bptAmountIn },
