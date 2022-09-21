@@ -32,6 +32,7 @@ import { formatFixed, parseFixed } from '@ethersproject/bignumber';
 import { BigNumber } from 'ethers';
 import {
     oldBnum,
+    oldBnumAddSlippage,
     oldBnumFromBnum,
     oldBnumScale,
     oldBnumScaleAmount,
@@ -607,7 +608,8 @@ export class PoolComposableExitService {
         finalTokenAmountsOut: TokenAmountHumanReadable[];
         toInternalBalance: boolean;
     }): ExitPoolRequest {
-        const bptInScaled = parseUnits(bptIn, 18);
+        //TODO: would be more appropriate to use output references here
+        const maxBptIn = parseUnits(oldBnumAddSlippage(bptIn, 18, slippage), 18).toString();
         const tokensWithPhantomBpt =
             pool.__typename === 'GqlPoolWeighted'
                 ? pool.tokens
@@ -641,12 +643,9 @@ export class PoolComposableExitService {
             }),
             userData:
                 pool.__typename === 'GqlPoolWeighted'
-                    ? WeightedPoolEncoder.exitBPTInForExactTokensOut(amountsOutScaled, bptInScaled)
+                    ? WeightedPoolEncoder.exitBPTInForExactTokensOut(amountsOutScaled, maxBptIn)
                     : //TODO: move this to the composable stable encoder once its merged in
-                      defaultAbiCoder.encode(
-                          ['uint256', 'uint256[]', 'uint256'],
-                          [1, amountsOutScaled, MaxUint256.toString()],
-                      ),
+                      defaultAbiCoder.encode(['uint256', 'uint256[]', 'uint256'], [1, amountsOutScaled, maxBptIn]),
             toInternalBalance,
         };
     }
