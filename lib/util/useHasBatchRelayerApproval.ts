@@ -3,8 +3,6 @@ import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 import { vaultContractConfig } from '~/lib/util/useSubmitTransaction';
 import { useUserAccount } from '~/lib/user/useUserAccount';
 
-const ALLOWANCES_CACHE_TIME_MS = 30_000;
-
 export function useHasBatchRelayerApproval() {
     const networkConfig = useNetworkConfig();
     const { userAddress } = useUserAccount();
@@ -13,7 +11,7 @@ export function useHasBatchRelayerApproval() {
         ...vaultContractConfig,
         enabled: typeof userAddress === 'string',
         args: [userAddress, networkConfig.balancer.batchRelayer],
-        //cacheTime: cacheTimeMs,
         functionName: 'hasApprovedRelayer',
+        watch: true,
     });
 }
