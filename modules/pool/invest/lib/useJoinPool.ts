@@ -27,7 +27,6 @@ export function useJoinPool(pool: GqlPoolUnion, zapEnabled?: boolean) {
     function joinPool(contractCallData: PoolJoinContractCallData, tokenAmountsIn: TokenAmountHumanReadable[]) {
         const amountsString = tokenAmountsConcatenatedString(tokenAmountsIn, pool.allTokens);
 
-        console.log('contractCallData', contractCallData);
         if (contractCallData.type === 'JoinPool') {
             const ethIndex = contractCallData.assets.findIndex((asset) => asset === AddressZero);
 

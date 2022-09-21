@@ -32,10 +32,9 @@ import { parseUnits } from 'ethers/lib/utils';
 import { oldBnum, oldBnumScale, oldBnumSubtractSlippage } from '~/lib/services/pool/lib/old-big-number';
 import { formatFixed } from '@ethersproject/bignumber';
 import { MaxUint256, WeiPerEther, Zero } from '@ethersproject/constants';
-import { poolScaleTokenAmounts } from '~/lib/services/pool/lib/util';
+import { poolBatchSwaps, poolQueryBatchSwap, poolScaleTokenAmounts } from '~/lib/services/pool/lib/util';
 import { poolIsTokenPhantomBpt } from '~/lib/services/pool/pool-util';
 import { BigNumber } from 'ethers';
-import { poolBatchSwaps, poolQueryBatchSwap } from '~/lib/services/pool/lib/composable-util';
 
 export class PoolWeightedBoostedService implements PoolService {
     private baseService: PoolBaseService;

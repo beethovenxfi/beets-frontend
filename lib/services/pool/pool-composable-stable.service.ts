@@ -6,7 +6,6 @@ import {
 } from '~/apollo/generated/graphql-codegen-generated';
 import {
     ComposablePoolJoinProcessedStepsOutput,
-    ComposablePoolJoinStep,
     PoolExitBptInSingleAssetWithdrawOutput,
     PoolExitContractCallData,
     PoolExitData,
@@ -18,10 +17,9 @@ import {
 } from '~/lib/services/pool/pool-types';
 import { AmountHumanReadable, AmountScaledString, TokenAmountHumanReadable } from '~/lib/services/token/token-types';
 import { SwapTypes } from '@balancer-labs/sor';
-import { PoolBaseService } from '~/lib/services/pool/lib/pool-base.service';
-import { isSameAddress, SwapV2 } from '@balancer-labs/sdk';
+import { SwapV2 } from '@balancer-labs/sdk';
 import { BaseProvider } from '@ethersproject/providers';
-import { oldBnum, oldBnumScaleDown } from '~/lib/services/pool/lib/old-big-number';
+import { oldBnum } from '~/lib/services/pool/lib/old-big-number';
 import { SwapKind } from '@balancer-labs/balancer-js';
 import { BatchRelayerService } from '~/lib/services/batch-relayer/batch-relayer.service';
 import {
@@ -31,17 +29,13 @@ import {
     poolGetJoinSwapForToken,
     poolSumPoolTokenBalances,
 } from '~/lib/services/pool/pool-phantom-stable-util';
-import {
-    poolBatchSwaps,
-    poolGetJoinSteps,
-    poolJoinGetContractCallData,
-    poolProcessJoinSteps,
-    poolQueryBatchSwap,
-} from '~/lib/services/pool/lib/composable-util';
+import { poolBatchSwaps, poolQueryBatchSwap } from '~/lib/services/pool/lib/util';
+import { PoolComposableJoinService } from '~/lib/services/pool/lib/pool-composable-join.service';
+import { PoolComposableExitService } from '~/lib/services/pool/lib/pool-composable-exit.service';
 
 export class PoolComposableStableService implements PoolService {
-    private readonly baseService: PoolBaseService;
-    private readonly joinSteps: ComposablePoolJoinStep[];
+    private readonly composableJoinService: PoolComposableJoinService;
+    private readonly composableExitService: PoolComposableExitService;
 
     constructor(
         private pool: GqlPoolPhantomStable,
@@ -49,25 +43,25 @@ export class PoolComposableStableService implements PoolService {
         private readonly wethAddress: string,
         private readonly provider: BaseProvider,
     ) {
-        this.baseService = new PoolBaseService(pool, wethAddress);
-        this.joinSteps = poolGetJoinSteps(this.pool);
+        this.composableJoinService = new PoolComposableJoinService(pool, batchRelayerService, provider, wethAddress);
+        this.composableExitService = new PoolComposableExitService(pool, batchRelayerService, provider, wethAddress);
     }
 
     public updatePool(pool: GqlPoolPhantomStable) {
         this.pool = pool;
-        this.baseService.updatePool(pool);
+        this.composableJoinService.updatePool(pool);
     }
 
     public async joinGetContractCallData(data: PoolJoinData): Promise<PoolJoinContractCallData> {
         if (data.kind !== 'ExactTokensInForBPTOut') {
             throw new Error('unsupported join type');
         }
+
         const { processedSteps } = await this.getJoinData(data.tokenAmountsIn, data.slippage);
 
-        return poolJoinGetContractCallData({
+        return this.composableJoinService.joinGetContractCallData({
             data,
             processedSteps,
-            wethAddress: this.wethAddress,
         });
     }
 
@@ -88,11 +82,8 @@ export class PoolComposableStableService implements PoolService {
         tokenAmountsIn: TokenAmountHumanReadable[],
         slippage: AmountHumanReadable,
     ): Promise<ComposablePoolJoinProcessedStepsOutput> {
-        const data = await poolProcessJoinSteps({
-            pool: this.pool,
-            steps: this.joinSteps,
+        const data = await this.composableJoinService.processJoinSteps({
             tokenAmountsIn,
-            provider: this.provider,
             slippage,
         });
 
@@ -104,49 +95,20 @@ export class PoolComposableStableService implements PoolService {
         bptIn: AmountHumanReadable,
         tokensOut: string[],
     ): Promise<TokenAmountHumanReadable[]> {
-        const bptInForTokensOut = this.getProportionallyWeightedBptAmountsForTokensOut(bptIn);
-        const { assets, deltas } = await this.getExitSwaps(bptInForTokensOut);
-
-        return this.pool.withdrawConfig.options.map((option) => {
-            const tokenOption = option.tokenOptions[0];
-            const assetIndex = assets.findIndex((asset) => isSameAddress(asset, tokenOption.address));
-
-            return {
-                address: tokenOption.address,
-                amount: oldBnumScaleDown(oldBnum(deltas[assetIndex]).abs(), tokenOption.decimals).toString(),
-            };
-        });
+        return this.composableExitService.exitGetProportionalWithdrawEstimate(bptIn, tokensOut);
     }
 
     public async exitGetBptInForSingleAssetWithdraw(
         tokenAmount: TokenAmountHumanReadable,
     ): Promise<PoolExitBptInSingleAssetWithdrawOutput> {
-        const { poolToken, option, tokenOption } = this.getWithdrawOptionAndPoolTokenForTokenOut(tokenAmount.address);
-        const { swaps, deltas, assets } = await this.getJoinSwaps([tokenAmount]);
-
-        const bptIndex = assets.findIndex((asset) => isSameAddress(asset, this.pool.address));
-        const bptIn = oldBnumScaleDown(oldBnum(deltas[bptIndex]).abs(), 18).toString();
-
-        return {
-            priceImpact: 0,
-            bptIn,
-        };
+        return this.composableExitService.exitGetBptInForSingleAssetWithdraw(tokenAmount);
     }
 
     public async exitGetSingleAssetWithdrawForBptIn(
         bptIn: AmountHumanReadable,
         tokenOutAddress: string,
     ): Promise<PoolExitSingleAssetWithdrawForBptInOutput> {
-        const { tokenOption } = this.getWithdrawOptionAndPoolTokenForTokenOut(tokenOutAddress);
-        const { assets, deltas } = await this.getExitSwaps([{ address: tokenOutAddress, amount: bptIn }]);
-
-        const assetIndex = assets.findIndex((asset) => isSameAddress(asset, tokenOutAddress));
-        const tokenAmount = oldBnumScaleDown(oldBnum(deltas[assetIndex]).abs(), tokenOption.decimals).toString();
-
-        return {
-            tokenAmount,
-            priceImpact: 0,
-        };
+        return this.composableExitService.exitGetSingleAssetWithdrawForBptIn(bptIn, tokenOutAddress);
     }
 
     public async exitGetContractCallData(data: PoolExitData): Promise<PoolExitContractCallData> {
@@ -162,7 +124,7 @@ export class PoolComposableStableService implements PoolService {
                 limits: deltas,
             };
         } else if (data.kind === 'ExactBPTInForOneTokenOut') {
-            const { swaps, assets, deltas } = await this.getExitSwaps([
+            /*const { swaps, assets, deltas } = await this.getExitSwaps([
                 { address: data.tokenOutAddress, amount: data.bptAmountIn },
             ]);
 
@@ -172,7 +134,9 @@ export class PoolComposableStableService implements PoolService {
                 swaps: swaps,
                 assets: assets,
                 limits: deltas,
-            };
+            };*/
+
+            return this.composableExitService.exitExactBPTInForOneTokenOutGetContractCallData(data);
         }
 
         throw new Error('unsupported join type');

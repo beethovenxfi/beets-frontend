@@ -4,6 +4,11 @@ import { SwapKind, BatchSwapStep, FundManagement } from '@balancer-labs/balancer
 import {
     GqlPoolPhantomStable,
     GqlPoolPhantomStableNested,
+    GqlPoolToken,
+    GqlPoolTokenBase,
+    GqlPoolTokenExpanded,
+    GqlPoolTokenLinear,
+    GqlPoolTokenUnion,
     GqlPoolUnion,
     GqlPoolWeighted,
 } from '~/apollo/generated/graphql-codegen-generated';
@@ -65,6 +70,13 @@ export interface PoolJoinEstimateOutputNestedPriceImpact {
 export interface PoolExitSingleAssetWithdrawForBptInOutput {
     tokenAmount: AmountHumanReadable;
     priceImpact: number;
+    nestedPriceImpacts?: PoolExitEstimateOutputNestedPriceImpact[];
+}
+
+export interface PoolExitEstimateOutputNestedPriceImpact {
+    poolId: string;
+    priceImpact: number;
+    tokenAmount: TokenAmountHumanReadable;
 }
 
 export interface PoolExitBptInSingleAssetWithdrawOutput {
@@ -219,4 +231,36 @@ export interface ComposablePoolJoinProcessedStepsOutput {
     priceImpact: number;
     minBptReceived: AmountHumanReadable;
     nestedPriceImpacts: PoolJoinEstimateOutputNestedPriceImpact[];
+}
+
+export type PoolWithPossibleNesting = GqlPoolWeighted | GqlPoolPhantomStable;
+
+export interface ComposablePoolExitBatchSwapStep {
+    type: 'BatchSwap';
+    nestedLinearPools: ComposablePoolExitNestedLinearPool[];
+    tokensOut: string[];
+}
+
+export interface ComposablePoolExitNestedLinearPool {
+    linearPoolToken: GqlPoolTokenLinear;
+    mainToken: GqlPoolToken;
+    wrappedToken: GqlPoolToken;
+}
+
+export interface ComposablePoolExitPoolStep {
+    type: 'Exit';
+    pool: GqlPoolWeighted | GqlPoolPhantomStable | GqlPoolPhantomStableNested;
+    tokensOut: string[];
+}
+
+export type ComposablePoolExitStep = ComposablePoolExitBatchSwapStep | ComposablePoolExitPoolStep;
+
+export interface ComposablePoolSingleAssetExit {
+    tokenOut: GqlPoolTokenExpanded;
+    poolToken: GqlPoolTokenUnion;
+    linearPool?: ComposablePoolExitNestedLinearPool;
+    exitSwaps?: {
+        swaps: SwapV2[];
+        assets: string[];
+    };
 }

@@ -15,10 +15,12 @@ import {
     ExitPoolData,
 } from '~/lib/services/batch-relayer/relayer-types';
 import { BigNumber, BigNumberish } from '@ethersproject/bignumber';
-import { AddressZero, Zero } from '@ethersproject/constants';
+import { AddressZero, MaxUint256, Zero } from '@ethersproject/constants';
 import { PoolJoinBatchRelayerContractCallData } from '~/lib/services/pool/pool-types';
 import { GqlPoolStable, GqlPoolWeighted } from '~/apollo/generated/graphql-codegen-generated';
-import { isSameAddress } from '@balancer-labs/sdk';
+import { isSameAddress, Swaps, SwapType, SwapV2 } from '@balancer-labs/sdk';
+import { AmountScaledString, TokenAmountHumanReadable } from '~/lib/services/token/token-types';
+import { poolScaleSlippage } from '~/lib/services/pool/lib/util';
 
 export class BatchRelayerService {
     private readonly CHAINED_REFERENCE_PREFIX = 'ba10';
@@ -112,6 +114,58 @@ export class BatchRelayerService {
             calls: [vaultEncodedJoinPool, masterChefDeposit],
             ethValue: ethAmount ? ethAmount.toString() : undefined,
         };
+    }
+
+    public encodeBatchSwapWithLimits({
+        tokensIn,
+        tokensOut,
+        deltas,
+        assets,
+        swaps,
+        userAddress,
+        ethAmountScaled,
+        slippage,
+        fromInternalBalance,
+        toInternalBalance,
+    }: {
+        tokensIn: string[];
+        tokensOut: string[];
+        swaps: SwapV2[];
+        assets: string[];
+        deltas: string[];
+        userAddress: string;
+        ethAmountScaled: AmountScaledString;
+        slippage: string;
+        fromInternalBalance: boolean;
+        toInternalBalance: boolean;
+    }): string {
+        const limits = Swaps.getLimitsForSlippage(
+            tokensIn,
+            tokensOut,
+            SwapType.SwapExactIn,
+            deltas,
+            assets,
+            poolScaleSlippage(slippage),
+        );
+
+        return this.vaultEncodeBatchSwap({
+            swapType: SwapType.SwapExactIn,
+            swaps,
+            assets,
+            funds: {
+                sender: userAddress,
+                recipient: userAddress,
+                fromInternalBalance,
+                toInternalBalance,
+            },
+            limits,
+            deadline: MaxUint256,
+            value: ethAmountScaled,
+            outputReferences: assets.map((asset, index) => ({
+                index,
+                key: batchRelayerService.toChainedReference(index),
+            })),
+        });
     }
 
     public replaceWethWithAddressZero(address: string) {
