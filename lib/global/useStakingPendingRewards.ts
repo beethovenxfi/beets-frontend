@@ -10,18 +10,17 @@ import { useGetTokens } from '~/lib/global/useToken';
 import { StakingPendingRewardAmount } from '~/lib/services/staking/staking-types';
 import { gaugeStakingService } from '~/lib/services/staking/gauge-staking.service';
 import { useUserAccount } from '~/lib/user/useUserAccount';
-import { useEffect, useRef } from 'react';
+import { useRef } from 'react';
 
-export function useStakingPendingRewards(stakingItems: GqlPoolStaking[]) {
+export function useStakingPendingRewards(stakingItems: GqlPoolStaking[], hookName: string) {
     const provider = useProvider();
     const { userAddress } = useUserAccount();
     const { tokens } = useGetTokens();
     const stakingIds = stakingItems.map((staking) => staking.id);
     const isHardRefetch = useRef(false);
-    const currentGaugePendingRewards = useRef<StakingPendingRewardAmount[]>([]);
 
     const query = useQuery(
-        ['useStakingPendingRewards', userAddress, stakingIds],
+        ['useStakingPendingRewards', hookName, userAddress, stakingIds],
         async () => {
             let pendingRewards: StakingPendingRewardAmount[] = [];
             const farms = stakingItems
@@ -50,21 +49,7 @@ export function useStakingPendingRewards(stakingItems: GqlPoolStaking[]) {
                     tokens,
                     userAddress: userAddress || '',
                 });
-
-                //The reward helper contract can at times fail to return amounts despite there being pending rewards
-                //we try to preserve previous good results to prevent the UI from rendering 0s
-                //hardRefetch is called after a rewards claim, so we bypass the ref in those instances
-                const pendingRewardsHasAmount = !!gaugePendingRewards.find((item) => parseFloat(item.amount) > 0);
-
-                if (
-                    isHardRefetch.current ||
-                    currentGaugePendingRewards.current.length === 0 ||
-                    pendingRewardsHasAmount
-                ) {
-                    currentGaugePendingRewards.current = gaugePendingRewards;
-                }
-
-                pendingRewards = [...pendingRewards, ...currentGaugePendingRewards.current];
+                pendingRewards = [...pendingRewards, ...gaugePendingRewards];
             }
 
             return pendingRewards;

@@ -13,7 +13,6 @@ import {
 } from '@chakra-ui/react';
 import { useUserPendingRewards } from '~/lib/user/useUserPendingRewards';
 import { numberFormatUSDValue } from '~/lib/util/number-formats';
-import numeral from 'numeral';
 import { useGetTokens } from '~/lib/global/useToken';
 
 import { BeetsBox } from '~/components/box/BeetsBox';
@@ -21,6 +20,7 @@ import { useUserData } from '~/lib/user/useUserData';
 
 import { useUserHarvestAllPendingRewards } from './lib/useUserHarvestAllPendingRewards';
 import { BeetsSubmitTransactionButton } from '~/components/button/BeetsSubmitTransactionButton';
+import { tokenFormatAmount } from '~/lib/services/token/token-util';
 
 export function NavbarPendingRewards() {
     const {
@@ -60,7 +60,7 @@ export function NavbarPendingRewards() {
                         <Skeleton height="7.5px" width="36px" mt="1.5" mb="2px" />
                     ) : (
                         <Box fontSize="11px" pt="0.5">
-                            {numeral(pendingRewardsTotalUSD).format('$0.00a')}
+                            {numberFormatUSDValue(pendingRewardsTotalUSD)}
                         </Box>
                     )}
                     <Skeleton />
@@ -77,7 +77,7 @@ export function NavbarPendingRewards() {
                         </Box>
                         {pendingRewards.map((item) => (
                             <Box fontSize="xl" fontWeight="normal" lineHeight="26px" key={item.address}>
-                                {numeral(item.amount).format('0.0000')} {getToken(item.address)?.symbol}
+                                {tokenFormatAmount(item.amount)} {getToken(item.address)?.symbol}
                             </Box>
                         ))}
                         <Box pt="2" color="gray.200">
