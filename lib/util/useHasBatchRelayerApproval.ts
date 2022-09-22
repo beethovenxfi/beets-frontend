@@ -12,6 +12,5 @@ export function useHasBatchRelayerApproval() {
         enabled: typeof userAddress === 'string',
         args: [userAddress, networkConfig.balancer.batchRelayer],
         functionName: 'hasApprovedRelayer',
-        watch: true,
     });
 }
