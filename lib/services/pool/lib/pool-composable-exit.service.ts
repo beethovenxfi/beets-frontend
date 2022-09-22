@@ -411,7 +411,7 @@ export class PoolComposableExitService {
         }));
 
         if (nestedLinearPools.length > 0) {
-            const { swaps, assets, deltas } = await this.getExitSwapsForNestedLinearPools(
+            const { swaps, assets, deltas, requiresUnwrap } = await this.getExitSwapsForNestedLinearPools(
                 bptAmounts,
                 nestedLinearPools,
             );
@@ -419,18 +419,36 @@ export class PoolComposableExitService {
             calls.push(
                 this.batchRelayerService.encodeBatchSwapWithLimits({
                     tokensIn: nestedLinearPools.map((linearPool) => linearPool.linearPoolToken.address),
-                    tokensOut: nestedLinearPools.map((linearPool) => linearPool.mainToken.address),
+                    tokensOut: nestedLinearPools.map((linearPool) =>
+                        requiresUnwrap ? linearPool.wrappedToken.address : linearPool.mainToken.address,
+                    ),
                     deltas,
                     assets,
                     swaps,
                     ethAmountScaled: '0',
                     sender: userAddress,
-                    recipient: userAddress,
+                    recipient: requiresUnwrap ? this.batchRelayerService.batchRelayerAddress : userAddress,
                     slippage,
                     fromInternalBalance: true,
                     toInternalBalance: false,
                 }),
             );
+
+            if (requiresUnwrap) {
+                for (const nestedLinearPool of nestedLinearPools) {
+                    const assetIdx = assets.indexOf(nestedLinearPool.wrappedToken.address);
+
+                    calls.push(
+                        this.batchRelayerService.reaperEncodeUnwrap({
+                            vaultToken: nestedLinearPool.wrappedToken.address,
+                            sender: this.batchRelayerService.batchRelayerAddress,
+                            recipient: userAddress,
+                            amount: this.batchRelayerService.toChainedReference(assetIdx),
+                            outputReference: Zero,
+                        }),
+                    );
+                }
+            }
         }
 
         return {
@@ -446,21 +464,26 @@ export class PoolComposableExitService {
         swaps: SwapV2[];
         deltas: string[];
         assets: string[];
-        tokenAmountsOut: TokenAmountHumanReadable[];
-        mainTokenAmountsOut: TokenAmountHumanReadable[];
+        //tokenAmountsOut: TokenAmountHumanReadable[];
+        //mainTokenAmountsOut: TokenAmountHumanReadable[];
+        requiresUnwrap: boolean;
     }> {
         const exitSwaps: { swap: SwapV2; assets: string[]; nestedLinearPool: ComposablePoolExitNestedLinearPool }[] =
             [];
+        const requiresUnwrap = !!nestedLinearPools.find(({ linearPoolToken, mainToken }) => {
+            const bptAmount = bptAmountsIn.find((amount) => amount.address === linearPoolToken.address);
+
+            return (
+                parseFloat(mainToken.totalBalance) <
+                parseFloat(bptAmount?.amount || '0') * parseFloat(linearPoolToken.pool.bptPriceRate)
+            );
+        });
 
         for (const nestedLinearPool of nestedLinearPools) {
             const { linearPoolToken, mainToken, wrappedToken } = nestedLinearPool;
             const bptAmount = bptAmountsIn.find((amount) => amount.address === linearPoolToken.address);
 
             if (bptAmount) {
-                const hasEnoughMainToken =
-                    parseFloat(mainToken.totalBalance) >
-                    parseFloat(bptAmount?.amount || '0') * parseFloat(linearPoolToken.pool.bptPriceRate);
-
                 exitSwaps.push({
                     swap: {
                         poolId: linearPoolToken.pool.id,
@@ -469,7 +492,7 @@ export class PoolComposableExitService {
                         amount: parseFixed(bptAmount?.amount || '0', 18).toString(),
                         userData: '0x',
                     },
-                    assets: [linearPoolToken.address, hasEnoughMainToken ? mainToken.address : wrappedToken.address],
+                    assets: [linearPoolToken.address, requiresUnwrap ? wrappedToken.address : mainToken.address],
                     nestedLinearPool,
                 });
             }
@@ -487,7 +510,7 @@ export class PoolComposableExitService {
             provider: this.provider,
         });
 
-        const tokenAmountsOut = exitSwaps.map((exitSwap) => {
+        /*const tokenAmountsOut = exitSwaps.map((exitSwap) => {
             const tokenOut = exitSwap.assets[1];
             const tokenOutIdx = assets.indexOf(tokenOut);
             const token =
@@ -519,14 +542,15 @@ export class PoolComposableExitService {
                     token.decimals,
                 ),
             };
-        });
+        });*/
 
         return {
             swaps,
             deltas,
             assets,
-            tokenAmountsOut,
-            mainTokenAmountsOut,
+            //tokenAmountsOut,
+            //mainTokenAmountsOut,
+            requiresUnwrap,
         };
     }
 
