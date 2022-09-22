@@ -160,7 +160,6 @@ export function poolStableBptForTokensZeroPriceImpact(
     tokenAmounts: TokenAmountHumanReadable[],
     pool: GqlPoolPhantomStable | GqlPoolPhantomStableNested,
 ): OldBigNumber {
-    console.log('tokenAmounts', tokenAmounts);
     const denormAmounts = poolScaleTokenAmounts(tokenAmounts, pool.tokens);
     const priceRatesScaled = pool.tokens.map((token) => oldBnumScaleAmount(token.priceRate, 18));
 
@@ -172,18 +171,6 @@ export function poolStableBptForTokensZeroPriceImpact(
             .mul(priceRatesScaled[index].toString())
             .div(WeiPerEther),
     );
-
-    console.log({
-        balances: balances.map((balance) => balance.toString()),
-        decimals: pool.tokens.map((token) => token.decimals),
-        denormAmounts: denormAmounts.map((amount) => amount.toString()),
-        shares: oldBnumScaleAmount(
-            pool.__typename === 'GqlPoolPhantomStableNested' ? pool.totalShares : pool.dynamicData.totalShares,
-        ).toString(),
-        swapFee: oldBnumScaleAmount(
-            pool.__typename === 'GqlPoolPhantomStableNested' ? pool.swapFee : pool.dynamicData.swapFee,
-        ).toString(),
-    });
 
     const bptZeroImpact = stableBPTForTokensZeroPriceImpact(
         balances,

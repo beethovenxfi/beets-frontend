@@ -1,6 +1,11 @@
 import { createContext, useContext, useEffect, useMemo } from 'react';
 import { GqlPoolUnion, useGetPoolQuery } from '~/apollo/generated/graphql-codegen-generated';
-import { poolGetServiceForPool, poolGetTypeName, poolRequiresBatchRelayerOnJoin } from '~/lib/services/pool/pool-util';
+import {
+    poolGetServiceForPool,
+    poolGetTypeName,
+    poolRequiresBatchRelayerOnExit,
+    poolRequiresBatchRelayerOnJoin,
+} from '~/lib/services/pool/pool-util';
 import { useEffectOnce } from '~/lib/util/custom-hooks';
 import { PoolService } from '~/lib/services/pool/pool-types';
 import { TokenBase } from '~/lib/services/token/token-types';
@@ -15,6 +20,7 @@ export interface PoolContextType {
     allTokens: TokenBase[];
     allTokenAddresses: string[];
     requiresBatchRelayerOnJoin: boolean;
+    requiresBatchRelayerOnExit: boolean;
     supportsZap: boolean;
     formattedTypeName: string;
     totalApr: number;
@@ -43,6 +49,7 @@ export function PoolProvider({ pool: poolFromProps, children }: { pool: GqlPoolU
     const bptPrice = parseFloat(pool.dynamicData.totalLiquidity) / parseFloat(pool.dynamicData.totalShares);
 
     const requiresBatchRelayerOnJoin = poolRequiresBatchRelayerOnJoin(pool);
+    const requiresBatchRelayerOnExit = poolRequiresBatchRelayerOnExit(pool);
     const supportsZap =
         (pool.__typename === 'GqlPoolWeighted' || pool.__typename === 'GqlPoolStable') &&
         pool.staking?.type === 'MASTER_CHEF' &&
@@ -85,6 +92,7 @@ export function PoolProvider({ pool: poolFromProps, children }: { pool: GqlPoolU
                 allTokens,
                 allTokenAddresses: allTokens.map((token) => token.address),
                 requiresBatchRelayerOnJoin,
+                requiresBatchRelayerOnExit,
                 bptPrice,
                 supportsZap,
                 formattedTypeName: poolGetTypeName(pool),

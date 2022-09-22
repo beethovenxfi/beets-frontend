@@ -51,7 +51,6 @@ import {
 } from '~/apollo/generated/graphql-codegen-generated';
 import { cloneDeep, reverse, sortBy } from 'lodash';
 import { poolGetExitSwaps } from '~/lib/services/pool/pool-phantom-stable-util';
-import { MaxUint256 } from '@ethersproject/constants';
 import { defaultAbiCoder } from '@ethersproject/abi';
 
 export class PoolComposableExitService {
@@ -134,7 +133,7 @@ export class PoolComposableExitService {
         let amountOut: AmountHumanReadable = '0';
 
         const { tokenAmountOut, priceImpact } = this.getAmountOutForBptIn({
-            bptIn: amountIn,
+            bptIn,
             pool: this.pool,
             poolToken: singleAssetExit.poolToken,
         });
@@ -145,22 +144,13 @@ export class PoolComposableExitService {
         }
 
         if (singleAssetExit.exitSwaps) {
-            const tokenOutIdx = singleAssetExit.exitSwaps.assets.indexOf(tokenOutAddress);
-            const swaps = cloneDeep(singleAssetExit.exitSwaps.swaps);
-            //amountIn is always a BPT
-            swaps[0].amount = parseUnits(amountIn, 18).toString();
-
-            const deltas = await poolQueryBatchSwap({
-                provider: this.provider,
-                swaps,
-                assets: singleAssetExit.exitSwaps.assets,
-                swapType: SwapTypes.SwapExactIn,
+            const { mainTokenAmountOut } = await this.getSingleAssetExitSwaps({
+                exit: singleAssetExit,
+                tokenOutAddress,
+                amountIn,
             });
 
-            amountOut = formatFixed(
-                BigNumber.from(deltas[tokenOutIdx] || '0').abs(),
-                singleAssetExit.tokenOut.decimals,
-            );
+            amountOut = mainTokenAmountOut;
         }
 
         return {
@@ -176,12 +166,30 @@ export class PoolComposableExitService {
     ): Promise<PoolExitBptInSingleAssetWithdrawOutput> {
         const singleAssetExit = this.getSingleAssetExitForTokenOut(tokenAmount.address);
         const poolToken = singleAssetExit.poolToken;
+        const tokenOut = singleAssetExit.tokenOut;
         let bptIn: AmountHumanReadable = '0';
 
         if (singleAssetExit.exitSwaps) {
+            const requiresUnwrap =
+                singleAssetExit.linearPool &&
+                parseFloat(tokenAmount.amount) > parseFloat(singleAssetExit.linearPool.mainToken.totalBalance);
+
             //for exact out, we need to reverse the swaps
             const swaps = reverse(cloneDeep(singleAssetExit.exitSwaps.swaps));
-            swaps[0].amount = parseUnits(tokenAmount.amount, singleAssetExit.tokenOut.decimals).toString();
+            const assets = cloneDeep(singleAssetExit.exitSwaps.assets);
+
+            if (requiresUnwrap && singleAssetExit.linearPool) {
+                const wrappedToken = singleAssetExit.linearPool.wrappedToken;
+                const wrappedTokenAmount: AmountHumanReadable = formatFixed(
+                    oldBnumScaleAmount(tokenAmount.amount, tokenOut.decimals).div(wrappedToken.priceRate).toFixed(0),
+                    tokenOut.decimals,
+                );
+
+                assets[assets.length - 1] = wrappedToken.address;
+                swaps[0].amount = parseUnits(wrappedTokenAmount, wrappedToken.decimals).toString();
+            } else {
+                swaps[0].amount = parseUnits(tokenAmount.amount, tokenOut.decimals).toString();
+            }
 
             const deltas = await poolQueryBatchSwap({
                 provider: this.provider,
@@ -267,20 +275,20 @@ export class PoolComposableExitService {
         }
 
         if (singleAssetExit.exitSwaps) {
-            const assets = singleAssetExit.exitSwaps.assets;
-            const assetOutIdx = assets.indexOf(tokenOutAddress);
-            const swaps = cloneDeep(singleAssetExit.exitSwaps.swaps);
-            swaps[0].amount = parseUnits(amountIn, 18).toString();
+            const assetOutIdx = singleAssetExit.exitSwaps.assets.indexOf(tokenOutAddress);
 
-            const deltas = await poolQueryBatchSwap({
-                provider: this.provider,
-                swaps,
-                assets,
-                swapType: SwapTypes.SwapExactIn,
+            const { deltas, requiresUnwrap, swaps, assets } = await this.getSingleAssetExitSwaps({
+                exit: singleAssetExit,
+                tokenOutAddress,
+                amountIn,
             });
 
-            //Inject the user accepted amount out.
-            deltas[assetOutIdx] = `-${parseUnits(amountOut, singleAssetExit.tokenOut.decimals).toString()}`;
+            if (!requiresUnwrap) {
+                //Inject the user accepted amount out.
+                deltas[assetOutIdx] = `-${parseUnits(amountOut, singleAssetExit.tokenOut.decimals).toString()}`;
+            } else {
+                //TODO: scale on price rate
+            }
 
             if (this.isWeightedPool) {
                 swaps[0].amount = this.batchRelayerService.toChainedReference(poolToken.index).toString();
@@ -301,8 +309,6 @@ export class PoolComposableExitService {
                 }),
             );
         }
-
-        //TODO handle unwrap
 
         return {
             type: 'BatchRelayer',
@@ -383,7 +389,10 @@ export class PoolComposableExitService {
         }));
 
         if (nestedLinearPools.length > 0) {
-            const { swaps, assets, deltas } = await this.getExitSwaps(bptAmounts, nestedLinearPools);
+            const { swaps, assets, deltas } = await this.getExitSwapsForNestedLinearPools(
+                bptAmounts,
+                nestedLinearPools,
+            );
 
             calls.push(
                 this.batchRelayerService.encodeBatchSwapWithLimits({
@@ -407,7 +416,7 @@ export class PoolComposableExitService {
         };
     }
 
-    private async getExitSwaps(
+    private async getExitSwapsForNestedLinearPools(
         bptAmountsIn: TokenAmountHumanReadable[],
         nestedLinearPools: ComposablePoolExitNestedLinearPool[],
     ): Promise<{
@@ -506,6 +515,7 @@ export class PoolComposableExitService {
         tokenOption: GqlPoolToken;
     }): ComposablePoolSingleAssetExit {
         const poolToken = this.pool.tokens.find((poolToken) => poolToken.address === option.poolTokenAddress)!;
+        const tokenOut = this.pool.allTokens.find((token) => token.address === tokenOption.address)!;
         const linearPoolToken = this.nestedLinearPoolTokens.find((linearPoolToken) => {
             const mainToken = poolGetMainTokenFromLinearPoolToken(linearPoolToken);
 
@@ -513,10 +523,24 @@ export class PoolComposableExitService {
         });
 
         const exitSwapPool = this.isStablePool ? this.pool : 'pool' in poolToken ? poolToken.pool : null;
+        let estimatedBptToMainTokenPriceRate = '1.0';
+
+        //estimatedBptToMainTokenPriceRate
+        if (exitSwapPool && linearPoolToken) {
+            if (exitSwapPool.__typename === 'GqlPoolLinearNested') {
+                estimatedBptToMainTokenPriceRate = exitSwapPool.bptPriceRate;
+            } else if (
+                exitSwapPool.__typename === 'GqlPoolPhantomStableNested' ||
+                exitSwapPool.__typename === 'GqlPoolPhantomStable'
+            ) {
+                estimatedBptToMainTokenPriceRate = oldBnum(linearPoolToken.pool.bptPriceRate).times('1.0').toString();
+                //formatFixed(oldBnumScaleAmount(bptAmount.amount).times(linearPoolToken.priceRate).toFixed(0), 18);
+            }
+        }
 
         return {
-            tokenOut: this.pool.allTokens.find((token) => token.address === tokenOption.address)!,
-            poolToken: this.pool.tokens.find((token) => token.address === option.poolTokenAddress)!,
+            tokenOut,
+            poolToken,
             linearPool: linearPoolToken
                 ? {
                       linearPoolToken,
@@ -533,6 +557,7 @@ export class PoolComposableExitService {
                       poolToken,
                   })
                 : undefined,
+            estimatedBptToMainTokenPriceRate,
         };
     }
 
@@ -563,7 +588,9 @@ export class PoolComposableExitService {
 
         return {
             tokenAmountOut: poolTokenAmountOut,
-            priceImpact: bptAmountScaled.div(bptZeroPriceImpact).minus(1).toNumber(),
+            priceImpact: bptAmountScaled.gt(bptZeroPriceImpact)
+                ? 0
+                : bptAmountScaled.div(bptZeroPriceImpact).minus(1).toNumber(),
         };
     }
 
@@ -648,5 +675,71 @@ export class PoolComposableExitService {
                       defaultAbiCoder.encode(['uint256', 'uint256[]', 'uint256'], [1, amountsOutScaled, maxBptIn]),
             toInternalBalance,
         };
+    }
+
+    private async getSingleAssetExitSwaps({
+        exit,
+        tokenOutAddress,
+        amountIn,
+    }: {
+        exit: ComposablePoolSingleAssetExit;
+        amountIn: AmountHumanReadable;
+        tokenOutAddress: string;
+    }): Promise<{
+        deltas: string[];
+        requiresUnwrap: boolean;
+        mainTokenAmountOut: AmountHumanReadable;
+        tokenAmountOut: AmountHumanReadable;
+        swaps: SwapV2[];
+        assets: string[];
+    }> {
+        const swaps = cloneDeep(exit.exitSwaps?.swaps || []);
+        const assets = cloneDeep(exit.exitSwaps?.assets || []);
+        const assetOutIdx = assets.indexOf(tokenOutAddress);
+        let deltas: string[] = [];
+        let requiresUnwrap = false;
+
+        swaps[0].amount = parseUnits(amountIn, 18).toString();
+
+        //the most accurate way to determine if we need to unwrap is to attempt to exit with main token,
+        //and if that fails, then attempt to exit with wrapped token.
+        try {
+            deltas = await poolQueryBatchSwap({
+                provider: this.provider,
+                swaps,
+                assets,
+                swapType: SwapTypes.SwapExactIn,
+            });
+        } catch (e) {
+            if (!exit.linearPool) {
+                //shouldn't ever really get here, the batch swap should only fail when there is inadequate main
+                //token in the linear pool to facilitate the exit
+                throw e;
+            }
+
+            assets[assetOutIdx] = exit.linearPool.wrappedToken.address;
+            deltas = await poolQueryBatchSwap({
+                provider: this.provider,
+                swaps,
+                assets,
+                swapType: SwapTypes.SwapExactIn,
+            });
+
+            requiresUnwrap = true;
+        }
+
+        const swapTokenOut = requiresUnwrap && exit.linearPool ? exit.linearPool.wrappedToken : exit.tokenOut;
+        const wrappedTokenPriceRate = exit.linearPool?.wrappedToken.priceRate || '1.0';
+
+        const tokenAmountOut = formatFixed(BigNumber.from(deltas[assetOutIdx] || '0').abs(), swapTokenOut.decimals);
+        const mainTokenAmountOut = formatFixed(
+            oldBnum(deltas[assetOutIdx] || '0')
+                .abs()
+                .times(requiresUnwrap ? wrappedTokenPriceRate : '1.0')
+                .toFixed(0),
+            exit.tokenOut.decimals,
+        );
+
+        return { requiresUnwrap, deltas, tokenAmountOut, mainTokenAmountOut, swaps, assets };
     }
 }

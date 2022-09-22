@@ -2,6 +2,8 @@ import { AmountHumanReadable, AmountScaledString, TokenAmountHumanReadable } fro
 import { BigNumberish } from 'ethers';
 import { SwapKind, BatchSwapStep, FundManagement } from '@balancer-labs/balancer-js';
 import {
+    GqlPoolLinear,
+    GqlPoolLinearNested,
     GqlPoolPhantomStable,
     GqlPoolPhantomStableNested,
     GqlPoolToken,
@@ -234,6 +236,7 @@ export interface ComposablePoolJoinProcessedStepsOutput {
 }
 
 export type PoolWithPossibleNesting = GqlPoolWeighted | GqlPoolPhantomStable;
+export type ComposableExitSwapPool = GqlPoolPhantomStable | GqlPoolPhantomStableNested | GqlPoolLinearNested;
 
 export interface ComposablePoolExitNestedLinearPool {
     linearPoolToken: GqlPoolTokenLinear;
@@ -249,4 +252,5 @@ export interface ComposablePoolSingleAssetExit {
         swaps: SwapV2[];
         assets: string[];
     };
+    estimatedBptToMainTokenPriceRate: AmountHumanReadable;
 }
