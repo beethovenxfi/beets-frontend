@@ -172,7 +172,8 @@ export class PoolComposableJoinService {
                     ...batchSwapStep,
                     tokensIn: batchSwapStep.tokenAmountsIn.map((amountIn) => amountIn.address),
                     tokensOut: batchSwapStep.tokenAmountsOut.map((amountOut) => amountOut.address),
-                    userAddress: data.userAddress,
+                    sender: data.userAddress,
+                    recipient: data.userAddress,
                     ethAmountScaled,
                     //TODO: do we need to worry about slippage here? only real concern is the rate provider ticking up
                     slippage: '0.0001',

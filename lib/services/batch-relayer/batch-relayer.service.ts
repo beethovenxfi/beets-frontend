@@ -12,6 +12,8 @@ import {
     EncodeJoinPoolInput,
     EncodeMasterChefDepositInput,
     EncodeMasterChefWithdrawInput,
+    EncodeReaperUnwrapInput,
+    EncodeReaperWrapInput,
     ExitPoolData,
 } from '~/lib/services/batch-relayer/relayer-types';
 import { BigNumber, BigNumberish } from '@ethersproject/bignumber';
@@ -21,6 +23,7 @@ import { GqlPoolStable, GqlPoolWeighted } from '~/apollo/generated/graphql-codeg
 import { isSameAddress, Swaps, SwapType, SwapV2 } from '@balancer-labs/sdk';
 import { AmountScaledString, TokenAmountHumanReadable } from '~/lib/services/token/token-types';
 import { poolScaleSlippage } from '~/lib/services/pool/lib/util';
+import { ReaperWrappingService } from '~/lib/services/batch-relayer/extensions/reaper-wrapping.service';
 
 export class BatchRelayerService {
     private readonly CHAINED_REFERENCE_PREFIX = 'ba10';
@@ -35,6 +38,7 @@ export class BatchRelayerService {
         private readonly fBeetsBarStakingService: FBeetsBarStakingService,
         private readonly masterChefStakingService: MasterChefStakingService,
         private readonly yearnWrappingService: YearnWrappingService,
+        private readonly reaperWrappingService: ReaperWrappingService,
     ) {}
 
     public toChainedReference(key: BigNumberish): BigNumber {
@@ -67,6 +71,14 @@ export class BatchRelayerService {
 
     public masterChefEncodeWithdraw(params: EncodeMasterChefWithdrawInput): string {
         return this.masterChefStakingService.encodeWithdraw(params);
+    }
+
+    public reaperEncodeWrap(params: EncodeReaperWrapInput): string {
+        return this.reaperWrappingService.encodeWrap(params);
+    }
+
+    public reaperEncodeUnwrap(params: EncodeReaperUnwrapInput): string {
+        return this.reaperWrappingService.encodeUnwrap(params);
     }
 
     public encodeJoinPoolAndStakeInMasterChefFarm({
@@ -122,22 +134,24 @@ export class BatchRelayerService {
         deltas,
         assets,
         swaps,
-        userAddress,
         ethAmountScaled,
         slippage,
         fromInternalBalance,
         toInternalBalance,
+        sender,
+        recipient,
     }: {
         tokensIn: string[];
         tokensOut: string[];
         swaps: SwapV2[];
         assets: string[];
         deltas: string[];
-        userAddress: string;
         ethAmountScaled: AmountScaledString;
         slippage: string;
         fromInternalBalance: boolean;
         toInternalBalance: boolean;
+        sender: string;
+        recipient: string;
     }): string {
         const limits = Swaps.getLimitsForSlippage(
             tokensIn,
@@ -153,8 +167,8 @@ export class BatchRelayerService {
             swaps,
             assets,
             funds: {
-                sender: userAddress,
-                recipient: userAddress,
+                sender,
+                recipient,
                 fromInternalBalance,
                 toInternalBalance,
             },
@@ -183,4 +197,5 @@ export const batchRelayerService = new BatchRelayerService(
     new FBeetsBarStakingService(),
     new MasterChefStakingService(),
     new YearnWrappingService(),
+    new ReaperWrappingService(),
 );

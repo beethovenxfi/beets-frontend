@@ -52,6 +52,7 @@ import {
 import { cloneDeep, reverse, sortBy } from 'lodash';
 import { poolGetExitSwaps } from '~/lib/services/pool/pool-phantom-stable-util';
 import { defaultAbiCoder } from '@ethersproject/abi';
+import { Zero } from '@ethersproject/constants';
 
 export class PoolComposableExitService {
     private readonly singleAssetExits: ComposablePoolSingleAssetExit[] = [];
@@ -194,7 +195,7 @@ export class PoolComposableExitService {
             const deltas = await poolQueryBatchSwap({
                 provider: this.provider,
                 swaps,
-                assets: singleAssetExit.exitSwaps.assets,
+                assets,
                 swapType: SwapTypes.SwapExactOut,
             });
 
@@ -275,9 +276,10 @@ export class PoolComposableExitService {
         }
 
         if (singleAssetExit.exitSwaps) {
+            const wrappedToken = singleAssetExit.linearPool?.wrappedToken;
             const assetOutIdx = singleAssetExit.exitSwaps.assets.indexOf(tokenOutAddress);
 
-            const { deltas, requiresUnwrap, swaps, assets } = await this.getSingleAssetExitSwaps({
+            const { deltas, requiresUnwrap, swaps, assets, tokenAmountOut } = await this.getSingleAssetExitSwaps({
                 exit: singleAssetExit,
                 tokenOutAddress,
                 amountIn,
@@ -294,23 +296,40 @@ export class PoolComposableExitService {
                 swaps[0].amount = this.batchRelayerService.toChainedReference(poolToken.index).toString();
             }
 
-            console.log('swaps', swaps);
-            console.log('deltas', deltas);
-
             calls.push(
                 this.batchRelayerService.encodeBatchSwapWithLimits({
                     tokensIn: [this.pool.address],
-                    tokensOut: [tokenOutAddress],
+                    tokensOut: [requiresUnwrap && wrappedToken ? wrappedToken.address : tokenOutAddress],
                     swaps,
                     assets,
                     deltas,
-                    userAddress,
                     ethAmountScaled: '0',
                     slippage,
                     fromInternalBalance: this.isWeightedPool,
                     toInternalBalance: false,
+                    sender: userAddress,
+                    recipient:
+                        requiresUnwrap && singleAssetExit.linearPool
+                            ? this.batchRelayerService.batchRelayerAddress
+                            : userAddress,
                 }),
             );
+
+            if (requiresUnwrap && singleAssetExit.linearPool) {
+                const wrappedToken = singleAssetExit.linearPool.wrappedToken;
+                const assetOutIdx = assets.length - 1;
+
+                //TODO: support additional unwrapping types
+                calls.push(
+                    this.batchRelayerService.reaperEncodeUnwrap({
+                        vaultToken: wrappedToken.address,
+                        sender: this.batchRelayerService.batchRelayerAddress,
+                        recipient: userAddress,
+                        amount: this.batchRelayerService.toChainedReference(assetOutIdx),
+                        outputReference: Zero,
+                    }),
+                );
+            }
         }
 
         return {
@@ -405,7 +424,8 @@ export class PoolComposableExitService {
                     assets,
                     swaps,
                     ethAmountScaled: '0',
-                    userAddress,
+                    sender: userAddress,
+                    recipient: userAddress,
                     slippage,
                     fromInternalBalance: true,
                     toInternalBalance: false,
@@ -526,20 +546,6 @@ export class PoolComposableExitService {
         });
 
         const exitSwapPool = this.isStablePool ? this.pool : 'pool' in poolToken ? poolToken.pool : null;
-        let estimatedBptToMainTokenPriceRate = '1.0';
-
-        //estimatedBptToMainTokenPriceRate
-        if (exitSwapPool && linearPoolToken) {
-            if (exitSwapPool.__typename === 'GqlPoolLinearNested') {
-                estimatedBptToMainTokenPriceRate = exitSwapPool.bptPriceRate;
-            } else if (
-                exitSwapPool.__typename === 'GqlPoolPhantomStableNested' ||
-                exitSwapPool.__typename === 'GqlPoolPhantomStable'
-            ) {
-                estimatedBptToMainTokenPriceRate = oldBnum(linearPoolToken.pool.bptPriceRate).times('1.0').toString();
-                //formatFixed(oldBnumScaleAmount(bptAmount.amount).times(linearPoolToken.priceRate).toFixed(0), 18);
-            }
-        }
 
         return {
             tokenOut,
@@ -560,7 +566,6 @@ export class PoolComposableExitService {
                       poolToken,
                   })
                 : undefined,
-            estimatedBptToMainTokenPriceRate,
         };
     }
 

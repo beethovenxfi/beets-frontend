@@ -252,5 +252,4 @@ export interface ComposablePoolSingleAssetExit {
         swaps: SwapV2[];
         assets: string[];
     };
-    estimatedBptToMainTokenPriceRate: AmountHumanReadable;
 }
