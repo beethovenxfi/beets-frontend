@@ -294,6 +294,9 @@ export class PoolComposableExitService {
                 swaps[0].amount = this.batchRelayerService.toChainedReference(poolToken.index).toString();
             }
 
+            console.log('swaps', swaps);
+            console.log('deltas', deltas);
+
             calls.push(
                 this.batchRelayerService.encodeBatchSwapWithLimits({
                     tokensIn: [this.pool.address],
@@ -544,7 +547,7 @@ export class PoolComposableExitService {
             linearPool: linearPoolToken
                 ? {
                       linearPoolToken,
-                      mainToken: poolGetWrappedTokenFromLinearPoolToken(linearPoolToken),
+                      mainToken: poolGetMainTokenFromLinearPoolToken(linearPoolToken),
                       wrappedToken: poolGetWrappedTokenFromLinearPoolToken(linearPoolToken),
                   }
                 : undefined,
@@ -586,9 +589,12 @@ export class PoolComposableExitService {
                 ? poolWeightedBptForTokensZeroPriceImpact(tokenAmounts, pool)
                 : poolStableBptForTokensZeroPriceImpact(tokenAmounts, pool);
 
+        console.log('bpt in', bptAmountScaled.toString());
+        console.log('bptZeroPriceImpact', bptZeroPriceImpact.toString());
+
         return {
             tokenAmountOut: poolTokenAmountOut,
-            priceImpact: bptAmountScaled.gt(bptZeroPriceImpact)
+            priceImpact: bptAmountScaled.lt(bptZeroPriceImpact)
                 ? 0
                 : bptAmountScaled.div(bptZeroPriceImpact).minus(1).toNumber(),
         };

@@ -59,8 +59,11 @@ export function poolScaleTokenAmounts(
 ): BigNumber[] {
     return poolTokens.map((poolToken) => {
         const amount = tokenAmounts.find((amount) => amount.address === poolToken.address);
+        const priceRate = oldBnumScaleAmount(poolToken.priceRate, 18);
 
-        return amount ? parseUnits(amount.amount, poolToken.decimals) : BigNumber.from(0);
+        return amount
+            ? parseUnits(amount.amount, poolToken.decimals).mul(priceRate.toString()).div(WeiPerEther)
+            : BigNumber.from(0);
     });
 }
 
@@ -160,8 +163,8 @@ export function poolStableBptForTokensZeroPriceImpact(
     tokenAmounts: TokenAmountHumanReadable[],
     pool: GqlPoolPhantomStable | GqlPoolPhantomStableNested,
 ): OldBigNumber {
-    const denormAmounts = poolScaleTokenAmounts(tokenAmounts, pool.tokens);
     const priceRatesScaled = pool.tokens.map((token) => oldBnumScaleAmount(token.priceRate, 18));
+    const denormAmounts = poolScaleTokenAmounts(tokenAmounts, pool.tokens);
 
     // _bptForTokensZeroPriceImpact is the only stable pool function
     // that requires balances be scaled by the tokenWithAmount decimals and not 18
@@ -176,12 +179,8 @@ export function poolStableBptForTokensZeroPriceImpact(
         balances,
         pool.tokens.map((token) => token.decimals),
         denormAmounts,
-        oldBnumScaleAmount(
-            pool.__typename === 'GqlPoolPhantomStableNested' ? pool.totalShares : pool.dynamicData.totalShares,
-        ).toString(),
-        oldBnumScaleAmount(
-            pool.__typename === 'GqlPoolPhantomStableNested' ? pool.swapFee : pool.dynamicData.swapFee,
-        ).toString(),
+        oldBnumScaleAmount(poolGetTotalShares(pool)).toString(),
+        oldBnumScaleAmount(poolGetSwapFee(pool)).toString(),
     );
 
     return oldBnumFromBnum(bptZeroImpact);
