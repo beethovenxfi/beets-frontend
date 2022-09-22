@@ -34,7 +34,7 @@ export function PoolCreateDetails({ changeState }: Props) {
         >
             {({ handleSubmit, errors, touched }) => (
                 <form onSubmit={handleSubmit}>
-                    <VStack minHeight="500px" alignItems="flex-start" justifyContent="space-between" width="full">
+                    <VStack minHeight="550px" alignItems="flex-start" justifyContent="space-between" width="full">
                         <VStack spacing={4} width="full">
                             <FormControl>
                                 <FormLabel>Pool name</FormLabel>
@@ -48,34 +48,36 @@ export function PoolCreateDetails({ changeState }: Props) {
                                 <FormHelperText>This can&apos;t be changed.</FormHelperText>
                             </FormControl>
 
-                            <FormControl>
-                                <FormLabel>Pool Symbol</FormLabel>
-                                <InputGroup>
-                                    <InputLeftElement pointerEvents="none">
-                                        <Text>BPT-</Text>
-                                    </InputLeftElement>
-                                    <Input as={Field} id="symbol" name="symbol" variant="flushed" type="text" />
-                                </InputGroup>
-                                <FormHelperText>The maximum number of characters is ??.</FormHelperText>
-                            </FormControl>
+                            <HStack alignItems="flex-start" justifyContent="space-between" width="full">
+                                <FormControl>
+                                    <FormLabel>Pool Symbol</FormLabel>
+                                    <InputGroup>
+                                        <InputLeftElement pointerEvents="none">
+                                            <Text>BPT-</Text>
+                                        </InputLeftElement>
+                                        <Input as={Field} id="symbol" name="symbol" variant="flushed" type="text" />
+                                    </InputGroup>
+                                    <FormHelperText>The maximum number of characters is ??.</FormHelperText>
+                                </FormControl>
 
-                            <FormControl>
-                                <FormLabel>Swap fee percentage</FormLabel>
-                                <InputGroup>
-                                    <Input
-                                        as={Field}
-                                        id="fee"
-                                        name="fee"
-                                        variant="flushed"
-                                        type="number"
-                                        style={{ textAlign: 'right' }}
-                                    />
-                                    <InputRightElement pointerEvents="none">
-                                        <Text>%</Text>
-                                    </InputRightElement>
-                                </InputGroup>
-                                <FormHelperText>The percentage should between 0 and 10%?.</FormHelperText>
-                            </FormControl>
+                                <FormControl>
+                                    <FormLabel>Swap fee percentage</FormLabel>
+                                    <InputGroup>
+                                        <Input
+                                            as={Field}
+                                            id="fee"
+                                            name="fee"
+                                            variant="flushed"
+                                            type="number"
+                                            style={{ textAlign: 'right' }}
+                                        />
+                                        <InputRightElement pointerEvents="none">
+                                            <Text>%</Text>
+                                        </InputRightElement>
+                                    </InputGroup>
+                                    <FormHelperText>The percentage should between 0 and 10%?.</FormHelperText>
+                                </FormControl>
+                            </HStack>
                         </VStack>
 
                         <Button variant="primary" type="submit" width="25%" alignSelf="flex-end">

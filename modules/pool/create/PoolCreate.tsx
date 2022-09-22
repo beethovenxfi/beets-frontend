@@ -12,15 +12,15 @@ export function PoolCreate() {
     const changeState = (state: SetStateAction<PoolCreateState>) => setState(state);
 
     return (
-        <Grid templateColumns="200px 1fr" templateAreas={`"left right"`} gap="6" w="1024px">
+        <Grid templateColumns="200px 1fr" templateAreas={`"left right"`} gap="6" w="768px">
             <GridItem area="left">
                 <Card p="20px" height="full">
                     <Text as="h2" textStyle="h2" mb="20px">
-                        Title
+                        Steps
                     </Text>
                     <OrderedList>
                         <ListItem>Pool details</ListItem>
-                        <ListItem>Tokens & weights</ListItem>
+                        <ListItem>Tokens</ListItem>
                         <ListItem>Summary</ListItem>
                         <ListItem>Done</ListItem>
                     </OrderedList>
