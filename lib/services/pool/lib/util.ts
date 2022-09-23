@@ -1,4 +1,5 @@
 import {
+    GqlPoolLinearNested,
     GqlPoolPhantomStable,
     GqlPoolPhantomStableNested,
     GqlPoolToken,
@@ -120,8 +121,7 @@ export function poolGetProportionalExitAmountsForBptIn(
 }
 
 export function poolScaleSlippage(slippage: number | string) {
-    //5%=50_000_000_000_000_000.
-    return `${oldBnumScale(`${slippage}`, 16).toFixed(0)}`;
+    return `${oldBnumScale(`${slippage}`, 18).toFixed(0)}`;
 }
 
 export function poolGetEthAmountFromJoinData(
@@ -438,7 +438,7 @@ function scaleTokenAmountDownFrom18Decimals(
 }
 
 export function poolGetPoolTokenForPossiblyNestedTokenOut(
-    pool: GqlPoolWeighted | GqlPoolPhantomStable | GqlPoolPhantomStableNested,
+    pool: GqlPoolWeighted | GqlPoolPhantomStable | GqlPoolPhantomStableNested | GqlPoolLinearNested,
     tokenOutAddress: string,
 ) {
     return pool.tokens.find((poolToken) => {

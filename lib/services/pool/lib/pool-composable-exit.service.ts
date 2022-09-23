@@ -25,6 +25,7 @@ import {
     poolWeightedBptForTokensZeroPriceImpact,
     poolWeightedBptInForExactTokenOut,
     poolWeightedExactBPTInForTokenOut,
+    poolGetPoolTokenForPossiblyNestedTokenOut,
 } from '~/lib/services/pool/lib/util';
 import { BaseProvider } from '@ethersproject/providers';
 import { AmountHumanReadable, TokenAmountHumanReadable } from '~/lib/services/token/token-types';
@@ -53,7 +54,7 @@ import {
 import { cloneDeep, reverse, sortBy } from 'lodash';
 import { poolGetExitSwaps } from '~/lib/services/pool/pool-phantom-stable-util';
 import { defaultAbiCoder } from '@ethersproject/abi';
-import { Zero } from '@ethersproject/constants';
+import { MaxUint256, Zero } from '@ethersproject/constants';
 
 export class PoolComposableExitService {
     private readonly singleAssetExits: ComposablePoolSingleAssetExit[] = [];
@@ -252,10 +253,13 @@ export class PoolComposableExitService {
             });
 
             //if there are no exit swaps, then we use the passed in amountOut
-            const minAmountOut = oldBnumSubtractSlippage(
-                singleAssetExit.exitSwaps ? tokenAmountOut : amountOut,
+            const minAmountOut = parseUnits(
+                oldBnumSubtractSlippage(
+                    singleAssetExit.exitSwaps ? tokenAmountOut : amountOut,
+                    poolToken.decimals,
+                    slippage,
+                ),
                 poolToken.decimals,
-                slippage,
             ).toString();
 
             const exitCall = this.batchRelayerService.vaultConstructExitCall({
@@ -301,11 +305,14 @@ export class PoolComposableExitService {
 
             if (this.isWeightedPool) {
                 swaps[0].amount = this.batchRelayerService.toChainedReference(poolToken.index).toString();
+
+                const amountScaled = oldBnum(deltas[0]);
+                deltas[0] = amountScaled.plus(amountScaled.times(slippage)).toFixed(0);
             }
 
             calls.push(
                 this.batchRelayerService.encodeBatchSwapWithLimits({
-                    tokensIn: [this.pool.address],
+                    tokensIn: [assets[0]],
                     tokensOut: [requiresUnwrap && wrappedToken ? wrappedToken.address : tokenOutAddress],
                     swaps,
                     assets,
@@ -577,6 +584,9 @@ export class PoolComposableExitService {
         });
 
         const exitSwapPool = this.isStablePool ? this.pool : 'pool' in poolToken ? poolToken.pool : null;
+        const exitSwapPoolToken = exitSwapPool
+            ? poolGetPoolTokenForPossiblyNestedTokenOut(exitSwapPool, tokenOption.address)
+            : undefined;
 
         return {
             tokenOut,
@@ -588,15 +598,16 @@ export class PoolComposableExitService {
                       wrappedToken: poolGetWrappedTokenFromLinearPoolToken(linearPoolToken),
                   }
                 : undefined,
-            exitSwaps: exitSwapPool
-                ? poolGetExitSwaps({
-                      poolId: exitSwapPool.id,
-                      poolAddress: exitSwapPool.address,
-                      tokenOut: tokenOption.address,
-                      bptIn: '0',
-                      poolToken,
-                  })
-                : undefined,
+            exitSwaps:
+                exitSwapPool && exitSwapPoolToken
+                    ? poolGetExitSwaps({
+                          poolId: exitSwapPool.id,
+                          poolAddress: exitSwapPool.address,
+                          tokenOut: tokenOption.address,
+                          bptIn: '0',
+                          poolToken: exitSwapPoolToken,
+                      })
+                    : undefined,
         };
     }
 

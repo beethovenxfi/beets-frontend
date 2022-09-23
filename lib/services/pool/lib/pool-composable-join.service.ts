@@ -99,12 +99,12 @@ export class PoolComposableJoinService {
         slippage: AmountHumanReadable;
     }): Promise<ComposablePoolJoinProcessedStepsOutput> {
         const processedSteps: ComposablePoolProcessedJoinStep[] = [];
-        let currentTokenAmountsIn = tokenAmountsIn;
+        let currentTokenAmountsIn = tokenAmountsIn.filter((amount) => parseFloat(amount.amount) > 0);
 
         for (const step of this.joinSteps) {
             const joinAmountsIn = currentTokenAmountsIn.filter((amountIn) => step.tokensIn.includes(amountIn.address));
 
-            if (tokenAmountsAllZero(joinAmountsIn)) {
+            if (joinAmountsIn.length === 0) {
                 continue;
             }
 
