@@ -267,7 +267,7 @@ export function PoolComposition() {
                 symbol: `${token.symbol}--${token.address}`,
                 name: token.name,
                 weight: token.weight ?? calculatedWeight,
-                myBalance: `${hasNestedTokens && 'pool' in token ? '~' : ''} ${tokenFormatAmount(userBalance)}`,
+                myBalance: `${hasNestedTokens && 'pool' in token ? '~' : ''}${tokenFormatAmount(userBalance)}`,
                 myValue: numeral(parseFloat(userBalance) * tokenPrice).format('$0,0.00a'),
                 balance: tokenFormatAmount(token.balance),
                 value: numeral(totalTokenValue).format('$0,0.00a'),
