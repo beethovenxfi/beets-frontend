@@ -618,9 +618,6 @@ export class PoolComposableExitService {
                 ? poolWeightedBptForTokensZeroPriceImpact(tokenAmounts, pool)
                 : poolStableBptForTokensZeroPriceImpact(tokenAmounts, pool);
 
-        console.log('bpt in', bptAmountScaled.toString());
-        console.log('bptZeroPriceImpact', bptZeroPriceImpact.toString());
-
         return {
             tokenAmountOut: poolTokenAmountOut,
             priceImpact: bptAmountScaled.lt(bptZeroPriceImpact)
