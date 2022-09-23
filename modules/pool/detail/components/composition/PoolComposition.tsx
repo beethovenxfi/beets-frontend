@@ -32,6 +32,7 @@ import { usePoolUserInvestedTokenBalances } from '~/modules/pool/lib/usePoolUser
 import { usePool } from '~/modules/pool/lib/usePool';
 import { GqlPoolTokenUnion } from '~/apollo/generated/graphql-codegen-generated';
 import { etherscanGetTokenUrl } from '~/lib/util/etherscan';
+import { usePoolUserDepositBalance } from '~/modules/pool/lib/usePoolUserDepositBalance';
 
 interface PoolCompositionTableProps {
     columns: Column<TableDataTemplate>[];
@@ -209,6 +210,8 @@ export function PoolComposition() {
     const { pool } = usePool();
     const { getUserInvestedBalance, data: userInvestedBalances } = usePoolUserInvestedTokenBalances();
     const { priceFor } = useGetTokens();
+    const { userPoolBalanceUSD } = usePoolUserDepositBalance();
+
     const hasNestedTokens = pool.tokens.some((token) =>
         ['GqlPoolTokenLinear', 'GqlPoolTokenPhantomStable'].includes(token.__typename),
     );
@@ -249,14 +252,22 @@ export function PoolComposition() {
 
     function getTokenData(tokens: GqlPoolTokenUnion[]): TableData[] {
         return tokens.map((token) => {
-            const userBalance = getUserInvestedBalance(token.address);
             const tokenPrice = priceFor(token.address);
             const totalTokenValue = parseFloat(token.balance) * tokenPrice;
+            const calculatedWeight = totalTokenValue / parseFloat(pool.dynamicData.totalLiquidity);
+            const userBalance =
+                hasNestedTokens && 'pool' in token
+                    ? (
+                          ((calculatedWeight * userPoolBalanceUSD) / totalTokenValue) *
+                          parseFloat(token.balance)
+                      ).toString()
+                    : getUserInvestedBalance(token.address);
+
             return {
                 symbol: `${token.symbol}--${token.address}`,
                 name: token.name,
-                weight: token.weight ?? totalTokenValue / parseFloat(pool.dynamicData.totalLiquidity),
-                myBalance: tokenFormatAmount(userBalance),
+                weight: token.weight ?? calculatedWeight,
+                myBalance: `${hasNestedTokens && 'pool' in token ? '~' : ''} ${tokenFormatAmount(userBalance)}`,
                 myValue: numeral(parseFloat(userBalance) * tokenPrice).format('$0,0.00a'),
                 balance: tokenFormatAmount(token.balance),
                 value: numeral(totalTokenValue).format('$0,0.00a'),
