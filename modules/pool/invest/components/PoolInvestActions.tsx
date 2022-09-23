@@ -82,7 +82,7 @@ export function PoolInvestActions({ onInvestComplete, onClose }: Props) {
             </FadeInBox>
             <Box mt="6">
                 <BeetsTransactionStepsSubmit
-                    isLoading={steps === null}
+                    isLoading={steps === null || !contractCallData}
                     loadingButtonText="Invest"
                     completeButtonText="Return to pool"
                     onCompleteButtonClick={onClose}

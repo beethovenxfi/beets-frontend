@@ -114,7 +114,7 @@ export function BeetsTransactionStepsSubmit({
                     {loadingButtonText}
                 </Button>
             ) : null}
-            {steps && currentStep && currentStep.type === 'tokenApproval' && !complete ? (
+            {!isLoading && steps && currentStep && currentStep.type === 'tokenApproval' && !complete ? (
                 <BeetsTokenApprovalButton
                     tokenWithAmount={currentStep.token}
                     contractToApprove={currentStep.contractToApprove}
@@ -126,7 +126,7 @@ export function BeetsTransactionStepsSubmit({
                     size={buttonSize}
                 />
             ) : null}
-            {currentStep && currentStep.type !== 'tokenApproval' && currentQuery && !complete ? (
+            {!isLoading && currentStep && currentStep.type !== 'tokenApproval' && currentQuery && !complete ? (
                 <BeetsSubmitTransactionButton
                     {...currentQuery}
                     width="full"
