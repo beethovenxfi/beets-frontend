@@ -29,6 +29,7 @@ import {
     poolStableExactTokensInForBPTOut,
     poolWeightedBptForTokensZeroPriceImpact,
     poolWeightedExactTokensInForBPTOut,
+    tokenAmountsAllZero,
 } from '~/lib/services/pool/lib/util';
 import { BaseProvider } from '@ethersproject/providers';
 import { formatFixed, parseFixed } from '@ethersproject/bignumber';
@@ -102,6 +103,10 @@ export class PoolComposableJoinService {
 
         for (const step of this.joinSteps) {
             const joinAmountsIn = currentTokenAmountsIn.filter((amountIn) => step.tokensIn.includes(amountIn.address));
+
+            if (tokenAmountsAllZero(joinAmountsIn)) {
+                continue;
+            }
 
             if (step.type === 'Join') {
                 const joinPoolResponse = await this.joinStepGetJoinPool({

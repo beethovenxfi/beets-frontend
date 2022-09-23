@@ -5,6 +5,7 @@ import {
     GqlPoolTokenBase,
     GqlPoolTokenLinear,
     GqlPoolTokenPhantomStable,
+    GqlPoolTokenUnion,
     GqlPoolWeighted,
 } from '~/apollo/generated/graphql-codegen-generated';
 import { AmountHumanReadable, AmountScaledString, TokenAmountHumanReadable } from '~/lib/services/token/token-types';
@@ -471,4 +472,60 @@ export function poolHasOnlyLinearBpts(pool: GqlPoolWeighted | GqlPoolPhantomStab
     }
 
     return true;
+}
+
+export function poolGetNestedTokenEstimateForPoolTokenAmounts({
+    pool,
+    poolTokenAmounts,
+    nestedTokens,
+}: {
+    pool: PoolWithPossibleNesting;
+    poolTokenAmounts: TokenAmountHumanReadable[];
+    nestedTokens: string[];
+}): TokenAmountHumanReadable[] {
+    const nestedStablePoolTokens = poolGetNestedStablePoolTokens(pool);
+    const nestedLinearPoolTokens = poolGetNestedLinearPoolTokens(pool);
+    let tokenAmountsOut = poolTokenAmounts.filter((amountOut) => nestedTokens.includes(amountOut.address));
+    let bptAmounts = poolTokenAmounts.filter((amountOut) => !nestedTokens.includes(amountOut.address));
+
+    for (const nestedStablePoolToken of nestedStablePoolTokens) {
+        const nestedStablePool = nestedStablePoolToken.pool;
+        //assuming a proportional exit, there should always be an amount for this
+        const bptAmount = bptAmounts.find((amount) => amount.address === nestedStablePoolToken.address)!;
+
+        const nestedExitAmounts = poolGetProportionalExitAmountsForBptIn(
+            bptAmount.amount,
+            nestedStablePool.tokens,
+            poolGetTotalShares(nestedStablePool),
+        );
+
+        tokenAmountsOut = tokenAmountsOut.concat(
+            nestedExitAmounts.filter((amountOut) => nestedTokens.includes(amountOut.address)),
+        );
+        bptAmounts = bptAmounts.concat(
+            nestedExitAmounts.filter((amountOut) => !nestedTokens.includes(amountOut.address)),
+        );
+    }
+
+    for (const linearPoolToken of nestedLinearPoolTokens) {
+        const mainToken = poolGetMainTokenFromLinearPoolToken(linearPoolToken);
+        const bptAmount = bptAmounts.find((bptAmount) => bptAmount.address === linearPoolToken.address);
+
+        if (bptAmount) {
+            //TODO: this is an estimation, but should be adequate assuming rates are up to date
+            tokenAmountsOut.push({
+                address: mainToken.address,
+                amount: formatFixed(
+                    oldBnumScaleAmount(bptAmount.amount).times(linearPoolToken.priceRate).toFixed(0),
+                    18,
+                ),
+            });
+        }
+    }
+
+    return tokenAmountsOut;
+}
+
+export function tokenAmountsAllZero(tokenAmounts: TokenAmountHumanReadable[]) {
+    return tokenAmounts.filter((amount) => parseFloat(amount.amount) === 0).length === tokenAmounts.length;
 }

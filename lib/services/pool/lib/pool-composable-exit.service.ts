@@ -15,6 +15,7 @@ import {
     poolGetNestedLinearPoolTokens,
     poolGetNestedStablePoolTokens,
     poolGetProportionalExitAmountsForBptIn,
+    poolGetNestedTokenEstimateForPoolTokenAmounts,
     poolGetTotalShares,
     poolGetWrappedTokenFromLinearPoolToken,
     poolHasOnlyLinearBpts,
@@ -84,7 +85,13 @@ export class PoolComposableExitService {
             poolGetTotalShares(this.pool),
         );
 
-        let tokenAmountsOut = exitAmounts.filter((amountOut) => tokensOut.includes(amountOut.address));
+        return poolGetNestedTokenEstimateForPoolTokenAmounts({
+            pool: this.pool,
+            nestedTokens: tokensOut,
+            poolTokenAmounts: exitAmounts,
+        });
+
+        /*let tokenAmountsOut = exitAmounts.filter((amountOut) => tokensOut.includes(amountOut.address));
         let bptAmounts = exitAmounts.filter((amountOut) => !tokensOut.includes(amountOut.address));
 
         for (const nestedStablePoolToken of this.nestedStablePoolTokens) {
@@ -122,7 +129,7 @@ export class PoolComposableExitService {
             }
         }
 
-        return tokenAmountsOut;
+        return tokenAmountsOut;*/
     }
 
     public async exitGetSingleAssetWithdrawForBptIn(

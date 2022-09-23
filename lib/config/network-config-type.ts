@@ -41,6 +41,7 @@ export interface NetworkConfig {
         vault: string;
         batchRelayer: string;
         composableStableFactory: string;
+        weightedPoolV2Factory: string;
     };
     beetsPoolOwnerAddress: string;
     masterChefContractAddress: string;

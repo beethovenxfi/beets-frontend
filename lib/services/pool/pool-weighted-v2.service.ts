@@ -1,4 +1,4 @@
-import { GqlPoolPhantomStable } from '~/apollo/generated/graphql-codegen-generated';
+import { GqlPoolWeighted } from '~/apollo/generated/graphql-codegen-generated';
 import {
     ComposablePoolJoinProcessedStepsOutput,
     PoolExitBptInSingleAssetWithdrawOutput,
@@ -13,15 +13,20 @@ import {
 import { AmountHumanReadable, TokenAmountHumanReadable } from '~/lib/services/token/token-types';
 import { BaseProvider } from '@ethersproject/providers';
 import { BatchRelayerService } from '~/lib/services/batch-relayer/batch-relayer.service';
+import {
+    poolGetPoolTokenForPossiblyNestedTokenOut,
+    poolGetProportionalJoinAmountsForFixedAmount,
+    poolGetNestedTokenEstimateForPoolTokenAmounts,
+} from '~/lib/services/pool/lib/util';
 import { PoolComposableJoinService } from '~/lib/services/pool/lib/pool-composable-join.service';
 import { PoolComposableExitService } from '~/lib/services/pool/lib/pool-composable-exit.service';
 
-export class PoolComposableStableService implements PoolService {
+export class PoolWeightedV2Service implements PoolService {
     private readonly composableJoinService: PoolComposableJoinService;
     private readonly composableExitService: PoolComposableExitService;
 
     constructor(
-        private pool: GqlPoolPhantomStable,
+        private pool: GqlPoolWeighted,
         private batchRelayerService: BatchRelayerService,
         private readonly wethAddress: string,
         private readonly provider: BaseProvider,
@@ -30,9 +35,42 @@ export class PoolComposableStableService implements PoolService {
         this.composableExitService = new PoolComposableExitService(pool, batchRelayerService, provider, wethAddress);
     }
 
-    public updatePool(pool: GqlPoolPhantomStable) {
+    public updatePool(pool: GqlPoolWeighted) {
         this.pool = pool;
         this.composableJoinService.updatePool(pool);
+    }
+
+    public async joinGetProportionalSuggestionForFixedAmount(
+        fixedAmount: TokenAmountHumanReadable,
+        tokensIn: string[],
+    ): Promise<TokenAmountHumanReadable[]> {
+        //map fixedAmount to the corresponding BPT
+        const poolToken = poolGetPoolTokenForPossiblyNestedTokenOut(this.pool, fixedAmount.address);
+        const { processedSteps } = await this.composableJoinService.processJoinSteps({
+            tokenAmountsIn: [fixedAmount],
+            slippage: '0',
+        });
+        const joinStep = processedSteps.find((step) => step.type === 'Join' && step.pool.id === this.pool.id)!;
+        const poolTokenFixedAmount = joinStep.tokenAmountsIn.find(
+            (amountIn) => amountIn.address === poolToken?.address,
+        );
+
+        if (!poolTokenFixedAmount) {
+            throw new Error('WeightedV2: failed to map fixed amount to pool token fixed amount');
+        }
+
+        //get the corresponding pool token amounts
+        const proportionalSuggestion = poolGetProportionalJoinAmountsForFixedAmount(
+            poolTokenFixedAmount,
+            this.pool.tokens,
+        );
+
+        //map pool token amounts to invest token amounts
+        return poolGetNestedTokenEstimateForPoolTokenAmounts({
+            pool: this.pool,
+            nestedTokens: tokensIn,
+            poolTokenAmounts: proportionalSuggestion,
+        });
     }
 
     public async joinGetContractCallData(data: PoolJoinData): Promise<PoolJoinContractCallData> {
