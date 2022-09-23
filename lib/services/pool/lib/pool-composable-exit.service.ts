@@ -313,7 +313,7 @@ export class PoolComposableExitService {
             calls.push(
                 this.batchRelayerService.encodeBatchSwapWithLimits({
                     tokensIn: [assets[0]],
-                    tokensOut: [requiresUnwrap && wrappedToken ? wrappedToken.address : tokenOutAddress],
+                    tokensOut: [assets[assetOutIdx]],
                     swaps,
                     assets,
                     deltas,
