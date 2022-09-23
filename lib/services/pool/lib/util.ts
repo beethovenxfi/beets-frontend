@@ -35,7 +35,6 @@ import { Contract } from '@ethersproject/contracts';
 import { networkConfig } from '~/lib/config/network-config';
 import VaultAbi from '~/lib/abi/VaultAbi.json';
 import { formatFixed } from '@ethersproject/bignumber';
-import { poolFindNestedPoolTokenForToken } from '~/lib/services/pool/pool-phantom-stable-util';
 
 export function poolScaleAmp(amp: string): BigNumber {
     // amp is stored with 3 decimals of precision
@@ -163,7 +162,7 @@ export function poolStableBptForTokensZeroPriceImpact(
     tokenAmounts: TokenAmountHumanReadable[],
     pool: GqlPoolPhantomStable | GqlPoolPhantomStableNested,
 ): OldBigNumber {
-    const priceRatesScaled = pool.tokens.map((token) => oldBnumScaleAmount(token.priceRate, 18));
+    const priceRatesScaled = pool.tokens.map((token) => parseUnits(token.priceRate, 18));
     const denormAmounts = poolScaleTokenAmounts(tokenAmounts, pool.tokens);
 
     // _bptForTokensZeroPriceImpact is the only stable pool function
@@ -180,7 +179,7 @@ export function poolStableBptForTokensZeroPriceImpact(
         pool.tokens.map((token) => token.decimals),
         denormAmounts,
         oldBnumScaleAmount(poolGetTotalShares(pool)).toString(),
-        oldBnumScaleAmount(poolGetSwapFee(pool)).toString(),
+        poolScaleAmp(pool.amp).toString(),
     );
 
     return oldBnumFromBnum(bptZeroImpact);
