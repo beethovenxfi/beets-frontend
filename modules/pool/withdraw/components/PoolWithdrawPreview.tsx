@@ -30,7 +30,7 @@ export function PoolWithdrawPreview({ onWithdrawComplete, onClose }: Props) {
     const { data } = usePoolExitGetProportionalWithdrawEstimate();
     const { priceForAmount } = useGetTokens();
     const { exitPool, ...exitPoolQuery } = useExitPool(pool);
-    const { data: contractCallData } = usePoolExitGetContractCallData();
+    const { data: contractCallData, isLoading: isLoadingContractCallData } = usePoolExitGetContractCallData();
     const { refetch } = usePoolUserBptBalance();
     const [userSyncBalance, { loading }] = useUserSyncBalanceMutation();
 
@@ -73,7 +73,7 @@ export function PoolWithdrawPreview({ onWithdrawComplete, onClose }: Props) {
             </FadeInBox>
 
             <BeetsTransactionStepsSubmit
-                isLoading={false}
+                isLoading={isLoadingContractCallData}
                 loadingButtonText=""
                 completeButtonText="Return to pool"
                 onCompleteButtonClick={onClose}
