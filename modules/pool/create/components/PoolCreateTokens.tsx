@@ -87,13 +87,20 @@ export function PoolCreateTokens({ changeState }: Props) {
                                                     {({ insert, remove, push }) =>
                                                         values.tokens.map((token, index) => (
                                                             <Tr key={index}>
-                                                                <Td>
+                                                                <Td maxWidth="150px">
                                                                     <HStack>
                                                                         <TokenAvatar
                                                                             address={token?.address}
                                                                             size="xs"
                                                                         />
-                                                                        <Text ml="2">{token?.symbol}</Text>
+                                                                        <Text
+                                                                            ml="2"
+                                                                            overflow="hidden"
+                                                                            textOverflow="ellipsis"
+                                                                            whiteSpace="nowrap"
+                                                                        >
+                                                                            {token?.symbol}
+                                                                        </Text>
                                                                     </HStack>
                                                                 </Td>
                                                                 <Td>
@@ -134,7 +141,11 @@ export function PoolCreateTokens({ changeState }: Props) {
                                                                     </FormControl>
                                                                 </Td>
                                                                 <Td>
-                                                                    <Trash2 size={16} />
+                                                                    <Trash2
+                                                                        size={16}
+                                                                        onClick={() => remove(index)}
+                                                                        style={{ cursor: 'pointer' }}
+                                                                    />
                                                                 </Td>
                                                             </Tr>
                                                         ))

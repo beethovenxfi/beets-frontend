@@ -1,4 +1,4 @@
-import { Box, Grid, GridItem, ModalHeader, ModalOverlay, Text, useDisclosure } from '@chakra-ui/react';
+import { Box, Button, Grid, GridItem, ModalHeader, ModalOverlay, Text, useDisclosure } from '@chakra-ui/react';
 import { Modal, ModalBody, ModalCloseButton, ModalContent } from '@chakra-ui/modal';
 import { useTradeCard } from '~/modules/trade/lib/useTradeCard';
 import { TokenSelectSearchInput } from '~/components/token-select/TokenSelectSearchInput';
@@ -26,8 +26,13 @@ export function PoolCreateTokenSelectModal({ isOpen, onClose }: Props) {
     const { loadToken, clearTokenImport, tokenToImport, addressToLoad, importToken } = useUserImportedTokens();
     const { setTokensSelected } = usePoolCreate();
 
-    function onTokenRowClick(address: string) {
+    function addToken(address: string) {
         setTokensSelected(address);
+        //setSearchTerm('');
+    }
+
+    function removeToken(address: string, remove: boolean) {
+        setTokensSelected(address, remove);
         //setSearchTerm('');
     }
 
@@ -65,18 +70,17 @@ export function PoolCreateTokenSelectModal({ isOpen, onClose }: Props) {
                                     />
                                 </Box>
                             ) : ( */}
-                            <Grid templateColumns="1fr 20px 1fr">
+                            <Grid templateColumns="1fr 1fr" gap="15px">
                                 <GridItem>
                                     <Text py="2">Available tokens</Text>
                                     <Box bg="box.500" borderLeftRadius="md">
                                         <PoolCreateTokenSelectTokenList
                                             listHeight={listHeight}
                                             searchTerm={searchTerm}
-                                            onTokenRowClick={(address) => onTokenRowClick(address)}
+                                            onTokenRowClick={(address) => addToken(address)}
                                         />
                                     </Box>
                                 </GridItem>
-                                <GridItem></GridItem>
                                 <GridItem>
                                     <Text py="2">Selected tokens</Text>
                                     <Box bg="box.500" borderRightRadius="md">
@@ -84,11 +88,14 @@ export function PoolCreateTokenSelectModal({ isOpen, onClose }: Props) {
                                             isForSelectedTokens
                                             listHeight={listHeight}
                                             searchTerm={searchTerm}
-                                            onTokenRowClick={(address) => onTokenRowClick(address)}
+                                            onTokenRowClick={(address) => removeToken(address, true)}
                                         />
                                     </Box>
                                 </GridItem>
                             </Grid>
+                            <Button variant="primary" width="full" mt="4" onClick={onClose}>
+                                Close
+                            </Button>
                             {/* )}
                             <TokenImportAlertDialog
                                 isOpen={alertDisclosure.isOpen}

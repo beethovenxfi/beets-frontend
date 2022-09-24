@@ -29,8 +29,12 @@ export function usePoolCreate() {
     const poolDetails = useReactiveVar(poolDetailsVar);
     const tokenDetails = useReactiveVar(tokenDetailsVar);
 
-    function setTokensSelected(selected: string) {
-        tokensSelectedVar([...tokensSelected, selected]);
+    function setTokensSelected(selected: string, remove = false) {
+        if (remove) {
+            tokensSelectedVar(tokensSelected.filter((token) => token !== selected));
+        } else {
+            tokensSelectedVar([...tokensSelected, selected]);
+        }
     }
 
     function setPoolDetails(details: PoolDetails) {
