@@ -105,17 +105,24 @@ export function poolGetProportionalExitAmountsForBptIn(
     bptInHumanReadable: AmountHumanReadable,
     poolTokens: GqlPoolTokenBase[],
     poolTotalShares: AmountHumanReadable,
+    isStable?: boolean,
 ): TokenAmountHumanReadable[] {
-    const bptInAmountScaled = parseUnits(bptInHumanReadable, 18);
-    const bptTotalSupply = parseUnits(poolTotalShares, 18);
+    const bptInAmountScaled = oldBnumScale(bptInHumanReadable, 18);
+    const bptTotalSupply = oldBnumScale(poolTotalShares, 18);
+    const balancesScaled = poolTokens.map((token) =>
+        isStable ? scaleTo18AndApplyPriceRate(token.totalBalance, token) : oldBnumScale(token.totalBalance, 18),
+    );
 
-    return poolTokens.map((token) => {
-        const tokenBalance = parseUnits(token.totalBalance, token.decimals);
-        const tokenProportionalAmount = bptInAmountScaled.mul(tokenBalance).div(bptTotalSupply);
+    const amountsOut = isStable
+        ? SDK.StableMath._calcTokensOutGivenExactBptIn(balancesScaled, bptInAmountScaled, bptTotalSupply)
+        : SDK.WeightedMath._calcTokensOutGivenExactBptIn(balancesScaled, bptInAmountScaled, bptTotalSupply);
+
+    return poolTokens.map((token, index) => {
+        const downscaledAmount = removePriceRateFromAmount(amountsOut[index].toString(), token);
 
         return {
             address: token.address,
-            amount: formatUnits(tokenProportionalAmount, token.decimals),
+            amount: formatUnits(downscaledAmount.toString(), token.decimals),
         };
     });
 }
@@ -218,10 +225,16 @@ export function poolWeightedBptForTokensZeroPriceImpact(
     return oldBnumFromBnum(result);
 }
 
-function scaleTo18AndApplyPriceRate(amount: AmountHumanReadable, token: GqlPoolTokenBase): OldBigNumber {
+export function scaleTo18AndApplyPriceRate(amount: AmountHumanReadable, token: GqlPoolTokenBase): OldBigNumber {
     const denormAmount = oldBnum(parseUnits(amount, 18).toString())
         .times(token.priceRate)
         .toFixed(0, OldBigNumber.ROUND_UP);
+
+    return oldBnum(denormAmount);
+}
+
+export function removePriceRateFromAmount(amount: AmountScaledString, token: GqlPoolTokenBase): OldBigNumber {
+    const denormAmount = oldBnum(amount).div(token.priceRate).toFixed(0, OldBigNumber.ROUND_UP);
 
     return oldBnum(denormAmount);
 }
@@ -497,6 +510,7 @@ export function poolGetNestedTokenEstimateForPoolTokenAmounts({
             bptAmount.amount,
             nestedStablePool.tokens,
             poolGetTotalShares(nestedStablePool),
+            true,
         );
 
         tokenAmountsOut = tokenAmountsOut.concat(

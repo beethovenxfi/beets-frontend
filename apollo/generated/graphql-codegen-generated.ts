@@ -360,6 +360,7 @@ export interface GqlPoolLinear extends GqlPoolBase {
     __typename: 'GqlPoolLinear';
     address: Scalars['Bytes'];
     allTokens: Array<GqlPoolTokenExpanded>;
+    bptPriceRate: Scalars['BigDecimal'];
     createTime: Scalars['Int'];
     decimals: Scalars['Int'];
     dynamicData: GqlPoolDynamicData;
@@ -513,6 +514,7 @@ export interface GqlPoolPhantomStable extends GqlPoolBase {
     address: Scalars['Bytes'];
     allTokens: Array<GqlPoolTokenExpanded>;
     amp: Scalars['BigInt'];
+    bptPriceRate: Scalars['BigDecimal'];
     createTime: Scalars['Int'];
     decimals: Scalars['Int'];
     dynamicData: GqlPoolDynamicData;
@@ -532,6 +534,7 @@ export interface GqlPoolPhantomStableNested {
     __typename: 'GqlPoolPhantomStableNested';
     address: Scalars['Bytes'];
     amp: Scalars['BigInt'];
+    bptPriceRate: Scalars['BigDecimal'];
     createTime: Scalars['Int'];
     factory?: Maybe<Scalars['Bytes']>;
     id: Scalars['ID'];

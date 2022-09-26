@@ -334,6 +334,7 @@ enum GqlPoolJoinExitType {
 type GqlPoolLinear implements GqlPoolBase {
     address: Bytes!
     allTokens: [GqlPoolTokenExpanded!]!
+    bptPriceRate: BigDecimal!
     createTime: Int!
     decimals: Int!
     dynamicData: GqlPoolDynamicData!
@@ -493,6 +494,7 @@ type GqlPoolPhantomStable implements GqlPoolBase {
     address: Bytes!
     allTokens: [GqlPoolTokenExpanded!]!
     amp: BigInt!
+    bptPriceRate: BigDecimal!
     createTime: Int!
     decimals: Int!
     dynamicData: GqlPoolDynamicData!
@@ -511,6 +513,7 @@ type GqlPoolPhantomStable implements GqlPoolBase {
 type GqlPoolPhantomStableNested {
     address: Bytes!
     amp: BigInt!
+    bptPriceRate: BigDecimal!
     createTime: Int!
     factory: Bytes
     id: ID!

@@ -14,8 +14,9 @@ import {
     poolGetMainTokenFromLinearPoolToken,
     poolGetNestedLinearPoolTokens,
     poolGetNestedStablePoolTokens,
-    poolGetProportionalExitAmountsForBptIn,
     poolGetNestedTokenEstimateForPoolTokenAmounts,
+    poolGetPoolTokenForPossiblyNestedTokenOut,
+    poolGetProportionalExitAmountsForBptIn,
     poolGetTotalShares,
     poolGetWrappedTokenFromLinearPoolToken,
     poolHasOnlyLinearBpts,
@@ -25,16 +26,16 @@ import {
     poolWeightedBptForTokensZeroPriceImpact,
     poolWeightedBptInForExactTokenOut,
     poolWeightedExactBPTInForTokenOut,
-    poolGetPoolTokenForPossiblyNestedTokenOut,
+    scaleTo18AndApplyPriceRate,
 } from '~/lib/services/pool/lib/util';
 import { BaseProvider } from '@ethersproject/providers';
 import { AmountHumanReadable, TokenAmountHumanReadable } from '~/lib/services/token/token-types';
 import { ExitPoolRequest, SwapTypes, SwapV2, WeightedPoolEncoder } from '@balancer-labs/sdk';
 import { formatFixed, parseFixed } from '@ethersproject/bignumber';
 import { BigNumber } from 'ethers';
+import * as SDK from '@georgeroman/balancer-v2-pools';
 import {
     oldBnum,
-    oldBnumAddSlippage,
     oldBnumFromBnum,
     oldBnumScale,
     oldBnumScaleAmount,
@@ -54,7 +55,7 @@ import {
 import { cloneDeep, reverse, sortBy } from 'lodash';
 import { poolGetExitSwaps } from '~/lib/services/pool/pool-phantom-stable-util';
 import { defaultAbiCoder } from '@ethersproject/abi';
-import { MaxUint256, Zero } from '@ethersproject/constants';
+import { Zero } from '@ethersproject/constants';
 
 export class PoolComposableExitService {
     private readonly singleAssetExits: ComposablePoolSingleAssetExit[] = [];
@@ -84,6 +85,13 @@ export class PoolComposableExitService {
             bptIn,
             this.pool.tokens,
             poolGetTotalShares(this.pool),
+            this.isStablePool,
+        );
+
+        const abc = SDK.StableMath._calcTokensOutGivenExactBptIn(
+            this.pool.tokens.map((token) => scaleTo18AndApplyPriceRate(token.totalBalance, token)),
+            oldBnumScale(bptIn, 18),
+            oldBnumScaleAmount(this.pool.dynamicData.totalShares, 18),
         );
 
         return poolGetNestedTokenEstimateForPoolTokenAmounts({
@@ -91,46 +99,6 @@ export class PoolComposableExitService {
             nestedTokens: tokensOut,
             poolTokenAmounts: exitAmounts,
         });
-
-        /*let tokenAmountsOut = exitAmounts.filter((amountOut) => tokensOut.includes(amountOut.address));
-        let bptAmounts = exitAmounts.filter((amountOut) => !tokensOut.includes(amountOut.address));
-
-        for (const nestedStablePoolToken of this.nestedStablePoolTokens) {
-            const nestedStablePool = nestedStablePoolToken.pool;
-            //assuming a proportional exit, there should always be an amount for this
-            const bptAmount = bptAmounts.find((amount) => amount.address === nestedStablePoolToken.address)!;
-
-            const nestedExitAmounts = poolGetProportionalExitAmountsForBptIn(
-                bptAmount.amount,
-                nestedStablePool.tokens,
-                poolGetTotalShares(nestedStablePool),
-            );
-
-            tokenAmountsOut = tokenAmountsOut.concat(
-                nestedExitAmounts.filter((amountOut) => tokensOut.includes(amountOut.address)),
-            );
-            bptAmounts = bptAmounts.concat(
-                nestedExitAmounts.filter((amountOut) => !tokensOut.includes(amountOut.address)),
-            );
-        }
-
-        for (const linearPoolToken of this.nestedLinearPoolTokens) {
-            const mainToken = poolGetMainTokenFromLinearPoolToken(linearPoolToken);
-            const bptAmount = bptAmounts.find((bptAmount) => bptAmount.address === linearPoolToken.address);
-
-            if (bptAmount) {
-                //TODO: this is an estimation, but should be adequate assuming rates are up to date
-                tokenAmountsOut.push({
-                    address: mainToken.address,
-                    amount: formatFixed(
-                        oldBnumScaleAmount(bptAmount.amount).times(linearPoolToken.priceRate).toFixed(0),
-                        18,
-                    ),
-                });
-            }
-        }
-
-        return tokenAmountsOut;*/
     }
 
     public async exitGetSingleAssetWithdrawForBptIn(
@@ -363,8 +331,15 @@ export class PoolComposableExitService {
             bptAmountIn,
             this.pool.tokens,
             poolGetTotalShares(this.pool),
+            this.isStablePool,
         );
         let bptAmounts = exitAmounts.filter((amountOut) => !tokensOut.includes(amountOut.address));
+
+        let references = this.pool.tokens.map((token, index) => ({
+            index: index + 1,
+            key: this.batchRelayerService.toChainedReference(index + 1),
+            address: token.address,
+        }));
 
         calls.push(
             this.batchRelayerService.vaultEncodeExitPool({
@@ -379,8 +354,9 @@ export class PoolComposableExitService {
                     finalTokenAmountsOut: amountsOut,
                     slippage,
                     toInternalBalance: poolHasOnlyLinearBpts(this.pool),
+                    inputReference: null,
                 }),
-                outputReferences: [],
+                outputReferences: references,
             }),
         );
 
@@ -393,7 +369,15 @@ export class PoolComposableExitService {
                 bptAmount.amount,
                 nestedStablePool.tokens,
                 poolGetTotalShares(nestedStablePool),
+                true,
             );
+
+            const lastIdx = references[references.length - 1].index;
+            const outputReferences = nestedStablePool.tokens.map((token, index) => ({
+                index: 1 + index,
+                key: this.batchRelayerService.toChainedReference(1 + index + lastIdx),
+                address: token.address,
+            }));
 
             calls.push(
                 this.batchRelayerService.vaultEncodeExitPool({
@@ -408,14 +392,17 @@ export class PoolComposableExitService {
                         finalTokenAmountsOut: amountsOut,
                         slippage,
                         toInternalBalance: poolHasOnlyLinearBpts(nestedStablePool),
+                        inputReference:
+                            references.find((ref) => ref.address === nestedStablePoolToken.address)?.index || null,
                     }),
-                    outputReferences: [],
+                    outputReferences,
                 }),
             );
 
             bptAmounts = bptAmounts.concat(
                 nestedExitAmounts.filter((amountOut) => !tokensOut.includes(amountOut.address)),
             );
+            references = [...references, ...outputReferences];
         }
 
         const nestedLinearPools = this.nestedLinearPoolTokens.map((linearPoolToken) => ({
@@ -429,6 +416,15 @@ export class PoolComposableExitService {
                 bptAmounts,
                 nestedLinearPools,
             );
+
+            //replace amounts with input references
+            for (const swap of swaps) {
+                const ref = references.find((ref) => ref.address === assets[swap.assetInIndex]);
+
+                if (ref) {
+                    swap.amount = ref.key.toString();
+                }
+            }
 
             calls.push(
                 this.batchRelayerService.encodeBatchSwapWithLimits({
@@ -503,6 +499,10 @@ export class PoolComposableExitService {
                         poolId: linearPoolToken.pool.id,
                         assetInIndex: 0,
                         assetOutIndex: 1,
+                        /*amount:
+                            exitAssetIndex !== -1
+                                ? this.batchRelayerService.toChainedReference(exitAssetIndex).toString()
+                                : parseFixed(bptAmount?.amount || '0', 18).toString(),*/
                         amount: parseFixed(bptAmount?.amount || '0', 18).toString(),
                         userData: '0x',
                     },
@@ -677,6 +677,7 @@ export class PoolComposableExitService {
         exitAmounts,
         finalTokenAmountsOut,
         toInternalBalance,
+        inputReference,
     }: {
         pool: GqlPoolWeighted | GqlPoolPhantomStable | GqlPoolPhantomStableNested;
         bptIn: AmountHumanReadable;
@@ -684,40 +685,32 @@ export class PoolComposableExitService {
         exitAmounts: TokenAmountHumanReadable[];
         finalTokenAmountsOut: TokenAmountHumanReadable[];
         toInternalBalance: boolean;
+        inputReference: number | null;
     }): ExitPoolRequest {
-        //TODO: would be more appropriate to use output references here
-        const maxBptIn = parseUnits(oldBnumAddSlippage(bptIn, 18, slippage), 18).toString();
+        const maxBptIn =
+            inputReference !== null
+                ? this.batchRelayerService.toChainedReference(inputReference).toString()
+                : parseUnits(bptIn, 18).toString();
         const tokensWithPhantomBpt =
             pool.__typename === 'GqlPoolWeighted'
                 ? pool.tokens
                 : sortBy([...pool.tokens, { address: pool.address, decimals: 18, __typename: 'pool' }], 'address');
 
+        //TODO: this approach is not entirely ideal, as it will leave the user with dust in their wallet when they fully exit,
+        //TODO: but a more complete solution will be much more involved, need to circle back to it
         const amountsOutScaled = exitAmounts.map((exitAmount) => {
+            const finalAmount = finalTokenAmountsOut.find((amountOut) => amountOut.address === exitAmount.address);
             const token = pool.tokens.find((token) => token.address);
+            const decimals = token?.decimals || 18;
+            const amount = finalAmount?.amount || exitAmount.amount;
 
-            return parseUnits(exitAmount.amount, token?.decimals || 18).toString();
+            return oldBnumScale(oldBnumSubtractSlippage(amount, decimals, slippage), decimals).toString();
         });
 
         return {
             assets: tokensWithPhantomBpt.map((token) => token.address),
-            minAmountsOut: tokensWithPhantomBpt.map((token) => {
-                const finalAmount = finalTokenAmountsOut.find((amountOut) => amountOut.address === token.address);
-                const exitAmount = exitAmounts.find((amountOut) => amountOut.address === token.address);
-
-                if (finalAmount) {
-                    return oldBnumScale(
-                        oldBnumSubtractSlippage(finalAmount.amount, token.decimals, slippage),
-                        token.decimals,
-                    ).toString();
-                } else if (exitAmount) {
-                    return oldBnumScale(
-                        oldBnumSubtractSlippage(exitAmount.amount, token.decimals, slippage),
-                        token.decimals,
-                    ).toString();
-                }
-
-                return '0';
-            }),
+            //minAmountsOut is not relevant for BPTInForExactTokensOut
+            minAmountsOut: tokensWithPhantomBpt.map(() => '0'),
             userData:
                 pool.__typename === 'GqlPoolWeighted'
                     ? WeightedPoolEncoder.exitBPTInForExactTokensOut(amountsOutScaled, maxBptIn)

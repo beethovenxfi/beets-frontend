@@ -6,7 +6,7 @@ export const optimismNetworkConfig: NetworkConfig = {
     networkName: 'Optimism Mainnet',
     networkShortName: 'Optimism',
     etherscanName: 'The Optimistic Explorer',
-    etherscanUrl: 'https://optimistic.etherscan.io/',
+    etherscanUrl: 'https://optimistic.etherscan.io',
     testnet: false,
     eth: {
         name: 'Ether',
@@ -21,7 +21,7 @@ export const optimismNetworkConfig: NetworkConfig = {
         nativeAssetId: 'optimism',
         platformId: 'optimism',
     },
-    rpcUrl: 'https://mainnet.optimism.io',
+    rpcUrl: 'https://rpc.ankr.com/optimism',
     multicall: '0x2dc0e2aa608532da689e89e237df582b783e552c',
     beets: {
         address: '0x97513e975a7fa9072c72c92d8000b0db90b163c5',
