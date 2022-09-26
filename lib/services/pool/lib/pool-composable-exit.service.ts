@@ -26,18 +26,15 @@ import {
     poolWeightedBptForTokensZeroPriceImpact,
     poolWeightedBptInForExactTokenOut,
     poolWeightedExactBPTInForTokenOut,
-    scaleTo18AndApplyPriceRate,
 } from '~/lib/services/pool/lib/util';
 import { BaseProvider } from '@ethersproject/providers';
 import { AmountHumanReadable, TokenAmountHumanReadable } from '~/lib/services/token/token-types';
 import { ExitPoolRequest, SwapTypes, SwapV2, WeightedPoolEncoder } from '@balancer-labs/sdk';
 import { formatFixed, parseFixed } from '@ethersproject/bignumber';
 import { BigNumber } from 'ethers';
-import * as SDK from '@georgeroman/balancer-v2-pools';
 import {
     oldBnum,
     oldBnumFromBnum,
-    oldBnumScale,
     oldBnumScaleAmount,
     oldBnumSubtractSlippage,
 } from '~/lib/services/pool/lib/old-big-number';
@@ -86,12 +83,6 @@ export class PoolComposableExitService {
             this.pool.tokens,
             poolGetTotalShares(this.pool),
             this.isStablePool,
-        );
-
-        const abc = SDK.StableMath._calcTokensOutGivenExactBptIn(
-            this.pool.tokens.map((token) => scaleTo18AndApplyPriceRate(token.totalBalance, token)),
-            oldBnumScale(bptIn, 18),
-            oldBnumScaleAmount(this.pool.dynamicData.totalShares, 18),
         );
 
         return poolGetNestedTokenEstimateForPoolTokenAmounts({
@@ -327,18 +318,21 @@ export class PoolComposableExitService {
         const { amountsOut, userAddress, bptAmountIn, slippage } = data;
         const tokensOut = amountsOut.map((amountOut) => amountOut.address);
 
+        //we apply the slippage on the bpt amount to allow a delta for the estimation
         const exitAmounts = poolGetProportionalExitAmountsForBptIn(
-            bptAmountIn,
+            oldBnumSubtractSlippage(bptAmountIn, 18, data.slippage),
             this.pool.tokens,
             poolGetTotalShares(this.pool),
             this.isStablePool,
         );
+
         let bptAmounts = exitAmounts.filter((amountOut) => !tokensOut.includes(amountOut.address));
 
         let references = this.pool.tokens.map((token, index) => ({
-            index: index + 1,
-            key: this.batchRelayerService.toChainedReference(index + 1),
+            index: token.index,
+            key: this.batchRelayerService.toChainedReference(index),
             address: token.address,
+            refIdx: index,
         }));
 
         calls.push(
@@ -365,18 +359,20 @@ export class PoolComposableExitService {
             //assuming a proportional exit, there should always be an amount for this
             const bptAmount = bptAmounts.find((amount) => amount.address === nestedStablePoolToken.address)!;
 
+            //we apply the slippage on the bpt amount to allow a delta for the estimation
             const nestedExitAmounts = poolGetProportionalExitAmountsForBptIn(
-                bptAmount.amount,
+                oldBnumSubtractSlippage(bptAmount.amount, 18, data.slippage),
                 nestedStablePool.tokens,
                 poolGetTotalShares(nestedStablePool),
                 true,
             );
 
-            const lastIdx = references[references.length - 1].index;
+            const firstIdx = references[references.length - 1].refIdx + 1;
             const outputReferences = nestedStablePool.tokens.map((token, index) => ({
-                index: 1 + index,
-                key: this.batchRelayerService.toChainedReference(1 + index + lastIdx),
+                index: token.index,
+                key: this.batchRelayerService.toChainedReference(firstIdx + index),
                 address: token.address,
+                refIdx: firstIdx + index,
             }));
 
             calls.push(
@@ -704,7 +700,9 @@ export class PoolComposableExitService {
             const decimals = token?.decimals || 18;
             const amount = finalAmount?.amount || exitAmount.amount;
 
-            return oldBnumScale(oldBnumSubtractSlippage(amount, decimals, slippage), decimals).toString();
+            //return oldBnumScale(oldBnumSubtractSlippage(amount, decimals, slippage), decimals).toString();
+
+            return parseUnits(amount, decimals).toString();
         });
 
         return {

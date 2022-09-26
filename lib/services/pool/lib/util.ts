@@ -101,7 +101,7 @@ export function poolGetProportionalJoinAmountsForFixedAmount(
     });
 }
 
-export function poolGetProportionalExitAmountsForBptIn(
+/*export function poolGetProportionalExitAmountsForBptIn(
     bptInHumanReadable: AmountHumanReadable,
     poolTokens: GqlPoolTokenBase[],
     poolTotalShares: AmountHumanReadable,
@@ -123,6 +123,26 @@ export function poolGetProportionalExitAmountsForBptIn(
         return {
             address: token.address,
             amount: formatUnits(downscaledAmount.toString(), token.decimals),
+        };
+    });
+}*/
+
+export function poolGetProportionalExitAmountsForBptIn(
+    bptInHumanReadable: AmountHumanReadable,
+    poolTokens: GqlPoolTokenBase[],
+    poolTotalShares: AmountHumanReadable,
+    isStable?: boolean,
+): TokenAmountHumanReadable[] {
+    const bptInAmountScaled = parseUnits(bptInHumanReadable, 18);
+    const bptTotalSupply = parseUnits(poolTotalShares, 18);
+
+    return poolTokens.map((token) => {
+        const tokenBalance = parseUnits(token.totalBalance, token.decimals);
+        const tokenProportionalAmount = bptInAmountScaled.mul(tokenBalance).div(bptTotalSupply);
+
+        return {
+            address: token.address,
+            amount: formatUnits(tokenProportionalAmount, token.decimals),
         };
     });
 }
