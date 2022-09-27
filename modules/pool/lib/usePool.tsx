@@ -37,7 +37,7 @@ export function PoolProvider({ pool: poolFromProps, children }: { pool: GqlPoolU
         notifyOnNetworkStatusChange: true,
     });
 
-    const pool = data?.pool || poolFromProps;
+    const pool = (data?.pool || poolFromProps) as GqlPoolUnion;
     const poolService = poolGetServiceForPool(pool);
 
     const bpt: TokenBase = {
