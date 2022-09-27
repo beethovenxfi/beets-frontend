@@ -694,16 +694,10 @@ export class PoolComposableExitService {
 
         //TODO: this approach is not entirely ideal, as it will leave the user with dust in their wallet when they fully exit,
         //TODO: but a more complete solution will be much more involved, need to circle back to it
-        const amountsOutScaled = exitAmounts.map((exitAmount) => {
-            const finalAmount = finalTokenAmountsOut.find((amountOut) => amountOut.address === exitAmount.address);
-            const token = pool.tokens.find((token) => token.address);
-            const decimals = token?.decimals || 18;
-            //const amount = finalAmount?.amount || exitAmount.amount;
-            const amount = exitAmount.amount;
+        const amountsOutScaled = sortBy(pool.tokens, 'index').map((poolToken) => {
+            const exitAmount = exitAmounts.find((exitAmount) => poolToken.address === exitAmount.address);
 
-            //return oldBnumScale(oldBnumSubtractSlippage(amount, decimals, slippage), decimals).toString();
-
-            return parseUnits(amount, decimals).toString();
+            return parseUnits(exitAmount?.amount || '0', poolToken.decimals).toString();
         });
 
         return {
