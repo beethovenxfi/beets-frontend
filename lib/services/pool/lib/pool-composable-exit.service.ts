@@ -698,7 +698,8 @@ export class PoolComposableExitService {
             const finalAmount = finalTokenAmountsOut.find((amountOut) => amountOut.address === exitAmount.address);
             const token = pool.tokens.find((token) => token.address);
             const decimals = token?.decimals || 18;
-            const amount = finalAmount?.amount || exitAmount.amount;
+            //const amount = finalAmount?.amount || exitAmount.amount;
+            const amount = exitAmount.amount;
 
             //return oldBnumScale(oldBnumSubtractSlippage(amount, decimals, slippage), decimals).toString();
 
