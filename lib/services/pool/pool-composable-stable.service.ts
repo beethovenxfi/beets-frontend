@@ -15,6 +15,7 @@ import { BaseProvider } from '@ethersproject/providers';
 import { BatchRelayerService } from '~/lib/services/batch-relayer/batch-relayer.service';
 import { PoolComposableJoinService } from '~/lib/services/pool/lib/pool-composable-join.service';
 import { PoolComposableExitService } from '~/lib/services/pool/lib/pool-composable-exit.service';
+import { sortBy } from 'lodash';
 
 export class PoolComposableStableService implements PoolService {
     private readonly composableJoinService: PoolComposableJoinService;
@@ -26,11 +27,13 @@ export class PoolComposableStableService implements PoolService {
         private readonly wethAddress: string,
         private readonly provider: BaseProvider,
     ) {
+        pool.tokens = sortBy(pool.tokens, 'index');
         this.composableJoinService = new PoolComposableJoinService(pool, batchRelayerService, provider, wethAddress);
         this.composableExitService = new PoolComposableExitService(pool, batchRelayerService, provider, wethAddress);
     }
 
     public updatePool(pool: GqlPoolPhantomStable) {
+        pool.tokens = sortBy(pool.tokens, 'index');
         this.pool = pool;
         this.composableJoinService.updatePool(pool);
     }
