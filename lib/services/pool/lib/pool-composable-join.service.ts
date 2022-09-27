@@ -294,15 +294,17 @@ export class PoolComposableJoinService {
             provider,
         });
 
-        const tokenAmountsOut = batchSwapStep.swaps.map((swap) => {
-            const token = pool.allTokens.find((token) => token.address === swap.tokenOut);
-            const tokenOutIdx = assets.findIndex((asset) => asset === swap.tokenOut);
+        const tokenAmountsOut = batchSwapStep.swaps
+            .map((swap) => {
+                const token = pool.allTokens.find((token) => token.address === swap.tokenOut);
+                const tokenOutIdx = assets.findIndex((asset) => asset === swap.tokenOut);
 
-            return {
-                address: swap.tokenOut,
-                amount: formatFixed(BigNumber.from(deltas[tokenOutIdx] || '0').abs(), token?.decimals || 18),
-            };
-        });
+                return {
+                    address: swap.tokenOut,
+                    amount: formatFixed(BigNumber.from(deltas[tokenOutIdx] || '0').abs(), token?.decimals || 18),
+                };
+            })
+            .filter((tokenAmount) => parseFloat(tokenAmount.amount) > 0);
 
         return { type: 'BatchSwap', swaps, assets, deltas, tokenAmountsIn, tokenAmountsOut };
     }
