@@ -115,7 +115,7 @@ export function useSubmitTransaction({ config, transactionType, waitForConfig }:
                     render: ({ onClose }) => (
                         <TransactionStatusToast
                             type={transactionType}
-                            status={error ? 'ERROR' : 'CONFIRMED'}
+                            status={error || data?.status === 0 ? 'ERROR' : 'CONFIRMED'}
                             text={toastText.current}
                             onClose={onClose}
                             txHash={data?.transactionHash || ''}

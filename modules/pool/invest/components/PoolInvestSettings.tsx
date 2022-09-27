@@ -12,7 +12,7 @@ import { usePool } from '~/modules/pool/lib/usePool';
 
 export function PoolInvestSettings({ ...rest }: BoxProps) {
     const { zapEnabled, toggleZapEnabled } = useInvestState();
-    const { data: hasBatchRelayerApproval } = useHasBatchRelayerApproval();
+    const { data: hasBatchRelayerApproval, refetch: refetchBatchRelayerApproval } = useHasBatchRelayerApproval();
     const { pool, supportsZap, requiresBatchRelayerOnJoin } = usePool();
 
     useEffect(() => {
@@ -44,7 +44,11 @@ export function PoolInvestSettings({ ...rest }: BoxProps) {
                         </Box>
                         <Box>
                             {!hasBatchRelayerApproval ? (
-                                <BeetsBatchRelayerApprovalButton />
+                                <BeetsBatchRelayerApprovalButton
+                                    onConfirmed={() => {
+                                        refetchBatchRelayerApproval();
+                                    }}
+                                />
                             ) : (
                                 <Text color="green">Approved</Text>
                             )}
@@ -76,7 +80,11 @@ export function PoolInvestSettings({ ...rest }: BoxProps) {
                                     <Box flex="1">{batchRelayerInfoButton}</Box>
                                     <Box>
                                         {!hasBatchRelayerApproval ? (
-                                            <BeetsBatchRelayerApprovalButton />
+                                            <BeetsBatchRelayerApprovalButton
+                                                onConfirmed={() => {
+                                                    refetchBatchRelayerApproval();
+                                                }}
+                                            />
                                         ) : (
                                             <Text color="green">Approved</Text>
                                         )}
