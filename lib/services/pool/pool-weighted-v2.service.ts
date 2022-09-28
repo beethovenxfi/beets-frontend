@@ -112,6 +112,12 @@ export class PoolWeightedV2Service implements PoolService {
         return data;
     }
 
+    public async exitGetProportionalPoolTokenWithdrawEstimate(
+        bptIn: AmountHumanReadable,
+    ): Promise<TokenAmountHumanReadable[]> {
+        return this.composableExitService.exitGetProportionalPoolTokenWithdrawEstimate(bptIn);
+    }
+
     public async exitGetProportionalWithdrawEstimate(
         bptIn: AmountHumanReadable,
         tokensOut: string[],

@@ -81,6 +81,12 @@ export class PoolComposableStableService implements PoolService {
         return this.composableExitService.exitGetProportionalWithdrawEstimate(bptIn, tokensOut);
     }
 
+    public async exitGetProportionalPoolTokenWithdrawEstimate(
+        bptIn: AmountHumanReadable,
+    ): Promise<TokenAmountHumanReadable[]> {
+        return this.composableExitService.exitGetProportionalPoolTokenWithdrawEstimate(bptIn);
+    }
+
     public async exitGetBptInForSingleAssetWithdraw(
         tokenAmount: TokenAmountHumanReadable,
     ): Promise<PoolExitBptInSingleAssetWithdrawOutput> {

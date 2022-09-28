@@ -3,6 +3,7 @@ import { GqlPoolUnion, useGetPoolQuery } from '~/apollo/generated/graphql-codege
 import {
     poolGetServiceForPool,
     poolGetTypeName,
+    poolIsComposablePool,
     poolRequiresBatchRelayerOnExit,
     poolRequiresBatchRelayerOnJoin,
 } from '~/lib/services/pool/pool-util';
@@ -26,6 +27,7 @@ export interface PoolContextType {
     totalApr: number;
     isFbeetsPool: boolean;
     isStablePool: boolean;
+    isComposablePool: boolean;
 }
 
 export const PoolContext = createContext<PoolContextType | null>(null);
@@ -48,6 +50,7 @@ export function PoolProvider({ pool: poolFromProps, children }: { pool: GqlPoolU
     };
     const bptPrice = parseFloat(pool.dynamicData.totalLiquidity) / parseFloat(pool.dynamicData.totalShares);
 
+    const isComposablePool = poolIsComposablePool(pool);
     const requiresBatchRelayerOnJoin = poolRequiresBatchRelayerOnJoin(pool);
     const requiresBatchRelayerOnExit = poolRequiresBatchRelayerOnExit(pool);
     const supportsZap =
@@ -99,6 +102,7 @@ export function PoolProvider({ pool: poolFromProps, children }: { pool: GqlPoolU
                 totalApr: parseFloat(pool.dynamicData.apr.total),
                 isFbeetsPool: pool.id === networkConfig.fbeets.poolId,
                 isStablePool,
+                isComposablePool,
             }}
         >
             {children}

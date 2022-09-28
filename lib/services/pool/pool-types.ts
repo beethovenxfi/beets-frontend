@@ -41,6 +41,7 @@ export interface PoolService {
         tokenAmount: TokenAmountHumanReadable,
     ): Promise<PoolExitBptInSingleAssetWithdrawOutput>;
     exitGetContractCallData(data: PoolExitData): Promise<PoolExitContractCallData>;
+    exitGetProportionalPoolTokenWithdrawEstimate?(bptIn: AmountHumanReadable): Promise<TokenAmountHumanReadable[]>;
 }
 
 export type PoolJoinData =

@@ -74,6 +74,15 @@ export class PoolComposableExitService {
         this.pool = pool;
     }
 
+    public async exitGetProportionalPoolTokenWithdrawEstimate(bptIn: AmountHumanReadable) {
+        return poolGetProportionalExitAmountsForBptIn(
+            bptIn,
+            this.pool.tokens,
+            poolGetTotalShares(this.pool),
+            this.isStablePool,
+        );
+    }
+
     public async exitGetProportionalWithdrawEstimate(
         bptIn: AmountHumanReadable,
         tokensOut: string[],
