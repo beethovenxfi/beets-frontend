@@ -60,11 +60,8 @@ export function poolScaleTokenAmounts(
 ): BigNumber[] {
     return poolTokens.map((poolToken) => {
         const amount = tokenAmounts.find((amount) => amount.address === poolToken.address);
-        const priceRate = oldBnumScaleAmount(poolToken.priceRate, 18);
 
-        return amount
-            ? parseUnits(amount.amount, poolToken.decimals).mul(priceRate.toString()).div(WeiPerEther)
-            : BigNumber.from(0);
+        return amount ? parseUnits(amount.amount, poolToken.decimals) : BigNumber.from(0);
     });
 }
 
