@@ -44,6 +44,10 @@ export class PoolWeightedV2Service implements PoolService {
         fixedAmount: TokenAmountHumanReadable,
         tokensIn: string[],
     ): Promise<TokenAmountHumanReadable[]> {
+        if (parseFloat(fixedAmount.amount) <= 0) {
+            return [fixedAmount];
+        }
+
         //map fixedAmount to the corresponding BPT
         const poolToken = poolGetPoolTokenForPossiblyNestedTokenOut(this.pool, fixedAmount.address);
         const { processedSteps } = await this.composableJoinService.processJoinSteps({
