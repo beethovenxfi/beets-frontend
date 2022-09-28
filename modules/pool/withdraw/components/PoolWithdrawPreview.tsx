@@ -26,8 +26,7 @@ interface Props {
 export function PoolWithdrawPreview({ onWithdrawComplete, onClose }: Props) {
     const { pool } = usePool();
     const { getToken } = useGetTokens();
-    const { selectedWithdrawType, singleAssetWithdraw } = useWithdrawState();
-    const { data } = usePoolExitGetProportionalWithdrawEstimate();
+    const { selectedWithdrawType, singleAssetWithdraw, proportionalAmounts } = useWithdrawState();
     const { priceForAmount } = useGetTokens();
     const { exitPool, ...exitPoolQuery } = useExitPool(pool);
     const { data: contractCallData, isLoading: isLoadingContractCallData } = usePoolExitGetContractCallData();
@@ -35,7 +34,11 @@ export function PoolWithdrawPreview({ onWithdrawComplete, onClose }: Props) {
     const [userSyncBalance, { loading }] = useUserSyncBalanceMutation();
 
     const withdrawAmounts =
-        selectedWithdrawType === 'SINGLE_ASSET' && singleAssetWithdraw ? [singleAssetWithdraw] : data ? data : [];
+        selectedWithdrawType === 'SINGLE_ASSET' && singleAssetWithdraw
+            ? [singleAssetWithdraw]
+            : proportionalAmounts
+            ? proportionalAmounts
+            : [];
     const totalWithdrawValue = sum(withdrawAmounts.map(priceForAmount));
 
     return (

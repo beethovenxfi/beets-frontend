@@ -31,8 +31,14 @@ interface Props extends BoxProps {
 
 export function PoolWithdrawProportional({ onShowPreview, ...rest }: Props) {
     const { pool } = usePool();
-    const { setProportionalPercent, proportionalPercent, setSelectedOption, selectedOptions, setProportionalWithdraw } =
-        useWithdrawState();
+    const {
+        setProportionalPercent,
+        proportionalPercent,
+        setSelectedOption,
+        selectedOptions,
+        setProportionalWithdraw,
+        setProportionalAmounts,
+    } = useWithdrawState();
     const { selectedWithdrawTokenAddresses } = useWithdraw();
     const { formattedPrice } = useGetTokens();
 
@@ -125,7 +131,15 @@ export function PoolWithdrawProportional({ onShowPreview, ...rest }: Props) {
 
             <PoolWithdrawSummary mt="6" />
             <PoolWithdrawSettings mt="6" />
-            <Button variant="primary" width="full" mt="8" onClick={onShowPreview}>
+            <Button
+                variant="primary"
+                width="full"
+                mt="8"
+                onClick={() => {
+                    setProportionalAmounts(proportionalAmounts);
+                    onShowPreview();
+                }}
+            >
                 Preview
             </Button>
         </Box>
