@@ -213,7 +213,7 @@ export function PoolComposition() {
     const { getUserInvestedBalance, data: userInvestedBalances } = usePoolUserInvestedTokenBalances();
     const { priceFor } = useGetTokens();
     const { userPoolBalanceUSD } = usePoolUserDepositBalance();
-    const { getUserPoolTokenBalance, data: userPoolTokenBalances } = usePoolComposableUserPoolTokenBalances();
+    const { getUserPoolTokenBalance } = usePoolComposableUserPoolTokenBalances();
     const hasNestedTokens = pool.tokens.some((token) =>
         ['GqlPoolTokenLinear', 'GqlPoolTokenPhantomStable'].includes(token.__typename),
     );
