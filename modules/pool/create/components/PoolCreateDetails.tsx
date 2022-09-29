@@ -35,7 +35,7 @@ export function PoolCreateDetails({ changeState }: Props) {
             {({ handleSubmit, errors, touched }) => (
                 <form onSubmit={handleSubmit}>
                     <VStack minHeight="550px" alignItems="flex-start" justifyContent="space-between" width="full">
-                        <VStack spacing={4} width="full">
+                        <VStack spacing={16} width="full">
                             <FormControl>
                                 <FormLabel>Pool name</FormLabel>
                                 <Field as={Input} id="name" name="name" variant="flushed" type="text" />
@@ -48,7 +48,7 @@ export function PoolCreateDetails({ changeState }: Props) {
                                 <FormHelperText>This can&apos;t be changed.</FormHelperText>
                             </FormControl>
 
-                            <HStack alignItems="flex-start" justifyContent="space-between" width="full">
+                            <HStack alignItems="flex-start" justifyContent="space-between" width="full" spacing={20}>
                                 <FormControl>
                                     <FormLabel>Pool Symbol</FormLabel>
                                     <InputGroup>

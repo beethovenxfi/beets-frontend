@@ -15,7 +15,6 @@ import {
     Tr,
     Th,
     Td,
-    TableCaption,
     TableContainer,
 } from '@chakra-ui/react';
 import { PoolCreateTokenSelectModal } from './token-select/PoolCreateTokenSelectModal';
@@ -38,10 +37,14 @@ interface GqlTokenWithWeight extends GqlToken {
 
 export function PoolCreateTokens({ changeState }: Props) {
     const tokenSelectDisclosure = useDisclosure();
-    const { tokensSelected, setTokenDetails } = usePoolCreate();
-    const { formattedPrice, getToken } = useGetTokens();
+    const { tokensSelected, tokenDetails, setTokenDetails } = usePoolCreate();
+    const { getToken } = useGetTokens();
+    console.log(tokenDetails);
 
-    const tokens = tokensSelected.map((address) => getToken(address));
+    const tokens =
+        tokenDetails.length !== 0
+            ? tokenDetails.map((token) => ({ ...getToken(token.address), weight: token.weight }))
+            : tokensSelected.map((address) => ({ ...getToken(address), weight: null }));
 
     const initialValues = {
         tokens: tokens,
@@ -56,6 +59,7 @@ export function PoolCreateTokens({ changeState }: Props) {
                     const tokens = values.tokens as GqlTokenWithWeight[];
                     const tokenDetails = tokens.map((token) => ({ address: token?.address, weight: token?.weight }));
                     setTokenDetails(tokenDetails);
+                    changeState('liquidity');
                 }}
             >
                 {({ handleSubmit, values, errors, touched }) => (
@@ -71,14 +75,14 @@ export function PoolCreateTokens({ changeState }: Props) {
                                 {tokens.length === 0 ? (
                                     <Box>No tokens selected yet</Box>
                                 ) : (
-                                    <TableContainer>
+                                    <TableContainer width="full">
                                         <Table size="sm">
                                             <Thead>
                                                 <Tr>
-                                                    <Th>Token</Th>
-                                                    <Th>Price</Th>
-                                                    <Th>Weight</Th>
-                                                    <Th>Amount</Th>
+                                                    <Th width="60%">Token</Th>
+                                                    <Th width="35%" textAlign="right">
+                                                        Weight
+                                                    </Th>
                                                     <Th></Th>
                                                 </Tr>
                                             </Thead>
@@ -87,7 +91,7 @@ export function PoolCreateTokens({ changeState }: Props) {
                                                     {({ insert, remove, push }) =>
                                                         values.tokens.map((token, index) => (
                                                             <Tr key={index}>
-                                                                <Td maxWidth="150px">
+                                                                <Td>
                                                                     <HStack>
                                                                         <TokenAvatar
                                                                             address={token?.address}
@@ -104,14 +108,6 @@ export function PoolCreateTokens({ changeState }: Props) {
                                                                     </HStack>
                                                                 </Td>
                                                                 <Td>
-                                                                    <Text>
-                                                                        {formattedPrice({
-                                                                            address: token?.address || '',
-                                                                            amount: '1',
-                                                                        })}
-                                                                    </Text>
-                                                                </Td>
-                                                                <Td>
                                                                     <FormControl>
                                                                         <InputGroup>
                                                                             <Input
@@ -126,18 +122,6 @@ export function PoolCreateTokens({ changeState }: Props) {
                                                                                 <Text>%</Text>
                                                                             </InputRightElement>
                                                                         </InputGroup>
-                                                                    </FormControl>
-                                                                </Td>
-                                                                <Td>
-                                                                    <FormControl>
-                                                                        <Input
-                                                                            style={{ textAlign: 'right' }}
-                                                                            as={Field}
-                                                                            id={`tokens.${index}.amount`}
-                                                                            name={`tokens.${index}.amount`}
-                                                                            variant="flushed"
-                                                                            type="number"
-                                                                        />
                                                                     </FormControl>
                                                                 </Td>
                                                                 <Td>
@@ -164,7 +148,7 @@ export function PoolCreateTokens({ changeState }: Props) {
                                         <Text>Previous</Text>
                                     </HStack>
                                 </Button>
-                                <Button variant="primary" width="25%" onClick={() => tokenSelectDisclosure.onOpen()}>
+                                <Button variant="primary" width="30%" onClick={() => tokenSelectDisclosure.onOpen()}>
                                     Select tokens
                                 </Button>
                                 <Button variant="primary" type="submit" width="25%">

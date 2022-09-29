@@ -94,7 +94,7 @@ export function PoolCreateTokenSelectModal({ isOpen, onClose }: Props) {
                                 </GridItem>
                             </Grid>
                             <Button variant="primary" width="full" mt="4" onClick={onClose}>
-                                Close
+                                Done
                             </Button>
                             {/* )}
                             <TokenImportAlertDialog
