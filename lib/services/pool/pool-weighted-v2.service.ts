@@ -44,8 +44,8 @@ export class PoolWeightedV2Service implements PoolService {
         fixedAmount: TokenAmountHumanReadable,
         tokensIn: string[],
     ): Promise<TokenAmountHumanReadable[]> {
-        if (parseFloat(fixedAmount.amount) <= 0) {
-            return [fixedAmount];
+        if (parseFloat(fixedAmount.amount) === 0) {
+            return tokensIn.map((address) => ({ address, amount: '0.0' }));
         }
 
         //map fixedAmount to the corresponding BPT
