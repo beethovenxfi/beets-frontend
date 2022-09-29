@@ -269,7 +269,7 @@ export function PoolComposition() {
                 weight: token.weight ?? calculatedWeight,
                 myBalance: `${hasNestedTokens && 'pool' in token ? '~' : ''} ${tokenFormatAmount(userBalance)}`,
                 myValue: numeral(parseFloat(userBalance) * tokenPrice).format('$0,0.00a'),
-                balance: tokenFormatAmount(token.balance),
+                balance: tokenFormatAmount(token.balance, false),
                 value: numeral(totalTokenValue).format('$0,0.00a'),
                 ...(hasNestedTokens && 'pool' in token && { subRows: getTokenData(token.pool.tokens) }),
             };
