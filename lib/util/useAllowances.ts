@@ -39,7 +39,7 @@ export function useAllowances(account: string | null, tokens: TokenBase[], contr
     }
 
     function hasApprovalForAmount(address: string, amount: AmountHumanReadable) {
-        if (amount === '') return true;
+        if (amount === '' || parseFloat(amount) === 0) return true;
 
         const allowance = allowances.find((allowance) => allowance.address === address.toLowerCase())?.amount || '0';
         if (parseFloat(allowance) === 0) return false;
