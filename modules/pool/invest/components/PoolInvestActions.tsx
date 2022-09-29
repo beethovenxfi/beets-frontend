@@ -44,7 +44,9 @@ export function PoolInvestActions({ onInvestComplete, onClose }: Props) {
     useEffect(() => {
         if (!isLoading) {
             const tokensRequiringApproval = selectedInvestTokensWithAmounts.filter(
-                (tokenWithAmount) => !hasApprovalForAmount(tokenWithAmount.address, tokenWithAmount.amount),
+                (tokenWithAmount) =>
+                    parseFloat(tokenWithAmount.amount) > 0 &&
+                    !hasApprovalForAmount(tokenWithAmount.address, tokenWithAmount.amount),
             );
 
             const steps: TransactionStep[] = [
