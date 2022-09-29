@@ -14,8 +14,10 @@ import { PoolDetailTokenInfoCard } from '~/modules/pool/detail/components/PoolDe
 import { usePool } from '~/modules/pool/lib/usePool';
 import { poolGetNestedLinearPoolTokens } from '~/lib/services/pool/lib/util';
 import { PoolWithPossibleNesting } from '~/lib/services/pool/pool-types';
+import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 
 export function PoolDetailAboutThisPool() {
+    const config = useNetworkConfig();
     const { pool } = usePool();
     const tokensOfInterest = [
         ...poolGetNestedLinearPoolTokens(pool as PoolWithPossibleNesting),
@@ -164,7 +166,7 @@ export function PoolDetailAboutThisPool() {
                         </Link>
                     </CardRow>
                     {pool.factory && (
-                        <CardRow mb="0">
+                        <CardRow>
                             <Box flex="1">Factory contract</Box>
                             <Link href={etherscanGetAddressUrl(pool.factory)} target="_blank">
                                 <HStack spacing="1">
@@ -174,6 +176,15 @@ export function PoolDetailAboutThisPool() {
                             </Link>
                         </CardRow>
                     )}
+                    <CardRow mb="0">
+                        <Box flex="1">Vault</Box>
+                        <Link href={etherscanGetAddressUrl(config.balancer.vault)} target="_blank">
+                            <HStack spacing="1">
+                                <Box>{addressShortDisplayName(config.balancer.vault)}</Box>
+                                <ExternalLink size={16} />
+                            </HStack>
+                        </Link>
+                    </CardRow>
                 </Card>
             </GridItem>
         </Grid>
