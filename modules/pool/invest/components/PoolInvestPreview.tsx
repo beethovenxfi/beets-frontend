@@ -21,26 +21,30 @@ export function PoolInvestPreview({ onInvestComplete, onClose }: Props) {
     return (
         <Box>
             <BeetsBox mt="4" p="2">
-                {selectedInvestTokensWithAmounts.map((token, index) => {
-                    return (
-                        <CardRow
-                            key={token.address}
-                            mb={index === selectedInvestTokensWithAmounts.length - 1 ? '0' : '1'}
-                            alignItems="center"
-                        >
-                            <HStack spacing="1.5" flex="1">
-                                <TokenAvatar size="xs" address={token.address} />
-                                <Text>{token.symbol}</Text>
-                            </HStack>
-                            <Box>
-                                <Box textAlign="right">{tokenFormatAmountPrecise(token.amount, token.decimals)}</Box>
-                                <Box textAlign="right" fontSize="sm" color="gray.200">
-                                    {numberFormatUSDValue(priceForAmount(token))}
+                {selectedInvestTokensWithAmounts
+                    .filter((token) => parseFloat(token.amount) !== 0)
+                    .map((token, index) => {
+                        return (
+                            <CardRow
+                                key={token.address}
+                                mb={index === selectedInvestTokensWithAmounts.length - 1 ? '0' : '1'}
+                                alignItems="center"
+                            >
+                                <HStack spacing="1.5" flex="1">
+                                    <TokenAvatar size="xs" address={token.address} />
+                                    <Text>{token.symbol}</Text>
+                                </HStack>
+                                <Box>
+                                    <Box textAlign="right">
+                                        {tokenFormatAmountPrecise(token.amount, token.decimals)}
+                                    </Box>
+                                    <Box textAlign="right" fontSize="sm" color="gray.200">
+                                        {numberFormatUSDValue(priceForAmount(token))}
+                                    </Box>
                                 </Box>
-                            </Box>
-                        </CardRow>
-                    );
-                })}
+                            </CardRow>
+                        );
+                    })}
             </BeetsBox>
             <PoolInvestSummary mt="6" />
             <PoolInvestActions onInvestComplete={onInvestComplete} onClose={onClose} />
