@@ -698,7 +698,7 @@ export class PoolComposableExitService {
                 : parseUnits(bptIn, 18).toString();
         const tokensWithPhantomBpt =
             pool.__typename === 'GqlPoolWeighted'
-                ? pool.tokens
+                ? sortBy(pool.tokens, 'index')
                 : sortBy([...pool.tokens, { address: pool.address, decimals: 18, __typename: 'pool' }], 'address');
 
         //TODO: this approach is not entirely ideal, as it will leave the user with dust in their wallet when they fully exit,
