@@ -9,6 +9,8 @@ import { BeetsTokenInputWithSlider } from '~/components/inputs/BeetsTokenInputWi
 import { usePoolJoinGetBptOutAndPriceImpactForTokensIn } from '~/modules/pool/invest/lib/usePoolJoinGetBptOutAndPriceImpactForTokensIn';
 import { useHasBatchRelayerApproval } from '~/lib/util/useHasBatchRelayerApproval';
 import { usePool } from '~/modules/pool/lib/usePool';
+import React from 'react';
+import { BeetsBox } from '~/components/box/BeetsBox';
 
 interface Props {
     onShowPreview(): void;
@@ -24,9 +26,10 @@ export function PoolInvestCustom({ onShowPreview }: Props) {
     const { data: hasBatchRelayerApproval } = useHasBatchRelayerApproval();
 
     return (
-        <Box mt="4">
-            <Box mb="4">
-                <Text>Drag the slider or enter an amount to configure your investment.</Text>
+        <Box p="4">
+            <Box mb='4'>
+
+            <PoolInvestSummary />
             </Box>
             {pool.investConfig.options.map((option, index) => {
                 return (
@@ -46,8 +49,7 @@ export function PoolInvestCustom({ onShowPreview }: Props) {
                     />
                 );
             })}
-            <PoolInvestSummary mt="6" />
-            <PoolInvestSettings mt="8" />
+            <PoolInvestSettings mt="4" />
             <Collapse in={hasHighPriceImpact} animateOpacity>
                 <Alert status="error" borderRadius="md" mt="4">
                     <Checkbox
@@ -67,7 +69,7 @@ export function PoolInvestCustom({ onShowPreview }: Props) {
             <Button
                 variant="primary"
                 width="full"
-                mt="8"
+                mt="4"
                 onClick={onShowPreview}
                 isDisabled={
                     !hasValidUserInput ||
