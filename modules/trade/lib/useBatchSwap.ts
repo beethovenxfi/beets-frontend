@@ -83,7 +83,10 @@ export function useBatchSwap() {
             ...(isEth(tokenIn)
                 ? {
                       overrides: {
-                          value: swapType === 'EXACT_IN' ? parseUnits(swapAmount, 18) : '0',
+                          value:
+                              swapType === 'EXACT_IN'
+                                  ? parseUnits(tokenInAmount, 18)
+                                  : oldBnumScaleAmount(tokenInAmount, 18).times(slippageAddition).toFixed(0),
                       },
                   }
                 : {}),

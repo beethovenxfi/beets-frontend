@@ -43,10 +43,13 @@ export function tokenAmountsGetArrayFromMap(amountMap: AmountHumanReadableMap): 
     );
 }
 
-export function tokenFormatAmount(amount: AmountHumanReadable | number) {
+export function tokenFormatAmount(amount: AmountHumanReadable | number, isDust = true) {
     const amountNum = typeof amount === 'string' ? parseFloat(amount) : amount;
 
-    if (amountNum < 0.000001 && amountNum >= 0) {
+    if (typeof amount === 'string' && amount.includes('e') && !isDust) {
+        const fixedNum = parseFloat(amount.split('-')[1]);
+        return amountNum.toFixed(fixedNum);
+    } else if (amountNum < 0.000001 && amountNum >= 0) {
         return '0.00';
     } else if (amountNum < 1) {
         return numeral(amount).format('0.[000000]');
@@ -56,9 +59,9 @@ export function tokenFormatAmount(amount: AmountHumanReadable | number) {
         return numeral(amount).format('0.[0000]');
     } else if (amountNum < 5000) {
         return numeral(amount).format('0,0.[00]');
+    } else {
+        return numeral(amount).format('0,0');
     }
-
-    return numeral(amount).format('0,0');
 }
 
 export function tokenFormatAmountPrecise(amount: AmountHumanReadable | number, precision: number = 12) {

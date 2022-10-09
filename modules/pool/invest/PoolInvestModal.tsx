@@ -10,6 +10,7 @@ import { motion } from 'framer-motion';
 import { useInvestState } from '~/modules/pool/invest/lib/useInvestState';
 import { usePool } from '~/modules/pool/lib/usePool';
 import { BeetsModalBody, BeetsModalContent, BeetsModalHeader } from '~/components/modal/BeetsModal';
+import { usePoolUserTokenBalancesInWallet } from '~/modules/pool/lib/usePoolUserTokenBalancesInWallet';
 
 export function PoolInvestModal() {
     const { isOpen, onOpen, onClose } = useDisclosure();
@@ -18,7 +19,8 @@ export function PoolInvestModal() {
     const [type, setInvestType] = useState<'proportional' | 'custom' | null>(null);
     const initialRef = useRef(null);
     const [investComplete, setInvestComplete] = useState(false);
-    const { clearInvestState } = useInvestState();
+    const { clearInvestState, setSelectedOptions, hasSelectedOptions } = useInvestState();
+    const { optionsWithLargestBalances } = usePoolUserTokenBalancesInWallet();
 
     useEffect(() => {
         if (modalState !== 'start') {
@@ -27,6 +29,12 @@ export function PoolInvestModal() {
 
         clearInvestState();
     }, [pool.id]);
+
+    useEffect(() => {
+        if (isOpen && !hasSelectedOptions) {
+            setSelectedOptions(optionsWithLargestBalances);
+        }
+    }, [isOpen]);
 
     function onModalClose() {
         if (investComplete) {
