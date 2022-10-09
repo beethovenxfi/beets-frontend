@@ -1,4 +1,4 @@
-import { Box, BoxProps, Flex, Skeleton } from '@chakra-ui/react';
+import { Box, BoxProps, Flex, Heading, HStack, Skeleton, VStack, Text } from '@chakra-ui/react';
 import { InfoButton } from '~/components/info-button/InfoButton';
 import AprTooltip from '~/components/apr-tooltip/AprTooltip';
 import { BeetsBox } from '~/components/box/BeetsBox';
@@ -9,6 +9,7 @@ import numeral from 'numeral';
 
 import { CardRow } from '~/components/card/CardRow';
 import { usePool } from '~/modules/pool/lib/usePool';
+import React from 'react';
 
 interface Props extends BoxProps {}
 
@@ -20,38 +21,28 @@ export function PoolInvestSummary({ ...rest }: Props) {
         usePoolJoinGetBptOutAndPriceImpactForTokensIn();
 
     return (
-        <BeetsBox p="2" {...rest}>
-            <CardRow>
-                <Box flex="1">Total</Box>
-                <Box>{numberFormatUSDValue(totalInvestValue)}</Box>
-            </CardRow>
-            <CardRow style={hasHighPriceImpact ? { color: 'white', fontWeight: 'bold', backgroundColor: 'red' } : {}}>
-                <Box flex="1">
-                    <InfoButton
-                        label="Price impact"
-                        moreInfoUrl="https://docs.beets.fi"
-                        infoText="This is the difference between the current market price and the price you will pay due to your investment influencing the balance and internal price of tokens within the pool."
-                    />
+        <VStack spacing="4" width='full' backgroundColor='blackAlpha.100' p='4' rounded='md'>
+            <HStack spacing="8">
+                <Box>
+                    <Heading size="sm" textAlign="center">
+                        Your investment total is
+                    </Heading>
+                    <Heading color="beets.green" textAlign="center">
+                        {numberFormatUSDValue(totalInvestValue)}
+                    </Heading>
                 </Box>
-                {isLoading ? (
-                    <Skeleton height="24px" width="64px" />
-                ) : (
-                    <Box color={hasMediumPriceImpact ? 'orange' : 'current'}>{formattedPriceImpact}</Box>
-                )}
-            </CardRow>
-            <CardRow mb="0">
-                <Box flex="1">
-                    <InfoButton
-                        label="Potential weekly yield"
-                        moreInfoUrl="https://docs.beets.fi"
-                        infoText="This is your projected weekly yield based on the last 24 hours. The APR is a culmination of swap fees and additional incentives."
-                    />
+                <Box>
+                    <Heading size="sm" textAlign="center">
+                        Potential weekly yield
+                    </Heading>
+                    <HStack justifyContent="center">
+                        <Heading color="beets.highlight" textAlign="center">
+                            {numberFormatUSDValue(numberFormatUSDValue(weeklyYield))}
+                        </Heading>
+                        <AprTooltip data={pool.dynamicData.apr} onlySparkles={true} sparklesSize="sm" />
+                    </HStack>
                 </Box>
-                <Flex alignItems="center">
-                    <Box mr="1">{numberFormatUSDValue(weeklyYield)}</Box>
-                    <AprTooltip data={pool.dynamicData.apr} onlySparkles={true} sparklesSize="sm" />
-                </Flex>
-            </CardRow>
-        </BeetsBox>
+            </HStack>
+        </VStack>
     );
 }
