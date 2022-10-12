@@ -14,6 +14,8 @@ import {
     EncodeMasterChefWithdrawInput,
     EncodeReaperUnwrapInput,
     EncodeReaperWrapInput,
+    EncodeUnwrapErc4626Input,
+    EncodeWrapErc4626Input,
     ExitPoolData,
 } from '~/lib/services/batch-relayer/relayer-types';
 import { BigNumber, BigNumberish } from '@ethersproject/bignumber';
@@ -24,6 +26,7 @@ import { isSameAddress, Swaps, SwapType, SwapV2 } from '@balancer-labs/sdk';
 import { AmountScaledString, TokenAmountHumanReadable } from '~/lib/services/token/token-types';
 import { poolScaleSlippage } from '~/lib/services/pool/lib/util';
 import { ReaperWrappingService } from '~/lib/services/batch-relayer/extensions/reaper-wrapping.service';
+import { Erc4626WrappingService } from '~/lib/services/batch-relayer/extensions/erc4626-wrapping.service';
 
 export class BatchRelayerService {
     private readonly CHAINED_REFERENCE_PREFIX = 'ba10';
@@ -39,6 +42,7 @@ export class BatchRelayerService {
         private readonly masterChefStakingService: MasterChefStakingService,
         private readonly yearnWrappingService: YearnWrappingService,
         private readonly reaperWrappingService: ReaperWrappingService,
+        private readonly erc4626WrappingService: Erc4626WrappingService,
     ) {}
 
     public toChainedReference(key: BigNumberish): BigNumber {
@@ -79,6 +83,14 @@ export class BatchRelayerService {
 
     public reaperEncodeUnwrap(params: EncodeReaperUnwrapInput): string {
         return this.reaperWrappingService.encodeUnwrap(params);
+    }
+
+    public erc4626EncodeWrap(params: EncodeWrapErc4626Input): string {
+        return this.erc4626WrappingService.encodeWrap(params);
+    }
+
+    public erc4626EncodeUnwrap(params: EncodeUnwrapErc4626Input): string {
+        return this.erc4626WrappingService.encodeUnwrap(params);
     }
 
     public encodeJoinPoolAndStakeInMasterChefFarm({
@@ -198,4 +210,5 @@ export const batchRelayerService = new BatchRelayerService(
     new MasterChefStakingService(),
     new YearnWrappingService(),
     new ReaperWrappingService(),
+    new Erc4626WrappingService(),
 );

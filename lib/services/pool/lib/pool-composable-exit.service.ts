@@ -53,6 +53,7 @@ import { cloneDeep, reverse, sortBy } from 'lodash';
 import { poolGetExitSwaps } from '~/lib/services/pool/pool-phantom-stable-util';
 import { defaultAbiCoder } from '@ethersproject/abi';
 import { Zero } from '@ethersproject/constants';
+import { networkConfig } from '~/lib/config/network-config';
 
 export class PoolComposableExitService {
     private readonly singleAssetExits: ComposablePoolSingleAssetExit[] = [];
@@ -300,17 +301,31 @@ export class PoolComposableExitService {
             if (requiresUnwrap && singleAssetExit.linearPool) {
                 const wrappedToken = singleAssetExit.linearPool.wrappedToken;
                 const assetOutIdx = assets.length - 1;
+                const linearFactories = networkConfig.balancer.linearFactories;
+                const factory = singleAssetExit.linearPool.linearPoolToken.pool.factory || '';
 
                 //TODO: support additional unwrapping types
-                calls.push(
-                    this.batchRelayerService.reaperEncodeUnwrap({
-                        vaultToken: wrappedToken.address,
-                        sender: this.batchRelayerService.batchRelayerAddress,
-                        recipient: userAddress,
-                        amount: this.batchRelayerService.toChainedReference(assetOutIdx),
-                        outputReference: Zero,
-                    }),
-                );
+                if (linearFactories.erc4626.includes(factory)) {
+                    calls.push(
+                        this.batchRelayerService.erc4626EncodeUnwrap({
+                            wrappedToken: wrappedToken.address,
+                            sender: this.batchRelayerService.batchRelayerAddress,
+                            recipient: userAddress,
+                            amount: this.batchRelayerService.toChainedReference(assetOutIdx),
+                            outputReference: Zero,
+                        }),
+                    );
+                } else if (linearFactories.reaper.includes(factory)) {
+                    calls.push(
+                        this.batchRelayerService.reaperEncodeUnwrap({
+                            vaultToken: wrappedToken.address,
+                            sender: this.batchRelayerService.batchRelayerAddress,
+                            recipient: userAddress,
+                            amount: this.batchRelayerService.toChainedReference(assetOutIdx),
+                            outputReference: Zero,
+                        }),
+                    );
+                }
             }
         }
 
@@ -450,18 +465,32 @@ export class PoolComposableExitService {
             );
 
             if (requiresUnwrap) {
+                const linearFactories = networkConfig.balancer.linearFactories;
                 for (const nestedLinearPool of nestedLinearPools) {
+                    const factory = nestedLinearPool.linearPoolToken.pool.factory || '';
                     const assetIdx = assets.indexOf(nestedLinearPool.wrappedToken.address);
 
-                    calls.push(
-                        this.batchRelayerService.reaperEncodeUnwrap({
-                            vaultToken: nestedLinearPool.wrappedToken.address,
-                            sender: this.batchRelayerService.batchRelayerAddress,
-                            recipient: userAddress,
-                            amount: this.batchRelayerService.toChainedReference(assetIdx),
-                            outputReference: Zero,
-                        }),
-                    );
+                    if (linearFactories.erc4626.includes(factory)) {
+                        calls.push(
+                            this.batchRelayerService.erc4626EncodeUnwrap({
+                                wrappedToken: nestedLinearPool.wrappedToken.address,
+                                sender: this.batchRelayerService.batchRelayerAddress,
+                                recipient: userAddress,
+                                amount: this.batchRelayerService.toChainedReference(assetIdx),
+                                outputReference: Zero,
+                            }),
+                        );
+                    } else if (linearFactories.reaper.includes(factory)) {
+                        calls.push(
+                            this.batchRelayerService.reaperEncodeUnwrap({
+                                vaultToken: nestedLinearPool.wrappedToken.address,
+                                sender: this.batchRelayerService.batchRelayerAddress,
+                                recipient: userAddress,
+                                amount: this.batchRelayerService.toChainedReference(assetIdx),
+                                outputReference: Zero,
+                            }),
+                        );
+                    }
                 }
             }
         }
