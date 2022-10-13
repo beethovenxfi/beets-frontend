@@ -93,14 +93,14 @@ function AprTooltip({ data, textProps, onlySparkles, placement, aprLabel, sparkl
                                                 m="0.25rem"
                                                 h={
                                                     isSubItemsLengthOne
-                                                        ? '0.7rem'
+                                                        ? '0.8rem'
                                                         : isSubItemIndexZero
                                                         ? '1rem'
                                                         : '2rem'
                                                 }
                                                 mt={
                                                     isSubItemsLengthOne
-                                                        ? '-0.4rem'
+                                                        ? '-0.5rem'
                                                         : isSubItemIndexZero
                                                         ? '-0.3rem'
                                                         : '-1.7rem'
