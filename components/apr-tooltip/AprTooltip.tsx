@@ -83,21 +83,37 @@ function AprTooltip({ data, textProps, onlySparkles, placement, aprLabel, sparkl
                                 <Flex>
                                     {formatApr(item.apr)} <AprText>{item.title}</AprText>
                                 </Flex>
-                                {item.subItems?.map((subItem, subItemIndex) => (
-                                    <Flex align="center" key={subItemIndex}>
-                                        <Box
-                                            w="1px"
-                                            m="0.25rem"
-                                            h={subItemIndex === 0 ? '1rem' : '2rem'}
-                                            mt={subItemIndex === 0 ? '-0.3rem' : '-1.7rem'}
-                                            bgColor="gray.100"
-                                        />
-                                        <Box h="1px" w="0.75rem" mr="0.25rem" ml="-0.25rem" bgColor="gray.100" />
-                                        <Flex>
-                                            {formatApr(subItem.apr)} <AprText>{subItem.title}</AprText>
+                                {item.subItems?.map((subItem, subItemIndex) => {
+                                    const isSubItemsLengthOne = item.subItems?.length === 1;
+                                    const isSubItemIndexZero = subItemIndex === 0;
+                                    return (
+                                        <Flex align="center" key={subItemIndex}>
+                                            <Box
+                                                w="1px"
+                                                m="0.25rem"
+                                                h={
+                                                    isSubItemsLengthOne
+                                                        ? '0.7rem'
+                                                        : isSubItemIndexZero
+                                                        ? '1rem'
+                                                        : '2rem'
+                                                }
+                                                mt={
+                                                    isSubItemsLengthOne
+                                                        ? '-0.4rem'
+                                                        : isSubItemIndexZero
+                                                        ? '-0.3rem'
+                                                        : '-1.7rem'
+                                                }
+                                                bgColor="gray.100"
+                                            />
+                                            <Box h="1px" w="0.75rem" mr="0.25rem" ml="-0.25rem" bgColor="gray.100" />
+                                            <Flex>
+                                                {formatApr(subItem.apr)} <AprText>{subItem.title}</AprText>
+                                            </Flex>
                                         </Flex>
-                                    </Flex>
-                                ))}
+                                    );
+                                })}
                             </Box>
                         );
                     })}
