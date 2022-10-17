@@ -295,6 +295,7 @@ export class PoolComposableExitService {
                         requiresUnwrap && singleAssetExit.linearPool
                             ? this.batchRelayerService.batchRelayerAddress
                             : userAddress,
+                    skipOutputRefs: !(requiresUnwrap && singleAssetExit.linearPool),
                 }),
             );
 

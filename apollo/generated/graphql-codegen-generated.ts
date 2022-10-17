@@ -962,13 +962,32 @@ export interface GqlUserPoolSnapshot {
     farmBalance: Scalars['AmountHumanReadable'];
     fees24h: Scalars['AmountHumanReadable'];
     gaugeBalance: Scalars['AmountHumanReadable'];
-    id: Scalars['ID'];
     percentShare: Scalars['Float'];
     timestamp: Scalars['Int'];
     totalBalance: Scalars['AmountHumanReadable'];
-    valueUSD: Scalars['AmountHumanReadable'];
+    totalValueUSD: Scalars['AmountHumanReadable'];
     walletBalance: Scalars['AmountHumanReadable'];
 }
+
+export interface GqlUserPortfolioSnapshot {
+    __typename: 'GqlUserPortfolioSnapshot';
+    farmBalance: Scalars['AmountHumanReadable'];
+    fees24h: Scalars['AmountHumanReadable'];
+    gaugeBalance: Scalars['AmountHumanReadable'];
+    pools: Array<GqlUserPoolSnapshot>;
+    timestamp: Scalars['Int'];
+    totalBalance: Scalars['AmountHumanReadable'];
+    totalFees: Scalars['AmountHumanReadable'];
+    totalValueUSD: Scalars['AmountHumanReadable'];
+    walletBalance: Scalars['AmountHumanReadable'];
+}
+
+export type GqlUserSnapshotDataRange =
+    | 'ALL_TIME'
+    | 'NINETY_DAYS'
+    | 'ONE_HUNDRED_EIGHTY_DAYS'
+    | 'ONE_YEAR'
+    | 'THIRTY_DAYS';
 
 export interface GqlUserSwapVolumeFilter {
     poolIdIn?: InputMaybe<Array<Scalars['String']>>;
@@ -1094,7 +1113,7 @@ export interface Query {
     userGetFbeetsBalance: GqlUserFbeetsBalance;
     userGetPoolBalances: Array<GqlUserPoolBalance>;
     userGetPoolJoinExits: Array<GqlPoolJoinExit>;
-    userGetPoolSnapshots: Array<GqlUserPoolSnapshot>;
+    userGetPortfolioSnapshots: Array<GqlUserPortfolioSnapshot>;
     userGetStaking: Array<GqlPoolStaking>;
     userGetSwaps: Array<GqlPoolSwap>;
 }
@@ -1214,9 +1233,8 @@ export interface QueryUserGetPoolJoinExitsArgs {
     skip?: InputMaybe<Scalars['Int']>;
 }
 
-export interface QueryUserGetPoolSnapshotsArgs {
-    numDays: Scalars['Int'];
-    poolId: Scalars['String'];
+export interface QueryUserGetPortfolioSnapshotsArgs {
+    days: Scalars['Int'];
 }
 
 export interface QueryUserGetSwapsArgs {

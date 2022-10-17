@@ -152,6 +152,7 @@ export class BatchRelayerService {
         toInternalBalance,
         sender,
         recipient,
+        skipOutputRefs,
     }: {
         tokensIn: string[];
         tokensOut: string[];
@@ -164,6 +165,7 @@ export class BatchRelayerService {
         toInternalBalance: boolean;
         sender: string;
         recipient: string;
+        skipOutputRefs?: boolean;
     }): string {
         const limits = Swaps.getLimitsForSlippage(
             tokensIn,
@@ -187,10 +189,12 @@ export class BatchRelayerService {
             limits,
             deadline: MaxUint256,
             value: ethAmountScaled,
-            outputReferences: assets.map((asset, index) => ({
-                index,
-                key: batchRelayerService.toChainedReference(index),
-            })),
+            outputReferences: skipOutputRefs
+                ? []
+                : assets.map((asset, index) => ({
+                      index,
+                      key: batchRelayerService.toChainedReference(index),
+                  })),
         });
     }
 
