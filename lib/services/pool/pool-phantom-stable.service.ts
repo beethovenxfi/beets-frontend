@@ -33,15 +33,13 @@ import {
 } from '~/lib/services/pool/lib/old-big-number';
 import OldBigNumber from 'bignumber.js';
 import { SwapKind } from '@balancer-labs/balancer-js';
-import { poolScaleAmp } from '~/lib/services/pool/lib/util';
+import { poolBatchSwaps, poolQueryBatchSwap, poolScaleAmp } from '~/lib/services/pool/lib/util';
 import { BatchRelayerService } from '~/lib/services/batch-relayer/batch-relayer.service';
 import {
-    poolBatchSwaps,
     poolFindNestedPoolTokenForToken,
     poolFindPoolTokenFromOptions,
     poolGetExitSwaps,
     poolGetJoinSwapForToken,
-    poolQueryBatchSwap,
     poolSumPoolTokenBalances,
 } from '~/lib/services/pool/pool-phantom-stable-util';
 

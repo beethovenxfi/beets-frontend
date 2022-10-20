@@ -40,6 +40,12 @@ export interface NetworkConfig {
     balancer: {
         vault: string;
         batchRelayer: string;
+        composableStableFactory: string;
+        weightedPoolV2Factory: string;
+        linearFactories: {
+            erc4626: string[];
+            reaper: string[];
+        };
     };
     beetsPoolOwnerAddress: string;
     masterChefContractAddress: string;

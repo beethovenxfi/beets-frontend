@@ -15,8 +15,6 @@ export function TradeSubmittedContent({ query }: Props) {
     const { refetch } = useUserTokenBalances();
     const { isConfirmed, isFailed, isPending, error, txReceipt, txResponse } = query;
 
-    console.log({ isConfirmed, isFailed, isPending, error, txReceipt, txResponse });
-
     useEffect(() => {
         if (isConfirmed) {
             refetch();
@@ -26,7 +24,7 @@ export function TradeSubmittedContent({ query }: Props) {
     return (
         <Box pt="4">
             {reactiveTradeState.sorResponse && (
-                <Box px='4'>
+                <Box px="4">
                     <BatchSwapSorRoute swapInfo={reactiveTradeState.sorResponse} />{' '}
                 </Box>
             )}
