@@ -693,6 +693,7 @@ export interface GqlPoolTokenExpanded {
     address: Scalars['String'];
     decimals: Scalars['Int'];
     id: Scalars['ID'];
+    isMainToken: Scalars['Boolean'];
     isNested: Scalars['Boolean'];
     isPhantomBpt: Scalars['Boolean'];
     name: Scalars['String'];
