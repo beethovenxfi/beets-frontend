@@ -327,7 +327,7 @@ export class PoolPhantomStableService implements PoolService {
             //currently we only support single option select here
             const tokenOption = option.tokenOptions[0];
             const poolToken = this.pool.tokens.find((poolToken) => poolToken.index === option.poolTokenIndex)!;
-            const poolTokenWeight = oldBnum(poolToken.balance).div(totalBalance);
+            const poolTokenWeight = oldBnum(oldBnum(poolToken.balance).times(poolToken.priceRate)).div(totalBalance);
 
             if (poolToken.__typename === 'GqlPoolToken' || poolToken.__typename === 'GqlPoolTokenLinear') {
                 return {
