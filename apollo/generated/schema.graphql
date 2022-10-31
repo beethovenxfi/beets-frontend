@@ -666,6 +666,7 @@ type GqlPoolTokenExpanded {
     address: String!
     decimals: Int!
     id: ID!
+    isMainToken: Boolean!
     isNested: Boolean!
     isPhantomBpt: Boolean!
     name: String!
@@ -1013,6 +1014,7 @@ type Query {
     poolGetBatchSwaps(first: Int, skip: Int, where: GqlPoolSwapFilter): [GqlPoolBatchSwap!]!
     poolGetFeaturedPoolGroups: [GqlPoolFeaturedPoolGroup!]!
     poolGetJoinExits(first: Int, skip: Int, where: GqlPoolJoinExitFilter): [GqlPoolJoinExit!]!
+    poolGetLinearPools: [GqlPoolLinear!]!
     poolGetPool(id: String!): GqlPoolBase!
     poolGetPoolFilters: [GqlPoolFilterDefinition!]!
     poolGetPools(

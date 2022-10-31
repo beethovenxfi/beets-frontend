@@ -1091,6 +1091,7 @@ export interface Query {
     poolGetBatchSwaps: Array<GqlPoolBatchSwap>;
     poolGetFeaturedPoolGroups: Array<GqlPoolFeaturedPoolGroup>;
     poolGetJoinExits: Array<GqlPoolJoinExit>;
+    poolGetLinearPools: Array<GqlPoolLinear>;
     poolGetPool: GqlPoolBase;
     poolGetPoolFilters: Array<GqlPoolFilterDefinition>;
     poolGetPools: Array<GqlPoolMinimal>;
@@ -1767,6 +1768,137 @@ export type GqlPoolCardDataFragment = {
         isNested: boolean;
         isPhantomBpt: boolean;
         weight?: string | null;
+    }>;
+};
+
+export type GetLinearPoolsQueryVariables = Exact<{ [key: string]: never }>;
+
+export type GetLinearPoolsQuery = {
+    __typename: 'Query';
+    pools: Array<{
+        __typename: 'GqlPoolLinear';
+        id: string;
+        address: string;
+        name: string;
+        owner: string;
+        decimals: number;
+        factory?: string | null;
+        symbol: string;
+        createTime: number;
+        mainIndex: number;
+        wrappedIndex: number;
+        lowerTarget: string;
+        upperTarget: string;
+        dynamicData: {
+            __typename: 'GqlPoolDynamicData';
+            poolId: string;
+            swapEnabled: boolean;
+            totalLiquidity: string;
+            totalLiquidity24hAgo: string;
+            totalShares: string;
+            totalShares24hAgo: string;
+            fees24h: string;
+            swapFee: string;
+            volume24h: string;
+            fees48h: string;
+            volume48h: string;
+            apr: {
+                __typename: 'GqlPoolApr';
+                hasRewardApr: boolean;
+                thirdPartyApr: string;
+                nativeRewardApr: string;
+                swapApr: string;
+                total: string;
+                items: Array<{
+                    __typename: 'GqlBalancePoolAprItem';
+                    id: string;
+                    title: string;
+                    apr: string;
+                    subItems?: Array<{
+                        __typename: 'GqlBalancePoolAprSubItem';
+                        id: string;
+                        title: string;
+                        apr: string;
+                    }> | null;
+                }>;
+            };
+        };
+        tokens: Array<{
+            __typename: 'GqlPoolToken';
+            id: string;
+            index: number;
+            name: string;
+            symbol: string;
+            balance: string;
+            address: string;
+            priceRate: string;
+            decimals: number;
+            weight?: string | null;
+            totalBalance: string;
+        }>;
+    }>;
+};
+
+export type GqlPoolLinearFragment = {
+    __typename: 'GqlPoolLinear';
+    id: string;
+    address: string;
+    name: string;
+    owner: string;
+    decimals: number;
+    factory?: string | null;
+    symbol: string;
+    createTime: number;
+    mainIndex: number;
+    wrappedIndex: number;
+    lowerTarget: string;
+    upperTarget: string;
+    dynamicData: {
+        __typename: 'GqlPoolDynamicData';
+        poolId: string;
+        swapEnabled: boolean;
+        totalLiquidity: string;
+        totalLiquidity24hAgo: string;
+        totalShares: string;
+        totalShares24hAgo: string;
+        fees24h: string;
+        swapFee: string;
+        volume24h: string;
+        fees48h: string;
+        volume48h: string;
+        apr: {
+            __typename: 'GqlPoolApr';
+            hasRewardApr: boolean;
+            thirdPartyApr: string;
+            nativeRewardApr: string;
+            swapApr: string;
+            total: string;
+            items: Array<{
+                __typename: 'GqlBalancePoolAprItem';
+                id: string;
+                title: string;
+                apr: string;
+                subItems?: Array<{
+                    __typename: 'GqlBalancePoolAprSubItem';
+                    id: string;
+                    title: string;
+                    apr: string;
+                }> | null;
+            }>;
+        };
+    };
+    tokens: Array<{
+        __typename: 'GqlPoolToken';
+        id: string;
+        index: number;
+        name: string;
+        symbol: string;
+        balance: string;
+        address: string;
+        priceRate: string;
+        decimals: number;
+        weight?: string | null;
+        totalBalance: string;
     }>;
 };
 
@@ -4164,6 +4296,64 @@ export const GqlPoolFeaturedPoolGroupFragmentDoc = gql`
     }
     ${GqlPoolCardDataFragmentDoc}
 `;
+export const GqlPoolLinearFragmentDoc = gql`
+    fragment GqlPoolLinear on GqlPoolLinear {
+        id
+        address
+        name
+        owner
+        decimals
+        factory
+        symbol
+        createTime
+        dynamicData {
+            poolId
+            swapEnabled
+            totalLiquidity
+            totalLiquidity24hAgo
+            totalShares
+            totalShares24hAgo
+            fees24h
+            swapFee
+            volume24h
+            fees48h
+            volume48h
+            apr {
+                hasRewardApr
+                thirdPartyApr
+                nativeRewardApr
+                swapApr
+                total
+                items {
+                    id
+                    title
+                    apr
+                    subItems {
+                        id
+                        title
+                        apr
+                    }
+                }
+            }
+        }
+        mainIndex
+        wrappedIndex
+        lowerTarget
+        upperTarget
+        tokens {
+            id
+            index
+            name
+            symbol
+            balance
+            address
+            priceRate
+            decimals
+            weight
+            totalBalance
+        }
+    }
+`;
 export const GqlPoolTokenFragmentDoc = gql`
     fragment GqlPoolToken on GqlPoolToken {
         id
@@ -5108,6 +5298,45 @@ export function useGetHomeNewsItemsLazyQuery(
 export type GetHomeNewsItemsQueryHookResult = ReturnType<typeof useGetHomeNewsItemsQuery>;
 export type GetHomeNewsItemsLazyQueryHookResult = ReturnType<typeof useGetHomeNewsItemsLazyQuery>;
 export type GetHomeNewsItemsQueryResult = Apollo.QueryResult<GetHomeNewsItemsQuery, GetHomeNewsItemsQueryVariables>;
+export const GetLinearPoolsDocument = gql`
+    query GetLinearPools {
+        pools: poolGetLinearPools {
+            ...GqlPoolLinear
+        }
+    }
+    ${GqlPoolLinearFragmentDoc}
+`;
+
+/**
+ * __useGetLinearPoolsQuery__
+ *
+ * To run a query within a React component, call `useGetLinearPoolsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetLinearPoolsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetLinearPoolsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetLinearPoolsQuery(
+    baseOptions?: Apollo.QueryHookOptions<GetLinearPoolsQuery, GetLinearPoolsQueryVariables>,
+) {
+    const options = { ...defaultOptions, ...baseOptions };
+    return Apollo.useQuery<GetLinearPoolsQuery, GetLinearPoolsQueryVariables>(GetLinearPoolsDocument, options);
+}
+export function useGetLinearPoolsLazyQuery(
+    baseOptions?: Apollo.LazyQueryHookOptions<GetLinearPoolsQuery, GetLinearPoolsQueryVariables>,
+) {
+    const options = { ...defaultOptions, ...baseOptions };
+    return Apollo.useLazyQuery<GetLinearPoolsQuery, GetLinearPoolsQueryVariables>(GetLinearPoolsDocument, options);
+}
+export type GetLinearPoolsQueryHookResult = ReturnType<typeof useGetLinearPoolsQuery>;
+export type GetLinearPoolsLazyQueryHookResult = ReturnType<typeof useGetLinearPoolsLazyQuery>;
+export type GetLinearPoolsQueryResult = Apollo.QueryResult<GetLinearPoolsQuery, GetLinearPoolsQueryVariables>;
 export const GetPoolDocument = gql`
     query GetPool($id: String!) {
         pool: poolGetPool(id: $id) {

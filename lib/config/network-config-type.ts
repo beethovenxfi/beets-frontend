@@ -46,6 +46,8 @@ export interface NetworkConfig {
             erc4626: string[];
             reaper: string[];
         };
+        linearRebalancers: { [poolAddress: string]: string };
+        reaperManualRebalancer?: string;
     };
     beetsPoolOwnerAddress: string;
     masterChefContractAddress: string;
