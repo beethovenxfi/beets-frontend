@@ -11,7 +11,7 @@ import { useState } from 'react';
 export function LinearPoolList() {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [selectedPool, setSelectedPool] = useState<GqlPoolLinearFragment | null>(null);
-    const { data, loading } = useGetLinearPoolsQuery();
+    const { data, loading } = useGetLinearPoolsQuery({ pollInterval: 30000 });
     const { getToken } = useGetTokens();
     const linearPools = orderBy(data?.pools || [], (pool) => parseFloat(pool.dynamicData.totalLiquidity), 'desc');
 
