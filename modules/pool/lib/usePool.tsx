@@ -1,6 +1,12 @@
 import { createContext, useContext, useEffect, useMemo } from 'react';
 import { GqlPoolUnion, useGetPoolQuery } from '~/apollo/generated/graphql-codegen-generated';
-import { poolGetServiceForPool, poolGetTypeName, poolRequiresBatchRelayerOnJoin } from '~/lib/services/pool/pool-util';
+import {
+    poolGetServiceForPool,
+    poolGetTypeName,
+    poolIsComposablePool,
+    poolRequiresBatchRelayerOnExit,
+    poolRequiresBatchRelayerOnJoin,
+} from '~/lib/services/pool/pool-util';
 import { useEffectOnce } from '~/lib/util/custom-hooks';
 import { PoolService } from '~/lib/services/pool/pool-types';
 import { TokenBase } from '~/lib/services/token/token-types';
@@ -15,11 +21,13 @@ export interface PoolContextType {
     allTokens: TokenBase[];
     allTokenAddresses: string[];
     requiresBatchRelayerOnJoin: boolean;
+    requiresBatchRelayerOnExit: boolean;
     supportsZap: boolean;
     formattedTypeName: string;
     totalApr: number;
     isFbeetsPool: boolean;
     isStablePool: boolean;
+    isComposablePool: boolean;
 }
 
 export const PoolContext = createContext<PoolContextType | null>(null);
@@ -31,7 +39,7 @@ export function PoolProvider({ pool: poolFromProps, children }: { pool: GqlPoolU
         notifyOnNetworkStatusChange: true,
     });
 
-    const pool = data?.pool || poolFromProps;
+    const pool = (data?.pool || poolFromProps) as GqlPoolUnion;
     const poolService = poolGetServiceForPool(pool);
 
     const bpt: TokenBase = {
@@ -42,7 +50,9 @@ export function PoolProvider({ pool: poolFromProps, children }: { pool: GqlPoolU
     };
     const bptPrice = parseFloat(pool.dynamicData.totalLiquidity) / parseFloat(pool.dynamicData.totalShares);
 
+    const isComposablePool = poolIsComposablePool(pool);
     const requiresBatchRelayerOnJoin = poolRequiresBatchRelayerOnJoin(pool);
+    const requiresBatchRelayerOnExit = poolRequiresBatchRelayerOnExit(pool);
     const supportsZap =
         (pool.__typename === 'GqlPoolWeighted' || pool.__typename === 'GqlPoolStable') &&
         pool.staking?.type === 'MASTER_CHEF' &&
@@ -85,12 +95,14 @@ export function PoolProvider({ pool: poolFromProps, children }: { pool: GqlPoolU
                 allTokens,
                 allTokenAddresses: allTokens.map((token) => token.address),
                 requiresBatchRelayerOnJoin,
+                requiresBatchRelayerOnExit,
                 bptPrice,
                 supportsZap,
                 formattedTypeName: poolGetTypeName(pool),
                 totalApr: parseFloat(pool.dynamicData.apr.total),
                 isFbeetsPool: pool.id === networkConfig.fbeets.poolId,
                 isStablePool,
+                isComposablePool,
             }}
         >
             {children}

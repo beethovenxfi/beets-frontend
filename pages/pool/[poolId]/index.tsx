@@ -11,6 +11,7 @@ import { PoolUserDepositBalanceProvider } from '~/modules/pool/lib/usePoolUserDe
 import { PoolUserInvestedTokenBalanceProvider } from '~/modules/pool/lib/usePoolUserInvestedTokenBalances';
 import { PoolUserPendingRewardsProvider } from '~/modules/pool/lib/usePoolUserPendingRewards';
 import { PoolUserTokenBalancesInWalletProvider } from '~/modules/pool/lib/usePoolUserTokenBalancesInWallet';
+import { PoolComposableUserPoolTokenBalanceProvider } from '~/modules/pool/lib/usePoolComposableUserPoolTokenBalances';
 
 interface Props {
     pool: GqlPoolUnion;
@@ -36,7 +37,9 @@ const PoolPage = ({ pool }: Props) => {
                         <PoolUserInvestedTokenBalanceProvider>
                             <PoolUserPendingRewardsProvider>
                                 <PoolUserTokenBalancesInWalletProvider>
-                                    <Pool />
+                                    <PoolComposableUserPoolTokenBalanceProvider>
+                                        <Pool />
+                                    </PoolComposableUserPoolTokenBalanceProvider>
                                 </PoolUserTokenBalancesInWalletProvider>
                             </PoolUserPendingRewardsProvider>
                         </PoolUserInvestedTokenBalanceProvider>

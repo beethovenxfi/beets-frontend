@@ -36,6 +36,12 @@ export const fantomNetworkConfig: NetworkConfig = {
     balancer: {
         vault: '0x20dd72Ed959b6147912C2e529F0a0C651c33c9ce',
         batchRelayer: '0xC852F984CA3310AFc596adeB17EfcB0542646920',
+        composableStableFactory: '0xf145cafb67081895ee80eb7c04a30cf87f07b745',
+        weightedPoolV2Factory: '0x8ea1c497c16726e097f62c8c9fbd944143f27090',
+        linearFactories: {
+            erc4626: [],
+            reaper: ['0xd448c4156b8de31e56fdfc071c8d96459bb28119'],
+        },
     },
     beetsPoolOwnerAddress: '0xcd983793adb846dce4830c22f30c7ef0c864a776',
     masterChefContractAddress: '0x8166994d9ebBe5829EC86Bd81258149B87faCfd3',

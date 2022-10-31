@@ -6,7 +6,7 @@ export const optimismNetworkConfig: NetworkConfig = {
     networkName: 'Optimism Mainnet',
     networkShortName: 'Optimism',
     etherscanName: 'The Optimistic Explorer',
-    etherscanUrl: 'https://optimistic.etherscan.io/',
+    etherscanUrl: 'https://optimistic.etherscan.io',
     testnet: false,
     eth: {
         name: 'Ether',
@@ -21,7 +21,7 @@ export const optimismNetworkConfig: NetworkConfig = {
         nativeAssetId: 'optimism',
         platformId: 'optimism',
     },
-    rpcUrl: 'https://mainnet.optimism.io',
+    rpcUrl: 'https://rpc.ankr.com/optimism',
     multicall: '0x2dc0e2aa608532da689e89e237df582b783e552c',
     beets: {
         address: '0x97513e975a7fa9072c72c92d8000b0db90b163c5',
@@ -33,7 +33,13 @@ export const optimismNetworkConfig: NetworkConfig = {
     },
     balancer: {
         vault: '0xba12222222228d8ba445958a75a0704d566bf2c8',
-        batchRelayer: '0x0000000000000000000000000000000000000000',
+        batchRelayer: '0x1a58897ab366082028ced3740900ecbd765af738',
+        composableStableFactory: '0xf145cafb67081895ee80eb7c04a30cf87f07b745',
+        weightedPoolV2Factory: '0xad901309d9e9dbc5df19c84f729f429f0189a633',
+        linearFactories: {
+            erc4626: ['0x4c4287b07d293e361281bceee8715c8cdeb64e34'],
+            reaper: ['0x19968d4b7126904fd665ed25417599df9604df83', '0x0473136b0732606e826ffeb42f3abc81a7a766d5'],
+        },
     },
     beetsPoolOwnerAddress: '0xd9e2889ac8c6fff8e94c7c1beeade1352df1a513',
     masterChefContractAddress: '',
