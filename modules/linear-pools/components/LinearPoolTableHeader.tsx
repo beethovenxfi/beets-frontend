@@ -37,7 +37,7 @@ export function LinearPoolTableHeader() {
                 </GridItem>
                 <GridItem textAlign="right">
                     <Text fontSize="md" fontWeight="semibold" color="beets.base.100">
-                        Boost %
+                        % Wrapped
                     </Text>
                 </GridItem>
                 <GridItem textAlign="right">
