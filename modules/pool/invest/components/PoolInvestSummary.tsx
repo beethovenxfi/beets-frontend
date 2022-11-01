@@ -21,7 +21,7 @@ export function PoolInvestSummary({ ...rest }: Props) {
         usePoolJoinGetBptOutAndPriceImpactForTokensIn();
 
     return (
-        <VStack spacing="4" width='full' backgroundColor='blackAlpha.100' p='4' rounded='md'>
+        <VStack spacing="4" width="full" backgroundColor="blackAlpha.100" p="4" rounded="md">
             <HStack spacing="8">
                 <Box>
                     <Heading size="sm" textAlign="center">
@@ -37,7 +37,7 @@ export function PoolInvestSummary({ ...rest }: Props) {
                     </Heading>
                     <HStack justifyContent="center">
                         <Heading color="beets.highlight" textAlign="center">
-                            {numberFormatUSDValue(numberFormatUSDValue(weeklyYield))}
+                            {numberFormatUSDValue(weeklyYield)}
                         </Heading>
                         <AprTooltip data={pool.dynamicData.apr} onlySparkles={true} sparklesSize="sm" />
                     </HStack>
