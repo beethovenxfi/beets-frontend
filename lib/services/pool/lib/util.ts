@@ -188,7 +188,17 @@ export function poolStableBptForTokensZeroPriceImpact(
     pool: GqlPoolPhantomStable | GqlPoolPhantomStableNested,
 ): OldBigNumber {
     const priceRatesScaled = pool.tokens.map((token) => parseUnits(token.priceRate, 18));
-    const denormAmounts = poolScaleTokenAmounts(tokenAmounts, pool.tokens);
+
+    const denormAmounts = pool.tokens.map((token, index) => {
+        const tokenAmount = tokenAmounts.find((amount) => token.address === amount.address);
+
+        return (
+            parseUnits(tokenAmount?.amount || '0', token?.decimals || 18)
+                //apply the price rate to the amounts
+                .mul(priceRatesScaled[index].toString())
+                .div(WeiPerEther)
+        );
+    });
 
     // _bptForTokensZeroPriceImpact is the only stable pool function
     // that requires balances be scaled by the tokenWithAmount decimals and not 18
