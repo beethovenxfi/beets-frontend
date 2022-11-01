@@ -166,13 +166,7 @@ export function poolGetExitSwaps({
 }
 
 export function poolSumPoolTokenBalances(poolTokens: GqlPoolTokenUnion[]): OldBigNumber {
-    let totalBalance = oldBnum(0);
-
-    for (const token of poolTokens) {
-        totalBalance = totalBalance.plus(token.balance);
-    }
-
-    return totalBalance;
+    return poolTokens.reduce((total, token) => total.plus(oldBnum(token.balance).times(token.priceRate)), oldBnum(0));
 }
 
 export function poolFindNestedPoolTokenForToken(
