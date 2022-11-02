@@ -32,8 +32,8 @@ import { PoolInvestSummary } from '~/modules/pool/invest/components/PoolInvestSu
 import { useGetTokens } from '~/lib/global/useToken';
 import React, { useEffect, useMemo, useState } from 'react';
 import { usePoolJoinGetProportionalInvestmentAmount } from '~/modules/pool/invest/lib/usePoolJoinGetProportionalInvestmentAmount';
-import { mapValues, pick } from 'lodash';
-import { oldBnum } from '~/lib/services/pool/lib/old-big-number';
+import { keyBy, mapValues, pick } from 'lodash';
+import { oldBnum, oldBnumScale, oldBnumToHumanReadable } from '~/lib/services/pool/lib/old-big-number';
 import { useInvest } from '~/modules/pool/invest/lib/useInvest';
 import { CardRow } from '~/components/card/CardRow';
 import { useHasBatchRelayerApproval } from '~/lib/util/useHasBatchRelayerApproval';
@@ -44,6 +44,7 @@ import { usePoolJoinGetBptOutAndPriceImpactForTokensIn } from '../lib/usePoolJoi
 import { useUserTokenBalances } from '~/lib/user/useUserTokenBalances';
 import { usePoolUserTokenBalancesInWallet } from '../../lib/usePoolUserTokenBalancesInWallet';
 import { bnum } from '@balancer-labs/sor';
+import { GqlPoolToken } from '~/apollo/generated/graphql-codegen-generated';
 
 interface Props {
     onShowPreview(): void;
@@ -51,80 +52,52 @@ interface Props {
 
 export function PoolInvestProportional({ onShowPreview }: Props) {
     const { pool, poolService, requiresBatchRelayerOnJoin } = usePool();
-    const { priceForAmount, getToken } = useGetTokens();
+    const { getToken } = useGetTokens();
     const investOptions = pool.investConfig.options;
     const { setSelectedOption, selectedOptions, setInputAmounts, zapEnabled, inputAmounts } = useInvestState();
-    const [proportionalPercent, setProportionalPercent] = useState(25);
     const { data } = usePoolJoinGetProportionalInvestmentAmount();
-    const { selectedInvestTokens, userInvestTokenBalances } = useInvest();
+    const { selectedInvestTokens, userInvestTokenBalances, isInvestingWithEth } = useInvest();
     const { data: hasBatchRelayerApproval } = useHasBatchRelayerApproval();
-    const { formattedPriceImpact, hasHighPriceImpact, hasMediumPriceImpact, isLoading } =
+    const { formattedPriceImpact, hasHighPriceImpact, hasMediumPriceImpact } =
         usePoolJoinGetBptOutAndPriceImpactForTokensIn();
     const { userPoolTokenBalances } = usePoolUserTokenBalancesInWallet();
 
-    const [scaledProportionalSuggestions, setScaledProportionalSuggestions] = useState(inputAmounts);
-
-    useEffect(() => {
-        setInputAmounts(scaledProportionalSuggestions);
-    }, [JSON.stringify(scaledProportionalSuggestions)]);
-
-    useEffect(() => {
-        setScaledProportionalSuggestions(
-            mapValues(data || {}, (val, address) =>
-                oldBnum(val)
-                    .times(proportionalPercent)
-                    .div(100)
-                    .toFixed(getToken(address)?.decimals || 18)
-                    .toString(),
-            ),
-        );
-    }, [proportionalPercent]);
-
-    useEffect(() => {
-        setScaledProportionalSuggestions(
-            mapValues(data || {}, (val, address) =>
-                oldBnum(val)
-                    .times(proportionalPercent)
-                    .div(100)
-                    .toFixed(getToken(address)?.decimals || 18)
-                    .toString(),
-            ),
-        );
-    }, []);
-
-    async function onTokenAmountChange(tokenAddress: string, amount: string) {
+    async function onTokenAmountChange(token: GqlPoolToken, amount: string) {
         if (!amount) {
-            //clear all values
-            setScaledProportionalSuggestions(mapValues(scaledProportionalSuggestions, () => ''));
-
+            setInputAmounts({});
             return;
         }
 
         if (poolService.joinGetProportionalSuggestionForFixedAmount) {
             const scaledAmounts = await poolService.joinGetProportionalSuggestionForFixedAmount(
                 {
-                    address: replaceEthWithWeth(tokenAddress),
+                    address: replaceEthWithWeth(token.address),
                     amount,
                 },
-                [replaceEthWithWeth(tokenAddress)],
+                [replaceEthWithWeth(token.address)],
             );
-            const newInputs: Record<string, string> = {};
-            for (const scaledAmount of scaledAmounts) {
-                let address = scaledAmount.address;
-                if (isEth(tokenAddress) && isWeth(scaledAmount.address)) {
-                    address = tokenAddress;
-                }
-                newInputs[address] = scaledAmount.amount;
-            }
-            setScaledProportionalSuggestions(newInputs);
-            setInputAmounts(newInputs);
+
+            setInputAmounts(
+                mapValues(
+                    keyBy(scaledAmounts, (amount) =>
+                        isInvestingWithEth ? replaceWethWithEth(amount.address) : amount.address,
+                    ),
+                    (amount) => amount.amount,
+                ),
+            );
         }
     }
 
     const exceedsTokenBalances = userInvestTokenBalances.some((tokenBalance) => {
-        if (!scaledProportionalSuggestions[tokenBalance.address] || !tokenBalance.amount) return false;
-        return bnum(scaledProportionalSuggestions[tokenBalance.address]).gt(tokenBalance.amount);
+        if (!inputAmounts[tokenBalance.address] || !tokenBalance.amount) return false;
+        return bnum(inputAmounts[tokenBalance.address]).gt(tokenBalance.amount);
     });
+
+    const firstToken = selectedInvestTokens[0];
+    const proportionalPercent =
+        !exceedsTokenBalances && data && data[firstToken.address] && inputAmounts[firstToken.address]
+            ? Math.round((parseFloat(inputAmounts[firstToken.address]) / parseFloat(data[firstToken.address])) * 100)
+            : 0;
 
     return (
         <Box>
@@ -133,9 +106,27 @@ export function PoolInvestProportional({ onShowPreview }: Props) {
                 <BeetsBox py="2" px="4">
                     <Slider
                         mt="8"
-                        aria-label="slider-ex-1"
+                        focusThumbOnChange={false}
                         value={proportionalPercent}
-                        onChange={setProportionalPercent}
+                        onChange={(value) => {
+                            if (value === 100) {
+                                setInputAmounts(data || {});
+                            } else if (value === 0) {
+                                setInputAmounts({});
+                            } else {
+                                const inputAmounts = mapValues(data || {}, (maxAmount, address) => {
+                                    const tokenDecimals =
+                                        selectedInvestTokens.find((token) => token.address === address)?.decimals || 18;
+
+                                    return oldBnumToHumanReadable(
+                                        oldBnumScale(maxAmount, tokenDecimals).times(value / 100),
+                                        tokenDecimals,
+                                    );
+                                });
+
+                                setInputAmounts(inputAmounts);
+                            }
+                        }}
                     >
                         <SliderTrack>
                             <SliderFilledTrack />
@@ -168,7 +159,7 @@ export function PoolInvestProportional({ onShowPreview }: Props) {
                             return (
                                 <TokenRow
                                     withInput
-                                    onAmountChange={(amount) => onTokenAmountChange(tokenOption.address, amount)}
+                                    onAmountChange={(amount) => onTokenAmountChange(tokenOption, amount)}
                                     key={tokenOption.address}
                                     alternateTokens={option.tokenOptions}
                                     address={tokenOption.address}
