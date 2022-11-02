@@ -94,10 +94,8 @@ export function PoolInvestProportional({ onShowPreview }: Props) {
 
     const onTokenAmountChange = (tokenAddress: string) => async (amount: string) => {
         if (!amount) {
-            setScaledProportionalSuggestions({
-                ...scaledProportionalSuggestions,
-                [tokenAddress]: '',
-            });
+            setScaledProportionalSuggestions(mapValues(scaledProportionalSuggestions, () => ''));
+
             return;
         }
         if (poolService.joinGetProportionalSuggestionForFixedAmount) {
