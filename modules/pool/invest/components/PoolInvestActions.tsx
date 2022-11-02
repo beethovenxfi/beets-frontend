@@ -69,11 +69,12 @@ export function PoolInvestActions({ onInvestComplete, onClose }: Props) {
 
     return (
         <>
-            <FadeInBox isVisible={joinQuery.isConfirmed || joinQuery.isPending || joinQuery.isFailed}>
+            <FadeInBox width='full' isVisible={joinQuery.isConfirmed || joinQuery.isPending || joinQuery.isFailed}>
                 <Text fontSize="lg" fontWeight="semibold" mt="4" mb="2">
                     Transaction details
                 </Text>
                 <TransactionSubmittedContent
+                    width='full'
                     query={joinQuery}
                     confirmedMessage={`You've successfully invested ${numberFormatUSDValue(totalInvestValue)} into ${
                         pool.name

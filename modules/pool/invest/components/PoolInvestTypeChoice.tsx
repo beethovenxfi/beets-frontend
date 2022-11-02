@@ -34,6 +34,7 @@ import BeetsThinking from '~/assets/icons/beetx-thinking.svg';
 import BeetSmart from '~/assets/icons/beetx-smarts.svg';
 import Image from 'next/image';
 import { etherscanGetTokenUrl } from '~/lib/util/etherscan';
+import BeetsTooltip from '~/components/tooltip/BeetsTooltip';
 interface Props {
     onShowProportional(): void;
     onShowCustom(): void;
@@ -51,10 +52,13 @@ export function PoolInvestTypeChoice({ onShowProportional, onShowCustom }: Props
     const _canInvestProportionally = (data?.maxAmount || 0) > 0 && canInvestProportionally && proportionalSupported;
 
     const disabledProportionalInvestmentTooltip = useMemo(() => {
+        if (!proportionalSupported) {
+            return 'This pool does not support proportional investment.';
+        }
         if ((data?.maxAmount || 0) <= 0) {
             return "You don't have the appropriate funds for a proportional investment. Refer below to the tokens you need to make a proportional investment.";
         }
-        return 'This pool does not support proprtional investment.';
+        return 'This pool does not support proportional investment.';
     }, [_canInvestProportionally]);
 
     return (
@@ -76,12 +80,7 @@ export function PoolInvestTypeChoice({ onShowProportional, onShowCustom }: Props
                 </VStack>
 
                 <HStack width="full">
-                    <Tooltip
-                        borderRadius="md"
-                        p="2"
-                        label={_canInvestProportionally ? '' : disabledProportionalInvestmentTooltip}
-                        hasArrow
-                    >
+                    <BeetsTooltip noImage label={_canInvestProportionally ? '' : disabledProportionalInvestmentTooltip}>
                         <Box width="full">
                             <Button
                                 _hover={{ borderColor: 'beets.green' }}
@@ -103,7 +102,7 @@ export function PoolInvestTypeChoice({ onShowProportional, onShowCustom }: Props
                                 </VStack>
                             </Button>
                         </Box>
-                    </Tooltip>
+                    </BeetsTooltip>
                     <Button
                         _hover={{ borderColor: 'beets.green' }}
                         borderWidth={1}

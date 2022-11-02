@@ -6,23 +6,33 @@ import Image from 'next/image';
 
 interface Props {
     children: ReactNode | ReactNode[];
-    label: string;
+    label: ReactNode | ReactNode[];
+    noImage?: boolean;
 }
 
-function BeetsTooltipLabel({ label }: { label: string }) {
+function BeetsTooltipLabel({ label, noImage }: { label: ReactNode | ReactNode[]; noImage: boolean }) {
     return (
         <HStack>
-            <Box>
-                <Image src={BeetsThinking} alt="thinking-emoji" />
-            </Box>
+            {!noImage && (
+                <Box>
+                    <Image src={BeetsThinking} alt="thinking-emoji" />
+                </Box>
+            )}
             <Text>{label}</Text>
         </HStack>
     );
 }
 
-export default function BeetsTooltip({ children, label }: Props) {
+export default function BeetsTooltip({ children, label, noImage }: Props) {
     return (
-        <Tooltip bg='beets.base.400' shadow='2xl' borderRadius="md" p="2" label={<BeetsTooltipLabel label={label} />} hasArrow>
+        <Tooltip
+            bg="beets.base.400"
+            shadow="2xl"
+            borderRadius="md"
+            p="2"
+            label={<BeetsTooltipLabel noImage={noImage} label={label} />}
+            hasArrow
+        >
             {children}
         </Tooltip>
     );

@@ -49,7 +49,7 @@ export function PoolInvestSettings({ ...rest }: BoxProps) {
                                     }}
                                 />
                             ) : (
-                                <Text color="green">Approved</Text>
+                                <Text color="beets.highlight">Approved</Text>
                             )}
                         </Box>
                     </>
@@ -85,7 +85,7 @@ export function PoolInvestSettings({ ...rest }: BoxProps) {
                                                 }}
                                             />
                                         ) : (
-                                            <Text color="green">Approved</Text>
+                                            <Text color="beets.highlight">Approved</Text>
                                         )}
                                     </Box>
                                 </Flex>
