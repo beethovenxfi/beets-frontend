@@ -92,12 +92,14 @@ export function PoolInvestProportional({ onShowPreview }: Props) {
         );
     }, []);
 
-    const onTokenAmountChange = (tokenAddress: string) => async (amount: string) => {
+    async function onTokenAmountChange(tokenAddress: string, amount: string) {
         if (!amount) {
+            //clear all values
             setScaledProportionalSuggestions(mapValues(scaledProportionalSuggestions, () => ''));
 
             return;
         }
+
         if (poolService.joinGetProportionalSuggestionForFixedAmount) {
             const scaledAmounts = await poolService.joinGetProportionalSuggestionForFixedAmount(
                 {
@@ -117,7 +119,7 @@ export function PoolInvestProportional({ onShowPreview }: Props) {
             setScaledProportionalSuggestions(newInputs);
             setInputAmounts(newInputs);
         }
-    };
+    }
 
     const exceedsTokenBalances = userInvestTokenBalances.some((tokenBalance) => {
         if (!scaledProportionalSuggestions[tokenBalance.address] || !tokenBalance.amount) return false;
@@ -166,7 +168,7 @@ export function PoolInvestProportional({ onShowPreview }: Props) {
                             return (
                                 <TokenRow
                                     withInput
-                                    onAmountChange={onTokenAmountChange(tokenOption.address)}
+                                    onAmountChange={(amount) => onTokenAmountChange(tokenOption.address, amount)}
                                     key={tokenOption.address}
                                     alternateTokens={option.tokenOptions}
                                     address={tokenOption.address}
