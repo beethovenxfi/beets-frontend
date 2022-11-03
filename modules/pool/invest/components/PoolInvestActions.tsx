@@ -22,7 +22,7 @@ interface Props {
 
 export function PoolInvestActions({ onInvestComplete, onClose }: Props) {
     const networkConfig = useNetworkConfig();
-    const { pool } = usePool();
+    const { pool, requiresBatchRelayerOnJoin } = usePool();
     const { selectedInvestTokensWithAmounts, totalInvestValue, zapEnabled } = useInvest();
     const { joinPool, ...joinQuery } = useJoinPool(pool, zapEnabled);
     const allInvestTokens = pool.investConfig.options.map((option) => option.tokenOptions).flat();
@@ -62,6 +62,15 @@ export function PoolInvestActions({ onInvestComplete, onClose }: Props) {
                     tooltipText: 'Invest into this pool',
                 },
             ];
+
+            if (requiresBatchRelayerOnJoin) {
+                steps.unshift({
+                    id: 'batch-relayer',
+                    type: 'other',
+                    buttonText: 'Approve Batch Relayer',
+                    tooltipText: 'This pool requires you to approve the batch relayer.',
+                })
+            }
 
             setSteps(steps);
         }

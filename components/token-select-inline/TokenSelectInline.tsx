@@ -32,7 +32,7 @@ export function TokenSelectInline({ tokenOptions, selectedAddress, onOptionSelec
         <Menu>
             {({ isOpen }) => (
                 <>
-                    <BeetsTooltip label="You can choose to use the unwrapped or wrapped version of this token.">
+                    <BeetsTooltip label="You can choose to use another, equivalent variant of this token.">
                         <MenuButton
                             isActive={isOpen}
                             as={Button}

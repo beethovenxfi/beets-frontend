@@ -114,6 +114,20 @@ export function BeetsTransactionStepsSubmit({
                     {loadingButtonText}
                 </Button>
             ) : null}
+            {steps && currentStep && currentStep.id === 'batch-relayer' && !complete ? (
+                <BeetsSubmitTransactionButton
+                    width="full"
+                    onClick={() => onSubmit(currentStep.id)}
+                    onSubmitting={() => setStepStatus(currentStep.id, 'submitting')}
+                    onPending={() => setStepStatus(currentStep.id, 'pending')}
+                    onCanceled={() => setStepStatus(currentStep.id, 'current')}
+                    onConfirmed={internalOnConfirmed}
+                    isDisabled={isDisabled}
+                    size={buttonSize}
+                >
+                    {currentStep.buttonText}
+                </BeetsSubmitTransactionButton>
+            ) : null}
             {steps && currentStep && currentStep.type === 'tokenApproval' && !complete ? (
                 <BeetsTokenApprovalButton
                     tokenWithAmount={currentStep.token}

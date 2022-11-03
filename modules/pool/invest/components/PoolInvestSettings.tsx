@@ -33,7 +33,7 @@ export function PoolInvestSettings({ ...rest }: BoxProps) {
     return (
         <Box {...rest} width='full'>
             <BeetsBox p="2" width='full'>
-                {requiresBatchRelayerOnJoin && (
+                {/* {requiresBatchRelayerOnJoin && (
                     <>
                         <Box flex="1">
                             {batchRelayerInfoButton}
@@ -53,7 +53,7 @@ export function PoolInvestSettings({ ...rest }: BoxProps) {
                             )}
                         </Box>
                     </>
-                )}
+                )} */}
                 {supportsZap && (
                     <>
                         <Flex>
