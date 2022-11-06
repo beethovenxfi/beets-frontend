@@ -8,6 +8,7 @@ interface Props {
     children: ReactNode | ReactNode[];
     label: ReactNode | ReactNode[];
     noImage?: boolean;
+    hasArrow?: boolean;
 }
 
 function BeetsTooltipLabel({ label, noImage }: { label: ReactNode | ReactNode[]; noImage: boolean }) {
@@ -23,7 +24,8 @@ function BeetsTooltipLabel({ label, noImage }: { label: ReactNode | ReactNode[];
     );
 }
 
-export default function BeetsTooltip({ children, label, noImage }: Props) {
+export default function BeetsTooltip({ children, label, noImage, hasArrow = false }: Props) {
+    if (!label) return <>{children}</>;
     return (
         <Tooltip
             bg="beets.base.400"
@@ -31,7 +33,7 @@ export default function BeetsTooltip({ children, label, noImage }: Props) {
             borderRadius="md"
             p="2"
             label={<BeetsTooltipLabel noImage={noImage} label={label} />}
-            hasArrow
+            hasArrow={hasArrow}
         >
             {children}
         </Tooltip>

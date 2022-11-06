@@ -68,14 +68,21 @@ export function PoolInvestTypeChoice({ onShowProportional, onShowCustom }: Props
                     <Heading size="sm">Choose your investment type</Heading>
                     <Text fontSize="base">
                         The max amount you can invest is shown for each option.
-                        <HStack spacing="1" alignItems="center">
-                            <Text color="beets.highlight" fontSize="sm">
-                                Whats the difference
-                            </Text>
-                            <Box _hover={{ transform: 'scale(1.2)' }}>
-                                <Image src={BeetsThinking} width="24" height="24" alt="beets-balanced" />
-                            </Box>
-                        </HStack>
+                        {proportionalSupported && (
+                            <BeetsTooltip
+                                noImage
+                                label="When investing proportionally, you enter the Liquidity Pool in the specific ratios set by the pool. This helps to ensure you aren’t subject to the fees associated with price impact. Alternatively, customising your investment allows you to invest with your desired proportions. However, this action may shift the pool out of balance and subject you to price impact."
+                            >
+                                <HStack spacing="1" alignItems="center">
+                                    <Text color="beets.highlight" fontSize="sm">
+                                        What&apos;s the difference
+                                    </Text>
+                                    <Box _hover={{ transform: 'scale(1.2)' }}>
+                                        <Image src={BeetsThinking} width="24" height="24" alt="beets-balanced" />
+                                    </Box>
+                                </HStack>
+                            </BeetsTooltip>
+                        )}
                     </Text>
                 </VStack>
 
@@ -86,7 +93,7 @@ export function PoolInvestTypeChoice({ onShowProportional, onShowCustom }: Props
                                 _hover={{ borderColor: 'beets.green' }}
                                 borderWidth={1}
                                 borderColor="beets.transparent"
-                                disabled={!_canInvestProportionally}
+                                disabled={!_canInvestProportionally || !proportionalSupported}
                                 height="140px"
                                 width="full"
                                 onClick={onShowProportional}

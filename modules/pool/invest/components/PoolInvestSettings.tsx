@@ -1,5 +1,5 @@
 import { InfoButton } from '~/components/info-button/InfoButton';
-import { Box, BoxProps, Collapse, Flex, HStack, Switch, Text } from '@chakra-ui/react';
+import { Box, BoxProps, Collapse, Flex, HStack, Switch, Text, VStack } from '@chakra-ui/react';
 import { BeetsBox } from '~/components/box/BeetsBox';
 import { ModalSectionHeadline } from '~/components/modal/ModalSectionHeadline';
 import { SlippageTextLinkMenu } from '~/components/slippage/SlippageTextLinkMenu';
@@ -33,38 +33,15 @@ export function PoolInvestSettings({ ...rest }: BoxProps) {
     return (
         <Box {...rest} width='full'>
             <BeetsBox p="2" width='full'>
-                {/* {requiresBatchRelayerOnJoin && (
-                    <>
-                        <Box flex="1">
-                            {batchRelayerInfoButton}
-                            <Text color="gray.200" fontSize="sm">
-                                Investing into this pool requires the batch relayer.
-                            </Text>
-                        </Box>
-                        <Box>
-                            {!hasBatchRelayerApproval ? (
-                                <BeetsBatchRelayerApprovalButton
-                                    onConfirmed={() => {
-                                        refetchBatchRelayerApproval();
-                                    }}
-                                />
-                            ) : (
-                                <Text color="beets.highlight">Approved</Text>
-                            )}
-                        </Box>
-                    </>
-                )} */}
+                <VStack width='full'>
                 {supportsZap && (
                     <>
-                        <Flex>
+                        <Flex width='full'>
                             <Box flex="1">
                                 <InfoButton
                                     label="Zap into farm"
                                     infoText="With ZAP enabled, your investment BPTs are automatically deposited to the farm, saving time & maximizing yield."
                                 />
-                                <Text color="gray.200" fontSize="sm">
-                                    Deposit my BPTs directly into the farm with ZAP.
-                                </Text>
                             </Box>
                             <Switch
                                 id="zap-into-farm"
@@ -102,6 +79,7 @@ export function PoolInvestSettings({ ...rest }: BoxProps) {
                     </Box>
                     <SlippageTextLinkMenu />
                 </HStack>
+                </VStack>
             </BeetsBox>
         </Box>
     );
