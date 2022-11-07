@@ -7,6 +7,8 @@ import { BeetsSubmitTransactionButton } from '~/components/button/BeetsSubmitTra
 import { BeetsTokenApprovalButton } from '~/components/button/BeetsTokenApprovalButton';
 import { SubmitTransactionQuery } from '~/lib/util/useSubmitTransaction';
 import { transactionMessageFromError } from '~/lib/util/transaction-util';
+import { BeetsBatchRelayerApprovalButton } from './BeetsBatchRelayerApprovalButton';
+import { useHasBatchRelayerApproval } from '~/lib/util/useHasBatchRelayerApproval';
 
 export type TransactionStep = TransactionTokenApprovalStep | TransactionOtherStep;
 
@@ -57,6 +59,7 @@ export function BeetsTransactionStepsSubmit({
     const currentStep = steps ? steps[currentStepIdx] : null;
     const currentQuery = queries.find((query) => query.id === currentStep?.id);
     const [complete, setComplete] = useState(false);
+    const { refetch: refetchBatchRelayerApproval } = useHasBatchRelayerApproval();
 
     function setStepStatus(id: string, status: StepStatus) {
         setStepStatuses({ ...stepStatuses, [id]: status });
@@ -115,18 +118,12 @@ export function BeetsTransactionStepsSubmit({
                 </Button>
             ) : null}
             {steps && currentStep && currentStep.id === 'batch-relayer' && !complete ? (
-                <BeetsSubmitTransactionButton
-                    width="full"
-                    onClick={() => onSubmit(currentStep.id)}
-                    onSubmitting={() => setStepStatus(currentStep.id, 'submitting')}
-                    onPending={() => setStepStatus(currentStep.id, 'pending')}
-                    onCanceled={() => setStepStatus(currentStep.id, 'current')}
-                    onConfirmed={internalOnConfirmed}
-                    isDisabled={isDisabled}
-                    size={buttonSize}
-                >
-                    {currentStep.buttonText}
-                </BeetsSubmitTransactionButton>
+                <BeetsBatchRelayerApprovalButton
+                    onConfirmed={() => {
+                        refetchBatchRelayerApproval();
+                        internalOnConfirmed();
+                    }}
+                />
             ) : null}
             {steps && currentStep && currentStep.type === 'tokenApproval' && !complete ? (
                 <BeetsTokenApprovalButton

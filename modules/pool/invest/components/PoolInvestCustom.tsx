@@ -27,9 +27,8 @@ export function PoolInvestCustom({ onShowPreview }: Props) {
 
     return (
         <Box p="4">
-            <Box mb='4'>
-
-            <PoolInvestSummary />
+            <Box mb="4">
+                <PoolInvestSummary />
             </Box>
             {pool.investConfig.options.map((option, index) => {
                 return (
@@ -71,11 +70,7 @@ export function PoolInvestCustom({ onShowPreview }: Props) {
                 width="full"
                 mt="4"
                 onClick={onShowPreview}
-                isDisabled={
-                    !hasValidUserInput ||
-                    (hasHighPriceImpact && !acknowledgeHighPriceImpact) ||
-                    (!hasBatchRelayerApproval && (zapEnabled || requiresBatchRelayerOnJoin))
-                }
+                isDisabled={!hasValidUserInput || (hasHighPriceImpact && !acknowledgeHighPriceImpact)}
             >
                 Preview
             </Button>

@@ -14,6 +14,7 @@ import { usePoolUserBptBalance } from '~/modules/pool/lib/usePoolUserBptBalance'
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 import { usePool } from '~/modules/pool/lib/usePool';
 import { useUserSyncBalanceMutation } from '~/apollo/generated/graphql-codegen-generated';
+import { useHasBatchRelayerApproval } from '~/lib/util/useHasBatchRelayerApproval';
 
 interface Props {
     onInvestComplete(): void;
@@ -37,6 +38,7 @@ export function PoolInvestActions({ onInvestComplete, onClose }: Props) {
         bptOutAndPriceImpact?.minBptReceived || null,
         zapEnabled,
     );
+    const { data: hasBatchRelayerApproval } = useHasBatchRelayerApproval();
     const { refetch: refetchUserTokenBalances } = usePoolUserTokenBalancesInWallet();
     const { refetch: refetchUserBptBalance } = usePoolUserBptBalance();
     const [userSyncBalance, { loading }] = useUserSyncBalanceMutation();
@@ -63,13 +65,13 @@ export function PoolInvestActions({ onInvestComplete, onClose }: Props) {
                 },
             ];
 
-            if (requiresBatchRelayerOnJoin) {
+            if ((requiresBatchRelayerOnJoin || zapEnabled) && !hasBatchRelayerApproval) {
                 steps.unshift({
                     id: 'batch-relayer',
                     type: 'other',
                     buttonText: 'Approve Batch Relayer',
                     tooltipText: 'This pool requires you to approve the batch relayer.',
-                })
+                });
             }
 
             setSteps(steps);
@@ -78,12 +80,12 @@ export function PoolInvestActions({ onInvestComplete, onClose }: Props) {
 
     return (
         <>
-            <FadeInBox width='full' isVisible={joinQuery.isConfirmed || joinQuery.isPending || joinQuery.isFailed}>
+            <FadeInBox width="full" isVisible={joinQuery.isConfirmed || joinQuery.isPending || joinQuery.isFailed}>
                 <Text fontSize="lg" fontWeight="semibold" mt="4" mb="2">
                     Transaction details
                 </Text>
                 <TransactionSubmittedContent
-                    width='full'
+                    width="full"
                     query={joinQuery}
                     confirmedMessage={`You've successfully invested ${numberFormatUSDValue(totalInvestValue)} into ${
                         pool.name
