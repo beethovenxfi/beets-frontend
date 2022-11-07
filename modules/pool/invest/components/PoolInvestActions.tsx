@@ -1,12 +1,12 @@
 import { useUserAllowances } from '~/lib/util/useUserAllowances';
 import { useInvest } from '~/modules/pool/invest/lib/useInvest';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { usePoolJoinGetBptOutAndPriceImpactForTokensIn } from '~/modules/pool/invest/lib/usePoolJoinGetBptOutAndPriceImpactForTokensIn';
 import { usePoolJoinGetContractCallData } from '~/modules/pool/invest/lib/usePoolJoinGetContractCallData';
 import { useJoinPool } from '~/modules/pool/invest/lib/useJoinPool';
 import { BeetsTransactionStepsSubmit, TransactionStep } from '~/components/button/BeetsTransactionStepsSubmit';
 import { TransactionSubmittedContent } from '~/components/transaction/TransactionSubmittedContent';
-import { Box, Text } from '@chakra-ui/react';
+import { Alert, AlertIcon, Box, Text, VStack } from '@chakra-ui/react';
 import { FadeInBox } from '~/components/animation/FadeInBox';
 import { numberFormatUSDValue } from '~/lib/util/number-formats';
 import { usePoolUserTokenBalancesInWallet } from '~/modules/pool/lib/usePoolUserTokenBalancesInWallet';
@@ -15,6 +15,8 @@ import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 import { usePool } from '~/modules/pool/lib/usePool';
 import { useUserSyncBalanceMutation } from '~/apollo/generated/graphql-codegen-generated';
 import { useHasBatchRelayerApproval } from '~/lib/util/useHasBatchRelayerApproval';
+import { SubTransactionSubmittedContent } from '~/components/transaction/SubTransactionSubmittedContent';
+import { transactionMessageFromError } from '~/lib/util/transaction-util';
 
 interface Props {
     onInvestComplete(): void;
@@ -79,20 +81,36 @@ export function PoolInvestActions({ onInvestComplete, onClose }: Props) {
     }, [isLoading]);
 
     return (
-        <>
-            <FadeInBox width="full" isVisible={joinQuery.isConfirmed || joinQuery.isPending || joinQuery.isFailed}>
-                <Text fontSize="lg" fontWeight="semibold" mt="4" mb="2">
-                    Transaction details
-                </Text>
-                <TransactionSubmittedContent
-                    width="full"
-                    query={joinQuery}
-                    confirmedMessage={`You've successfully invested ${numberFormatUSDValue(totalInvestValue)} into ${
-                        pool.name
-                    }.`}
-                />
-            </FadeInBox>
-            <Box mt="6">
+        <VStack width="full" spacing="4">
+            {joinQuery.error && (
+                <Box width="full" px="4">
+                    <Alert width="full" status="error">
+                        <AlertIcon />
+                        {transactionMessageFromError(joinQuery.error)}
+                    </Alert>
+                </Box>
+            )}
+            {joinQuery.isConfirmed && (
+                <Box width="full" px="4">
+                    <FadeInBox isVisible={joinQuery.isConfirmed}>
+                        <Alert status="success" borderRadius="md">
+                            <AlertIcon />
+                            {`You've successfully invested ${numberFormatUSDValue(totalInvestValue)} into ${
+                                pool.name
+                            }.`}
+                        </Alert>
+                    </FadeInBox>
+                </Box>
+            )}
+            <Box
+                px="4"
+                width="full"
+                pb={
+                    joinQuery.isConfirmed || joinQuery.isFailed || joinQuery.isPending
+                        ? '0'
+                        : '4'
+                }
+            >
                 <BeetsTransactionStepsSubmit
                     isLoading={steps === null}
                     loadingButtonText="Invest"
@@ -117,6 +135,9 @@ export function PoolInvestActions({ onInvestComplete, onClose }: Props) {
                     queries={[{ ...joinQuery, id: 'invest' }]}
                 />
             </Box>
-        </>
+            <FadeInBox width="full" isVisible={joinQuery.isConfirmed || joinQuery.isPending || joinQuery.isFailed}>
+                <SubTransactionSubmittedContent query={joinQuery} />
+            </FadeInBox>
+        </VStack>
     );
 }

@@ -34,20 +34,8 @@ export function TransactionSubmittedContent({ query, confirmedMessage, showSpinn
     };
 
     return (
-        <VStack {...rest} width="full" spacing="4">
-            {isFailed && (
-                <Flex color="beets.red" alignItems="center">
-                    {isPending && showSpinnerOnPending && <Spinner size="sm" mr="2" />}
-                    <Text>{getTransactionStatus()}</Text>
-                </Flex>
-            )}
-            {isPending && (
-                <Flex color="orange" alignItems="center">
-                    {showSpinnerOnPending && <Spinner size="sm" mr="2" />}
-                    <Text>{getTransactionStatus()}</Text>
-                </Flex>
-            )}
-            <VStack px="4" width="full">
+        <VStack {...rest} width="full" spacing="2">
+            <VStack width="full">
                 {error ? (
                     <Box width="full">
                         <Alert width="full" status="error">

@@ -21,16 +21,18 @@ export function PoolInvestPreview({ onInvestComplete, onClose }: Props) {
     const { selectedInvestTokensWithAmounts } = useInvest();
 
     return (
-        <Box p="4">
-            <PoolInvestSummary mt="6" />
-            <BeetsBox>
-                <VStack width="full" divider={<StackDivider borderColor="whiteAlpha.200" />} mt="4" p="2">
-                    {selectedInvestTokensWithAmounts.map((token, index) => {
-                        return <TokenRow key={token.address} address={token.address} amount={token.amount} />;
-                    })}
-                </VStack>
-            </BeetsBox>
+        <VStack spacing='4' width='full'>
+            <Box px="4" width='full'>
+                <PoolInvestSummary mt="6" />
+                <BeetsBox>
+                    <VStack width="full" divider={<StackDivider borderColor="whiteAlpha.200" />} mt="4" p="2">
+                        {selectedInvestTokensWithAmounts.map((token, index) => {
+                            return <TokenRow key={token.address} address={token.address} amount={token.amount} />;
+                        })}
+                    </VStack>
+                </BeetsBox>
+            </Box>
             <PoolInvestActions onInvestComplete={onInvestComplete} onClose={onClose} />
-        </Box>
+        </VStack>
     );
 }

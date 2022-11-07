@@ -64,6 +64,7 @@ export function PoolWithdrawPreview({ onWithdrawComplete, onClose }: Props) {
                     Transaction details
                 </Text>
                 <TransactionSubmittedContent
+                    width='full'
                     query={exitPoolQuery}
                     confirmedMessage={`You've successfully withdrawn ${numberFormatUSDValue(totalWithdrawValue)} from ${
                         pool.name
