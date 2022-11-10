@@ -1,0 +1,36 @@
+[
+    {
+        "inputs": [{ "internalType": "contract IVault", "name": "_vault", "type": "address" }],
+        "stateMutability": "nonpayable",
+        "type": "constructor"
+    },
+    {
+        "inputs": [
+            { "internalType": "bytes32", "name": "linearPoolId", "type": "bytes32" },
+            { "internalType": "uint256", "name": "numLoops", "type": "uint256" },
+            { "internalType": "uint256", "name": "mainTokenAmountOrZeroForAll", "type": "uint256" }
+        ],
+        "name": "unwrap",
+        "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "vault",
+        "outputs": [{ "internalType": "contract IVault", "name": "", "type": "address" }],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            { "internalType": "bytes32", "name": "linearPoolId", "type": "bytes32" },
+            { "internalType": "uint256", "name": "numLoops", "type": "uint256" },
+            { "internalType": "uint256", "name": "mainTokenAmountOrZeroForAll", "type": "uint256" }
+        ],
+        "name": "wrap",
+        "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    }
+]

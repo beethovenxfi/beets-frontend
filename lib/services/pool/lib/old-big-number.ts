@@ -69,3 +69,13 @@ export function oldBnumToFixed(amount: AmountHumanReadable, decimals: number): A
 
     return bnum.toString();
 }
+
+export function oldBnumAddSlippage(
+    amount: AmountHumanReadable,
+    decimals: number,
+    slippage: string | number,
+): AmountHumanReadable {
+    const amountScaled = oldBnumScaleAmount(amount, decimals);
+
+    return formatFixed(amountScaled.plus(amountScaled.times(slippage)).toFixed(0), decimals);
+}

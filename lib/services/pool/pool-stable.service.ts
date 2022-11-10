@@ -104,7 +104,7 @@ export class PoolStableService implements PoolService {
         bptIn: AmountHumanReadable,
         tokensOut: string[],
     ): Promise<TokenAmountHumanReadable[]> {
-        return poolGetProportionalExitAmountsForBptIn(bptIn, this.pool.tokens, this.pool.dynamicData.totalShares);
+        return poolGetProportionalExitAmountsForBptIn(bptIn, this.pool.tokens, this.pool.dynamicData.totalShares, true);
     }
 
     public async exitGetBptInForSingleAssetWithdraw(
@@ -257,9 +257,11 @@ export class PoolStableService implements PoolService {
         if (data.kind == 'Init') {
             return StablePoolEncoder.joinInit(poolScaleTokenAmounts(data.tokenAmountsIn, this.pool.tokens));
         } else if (data.kind == 'ExactTokensInForBPTOut') {
+            const minimumBptMinusSlippage = oldBnumSubtractSlippage(data.minimumBpt, 18, data.slippage);
+
             return StablePoolEncoder.joinExactTokensInForBPTOut(
                 poolScaleTokenAmounts(data.tokenAmountsIn, this.pool.tokens),
-                parseUnits(data.minimumBpt),
+                parseUnits(minimumBptMinusSlippage, 18),
             );
         } else if (data.kind === 'TokenInForExactBPTOut') {
             const token = poolGetRequiredToken(data.tokenInAddress, this.pool.tokens);

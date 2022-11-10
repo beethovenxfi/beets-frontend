@@ -33,7 +33,7 @@ export function PoolInvestActions({ onInvestComplete, onClose }: Props) {
     } = useUserAllowances(allInvestTokens, networkConfig.balancer.vault);
     const [steps, setSteps] = useState<TransactionStep[] | null>(null);
     const { bptOutAndPriceImpact } = usePoolJoinGetBptOutAndPriceImpactForTokensIn();
-    const { data: contractCallData } = usePoolJoinGetContractCallData(
+    const { data: contractCallData, isLoading: isLoadingContractCallData } = usePoolJoinGetContractCallData(
         bptOutAndPriceImpact?.minBptReceived || null,
         zapEnabled,
     );
@@ -44,7 +44,9 @@ export function PoolInvestActions({ onInvestComplete, onClose }: Props) {
     useEffect(() => {
         if (!isLoading) {
             const tokensRequiringApproval = selectedInvestTokensWithAmounts.filter(
-                (tokenWithAmount) => !hasApprovalForAmount(tokenWithAmount.address, tokenWithAmount.amount),
+                (tokenWithAmount) =>
+                    parseFloat(tokenWithAmount.amount) > 0 &&
+                    !hasApprovalForAmount(tokenWithAmount.address, tokenWithAmount.amount),
             );
 
             const steps: TransactionStep[] = [
@@ -82,7 +84,7 @@ export function PoolInvestActions({ onInvestComplete, onClose }: Props) {
             </FadeInBox>
             <Box mt="6">
                 <BeetsTransactionStepsSubmit
-                    isLoading={steps === null}
+                    isLoading={steps === null || isLoadingContractCallData}
                     loadingButtonText="Invest"
                     completeButtonText="Return to pool"
                     onCompleteButtonClick={onClose}

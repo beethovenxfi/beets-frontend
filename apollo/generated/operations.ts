@@ -95,6 +95,64 @@ export const GqlPoolFeaturedPoolGroup = gql`
     }
     ${GqlPoolCardData}
 `;
+export const GqlPoolLinear = gql`
+    fragment GqlPoolLinear on GqlPoolLinear {
+        id
+        address
+        name
+        owner
+        decimals
+        factory
+        symbol
+        createTime
+        dynamicData {
+            poolId
+            swapEnabled
+            totalLiquidity
+            totalLiquidity24hAgo
+            totalShares
+            totalShares24hAgo
+            fees24h
+            swapFee
+            volume24h
+            fees48h
+            volume48h
+            apr {
+                hasRewardApr
+                thirdPartyApr
+                nativeRewardApr
+                swapApr
+                total
+                items {
+                    id
+                    title
+                    apr
+                    subItems {
+                        id
+                        title
+                        apr
+                    }
+                }
+            }
+        }
+        mainIndex
+        wrappedIndex
+        lowerTarget
+        upperTarget
+        tokens {
+            id
+            index
+            name
+            symbol
+            balance
+            address
+            priceRate
+            decimals
+            weight
+            totalBalance
+        }
+    }
+`;
 export const GqlPoolToken = gql`
     fragment GqlPoolToken on GqlPoolToken {
         id
@@ -106,6 +164,7 @@ export const GqlPoolToken = gql`
         priceRate
         decimals
         weight
+        totalBalance
     }
 `;
 export const GqlPoolTokenLinear = gql`
@@ -122,6 +181,7 @@ export const GqlPoolTokenLinear = gql`
         mainTokenBalance
         wrappedTokenBalance
         totalMainTokenBalance
+        totalBalance
         pool {
             id
             name
@@ -157,6 +217,7 @@ export const GqlPoolTokenPhantomStable = gql`
         weight
         priceRate
         decimals
+        totalBalance
         pool {
             id
             name
@@ -526,6 +587,14 @@ export const GetHomeNewsItems = gql`
             discussionUrl
         }
     }
+`;
+export const GetLinearPools = gql`
+    query GetLinearPools {
+        pools: poolGetLinearPools {
+            ...GqlPoolLinear
+        }
+    }
+    ${GqlPoolLinear}
 `;
 export const GetPool = gql`
     query GetPool($id: String!) {

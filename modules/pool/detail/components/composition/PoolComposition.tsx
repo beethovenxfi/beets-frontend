@@ -5,6 +5,7 @@ import {
     Flex,
     FormLabel,
     HStack,
+    Link,
     Progress,
     Spacer,
     Switch,
@@ -17,7 +18,7 @@ import {
     Thead,
     Tr,
 } from '@chakra-ui/react';
-import { CornerDownRight } from 'react-feather';
+import { CornerDownRight, ExternalLink } from 'react-feather';
 import { Cell, Column, TableOptions, useExpanded, useTable } from 'react-table';
 
 import Card from '~/components/card/Card';
@@ -30,6 +31,10 @@ import { usePoolUserBptBalance } from '~/modules/pool/lib/usePoolUserBptBalance'
 import { usePoolUserInvestedTokenBalances } from '~/modules/pool/lib/usePoolUserInvestedTokenBalances';
 import { usePool } from '~/modules/pool/lib/usePool';
 import { GqlPoolTokenUnion } from '~/apollo/generated/graphql-codegen-generated';
+import { etherscanGetTokenUrl } from '~/lib/util/etherscan';
+import { usePoolUserDepositBalance } from '~/modules/pool/lib/usePoolUserDepositBalance';
+import { usePoolComposableUserPoolTokenBalances } from '~/modules/pool/lib/usePoolComposableUserPoolTokenBalances';
+import { poolIsComposablePool } from '~/lib/services/pool/pool-util';
 
 interface PoolCompositionTableProps {
     columns: Column<TableDataTemplate>[];
@@ -101,9 +106,14 @@ function PoolCompositionTable({ columns, data, hasNestedTokens }: PoolCompositio
                         </Box>
                     ) : null}
                     <TokenAvatar size="xs" address={address} />
-                    <Text fontSize="sm" color="beets.base.50">
-                        {symbol}
-                    </Text>
+                    <HStack spacing="1">
+                        <Text fontSize="sm" color="beets.base.50">
+                            {symbol}
+                        </Text>
+                        <Link href={etherscanGetTokenUrl(address)} target="_blank">
+                            <ExternalLink size={14} />
+                        </Link>
+                    </HStack>
                 </HStack>
             );
         } else if (cell.column.id === Columns.Weight) {
@@ -199,9 +209,11 @@ function PoolCompositionTable({ columns, data, hasNestedTokens }: PoolCompositio
 }
 
 export function PoolComposition() {
-    const { pool } = usePool();
+    const { pool, isComposablePool } = usePool();
     const { getUserInvestedBalance, data: userInvestedBalances } = usePoolUserInvestedTokenBalances();
     const { priceFor } = useGetTokens();
+    const { userPoolBalanceUSD } = usePoolUserDepositBalance();
+    const { getUserPoolTokenBalance } = usePoolComposableUserPoolTokenBalances();
     const hasNestedTokens = pool.tokens.some((token) =>
         ['GqlPoolTokenLinear', 'GqlPoolTokenPhantomStable'].includes(token.__typename),
     );
@@ -242,16 +254,24 @@ export function PoolComposition() {
 
     function getTokenData(tokens: GqlPoolTokenUnion[]): TableData[] {
         return tokens.map((token) => {
-            const userBalance = getUserInvestedBalance(token.address);
             const tokenPrice = priceFor(token.address);
             const totalTokenValue = parseFloat(token.balance) * tokenPrice;
+            const calculatedWeight = totalTokenValue / parseFloat(pool.dynamicData.totalLiquidity);
+            const userBalance = isComposablePool
+                ? getUserPoolTokenBalance(token.address)
+                : hasNestedTokens && 'pool' in token
+                ? (((calculatedWeight * userPoolBalanceUSD) / totalTokenValue) * parseFloat(token.balance)).toString()
+                : getUserInvestedBalance(token.address);
+
             return {
                 symbol: `${token.symbol}--${token.address}`,
                 name: token.name,
-                weight: token.weight ?? totalTokenValue / parseFloat(pool.dynamicData.totalLiquidity),
-                myBalance: tokenFormatAmount(userBalance),
+                weight: token.weight ?? calculatedWeight,
+                myBalance: `${hasNestedTokens && 'pool' in token && !isComposablePool ? '~' : ''}${tokenFormatAmount(
+                    userBalance,
+                )}`,
                 myValue: numeral(parseFloat(userBalance) * tokenPrice).format('$0,0.00a'),
-                balance: tokenFormatAmount(token.balance),
+                balance: tokenFormatAmount(token.balance, false),
                 value: numeral(totalTokenValue).format('$0,0.00a'),
                 ...(hasNestedTokens && 'pool' in token && { subRows: getTokenData(token.pool.tokens) }),
             };

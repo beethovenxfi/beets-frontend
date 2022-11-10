@@ -13,6 +13,9 @@ import { batchRelayerService } from '~/lib/services/batch-relayer/batch-relayer.
 import { networkConfig } from '~/lib/config/network-config';
 import { networkProvider } from '~/lib/global/network';
 import { PoolMetaStableService } from '~/lib/services/pool/pool-meta-stable.service';
+import { isSameAddress } from '@balancer-labs/sdk';
+import { PoolComposableStableService } from '~/lib/services/pool/pool-composable-stable.service';
+import { PoolWeightedV2Service } from '~/lib/services/pool/pool-weighted-v2.service';
 
 export function poolGetTokensWithoutPhantomBpt(pool: GqlPoolUnion | GqlPoolPhantomStableNested | GqlPoolLinearNested) {
     return pool.tokens.filter((token) => token.address !== pool.address);
@@ -28,22 +31,48 @@ export function poolIsTokenPhantomBpt(poolToken: GqlPoolTokenUnion) {
 
 export function poolRequiresBatchRelayerOnJoin(pool: GqlPoolUnion) {
     return (
-        pool.__typename === 'GqlPoolWeighted' &&
-        (pool.nestingType === 'HAS_SOME_PHANTOM_BPT' || pool.nestingType === 'HAS_ONLY_PHANTOM_BPT')
+        (pool.__typename === 'GqlPoolWeighted' &&
+            (pool.nestingType === 'HAS_SOME_PHANTOM_BPT' || pool.nestingType === 'HAS_ONLY_PHANTOM_BPT')) ||
+        pool.factory === networkConfig.balancer.composableStableFactory
     );
 }
 
 export function poolRequiresBatchRelayerOnExit(pool: GqlPoolUnion) {
     return (
-        pool.__typename === 'GqlPoolWeighted' &&
-        (pool.nestingType === 'HAS_SOME_PHANTOM_BPT' || pool.nestingType === 'HAS_ONLY_PHANTOM_BPT')
+        (pool.__typename === 'GqlPoolWeighted' &&
+            (pool.nestingType === 'HAS_SOME_PHANTOM_BPT' || pool.nestingType === 'HAS_ONLY_PHANTOM_BPT')) ||
+        pool.factory === networkConfig.balancer.composableStableFactory
     );
+}
+
+export function poolIsComposablePool(pool: GqlPoolUnion) {
+    if (
+        pool.__typename === 'GqlPoolWeighted' &&
+        isSameAddress(pool.factory || '', networkConfig.balancer.weightedPoolV2Factory) &&
+        (pool.nestingType === 'HAS_SOME_PHANTOM_BPT' || pool.nestingType === 'HAS_ONLY_PHANTOM_BPT')
+    ) {
+        return true;
+    }
+
+    if (
+        pool.__typename === 'GqlPoolPhantomStable' &&
+        isSameAddress(pool.factory || '', networkConfig.balancer.composableStableFactory)
+    ) {
+        return true;
+    }
+
+    return false;
 }
 
 export function poolGetServiceForPool(pool: GqlPoolUnion): PoolService {
     switch (pool.__typename) {
         case 'GqlPoolWeighted': {
-            if (pool.nestingType === 'HAS_SOME_PHANTOM_BPT' || pool.nestingType === 'HAS_ONLY_PHANTOM_BPT') {
+            if (
+                isSameAddress(pool.factory || '', networkConfig.balancer.weightedPoolV2Factory) &&
+                (pool.nestingType === 'HAS_SOME_PHANTOM_BPT' || pool.nestingType === 'HAS_ONLY_PHANTOM_BPT')
+            ) {
+                return new PoolWeightedV2Service(pool, batchRelayerService, networkConfig.wethAddress, networkProvider);
+            } else if (pool.nestingType === 'HAS_SOME_PHANTOM_BPT' || pool.nestingType === 'HAS_ONLY_PHANTOM_BPT') {
                 return new PoolWeightedBoostedService(
                     pool,
                     batchRelayerService,
@@ -56,8 +85,18 @@ export function poolGetServiceForPool(pool: GqlPoolUnion): PoolService {
         }
         case 'GqlPoolStable':
             return new PoolStableService(pool, batchRelayerService, networkConfig.wethAddress);
-        case 'GqlPoolPhantomStable':
+        case 'GqlPoolPhantomStable': {
+            if (isSameAddress(pool.factory || '', networkConfig.balancer.composableStableFactory)) {
+                return new PoolComposableStableService(
+                    pool,
+                    batchRelayerService,
+                    networkConfig.wethAddress,
+                    networkProvider,
+                );
+            }
+
             return new PoolPhantomStableService(pool, batchRelayerService, networkConfig.wethAddress, networkProvider);
+        }
         case 'GqlPoolMetaStable':
             return new PoolMetaStableService(pool, batchRelayerService, networkConfig.wethAddress);
     }

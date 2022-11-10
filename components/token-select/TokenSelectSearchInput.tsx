@@ -1,4 +1,4 @@
-import { Input, InputGroup, InputLeftElement, useTheme } from '@chakra-ui/react';
+import { forwardRef, Input, InputGroup, InputLeftElement, useTheme } from '@chakra-ui/react';
 import { Search } from 'react-feather';
 
 interface Props {
@@ -7,7 +7,7 @@ interface Props {
     setValue: (value: string) => void;
 }
 
-export function TokenSelectSearchInput({ value, setValue, placeholder }: Props) {
+export const TokenSelectSearchInput = forwardRef(({ value, setValue, placeholder }: Props, ref) => {
     const { colors } = useTheme();
 
     return (
@@ -16,6 +16,7 @@ export function TokenSelectSearchInput({ value, setValue, placeholder }: Props) 
                 <Search color={colors.gray['200']} size={22} style={{ marginBottom: 2 }} />
             </InputLeftElement>
             <Input
+                ref={ref}
                 variant="filled"
                 placeholder={placeholder}
                 size="lg"
@@ -24,4 +25,4 @@ export function TokenSelectSearchInput({ value, setValue, placeholder }: Props) 
             />
         </InputGroup>
     );
-}
+});

@@ -115,7 +115,7 @@ export function useSubmitTransaction({ config, transactionType, waitForConfig }:
                     render: ({ onClose }) => (
                         <TransactionStatusToast
                             type={transactionType}
-                            status={error ? 'ERROR' : 'CONFIRMED'}
+                            status={error || data?.status === 0 ? 'ERROR' : 'CONFIRMED'}
                             text={toastText.current}
                             onClose={onClose}
                             txHash={data?.transactionHash || ''}
@@ -151,8 +151,10 @@ export function useSubmitTransaction({ config, transactionType, waitForConfig }:
         isSubmitError: contractWrite.isError,
 
         isPending: waitForTransaction.isLoading,
-        isConfirmed: waitForTransaction.isSuccess,
-        isFailed: waitForTransaction.isError,
+        isConfirmed:
+            waitForTransaction.isSuccess && waitForTransaction.data?.status !== 0 && waitForTransaction.error === null,
+        isFailed:
+            waitForTransaction.isError || waitForTransaction.error !== null || waitForTransaction.data?.status === 0,
         error: waitForTransaction.error,
         reset: contractWrite.reset,
         txResponse: contractWrite.data,

@@ -73,8 +73,10 @@ export function useJoinPool(pool: GqlPoolUnion, zapEnabled?: boolean) {
         } else if (contractCallData.type === 'BatchRelayer') {
             submit({
                 args: [contractCallData.calls],
-                toastText: `Zap into ${networkConfig.farmTypeName} with ${amountsString}`,
-                walletText: `Join ${pool.name} with ${amountsString} and Zap into the ${networkConfig.farmTypeName}.`,
+                toastText: zapEnabled ? `Zap into ${networkConfig.farmTypeName} with ${amountsString}` : amountsString,
+                walletText: zapEnabled
+                    ? `Join ${pool.name} with ${amountsString} and Zap into the ${networkConfig.farmTypeName}.`
+                    : `Join ${pool.name} with ${amountsString}`,
                 ...(contractCallData.ethValue
                     ? {
                           overrides: {
