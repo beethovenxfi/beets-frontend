@@ -10,6 +10,7 @@ interface PoolDetails {
 interface TokenDetails {
     address: string;
     weight: number;
+    amount: number;
 }
 
 interface AmountDetails {

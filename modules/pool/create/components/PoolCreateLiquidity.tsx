@@ -14,6 +14,8 @@ import {
     Td,
     TableContainer,
     Tfoot,
+    InputGroup,
+    InputLeftElement,
 } from '@chakra-ui/react';
 import { usePoolCreate } from '../../lib/usePoolCreate';
 import { ArrowLeft, ArrowRight, Trash2 } from 'react-feather';
@@ -34,19 +36,37 @@ interface GqlTokenWithWeight extends GqlToken {
 
 export function PoolCreateLiquidity({ changeState }: Props) {
     const { tokenDetails, setTokenDetails } = usePoolCreate();
-    const { formattedPrice, getToken } = useGetTokens();
+    const { priceFor, formattedPrice, getToken } = useGetTokens();
 
-    const tokens = tokenDetails.map((token) => ({ ...getToken(token.address), weight: token.weight }));
+    const tokenPrice = (address: string, amount = '1') =>
+        formattedPrice({
+            address: address || '',
+            amount,
+        });
 
-    const initialValues = {
-        tokens: tokens,
+    const tokens = tokenDetails.map((token) => ({
+        ...getToken(token.address),
+        weight: token.weight,
+        amount: 0,
+    }));
+
+    const initialValues = () => {
+        const total = 100;
+        const updatedTokens = tokens.map((token) => ({
+            ...token,
+            amount: (total * (token.weight / 100)) / priceFor(token.address || ''),
+        }));
+        return {
+            tokens: updatedTokens,
+            total,
+        };
     };
 
     return (
         <>
             <Formik
                 enableReinitialize
-                initialValues={initialValues}
+                initialValues={initialValues()}
                 onSubmit={(values) => {
                     console.log(values);
                     // const tokens = values.tokens as GqlTokenWithWeight[];
@@ -55,7 +75,7 @@ export function PoolCreateLiquidity({ changeState }: Props) {
                     changeState('confirm');
                 }}
             >
-                {({ handleSubmit, handleChange, values, errors, touched }) => (
+                {({ handleSubmit, handleChange, handleBlur, values, errors, touched }) => (
                     <form onSubmit={handleSubmit}>
                         <VStack
                             minHeight="550px"
@@ -69,11 +89,14 @@ export function PoolCreateLiquidity({ changeState }: Props) {
                                     <Table size="sm">
                                         <Thead>
                                             <Tr>
-                                                <Th width="30%">Token</Th>
-                                                <Th width="15%">Price</Th>
-                                                <Th width="15%">Weight</Th>
-                                                <Th width="35%" textAlign="right">
+                                                <Th width="25%">Token</Th>
+                                                <Th width="10%">Price</Th>
+                                                <Th width="10%">Weight</Th>
+                                                <Th width="25%" isNumeric>
                                                     Amount
+                                                </Th>
+                                                <Th width="30%" textAlign="right">
+                                                    Value
                                                 </Th>
                                                 <Th></Th>
                                             </Tr>
@@ -97,35 +120,35 @@ export function PoolCreateLiquidity({ changeState }: Props) {
                                                                 </HStack>
                                                             </Td>
                                                             <Td>
-                                                                <Text>
-                                                                    {formattedPrice({
-                                                                        address: token?.address || '',
-                                                                        amount: '1',
-                                                                    })}
-                                                                </Text>
+                                                                <Text>{tokenPrice(token?.address || '')}</Text>
                                                             </Td>
                                                             <Td textAlign="right">{token.weight}%</Td>
-                                                            <Td>
+                                                            <Td isNumeric>
                                                                 <FormControl>
                                                                     <Input
-                                                                        style={{ textAlign: 'right' }}
+                                                                        textAlign="right"
                                                                         as={Field}
                                                                         id={`tokens.${index}.amount`}
                                                                         name={`tokens.${index}.amount`}
                                                                         variant="flushed"
                                                                         type="number"
-                                                                        onChange={(e) => {
-                                                                            handleChange(e);
-                                                                            console.log(e.currentTarget.value);
-                                                                        }}
+                                                                        onBlur={handleBlur}
                                                                     />
                                                                 </FormControl>
+                                                            </Td>
+                                                            <Td>
+                                                                <Text textAlign="right">
+                                                                    {tokenPrice(
+                                                                        token?.address || '',
+                                                                        values.tokens[index].amount.toString(),
+                                                                    )}
+                                                                </Text>
                                                             </Td>
                                                             <Td>
                                                                 <Trash2
                                                                     size={16}
                                                                     onClick={() => remove(index)}
-                                                                    style={{ cursor: 'pointer' }}
+                                                                    cursor="pointer"
                                                                 />
                                                             </Td>
                                                         </Tr>
@@ -136,10 +159,28 @@ export function PoolCreateLiquidity({ changeState }: Props) {
                                         <Tfoot>
                                             <Tr></Tr>
                                             <Tr>
-                                                <Td textAlign="right" colSpan={3}>
+                                                <Td textAlign="right" colSpan={4}>
                                                     <Text>Total:</Text>
                                                 </Td>
-                                                <Td textAlign="right">XXX</Td>
+                                                <Td>
+                                                    <FormControl>
+                                                        <InputGroup>
+                                                            <InputLeftElement ml={-7} pointerEvents="none">
+                                                                <Text>$</Text>
+                                                            </InputLeftElement>
+                                                            <Input
+                                                                pl={0}
+                                                                textAlign="right"
+                                                                as={Field}
+                                                                id="total"
+                                                                name="total"
+                                                                variant="flushed"
+                                                                type="number"
+                                                                onBlur={handleBlur}
+                                                            />
+                                                        </InputGroup>
+                                                    </FormControl>
+                                                </Td>
                                             </Tr>
                                         </Tfoot>
                                     </Table>
