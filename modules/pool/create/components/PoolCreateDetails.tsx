@@ -69,7 +69,7 @@ export function PoolCreateDetails({ changeState }: Props) {
                                             name="fee"
                                             variant="flushed"
                                             type="number"
-                                            style={{ textAlign: 'right' }}
+                                            textAlign="right"
                                         />
                                         <InputRightElement pointerEvents="none">
                                             <Text>%</Text>

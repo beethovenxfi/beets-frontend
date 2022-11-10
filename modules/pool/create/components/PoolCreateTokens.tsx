@@ -111,7 +111,7 @@ export function PoolCreateTokens({ changeState }: Props) {
                                                                     <FormControl>
                                                                         <InputGroup>
                                                                             <Input
-                                                                                style={{ textAlign: 'right' }}
+                                                                                textAlign="right"
                                                                                 as={Field}
                                                                                 id={`tokens.${index}.weight`}
                                                                                 name={`tokens.${index}.weight`}
@@ -128,7 +128,7 @@ export function PoolCreateTokens({ changeState }: Props) {
                                                                     <Trash2
                                                                         size={16}
                                                                         onClick={() => remove(index)}
-                                                                        style={{ cursor: 'pointer' }}
+                                                                        cursor="pointer"
                                                                     />
                                                                 </Td>
                                                             </Tr>
