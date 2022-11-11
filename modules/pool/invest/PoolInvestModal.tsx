@@ -1,5 +1,15 @@
 import { Modal, ModalBody, ModalCloseButton, ModalContent } from '@chakra-ui/modal';
-import { Button, Heading, IconButton, ModalHeader, ModalOverlay, Text, useDisclosure } from '@chakra-ui/react';
+import {
+    Alert,
+    AlertIcon,
+    Button,
+    Heading,
+    IconButton,
+    ModalHeader,
+    ModalOverlay,
+    Text,
+    useDisclosure,
+} from '@chakra-ui/react';
 import { PoolInvestProportional } from '~/modules/pool/invest/components/PoolInvestProportional';
 import { ChevronLeft } from 'react-feather';
 import { PoolInvestPreview } from '~/modules/pool/invest/components/PoolInvestPreview';
@@ -116,6 +126,13 @@ export function PoolInvestModal() {
                     <ModalBody className="bg" pb="6">
                         {modalState === 'start' ? (
                             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+                                {pool.id === '0xb1c9ac57594e9b1ec0f3787d9f6744ef4cb0a02400000000000000000000006e' && (
+                                    <Alert status="warning" mb="4">
+                                        <AlertIcon />
+                                        To account for the USD+ and DAI+ deposit/withdraw fee, this pool will charge a
+                                        fee on both invest and withdraw of up to 0.06%.
+                                    </Alert>
+                                )}
                                 <PoolInvestTypeChoice
                                     onShowProportional={() => {
                                         setInvestType('proportional');
