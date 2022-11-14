@@ -41,17 +41,14 @@ export function PoolInvestModal() {
             setModalState('start');
             setInvestType(null);
         }
-
         onClose();
     }
 
     return (
-        <>
-            <Box>
-                <Button variant="primary" onClick={onOpen} width={{ base: 'full' }} mr="2">
-                    Invest
-                </Button>
-            </Box>
+        <Box>
+            <Button variant="primary" onClick={onOpen} width={{ base: 'full' }} mr="2">
+                Invest
+            </Button>
             <Modal isOpen={isOpen} onClose={onModalClose} size="lg" initialFocusRef={initialRef}>
                 <ModalOverlay bg="blackAlpha.900" />
                 <BeetsModalContent>
@@ -94,24 +91,24 @@ export function PoolInvestModal() {
                         ) : null}
 
                         {modalState === 'proportional' ? (
-                            <Heading size="md" marginLeft='8' textAlign="left">
+                            <Heading size="md" marginLeft="8" textAlign="left">
                                 Proportional investment
                             </Heading>
                         ) : null}
 
                         {modalState === 'custom' ? (
-                            <Heading size="md" marginLeft='8' textAlign="left">
+                            <Heading size="md" marginLeft="8" textAlign="left">
                                 Custom investment
                             </Heading>
                         ) : null}
 
                         {modalState === 'preview' ? (
-                            <Heading size="md" marginLeft='8' textAlign="left">
+                            <Heading size="md" marginLeft="8" textAlign="left">
                                 Investment preview
                             </Heading>
                         ) : null}
                     </BeetsModalHeader>
-                    <BeetsModalBody p='0'>
+                    <BeetsModalBody p="0">
                         {modalState === 'start' ? (
                             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
                                 <PoolInvestTypeChoice
@@ -160,6 +157,6 @@ export function PoolInvestModal() {
                     </BeetsModalBody>
                 </BeetsModalContent>
             </Modal>
-        </>
+        </Box>
     );
 }

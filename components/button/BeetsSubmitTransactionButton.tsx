@@ -74,24 +74,14 @@ export function BeetsSubmitTransactionButton({
                 minWidth: '50px',
             });
             controls.start({
-                // transform: 'scaleX(0.25)',
                 width: '50px',
-                // transition: { type: 'spring', mass: 1, stiffness: 200, damping: 15 },
-                transition: { type: 'spring', bounce: 0, mass: 1, stiffness: 150, damping: 15 },
-                // transition: { type: 'spring', bounce: 0, duration: .65 },
-
-                // transition: { ease: 'circIn' }
+                transition: { type: 'spring', bounce: 0, mass: 1, stiffness: 200, damping: 25 },
             });
         } else {
-            // controls.set({
-            //     minWidth: '100%'
-            // })
             controls.start({
-                // transform: 'scaleX(1)',
                 width: 'auto',
                 minWidth: '100%',
                 transition: { type: 'spring', bounce: 0, duration: 0.5 },
-                // transition: { ease: 'circIn' }
             });
         }
     }, [isProcessing]);
@@ -109,13 +99,11 @@ export function BeetsSubmitTransactionButton({
                 variant="primary"
                 isDisabled={isDisabled || isLoading || isSubmitting || isPending}
                 isLoading={isLoading || isSubmitting || isPending}
-                // loadingText={isSubmitting ? submittingText : isPending ? pendingText : loadingText}
                 onClick={onClick}
                 _hover={{ transform: 'none', backgroundColor: isProcessing ? '' : 'beets.highlight' }}
                 {...rest}
                 as={motion.button}
                 animate={controls}
-                // layout={true}
             >
                 {_children}
             </Button>
