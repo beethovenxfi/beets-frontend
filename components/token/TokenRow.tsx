@@ -100,7 +100,7 @@ export default function TokenRow({
                 </Text>
                 {balance && (
                     <Text fontSize="sm" color="gray.100">
-                        You have {parseFloat(balance || '0').toFixed(2)}
+                        You have {tokenFormatAmount(balance || '0')}
                     </Text>
                 )}
             </VStack>
