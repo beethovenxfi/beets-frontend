@@ -45,6 +45,7 @@ import { useUserTokenBalances } from '~/lib/user/useUserTokenBalances';
 import { usePoolUserTokenBalancesInWallet } from '../../lib/usePoolUserTokenBalancesInWallet';
 import { bnum } from '@balancer-labs/sor';
 import { GqlPoolToken } from '~/apollo/generated/graphql-codegen-generated';
+import { tokenInputTruncateDecimalPlaces } from '~/lib/util/input-util';
 
 interface Props {
     onShowPreview(): void;
@@ -72,7 +73,7 @@ export function PoolInvestProportional({ onShowPreview }: Props) {
             const scaledAmounts = await poolService.joinGetProportionalSuggestionForFixedAmount(
                 {
                     address: replaceEthWithWeth(token.address),
-                    amount,
+                    amount: tokenInputTruncateDecimalPlaces(amount, token.decimals),
                 },
                 [replaceEthWithWeth(token.address)],
             );
