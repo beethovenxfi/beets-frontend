@@ -58,12 +58,12 @@ export default function TokenRow({
             ) : (
                 <HStack>
                     <TokenAvatar width="40px" height="40px" address={address} />
-                    <Text>
+                    <Box>
                         {token?.name}
                         <HStack spacing="1">
                             <Text fontWeight="bold">{token?.symbol}</Text>
                         </HStack>
-                    </Text>
+                    </Box>
                 </HStack>
             )}
             <VStack alignItems="flex-end" spacing="0">
