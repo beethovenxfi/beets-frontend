@@ -157,7 +157,11 @@ export function PoolInvestTypeChoice({ onShowProportional, onShowCustom }: Props
                                         const tokenPrecision = Math.min(tokenOption?.decimals || 18, 12);
 
                                         return (
-                                            <HStack key={index} justifyContent="space-between" width="full">
+                                            <HStack
+                                                key={`${index}-${tokenIndex}`}
+                                                justifyContent="space-between"
+                                                width="full"
+                                            >
                                                 <HStack>
                                                     <TokenAvatar
                                                         width="40px"
