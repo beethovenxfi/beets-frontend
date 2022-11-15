@@ -341,7 +341,7 @@ export interface GqlPoolJoinExit {
     timestamp: Scalars['Int'];
     tx: Scalars['String'];
     type: GqlPoolJoinExitType;
-    valueUSD: Scalars['String'];
+    valueUSD?: Maybe<Scalars['String']>;
 }
 
 export interface GqlPoolJoinExitAmount {
@@ -3665,7 +3665,7 @@ export type GetPoolJoinExitsQuery = {
         tx: string;
         type: GqlPoolJoinExitType;
         poolId: string;
-        valueUSD: string;
+        valueUSD?: string | null;
         amounts: Array<{ __typename: 'GqlPoolJoinExitAmount'; address: string; amount: string }>;
     }>;
 };
@@ -3695,7 +3695,7 @@ export type GetPoolUserJoinExitsQuery = {
         tx: string;
         type: GqlPoolJoinExitType;
         poolId: string;
-        valueUSD: string;
+        valueUSD?: string | null;
         amounts: Array<{ __typename: 'GqlPoolJoinExitAmount'; address: string; amount: string }>;
     }>;
 };

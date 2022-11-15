@@ -314,7 +314,7 @@ type GqlPoolJoinExit {
     timestamp: Int!
     tx: String!
     type: GqlPoolJoinExitType!
-    valueUSD: String!
+    valueUSD: String
 }
 
 type GqlPoolJoinExitAmount {
