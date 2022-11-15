@@ -184,11 +184,7 @@ export function PoolInvestProportional({ onShowPreview }: Props) {
                     width="full"
                     mt="8"
                     onClick={onShowPreview}
-                    isDisabled={
-                        exceedsTokenBalances ||
-                        proportionalPercent === 0 ||
-                        (!hasBatchRelayerApproval && (zapEnabled || requiresBatchRelayerOnJoin))
-                    }
+                    isDisabled={exceedsTokenBalances || proportionalPercent === 0}
                 >
                     Preview
                 </Button>
