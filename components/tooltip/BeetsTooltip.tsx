@@ -19,13 +19,14 @@ function BeetsTooltipLabel({ label, noImage }: { label: ReactNode | ReactNode[];
                     <Image src={BeetsThinking} alt="thinking-emoji" />
                 </Box>
             )}
-            <Text>{label}</Text>
+            <Box>{label}</Box>
         </HStack>
     );
 }
 
 export default function BeetsTooltip({ children, label, noImage, hasArrow = false }: Props) {
     if (!label) return <>{children}</>;
+
     return (
         <Tooltip
             bg="beets.base.400"

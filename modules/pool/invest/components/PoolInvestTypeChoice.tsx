@@ -66,7 +66,7 @@ export function PoolInvestTypeChoice({ onShowProportional, onShowCustom }: Props
             <VStack alignItems="flex-start" px="4" pb="4" width="full">
                 <VStack alignItems="flex-start" spacing="0">
                     <Heading size="sm">Choose your investment type</Heading>
-                    <Text fontSize="base">
+                    <Box fontSize="base">
                         The max amount you can invest is shown for each option.
                         {proportionalSupported && (
                             <BeetsTooltip
@@ -83,7 +83,7 @@ export function PoolInvestTypeChoice({ onShowProportional, onShowCustom }: Props
                                 </HStack>
                             </BeetsTooltip>
                         )}
-                    </Text>
+                    </Box>
                 </VStack>
 
                 <HStack width="full">
