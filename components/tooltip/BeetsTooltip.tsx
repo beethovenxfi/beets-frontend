@@ -32,7 +32,7 @@ export default function BeetsTooltip({ children, label, noImage, hasArrow = fals
             shadow="2xl"
             borderRadius="md"
             p="2"
-            label={<BeetsTooltipLabel noImage={noImage} label={label} />}
+            label={<BeetsTooltipLabel noImage={!!noImage} label={label} />}
             hasArrow={hasArrow}
         >
             {children}
