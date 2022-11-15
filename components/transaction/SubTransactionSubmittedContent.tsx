@@ -40,7 +40,7 @@ export function SubTransactionSubmittedContent({ query, showSpinnerOnPending, ..
             {txResponse?.hash && (
                 <HStack width="full" justifyContent="space-between">
                     <Text color="gray.100" fontSize=".85rem">
-                        Price impact
+                        Transaction
                     </Text>
                     <Link href={etherscanGetTxUrl(txResponse.hash)} target="_blank">
                         <HStack>
