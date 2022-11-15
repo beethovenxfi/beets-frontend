@@ -1,11 +1,8 @@
-import { Box, HStack, Input, Link, Text, VStack } from '@chakra-ui/react';
+import { Box, HStack, Input, Text, VStack } from '@chakra-ui/react';
 import React from 'react';
-import { ExternalLink } from 'react-feather';
 import { GqlPoolToken } from '~/apollo/generated/graphql-codegen-generated';
 import { useGetTokens } from '~/lib/global/useToken';
-import { tokenFormatAmount, tokenFormatAmountPrecise } from '~/lib/services/token/token-util';
-import { useUserTokenBalances } from '~/lib/user/useUserTokenBalances';
-import { etherscanGetTokenUrl } from '~/lib/util/etherscan';
+import { tokenFormatAmount } from '~/lib/services/token/token-util';
 import { tokenInputBlockInvalidCharacters } from '~/lib/util/input-util';
 import { numberFormatUSDValue } from '~/lib/util/number-formats';
 import { TokenSelectInline } from '../token-select-inline/TokenSelectInline';
