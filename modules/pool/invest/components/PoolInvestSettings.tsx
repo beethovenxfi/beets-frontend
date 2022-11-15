@@ -50,24 +50,6 @@ export function PoolInvestSettings({ ...rest }: BoxProps) {
                                 onChange={toggleZapEnabled}
                             />
                         </Flex>
-                        {supportsZap && !requiresBatchRelayerOnJoin && (
-                            <Collapse in={zapEnabled} animateOpacity>
-                                <Flex mt="2" alignItems="center">
-                                    <Box flex="1">{batchRelayerInfoButton}</Box>
-                                    <Box>
-                                        {!hasBatchRelayerApproval ? (
-                                            <BeetsBatchRelayerApprovalButton
-                                                onConfirmed={() => {
-                                                    refetchBatchRelayerApproval();
-                                                }}
-                                            />
-                                        ) : (
-                                            <Text color="beets.highlight">Approved</Text>
-                                        )}
-                                    </Box>
-                                </Flex>
-                            </Collapse>
-                        )}
                     </>
                 )}
                 <HStack justifyContent='space-between' width='full'>
