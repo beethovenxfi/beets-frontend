@@ -164,7 +164,7 @@ export function PoolInvestTypeChoice({ onShowProportional, onShowCustom }: Props
                                                         height="40px"
                                                         address={tokenOption.address}
                                                     />
-                                                    <Text>
+                                                    <Box>
                                                         {tokenOption.name}
                                                         <HStack spacing="1">
                                                             <Text fontWeight="bold">{tokenOption?.symbol}</Text>
@@ -176,7 +176,7 @@ export function PoolInvestTypeChoice({ onShowProportional, onShowCustom }: Props
                                                                 <ExternalLink size={14} />
                                                             </Link>
                                                         </HStack>
-                                                    </Text>
+                                                    </Box>
                                                 </HStack>
                                                 <VStack alignItems="flex-end" spacing="0">
                                                     <Text>{tokenFormatAmountPrecise(userBalance, tokenPrecision)}</Text>
