@@ -107,7 +107,7 @@ export class PoolMetaStableService implements PoolService {
         bptIn: AmountHumanReadable,
         tokensOut: string[],
     ): Promise<TokenAmountHumanReadable[]> {
-        return poolGetProportionalExitAmountsForBptIn(bptIn, this.pool.tokens, this.pool.dynamicData.totalShares);
+        return poolGetProportionalExitAmountsForBptIn(bptIn, this.pool.tokens, this.pool.dynamicData.totalShares, true);
     }
 
     public async exitGetBptInForSingleAssetWithdraw(

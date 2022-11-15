@@ -8,6 +8,7 @@ interface WithdrawState {
     singleAsset: TokenAmountHumanReadable | null;
     proportionalPercent: number;
     selectedOptions: { [poolTokenIndex: string]: string };
+    proportionalAmounts: TokenAmountHumanReadable[] | null;
 }
 
 export const withdrawStateVar = makeVar<WithdrawState>({
@@ -15,6 +16,7 @@ export const withdrawStateVar = makeVar<WithdrawState>({
     proportionalPercent: 50,
     singleAsset: null,
     selectedOptions: {},
+    proportionalAmounts: null,
 });
 
 export function useWithdrawState() {
@@ -24,6 +26,10 @@ export function useWithdrawState() {
 
     function setProportionalWithdraw() {
         withdrawStateVar({ ...withdrawStateVar(), type: 'PROPORTIONAL', singleAsset: null });
+    }
+
+    function setProportionalAmounts(proportionalAmounts: TokenAmountHumanReadable[]) {
+        withdrawStateVar({ ...withdrawStateVar(), proportionalAmounts });
     }
 
     function setSingleAssetWithdraw(tokenAddress: string) {
@@ -59,6 +65,7 @@ export function useWithdrawState() {
             proportionalPercent: 50,
             singleAsset: null,
             selectedOptions: {},
+            proportionalAmounts: null,
         });
     }
 
@@ -70,10 +77,12 @@ export function useWithdrawState() {
         singleAssetWithdraw: withdrawState.singleAsset,
         proportionalPercent: withdrawState.proportionalPercent,
         selectedOptions: withdrawState.selectedOptions,
+        proportionalAmounts: withdrawState.proportionalAmounts,
         setProportionalWithdraw,
         setSingleAssetWithdraw,
         setSingleAssetWithdrawAmount,
         setSelectedOption,
         clearWithdrawState,
+        setProportionalAmounts,
     };
 }
