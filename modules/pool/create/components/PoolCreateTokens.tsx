@@ -23,9 +23,9 @@ import { PoolCreateTokenSelectModal } from './token-select/PoolCreateTokenSelect
 import { usePoolCreate } from '../../lib/usePoolCreate';
 import { ArrowLeft, ArrowRight, Trash2 } from 'react-feather';
 import { useGetTokens } from '~/lib/global/useToken';
-import { SetStateAction } from 'react';
+import { SetStateAction, useEffect } from 'react';
 import { PoolCreateState } from '../PoolCreate';
-import { Formik, Field, FieldArray } from 'formik';
+import { Formik, Field, FieldArray, useField, useFormikContext } from 'formik';
 import TokenAvatar from '~/components/token/TokenAvatar';
 import { GqlToken } from '~/apollo/generated/graphql-codegen-generated';
 
@@ -49,6 +49,18 @@ export function PoolCreateTokens({ changeState }: Props) {
             amount,
         });
 
+    const tokenAmount = (token: any, total: number) => {
+        const weight = token?.weight || 0;
+        const price = priceFor(token?.address || '');
+        return (total * (weight / 100)) / price;
+    };
+
+    const lastTokenWeight = (tokens: any[]) => {
+        const tokensCopy = [...tokens];
+        tokensCopy.pop();
+        return 100 - tokensCopy.reduce((total, token) => total + token.weight, 0);
+    };
+
     const tokens =
         tokenDetails.length !== 0
             ? tokenDetails.map((token) => ({ ...getToken(token.address), weight: token.weight, amount: token.amount }))
@@ -57,6 +69,29 @@ export function PoolCreateTokens({ changeState }: Props) {
     const initialValues = {
         tokens: tokens,
         total: 100,
+    };
+
+    const AmountField = (props) => {
+        const { values, touched, setFieldValue } = useFormikContext();
+        const [field, meta] = useField(props);
+
+        const lastTokenIndex = values.tokens.length - 1;
+        const lastToken = values.tokens[lastTokenIndex];
+        const amount = tokenAmount(lastToken, values.total);
+
+        useEffect(() => {
+            if (lastToken.weight !== 0) {
+                console.log('setfield');
+                setFieldValue(props.name, amount);
+            }
+        }, [lastToken.weight, amount, setFieldValue, props.name]);
+
+        return (
+            <>
+                <input {...props} {...field} />
+                {!!meta.touched && !!meta.error && <div>{meta.error}</div>}
+            </>
+        );
     };
 
     return (
@@ -75,7 +110,7 @@ export function PoolCreateTokens({ changeState }: Props) {
                     //changeState('liquidity');
                 }}
             >
-                {({ handleSubmit, handleBlur, values, errors, touched }) => (
+                {({ handleSubmit, handleBlur, setFieldValue, values, errors, touched }) => (
                     <form onSubmit={handleSubmit}>
                         <VStack
                             minHeight="550px"
@@ -94,10 +129,10 @@ export function PoolCreateTokens({ changeState }: Props) {
                                                 <Tr>
                                                     <Th width="20%">Token</Th>
                                                     <Th width="20%">Price</Th>
-                                                    <Th width="20%" isNumeric>
+                                                    <Th width="15%" isNumeric>
                                                         Weight
                                                     </Th>
-                                                    <Th width="20%" isNumeric>
+                                                    <Th width="25%" isNumeric>
                                                         Amount
                                                     </Th>
                                                     <Th width="20%" textAlign="right">
@@ -140,6 +175,28 @@ export function PoolCreateTokens({ changeState }: Props) {
                                                                                 name={`tokens.${index}.weight`}
                                                                                 variant="flushed"
                                                                                 type="number"
+                                                                                min={2}
+                                                                                max={98}
+                                                                                onBlur={(e) => {
+                                                                                    handleBlur(e);
+                                                                                    const amount = tokenAmount(
+                                                                                        token,
+                                                                                        values.total,
+                                                                                    );
+                                                                                    setFieldValue(
+                                                                                        `tokens.${index}.amount`,
+                                                                                        amount,
+                                                                                    );
+                                                                                    setFieldValue(
+                                                                                        `tokens.${
+                                                                                            values.tokens.length - 1
+                                                                                        }.weight`,
+                                                                                        lastTokenWeight(values.tokens),
+                                                                                    );
+                                                                                }}
+                                                                                isReadOnly={
+                                                                                    index === values.tokens.length - 1
+                                                                                }
                                                                             />
                                                                             <InputRightElement pointerEvents="none">
                                                                                 <Text>%</Text>
@@ -151,12 +208,15 @@ export function PoolCreateTokens({ changeState }: Props) {
                                                                     <FormControl>
                                                                         <Input
                                                                             textAlign="right"
-                                                                            as={Field}
+                                                                            as={
+                                                                                index === values.tokens.length - 1
+                                                                                    ? AmountField
+                                                                                    : Field
+                                                                            }
                                                                             id={`tokens.${index}.amount`}
                                                                             name={`tokens.${index}.amount`}
                                                                             variant="flushed"
                                                                             type="number"
-                                                                            onBlur={handleBlur}
                                                                         />
                                                                     </FormControl>
                                                                 </Td>
