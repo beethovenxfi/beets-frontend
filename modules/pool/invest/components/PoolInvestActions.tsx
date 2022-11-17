@@ -31,19 +31,27 @@ export function PoolInvestActions({ onInvestComplete, onClose }: Props) {
     const allInvestTokens = pool.investConfig.options.map((option) => option.tokenOptions).flat();
     const {
         hasApprovalForAmount,
-        isLoading,
+        isLoading: isLoadingUserAllowances,
         refetch: refetchUserAllowances,
+        error: userAllowancesError,
     } = useUserAllowances(allInvestTokens, networkConfig.balancer.vault);
     const [steps, setSteps] = useState<TransactionStep[] | null>(null);
     const { bptOutAndPriceImpact } = usePoolJoinGetBptOutAndPriceImpactForTokensIn();
-    const { data: contractCallData, isLoading: isLoadingContractCallData } = usePoolJoinGetContractCallData(
-        bptOutAndPriceImpact?.minBptReceived || null,
-        zapEnabled,
-    );
-    const { data: hasBatchRelayerApproval } = useHasBatchRelayerApproval();
+    const {
+        data: contractCallData,
+        isLoading: isLoadingContractCallData,
+        error: contractCallDataError,
+    } = usePoolJoinGetContractCallData(bptOutAndPriceImpact?.minBptReceived || null, zapEnabled);
+    const {
+        data: hasBatchRelayerApproval,
+        isLoading: isLoadingBatchRelayerApproval,
+        error: hasBatchRelayerApprovalError,
+    } = useHasBatchRelayerApproval();
     const { refetch: refetchUserTokenBalances } = usePoolUserTokenBalancesInWallet();
     const { refetch: refetchUserBptBalance } = usePoolUserBptBalance();
-    const [userSyncBalance, { loading }] = useUserSyncBalanceMutation();
+    const [userSyncBalance] = useUserSyncBalanceMutation();
+
+    const isLoading = isLoadingUserAllowances || isLoadingContractCallData || isLoadingBatchRelayerApproval;
 
     useEffect(() => {
         if (!isLoading) {
@@ -107,11 +115,7 @@ export function PoolInvestActions({ onInvestComplete, onClose }: Props) {
             <Box
                 px="4"
                 width="full"
-                pb={
-                    joinQuery.isConfirmed || joinQuery.isFailed || joinQuery.isPending
-                        ? '0'
-                        : '4'
-                }
+                pb={joinQuery.isConfirmed || joinQuery.isFailed || joinQuery.isPending ? '0' : '4'}
             >
                 <BeetsTransactionStepsSubmit
                     isLoading={steps === null || isLoadingContractCallData}
