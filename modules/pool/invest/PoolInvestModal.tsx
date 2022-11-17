@@ -21,6 +21,7 @@ import { useInvestState } from '~/modules/pool/invest/lib/useInvestState';
 import { usePool } from '~/modules/pool/lib/usePool';
 import { BeetsModalBody, BeetsModalContent, BeetsModalHeader } from '~/components/modal/BeetsModal';
 import { usePoolUserTokenBalancesInWallet } from '~/modules/pool/lib/usePoolUserTokenBalancesInWallet';
+import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 
 export function PoolInvestModal() {
     const { isOpen, onOpen, onClose } = useDisclosure();
@@ -31,6 +32,7 @@ export function PoolInvestModal() {
     const [investComplete, setInvestComplete] = useState(false);
     const { clearInvestState, setSelectedOptions, hasSelectedOptions } = useInvestState();
     const { optionsWithLargestBalances } = usePoolUserTokenBalancesInWallet();
+    const { warnings } = useNetworkConfig();
 
     useEffect(() => {
         if (modalState !== 'start') {
@@ -121,12 +123,13 @@ export function PoolInvestModal() {
                     <BeetsModalBody p="0">
                         {modalState === 'start' ? (
                             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-                                {pool.id === '0xb1c9ac57594e9b1ec0f3787d9f6744ef4cb0a02400000000000000000000006e' && (
-                                    <Alert status="warning" mb="4">
-                                        <AlertIcon />
-                                        To account for the USD+ and DAI+ deposit/withdraw fee, this pool will charge a
-                                        fee on both invest and withdraw of up to 0.06%.
-                                    </Alert>
+                                {warnings.poolInvest[pool.id] && (
+                                    <Box px="4">
+                                        <Alert status="warning" mb="4">
+                                            <AlertIcon />
+                                            {warnings.poolInvest[pool.id]}
+                                        </Alert>
+                                    </Box>
                                 )}
                                 <PoolInvestTypeChoice
                                     onShowProportional={() => {

@@ -119,4 +119,15 @@ export const optimismNetworkConfig: NetworkConfig = {
         rewardHelperAddress: '0x299dcdf14350999496204c141a0c20a29d71af3e',
     },
     createPoolUrl: 'https://opv1.beets.fi/#/pool-create',
+    warnings: {
+        poolDetail: {},
+        poolInvest: {
+            '0xb1c9ac57594e9b1ec0f3787d9f6744ef4cb0a02400000000000000000000006e':
+                'To account for the USD+ and DAI+ deposit/withdraw fee, this pool will charge a fee on both invest and withdraw of up to 0.06%.',
+        },
+        poolWithdraw: {
+            '0xb1c9ac57594e9b1ec0f3787d9f6744ef4cb0a02400000000000000000000006e':
+                'To account for the USD+ and DAI+ deposit/withdraw fee, this pool will charge a fee on both invest and withdraw of up to 0.06%.',
+        },
+    },
 };

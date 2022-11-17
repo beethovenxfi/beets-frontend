@@ -1,8 +1,6 @@
 import {
     Box,
     Button,
-    HStack,
-    Link,
     Slider,
     SliderFilledTrack,
     SliderMark,
@@ -14,53 +12,34 @@ import {
 } from '@chakra-ui/react';
 
 import { useInvestState } from '~/modules/pool/invest/lib/useInvestState';
-import {
-    isEth,
-    isWeth,
-    replaceEthWithWeth,
-    replaceWethWithEth,
-    tokenFormatAmount,
-    tokenFormatAmountPrecise,
-    tokenGetAmountForAddress,
-} from '~/lib/services/token/token-util';
+import { replaceEthWithWeth, replaceWethWithEth, tokenGetAmountForAddress } from '~/lib/services/token/token-util';
 import { PoolInvestSettings } from '~/modules/pool/invest/components/PoolInvestSettings';
 import { BeetsBox } from '~/components/box/BeetsBox';
-import { TokenSelectInline } from '~/components/token-select-inline/TokenSelectInline';
-import TokenAvatar from '~/components/token/TokenAvatar';
-import { numberFormatUSDValue } from '~/lib/util/number-formats';
 import { PoolInvestSummary } from '~/modules/pool/invest/components/PoolInvestSummary';
-import { useGetTokens } from '~/lib/global/useToken';
-import React, { useEffect, useMemo, useState } from 'react';
+import React from 'react';
 import { usePoolJoinGetProportionalInvestmentAmount } from '~/modules/pool/invest/lib/usePoolJoinGetProportionalInvestmentAmount';
-import { keyBy, mapValues, pick } from 'lodash';
-import { oldBnum, oldBnumScale, oldBnumToHumanReadable } from '~/lib/services/pool/lib/old-big-number';
+import { keyBy, mapValues } from 'lodash';
+import { oldBnumScale, oldBnumToHumanReadable } from '~/lib/services/pool/lib/old-big-number';
 import { useInvest } from '~/modules/pool/invest/lib/useInvest';
-import { CardRow } from '~/components/card/CardRow';
-import { useHasBatchRelayerApproval } from '~/lib/util/useHasBatchRelayerApproval';
 import { usePool } from '~/modules/pool/lib/usePool';
-import { ExternalLink } from 'react-feather';
 import TokenRow from '~/components/token/TokenRow';
-import { usePoolJoinGetBptOutAndPriceImpactForTokensIn } from '../lib/usePoolJoinGetBptOutAndPriceImpactForTokensIn';
-import { useUserTokenBalances } from '~/lib/user/useUserTokenBalances';
 import { usePoolUserTokenBalancesInWallet } from '../../lib/usePoolUserTokenBalancesInWallet';
 import { bnum } from '@balancer-labs/sor';
 import { GqlPoolToken } from '~/apollo/generated/graphql-codegen-generated';
 import { tokenInputTruncateDecimalPlaces } from '~/lib/util/input-util';
+import { PoolInvestPriceImpact } from '~/modules/pool/invest/components/PoolInvestPriceImpact';
 
 interface Props {
     onShowPreview(): void;
 }
 
 export function PoolInvestProportional({ onShowPreview }: Props) {
-    const { pool, poolService, requiresBatchRelayerOnJoin } = usePool();
-    const { getToken } = useGetTokens();
+    const { pool, poolService } = usePool();
     const investOptions = pool.investConfig.options;
-    const { setSelectedOption, selectedOptions, setInputAmounts, zapEnabled, inputAmounts } = useInvestState();
+    const { setSelectedOption, selectedOptions, setInputAmounts, inputAmounts } = useInvestState();
     const { data } = usePoolJoinGetProportionalInvestmentAmount();
     const { selectedInvestTokens, userInvestTokenBalances, isInvestingWithEth } = useInvest();
-    const { data: hasBatchRelayerApproval } = useHasBatchRelayerApproval();
-    const { formattedPriceImpact, hasHighPriceImpact, hasMediumPriceImpact } =
-        usePoolJoinGetBptOutAndPriceImpactForTokensIn();
+
     const { userPoolTokenBalances } = usePoolUserTokenBalancesInWallet();
 
     async function onTokenAmountChange(token: GqlPoolToken, amount: string) {
@@ -189,19 +168,7 @@ export function PoolInvestProportional({ onShowPreview }: Props) {
                     Preview
                 </Button>
             </VStack>
-            <VStack width="full" py="4" backgroundColor="blackAlpha.500" px="5">
-                <HStack width="full" justifyContent="space-between">
-                    <Text color="gray.100" fontSize=".85rem">
-                        Price impact
-                    </Text>
-                    <Text
-                        fontSize=".85rem"
-                        color={hasHighPriceImpact ? 'beets.red' : hasMediumPriceImpact ? 'orange' : 'white'}
-                    >
-                        {formattedPriceImpact}
-                    </Text>
-                </HStack>
-            </VStack>
+            <PoolInvestPriceImpact />
         </Box>
     );
 }
