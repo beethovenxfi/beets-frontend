@@ -2,9 +2,7 @@ import { Grid, GridItem, ListItem, OrderedList, Text } from '@chakra-ui/react';
 import { PoolCreateDetails } from './components/PoolCreateDetails';
 import { SetStateAction, useState } from 'react';
 import { PoolCreateTokens } from './components/PoolCreateTokens';
-
 import Card from '~/components/card/Card';
-import { PoolCreateLiquidity } from './components/PoolCreateLiquidity';
 
 export type PoolCreateState = 'details' | 'tokens' | 'confirm';
 

@@ -13,11 +13,6 @@ interface TokenDetails {
     amount: number;
 }
 
-interface AmountDetails {
-    address: string;
-    amount: number;
-}
-
 const tokensSelectedVar = makeVar<string[]>([]);
 
 const initialValues: PoolDetails = {
@@ -29,7 +24,6 @@ const initialValues: PoolDetails = {
 
 const poolDetailsVar = makeVar<PoolDetails>(initialValues);
 const tokenDetailsVar = makeVar<TokenDetails[]>([]);
-const amountDetailsVar = makeVar<AmountDetails[]>([]);
 
 export function usePoolCreate() {
     const tokensSelected = useReactiveVar(tokensSelectedVar);
@@ -53,18 +47,12 @@ export function usePoolCreate() {
         tokenDetailsVar(details);
     }
 
-    function setAmountDetails(details: AmountDetails[]) {
-        amountDetailsVar(details);
-    }
-
     return {
         tokensSelected,
         poolDetails,
         tokenDetails,
-        amountDetails,
         setTokensSelected,
         setPoolDetails,
         setTokenDetails,
-        setAmountDetails,
     };
 }
