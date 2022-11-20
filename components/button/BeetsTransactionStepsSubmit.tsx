@@ -1,5 +1,5 @@
 import { TokenBaseWithAmount } from '~/lib/services/token/token-types';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { HorizontalSteps, StepStatus } from '~/components/steps/HorizontalSteps';
 import { Alert, AlertIcon, Box, Button, Flex, Skeleton, Portal } from '@chakra-ui/react';
 
@@ -59,7 +59,7 @@ export function BeetsTransactionStepsSubmit({
     const currentStep = steps ? steps[currentStepIdx] : null;
     const currentQuery = queries.find((query) => query.id === currentStep?.id);
     const [complete, setComplete] = useState(false);
-    const { refetch: refetchBatchRelayerApproval } = useHasBatchRelayerApproval();
+    const { refetch: refetchBatchRelayerApproval, data: hasBatchRelayerApproval } = useHasBatchRelayerApproval();
 
     function setStepStatus(id: string, status: StepStatus) {
         setStepStatuses({ ...stepStatuses, [id]: status });
@@ -91,6 +91,12 @@ export function BeetsTransactionStepsSubmit({
         }
     }
 
+    // console.log({
+    //     isLoading,
+    //     complete,
+    //     hasBatchRelayerApproval,
+    //     steps
+    // });
     return (
         <Box>
             {isLoading ? (

@@ -36,19 +36,32 @@ export function PoolInvestActions({ onInvestComplete, onClose }: Props) {
     } = useUserAllowances(allInvestTokens, networkConfig.balancer.vault);
     const [steps, setSteps] = useState<TransactionStep[] | null>(null);
     const { bptOutAndPriceImpact } = usePoolJoinGetBptOutAndPriceImpactForTokensIn();
-    const { data: contractCallData } = usePoolJoinGetContractCallData(
+    const { data: contractCallData, isLoading: isLoadingContractCallData } = usePoolJoinGetContractCallData(
         bptOutAndPriceImpact?.minBptReceived || null,
         zapEnabled,
     );
-    const { data: hasBatchRelayerApproval } = useHasBatchRelayerApproval();
+    const {
+        data: hasBatchRelayerApproval,
+        isLoading: isLoadingBatchRelayerApproval,
+        refetch: refetchBatchRelayerApproval,
+        
+    } = useHasBatchRelayerApproval();
     const { refetch: refetchUserTokenBalances } = usePoolUserTokenBalancesInWallet();
     const { refetch: refetchUserBptBalance } = usePoolUserBptBalance();
     const [userSyncBalance, { loading }] = useUserSyncBalanceMutation();
 
+    console.log('relayerapproval', { isLoadingBatchRelayerApproval, hasBatchRelayerApproval });
+
+    useEffect(() => {
+        refetchBatchRelayerApproval({ });
+    }, []);
+
     useEffect(() => {
         if (!isLoading) {
             const tokensRequiringApproval = selectedInvestTokensWithAmounts.filter(
-                (tokenWithAmount) => !hasApprovalForAmount(tokenWithAmount.address, tokenWithAmount.amount),
+                (tokenWithAmount) =>
+                    parseFloat(tokenWithAmount.amount) > 0 &&
+                    !hasApprovalForAmount(tokenWithAmount.address, tokenWithAmount.amount),
             );
 
             const steps: TransactionStep[] = [
@@ -78,7 +91,7 @@ export function PoolInvestActions({ onInvestComplete, onClose }: Props) {
 
             setSteps(steps);
         }
-    }, [isLoading]);
+    }, [isLoading, isLoadingBatchRelayerApproval]);
 
     return (
         <VStack width="full" spacing="4">
@@ -105,14 +118,10 @@ export function PoolInvestActions({ onInvestComplete, onClose }: Props) {
             <Box
                 px="4"
                 width="full"
-                pb={
-                    joinQuery.isConfirmed || joinQuery.isFailed || joinQuery.isPending
-                        ? '0'
-                        : '4'
-                }
+                pb={joinQuery.isConfirmed || joinQuery.isFailed || joinQuery.isPending ? '0' : '4'}
             >
                 <BeetsTransactionStepsSubmit
-                    isLoading={steps === null}
+                    isLoading={steps === null || isLoadingBatchRelayerApproval}
                     loadingButtonText="Invest"
                     completeButtonText="Return to pool"
                     onCompleteButtonClick={onClose}
@@ -135,6 +144,7 @@ export function PoolInvestActions({ onInvestComplete, onClose }: Props) {
                     queries={[{ ...joinQuery, id: 'invest' }]}
                 />
             </Box>
+            )
             <FadeInBox width="full" isVisible={joinQuery.isConfirmed || joinQuery.isPending || joinQuery.isFailed}>
                 <SubTransactionSubmittedContent query={joinQuery} />
             </FadeInBox>
