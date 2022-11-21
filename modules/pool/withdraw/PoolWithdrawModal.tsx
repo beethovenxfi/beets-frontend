@@ -2,6 +2,7 @@ import { Modal, ModalBody, ModalCloseButton, ModalContent } from '@chakra-ui/mod
 import {
     Alert,
     AlertIcon,
+    Box,
     Button,
     Heading,
     IconButton,
@@ -19,6 +20,7 @@ import { PoolWithdrawPreview } from '~/modules/pool/withdraw/components/PoolWith
 import { FadeInBox } from '~/components/animation/FadeInBox';
 import { useWithdrawState } from '~/modules/pool/withdraw/lib/useWithdrawState';
 import { usePool } from '~/modules/pool/lib/usePool';
+import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 
 export function PoolWithdrawModal() {
     const { isOpen, onOpen, onClose } = useDisclosure();
@@ -28,6 +30,7 @@ export function PoolWithdrawModal() {
     const initialRef = useRef(null);
     const [withdrawComplete, setWithdrawComplete] = useState(false);
     const { clearWithdrawState } = useWithdrawState();
+    const { warnings } = useNetworkConfig();
 
     useEffect(() => {
         setModalState('start');
@@ -114,11 +117,10 @@ export function PoolWithdrawModal() {
                     </ModalHeader>
                     <ModalBody className="bg" pb="6">
                         <FadeInBox isVisible={modalState === 'start'}>
-                            {pool.id === '0xb1c9ac57594e9b1ec0f3787d9f6744ef4cb0a02400000000000000000000006e' && (
+                            {warnings.poolWithdraw[pool.id] && (
                                 <Alert status="warning" mb="4">
                                     <AlertIcon />
-                                    To account for the USD+ and DAI+ deposit/withdraw fee, this pool will charge a fee
-                                    on both invest and withdraw of up to 0.06%.
+                                    {warnings.poolWithdraw[pool.id]}
                                 </Alert>
                             )}
                             <PoolWithdrawTypeChoice
