@@ -72,6 +72,20 @@ fragment GqlPoolMinimal on GqlPoolMinimal {
         weight
         symbol
     }
+    displayTokens {
+        id
+        address
+        name
+        weight
+        symbol
+        nestedTokens {
+            id
+            address
+            name
+            weight
+            symbol
+        }
+    }
     staking {
         id
         type

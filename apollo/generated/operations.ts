@@ -283,6 +283,20 @@ export const GqlPoolMinimal = gql`
             weight
             symbol
         }
+        displayTokens {
+            id
+            address
+            name
+            weight
+            symbol
+            nestedTokens {
+                id
+                address
+                name
+                weight
+                symbol
+            }
+        }
         staking {
             id
             type
@@ -665,6 +679,20 @@ export const GetPool = gql`
                 decimals
                 isNested
                 isPhantomBpt
+            }
+            displayTokens {
+                id
+                address
+                name
+                weight
+                symbol
+                nestedTokens {
+                    id
+                    address
+                    name
+                    weight
+                    symbol
+                }
             }
             staking {
                 id
