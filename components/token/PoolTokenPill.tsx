@@ -22,7 +22,11 @@ export function PoolTokenPill({ token }: Props) {
         <BeetsBox p="2">
             <Flex alignItems="center">
                 <TokenAvatar address={token.address} size="xs" />
-                <Text ml="2">{getToken(token.address)?.symbol}</Text>
+                <Text ml="2">
+                    {token.nestedTokens
+                        ? token.nestedTokens.map((nestedToken) => getToken(nestedToken.address)?.symbol).join('/')
+                        : getToken(token.address)?.symbol}
+                </Text>
                 {token.weight ? <Text ml="2">{numeral(token.weight).format('%')}</Text> : null}
             </Flex>
         </BeetsBox>
