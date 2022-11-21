@@ -1641,6 +1641,22 @@ export type GetHomeDataQuery = {
                       isPhantomBpt: boolean;
                       weight?: string | null;
                   }>;
+                  displayTokens: Array<{
+                      __typename: 'GqlPoolTokenDisplay';
+                      id: string;
+                      address: string;
+                      name: string;
+                      weight?: string | null;
+                      symbol: string;
+                      nestedTokens?: Array<{
+                          __typename: 'GqlPoolTokenDisplay';
+                          id: string;
+                          address: string;
+                          name: string;
+                          weight?: string | null;
+                          symbol: string;
+                      }> | null;
+                  }>;
               }
         >;
     }>;
@@ -1710,6 +1726,22 @@ export type GetHomeFeaturedPoolsQuery = {
                       isNested: boolean;
                       isPhantomBpt: boolean;
                       weight?: string | null;
+                  }>;
+                  displayTokens: Array<{
+                      __typename: 'GqlPoolTokenDisplay';
+                      id: string;
+                      address: string;
+                      name: string;
+                      weight?: string | null;
+                      symbol: string;
+                      nestedTokens?: Array<{
+                          __typename: 'GqlPoolTokenDisplay';
+                          id: string;
+                          address: string;
+                          name: string;
+                          weight?: string | null;
+                          symbol: string;
+                      }> | null;
                   }>;
               }
         >;
@@ -1783,6 +1815,22 @@ export type GqlPoolFeaturedPoolGroupFragment = {
                   isPhantomBpt: boolean;
                   weight?: string | null;
               }>;
+              displayTokens: Array<{
+                  __typename: 'GqlPoolTokenDisplay';
+                  id: string;
+                  address: string;
+                  name: string;
+                  weight?: string | null;
+                  symbol: string;
+                  nestedTokens?: Array<{
+                      __typename: 'GqlPoolTokenDisplay';
+                      id: string;
+                      address: string;
+                      name: string;
+                      weight?: string | null;
+                      symbol: string;
+                  }> | null;
+              }>;
           }
     >;
 };
@@ -1824,6 +1872,22 @@ export type GqlPoolCardDataFragment = {
         isNested: boolean;
         isPhantomBpt: boolean;
         weight?: string | null;
+    }>;
+    displayTokens: Array<{
+        __typename: 'GqlPoolTokenDisplay';
+        id: string;
+        address: string;
+        name: string;
+        weight?: string | null;
+        symbol: string;
+        nestedTokens?: Array<{
+            __typename: 'GqlPoolTokenDisplay';
+            id: string;
+            address: string;
+            name: string;
+            weight?: string | null;
+            symbol: string;
+        }> | null;
     }>;
 };
 
@@ -4474,6 +4538,20 @@ export const GqlPoolCardDataFragmentDoc = gql`
             isNested
             isPhantomBpt
             weight
+        }
+        displayTokens {
+            id
+            address
+            name
+            weight
+            symbol
+            nestedTokens {
+                id
+                address
+                name
+                weight
+                symbol
+            }
         }
     }
 `;
