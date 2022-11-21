@@ -8,9 +8,7 @@ import Jazzicon, { jsNumberForAddress } from 'react-jazzicon';
 interface DisplayToken {
     address: string;
     weight?: string | null;
-    nestedTokens?: {
-        address: string;
-    }[];
+    nestedTokens?: { address: string }[] | null;
 }
 
 interface Props {
