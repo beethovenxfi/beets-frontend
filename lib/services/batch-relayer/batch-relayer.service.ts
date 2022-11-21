@@ -9,6 +9,7 @@ import { networkConfig } from '~/lib/config/network-config';
 import {
     EncodeBatchSwapInput,
     EncodeExitPoolInput,
+    EncodeGaugeDepositInput,
     EncodeJoinPoolInput,
     EncodeMasterChefDepositInput,
     EncodeMasterChefWithdrawInput,
@@ -27,6 +28,7 @@ import { AmountScaledString, TokenAmountHumanReadable } from '~/lib/services/tok
 import { poolScaleSlippage } from '~/lib/services/pool/lib/util';
 import { ReaperWrappingService } from '~/lib/services/batch-relayer/extensions/reaper-wrapping.service';
 import { Erc4626WrappingService } from '~/lib/services/batch-relayer/extensions/erc4626-wrapping.service';
+import { GaugeActionsService } from '~/lib/services/batch-relayer/extensions/gauge-actions.service';
 
 export class BatchRelayerService {
     private readonly CHAINED_REFERENCE_PREFIX = 'ba10';
@@ -43,6 +45,7 @@ export class BatchRelayerService {
         private readonly yearnWrappingService: YearnWrappingService,
         private readonly reaperWrappingService: ReaperWrappingService,
         private readonly erc4626WrappingService: Erc4626WrappingService,
+        private readonly gaugeStakingService: GaugeActionsService,
     ) {}
 
     public toChainedReference(key: BigNumberish): BigNumber {
@@ -75,6 +78,10 @@ export class BatchRelayerService {
 
     public masterChefEncodeWithdraw(params: EncodeMasterChefWithdrawInput): string {
         return this.masterChefStakingService.encodeWithdraw(params);
+    }
+
+    public gaugeEncodeDeposit(params: EncodeGaugeDepositInput): string {
+        return this.gaugeStakingService.encodeDeposit(params);
     }
 
     public reaperEncodeWrap(params: EncodeReaperWrapInput): string {
@@ -215,4 +222,5 @@ export const batchRelayerService = new BatchRelayerService(
     new YearnWrappingService(),
     new ReaperWrappingService(),
     new Erc4626WrappingService(),
+    new GaugeActionsService(),
 );

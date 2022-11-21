@@ -220,4 +220,11 @@ export interface EncodeMasterChefWithdrawInput {
     outputReference: BigNumberish;
 }
 
+export interface EncodeGaugeDepositInput {
+    gauge: string;
+    sender: string;
+    recipient: string;
+    amount: BigNumberish;
+}
+
 export type BalancerLinearPoolType = 'aave' | 'yearn' | 'boo' | 'reaper' | 'tarot';
