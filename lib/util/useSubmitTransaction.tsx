@@ -4,7 +4,7 @@ import {
     UseContractWriteConfig,
     UseContractWriteMutationArgs,
 } from 'wagmi/dist/declarations/src/hooks/contracts/useContractWrite';
-import { ToastId, useToast } from '@chakra-ui/react';
+// import { ToastId, useToast } from '@chakra-ui/react';
 import { BeetsTransactionType } from '~/components/toast/toast-util';
 import { TransactionStatusToast } from '~/components/toast/TransactionStatusToast';
 import { networkConfig } from '~/lib/config/network-config';
@@ -15,6 +15,8 @@ import { useRef } from 'react';
 import { useAddRecentTransaction } from '@rainbow-me/rainbowkit';
 import { makeVar } from '@apollo/client';
 import { TransactionReceipt, TransactionResponse } from '@ethersproject/providers';
+import { ToastType, useToast } from '~/components/toast/BeetsToast';
+import { HStack, Spinner, Text } from '@chakra-ui/react';
 
 interface Props {
     config: Omit<UseContractWriteArgs & UseContractWriteConfig, 'signerOrProvider'>;
@@ -57,8 +59,9 @@ export const txPendingVar = makeVar(false);
 
 export function useSubmitTransaction({ config, transactionType, waitForConfig }: Props): SubmitTransactionQuery {
     const signer = useSigner();
-    const toast = useToast();
-    const toastIdRef = useRef<ToastId | undefined>();
+    // const toast = useToast();
+    const { showToast, updateToast } = useToast();
+    // const toastIdRef = useRef<ToastId | undefined>();
     const toastText = useRef<string>('');
     const walletText = useRef<string>('');
     const addRecentTransaction = useAddRecentTransaction();
@@ -67,19 +70,29 @@ export function useSubmitTransaction({ config, transactionType, waitForConfig }:
         signerOrProvider: signer.data,
         ...config,
         onSuccess(data, variables, context) {
-            toastIdRef.current = toast({
-                position: 'bottom-left',
-                render: ({ onClose }) => (
-                    <TransactionStatusToast
-                        type={transactionType}
-                        status="PENDING"
-                        text={toastText.current}
-                        onClose={onClose}
-                        txHash={data.hash}
-                    />
+            showToast({
+                id: data.hash,
+                content: (
+                    <HStack>
+                        <Text>{toastText.current}</Text>
+                        <Spinner size='sm' />
+                    </HStack>
                 ),
-                duration: null,
+                type: ToastType.Info,
             });
+            // toastIdRef.current = toast({
+            //     position: 'bottom-left',
+            //     render: ({ onClose }) => (
+            //         <TransactionStatusToast
+            //             type={transactionType}
+            //             status="PENDING"
+            //             text={toastText.current}
+            //             onClose={onClose}
+            //             txHash={data.hash}
+            //         />
+            //     ),
+            //     duration: null,
+            // });
 
             try {
                 addRecentTransaction({
@@ -103,25 +116,30 @@ export function useSubmitTransaction({ config, transactionType, waitForConfig }:
         wait: contractWrite.data?.wait,
         ...waitForConfig,
         onSettled(data, error) {
-            if (toastIdRef.current) {
-                toast.close(toastIdRef.current);
-            }
+            updateToast(contractWrite.data?.hash || '', {
+                content: toastText.current,
+                type: ToastType.Success,
+                auto: true,
+            });
+            // if (toastIdRef.current) {
+            //     toast.close(toastIdRef.current);
+            // }
 
             txPendingVar(false);
 
             setTimeout(() => {
-                toast({
-                    position: 'bottom-left',
-                    render: ({ onClose }) => (
-                        <TransactionStatusToast
-                            type={transactionType}
-                            status={error || data?.status === 0 ? 'ERROR' : 'CONFIRMED'}
-                            text={toastText.current}
-                            onClose={onClose}
-                            txHash={data?.transactionHash || ''}
-                        />
-                    ),
-                });
+                // toast({
+                //     position: 'bottom-left',
+                //     render: ({ onClose }) => (
+                //         <TransactionStatusToast
+                //             type={transactionType}
+                //             status={error || data?.status === 0 ? 'ERROR' : 'CONFIRMED'}
+                //             text={toastText.current}
+                //             onClose={onClose}
+                //             txHash={data?.transactionHash || ''}
+                //         />
+                //     ),
+                // });
             }, 500);
 
             if (waitForConfig?.onSettled) {

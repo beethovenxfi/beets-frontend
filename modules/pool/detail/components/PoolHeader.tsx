@@ -1,5 +1,6 @@
 import {
     Box,
+    Button,
     Flex,
     HStack,
     Popover,
@@ -18,11 +19,12 @@ import { HelpCircle } from 'react-feather';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 import { AddressZero } from '@ethersproject/constants';
 import { usePool } from '~/modules/pool/lib/usePool';
+import { useToast } from '~/components/toast/BeetsToast';
 
 function PoolHeader() {
     const networkConfig = useNetworkConfig();
     const { pool } = usePool();
-
+    const { showToast } = useToast();
     // temp fix: https://github.com/chakra-ui/chakra-ui/issues/5896#issuecomment-1104085557
     const PopoverTrigger: React.FC<{ children: React.ReactNode }> = OrigPopoverTrigger;
 
@@ -36,6 +38,17 @@ function PoolHeader() {
 
     return (
         <VStack width="full" alignItems="flex-start" mb="8">
+            <Button
+                onClick={() =>
+                    showToast({
+                        id: 'toast',
+                        content: 'Toast',
+                        auto: true,
+                    })
+                }
+            >
+                TOAST
+            </Button>
             <Text textStyle="h3" as="h3" fontWeight="bold" mr="4" display={{ base: 'block', lg: 'none' }}>
                 {pool.name}
             </Text>
