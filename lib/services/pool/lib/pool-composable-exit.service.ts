@@ -183,7 +183,7 @@ export class PoolComposableExitService {
             if (poolToken.address === tokenAmount.address) {
                 bptIn = poolWeightedBptInForExactTokenOut(this.pool, {
                     address: poolToken.address,
-                    amount: tokenAmount.address,
+                    amount: tokenAmount.amount,
                 });
             } else {
                 bptIn = poolWeightedBptInForExactTokenOut(this.pool, {
