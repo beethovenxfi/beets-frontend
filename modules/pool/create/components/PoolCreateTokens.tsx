@@ -26,9 +26,10 @@ import { ArrowLeft, ArrowRight, Trash2 } from 'react-feather';
 import { useGetTokens } from '~/lib/global/useToken';
 import { SetStateAction, useEffect } from 'react';
 import { PoolCreateState } from '../PoolCreate';
-import { Formik, Field, FieldArray, useField, useFormikContext, FieldInputProps, Form } from 'formik';
+import { Formik, Field, FieldArray, useField, useFormikContext, FieldInputProps, getIn } from 'formik';
 import TokenAvatar from '~/components/token/TokenAvatar';
 import { GqlToken } from '~/apollo/generated/graphql-codegen-generated';
+import * as Yup from 'yup';
 
 interface Props {
     changeState: (state: SetStateAction<PoolCreateState>) => void;
@@ -101,9 +102,20 @@ export function PoolCreateTokens({ changeState }: Props) {
         );
     };
 
+    const validationSchema = Yup.object({
+        tokens: Yup.array(
+            Yup.object({
+                weight: Yup.number().required().min(2, 'Minimum = 2%').max(98, 'Maximum = 98%'),
+                amount: Yup.number().required(),
+            }),
+        ),
+        total: Yup.number().required().min(0),
+    });
+
     return (
         <>
             <Formik
+                validationSchema={validationSchema}
                 enableReinitialize
                 initialValues={initialValues}
                 onSubmit={(values) => {
@@ -118,7 +130,7 @@ export function PoolCreateTokens({ changeState }: Props) {
                 }}
             >
                 {({ handleSubmit, handleBlur, setFieldValue, values, errors, touched }) => (
-                    <Form onSubmit={handleSubmit}>
+                    <form onSubmit={handleSubmit}>
                         <VStack
                             minHeight="550px"
                             alignItems="flex-start"
@@ -131,7 +143,7 @@ export function PoolCreateTokens({ changeState }: Props) {
                                     <Box>No tokens selected yet</Box>
                                 ) : (
                                     <TableContainer width="full">
-                                        <Table size="sm">
+                                        <Table>
                                             <Thead>
                                                 <Tr>
                                                     <Th width="20%">Token</Th>
@@ -173,7 +185,11 @@ export function PoolCreateTokens({ changeState }: Props) {
                                                                     <Text>{tokenPrice(token?.address || '')}</Text>
                                                                 </Td>
                                                                 <Td>
-                                                                    <FormControl>
+                                                                    <FormControl
+                                                                        isInvalid={Boolean(
+                                                                            getIn(errors, `tokens.${index}.weight`),
+                                                                        )}
+                                                                    >
                                                                         <InputGroup>
                                                                             <Input
                                                                                 textAlign="right"
@@ -183,6 +199,7 @@ export function PoolCreateTokens({ changeState }: Props) {
                                                                                 variant="flushed"
                                                                                 type="number"
                                                                                 onBlur={(e) => {
+                                                                                    console.log(errors.tokens);
                                                                                     handleBlur(e);
                                                                                     const amount = tokenAmount(
                                                                                         token,
@@ -199,7 +216,7 @@ export function PoolCreateTokens({ changeState }: Props) {
                                                                                         lastTokenWeight(values.tokens),
                                                                                     );
                                                                                 }}
-                                                                                isReadOnly={
+                                                                                isDisabled={
                                                                                     index === values.tokens.length - 1
                                                                                 }
                                                                             />
@@ -208,7 +225,7 @@ export function PoolCreateTokens({ changeState }: Props) {
                                                                             </InputRightElement>
                                                                         </InputGroup>
                                                                         <FormErrorMessage>
-                                                                            Weight is required!
+                                                                            {getIn(errors, `tokens.${index}.weight`)}
                                                                         </FormErrorMessage>
                                                                     </FormControl>
                                                                 </Td>
@@ -295,7 +312,7 @@ export function PoolCreateTokens({ changeState }: Props) {
                                 </Button>
                             </HStack>
                         </VStack>
-                    </Form>
+                    </form>
                 )}
             </Formik>
 
