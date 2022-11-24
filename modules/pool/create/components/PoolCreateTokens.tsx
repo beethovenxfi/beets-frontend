@@ -18,6 +18,7 @@ import {
     TableContainer,
     Tfoot,
     InputLeftElement,
+    FormErrorMessage,
 } from '@chakra-ui/react';
 import { PoolCreateTokenSelectModal } from './token-select/PoolCreateTokenSelectModal';
 import { usePoolCreate } from '../../lib/usePoolCreate';
@@ -25,7 +26,7 @@ import { ArrowLeft, ArrowRight, Trash2 } from 'react-feather';
 import { useGetTokens } from '~/lib/global/useToken';
 import { SetStateAction, useEffect } from 'react';
 import { PoolCreateState } from '../PoolCreate';
-import { Formik, Field, FieldArray, useField, useFormikContext } from 'formik';
+import { Formik, Field, FieldArray, useField, useFormikContext, FieldInputProps, Form } from 'formik';
 import TokenAvatar from '~/components/token/TokenAvatar';
 import { GqlToken } from '~/apollo/generated/graphql-codegen-generated';
 
@@ -36,6 +37,15 @@ interface Props {
 interface GqlTokenWithWeight extends GqlToken {
     weight: number;
     amount: number;
+}
+
+interface Values {
+    tokens: GqlTokenWithWeight[];
+    total: number;
+}
+
+interface CustomFieldInputProps {
+    index: number;
 }
 
 export function PoolCreateTokens({ changeState }: Props) {
@@ -71,20 +81,17 @@ export function PoolCreateTokens({ changeState }: Props) {
         total: 100,
     };
 
-    const AmountField = (props) => {
-        const { values, touched, setFieldValue } = useFormikContext();
+    const AmountField = (props: CustomFieldInputProps & FieldInputProps<number>) => {
+        const { values, setFieldValue } = useFormikContext();
+        const valuesTyped = values as Values;
+
         const [field, meta] = useField(props);
 
-        const lastTokenIndex = values.tokens.length - 1;
-        const lastToken = values.tokens[lastTokenIndex];
-        const amount = tokenAmount(lastToken, values.total);
+        const amount = tokenAmount(valuesTyped.tokens[props.index], valuesTyped.total);
 
         useEffect(() => {
-            if (lastToken.weight !== 0) {
-                console.log('setfield');
-                setFieldValue(props.name, amount);
-            }
-        }, [lastToken.weight, amount, setFieldValue, props.name]);
+            setFieldValue(props.name, amount);
+        }, [amount, setFieldValue, props.name]);
 
         return (
             <>
@@ -111,7 +118,7 @@ export function PoolCreateTokens({ changeState }: Props) {
                 }}
             >
                 {({ handleSubmit, handleBlur, setFieldValue, values, errors, touched }) => (
-                    <form onSubmit={handleSubmit}>
+                    <Form onSubmit={handleSubmit}>
                         <VStack
                             minHeight="550px"
                             alignItems="flex-start"
@@ -175,8 +182,6 @@ export function PoolCreateTokens({ changeState }: Props) {
                                                                                 name={`tokens.${index}.weight`}
                                                                                 variant="flushed"
                                                                                 type="number"
-                                                                                min={2}
-                                                                                max={98}
                                                                                 onBlur={(e) => {
                                                                                     handleBlur(e);
                                                                                     const amount = tokenAmount(
@@ -202,21 +207,21 @@ export function PoolCreateTokens({ changeState }: Props) {
                                                                                 <Text>%</Text>
                                                                             </InputRightElement>
                                                                         </InputGroup>
+                                                                        <FormErrorMessage>
+                                                                            Weight is required!
+                                                                        </FormErrorMessage>
                                                                     </FormControl>
                                                                 </Td>
                                                                 <Td isNumeric>
                                                                     <FormControl>
                                                                         <Input
                                                                             textAlign="right"
-                                                                            as={
-                                                                                index === values.tokens.length - 1
-                                                                                    ? AmountField
-                                                                                    : Field
-                                                                            }
+                                                                            as={AmountField}
                                                                             id={`tokens.${index}.amount`}
                                                                             name={`tokens.${index}.amount`}
                                                                             variant="flushed"
                                                                             type="number"
+                                                                            index={index}
                                                                         />
                                                                     </FormControl>
                                                                 </Td>
@@ -290,7 +295,7 @@ export function PoolCreateTokens({ changeState }: Props) {
                                 </Button>
                             </HStack>
                         </VStack>
-                    </form>
+                    </Form>
                 )}
             </Formik>
 
