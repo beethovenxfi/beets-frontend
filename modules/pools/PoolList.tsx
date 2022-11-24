@@ -66,9 +66,14 @@ function PoolList() {
                             borderBottomColor="beets.base.800"
                             borderBottomWidth={index === pools.length - 1 ? 0 : 1}
                             bg="box.500"
-                            tokens={item.allTokens
-                                .filter((token) => !token.isNested && !token.isPhantomBpt)
-                                .map((token) => ({ ...token, logoURI: getToken(token.address)?.logoURI || undefined }))}
+                            tokens={item.displayTokens.map((token) => ({
+                                ...token,
+                                logoURI: getToken(token.address)?.logoURI || undefined,
+                                nestedTokens: token.nestedTokens?.map((nestedToken) => ({
+                                    ...nestedToken,
+                                    logoURI: getToken(nestedToken.address)?.logoURI || undefined,
+                                })),
+                            }))}
                             hasUnstakedBpt={item.dynamicData.apr.hasRewardApr && hasBptInWalletForPool(item.id)}
                         />
                     );

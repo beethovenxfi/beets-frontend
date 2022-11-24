@@ -1,5 +1,16 @@
 import { Modal, ModalBody, ModalCloseButton, ModalContent } from '@chakra-ui/modal';
-import { Button, Heading, IconButton, ModalHeader, ModalOverlay, Text, useDisclosure } from '@chakra-ui/react';
+import {
+    Alert,
+    AlertIcon,
+    Box,
+    Button,
+    Heading,
+    IconButton,
+    ModalHeader,
+    ModalOverlay,
+    Text,
+    useDisclosure,
+} from '@chakra-ui/react';
 import { ChevronLeft } from 'react-feather';
 import { useEffect, useRef, useState } from 'react';
 import { PoolWithdrawTypeChoice } from '~/modules/pool/withdraw/components/PoolWithdrawTypeChoice';
@@ -9,6 +20,7 @@ import { PoolWithdrawPreview } from '~/modules/pool/withdraw/components/PoolWith
 import { FadeInBox } from '~/components/animation/FadeInBox';
 import { useWithdrawState } from '~/modules/pool/withdraw/lib/useWithdrawState';
 import { usePool } from '~/modules/pool/lib/usePool';
+import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 
 export function PoolWithdrawModal() {
     const { isOpen, onOpen, onClose } = useDisclosure();
@@ -18,6 +30,7 @@ export function PoolWithdrawModal() {
     const initialRef = useRef(null);
     const [withdrawComplete, setWithdrawComplete] = useState(false);
     const { clearWithdrawState } = useWithdrawState();
+    const { warnings } = useNetworkConfig();
 
     useEffect(() => {
         setModalState('start');
@@ -35,7 +48,7 @@ export function PoolWithdrawModal() {
 
     return (
         <>
-            <Button onClick={onOpen} variant="secondary" width={{ base: 'full', md: '140px' }}>
+            <Button onClick={onOpen} variant="secondary" width={{ base: 'full', md: 'fit-content' }}>
                 Withdraw
             </Button>
             <Modal
@@ -104,6 +117,12 @@ export function PoolWithdrawModal() {
                     </ModalHeader>
                     <ModalBody className="bg" pb="6">
                         <FadeInBox isVisible={modalState === 'start'}>
+                            {warnings.poolWithdraw[pool.id] && (
+                                <Alert status="warning" mb="4">
+                                    <AlertIcon />
+                                    {warnings.poolWithdraw[pool.id]}
+                                </Alert>
+                            )}
                             <PoolWithdrawTypeChoice
                                 onShowProportional={() => {
                                     setInvestType('proportional');

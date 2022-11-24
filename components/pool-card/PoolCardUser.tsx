@@ -25,9 +25,10 @@ export function PoolCardUser({ pool, balance, balanceUSD, ...rest }: Props) {
                     </NextLinkOverlay>
                 </Box>
                 <TokenAvatarSet
-                    tokenData={pool.allTokens
-                        .filter((token) => !token.isNested && !token.isPhantomBpt)
-                        .map((token) => ({ address: token.address, ...(token.weight && { weight: token.weight }) }))}
+                    tokenData={pool.displayTokens.map((token) => ({
+                        address: token.address,
+                        ...(token.weight && { weight: token.weight }),
+                    }))}
                     width={104}
                     imageSize={28}
                     renderPopover={false}

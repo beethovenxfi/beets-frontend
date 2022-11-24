@@ -74,6 +74,20 @@ export const GqlPoolCardData = gql`
             isPhantomBpt
             weight
         }
+        displayTokens {
+            id
+            address
+            name
+            weight
+            symbol
+            nestedTokens {
+                id
+                address
+                name
+                weight
+                symbol
+            }
+        }
     }
 `;
 export const GqlPoolFeaturedPoolGroup = gql`
@@ -282,6 +296,20 @@ export const GqlPoolMinimal = gql`
             isPhantomBpt
             weight
             symbol
+        }
+        displayTokens {
+            id
+            address
+            name
+            weight
+            symbol
+            nestedTokens {
+                id
+                address
+                name
+                weight
+                symbol
+            }
         }
         staking {
             id
@@ -665,6 +693,20 @@ export const GetPool = gql`
                 decimals
                 isNested
                 isPhantomBpt
+            }
+            displayTokens {
+                id
+                address
+                name
+                weight
+                symbol
+                nestedTokens {
+                    id
+                    address
+                    name
+                    weight
+                    symbol
+                }
             }
             staking {
                 id

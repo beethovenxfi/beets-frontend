@@ -9,7 +9,7 @@ export function FadeInBox({ children, isVisible, ...rest }: Props) {
     return (
         <>
             {isVisible && (
-                <motion.div animate={{ opacity: 1 }} initial={{ opacity: 0 }}>
+                <motion.div animate={{ opacity: 1 }} initial={{ opacity: 0 }} style={{ width: '100%'}}>
                     <Box {...rest}>{children}</Box>
                 </motion.div>
             )}

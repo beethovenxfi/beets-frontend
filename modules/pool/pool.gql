@@ -67,6 +67,20 @@ query GetPool($id: String!) {
             isNested
             isPhantomBpt
         }
+        displayTokens {
+            id
+            address
+            name
+            weight
+            symbol
+            nestedTokens {
+                id
+                address
+                name
+                weight
+                symbol
+            }
+        }
         staking {
             id
             type

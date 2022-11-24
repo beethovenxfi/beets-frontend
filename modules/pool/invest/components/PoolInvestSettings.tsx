@@ -1,5 +1,5 @@
 import { InfoButton } from '~/components/info-button/InfoButton';
-import { Box, BoxProps, Collapse, Flex, Switch, Text } from '@chakra-ui/react';
+import { Box, BoxProps, Collapse, Flex, HStack, Switch, Text, VStack } from '@chakra-ui/react';
 import { BeetsBox } from '~/components/box/BeetsBox';
 import { ModalSectionHeadline } from '~/components/modal/ModalSectionHeadline';
 import { SlippageTextLinkMenu } from '~/components/slippage/SlippageTextLinkMenu';
@@ -7,7 +7,7 @@ import { CardRow } from '~/components/card/CardRow';
 import { useInvestState } from '~/modules/pool/invest/lib/useInvestState';
 import { BeetsBatchRelayerApprovalButton } from '~/components/button/BeetsBatchRelayerApprovalButton';
 import { useHasBatchRelayerApproval } from '~/lib/util/useHasBatchRelayerApproval';
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { usePool } from '~/modules/pool/lib/usePool';
 
 export function PoolInvestSettings({ ...rest }: BoxProps) {
@@ -31,41 +31,17 @@ export function PoolInvestSettings({ ...rest }: BoxProps) {
     );
 
     return (
-        <Box {...rest}>
-            <ModalSectionHeadline headline={`Settings`} />
-            <BeetsBox p="2">
-                {requiresBatchRelayerOnJoin && (
-                    <CardRow>
-                        <Box flex="1">
-                            {batchRelayerInfoButton}
-                            <Text color="gray.200" fontSize="sm">
-                                Investing into this pool requires the batch relayer.
-                            </Text>
-                        </Box>
-                        <Box>
-                            {!hasBatchRelayerApproval ? (
-                                <BeetsBatchRelayerApprovalButton
-                                    onConfirmed={() => {
-                                        refetchBatchRelayerApproval();
-                                    }}
-                                />
-                            ) : (
-                                <Text color="green">Approved</Text>
-                            )}
-                        </Box>
-                    </CardRow>
-                )}
+        <Box {...rest} width='full'>
+            <BeetsBox p="2" width='full'>
+                <VStack width='full'>
                 {supportsZap && (
-                    <CardRow flexDirection="column">
-                        <Flex>
+                    <>
+                        <Flex width='full'>
                             <Box flex="1">
                                 <InfoButton
                                     label="Zap into farm"
                                     infoText="With ZAP enabled, your investment BPTs are automatically deposited to the farm, saving time & maximizing yield."
                                 />
-                                <Text color="gray.200" fontSize="sm">
-                                    Deposit my BPTs directly into the farm with ZAP.
-                                </Text>
                             </Box>
                             <Switch
                                 id="zap-into-farm"
@@ -74,28 +50,9 @@ export function PoolInvestSettings({ ...rest }: BoxProps) {
                                 onChange={toggleZapEnabled}
                             />
                         </Flex>
-                        {supportsZap && !requiresBatchRelayerOnJoin && (
-                            <Collapse in={zapEnabled} animateOpacity>
-                                <Flex mt="2" alignItems="center">
-                                    <Box flex="1">{batchRelayerInfoButton}</Box>
-                                    <Box>
-                                        {!hasBatchRelayerApproval ? (
-                                            <BeetsBatchRelayerApprovalButton
-                                                onConfirmed={() => {
-                                                    refetchBatchRelayerApproval();
-                                                }}
-                                            />
-                                        ) : (
-                                            <Text color="green">Approved</Text>
-                                        )}
-                                    </Box>
-                                </Flex>
-                            </Collapse>
-                        )}
-                    </CardRow>
+                    </>
                 )}
-
-                <CardRow mb="0">
+                <HStack justifyContent='space-between' width='full'>
                     <Box flex="1">
                         <InfoButton
                             label="Max slippage"
@@ -103,7 +60,8 @@ export function PoolInvestSettings({ ...rest }: BoxProps) {
                         />
                     </Box>
                     <SlippageTextLinkMenu />
-                </CardRow>
+                </HStack>
+                </VStack>
             </BeetsBox>
         </Box>
     );
