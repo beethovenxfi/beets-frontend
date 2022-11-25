@@ -215,6 +215,36 @@ export class PoolComposableJoinService {
             deltas.push(parseUnits(step.minBptReceived, 18).toString());
         }
 
+        const poolBptOutputRef =
+            processedJoinSteps.length > 0
+                ? //if there is at least one join, the output ref of the bpt is 0
+                  this.batchRelayerService.toChainedReference(0)
+                : //use the index of the bpt address in the assets array
+                  this.batchRelayerService.toChainedReference(assets.indexOf(this.pool.address));
+
+        if (data.zapIntoMasterchefFarm) {
+            calls.push(
+                this.batchRelayerService.masterChefEncodeDeposit({
+                    //sender: this.batchRelayerService.batchRelayerAddress,
+                    sender: data.userAddress,
+                    recipient: data.userAddress,
+                    token: this.pool.address,
+                    pid: parseInt(this.pool.staking!.id),
+                    amount: poolBptOutputRef,
+                    outputReference: Zero,
+                }),
+            );
+        } else if (data.zapIntoGauge) {
+            calls.push(
+                this.batchRelayerService.gaugeEncodeDeposit({
+                    gauge: this.pool.staking!.id,
+                    sender: data.userAddress,
+                    recipient: data.userAddress,
+                    amount: poolBptOutputRef,
+                }),
+            );
+        }
+
         return {
             type: 'BatchRelayer',
             calls,
@@ -380,7 +410,9 @@ export class PoolComposableJoinService {
                 fromInternalBalance: batchSwapStep !== null,
             },
             value: joinHasNativeAsset ? ethAmountScaled : Zero,
-            outputReference: isNestedJoin ? this.batchRelayerService.toChainedReference(outputReference) : Zero,
+            outputReference: isNestedJoin
+                ? this.batchRelayerService.toChainedReference(outputReference)
+                : this.batchRelayerService.toChainedReference(0),
         });
     }
 }
