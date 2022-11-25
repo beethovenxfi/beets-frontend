@@ -12,17 +12,19 @@ import {
     SliderTrack,
     Text,
     useBoolean,
+    VStack,
 } from '@chakra-ui/react';
 import { GqlPoolToken } from '~/apollo/generated/graphql-codegen-generated';
 import { useGetTokens } from '~/lib/global/useToken';
 import TokenAvatar from '~/components/token/TokenAvatar';
 import { AmountHumanReadable } from '~/lib/services/token/token-types';
-import { tokenFormatAmountPrecise } from '~/lib/services/token/token-util';
+import { tokenFormatAmount, tokenFormatAmountPrecise } from '~/lib/services/token/token-util';
 import { parseUnits } from 'ethers/lib/utils';
 import { tokenInputBlockInvalidCharacters, tokenInputTruncateDecimalPlaces } from '~/lib/util/input-util';
 import { oldBnumScale, oldBnumToHumanReadable } from '~/lib/services/pool/lib/old-big-number';
 import { BeetsBox } from '~/components/box/BeetsBox';
 import { TokenSelectInline } from '~/components/token-select-inline/TokenSelectInline';
+import React from 'react';
 
 interface Props extends BoxProps {
     tokenOptions: GqlPoolToken[];
@@ -65,9 +67,14 @@ export function BeetsTokenInputWithSlider({
                         />
                     </Box>
                 ) : (
-                    <HStack spacing="1.5" flex="1">
-                        <TokenAvatar size="xs" address={selectedTokenOption.address} />
-                        <Text>{selectedTokenOption.symbol}</Text>
+                    <HStack spacing="2" flex="1">
+                        <TokenAvatar width="40px" height="40px" address={selectedTokenOption.address} />
+                        <VStack spacing="0" alignItems="flex-start">
+                            <Text fontWeight="normal">{selectedTokenOption?.name}</Text>
+                            <HStack spacing="1">
+                                <Text fontWeight="bold">{selectedTokenOption?.symbol}</Text>
+                            </HStack>
+                        </VStack>
                     </HStack>
                 )}
 
@@ -93,7 +100,7 @@ export function BeetsTokenInputWithSlider({
                         color="gray.100"
                         borderColor="transparent"
                         border="2px"
-                        bgColor="transparent"
+                        bgColor="blackAlpha.400"
                         fontWeight="semibold"
                         onKeyDown={tokenInputBlockInvalidCharacters}
                         width="full"
@@ -160,7 +167,7 @@ export function BeetsTokenInputWithSlider({
                             _hover={{ textDecoration: 'none' }}
                             cursor={hasBalance ? 'pointer' : 'default'}
                         >
-                            Balance: {tokenFormatAmountPrecise(balance, 4)}
+                            You have {tokenFormatAmount(balance)}
                             {hasBalance ? (
                                 <Text color="beets.highlight" ml="1">
                                     Max

@@ -22,15 +22,12 @@ export function BeetsBatchRelayerApprovalButton({ ...rest }: Props) {
                 approve();
             }}
             {...rest}
-            variant="outline"
-            size="xs"
-            color="beets.green"
             borderColor="beets.green"
             _focus={{ boxShadow: 'none' }}
             submittingText="Confirm..."
             pendingText="Waiting..."
         >
-            Approve
+            Approve Batch Relayer
         </BeetsSubmitTransactionButton>
     );
 }
