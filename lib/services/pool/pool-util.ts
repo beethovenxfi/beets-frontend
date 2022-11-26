@@ -69,7 +69,9 @@ export function poolGetServiceForPool(pool: GqlPoolUnion): PoolService {
         case 'GqlPoolWeighted': {
             if (
                 isSameAddress(pool.factory || '', networkConfig.balancer.weightedPoolV2Factory) &&
-                (pool.nestingType === 'HAS_SOME_PHANTOM_BPT' || pool.nestingType === 'HAS_ONLY_PHANTOM_BPT')
+                (pool.nestingType === 'HAS_SOME_PHANTOM_BPT' ||
+                    pool.nestingType === 'HAS_ONLY_PHANTOM_BPT' ||
+                    pool.nestingType === 'NO_NESTING')
             ) {
                 return new PoolWeightedV2Service(pool, batchRelayerService, networkConfig.wethAddress, networkProvider);
             } else if (pool.nestingType === 'HAS_SOME_PHANTOM_BPT' || pool.nestingType === 'HAS_ONLY_PHANTOM_BPT') {
