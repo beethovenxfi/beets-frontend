@@ -50,8 +50,6 @@ export function PoolInvestActions({ onInvestComplete, onClose }: Props) {
     const { refetch: refetchUserBptBalance } = usePoolUserBptBalance();
     const [userSyncBalance, { loading }] = useUserSyncBalanceMutation();
 
-    console.log('relayerapproval', { isLoadingBatchRelayerApproval, hasBatchRelayerApproval });
-
     useEffect(() => {
         refetchBatchRelayerApproval({ });
     }, []);

@@ -38,17 +38,6 @@ function PoolHeader() {
 
     return (
         <VStack width="full" alignItems="flex-start" mb="8">
-            <Button
-                onClick={() =>
-                    showToast({
-                        id: 'toast',
-                        content: 'Toast',
-                        auto: true,
-                    })
-                }
-            >
-                TOAST
-            </Button>
             <Text textStyle="h3" as="h3" fontWeight="bold" mr="4" display={{ base: 'block', lg: 'none' }}>
                 {pool.name}
             </Text>

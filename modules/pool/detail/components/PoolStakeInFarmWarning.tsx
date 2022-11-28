@@ -1,4 +1,14 @@
-import { Alert, AlertIcon, Box, Button, HStack, Link, useDisclosure } from '@chakra-ui/react';
+import {
+    Alert,
+    AlertIcon,
+    Box,
+    Button,
+    HStack,
+    Link,
+    useBreakpointValue,
+    useDisclosure,
+    VStack,
+} from '@chakra-ui/react';
 import { PoolStakeModal } from '~/modules/pool/stake/PoolStakeModal';
 import { usePoolUserBptBalance } from '~/modules/pool/lib/usePoolUserBptBalance';
 import { numberFormatUSDValue } from '~/lib/util/number-formats';
@@ -16,6 +26,9 @@ export function PoolStakeInFarmWarning() {
         parseFloat(pool.dynamicData.totalLiquidity);
 
     const { showToast, updateToast, removeToast, toastList } = useToast();
+    const isMobile = useBreakpointValue({ base: true, lg: false });
+
+    const StackComponent = isMobile ? VStack : HStack;
 
     useEffect(() => {
         if (hasBptInWallet) {
@@ -23,38 +36,21 @@ export function PoolStakeInFarmWarning() {
                 id: 'stake-alert',
                 type: ToastType.Warn,
                 content: (
-                    <HStack>
+                    <StackComponent>
                         <Box>
                             You have ~{numberFormatUSDValue(valueInWallet)} worth of BPT in your wallet. This pool
-                            offers additional rewards that will accumulate over time when your BPT are staked.{' '}
-                            {/*<Link color="beets.highlight">More details</Link>*/}
+                            offers additional rewards that will accumulate over time when your BPT are staked.
                         </Box>
                         <Button variant="outline" colorScheme="black" onClick={onOpen}>
                             Stake now
                         </Button>
-                    </HStack>
+                    </StackComponent>
                 ),
             });
+        } else {
+            removeToast('stake-alert');
         }
-
-        setTimeout(() => {
-            updateToast('stake-alert', {
-                type: ToastType.Success
-            })
-            // removeToast('stake-alert');
-        }, 5000);
     }, [hasBptInWallet]);
 
-    console.log('bingo', toastList);
-    return (
-        <>
-            {/* <FadeInOutBox isVisible={hasBptInWallet} containerWidth="100%">
-                <Alert status="warning" borderRadius="md" mb="4" width="full">
-                    <AlertIcon />
-
-                </Alert>
-            </FadeInOutBox> */}
-            <PoolStakeModal isOpen={isOpen} onOpen={onOpen} onClose={onClose} />
-        </>
-    );
+    return <PoolStakeModal isOpen={isOpen} onOpen={onOpen} onClose={onClose} />;
 }

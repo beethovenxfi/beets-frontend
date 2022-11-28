@@ -1,8 +1,10 @@
 import { Box } from '@chakra-ui/layout';
 import { Portal } from '@chakra-ui/portal';
-import { CloseButton, HStack } from '@chakra-ui/react';
-import { AnimatePresence, motion } from 'framer-motion';
-import React, { ReactNode, useCallback, useContext, useEffect, useRef, useState } from 'react';
+import { CloseButton, HStack, Spinner, useBreakpointValue } from '@chakra-ui/react';
+import { animate, AnimatePresence, animateVisualElement, motion, useAnimation } from 'framer-motion';
+import { sum } from 'lodash';
+import React, { ReactNode, useCallback, useContext, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { Check } from 'react-feather';
 
 interface Props {
     children: ReactNode | ReactNode[];
@@ -20,6 +22,7 @@ export enum ToastType {
     Error = 'ERROR',
     Warn = 'WARN',
     Success = 'SUCCESS',
+    Loading = 'LOADING',
 }
 
 interface Toast {
@@ -36,12 +39,24 @@ export const useToast = () => useContext(BeetsToastContext);
 export default function BeetsToast({ children }: Props) {
     const [toastList, setToastList] = useState<Toast[]>([]);
     const toastListRef = useRef<Toast[]>([]);
+    const containerHeightRef = useRef(0);
+    const toastContainerRef = useRef([] as (HTMLDivElement | null)[]);
+    const [containerHeight, setContainerHeight] = useState(0);
+    const [yPositions, setYPositions] = useState<number[]>([]);
+    const isMobile = useBreakpointValue({ base: true, lg: false });
+
     toastListRef.current = toastList;
+    containerHeightRef.current = containerHeight;
 
     const showToast = (toast: Toast) => {
         if (toastListRef.current.find((_toast) => toast.id === _toast.id)) {
             return;
         }
+
+        toastContainerRef.current = toastContainerRef.current.filter((el) => el !== null);
+        const height = sum(toastContainerRef.current.map((el) => el?.offsetHeight || 0));
+        setContainerHeight(height);
+
         setToastList([
             ...toastList,
             {
@@ -50,6 +65,9 @@ export default function BeetsToast({ children }: Props) {
             },
         ]);
 
+        yPositions[toastList.length] = 16;
+        setYPositions(yPositions);
+
         if (toast.auto) {
             setTimeout(() => {
                 removeToast(toast.id);
@@ -57,18 +75,27 @@ export default function BeetsToast({ children }: Props) {
         }
     };
 
+    const addRef = (i: number, el: HTMLDivElement | null) => {
+        toastContainerRef.current[i] = el;
+        yPositions[i] = containerHeight + (i + 1) * 16;
+        setContainerHeight(containerHeight + (el?.offsetHeight || 0) + 16);
+        setYPositions(yPositions);
+    };
+
     function removeToast(id: string) {
-        console.log('remove', toastList);
         if (!toastListRef.current.length) return;
+
+        let indexOfEl = toastList.findIndex((toast) => toast.id === id);
+        let heightOfEl = toastContainerRef.current[indexOfEl]?.offsetHeight || 0;
+
         setToastList(toastListRef.current.filter((toast) => toast.id !== id));
+        setContainerHeight(containerHeightRef.current - heightOfEl);
     }
 
     const updateToast = (id: string, toast: Partial<Pick<Toast, 'content' | 'type' | 'auto'>>) => {
-        console.log('update', toastList);
         if (!toastListRef.current.length) return;
 
         const relevantIndex = toastListRef.current.findIndex((toast) => toast.id === id);
-        console.log('ting', toastListRef.current, relevantIndex);
         const relevantToast = toastListRef.current[relevantIndex];
         const updatedList = [...toastListRef.current];
         updatedList[relevantIndex] = { ...relevantToast, ...toast };
@@ -90,7 +117,7 @@ export default function BeetsToast({ children }: Props) {
             case ToastType.Success:
                 return 'green.400';
             case ToastType.Warn:
-                return 'orange.400';
+                return 'orange.200';
             default:
                 return 'beets.base.300';
         }
@@ -105,7 +132,9 @@ export default function BeetsToast({ children }: Props) {
             case ToastType.Success:
                 return 'beets.base.900';
             case ToastType.Warn:
-                return 'beets.base.900';
+                return 'orange.900';
+            case ToastType.Loading:
+                return 'white';
             default:
                 return 'beets.base.900';
         }
@@ -121,35 +150,41 @@ export default function BeetsToast({ children }: Props) {
                         <Box
                             zIndex="toast"
                             key={`toast-${toast.id}`}
+                            ref={(el) => addRef(i, el)}
                             backgroundColor={getBgColor(toast.type || ToastType.Info)}
                             color={getTextColor(toast.type || ToastType.Info)}
-                            position="fixed"
-                            p="4"
-                            left="0"
-                            right="0"
-                            bottom="-128px"
+                            px="4"
+                            py="3"
+                            fontWeight="semibold"
                             marginX="auto"
                             width="fit-content"
                             maxW="80%"
                             rounded="lg"
                             shadow="dark-lg"
                             as={motion.div}
-                            initial={{ transform: 'translateY(0px)' }}
+                            position="fixed"
+                            bottom="0"
+                            left="0"
+                            right="0"
+                            initial={{
+                                transform: `translateY(96px)`,
+                            }}
                             animate={{
-                                transform: `translateY(-${148 + i * 84}px)`,
+                                transform: `translateY(-${yPositions[i]}px)`,
                                 transition: { damping: 20, mass: 0.8, stiffness: 200, type: 'spring' },
                             }}
                             exit={{
-                                transform: 'translateY(0px)',
+                                transform: isMobile ? 'translateY(196px)' : 'translateY(96px)',
                                 transition: { damping: 20, mass: 0.8, stiffness: 200, type: 'spring' },
                             }}
-                            layout={true}
                         >
                             <HStack>
                                 <Box>
                                     <CloseButton onClick={() => removeToast(toast.id)} />
                                 </Box>
                                 <Box>{toast.content}</Box>
+                                {toast.type === ToastType.Loading && <Spinner size="sm" />}
+                                {toast.type === ToastType.Success && <Check size={24} />}
                             </HStack>
                         </Box>
                     ))}
