@@ -12,7 +12,6 @@ import { PoolService } from '~/lib/services/pool/pool-types';
 import { TokenBase } from '~/lib/services/token/token-types';
 import { uniqBy } from 'lodash';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
-import { isSameAddress } from '@balancer-labs/sdk';
 
 export interface PoolContextType {
     pool: GqlPoolUnion;
@@ -59,10 +58,7 @@ export function PoolProvider({ pool: poolFromProps, children }: { pool: GqlPoolU
         pool.staking?.type === 'MASTER_CHEF' &&
         !!pool.staking.farm;
     const supportsZapIntoGauge =
-        ((pool.__typename === 'GqlPoolWeighted' &&
-            isSameAddress(pool.factory || '', networkConfig.balancer.weightedPoolV2Factory) &&
-            pool.nestingType !== 'NO_NESTING') ||
-            pool.__typename === 'GqlPoolPhantomStable') &&
+        (pool.__typename === 'GqlPoolWeighted' || pool.__typename === 'GqlPoolPhantomStable') &&
         pool.staking?.type === 'GAUGE' &&
         !!pool.staking.gauge;
     const supportsZap = supportsZapIntoMasterchefFarm || supportsZapIntoGauge;

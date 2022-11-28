@@ -68,10 +68,7 @@ export function poolIsComposablePool(pool: GqlPoolUnion) {
 export function poolGetServiceForPool(pool: GqlPoolUnion): PoolService {
     switch (pool.__typename) {
         case 'GqlPoolWeighted': {
-            if (
-                isSameAddress(pool.factory || '', networkConfig.balancer.weightedPoolV2Factory) &&
-                (pool.nestingType === 'HAS_SOME_PHANTOM_BPT' || pool.nestingType === 'HAS_ONLY_PHANTOM_BPT')
-            ) {
+            if (isSameAddress(pool.factory || '', networkConfig.balancer.weightedPoolV2Factory)) {
                 return new PoolWeightedV2Service(pool, batchRelayerService, networkConfig.wethAddress, networkProvider);
             } else if (pool.nestingType === 'HAS_SOME_PHANTOM_BPT' || pool.nestingType === 'HAS_ONLY_PHANTOM_BPT') {
                 return new PoolWeightedBoostedService(
