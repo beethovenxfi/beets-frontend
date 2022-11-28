@@ -1,4 +1,5 @@
 import {
+    GqlPoolLinear,
     GqlPoolLinearNested,
     GqlPoolPhantomStableNested,
     GqlPoolTokenUnion,
@@ -119,4 +120,30 @@ export function poolGetTypeName(pool: GqlPoolUnion) {
         default:
             return 'unknown';
     }
+}
+
+export function isReaperLinearPool(factoryAddress: string | undefined | null) {
+    return networkConfig.balancer.linearFactories.reaper.includes((factoryAddress || '').toLowerCase());
+}
+
+export function hasSmallWrappedBalancedIn18Decimals(
+    pool: GqlPoolUnion | GqlPoolPhantomStableNested | GqlPoolLinearNested,
+) {
+    if (pool.__typename == 'GqlPoolLinear' || pool.__typename === 'GqlPoolLinearNested') {
+        const mainToken = pool.tokens.find((token) => token.index === pool.mainIndex);
+
+        return isReaperLinearPool(pool.factory) && mainToken && mainToken.decimals < 18;
+    }
+
+    return false;
+}
+
+export function getLinearPoolMainToken(pool: GqlPoolUnion | GqlPoolPhantomStableNested | GqlPoolLinearNested) {
+    if (pool.__typename == 'GqlPoolLinear' || pool.__typename === 'GqlPoolLinearNested') {
+        const mainToken = pool.tokens.find((token) => token.index === pool.mainIndex);
+
+        return mainToken || null;
+    }
+
+    return null;
 }
