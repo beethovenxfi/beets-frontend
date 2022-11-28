@@ -1,11 +1,18 @@
 import { createContext, useContext, useEffect, useMemo } from 'react';
 import { GqlPoolUnion, useGetPoolQuery } from '~/apollo/generated/graphql-codegen-generated';
-import { poolGetServiceForPool, poolGetTypeName, poolRequiresBatchRelayerOnJoin } from '~/lib/services/pool/pool-util';
+import {
+    poolGetServiceForPool,
+    poolGetTypeName,
+    poolIsComposablePool,
+    poolRequiresBatchRelayerOnExit,
+    poolRequiresBatchRelayerOnJoin,
+} from '~/lib/services/pool/pool-util';
 import { useEffectOnce } from '~/lib/util/custom-hooks';
 import { PoolService } from '~/lib/services/pool/pool-types';
 import { TokenBase } from '~/lib/services/token/token-types';
 import { uniqBy } from 'lodash';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
+import { isSameAddress } from '@balancer-labs/sdk';
 
 export interface PoolContextType {
     pool: GqlPoolUnion;
@@ -15,11 +22,13 @@ export interface PoolContextType {
     allTokens: TokenBase[];
     allTokenAddresses: string[];
     requiresBatchRelayerOnJoin: boolean;
+    requiresBatchRelayerOnExit: boolean;
     supportsZap: boolean;
     formattedTypeName: string;
     totalApr: number;
     isFbeetsPool: boolean;
     isStablePool: boolean;
+    isComposablePool: boolean;
 }
 
 export const PoolContext = createContext<PoolContextType | null>(null);
@@ -31,7 +40,7 @@ export function PoolProvider({ pool: poolFromProps, children }: { pool: GqlPoolU
         notifyOnNetworkStatusChange: true,
     });
 
-    const pool = data?.pool || poolFromProps;
+    const pool = (data?.pool || poolFromProps) as GqlPoolUnion;
     const poolService = poolGetServiceForPool(pool);
 
     const bpt: TokenBase = {
@@ -42,11 +51,21 @@ export function PoolProvider({ pool: poolFromProps, children }: { pool: GqlPoolU
     };
     const bptPrice = parseFloat(pool.dynamicData.totalLiquidity) / parseFloat(pool.dynamicData.totalShares);
 
+    const isComposablePool = poolIsComposablePool(pool);
     const requiresBatchRelayerOnJoin = poolRequiresBatchRelayerOnJoin(pool);
-    const supportsZap =
+    const requiresBatchRelayerOnExit = poolRequiresBatchRelayerOnExit(pool);
+    const supportsZapIntoMasterchefFarm =
         (pool.__typename === 'GqlPoolWeighted' || pool.__typename === 'GqlPoolStable') &&
         pool.staking?.type === 'MASTER_CHEF' &&
         !!pool.staking.farm;
+    const supportsZapIntoGauge =
+        ((pool.__typename === 'GqlPoolWeighted' &&
+            isSameAddress(pool.factory || '', networkConfig.balancer.weightedPoolV2Factory) &&
+            pool.nestingType !== 'NO_NESTING') ||
+            pool.__typename === 'GqlPoolPhantomStable') &&
+        pool.staking?.type === 'GAUGE' &&
+        !!pool.staking.gauge;
+    const supportsZap = supportsZapIntoMasterchefFarm || supportsZapIntoGauge;
 
     const allTokens = useMemo(
         () =>
@@ -85,12 +104,14 @@ export function PoolProvider({ pool: poolFromProps, children }: { pool: GqlPoolU
                 allTokens,
                 allTokenAddresses: allTokens.map((token) => token.address),
                 requiresBatchRelayerOnJoin,
+                requiresBatchRelayerOnExit,
                 bptPrice,
                 supportsZap,
                 formattedTypeName: poolGetTypeName(pool),
                 totalApr: parseFloat(pool.dynamicData.apr.total),
                 isFbeetsPool: pool.id === networkConfig.fbeets.poolId,
                 isStablePool,
+                isComposablePool,
             }}
         >
             {children}

@@ -47,7 +47,7 @@ function PoolHeader() {
                         {pool.name}
                     </Text>
                 </WrapItem>
-                {pool.tokens.map((token, index) => (
+                {pool.displayTokens.map((token, index) => (
                     <WrapItem key={index}>
                         <PoolTokenPill token={token} />
                     </WrapItem>

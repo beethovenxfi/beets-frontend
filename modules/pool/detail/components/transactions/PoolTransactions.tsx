@@ -14,8 +14,8 @@ type Props = {};
 
 export function PoolTransactions({ ...rest }: Props & BoxProps) {
     const [activeTab, setActiveTab] = useState(0);
-    const { pool } = usePool();
-    const isPhantomStable = pool.__typename === 'GqlPoolPhantomStable';
+    const { pool, isComposablePool } = usePool();
+    const isPhantomStable = pool.__typename === 'GqlPoolPhantomStable' && !isComposablePool;
     const tabs = [
         'About this pool',
         isPhantomStable ? 'Transactions' : 'Investments',

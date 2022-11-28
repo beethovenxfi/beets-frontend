@@ -33,15 +33,13 @@ import {
 } from '~/lib/services/pool/lib/old-big-number';
 import OldBigNumber from 'bignumber.js';
 import { SwapKind } from '@balancer-labs/balancer-js';
-import { poolScaleAmp } from '~/lib/services/pool/lib/util';
+import { poolBatchSwaps, poolQueryBatchSwap, poolScaleAmp } from '~/lib/services/pool/lib/util';
 import { BatchRelayerService } from '~/lib/services/batch-relayer/batch-relayer.service';
 import {
-    poolBatchSwaps,
     poolFindNestedPoolTokenForToken,
     poolFindPoolTokenFromOptions,
     poolGetExitSwaps,
     poolGetJoinSwapForToken,
-    poolQueryBatchSwap,
     poolSumPoolTokenBalances,
 } from '~/lib/services/pool/pool-phantom-stable-util';
 
@@ -327,7 +325,7 @@ export class PoolPhantomStableService implements PoolService {
             //currently we only support single option select here
             const tokenOption = option.tokenOptions[0];
             const poolToken = this.pool.tokens.find((poolToken) => poolToken.index === option.poolTokenIndex)!;
-            const poolTokenWeight = oldBnum(poolToken.balance).div(totalBalance);
+            const poolTokenWeight = oldBnum(oldBnum(poolToken.balance).times(poolToken.priceRate)).div(totalBalance);
 
             if (poolToken.__typename === 'GqlPoolToken' || poolToken.__typename === 'GqlPoolTokenLinear') {
                 return {

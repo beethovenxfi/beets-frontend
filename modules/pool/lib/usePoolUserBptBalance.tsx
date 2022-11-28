@@ -14,6 +14,9 @@ import { useUserAccount } from '~/lib/user/useUserAccount';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 import { usePool } from '~/modules/pool/lib/usePool';
 import { createContext, ReactNode, useContext } from 'react';
+import { BigNumber } from 'ethers';
+
+const DUST_THRESHOLD = BigNumber.from('1000000000000');
 
 export function _usePoolUserBptBalance() {
     const { pool } = usePool();
@@ -40,9 +43,9 @@ export function _usePoolUserBptBalance() {
         userTotalBptBalance: formatFixed(userWalletBptBalance.add(userStakedBptBalanceScaled), 18),
         userWalletBptBalance: formatFixed(userWalletBptBalance, 18),
         userStakedBptBalance: formatFixed(userStakedBptBalanceScaled, 18),
-        hasBpt: userTotalBptBalanceScaled.gt(0),
-        hasBptInWallet: userWalletBptBalance.gt(0),
-        hasBptStaked: userStakedBptBalanceScaled.gt(0),
+        hasBpt: userTotalBptBalanceScaled.gt(DUST_THRESHOLD),
+        hasBptInWallet: userWalletBptBalance.gt(DUST_THRESHOLD),
+        hasBptStaked: userStakedBptBalanceScaled.gt(DUST_THRESHOLD),
         userPercentShare,
     };
 }
@@ -108,6 +111,9 @@ function usePoolUserStakedBalance() {
                         gaugeAddress: pool.staking.gauge?.gaugeAddress || '',
                         provider,
                     });
+                case 'RELIQUARY':
+                    //TODO: implement
+                    return '0';
             }
         },
         {},

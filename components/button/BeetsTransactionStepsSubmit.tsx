@@ -99,7 +99,7 @@ export function BeetsTransactionStepsSubmit({
     // });
     return (
         <Box>
-            {isLoading ? (
+            {isLoading && !complete ? (
                 <Flex justifyContent="center" mb="6">
                     <Skeleton height="30px" width="180px" />
                 </Flex>
@@ -112,7 +112,7 @@ export function BeetsTransactionStepsSubmit({
                     }))}
                 />
             ) : null}
-            {isLoading ? (
+            {isLoading && !complete ? (
                 <Button
                     variant="primary"
                     isLoading={true}
@@ -143,7 +143,7 @@ export function BeetsTransactionStepsSubmit({
                     size={buttonSize}
                 />
             ) : null}
-            {currentStep && currentStep.type !== 'tokenApproval' && currentQuery && !complete ? (
+            {!isLoading && currentStep && currentStep.type !== 'tokenApproval' && currentQuery && !complete ? (
                 <BeetsSubmitTransactionButton
                     {...currentQuery}
                     width="full"

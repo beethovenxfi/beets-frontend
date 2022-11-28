@@ -40,6 +40,14 @@ export interface NetworkConfig {
     balancer: {
         vault: string;
         batchRelayer: string;
+        composableStableFactory: string;
+        weightedPoolV2Factory: string;
+        linearFactories: {
+            erc4626: string[];
+            reaper: string[];
+        };
+        linearRebalancers: { [poolAddress: string]: string };
+        reaperManualRebalancer?: string;
     };
     beetsPoolOwnerAddress: string;
     masterChefContractAddress: string;
@@ -68,4 +76,9 @@ export interface NetworkConfig {
     createPoolUrl: string;
     launchUrl?: string;
     stakeUrl?: string;
+    warnings: {
+        poolDetail: { [poolId: string]: string };
+        poolInvest: { [poolId: string]: string };
+        poolWithdraw: { [poolId: string]: string };
+    };
 }

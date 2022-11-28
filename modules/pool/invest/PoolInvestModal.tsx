@@ -1,5 +1,15 @@
-import { Modal, ModalBody, ModalCloseButton, ModalContent } from '@chakra-ui/modal';
-import { Button, Heading, IconButton, ModalHeader, ModalOverlay, Text, useDisclosure, Box } from '@chakra-ui/react';
+import { Modal, ModalCloseButton } from '@chakra-ui/modal';
+import {
+    Alert,
+    AlertIcon,
+    Box,
+    Button,
+    Heading,
+    IconButton,
+    ModalOverlay,
+    Text,
+    useDisclosure,
+} from '@chakra-ui/react';
 import { PoolInvestProportional } from '~/modules/pool/invest/components/PoolInvestProportional';
 import { ChevronLeft } from 'react-feather';
 import { PoolInvestPreview } from '~/modules/pool/invest/components/PoolInvestPreview';
@@ -11,6 +21,7 @@ import { useInvestState } from '~/modules/pool/invest/lib/useInvestState';
 import { usePool } from '~/modules/pool/lib/usePool';
 import { BeetsModalBody, BeetsModalContent, BeetsModalHeader } from '~/components/modal/BeetsModal';
 import { usePoolUserTokenBalancesInWallet } from '~/modules/pool/lib/usePoolUserTokenBalancesInWallet';
+import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 
 export function PoolInvestModal() {
     const { isOpen, onOpen, onClose } = useDisclosure();
@@ -21,6 +32,7 @@ export function PoolInvestModal() {
     const [investComplete, setInvestComplete] = useState(false);
     const { clearInvestState, setSelectedOptions, hasSelectedOptions } = useInvestState();
     const { optionsWithLargestBalances } = usePoolUserTokenBalancesInWallet();
+    const { warnings } = useNetworkConfig();
 
     useEffect(() => {
         if (modalState !== 'start') {
@@ -45,8 +57,8 @@ export function PoolInvestModal() {
     }
 
     return (
-        <Box>
-            <Button variant="primary" onClick={onOpen} width={{ base: 'full' }} mr="2">
+        <Box width={{ base: 'full', md: 'fit-content' }}>
+            <Button variant="primary" onClick={onOpen} width={{ base: 'full', md: 'fit-content' }}>
                 Invest
             </Button>
             <Modal isOpen={isOpen} onClose={onModalClose} size="lg" initialFocusRef={initialRef}>
@@ -111,6 +123,14 @@ export function PoolInvestModal() {
                     <BeetsModalBody p="0">
                         {modalState === 'start' ? (
                             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+                                {warnings.poolInvest[pool.id] && (
+                                    <Box px="4">
+                                        <Alert status="warning" mb="4">
+                                            <AlertIcon />
+                                            {warnings.poolInvest[pool.id]}
+                                        </Alert>
+                                    </Box>
+                                )}
                                 <PoolInvestTypeChoice
                                     onShowProportional={() => {
                                         setInvestType('proportional');

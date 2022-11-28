@@ -8,13 +8,15 @@ import { PoolWithdrawSummary } from '~/modules/pool/withdraw/components/PoolWith
 import { PoolWithdrawSettings } from '~/modules/pool/withdraw/components/PoolWithdrawSettings';
 import { BeetsTokenInputWithSlider } from '~/components/inputs/BeetsTokenInputWithSlider';
 import { usePool } from '~/modules/pool/lib/usePool';
+import { useHasBatchRelayerApproval } from '~/lib/util/useHasBatchRelayerApproval';
 
 interface Props extends BoxProps {
     onShowPreview: () => void;
 }
 
 export function PoolWithdrawSingleAsset({ onShowPreview, ...rest }: Props) {
-    const { allTokens, pool } = usePool();
+    const { allTokens, pool, requiresBatchRelayerOnExit } = usePool();
+    const { data: hasBatchRelayerApproval } = useHasBatchRelayerApproval();
     const { singleAssetWithdraw, setSingleAssetWithdrawAmount, setSingleAssetWithdraw } = useWithdrawState();
     const singleAssetWithdrawForBptIn = usePoolExitGetSingleAssetWithdrawForBptIn();
     const { hasHighPriceImpact, formattedPriceImpact } = usePoolExitGetBptInForSingleAssetWithdraw();
@@ -43,7 +45,8 @@ export function PoolWithdrawSingleAsset({ onShowPreview, ...rest }: Props) {
     const isValid =
         parseFloat(singleAssetWithdraw.amount) > 0 &&
         parseFloat(singleAssetWithdraw.amount) <= parseFloat(maxAmount) &&
-        (!hasHighPriceImpact || acknowledgeHighPriceImpact);
+        (!hasHighPriceImpact || acknowledgeHighPriceImpact) &&
+        (!requiresBatchRelayerOnExit || hasBatchRelayerApproval);
 
     return (
         <Box pt={4} {...rest}>

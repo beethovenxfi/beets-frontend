@@ -141,8 +141,10 @@ export function useSubmitTransaction({ config, transactionType, waitForConfig }:
         isSubmitError: contractWrite.isError,
 
         isPending: waitForTransaction.isLoading,
-        isConfirmed: waitForTransaction.isSuccess,
-        isFailed: waitForTransaction.isError,
+        isConfirmed:
+            waitForTransaction.isSuccess && waitForTransaction.data?.status !== 0 && waitForTransaction.error === null,
+        isFailed:
+            waitForTransaction.isError || waitForTransaction.error !== null || waitForTransaction.data?.status === 0,
         error: waitForTransaction.error,
         reset: contractWrite.reset,
         txResponse: contractWrite.data,

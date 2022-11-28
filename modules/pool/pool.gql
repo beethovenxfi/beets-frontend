@@ -67,6 +67,20 @@ query GetPool($id: String!) {
             isNested
             isPhantomBpt
         }
+        displayTokens {
+            id
+            address
+            name
+            weight
+            symbol
+            nestedTokens {
+                id
+                address
+                name
+                weight
+                symbol
+            }
+        }
         staking {
             id
             type
@@ -211,6 +225,7 @@ fragment GqlPoolToken on GqlPoolToken {
     priceRate
     decimals
     weight
+    totalBalance
 }
 
 fragment GqlPoolTokenLinear on GqlPoolTokenLinear {
@@ -226,6 +241,7 @@ fragment GqlPoolTokenLinear on GqlPoolTokenLinear {
     mainTokenBalance
     wrappedTokenBalance
     totalMainTokenBalance
+    totalBalance
     pool {
         id
         name
@@ -259,6 +275,7 @@ fragment GqlPoolTokenPhantomStable on GqlPoolTokenPhantomStable {
     weight
     priceRate
     decimals
+    totalBalance
     pool {
         id
         name

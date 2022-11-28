@@ -1,11 +1,10 @@
+import React, { useEffect, useState } from 'react';
 import { useUserAllowances } from '~/lib/util/useUserAllowances';
 import { useInvest } from '~/modules/pool/invest/lib/useInvest';
-import React, { useEffect, useState } from 'react';
 import { usePoolJoinGetBptOutAndPriceImpactForTokensIn } from '~/modules/pool/invest/lib/usePoolJoinGetBptOutAndPriceImpactForTokensIn';
 import { usePoolJoinGetContractCallData } from '~/modules/pool/invest/lib/usePoolJoinGetContractCallData';
 import { useJoinPool } from '~/modules/pool/invest/lib/useJoinPool';
 import { BeetsTransactionStepsSubmit, TransactionStep } from '~/components/button/BeetsTransactionStepsSubmit';
-import { TransactionSubmittedContent } from '~/components/transaction/TransactionSubmittedContent';
 import { Alert, AlertIcon, Box, Text, VStack } from '@chakra-ui/react';
 import { FadeInBox } from '~/components/animation/FadeInBox';
 import { numberFormatUSDValue } from '~/lib/util/number-formats';
@@ -31,8 +30,9 @@ export function PoolInvestActions({ onInvestComplete, onClose }: Props) {
     const allInvestTokens = pool.investConfig.options.map((option) => option.tokenOptions).flat();
     const {
         hasApprovalForAmount,
-        isLoading,
+        isLoading: isLoadingUserAllowances,
         refetch: refetchUserAllowances,
+        error: userAllowancesError,
     } = useUserAllowances(allInvestTokens, networkConfig.balancer.vault);
     const [steps, setSteps] = useState<TransactionStep[] | null>(null);
     const { bptOutAndPriceImpact } = usePoolJoinGetBptOutAndPriceImpactForTokensIn();
@@ -44,14 +44,15 @@ export function PoolInvestActions({ onInvestComplete, onClose }: Props) {
         data: hasBatchRelayerApproval,
         isLoading: isLoadingBatchRelayerApproval,
         refetch: refetchBatchRelayerApproval,
-        
     } = useHasBatchRelayerApproval();
     const { refetch: refetchUserTokenBalances } = usePoolUserTokenBalancesInWallet();
     const { refetch: refetchUserBptBalance } = usePoolUserBptBalance();
-    const [userSyncBalance, { loading }] = useUserSyncBalanceMutation();
+    const [userSyncBalance] = useUserSyncBalanceMutation();
+
+    const isLoading = isLoadingUserAllowances || isLoadingContractCallData || isLoadingBatchRelayerApproval;
 
     useEffect(() => {
-        refetchBatchRelayerApproval({ });
+        refetchBatchRelayerApproval({});
     }, []);
 
     useEffect(() => {

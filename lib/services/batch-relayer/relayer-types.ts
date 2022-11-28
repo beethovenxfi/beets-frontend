@@ -61,6 +61,38 @@ export interface EncodeUnwrapYearnVaultTokenInput {
     outputReference: BigNumberish;
 }
 
+export interface EncodeWrapReaperVaultTokenInput {
+    vaultToken: string;
+    sender: string;
+    recipient: string;
+    amount: BigNumberish;
+    outputReference: BigNumberish;
+}
+
+export interface EncodeUnwrapReaperVaultTokenInput {
+    vaultToken: string;
+    sender: string;
+    recipient: string;
+    amount: BigNumberish;
+    outputReference: BigNumberish;
+}
+
+export interface EncodeWrapErc4626Input {
+    wrappedToken: string;
+    sender: string;
+    recipient: string;
+    amount: BigNumberish;
+    outputReference: BigNumberish;
+}
+
+export interface EncodeUnwrapErc4626Input {
+    wrappedToken: string;
+    sender: string;
+    recipient: string;
+    amount: BigNumberish;
+    outputReference: BigNumberish;
+}
+
 export interface ExitStablePhantomInput {
     account: string;
     poolId: string;
@@ -186,6 +218,13 @@ export interface EncodeMasterChefWithdrawInput {
     pid: number;
     amount: BigNumberish;
     outputReference: BigNumberish;
+}
+
+export interface EncodeGaugeDepositInput {
+    gauge: string;
+    sender: string;
+    recipient: string;
+    amount: BigNumberish;
 }
 
 export type BalancerLinearPoolType = 'aave' | 'yearn' | 'boo' | 'reaper' | 'tarot';

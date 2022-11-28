@@ -80,4 +80,18 @@ fragment GqlPoolCardData on GqlPoolMinimal {
         isPhantomBpt
         weight
     }
+    displayTokens {
+        id
+        address
+        name
+        weight
+        symbol
+        nestedTokens {
+            id
+            address
+            name
+            weight
+            symbol
+        }
+    }
 }
