@@ -90,13 +90,7 @@ export function BeetsTransactionStepsSubmit({
             setCurrentStepIdx(currentStepIdx + 1);
         }
     }
-
-    // console.log({
-    //     isLoading,
-    //     complete,
-    //     hasBatchRelayerApproval,
-    //     steps
-    // });
+    
     return (
         <Box>
             {isLoading && !complete ? (
