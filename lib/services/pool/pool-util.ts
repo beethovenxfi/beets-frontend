@@ -42,7 +42,8 @@ export function poolRequiresBatchRelayerOnExit(pool: GqlPoolUnion) {
     return (
         (pool.__typename === 'GqlPoolWeighted' &&
             (pool.nestingType === 'HAS_SOME_PHANTOM_BPT' || pool.nestingType === 'HAS_ONLY_PHANTOM_BPT')) ||
-        pool.factory === networkConfig.balancer.composableStableFactory
+        pool.factory === networkConfig.balancer.composableStableFactory ||
+        pool.factory === networkConfig.balancer.weightedPoolV2Factory
     );
 }
 
