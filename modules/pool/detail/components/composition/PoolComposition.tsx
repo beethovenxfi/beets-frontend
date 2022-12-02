@@ -221,7 +221,7 @@ function PoolCompositionTable({ columns, data, hasNestedTokens }: PoolCompositio
 export function PoolComposition() {
     const { pool, isComposablePool } = usePool();
     const { getUserInvestedBalance, data: userInvestedBalances } = usePoolUserInvestedTokenBalances();
-    const { priceFor } = useGetTokens();
+    const { prices, priceFor } = useGetTokens();
     const { userPoolBalanceUSD } = usePoolUserDepositBalance();
     const { getUserPoolTokenBalance } = usePoolComposableUserPoolTokenBalances();
     const hasNestedTokens = pool.tokens.some((token) =>
@@ -302,7 +302,7 @@ export function PoolComposition() {
 
     const data = React.useMemo(
         (): TableDataTemplate[] => getTokenData(pool.tokens, pool),
-        [JSON.stringify(pool.tokens), JSON.stringify(userInvestedBalances)],
+        [JSON.stringify(pool.tokens), JSON.stringify(userInvestedBalances), JSON.stringify(prices)],
     );
 
     return (
