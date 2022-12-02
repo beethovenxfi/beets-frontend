@@ -29,6 +29,7 @@ export function usePoolJoinGetContractCallData(minimumBpt: AmountHumanReadable |
         userAddress: userAddress || '',
         wethIsEth: hasEth,
         zapIntoMasterchefFarm: !!pool.staking?.farm && zapEnabled,
+        zapIntoGauge: !!pool.staking?.gauge && zapEnabled,
         slippage,
     };
 

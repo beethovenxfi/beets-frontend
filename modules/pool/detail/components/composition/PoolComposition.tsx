@@ -30,11 +30,21 @@ import { useGetTokens } from '~/lib/global/useToken';
 import { usePoolUserBptBalance } from '~/modules/pool/lib/usePoolUserBptBalance';
 import { usePoolUserInvestedTokenBalances } from '~/modules/pool/lib/usePoolUserInvestedTokenBalances';
 import { usePool } from '~/modules/pool/lib/usePool';
-import { GqlPoolTokenUnion } from '~/apollo/generated/graphql-codegen-generated';
+import {
+    GqlPoolLinearNested,
+    GqlPoolPhantomStableNested,
+    GqlPoolTokenUnion,
+    GqlPoolUnion,
+} from '~/apollo/generated/graphql-codegen-generated';
 import { etherscanGetTokenUrl } from '~/lib/util/etherscan';
 import { usePoolUserDepositBalance } from '~/modules/pool/lib/usePoolUserDepositBalance';
 import { usePoolComposableUserPoolTokenBalances } from '~/modules/pool/lib/usePoolComposableUserPoolTokenBalances';
-import { poolIsComposablePool } from '~/lib/services/pool/pool-util';
+import {
+    getLinearPoolMainToken,
+    hasSmallWrappedBalancedIn18Decimals,
+    poolIsComposablePool,
+} from '~/lib/services/pool/pool-util';
+import { oldBnumScale } from '~/lib/services/pool/lib/old-big-number';
 
 interface PoolCompositionTableProps {
     columns: Column<TableDataTemplate>[];
@@ -252,7 +262,10 @@ export function PoolComposition() {
         [],
     );
 
-    function getTokenData(tokens: GqlPoolTokenUnion[]): TableData[] {
+    function getTokenData(
+        tokens: GqlPoolTokenUnion[],
+        containingPool: GqlPoolUnion | GqlPoolLinearNested | GqlPoolPhantomStableNested,
+    ): TableData[] {
         return tokens.map((token) => {
             const tokenPrice = priceFor(token.address);
             const totalTokenValue = parseFloat(token.balance) * tokenPrice;
@@ -263,6 +276,10 @@ export function PoolComposition() {
                 ? (((calculatedWeight * userPoolBalanceUSD) / totalTokenValue) * parseFloat(token.balance)).toString()
                 : getUserInvestedBalance(token.address);
 
+            const smallWrappedBalanceIn18Decimals = hasSmallWrappedBalancedIn18Decimals(containingPool);
+            const linearPoolMainToken = getLinearPoolMainToken(containingPool);
+            const decimalDiff = 18 - (linearPoolMainToken?.decimals || 18);
+
             return {
                 symbol: `${token.symbol}--${token.address}`,
                 name: token.name,
@@ -271,15 +288,20 @@ export function PoolComposition() {
                     userBalance,
                 )}`,
                 myValue: numeral(parseFloat(userBalance) * tokenPrice).format('$0,0.00a'),
-                balance: tokenFormatAmount(token.balance, false),
+                balance:
+                    smallWrappedBalanceIn18Decimals &&
+                    linearPoolMainToken &&
+                    token.address !== linearPoolMainToken.address
+                        ? `${tokenFormatAmount(oldBnumScale(token.balance, decimalDiff).toString())}e-${decimalDiff}`
+                        : tokenFormatAmount(token.balance),
                 value: numeral(totalTokenValue).format('$0,0.00a'),
-                ...(hasNestedTokens && 'pool' in token && { subRows: getTokenData(token.pool.tokens) }),
+                ...(hasNestedTokens && 'pool' in token && { subRows: getTokenData(token.pool.tokens, token.pool) }),
             };
         });
     }
 
     const data = React.useMemo(
-        (): TableDataTemplate[] => getTokenData(pool.tokens),
+        (): TableDataTemplate[] => getTokenData(pool.tokens, pool),
         [JSON.stringify(pool.tokens), JSON.stringify(userInvestedBalances)],
     );
 

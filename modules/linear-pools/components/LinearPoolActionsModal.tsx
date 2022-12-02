@@ -18,6 +18,7 @@ import { useReaperLinearPoolLoopingWrap } from '~/modules/linear-pools/lib/useRe
 import { useReaperLinearPoolLoopingUnwrap } from '~/modules/linear-pools/lib/userReaperLinearPoolLoopingUnwrap';
 import { useUserBalances } from '~/lib/user/useUserBalances';
 import { useUserTokenBalances } from '~/lib/user/useUserTokenBalances';
+import { oldBnumScale } from '~/lib/services/pool/lib/old-big-number';
 
 interface Props {
     isOpen: boolean;
@@ -45,7 +46,7 @@ export function LinearPoolActionsModal({ isOpen, onClose, pool }: Props) {
     const manualRebalancerAllowance = useUserAllowances(mainToken ? [mainToken] : [], reaperManualRebalancer);
     const hasManualRebalancerAllowance = manualRebalancerAllowance.hasApprovalForAmount(
         mainToken?.address || '',
-        '10000000000000',
+        oldBnumScale('10000', mainToken?.decimals || 18).toString(10),
     );
     const { approve: approveManualRebalancer, ...approveManualRebalancerQuery } = useApproveToken(
         mainToken || { address: AddressZero, name: '', decimals: 18, symbol: '' },

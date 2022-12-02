@@ -111,6 +111,9 @@ function usePoolUserStakedBalance() {
                         gaugeAddress: pool.staking.gauge?.gaugeAddress || '',
                         provider,
                     });
+                case 'RELIQUARY':
+                    //TODO: implement
+                    return '0';
             }
         },
         {},

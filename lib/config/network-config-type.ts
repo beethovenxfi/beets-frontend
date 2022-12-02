@@ -76,4 +76,9 @@ export interface NetworkConfig {
     createPoolUrl: string;
     launchUrl?: string;
     stakeUrl?: string;
+    warnings: {
+        poolDetail: { [poolId: string]: string };
+        poolInvest: { [poolId: string]: string };
+        poolWithdraw: { [poolId: string]: string };
+    };
 }

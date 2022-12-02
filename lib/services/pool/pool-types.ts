@@ -53,6 +53,7 @@ export type PoolJoinData =
 interface PoolJoinBase {
     maxAmountsIn: TokenAmountHumanReadable[];
     zapIntoMasterchefFarm?: boolean;
+    zapIntoGauge?: boolean;
     userAddress: string;
     wethIsEth: boolean;
     slippage: string;

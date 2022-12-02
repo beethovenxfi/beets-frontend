@@ -1,4 +1,5 @@
 import {
+    GqlPoolLinear,
     GqlPoolLinearNested,
     GqlPoolPhantomStableNested,
     GqlPoolTokenUnion,
@@ -41,36 +42,24 @@ export function poolRequiresBatchRelayerOnExit(pool: GqlPoolUnion) {
     return (
         (pool.__typename === 'GqlPoolWeighted' &&
             (pool.nestingType === 'HAS_SOME_PHANTOM_BPT' || pool.nestingType === 'HAS_ONLY_PHANTOM_BPT')) ||
-        pool.factory === networkConfig.balancer.composableStableFactory
+        pool.factory === networkConfig.balancer.composableStableFactory ||
+        pool.factory === networkConfig.balancer.weightedPoolV2Factory
     );
 }
 
 export function poolIsComposablePool(pool: GqlPoolUnion) {
-    if (
-        pool.__typename === 'GqlPoolWeighted' &&
-        isSameAddress(pool.factory || '', networkConfig.balancer.weightedPoolV2Factory) &&
-        (pool.nestingType === 'HAS_SOME_PHANTOM_BPT' || pool.nestingType === 'HAS_ONLY_PHANTOM_BPT')
-    ) {
-        return true;
-    }
-
-    if (
-        pool.__typename === 'GqlPoolPhantomStable' &&
-        isSameAddress(pool.factory || '', networkConfig.balancer.composableStableFactory)
-    ) {
-        return true;
-    }
-
-    return false;
+    return (
+        (pool.__typename === 'GqlPoolWeighted' &&
+            isSameAddress(pool.factory || '', networkConfig.balancer.weightedPoolV2Factory)) ||
+        (pool.__typename === 'GqlPoolPhantomStable' &&
+            isSameAddress(pool.factory || '', networkConfig.balancer.composableStableFactory))
+    );
 }
 
 export function poolGetServiceForPool(pool: GqlPoolUnion): PoolService {
     switch (pool.__typename) {
         case 'GqlPoolWeighted': {
-            if (
-                isSameAddress(pool.factory || '', networkConfig.balancer.weightedPoolV2Factory) &&
-                (pool.nestingType === 'HAS_SOME_PHANTOM_BPT' || pool.nestingType === 'HAS_ONLY_PHANTOM_BPT')
-            ) {
+            if (isSameAddress(pool.factory || '', networkConfig.balancer.weightedPoolV2Factory)) {
                 return new PoolWeightedV2Service(pool, batchRelayerService, networkConfig.wethAddress, networkProvider);
             } else if (pool.nestingType === 'HAS_SOME_PHANTOM_BPT' || pool.nestingType === 'HAS_ONLY_PHANTOM_BPT') {
                 return new PoolWeightedBoostedService(
@@ -119,4 +108,30 @@ export function poolGetTypeName(pool: GqlPoolUnion) {
         default:
             return 'unknown';
     }
+}
+
+export function isReaperLinearPool(factoryAddress: string | undefined | null) {
+    return networkConfig.balancer.linearFactories.reaper.includes((factoryAddress || '').toLowerCase());
+}
+
+export function hasSmallWrappedBalancedIn18Decimals(
+    pool: GqlPoolUnion | GqlPoolPhantomStableNested | GqlPoolLinearNested,
+) {
+    if (pool.__typename == 'GqlPoolLinear' || pool.__typename === 'GqlPoolLinearNested') {
+        const mainToken = pool.tokens.find((token) => token.index === pool.mainIndex);
+
+        return isReaperLinearPool(pool.factory) && mainToken && mainToken.decimals < 18;
+    }
+
+    return false;
+}
+
+export function getLinearPoolMainToken(pool: GqlPoolUnion | GqlPoolPhantomStableNested | GqlPoolLinearNested) {
+    if (pool.__typename == 'GqlPoolLinear' || pool.__typename === 'GqlPoolLinearNested') {
+        const mainToken = pool.tokens.find((token) => token.index === pool.mainIndex);
+
+        return mainToken || null;
+    }
+
+    return null;
 }
