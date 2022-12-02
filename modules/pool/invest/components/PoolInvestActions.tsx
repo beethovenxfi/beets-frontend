@@ -1,11 +1,10 @@
+import React, { useEffect, useState } from 'react';
 import { useUserAllowances } from '~/lib/util/useUserAllowances';
 import { useInvest } from '~/modules/pool/invest/lib/useInvest';
-import React, { useEffect, useState } from 'react';
 import { usePoolJoinGetBptOutAndPriceImpactForTokensIn } from '~/modules/pool/invest/lib/usePoolJoinGetBptOutAndPriceImpactForTokensIn';
 import { usePoolJoinGetContractCallData } from '~/modules/pool/invest/lib/usePoolJoinGetContractCallData';
 import { useJoinPool } from '~/modules/pool/invest/lib/useJoinPool';
 import { BeetsTransactionStepsSubmit, TransactionStep } from '~/components/button/BeetsTransactionStepsSubmit';
-import { TransactionSubmittedContent } from '~/components/transaction/TransactionSubmittedContent';
 import { Alert, AlertIcon, Box, Text, VStack } from '@chakra-ui/react';
 import { FadeInBox } from '~/components/animation/FadeInBox';
 import { numberFormatUSDValue } from '~/lib/util/number-formats';
@@ -37,21 +36,24 @@ export function PoolInvestActions({ onInvestComplete, onClose }: Props) {
     } = useUserAllowances(allInvestTokens, networkConfig.balancer.vault);
     const [steps, setSteps] = useState<TransactionStep[] | null>(null);
     const { bptOutAndPriceImpact } = usePoolJoinGetBptOutAndPriceImpactForTokensIn();
-    const {
-        data: contractCallData,
-        isLoading: isLoadingContractCallData,
-        error: contractCallDataError,
-    } = usePoolJoinGetContractCallData(bptOutAndPriceImpact?.minBptReceived || null, zapEnabled);
+    const { data: contractCallData, isLoading: isLoadingContractCallData } = usePoolJoinGetContractCallData(
+        bptOutAndPriceImpact?.minBptReceived || null,
+        zapEnabled,
+    );
     const {
         data: hasBatchRelayerApproval,
         isLoading: isLoadingBatchRelayerApproval,
-        error: hasBatchRelayerApprovalError,
+        refetch: refetchBatchRelayerApproval,
     } = useHasBatchRelayerApproval();
     const { refetch: refetchUserTokenBalances } = usePoolUserTokenBalancesInWallet();
     const { refetch: refetchUserBptBalance } = usePoolUserBptBalance();
     const [userSyncBalance] = useUserSyncBalanceMutation();
 
     const isLoading = isLoadingUserAllowances || isLoadingContractCallData || isLoadingBatchRelayerApproval;
+
+    useEffect(() => {
+        refetchBatchRelayerApproval({});
+    }, []);
 
     useEffect(() => {
         if (!isLoading) {
@@ -88,7 +90,7 @@ export function PoolInvestActions({ onInvestComplete, onClose }: Props) {
 
             setSteps(steps);
         }
-    }, [isLoading]);
+    }, [isLoading, isLoadingBatchRelayerApproval]);
 
     return (
         <VStack width="full" spacing="4">
@@ -118,7 +120,7 @@ export function PoolInvestActions({ onInvestComplete, onClose }: Props) {
                 pb={joinQuery.isConfirmed || joinQuery.isFailed || joinQuery.isPending ? '0' : '4'}
             >
                 <BeetsTransactionStepsSubmit
-                    isLoading={steps === null || isLoadingContractCallData}
+                    isLoading={steps === null || isLoadingBatchRelayerApproval}
                     loadingButtonText="Invest"
                     completeButtonText="Return to pool"
                     onCompleteButtonClick={onClose}
@@ -141,6 +143,7 @@ export function PoolInvestActions({ onInvestComplete, onClose }: Props) {
                     queries={[{ ...joinQuery, id: 'invest' }]}
                 />
             </Box>
+            )
             <FadeInBox width="full" isVisible={joinQuery.isConfirmed || joinQuery.isPending || joinQuery.isFailed}>
                 <SubTransactionSubmittedContent query={joinQuery} />
             </FadeInBox>

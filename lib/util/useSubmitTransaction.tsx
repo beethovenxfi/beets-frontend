@@ -4,9 +4,7 @@ import {
     UseContractWriteConfig,
     UseContractWriteMutationArgs,
 } from 'wagmi/dist/declarations/src/hooks/contracts/useContractWrite';
-import { ToastId, useToast } from '@chakra-ui/react';
-import { BeetsTransactionType } from '~/components/toast/toast-util';
-import { TransactionStatusToast } from '~/components/toast/TransactionStatusToast';
+import { BeetsTransactionType, toastGetTransactionStatusHeadline } from '~/components/toast/toast-util';
 import { networkConfig } from '~/lib/config/network-config';
 import { Vault__factory } from '@balancer-labs/typechain';
 import batchRelayerAbi from '~/lib/abi/BatchRelayer.json';
@@ -15,6 +13,8 @@ import { useRef } from 'react';
 import { useAddRecentTransaction } from '@rainbow-me/rainbowkit';
 import { makeVar } from '@apollo/client';
 import { TransactionReceipt, TransactionResponse } from '@ethersproject/providers';
+import { ToastType, useToast } from '~/components/toast/BeetsToast';
+import { HStack, Text } from '@chakra-ui/react';
 
 interface Props {
     config: Omit<UseContractWriteArgs & UseContractWriteConfig, 'signerOrProvider'>;
@@ -57,8 +57,7 @@ export const txPendingVar = makeVar(false);
 
 export function useSubmitTransaction({ config, transactionType, waitForConfig }: Props): SubmitTransactionQuery {
     const signer = useSigner();
-    const toast = useToast();
-    const toastIdRef = useRef<ToastId | undefined>();
+    const { showToast, updateToast } = useToast();
     const toastText = useRef<string>('');
     const walletText = useRef<string>('');
     const addRecentTransaction = useAddRecentTransaction();
@@ -67,20 +66,18 @@ export function useSubmitTransaction({ config, transactionType, waitForConfig }:
         signerOrProvider: signer.data,
         ...config,
         onSuccess(data, variables, context) {
-            toastIdRef.current = toast({
-                position: 'bottom-left',
-                render: ({ onClose }) => (
-                    <TransactionStatusToast
-                        type={transactionType}
-                        status="PENDING"
-                        text={toastText.current}
-                        onClose={onClose}
-                        txHash={data.hash}
-                    />
+            showToast({
+                id: data.hash,
+                content: (
+                    <HStack>
+                        <Text>
+                            {toastGetTransactionStatusHeadline(transactionType, 'PENDING')}. &nbsp;
+                            {toastText.current}
+                        </Text>
+                    </HStack>
                 ),
-                duration: null,
+                type: ToastType.Loading,
             });
-
             try {
                 addRecentTransaction({
                     hash: data.hash,
@@ -103,26 +100,19 @@ export function useSubmitTransaction({ config, transactionType, waitForConfig }:
         wait: contractWrite.data?.wait,
         ...waitForConfig,
         onSettled(data, error) {
-            if (toastIdRef.current) {
-                toast.close(toastIdRef.current);
-            }
-
+            updateToast(contractWrite.data?.hash || '', {
+                type: ToastType.Success,
+                content: (
+                    <HStack>
+                        <Text>
+                            {toastGetTransactionStatusHeadline(transactionType, 'CONFIRMED')}&nbsp;-&nbsp;
+                            {toastText.current}
+                        </Text>
+                    </HStack>
+                ),
+                auto: true,
+            });
             txPendingVar(false);
-
-            setTimeout(() => {
-                toast({
-                    position: 'bottom-left',
-                    render: ({ onClose }) => (
-                        <TransactionStatusToast
-                            type={transactionType}
-                            status={error || data?.status === 0 ? 'ERROR' : 'CONFIRMED'}
-                            text={toastText.current}
-                            onClose={onClose}
-                            txHash={data?.transactionHash || ''}
-                        />
-                    ),
-                });
-            }, 500);
 
             if (waitForConfig?.onSettled) {
                 return waitForConfig.onSettled(data, error);

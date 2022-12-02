@@ -46,6 +46,7 @@ import { WalletUserAvatar } from '~/components/avatar/WalletUserAvatar';
 import Compose from '~/components/providers/Compose';
 import { TokensProvider } from '~/lib/global/useToken';
 import { UserDataProvider } from '~/lib/user/useUserData';
+import BeetsToast from '~/components/toast/BeetsToast';
 
 const queryClient = new QueryClient();
 
@@ -91,28 +92,30 @@ function BeetsApp(props: AppProps) {
     const dataProviders = [TokensProvider, UserDataProvider];
 
     return (
-        <QueryClientProvider client={queryClient}>
-            <WagmiConfig client={wagmiClient}>
-                <RainbowKitProvider
-                    coolMode
-                    chains={networkChainDefinitions}
-                    showRecentTransactions={true}
-                    appInfo={{ appName: 'Beethoven X', learnMoreUrl: 'https://docs.beets.fi' }}
-                    theme={darkTheme()}
-                    avatar={() => <WalletUserAvatar />}
-                >
-                    <ApolloProvider client={client}>
-                        <ChakraProvider theme={chakraTheme}>
-                            <Compose providers={dataProviders}>
-                                <BeetsFonts />
-                                <TopProgressBar />
-                                <AppContent {...props} />
-                            </Compose>
-                        </ChakraProvider>
-                    </ApolloProvider>
-                </RainbowKitProvider>
-            </WagmiConfig>
-        </QueryClientProvider>
+        <ChakraProvider theme={chakraTheme}>
+            <BeetsToast>
+                <QueryClientProvider client={queryClient}>
+                    <WagmiConfig client={wagmiClient}>
+                        <RainbowKitProvider
+                            coolMode
+                            chains={networkChainDefinitions}
+                            showRecentTransactions={true}
+                            appInfo={{ appName: 'Beethoven X', learnMoreUrl: 'https://docs.beets.fi' }}
+                            theme={darkTheme()}
+                            avatar={() => <WalletUserAvatar />}
+                        >
+                            <ApolloProvider client={client}>
+                                <Compose providers={dataProviders}>
+                                    <BeetsFonts />
+                                    <TopProgressBar />
+                                    <AppContent {...props} />
+                                </Compose>
+                            </ApolloProvider>
+                        </RainbowKitProvider>
+                    </WagmiConfig>
+                </QueryClientProvider>
+            </BeetsToast>
+        </ChakraProvider>
     );
 }
 
