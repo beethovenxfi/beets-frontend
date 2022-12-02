@@ -5,3 +5,7 @@ export interface StakingPendingRewardAmount {
     address: string;
     amount: AmountHumanReadable;
 }
+
+export interface ReliquaryStakingPendingRewardAmount extends StakingPendingRewardAmount {
+    relicId: string;
+}

@@ -15,6 +15,10 @@ import {
     EncodeMasterChefWithdrawInput,
     EncodeReaperUnwrapInput,
     EncodeReaperWrapInput,
+    EncodeReliquaryCreateRelicAndDepositInput,
+    EncodeReliquaryDepositInput,
+    EncodeReliquaryHarvestAllInput,
+    EncodeReliquaryWithdrawInput,
     EncodeUnwrapErc4626Input,
     EncodeWrapErc4626Input,
     ExitPoolData,
@@ -29,6 +33,7 @@ import { poolScaleSlippage } from '~/lib/services/pool/lib/util';
 import { ReaperWrappingService } from '~/lib/services/batch-relayer/extensions/reaper-wrapping.service';
 import { Erc4626WrappingService } from '~/lib/services/batch-relayer/extensions/erc4626-wrapping.service';
 import { GaugeActionsService } from '~/lib/services/batch-relayer/extensions/gauge-actions.service';
+import { ReliquaryStakingService } from './extensions/reliquary-staking.service';
 
 export class BatchRelayerService {
     private readonly CHAINED_REFERENCE_PREFIX = 'ba10';
@@ -42,6 +47,7 @@ export class BatchRelayerService {
         private readonly tarotSupplyVaultService: TarotSupplyVaultService,
         private readonly fBeetsBarStakingService: FBeetsBarStakingService,
         private readonly masterChefStakingService: MasterChefStakingService,
+        private readonly reliquaryStakingService: ReliquaryStakingService,
         private readonly yearnWrappingService: YearnWrappingService,
         private readonly reaperWrappingService: ReaperWrappingService,
         private readonly erc4626WrappingService: Erc4626WrappingService,
@@ -78,6 +84,22 @@ export class BatchRelayerService {
 
     public masterChefEncodeWithdraw(params: EncodeMasterChefWithdrawInput): string {
         return this.masterChefStakingService.encodeWithdraw(params);
+    }
+
+    public reliquaryEncodeCreateRelicAndDeposit(params: EncodeReliquaryCreateRelicAndDepositInput) {
+        return this.reliquaryStakingService.encodeCreateRelicAndDeposit(params);
+    }
+
+    public reliquaryEncodeDeposit(params: EncodeReliquaryDepositInput) {
+        return this.reliquaryStakingService.encodeDeposit(params);
+    }
+
+    public reliquaryEncodeWithdraw(params: EncodeReliquaryWithdrawInput) {
+        return this.reliquaryStakingService.encodeWithdraw(params);
+    }
+
+    public reliquaryEncodeHarvestAll(params: EncodeReliquaryHarvestAllInput) {
+        return this.reliquaryStakingService.encodeHarvestAll(params);
     }
 
     public gaugeEncodeDeposit(params: EncodeGaugeDepositInput): string {
@@ -219,6 +241,7 @@ export const batchRelayerService = new BatchRelayerService(
     new TarotSupplyVaultService(),
     new FBeetsBarStakingService(),
     new MasterChefStakingService(),
+    new ReliquaryStakingService(),
     new YearnWrappingService(),
     new ReaperWrappingService(),
     new Erc4626WrappingService(),
