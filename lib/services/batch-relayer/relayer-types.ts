@@ -227,4 +227,32 @@ export interface EncodeGaugeDepositInput {
     amount: BigNumberish;
 }
 
+export interface EncodeReliquaryCreateRelicAndDepositInput {
+    sender: string;
+    recipient: string;
+    token: string;
+    poolId: number;
+    amount: BigNumberish;
+    outputReference: BigNumberish;
+}
+export interface EncodeReliquaryDepositInput {
+    sender: string;
+    token: string;
+    relicid: number;
+    amount: BigNumberish;
+    outputReference: BigNumberish;
+}
+
+export interface EncodeReliquaryWithdrawInput {
+    recipient: string;
+    relicId: string;
+    amount: BigNumberish;
+    outputReference: BigNumberish;
+}
+export interface EncodeReliquaryHarvestAllInput {
+    relicIds: string[];
+    recipient: string;
+    outputReference: BigNumberish;
+}
+
 export type BalancerLinearPoolType = 'aave' | 'yearn' | 'boo' | 'reaper' | 'tarot';

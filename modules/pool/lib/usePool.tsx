@@ -60,8 +60,7 @@ export function PoolProvider({ pool: poolFromProps, children }: { pool: GqlPoolU
         !!pool.staking.farm;
     const supportsZapIntoGauge =
         ((pool.__typename === 'GqlPoolWeighted' &&
-            isSameAddress(pool.factory || '', networkConfig.balancer.weightedPoolV2Factory) &&
-            pool.nestingType !== 'NO_NESTING') ||
+            isSameAddress(pool.factory || '', networkConfig.balancer.weightedPoolV2Factory)) ||
             pool.__typename === 'GqlPoolPhantomStable') &&
         pool.staking?.type === 'GAUGE' &&
         !!pool.staking.gauge;

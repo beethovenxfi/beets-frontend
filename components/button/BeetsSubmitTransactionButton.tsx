@@ -1,6 +1,6 @@
 import { ButtonOptions, ButtonProps } from '@chakra-ui/button';
-import React, { ReactNode, useEffect } from 'react';
-import { Button, LinkProps, VStack, Text } from '@chakra-ui/react';
+import React, { ReactNode, useEffect, useState } from 'react';
+import { Button, LinkProps, VStack, Text, useConst } from '@chakra-ui/react';
 import { SubmitTransactionQuery } from '~/lib/util/useSubmitTransaction';
 import { motion, useAnimation } from 'framer-motion';
 import { omit } from 'lodash';
@@ -42,7 +42,8 @@ export function BeetsSubmitTransactionButton({
     ...rest
 }: BeetsSubmitTransactionButtonProps & ButtonOptions & ButtonProps & LinkProps) {
     const controls = useAnimation();
-    const isProcessing = isSubmitting || isPending || isLoading;
+    const [isAnimating, setIsAnimating] = useState(false);
+    const isProcessing = isSubmitting || isPending || isLoading || false;
 
     useEffect(() => {
         if (isSubmitting && onSubmitting) {
@@ -69,7 +70,7 @@ export function BeetsSubmitTransactionButton({
     }, [isConfirmed]);
 
     useEffect(() => {
-        if (isProcessing) {
+        if (isProcessing && isProcessing !== undefined) {
             controls.set({
                 minWidth: '50px',
             });
@@ -77,12 +78,16 @@ export function BeetsSubmitTransactionButton({
                 width: '50px',
                 transition: { type: 'spring', bounce: 0, mass: 1, stiffness: 200, damping: 25 },
             });
+            setIsAnimating(true);
         } else {
-            controls.start({
-                width: 'auto',
-                minWidth: '100%',
-                transition: { type: 'spring', bounce: 0, duration: 0.5 },
-            });
+            if (isAnimating) {
+                controls.start({
+                    width: 'auto',
+                    minWidth: '100%',
+                    transition: { type: 'spring', bounce: 0, duration: 0.5 },
+                });
+                setIsAnimating(false);
+            }
         }
     }, [isProcessing]);
 
