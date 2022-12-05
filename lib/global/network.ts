@@ -79,7 +79,6 @@ const responseBackend = configureChains(
 
 export const networkChainDefinitions = response.chains;
 export const networkProvider = responseBackend.provider({ chainId: parseInt(networkConfig.chainId) });
-console.log(process.env.INTERNAL_RPC_URL);
 
 const { connectors } = getDefaultWallets({
     appName: networkConfig.appName,
