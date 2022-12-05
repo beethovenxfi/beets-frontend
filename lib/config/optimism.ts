@@ -22,7 +22,7 @@ export const optimismNetworkConfig: NetworkConfig = {
         platformId: 'optimism',
     },
     rpcUrl: {
-        internal: process.env.INTERNAL_RPC_URL!,
+        internal: process.env.INTERNAL_RPC_URL || 'https://mainnet.optimism.io',
         client: 'https://rpc.ankr.com/optimism',
     },
     multicall: '0x2dc0e2aa608532da689e89e237df582b783e552c',
