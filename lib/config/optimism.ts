@@ -21,8 +21,10 @@ export const optimismNetworkConfig: NetworkConfig = {
         nativeAssetId: 'optimism',
         platformId: 'optimism',
     },
-    // rpcUrl: 'https://rpc.ankr.com/optimism',
-    rpcUrl: process.env.RPC_URL || 'https://rpc.ankr.com/optimism',
+    rpcUrl: {
+        internal: process.env.INTERNAL_RPC_URL || 'https://rpc.ankr.com/optimism',
+        client: 'https://rpc.ankr.com/optimism',
+    },
     multicall: '0x2dc0e2aa608532da689e89e237df582b783e552c',
     beets: {
         address: '0x97513e975a7fa9072c72c92d8000b0db90b163c5',

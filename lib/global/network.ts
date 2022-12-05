@@ -18,7 +18,7 @@ const response = configureChains(
                 decimals: networkConfig.eth.decimals,
             },
             rpcUrls: {
-                default: networkConfig.rpcUrl,
+                default: networkConfig.rpcUrl.client,
             },
             blockExplorers: {
                 etherscan: {
@@ -35,13 +35,51 @@ const response = configureChains(
     ],
     [
         batchJsonRpcProvider({
-            rpc: (chain) => ({ http: networkConfig.rpcUrl }),
+            rpc: (chain) => ({ http: networkConfig.rpcUrl.client }),
+        }),
+    ],
+);
+
+const responseBackend = configureChains(
+    [
+        {
+            id: parseInt(networkConfig.chainId),
+            network: networkConfig.networkShortName,
+            name: networkConfig.networkName,
+            ...(networkConfig.chainId === '250' && {
+                iconUrl: 'https://assets.coingecko.com/coins/images/4001/large/Fantom.png?1558015016',
+            }),
+            nativeCurrency: {
+                name: networkConfig.eth.name,
+                symbol: networkConfig.eth.symbol,
+                decimals: networkConfig.eth.decimals,
+            },
+            rpcUrls: {
+                default: networkConfig.rpcUrl.internal,
+            },
+            blockExplorers: {
+                etherscan: {
+                    name: networkConfig.etherscanName,
+                    url: networkConfig.etherscanUrl,
+                },
+                default: {
+                    name: networkConfig.etherscanName,
+                    url: networkConfig.etherscanUrl,
+                },
+            },
+            testnet: networkConfig.testnet,
+        },
+    ],
+    [
+        batchJsonRpcProvider({
+            rpc: (chain) => ({ http: networkConfig.rpcUrl.internal }),
         }),
     ],
 );
 
 export const networkChainDefinitions = response.chains;
-export const networkProvider = response.provider({ chainId: parseInt(networkConfig.chainId) });
+export const networkProvider = responseBackend.provider({ chainId: parseInt(networkConfig.chainId) });
+console.log(process.env.INTERNAL_RPC_URL);
 
 const { connectors } = getDefaultWallets({
     appName: networkConfig.appName,

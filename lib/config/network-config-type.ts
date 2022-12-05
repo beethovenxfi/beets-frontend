@@ -15,7 +15,10 @@ export interface NetworkConfig {
     };
     wethAddress: string;
     wethAddressFormatted: string;
-    rpcUrl: string;
+    rpcUrl: {
+        internal: string;
+        client: string;
+    };
     coingecko: {
         nativeAssetId: string;
         platformId: string;
