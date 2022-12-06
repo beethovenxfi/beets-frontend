@@ -16,6 +16,8 @@ interface BeetsSubmitTransactionButtonProps extends Omit<SubmitTransactionQuery,
     onPending?: () => void;
     onCanceled?: () => void;
     onConfirmed?: () => void;
+
+    fullWidth?: boolean;
 }
 
 export function BeetsSubmitTransactionButton({
@@ -39,6 +41,7 @@ export function BeetsSubmitTransactionButton({
     txResponse,
     txReceipt,
     children,
+    fullWidth,
     ...rest
 }: BeetsSubmitTransactionButtonProps & ButtonOptions & ButtonProps & LinkProps) {
     const controls = useAnimation();
@@ -94,7 +97,7 @@ export function BeetsSubmitTransactionButton({
     let _children = children;
 
     return (
-        <VStack>
+        <VStack width={fullWidth ? 'full' : undefined}>
             {isProcessing && (
                 <Text fontWeight="semibold" fontSize="1rem">
                     {isSubmitting ? submittingText : isPending ? pendingText : loadingText}
