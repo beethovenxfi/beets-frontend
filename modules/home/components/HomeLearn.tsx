@@ -74,7 +74,7 @@ export function HomeLearn(props: BoxProps) {
                         url="https://docs.balancer.fi/"
                     />
 
-                    <Box flex="1" mt="12" mb="12">
+                    <Box flex="1" mb="12">
                         <BeetsSubHeadline mb="8">Want to dive even deeper?</BeetsSubHeadline>
                         <Button variant="primary" as="a" href="https://docs.beets.fi" target="_blank">
                             Check out our Docs
