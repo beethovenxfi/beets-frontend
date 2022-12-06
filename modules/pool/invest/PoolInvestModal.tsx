@@ -58,7 +58,7 @@ export function PoolInvestModal() {
 
     return (
         <Box width={{ base: 'full', md: 'fit-content' }}>
-            <Button variant="primary" onClick={onOpen} width={{ base: 'full', md: 'fit-content' }}>
+            <Button variant="primary" onClick={onOpen} width={{ base: 'full', md: '140px' }}>
                 Invest
             </Button>
             <Modal isOpen={isOpen} onClose={onModalClose} size="lg" initialFocusRef={initialRef}>

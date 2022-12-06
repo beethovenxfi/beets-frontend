@@ -48,7 +48,7 @@ export function PoolWithdrawModal() {
 
     return (
         <>
-            <Button onClick={onOpen} variant="secondary" width={{ base: 'full', md: 'fit-content' }}>
+            <Button onClick={onOpen} variant="secondary" width={{ base: 'full', md: '140px' }}>
                 Withdraw
             </Button>
             <Modal
