@@ -46,6 +46,17 @@ export class ReliquaryService {
             .toString();
     }
 
+    public async getRelicNFT({ tokenId, provider }: { tokenId: string; provider: BaseProvider }) {
+        const reliquary = new Contract(this.reliquaryContractAddress, ReliquaryAbi, provider);
+        const tokenURI = await reliquary.tokenURI(tokenId);
+        const decodedURI = Buffer.from(tokenURI.split(',')[1], 'base64');
+        const nft = JSON.parse(decodedURI.toString());
+        const image = nft.image;
+        return image;
+        // const decodedImageURI = Buffer.from(image.split(',')[1], 'base64');
+        // return decodedImageURI.toString();
+    }
+
     public async getAllPendingRewards({
         userAddress,
         provider,

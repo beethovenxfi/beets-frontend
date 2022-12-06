@@ -21,7 +21,7 @@ export function PoolInvestSummary({ ...rest }: Props) {
         usePoolJoinGetBptOutAndPriceImpactForTokensIn();
 
     return (
-        <VStack spacing="4" width="full" backgroundColor="blackAlpha.100" p="4" rounded="md">
+        <VStack spacing="4" width="full"  p="4" rounded="md">
             <HStack spacing="8">
                 <Box>
                     <Heading size="sm" textAlign="center">
