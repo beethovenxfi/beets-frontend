@@ -238,7 +238,7 @@ export interface EncodeReliquaryCreateRelicAndDepositInput {
 export interface EncodeReliquaryDepositInput {
     sender: string;
     token: string;
-    relicid: number;
+    relicId: number;
     amount: BigNumberish;
     outputReference: BigNumberish;
 }

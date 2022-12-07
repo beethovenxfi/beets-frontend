@@ -1,15 +1,4 @@
-import {
-    Alert,
-    AlertIcon,
-    Box,
-    Checkbox,
-    Flex,
-    HStack,
-    Link,
-    StackDivider,
-    Text,
-    VStack,
-} from '@chakra-ui/react';
+import { Alert, AlertIcon, Box, Checkbox, Flex, HStack, Link, StackDivider, Text, VStack } from '@chakra-ui/react';
 import React, { useState } from 'react';
 import { BeetsSubmitTransactionButton } from '~/components/button/BeetsSubmitTransactionButton';
 import { useTrade } from '~/modules/trade/lib/useTrade';
@@ -181,7 +170,8 @@ export function TradePreviewContent({ query, onTransactionSubmitted }: Props) {
                         onConfirmed={() => refetchUserBalances()}
                         width="full"
                         size="lg"
-                        marginTop="4"
+                        marginTop={batchSwapQuery && batchSwapQuery.submitError ? '0' : '4'}
+                        fullWidth={true}
                     >
                         Swap
                     </BeetsSubmitTransactionButton>

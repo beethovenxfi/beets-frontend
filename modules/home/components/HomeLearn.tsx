@@ -47,31 +47,26 @@ export function HomeLearn(props: BoxProps) {
                     <HomeLearnItem
                         title="Getting started: What is DeFi?"
                         description="Discover a brand new way to manage your finances. Decentralized Finance (DeFi) is an emerging industry that removes the control banks and institutions have over financial services. Permissionless and decentralized, DeFi is revolutionizing the financial world as we know it."
-                        url="https://lrn.fi/2022/06/15/core-series-defi/"
+                        url="https://blockbytes.com/2022/06/15/core-series-defi/"
                     />
                     <HomeLearnItem
                         title="Basics: How to set up a MetaMask wallet"
                         description="To begin your DeFi journey, you first need a web3 wallet. From the basics of setting one up to your first transactions, learn all there is to know about navigating MetaMask in DeFi."
-                        url="https://lrn.fi/2022/05/26/how-to-set-up-metamask-for-web-3/"
+                        url="https://blockbytes.com/2022/05/26/how-to-set-up-metamask-for-web-3/"
                     />
                     <HomeLearnItem
                         title="Basics: How to bridge to Optimism?"
                         description="Are you interested in exploring a whole new ecosystem? Bridges in web3 can be confusing to navigate even for the most experienced users. Learn about all the right steps you need to take to get your assets bridged across safely."
-                        url="https://lrn.fi/2022/07/06/how-to-bridge-tokens-to-optimism-with-multichain/"
+                        url="https://blockbytes.com/2022/07/06/how-to-bridge-tokens-to-optimism-with-multichain/"
                         last={true}
                     />
                 </GridItem>
                 <GridItem>
                     <BeetsSubHeadline mb="8">Other resources</BeetsSubHeadline>
                     <HomeLearnItem
-                        title="Lrn.fi"
-                        description="Lrn.fi is a next generation education platform built to educate and empower users on the wonderful world of web3. Learn all you need to know to successfully start your journey into Defi."
-                        url="https://lrn.fi/"
-                    />
-                    <HomeLearnItem
-                        title="FTMAlerts (YouTube)"
-                        description="FTM Alerts is a platform that aims to provide social support for projects building on Fantom. From deep dives into individual protocols, AMAs and a weekly roundup of the latest news on Fantom, FTMAlerts has become a staple for anyone looking to learn more about DeFi."
-                        url="https://www.youtube.com/c/FTMAlerts"
+                        title="Blockbytes"
+                        description="Blockbytes is a next-generation multi-media and education platform built to empower users in the wonderful world of web3. From deep dives into individual protocols, AMAs, newsletters and weekly live shows, BlockBytes has become a staple for anyone looking to learn more about DeFi."
+                        url="https://blockbytes.com/"
                     />
                     <HomeLearnItem
                         title="Balancer (balancer.fi)"
@@ -79,7 +74,7 @@ export function HomeLearn(props: BoxProps) {
                         url="https://docs.balancer.fi/"
                     />
 
-                    <Box flex="1" mt="12" mb="12">
+                    <Box flex="1" mb="12">
                         <BeetsSubHeadline mb="8">Want to dive even deeper?</BeetsSubHeadline>
                         <Button variant="primary" as="a" href="https://docs.beets.fi" target="_blank">
                             Check out our Docs

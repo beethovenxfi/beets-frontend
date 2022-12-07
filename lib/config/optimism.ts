@@ -31,6 +31,14 @@ export const optimismNetworkConfig: NetworkConfig = {
         farmId: '',
         poolId: '',
     },
+    reliquary: {
+        address: '',
+        fbeets: {
+            poolId: '',
+            poolAddress: '',
+            farmId: 0,
+        },
+    },
     balancer: {
         vault: '0xba12222222228d8ba445958a75a0704d566bf2c8',
         batchRelayer: '0x1a58897ab366082028ced3740900ecbd765af738',
@@ -51,6 +59,7 @@ export const optimismNetworkConfig: NetworkConfig = {
             '0xc0d7013a05860271a1edb52415cf74bc85b2ace7': '0x87b57d325bc066890a400a5c88f34084a2454d91', //susd
         },
         reaperManualRebalancer: '0xf070996cf89cd3d2582705fc269f2c800e9a6a21',
+        balancerQueries: '0xe39b5e3b6d74016b2f6a9673d7d7493b6df549d5',
     },
     beetsPoolOwnerAddress: '0xd9e2889ac8c6fff8e94c7c1beeade1352df1a513',
     masterChefContractAddress: '',

@@ -37,6 +37,14 @@ export interface NetworkConfig {
         farmId: string;
         poolId: string;
     };
+    reliquary: {
+        address: string;
+        fbeets: {
+            poolAddress: string;
+            poolId: string;
+            farmId: number;
+        };
+    };
     balancer: {
         vault: string;
         batchRelayer: string;
@@ -48,6 +56,7 @@ export interface NetworkConfig {
         };
         linearRebalancers: { [poolAddress: string]: string };
         reaperManualRebalancer?: string;
+        balancerQueries: string;
     };
     beetsPoolOwnerAddress: string;
     masterChefContractAddress: string;

@@ -40,6 +40,16 @@ export class VaultActionsService {
     public encodeJoinPool(params: EncodeJoinPoolInput): string {
         const relayerLibrary = new Interface(VaultActionsAbi);
 
+        console.log([
+            params.poolId,
+            params.poolKind,
+            params.sender,
+            params.recipient,
+            params.joinPoolRequest,
+            params.value,
+            params.outputReference,
+        ]);
+
         return relayerLibrary.encodeFunctionData('joinPool', [
             params.poolId,
             params.poolKind,
