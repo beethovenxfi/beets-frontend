@@ -87,7 +87,7 @@ export default function Reliquary(props: Props) {
                                             <Heading fontSize="1.75rem">Get your first relic</Heading>
                                             <Text fontSize="1.15rem">
                                                 Looks like you don't have a relic yet. Let's get started by investing
-                                                into the TODO POOL NAME.
+                                                into fBEETS.
                                             </Text>
                                         </VStack>
                                         <ReliquaryInvest onInvestComplete={() => false} />
