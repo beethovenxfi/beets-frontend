@@ -33,9 +33,19 @@ export const fantomNetworkConfig: NetworkConfig = {
         farmId: '22',
         poolId: '0xcde5a11a4acb4ee4c805352cec57e236bdbc3837000200000000000000000019',
     },
+    reliquary: {
+        address: '0xb0fc43069089d0fa02baaa896ac2efcb596d7d05',
+        fbeets: {
+            //poolId: '0x9e4341acef4147196e99d648c5e43b3fc9d026780002000000000000000005ec',
+            poolId: '0xfb2aeb7df228872de762694e2bc3525cf33b940d0002000000000000000005ce',
+            poolAddress: '0xfb2aeb7df228872de762694e2bc3525cf33b940d',
+            farmId: 1,
+        },
+    },
+
     balancer: {
         vault: '0x20dd72Ed959b6147912C2e529F0a0C651c33c9ce',
-        batchRelayer: '0xC852F984CA3310AFc596adeB17EfcB0542646920',
+        batchRelayer: '0xe273ed010295c69b652d93de4390234042065258',
         composableStableFactory: '0xf145cafb67081895ee80eb7c04a30cf87f07b745',
         weightedPoolV2Factory: '0x8ea1c497c16726e097f62c8c9fbd944143f27090',
         linearFactories: {
@@ -43,6 +53,7 @@ export const fantomNetworkConfig: NetworkConfig = {
             reaper: ['0xd448c4156b8de31e56fdfc071c8d96459bb28119'],
         },
         linearRebalancers: {},
+        balancerQueries: '0x1b0a42663df1edea171cd8732d288a81efff6d23',
     },
     beetsPoolOwnerAddress: '0xcd983793adb846dce4830c22f30c7ef0c864a776',
     masterChefContractAddress: '0x8166994d9ebBe5829EC86Bd81258149B87faCfd3',

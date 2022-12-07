@@ -26,7 +26,7 @@ export class ReliquaryStakingService {
         return reliquaryStakingLibrary.encodeFunctionData('reliquaryDeposit', [
             params.sender,
             params.token,
-            params.relicid,
+            params.relicId,
             params.amount,
             params.outputReference,
         ]);
