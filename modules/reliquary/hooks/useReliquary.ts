@@ -1,56 +1,45 @@
-import { Provider } from '@wagmi/core';
-import { useEffect } from 'react';
 import { useQuery } from 'react-query';
 import { useProvider } from 'wagmi';
-import { ReliquaryStakingService } from '~/lib/services/batch-relayer/extensions/reliquary-staking.service';
 import { ReliquaryService } from '~/lib/services/staking/reliquary.service';
 import { TokenBase } from '~/lib/services/token/token-types';
 import { useUserAccount } from '~/lib/user/useUserAccount';
 import { useUserBalances } from '~/lib/user/useUserBalances';
-import { useUserData } from '~/lib/user/useUserData';
-import { useBalances } from '~/lib/util/useBalances';
-import { usePoolUserBptBalance } from '~/modules/pool/lib/usePoolUserBptBalance';
-
-const reliquaryService = new ReliquaryService('0xb0FC43069089d0fA02baAa896ac2eFcb596D7D05', '250', '');
-
-async function getRelicPositions(userAddress: string, provider: Provider) {
-    const positions = await reliquaryService.getAllPositions({ userAddress, provider });
-    return positions;
-}
-
-export const SBT_TEST_POOL = '0xfb2aeb7df228872de762694e2bc3525cf33b940d';
-export const SBT_TEST_POOL_FULL = '0xfb2aeb7df228872de762694e2bc3525cf33b940d0002000000000000000005ce';
-
-const bpt: TokenBase = {
-    address: SBT_TEST_POOL,
-    symbol: 'SBT',
-    name: 'SBT',
-    decimals: 18,
-};
+import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
+import { useRef } from 'react';
 
 export default function useReliquary() {
     const { userAddress } = useUserAccount();
     const provider = useProvider();
+    const networkConfig = useNetworkConfig();
+    const reliquaryService = useRef(
+        new ReliquaryService(networkConfig.reliquary.address, networkConfig.chainId, networkConfig.beets.address),
+    ).current;
 
-    const { userBalances, isLoading: isLoadingUserBalances } = useUserBalances([SBT_TEST_POOL], [bpt]);
+    const bpt: TokenBase = {
+        address: networkConfig.reliquary.fbeets.poolAddress,
+        symbol: 'fBEETS',
+        name: 'fBEETS',
+        decimals: 18,
+    };
+
+    const { isLoading: isLoadingUserBalances, getUserBalance } = useUserBalances([bpt.address], [bpt]);
     const { data: relicPositions = [], isLoading: isLoadingRelicPositions } = useQuery(
         ['relicBalance', userAddress],
         async () => {
-            return await getRelicPositions(userAddress || '', provider);
+            return reliquaryService.getAllPositions({ userAddress: userAddress || '', provider });
         },
         {
-            enabled: userAddress !== '',
+            enabled: !!userAddress,
         },
     );
 
-    const depositableBalance =
-        userBalances.find((balance) => balance.address.toLowerCase() === SBT_TEST_POOL.toLowerCase())?.amount || '0';
+    const depositableBalance = getUserBalance(bpt.address);
 
-        const isLoading = isLoadingUserBalances || isLoadingRelicPositions;
+    const isLoading = isLoadingUserBalances || isLoadingRelicPositions;
     return {
         relicPositions,
         isLoadingRelicPositions,
         depositableBalance,
-        isLoading
+        isLoading,
     };
 }

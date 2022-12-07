@@ -10,10 +10,10 @@ import { UserTokenBalancesProvider } from '~/lib/user/useUserTokenBalances';
 import Reliquary from '~/modules/reliquary/Reliquary';
 import { GetPoolQuery, GetPoolQueryVariables, GqlPoolUnion } from '~/apollo/generated/graphql-codegen-generated';
 import { GetPool } from '~/apollo/generated/operations';
-import { SBT_TEST_POOL, SBT_TEST_POOL_FULL } from '~/modules/reliquary/hooks/useReliquary';
 import { PoolProvider } from '~/modules/pool/lib/usePool';
 import { PoolUserTokenBalancesInWalletProvider } from '~/modules/pool/lib/usePoolUserTokenBalancesInWallet';
 import { PoolUserBptBalanceProvider } from '~/modules/pool/lib/usePoolUserBptBalance';
+import { networkConfig } from '~/lib/config/network-config';
 
 interface Props {
     pool: GqlPoolUnion;
@@ -63,7 +63,7 @@ export async function getStaticProps({ params }: { params: { poolId: string } })
     const client = initializeApolloClient();
     const { data } = await client.query<GetPoolQuery, GetPoolQueryVariables>({
         query: GetPool,
-        variables: { id: SBT_TEST_POOL_FULL },
+        variables: { id: networkConfig.reliquary.fbeets.poolId },
     });
 
     //pre-load the fbeets ratio for fidelio duetto
