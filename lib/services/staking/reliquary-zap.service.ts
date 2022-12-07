@@ -43,23 +43,11 @@ export class ReliquaryZapService {
             ethValue: isNativeFtm ? ftmAmountScaled : '0',
         });
 
-        const relicDepositOrCreateAndDeposit =
-            relicId && typeof relicId !== undefined
-                ? this.batchRelayerService.reliquaryEncodeDeposit({
-                      sender: networkConfig.balancer.batchRelayer,
-                      token: networkConfig.reliquary.fbeets.poolAddress,
-                      relicId,
-                      amount: this.batchRelayerService.toPersistentChainedReference('0'),
-                      outputReference: '0',
-                  })
-                : this.batchRelayerService.reliquaryEncodeCreateRelicAndDeposit({
-                      sender: networkConfig.balancer.batchRelayer,
-                      recipient: userAddress,
-                      token: networkConfig.reliquary.fbeets.poolAddress,
-                      poolId: networkConfig.reliquary.fbeets.farmId,
-                      amount: this.batchRelayerService.toPersistentChainedReference('0'),
-                      outputReference: '0',
-                  });
+        const relicDepositOrCreateAndDeposit = this.getRelicDepositOrCreateAndDeposit({
+            userAddress,
+            relicId,
+            amount: this.batchRelayerService.toPersistentChainedReference('0'),
+        });
 
         const peekJoinNewFbeetsBpt = this.batchRelayerService.encodePeekChainedReferenceValue(
             this.batchRelayerService.toPersistentChainedReference('0'),
@@ -135,23 +123,11 @@ export class ReliquaryZapService {
             ethValue: '0',
         });
 
-        const relicDepositOrCreateAndDeposit =
-            relicId && typeof relicId !== undefined
-                ? this.batchRelayerService.reliquaryEncodeDeposit({
-                      sender: networkConfig.balancer.batchRelayer,
-                      token: networkConfig.reliquary.fbeets.poolAddress,
-                      relicId,
-                      amount: this.batchRelayerService.toPersistentChainedReference('3'),
-                      outputReference: '0',
-                  })
-                : this.batchRelayerService.reliquaryEncodeCreateRelicAndDeposit({
-                      sender: networkConfig.balancer.batchRelayer,
-                      recipient: userAddress,
-                      token: networkConfig.reliquary.fbeets.poolAddress,
-                      poolId: networkConfig.reliquary.fbeets.farmId,
-                      amount: this.batchRelayerService.toPersistentChainedReference('3'),
-                      outputReference: '0',
-                  });
+        const relicDepositOrCreateAndDeposit = this.getRelicDepositOrCreateAndDeposit({
+            userAddress,
+            relicId,
+            amount: this.batchRelayerService.toPersistentChainedReference('3'),
+        });
 
         const peekExitFidelioDuetoWftm = this.batchRelayerService.encodePeekChainedReferenceValue(
             this.batchRelayerService.toPersistentChainedReference('1'),
@@ -235,6 +211,7 @@ export class ReliquaryZapService {
             },
         });
     }
+
     private getReliquaryFbeetsJoinCallData({
         userAddress,
         amountsIn,
@@ -266,6 +243,33 @@ export class ReliquaryZapService {
             value: ethValue,
             outputReference,
         });
+    }
+
+    private getRelicDepositOrCreateAndDeposit({
+        userAddress,
+        relicId,
+        amount,
+    }: {
+        userAddress: string;
+        relicId?: number;
+        amount: BigNumberish;
+    }) {
+        return relicId && typeof relicId !== undefined
+            ? this.batchRelayerService.reliquaryEncodeDeposit({
+                  sender: networkConfig.balancer.batchRelayer,
+                  token: networkConfig.reliquary.fbeets.poolAddress,
+                  relicId,
+                  amount,
+                  outputReference: '0',
+              })
+            : this.batchRelayerService.reliquaryEncodeCreateRelicAndDeposit({
+                  sender: networkConfig.balancer.batchRelayer,
+                  recipient: userAddress,
+                  token: networkConfig.reliquary.fbeets.poolAddress,
+                  poolId: networkConfig.reliquary.fbeets.farmId,
+                  amount,
+                  outputReference: '0',
+              });
     }
 }
 
