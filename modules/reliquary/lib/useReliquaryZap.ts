@@ -1,21 +1,21 @@
 import { batchRelayerContractConfig, useSubmitTransaction } from '~/lib/util/useSubmitTransaction';
 
-export function useReliquaryFbeetsZap() {
+export function useReliquaryZap() {
     const { submit, submitAsync, ...rest } = useSubmitTransaction({
         config: batchRelayerContractConfig,
         transactionType: 'JOIN',
     });
 
-    async function reliquaryFbeetsZap(calls: string[]) {
+    async function reliquaryZap(calls: string[], type: 'MIGRATE' | 'DEPOSIT') {
         submit({
             args: [calls],
-            toastText: 'toast text',
-            walletText: 'wallet text',
+            toastText: type === 'MIGRATE' ? 'Migrate toast text' : 'Join toast text',
+            walletText: type === 'MIGRATE' ? 'Migrate wallet text' : 'Join wallet text',
         });
     }
 
     return {
-        reliquaryFbeetsZap,
+        reliquaryZap,
         ...rest,
     };
 }

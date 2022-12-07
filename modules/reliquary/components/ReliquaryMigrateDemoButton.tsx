@@ -1,15 +1,15 @@
 import { Button } from '@chakra-ui/react';
 import { useReliquaryFbeetsMigrateContractCallData } from '~/modules/reliquary/lib/useReliquaryFbeetsMigrateContractCallData';
-import { useReliquaryFbeetsZap } from '~/modules/reliquary/lib/useReliquaryFbeetsZap';
+import { useReliquaryZap } from '~/modules/reliquary/lib/useReliquaryZap';
 
 export function ReliquaryMigrateDemoButton() {
     const { data: contractCalls, fbeetsBalance } = useReliquaryFbeetsMigrateContractCallData();
-    const { reliquaryFbeetsZap } = useReliquaryFbeetsZap();
+    const { reliquaryZap } = useReliquaryZap();
 
     return (
         <Button
             onClick={() => {
-                reliquaryFbeetsZap(contractCalls || []);
+                reliquaryZap(contractCalls || [], 'MIGRATE');
             }}
         >
             Migrate fBeets to reliquary {fbeetsBalance}

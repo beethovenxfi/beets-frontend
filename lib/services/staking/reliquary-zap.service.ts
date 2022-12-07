@@ -13,6 +13,80 @@ import { oldBnum } from '~/lib/services/pool/lib/old-big-number';
 export class ReliquaryZapService {
     constructor(private readonly batchRelayerService: BatchRelayerService, private readonly provider: BaseProvider) {}
 
+    public async getReliquaryDepositContractCallData({
+        userAddress,
+        beetsAmount,
+        ftmAmount,
+        slippage,
+        isNativeFtm,
+        relicId,
+    }: {
+        userAddress: string;
+        beetsAmount: AmountHumanReadable;
+        ftmAmount: AmountHumanReadable;
+        slippage: AmountHumanReadable;
+        isNativeFtm: boolean;
+        relicId?: number;
+    }): Promise<string[]> {
+        const beetsAmountScaled = parseFixed(beetsAmount, 18);
+        const ftmAmountScaled = parseFixed(ftmAmount, 18);
+
+        const joinNewFbeets = this.getReliquaryFbeetsJoinCallData({
+            userAddress,
+            amountsIn: [ftmAmountScaled, beetsAmountScaled],
+            maxAmountsIn: [ftmAmountScaled, beetsAmountScaled],
+            //this is set to 0 for the peek
+            minimumBPT: '0',
+            outputReference: this.batchRelayerService.toPersistentChainedReference('0'),
+            fromInternalBalance: false,
+            ethValue: isNativeFtm ? ftmAmountScaled : '0',
+        });
+
+        const relicDepositOrCreateAndDeposit =
+            relicId && typeof relicId !== undefined
+                ? this.batchRelayerService.reliquaryEncodeDeposit({
+                      sender: networkConfig.balancer.batchRelayer,
+                      token: networkConfig.reliquary.fbeets.poolAddress,
+                      relicId,
+                      amount: this.batchRelayerService.toPersistentChainedReference('0'),
+                      outputReference: '0',
+                  })
+                : this.batchRelayerService.reliquaryEncodeCreateRelicAndDeposit({
+                      sender: networkConfig.balancer.batchRelayer,
+                      recipient: userAddress,
+                      token: networkConfig.reliquary.fbeets.poolAddress,
+                      poolId: networkConfig.reliquary.fbeets.farmId,
+                      amount: this.batchRelayerService.toPersistentChainedReference('0'),
+                      outputReference: '0',
+                  });
+
+        const peekJoinNewFbeetsBpt = this.batchRelayerService.encodePeekChainedReferenceValue(
+            this.batchRelayerService.toPersistentChainedReference('0'),
+        );
+
+        const [, newFbeetsBptAmountOut] = await this.batchRelayerService.simulateMulticall({
+            provider: this.provider,
+            userAddress,
+            calls: [joinNewFbeets, peekJoinNewFbeetsBpt],
+        });
+
+        //below we use the output value of the peek to set min bpt amount
+        return [
+            this.getReliquaryFbeetsJoinCallData({
+                userAddress,
+                amountsIn: [ftmAmountScaled, beetsAmountScaled],
+                maxAmountsIn: [ftmAmountScaled, beetsAmountScaled],
+                minimumBPT: oldBnum(newFbeetsBptAmountOut)
+                    .minus(oldBnum(newFbeetsBptAmountOut).times(slippage))
+                    .toFixed(0),
+                outputReference: this.batchRelayerService.toPersistentChainedReference('0'),
+                fromInternalBalance: true,
+                ethValue: isNativeFtm ? ftmAmountScaled : '0',
+            }),
+            relicDepositOrCreateAndDeposit,
+        ];
+    }
+
     // burn fbeets -> exit fidelio duetto -> join new fbeets -> deposit to relic (create relic if no id provided)
     public async getFbeetsMigrateContractCallData({
         userAddress,

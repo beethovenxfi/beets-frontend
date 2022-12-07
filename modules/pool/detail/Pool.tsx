@@ -11,7 +11,6 @@ import { usePool } from '~/modules/pool/lib/usePool';
 import { usePoolUserBptBalance } from '~/modules/pool/lib/usePoolUserBptBalance';
 import { PoolFbeetsWarning } from '~/modules/pool/detail/components/PoolFbeetsWarning';
 import { PoolOvernightWarning } from '~/modules/pool/detail/components/PoolOvernightWarning';
-import { ReliquaryMigrateDemoButton } from '~/modules/reliquary/components/ReliquaryMigrateDemoButton';
 
 export function Pool() {
     const { pool, isFbeetsPool } = usePool();
@@ -21,7 +20,6 @@ export function Pool() {
         <Box marginBottom="8">
             <PoolHeader />
             <VStack width="full" spacing="4">
-                <ReliquaryMigrateDemoButton />
                 {pool.id === '0xb1c9ac57594e9b1ec0f3787d9f6744ef4cb0a02400000000000000000000006e' && (
                     <PoolOvernightWarning />
                 )}
