@@ -8,9 +8,10 @@ import { BatchSwapRoute } from '~/components/batch-swap/components/BatchSwapRout
 
 interface Props {
     swapInfo: GqlSorGetSwapsResponseFragment;
+    minimalWidth?: boolean;
 }
 
-export function BatchSwapSorRoute({ swapInfo }: Props) {
+export function BatchSwapSorRoute({ swapInfo, minimalWidth }: Props) {
     const { getToken } = useGetTokens();
     const tokenIn = getToken(swapInfo.tokenIn);
     const tokenOut = getToken(swapInfo.tokenOut);
@@ -37,7 +38,7 @@ export function BatchSwapSorRoute({ swapInfo }: Props) {
                 {swapInfo.routes.map((route, index) => (
                     <AnimatePresence key={index}>
                         <motion.div layout initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-                            <BatchSwapRoute route={route} />
+                            <BatchSwapRoute route={route} minimalWidth={minimalWidth} />
                         </motion.div>
                     </AnimatePresence>
                 ))}
