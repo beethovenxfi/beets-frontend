@@ -227,6 +227,42 @@ export class BatchRelayerService {
         });
     }
 
+    public getUnwrapCallForLinearPoolWithFactory({
+        factory,
+        wrappedToken,
+        sender,
+        recipient,
+        amount,
+        outputReference,
+    }: {
+        factory: string;
+        wrappedToken: string;
+        sender: string;
+        recipient: string;
+        amount: BigNumberish;
+        outputReference: BigNumberish;
+    }) {
+        if (networkConfig.balancer.linearFactories.erc4626.includes(factory)) {
+            return this.erc4626EncodeUnwrap({
+                wrappedToken,
+                sender,
+                recipient,
+                amount,
+                outputReference,
+            });
+        } else if (networkConfig.balancer.linearFactories.reaper.includes(factory)) {
+            return this.reaperEncodeUnwrap({
+                vaultToken: wrappedToken,
+                sender,
+                recipient,
+                amount,
+                outputReference,
+            });
+        }
+
+        throw new Error('getUnwrapCallForLinearPoolWithFactory: Unsupported factory');
+    }
+
     public replaceWethWithAddressZero(address: string) {
         return isSameAddress(address, this.wethAddress) ? AddressZero : address;
     }
