@@ -1,4 +1,3 @@
-import { useReliquaryFbeetsMigrateContractCallData } from '~/modules/reliquary/lib/useReliquaryFbeetsMigrateContractCallData';
 import { useReliquaryZap } from '~/modules/reliquary/lib/useReliquaryZap';
 import { Button } from '@chakra-ui/react';
 import { useReliquaryDepositContractCallData } from '~/modules/reliquary/lib/useReliquaryDepositContractCallData';

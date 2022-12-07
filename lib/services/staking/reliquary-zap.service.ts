@@ -13,6 +13,7 @@ import { oldBnum } from '~/lib/services/pool/lib/old-big-number';
 export class ReliquaryZapService {
     constructor(private readonly batchRelayerService: BatchRelayerService, private readonly provider: BaseProvider) {}
 
+    //join pool with beets/ftm -> deposit bpt into relic (create relic if no id provided)
     public async getReliquaryDepositContractCallData({
         userAddress,
         beetsAmount,
