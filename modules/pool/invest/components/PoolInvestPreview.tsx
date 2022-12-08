@@ -21,8 +21,8 @@ export function PoolInvestPreview({ onInvestComplete, onClose }: Props) {
     const { selectedInvestTokensWithAmounts } = useInvest();
 
     return (
-        <VStack spacing='4' width='full'>
-            <Box px="4" width='full'>
+        <VStack spacing="4" width="full">
+            <Box px="4" width="full">
                 <PoolInvestSummary mt="6" />
                 <BeetsBox>
                     <VStack width="full" divider={<StackDivider borderColor="whiteAlpha.200" />} mt="4" p="2">
@@ -32,7 +32,7 @@ export function PoolInvestPreview({ onInvestComplete, onClose }: Props) {
                     </VStack>
                 </BeetsBox>
             </Box>
-            <PoolInvestActions onInvestComplete={onInvestComplete} onClose={onClose} />
+            <PoolInvestActions isReliquaryDeposit onInvestComplete={onInvestComplete} onClose={onClose} />
         </VStack>
     );
 }

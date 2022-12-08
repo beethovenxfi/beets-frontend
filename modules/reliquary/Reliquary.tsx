@@ -91,13 +91,6 @@ export default function Reliquary(props: Props) {
                                             </Text>
                                         </VStack>
                                         <ReliquaryInvest onInvestComplete={() => false} />
-                                        <Button
-                                            disabled={bptInput === 0}
-                                            variant="primary"
-                                            width={{ base: 'full', md: 'fit-content' }}
-                                        >
-                                            Mint your first relic
-                                        </Button>
                                     </VStack>
                                 )}
                             </VStack>

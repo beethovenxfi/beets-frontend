@@ -1,7 +1,7 @@
 import { TokenBaseWithAmount } from '~/lib/services/token/token-types';
 import { useEffect, useState } from 'react';
 import { HorizontalSteps, StepStatus } from '~/components/steps/HorizontalSteps';
-import { Alert, AlertIcon, Box, Button, Flex, Skeleton, Portal } from '@chakra-ui/react';
+import { Alert, AlertIcon, Box, Button, Flex, Skeleton, Portal, Text } from '@chakra-ui/react';
 
 import { BeetsSubmitTransactionButton } from '~/components/button/BeetsSubmitTransactionButton';
 import { BeetsTokenApprovalButton } from '~/components/button/BeetsTokenApprovalButton';
@@ -90,7 +90,9 @@ export function BeetsTransactionStepsSubmit({
             setCurrentStepIdx(currentStepIdx + 1);
         }
     }
-    
+
+    console.log('esk', { steps, currentQuery, currentStep });
+
     return (
         <Box>
             {isLoading && !complete ? (

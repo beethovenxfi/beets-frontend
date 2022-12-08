@@ -16,13 +16,16 @@ import { useUserSyncBalanceMutation } from '~/apollo/generated/graphql-codegen-g
 import { useHasBatchRelayerApproval } from '~/lib/util/useHasBatchRelayerApproval';
 import { SubTransactionSubmittedContent } from '~/components/transaction/SubTransactionSubmittedContent';
 import { transactionMessageFromError } from '~/lib/util/transaction-util';
+import { useReliquaryDepositContractCallData } from '~/modules/reliquary/lib/useReliquaryDepositContractCallData';
+import { useReliquaryZap } from '~/modules/reliquary/lib/useReliquaryZap';
 
 interface Props {
     onInvestComplete(): void;
     onClose(): void;
+    isReliquaryDeposit?: boolean;
 }
 
-export function PoolInvestActions({ onInvestComplete, onClose }: Props) {
+export function PoolInvestActions({ onInvestComplete, onClose, isReliquaryDeposit = false }: Props) {
     const networkConfig = useNetworkConfig();
     const { pool, requiresBatchRelayerOnJoin } = usePool();
     const { selectedInvestTokensWithAmounts, totalInvestValue, zapEnabled } = useInvest();
@@ -35,21 +38,34 @@ export function PoolInvestActions({ onInvestComplete, onClose }: Props) {
         error: userAllowancesError,
     } = useUserAllowances(allInvestTokens, networkConfig.balancer.vault);
     const [steps, setSteps] = useState<TransactionStep[] | null>(null);
-    const { bptOutAndPriceImpact } = usePoolJoinGetBptOutAndPriceImpactForTokensIn();
-    const { data: contractCallData, isLoading: isLoadingContractCallData } = usePoolJoinGetContractCallData(
-        bptOutAndPriceImpact?.minBptReceived || null,
-        zapEnabled,
-    );
     const {
         data: hasBatchRelayerApproval,
         isLoading: isLoadingBatchRelayerApproval,
         refetch: refetchBatchRelayerApproval,
     } = useHasBatchRelayerApproval();
+
+    // normal invest
+    const { bptOutAndPriceImpact } = usePoolJoinGetBptOutAndPriceImpactForTokensIn();
+    const { data: contractCallData, isLoading: isLoadingContractCallData } = usePoolJoinGetContractCallData(
+        bptOutAndPriceImpact?.minBptReceived || null,
+        zapEnabled,
+    );
+
+    // reliquary invest - disabled during the normal invest flow
+    const { reliquaryZap, ...reliquaryJoinQuery } = useReliquaryZap();
+    const { data: reliquaryContractCalls } = useReliquaryDepositContractCallData({
+        investTokensWithAmounts: selectedInvestTokensWithAmounts,
+        enabled: isReliquaryDeposit,
+    });
+
+    console.log('lmao', selectedInvestTokensWithAmounts);
+
     const { refetch: refetchUserTokenBalances } = usePoolUserTokenBalancesInWallet();
     const { refetch: refetchUserBptBalance } = usePoolUserBptBalance();
     const [userSyncBalance] = useUserSyncBalanceMutation();
 
     const isLoading = isLoadingUserAllowances || isLoadingContractCallData || isLoadingBatchRelayerApproval;
+    const isBatchRelayerApprovalRequired = requiresBatchRelayerOnJoin || zapEnabled || isReliquaryDeposit;
 
     useEffect(() => {
         refetchBatchRelayerApproval({});
@@ -63,6 +79,21 @@ export function PoolInvestActions({ onInvestComplete, onClose }: Props) {
                     !hasApprovalForAmount(tokenWithAmount.address, tokenWithAmount.amount),
             );
 
+            let investStep: TransactionStep = {
+                id: 'invest',
+                type: 'other',
+                buttonText: 'Invest',
+                tooltipText: 'Invest into this pool',
+            };
+            if (isReliquaryDeposit) {
+                investStep = {
+                    id: 'reliquary-invest',
+                    type: 'other',
+                    buttonText: 'Invest into your relic',
+                    tooltipText: 'Invest into fBeets and deposit into your relic',
+                };
+            }
+
             const steps: TransactionStep[] = [
                 ...tokensRequiringApproval.map((token) => ({
                     id: token.symbol,
@@ -71,20 +102,19 @@ export function PoolInvestActions({ onInvestComplete, onClose }: Props) {
                     tooltipText: `Approve ${token.symbol} for investing`,
                     token,
                 })),
-                {
-                    id: 'invest',
-                    type: 'other',
-                    buttonText: 'Invest',
-                    tooltipText: 'Invest into this pool',
-                },
+                investStep,
             ];
 
-            if ((requiresBatchRelayerOnJoin || zapEnabled) && !hasBatchRelayerApproval) {
+            if (isBatchRelayerApprovalRequired && !hasBatchRelayerApproval) {
+                let tooltipText = 'This pool requires you to approve the batch relayer.';
+                if (isReliquaryDeposit) {
+                    tooltipText = 'To create and deposit into a relic, you need to approve the batch relayer.';
+                }
                 steps.unshift({
                     id: 'batch-relayer',
                     type: 'other',
                     buttonText: 'Approve Batch Relayer',
-                    tooltipText: 'This pool requires you to approve the batch relayer.',
+                    tooltipText,
                 });
             }
 
@@ -129,6 +159,9 @@ export function PoolInvestActions({ onInvestComplete, onClose }: Props) {
                         if (id === 'invest' && contractCallData) {
                             joinPool(contractCallData, selectedInvestTokensWithAmounts);
                         }
+                        if (id === 'reliquary-invest' && reliquaryContractCalls) {
+                            reliquaryZap(reliquaryContractCalls, 'DEPOSIT');
+                        }
                     }}
                     onConfirmed={(id) => {
                         if (id !== 'invest') {
@@ -140,7 +173,10 @@ export function PoolInvestActions({ onInvestComplete, onClose }: Props) {
                             onInvestComplete();
                         }
                     }}
-                    queries={[{ ...joinQuery, id: 'invest' }]}
+                    queries={[
+                        { ...joinQuery, id: 'invest' },
+                        { ...reliquaryJoinQuery, id: 'reliquary-invest' },
+                    ]}
                 />
             </Box>
             )

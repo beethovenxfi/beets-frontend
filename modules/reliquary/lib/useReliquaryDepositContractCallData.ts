@@ -5,33 +5,62 @@ import { useSlippage } from '~/lib/global/useSlippage';
 import { useBalances } from '~/lib/util/useBalances';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 import { AmountHumanReadable } from '~/lib/services/token/token-types';
+import { GqlPoolToken } from '~/apollo/generated/graphql-codegen-generated';
+import { useMemo } from 'react';
+import { keyBy } from 'lodash';
 
 export function useReliquaryDepositContractCallData({
-    beetsAmount,
-    ftmAmount,
-    isNativeFtm,
+    investTokensWithAmounts,
+    enabled = true,
 }: {
-    beetsAmount: AmountHumanReadable;
-    ftmAmount: AmountHumanReadable;
-    isNativeFtm: boolean;
+    investTokensWithAmounts: (GqlPoolToken & { amount: string })[];
+    enabled?: boolean;
 }) {
     const { userAddress } = useUserAccount();
     const { slippage } = useSlippage();
+    const networkConfig = useNetworkConfig();
+
+    const investTokensWithAmountsMap = useMemo(
+        () => keyBy(investTokensWithAmounts, 'address'),
+        [investTokensWithAmounts],
+    );
+
+    const investData = useMemo(() => {
+        let beetsAmount = '0';
+        let ftmAmount = '0';
+        let isNativeFtm = true;
+
+        if (enabled) {
+            beetsAmount = investTokensWithAmountsMap[networkConfig.beets.address].amount;
+            if (investTokensWithAmountsMap[networkConfig.eth.address]?.address) {
+                ftmAmount = investTokensWithAmountsMap[networkConfig.eth.address].amount;
+            } else {
+                ftmAmount = investTokensWithAmountsMap[networkConfig.wethAddress].amount;
+                isNativeFtm = false;
+            }
+        }
+
+        return {
+            beetsAmount,
+            ftmAmount,
+            isNativeFtm,
+        };
+    }, [enabled, investTokensWithAmountsMap]);
 
     const query = useQuery(
-        ['reliquaryDepositContractCallData', userAddress, slippage, beetsAmount, ftmAmount, isNativeFtm],
+        ['reliquaryDepositContractCallData', userAddress, slippage, investData],
         async () => {
             return reliquaryZapService.getReliquaryDepositContractCallData({
                 userAddress: userAddress || '',
                 slippage,
-                beetsAmount,
-                ftmAmount,
-                isNativeFtm,
+                beetsAmount: investData.beetsAmount,
+                ftmAmount: investData.ftmAmount,
+                isNativeFtm: investData.isNativeFtm,
                 //TODO: set a relic id here if the user already has a relic
                 relicId: undefined,
             });
         },
-        { enabled: !!userAddress },
+        { enabled: !!userAddress && enabled },
     );
 
     return {

@@ -17,6 +17,7 @@ export default function SwitchButton({ options, onChange, value }: Props) {
         <Box rounded="md" overflow="hidden" backgroundColor="whiteAlpha.100">
             {options.map((option) => (
                 <Button
+                    key={`switchbutton-${option.id}`}
                     backgroundColor="transparent"
                     position="relative"
                     onClick={() => onChange(option.id)}
