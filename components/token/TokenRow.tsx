@@ -68,7 +68,7 @@ export default function TokenRow({
                     <Input
                         type="number"
                         min={0}
-                        placeholder="12.4.."
+                        placeholder="0.0"
                         textAlign="right"
                         value={amount || ''}
                         onChange={(e) => {
