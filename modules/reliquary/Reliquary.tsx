@@ -84,7 +84,7 @@ export default function Reliquary(props: Props) {
                                 {relicPositions.length === 0 && (
                                     <VStack spacing="4">
                                         <VStack spacing="2">
-                                            <Heading fontSize="1.75rem">Get your first relic</Heading>
+                                            <Heading fontSize="1.75rem">Mint your first relic</Heading>
                                             <Text fontSize="1.15rem">
                                                 Looks like you don't have a relic yet. Let's get started by investing
                                                 into fBEETS.
