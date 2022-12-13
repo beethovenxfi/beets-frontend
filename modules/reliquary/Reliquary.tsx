@@ -65,7 +65,14 @@ export default function Reliquary(props: Props) {
     };
 
     return (
-        <Box minHeight="600px" display="flex" alignItems="center" justifyContent={{ md: 'center', xl: 'initial' }}>
+        <Box
+            minHeight="600px"
+            width="full"
+            display="flex"
+            height="full"
+            alignItems="center"
+            justifyContent={{ md: 'center', xl: 'initial' }}
+        >
             <AnimatePresence>
                 {!isConnected && <ReliquaryConnectWallet />}
                 {isConnected && (
@@ -74,13 +81,13 @@ export default function Reliquary(props: Props) {
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
-                        width="100%"
+                        width="full"
+                        height="full"
                         alignItems="flex-start"
                     >
-                        <Flex justifyContent="center" alignItems="flex-start" width="100%" height="100%">
-                            {/* TODO SPLIT COMPONENTS UP */}
-                            <VStack spacing="8">
-                                {relicPositions.length > 0 && <ReliquaryNFT />}
+                        <Flex justifyContent="center" alignItems="flex-start" width="full" height="full">
+                            <VStack spacing="8" width="full" height="full">
+                                {relicPositions.length > 0 && <ReliquaryNFT positions={relicPositions} />}
                                 {relicPositions.length === 0 && (
                                     <VStack spacing="4">
                                         <VStack spacing="2">

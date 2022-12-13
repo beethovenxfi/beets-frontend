@@ -1,4 +1,4 @@
-import { Box, useTheme } from '@chakra-ui/react';
+import { Box, Flex, useTheme } from '@chakra-ui/react';
 import { AppProps } from 'next/app';
 import { Navbar } from '~/modules/nav/Navbar';
 import { SubNavBar } from '~/modules/nav/SubNavBar';
@@ -38,7 +38,9 @@ export function AppContent({ Component, pageProps }: AppProps) {
             <Box pt="3" />
             <Navbar scrollY={scrollY} />
             <Box pt="1" />
-            <SubNavBar />
+            <Flex width="full" justifyContent="center">
+                <SubNavBar />
+            </Flex>
             <Box display="flex" justifyContent="center" mt="8">
                 <Box
                     width={{ base: 'full', '2xl': theme.breakpoints['2xl'] }}

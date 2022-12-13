@@ -40,17 +40,17 @@ function Relic({ pool }: Props) {
                 <PoolUserBptBalanceProvider>
                     <PoolUserTokenBalancesInWalletProvider>
                         <UserTokenBalancesProvider>
+                            <PageMasthead
+                                title="Reliquary"
+                                image={
+                                    <NextImage
+                                        src={chainId === '10' ? SwapMastheadOpImage : SwapMastheadImage}
+                                        width="213.71px"
+                                        height="68px"
+                                    />
+                                }
+                            />
                             <Reliquary />
-                            {/* <PageMasthead
-                    title="Reliquary"
-                    image={
-                        <NextImage
-                            src={chainId === '10' ? SwapMastheadOpImage : SwapMastheadImage}
-                            width="213.71px"
-                            height="68px"
-                        />
-                    }
-                /> */}
                         </UserTokenBalancesProvider>
                     </PoolUserTokenBalancesInWalletProvider>
                 </PoolUserBptBalanceProvider>

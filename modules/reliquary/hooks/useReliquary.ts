@@ -38,5 +38,6 @@ export default function useReliquary() {
         isLoadingRelicPositions,
         depositableBalance,
         isLoading,
+        reliquaryService,
     };
 }

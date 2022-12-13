@@ -19,7 +19,7 @@ export default function ReliquaryInvest({ onInvestComplete }: Props) {
     const [investmentStep, setInvestmentStep] = useState('proportional');
 
     return (
-        <VStack spacing="4">
+        <VStack spacing="0">
             <SwitchButton
                 onChange={(id: string) => setInvestmentStep(id)}
                 value={investmentStep}

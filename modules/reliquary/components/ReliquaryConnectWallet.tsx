@@ -19,7 +19,6 @@ export default function ReliquaryConnectWallet(props: Props) {
             justifyContent="center"
             alignItems="center"
         >
-            <ReliquaryNFT />
             <VStack spacing="1">
                 <Heading fontSize="1.75rem">Welcome to the Beets Reliquary</Heading>
                 <Text fontSize="1.15rem">Connect your wallet to get started.</Text>
