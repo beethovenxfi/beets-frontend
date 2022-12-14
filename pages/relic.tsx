@@ -14,6 +14,7 @@ import { PoolProvider } from '~/modules/pool/lib/usePool';
 import { PoolUserTokenBalancesInWalletProvider } from '~/modules/pool/lib/usePoolUserTokenBalancesInWallet';
 import { PoolUserBptBalanceProvider } from '~/modules/pool/lib/usePoolUserBptBalance';
 import { networkConfig } from '~/lib/config/network-config';
+import { PoolUserDepositBalanceProvider } from '~/modules/pool/lib/usePoolUserDepositBalance';
 
 interface Props {
     pool: GqlPoolUnion;
@@ -40,17 +41,19 @@ function Relic({ pool }: Props) {
                 <PoolUserBptBalanceProvider>
                     <PoolUserTokenBalancesInWalletProvider>
                         <UserTokenBalancesProvider>
-                            <PageMasthead
-                                title="Reliquary"
-                                image={
-                                    <NextImage
-                                        src={chainId === '10' ? SwapMastheadOpImage : SwapMastheadImage}
-                                        width="213.71px"
-                                        height="68px"
-                                    />
-                                }
-                            />
-                            <Reliquary />
+                            <PoolUserDepositBalanceProvider>
+                                <PageMasthead
+                                    title="Reliquary"
+                                    image={
+                                        <NextImage
+                                            src={chainId === '10' ? SwapMastheadOpImage : SwapMastheadImage}
+                                            width="213.71px"
+                                            height="68px"
+                                        />
+                                    }
+                                />
+                                <Reliquary />
+                            </PoolUserDepositBalanceProvider>
                         </UserTokenBalancesProvider>
                     </PoolUserTokenBalancesInWalletProvider>
                 </PoolUserBptBalanceProvider>

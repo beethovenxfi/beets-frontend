@@ -165,6 +165,14 @@ export class ReliquaryService {
         return levelOnUpdate.toNumber();
     }
 
+    public async getMaturityThresholds({ pid, provider }: { pid: string; provider: BaseProvider }) {
+        const reliquary = new Contract(this.reliquaryContractAddress, ReliquaryAbi, provider);
+        const poolLevelInfo = await reliquary.getLevelInfo(pid);
+
+        const maturityThresholds = poolLevelInfo.requiredMaturity.map((maturity: BigNumber) => maturity.toString());
+        return maturityThresholds;
+    }
+
     public async getDepositImpact({
         amount,
         relicId,
