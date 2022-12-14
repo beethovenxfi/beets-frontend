@@ -4,12 +4,12 @@ import { useReliquaryZap } from '~/modules/reliquary/lib/useReliquaryZap';
 
 export function ReliquaryMigrateDemoButton() {
     const { data: contractCalls, fbeetsBalance } = useReliquaryFbeetsMigrateContractCallData();
-    const { reliquaryZap } = useReliquaryZap();
+    const { reliquaryZap } = useReliquaryZap('MIGRATE');
 
     return (
         <Button
             onClick={() => {
-                reliquaryZap(contractCalls || [], 'MIGRATE');
+                reliquaryZap(contractCalls || []);
             }}
         >
             Migrate fBeets to reliquary {fbeetsBalance}

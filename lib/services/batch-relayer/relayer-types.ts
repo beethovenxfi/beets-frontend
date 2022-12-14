@@ -245,12 +245,12 @@ export interface EncodeReliquaryDepositInput {
 
 export interface EncodeReliquaryWithdrawInput {
     recipient: string;
-    relicId: string;
+    relicId: number;
     amount: BigNumberish;
     outputReference: BigNumberish;
 }
 export interface EncodeReliquaryHarvestAllInput {
-    relicIds: string[];
+    relicIds: number[];
     recipient: string;
     outputReference: BigNumberish;
 }

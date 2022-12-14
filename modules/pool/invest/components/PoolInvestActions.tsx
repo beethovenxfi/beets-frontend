@@ -52,7 +52,7 @@ export function PoolInvestActions({ onInvestComplete, onClose, isReliquaryDeposi
     );
 
     // reliquary invest - disabled during the normal invest flow
-    const { reliquaryZap, ...reliquaryJoinQuery } = useReliquaryZap();
+    const { reliquaryZap, ...reliquaryJoinQuery } = useReliquaryZap('DEPOSIT');
     const { data: reliquaryContractCalls } = useReliquaryDepositContractCallData({
         investTokensWithAmounts: selectedInvestTokensWithAmounts,
         enabled: isReliquaryDeposit,
@@ -160,7 +160,7 @@ export function PoolInvestActions({ onInvestComplete, onClose, isReliquaryDeposi
                             joinPool(contractCallData, selectedInvestTokensWithAmounts);
                         }
                         if (id === 'reliquary-invest' && reliquaryContractCalls) {
-                            reliquaryZap(reliquaryContractCalls, 'DEPOSIT');
+                            reliquaryZap(reliquaryContractCalls);
                         }
                     }}
                     onConfirmed={(id) => {

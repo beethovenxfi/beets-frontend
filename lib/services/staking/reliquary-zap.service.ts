@@ -9,6 +9,9 @@ import { BigNumber, BigNumberish } from 'ethers';
 import { MaxUint256 } from '@ethersproject/constants';
 import { OutputReference } from '~/lib/services/batch-relayer/relayer-types';
 import { oldBnum } from '~/lib/services/pool/lib/old-big-number';
+import { GqlPoolTokenBase } from '~/apollo/generated/graphql-codegen-generated';
+import { poolGetProportionalExitAmountsForBptIn } from '~/lib/services/pool/lib/util';
+import { parseUnits } from 'ethers/lib/utils';
 
 export class ReliquaryZapService {
     constructor(private readonly batchRelayerService: BatchRelayerService, private readonly provider: BaseProvider) {}
@@ -186,6 +189,47 @@ export class ReliquaryZapService {
         ];
     }
 
+    // withdraw bpt from relic -> exit pool with beets/wftm
+    public async getReliquaryWithdrawContractCallData({
+        userAddress,
+        bptAmount,
+        relicId,
+        slippage,
+        poolTokens,
+        poolTotalShares,
+    }: {
+        userAddress: string;
+        bptAmount: AmountHumanReadable;
+        relicId: number;
+        slippage: AmountHumanReadable;
+        poolTokens: GqlPoolTokenBase[];
+        poolTotalShares: AmountHumanReadable;
+    }): Promise<string[]> {
+        const bptAmountScaled = parseFixed(bptAmount, 18);
+
+        const withdrawBptFromRelic = this.batchRelayerService.reliquaryEncodeWithdraw({
+            recipient: networkConfig.balancer.batchRelayer,
+            relicId,
+            amount: bptAmountScaled,
+            outputReference: this.batchRelayerService.toChainedReference('0'),
+        });
+
+        const proportionalAmounts = poolGetProportionalExitAmountsForBptIn(bptAmount, poolTokens, poolTotalShares);
+
+        const exitFbeetsPool = this.getNewFbeetsPoolExitCallData({
+            userAddress,
+            //we set these to 0 for the peek, they get filled in for the actual call data
+            minAmountsOut: proportionalAmounts.map((amount) => {
+                const poolToken = poolTokens.find((token) => token.address === amount.address);
+                const amountScaled = parseUnits(amount.amount, poolToken?.decimals || 18).toString();
+
+                return oldBnum(amountScaled).minus(oldBnum(amountScaled).times(slippage)).toFixed(0);
+            }),
+        });
+
+        return [withdrawBptFromRelic, exitFbeetsPool];
+    }
+
     private getExitFidelioCallData({
         bptIn,
         userAddress,
@@ -270,6 +314,33 @@ export class ReliquaryZapService {
                   amount,
                   outputReference: '0',
               });
+    }
+
+    private getNewFbeetsPoolExitCallData({
+        userAddress,
+        minAmountsOut,
+    }: {
+        userAddress: string;
+        minAmountsOut: string[];
+    }) {
+        return this.batchRelayerService.vaultEncodeExitPool({
+            poolId: networkConfig.reliquary.fbeets.poolId,
+            poolKind: 0,
+            sender: networkConfig.balancer.batchRelayer,
+            recipient: userAddress,
+            exitPoolRequest: {
+                assets: [networkConfig.wethAddress, networkConfig.beets.address],
+                minAmountsOut,
+                userData: WeightedPoolEncoder.exitExactBPTInForTokensOut(
+                    this.batchRelayerService.toChainedReference('0'),
+                ),
+                toInternalBalance: false,
+            },
+            outputReferences: [
+                { index: 0, key: this.batchRelayerService.toChainedReference('1') },
+                { index: 1, key: this.batchRelayerService.toChainedReference('2') },
+            ],
+        });
     }
 }
 
