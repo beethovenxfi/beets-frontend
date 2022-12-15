@@ -28,7 +28,7 @@ export function Footer() {
                             <FooterLink href="/swap" linkType="internal">
                                 Swap
                             </FooterLink>
-                            <FooterLink href="https://v1.beets.fi/#/stake" linkType="internal">
+                            <FooterLink href="https://beets.fi/stake" linkType="internal">
                                 Stake
                                 <Text as="span" fontSize="2xs">
                                     {' '}

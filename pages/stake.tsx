@@ -20,7 +20,7 @@ import React from 'react';
 interface Props {
     pool: GqlPoolUnion;
 }
-function Relic({ pool }: Props) {
+function Stake({ pool }: Props) {
     const { chainId } = useNetworkConfig();
 
     const TITLE = 'Beethoven X | Reliquary';
@@ -81,4 +81,4 @@ export async function getStaticProps({ params }: { params: { poolId: string } })
     });
 }
 
-export default Relic;
+export default Stake;
