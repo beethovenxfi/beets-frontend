@@ -13,7 +13,7 @@ import {
 import { PoolInvestProportional } from '~/modules/pool/invest/components/PoolInvestProportional';
 import { ChevronLeft } from 'react-feather';
 import { PoolInvestPreview } from '~/modules/pool/invest/components/PoolInvestPreview';
-import { useEffect, useRef, useState } from 'react';
+import { ReactNode, useEffect, useRef, useState } from 'react';
 import { PoolInvestTypeChoice } from '~/modules/pool/invest/components/PoolInvestTypeChoice';
 import { PoolInvestCustom } from '~/modules/pool/invest/components/PoolInvestCustom';
 import { motion } from 'framer-motion';
@@ -23,7 +23,11 @@ import { BeetsModalBody, BeetsModalContent, BeetsModalHeader } from '~/component
 import { usePoolUserTokenBalancesInWallet } from '~/modules/pool/lib/usePoolUserTokenBalancesInWallet';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 
-export function PoolInvestModal() {
+interface Props {
+    activator?: ReactNode;
+}
+
+export function PoolInvestModal({ activator }: Props) {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const { pool, formattedTypeName } = usePool();
     const [modalState, setModalState] = useState<'start' | 'proportional' | 'custom' | 'preview'>('start');
@@ -58,9 +62,13 @@ export function PoolInvestModal() {
 
     return (
         <Box width={{ base: 'full', md: 'fit-content' }}>
-            <Button variant="primary" onClick={onOpen} width={{ base: 'full', md: '140px' }}>
-                Invest
-            </Button>
+            {activator ? (
+                <Box onClick={onOpen}>{activator}</Box>
+            ) : (
+                <Button variant="primary" onClick={onOpen} width={{ base: 'full', md: '140px' }}>
+                    Invest
+                </Button>
+            )}
             <Modal isOpen={isOpen} onClose={onModalClose} size="lg" initialFocusRef={initialRef}>
                 <ModalOverlay bg="blackAlpha.900" />
                 <BeetsModalContent>

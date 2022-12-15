@@ -14,7 +14,6 @@ import { PoolProvider } from '~/modules/pool/lib/usePool';
 import { PoolUserTokenBalancesInWalletProvider } from '~/modules/pool/lib/usePoolUserTokenBalancesInWallet';
 import { PoolUserBptBalanceProvider } from '~/modules/pool/lib/usePoolUserBptBalance';
 import { networkConfig } from '~/lib/config/network-config';
-import { ReliquaryWithdrawDemoButton } from '~/modules/reliquary/components/ReliquaryWithdrawDemoButton';
 import React from 'react';
 
 interface Props {
@@ -53,7 +52,6 @@ function Stake({ pool }: Props) {
                                 }
                             />
 
-                            <ReliquaryWithdrawDemoButton />
                             <Reliquary />
                         </UserTokenBalancesProvider>
                     </PoolUserTokenBalancesInWalletProvider>

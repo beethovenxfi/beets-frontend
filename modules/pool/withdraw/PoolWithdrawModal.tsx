@@ -12,7 +12,7 @@ import {
     useDisclosure,
 } from '@chakra-ui/react';
 import { ChevronLeft } from 'react-feather';
-import { useEffect, useRef, useState } from 'react';
+import { ReactNode, useEffect, useRef, useState } from 'react';
 import { PoolWithdrawTypeChoice } from '~/modules/pool/withdraw/components/PoolWithdrawTypeChoice';
 import { PoolWithdrawProportional } from '~/modules/pool/withdraw/components/PoolWithdrawProportional';
 import { PoolWithdrawSingleAsset } from '~/modules/pool/withdraw/components/PoolWithdrawSingleAsset';
@@ -22,7 +22,10 @@ import { useWithdrawState } from '~/modules/pool/withdraw/lib/useWithdrawState';
 import { usePool } from '~/modules/pool/lib/usePool';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 
-export function PoolWithdrawModal() {
+interface Props {
+    activator?: ReactNode;
+}
+export function PoolWithdrawModal({ activator }: Props) {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const { pool, formattedTypeName } = usePool();
     const [modalState, setModalState] = useState<'start' | 'proportional' | 'single-asset' | 'preview'>('start');
@@ -48,9 +51,13 @@ export function PoolWithdrawModal() {
 
     return (
         <>
-            <Button onClick={onOpen} variant="secondary" width={{ base: 'full', md: '140px' }}>
-                Withdraw
-            </Button>
+            {activator ? (
+                <Box onClick={onOpen}>{activator}</Box>
+            ) : (
+                <Button onClick={onOpen} variant="secondary" width={{ base: 'full', md: '140px' }}>
+                    Withdraw
+                </Button>
+            )}
             <Modal
                 isOpen={isOpen}
                 onClose={onModalClose}
