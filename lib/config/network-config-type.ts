@@ -75,6 +75,6 @@ export interface NetworkConfig {
         poolWithdraw: { [poolId: string]: string };
     };
     boostedByTypes: {
-        [id: string]: BoostedByType;
+        [poolId: string]: BoostedByType;
     };
 }
