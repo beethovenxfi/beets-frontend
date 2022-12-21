@@ -12,7 +12,7 @@ export default function AnimatedProgress({ value, ...rest }: Props & BoxProps) {
         <BeetsBox zIndex='docked' borderRadius='2px' minWidth="100px" height="15px" overflow="hidden" {...rest}>
             <Box
                 initial={{ width: '0px' }}
-                animate={{ width: '100%', transition: { delay: 1, duration: 3 } }}
+                animate={{ width: '100%', transition: { delay: 1, duration: 2 } }}
                 bgColor="orange.400"
                 as={motion.div}
                 height="full"
