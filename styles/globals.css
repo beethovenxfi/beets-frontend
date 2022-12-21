@@ -368,11 +368,52 @@ a {
     z-index: -1;
 }
 
+.relic-glow {
+    position: relative;
+    z-index: 999;
+}
+
+.relic-glow::after {
+    position: absolute;
+    background-color: rgba(0,248,156, 0.6);
+    content: '';
+    filter: blur(50px);
+    width: 100%;
+    height: 100%;
+    top: 0;
+    animation: spin 20s linear infinite;
+    z-index: -1;
+    opacity: 0.35;
+    border-radius: 50rem;
+}
+
+.relic-glow::before {
+    position: absolute;
+    background-color: #FF0000;
+    content: '';
+    filter: blur(75px);
+    width: 75%;
+    height: 75%;
+    top: 0;
+    animation: spin 25s linear infinite;
+    z-index: -1;
+    border-radius: 50rem;
+}
+
 @keyframes spin {
     0% {
-      opacity: 0.3;
+      rotate: 0deg;
+      opacity: 0.5;
+    }
+    50% {
+        opacity: 0.15;
+        rotate: 180deg;
+
     }
     100% {
-      opacity: 1;
+        rotate: 360deg;
+        opacity: 0.5;
+
     }
   }
+  
