@@ -4,6 +4,7 @@ import Card from '~/components/card/Card';
 import ReactECharts from 'echarts-for-react';
 import { EChartsOption, graphic } from 'echarts';
 import useReliquary from '../hooks/useReliquary';
+import { format, fromUnixTime } from 'date-fns';
 
 interface Props {}
 
@@ -29,6 +30,7 @@ export default function RelicMaturity({}: Props) {
                 };
             });
     }, [isLoading]);
+
     const chartOption: EChartsOption = useMemo(() => {
         return {
             title: {
@@ -39,6 +41,7 @@ export default function RelicMaturity({}: Props) {
                 axisPointer: {
                     type: 'cross',
                 },
+                valueFormatter: (value) => `Level ${value}`,
             },
             grid: {
                 left: '1%',
@@ -56,7 +59,12 @@ export default function RelicMaturity({}: Props) {
                 type: 'category',
                 show: false,
                 boundaryGap: false,
-                data: maturityThresholds,
+                data: maturityThresholds.map((threshold) => {
+                    return format(
+                        fromUnixTime((currentRelicPosition?.entry || 0) + parseInt(threshold, 10)),
+                        'dd/MM/yyyy HH:mm',
+                    );
+                }),
             },
             yAxis: {
                 show: false,
@@ -95,8 +103,9 @@ export default function RelicMaturity({}: Props) {
                     areaStyle: {
                         opacity: 0.2,
                     },
+                    step: 'middle',
                     // prettier-ignore
-                    data: [1,2.5,3.8,4,6,9,10,10.1,10.2,10.3],
+                    data: maturityThresholds.map((_, i) => i + 1),
                 },
             ],
         };
