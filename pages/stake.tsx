@@ -11,6 +11,7 @@ import { PoolUserBptBalanceProvider } from '~/modules/pool/lib/usePoolUserBptBal
 import { networkConfig } from '~/lib/config/network-config';
 import React from 'react';
 import { RelicDepositBalanceProvider } from '~/modules/reliquary/lib/useRelicDepositBalance';
+import { PoolUserDepositBalanceProvider } from '~/modules/pool/lib/usePoolUserDepositBalance';
 
 interface Props {
     pool: GqlPoolUnion;
@@ -37,8 +38,9 @@ function Stake({ pool }: Props) {
                 <PoolUserBptBalanceProvider>
                     <PoolUserTokenBalancesInWalletProvider>
                         <UserTokenBalancesProvider>
-                            <RelicDepositBalanceProvider>
-                                {/* <PageMasthead
+                            <PoolUserDepositBalanceProvider>
+                                <RelicDepositBalanceProvider>
+                                    {/* <PageMasthead
                                 title="Reliquary"
                                 image={
                                     <NextImage
@@ -49,8 +51,9 @@ function Stake({ pool }: Props) {
                                 }
                             /> */}
 
-                                <Reliquary />
-                            </RelicDepositBalanceProvider>
+                                    <Reliquary />
+                                </RelicDepositBalanceProvider>
+                            </PoolUserDepositBalanceProvider>
                         </UserTokenBalancesProvider>
                     </PoolUserTokenBalancesInWalletProvider>
                 </PoolUserBptBalanceProvider>
