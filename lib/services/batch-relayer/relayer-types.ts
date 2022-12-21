@@ -255,4 +255,8 @@ export interface EncodeReliquaryHarvestAllInput {
     outputReference: BigNumberish;
 }
 
+export interface EncodeReliquaryUpdatePositionInput {
+    relicId: number;
+}
+
 export type BalancerLinearPoolType = 'aave' | 'yearn' | 'boo' | 'reaper' | 'tarot';

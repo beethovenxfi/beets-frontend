@@ -34,7 +34,6 @@ export default function useReliquary() {
         new ReliquaryService(networkConfig.reliquary.address, networkConfig.chainId, networkConfig.beets.address),
     ).current;
     const farmId = useRef(1);
-
     const BPT: TokenBase = useMemo(() => {
         return { address: networkConfig.reliquary.fbeets.poolAddress, symbol: 'fBEETS', name: 'fBEETS', decimals: 18 };
     }, [networkConfig]);

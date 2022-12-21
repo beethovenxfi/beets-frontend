@@ -15,6 +15,7 @@ import { PoolUserTokenBalancesInWalletProvider } from '~/modules/pool/lib/usePoo
 import { PoolUserBptBalanceProvider } from '~/modules/pool/lib/usePoolUserBptBalance';
 import { networkConfig } from '~/lib/config/network-config';
 import React from 'react';
+import { PoolUserDepositBalanceProvider } from '~/modules/pool/lib/usePoolUserDepositBalance';
 
 interface Props {
     pool: GqlPoolUnion;
@@ -41,7 +42,8 @@ function Stake({ pool }: Props) {
                 <PoolUserBptBalanceProvider>
                     <PoolUserTokenBalancesInWalletProvider>
                         <UserTokenBalancesProvider>
-                            <PageMasthead
+                            <PoolUserDepositBalanceProvider>
+                                {/* <PageMasthead
                                 title="Reliquary"
                                 image={
                                     <NextImage
@@ -50,9 +52,10 @@ function Stake({ pool }: Props) {
                                         height="68px"
                                     />
                                 }
-                            />
+                            /> */}
 
-                            <Reliquary />
+                                <Reliquary />
+                            </PoolUserDepositBalanceProvider>
                         </UserTokenBalancesProvider>
                     </PoolUserTokenBalancesInWalletProvider>
                 </PoolUserBptBalanceProvider>

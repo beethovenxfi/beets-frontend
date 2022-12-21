@@ -66,7 +66,7 @@ export default function Reliquary(props: Props) {
 
     return (
         <Box
-            minHeight="600px"
+            minHeight="800px"
             width="full"
             display="flex"
             height="full"

@@ -4,6 +4,7 @@ import {
     EncodeReliquaryCreateRelicAndDepositInput,
     EncodeReliquaryDepositInput,
     EncodeReliquaryHarvestAllInput,
+    EncodeReliquaryUpdatePositionInput,
     EncodeReliquaryWithdrawInput,
 } from '~/lib/services/batch-relayer/relayer-types';
 
