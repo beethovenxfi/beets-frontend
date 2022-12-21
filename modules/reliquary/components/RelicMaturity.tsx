@@ -17,7 +17,7 @@ export default function RelicMaturity({}: Props) {
             .map((maturityThreshold, i) => {
                 const threshold = parseInt(maturityThreshold, 10);
                 const nextThreshold = parseInt(maturityThresholds[i + 1], 10);
-                if (!maturityThresholds[i + 1]) return []
+                if (!maturityThresholds[i + 1]) return [];
                 return [threshold, nextThreshold, i + 1, `Level ${i + 1}`];
             })
             .map(function (item, index) {
@@ -34,52 +34,69 @@ export default function RelicMaturity({}: Props) {
             title: {
                 show: false,
             },
-            tooltip: {},
-            xAxis: {
-                scale: true,
-                splitLine: { show: false },
-                show: false,
-            },
-            yAxis: {
-                splitLine: { show: false },
-                show: false,
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'cross',
+                },
             },
             grid: {
-                left: 0,
-                right: 0,
+                left: '1%',
                 bottom: 0,
+                right: '1%',
+                top: '2%',
+            },
+            toolbox: {
+                show: false,
+                feature: {
+                    saveAsImage: {},
+                },
+            },
+            xAxis: {
+                type: 'category',
+                show: false,
+                boundaryGap: false,
+                data: maturityThresholds,
+            },
+            yAxis: {
+                show: false,
+                type: 'value',
+                axisLabel: {
+                    formatter: '{value} W',
+                },
+                axisPointer: {
+                    snap: true,
+                },
+            },
+            visualMap: {
+                show: false,
+                dimension: 0,
+                pieces: [
+                    {
+                        lte: 8,
+                        color: '#00FFFF',
+                    },
+
+                    {
+                        gt: 8,
+                        lte: 14,
+                        color: '#00FFFF',
+                    },
+                    {
+                        gt: 14,
+                        color: '#FF0000',
+                    },
+                ],
             },
             series: [
                 {
-                    type: 'custom',
-                    renderItem: function (params: any, api: any) {
-                        var yValue = api.value(2);
-                        var start = api.coord([api.value(0), yValue]);
-                        var size = api.size([api.value(1) - api.value(0), yValue]);
-                        var style = api.style();
-                        return {
-                            type: 'rect',
-                            shape: {
-                                x: start[0],
-                                y: start[1],
-                                width: size[0] - 2,
-                                height: size[1],
-                            },
-                            style: style,
-                        };
+                    type: 'line',
+                    smooth: true,
+                    areaStyle: {
+                        opacity: 0.2,
                     },
-                    label: {
-                        show: true,
-                        position: 'top',
-                    },
-                    dimensions: ['from', 'to', 'profit'],
-                    encode: {
-                        x: [0, 1],
-                        y: 2,
-                        tooltip: [0, 1, 2],
-                        itemName: 3,
-                    },
-                    data: chartData,
+                    // prettier-ignore
+                    data: [1,2.5,3.8,4,6,9,10,10.1,10.2,10.3],
                 },
             ],
         };
