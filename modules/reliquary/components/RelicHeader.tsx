@@ -43,7 +43,7 @@ export function RelicHeader() {
                     pt="4"
                     position="relative"
                     spacing="0"
-                    justifyContent="center"
+                    justifyContent="flex-start"
                 >
                     <HStack
                         px="3"
@@ -65,14 +65,16 @@ export function RelicHeader() {
                             </Badge>
                         )}
                     </HStack>
-                    <AnimatedProgress
-                        value={progressToNextLevel}
-                        width="100%"
-                        borderTopRightRadius="lg"
-                        borderBottomRightRadius="lg"
-                        borderTopLeftRadius="none"
-                        borderBottomLeftRadius="none"
-                    />
+                    {!isMaxMaturity && (
+                        <AnimatedProgress
+                            value={progressToNextLevel}
+                            width="100%"
+                            borderTopRightRadius="lg"
+                            borderBottomRightRadius="lg"
+                            borderTopLeftRadius="none"
+                            borderBottomLeftRadius="none"
+                        />
+                    )}
 
                     {/* <Box display='inline-block' width="max-content" p="1" bg="whiteAlpha.200" rounded="md">
 
