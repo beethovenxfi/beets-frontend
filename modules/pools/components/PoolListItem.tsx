@@ -8,6 +8,8 @@ import { AmountHumanReadable } from '~/lib/services/token/token-types';
 import { numberFormatUSDValue } from '~/lib/util/number-formats';
 import { TokenAvatarSetInList, TokenAvatarSetInListTokenData } from '~/components/token/TokenAvatarSetInList';
 import { memo } from 'react';
+import { BoostedBadgeSmall } from '~/components/boosted-badge/BoostedBadgeSmall';
+import { BoostedByType } from '~/lib/config/network-config-type';
 
 interface Props extends BoxProps {
     pool: GqlPoolMinimalFragment;
@@ -15,12 +17,21 @@ interface Props extends BoxProps {
     showUserBalance: boolean;
     tokens: TokenAvatarSetInListTokenData[];
     hasUnstakedBpt?: boolean;
+    boostedBy?: BoostedByType;
 }
 
 const MemoizedTokenAvatarSetInList = memo(TokenAvatarSetInList);
 const MemoizedAprTooltip = memo(AprTooltip);
 
-export function PoolListItem({ pool, userBalance, showUserBalance, tokens, hasUnstakedBpt, ...rest }: Props) {
+export function PoolListItem({
+    pool,
+    userBalance,
+    showUserBalance,
+    tokens,
+    hasUnstakedBpt,
+    boostedBy,
+    ...rest
+}: Props) {
     return (
         <Box
             mb={{ base: '4', lg: '0' }}
@@ -32,11 +43,14 @@ export function PoolListItem({ pool, userBalance, showUserBalance, tokens, hasUn
                 <a>
                     <Grid
                         pl="4"
-                        py="4"
+                        py={{ base: '4', lg: '0' }}
+                        height={{ lg: '63.5px' }}
                         templateColumns={{
                             base: '1fr 1fr',
-                            lg: showUserBalance ? '90px 1fr 150px 200px 0px 200px' : '90px 1fr 200px 200px 200px',
-                            xl: showUserBalance ? '90px 1fr 150px 200px 200px 200px' : '90px 1fr 200px 200px 200px',
+                            lg: showUserBalance ? '90px 1fr 150px 200px 0px 200px' : '90px 1fr 100px 146px 200px 200px',
+                            xl: showUserBalance
+                                ? '90px 1fr 150px 200px 200px 200px'
+                                : '90px 1fr 100px 146px 200px 200px',
                         }}
                         gap="0"
                         templateAreas={
@@ -50,15 +64,15 @@ export function PoolListItem({ pool, userBalance, showUserBalance, tokens, hasUn
                                       lg: `"icons name userBalance tvl volume apr"`,
                                   }
                                 : {
-                                      base: `"name name"
+                                      base: `"name boosted"
                                              "apr tvl"
                                              "fees volume"
                                              "icons icons"`,
-                                      lg: `"icons name tvl volume apr"`,
+                                      lg: `"icons name boosted tvl volume apr"`,
                                   }
                         }
                     >
-                        <GridItem area="icons">
+                        <GridItem area="icons" alignItems="center" display="flex">
                             <MemoizedTokenAvatarSetInList
                                 imageSize={25}
                                 width={92}
@@ -66,7 +80,7 @@ export function PoolListItem({ pool, userBalance, showUserBalance, tokens, hasUn
                                 //renderPopover={false}
                             />
                         </GridItem>
-                        <GridItem area="name" mb={{ base: '4', lg: '0' }}>
+                        <GridItem area="name" mb={{ base: '4', lg: '0' }} alignItems="center" display="flex">
                             <Text fontSize={{ base: 'xl', lg: 'md' }} fontWeight={{ base: 'bold', lg: 'normal' }}>
                                 {pool.name}
                             </Text>
@@ -74,6 +88,9 @@ export function PoolListItem({ pool, userBalance, showUserBalance, tokens, hasUn
                         {showUserBalance && (
                             <GridItem
                                 area="userBalance"
+                                display={{ base: 'block', lg: 'flex' }}
+                                justifyContent="flex-end"
+                                alignItems="center"
                                 textAlign={{ base: 'left', lg: 'right' }}
                                 mb={{ base: '4', lg: '0' }}
                             >
@@ -83,7 +100,20 @@ export function PoolListItem({ pool, userBalance, showUserBalance, tokens, hasUn
                                 </Text>
                             </GridItem>
                         )}
-                        <StatGridItem area="tvl">
+                        <GridItem
+                            area="boosted"
+                            alignItems="center"
+                            display={showUserBalance ? 'none' : 'flex'}
+                            mb={{ base: '4', lg: '0' }}
+                        >
+                            {boostedBy && <BoostedBadgeSmall boostedBy={boostedBy} />}
+                        </GridItem>
+                        <StatGridItem
+                            area="tvl"
+                            display={{ base: 'block', lg: 'flex' }}
+                            justifyContent="flex-end"
+                            alignItems="center"
+                        >
                             <MobileLabel text="TVL" />
                             <Text fontSize={{ base: 'xl', lg: 'md' }}>
                                 {numeral(pool.dynamicData.totalLiquidity).format('$0,0')}
@@ -91,7 +121,13 @@ export function PoolListItem({ pool, userBalance, showUserBalance, tokens, hasUn
                         </StatGridItem>
                         <StatGridItem
                             area="volume"
-                            display={showUserBalance ? { base: 'block', lg: 'none', xl: 'block' } : 'block'}
+                            display={
+                                showUserBalance
+                                    ? { base: 'block', lg: 'none', xl: 'flex' }
+                                    : { base: 'block', lg: 'flex' }
+                            }
+                            justifyContent="flex-end"
+                            alignItems="center"
                         >
                             <MobileLabel text="VOLUME (24H)" />
                             <Text fontSize={{ base: 'xl', lg: 'md' }}>

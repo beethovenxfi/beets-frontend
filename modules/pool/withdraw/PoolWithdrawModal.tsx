@@ -51,13 +51,9 @@ export function PoolWithdrawModal({ activator }: Props) {
 
     return (
         <>
-            {activator ? (
-                <Box onClick={onOpen}>{activator}</Box>
-            ) : (
-                <Button onClick={onOpen} variant="secondary" width={{ base: 'full', md: '140px' }}>
-                    Withdraw
-                </Button>
-            )}
+            <Button onClick={onOpen} variant="secondary" width={{ base: 'full', md: '140px' }}>
+                Withdraw
+            </Button>
             <Modal
                 isOpen={isOpen}
                 onClose={onModalClose}

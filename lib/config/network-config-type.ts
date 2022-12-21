@@ -1,3 +1,5 @@
+export type BoostedByType = 'reaper-aave' | 'reaper-aave-granary' | 'yearn' | 'reaper-sonne' | 'overnight';
+
 export interface NetworkConfig {
     appName: string;
     chainId: string;
@@ -21,14 +23,6 @@ export interface NetworkConfig {
         platformId: string;
     };
     multicall: string;
-    /*subgraphs: {
-        balancer: string;
-        blocks: string;
-        masterchef: string;
-        beetsBar: string;
-        changelog: string;
-        locking: string;
-    };*/
     beets: {
         address: string;
     };
@@ -81,7 +75,6 @@ export interface NetworkConfig {
     gauge: {
         rewardHelperAddress: string;
     };
-
     createPoolUrl: string;
     launchUrl?: string;
     stakeUrl?: string;
@@ -89,5 +82,8 @@ export interface NetworkConfig {
         poolDetail: { [poolId: string]: string };
         poolInvest: { [poolId: string]: string };
         poolWithdraw: { [poolId: string]: string };
+    };
+    boostedByTypes: {
+        [poolId: string]: BoostedByType;
     };
 }

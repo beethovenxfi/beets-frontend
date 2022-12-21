@@ -65,13 +65,9 @@ export function PoolInvestModal({ activator }: Props) {
 
     return (
         <Box width={{ base: 'full', md: 'fit-content' }}>
-            {activator ? (
-                <Box onClick={onOpen}>{activator}</Box>
-            ) : (
-                <Button variant="primary" onClick={onOpen} width={{ base: 'full', md: '140px' }}>
-                    Invest
-                </Button>
-            )}
+            <Button variant="primary" onClick={onOpen} width={{ base: 'full', md: '140px' }}>
+                Invest
+            </Button>
             <Modal isOpen={isOpen} onClose={onModalClose} size="lg" initialFocusRef={initialRef}>
                 <ModalOverlay bg="blackAlpha.900" />
                 <BeetsModalContent>

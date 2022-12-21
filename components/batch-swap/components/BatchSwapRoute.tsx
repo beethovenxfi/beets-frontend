@@ -12,9 +12,19 @@ import { Fragment } from 'react';
 
 interface Props {
     route: GqlSorSwapRouteFragment;
+    minimalWidth?: boolean;
 }
 
-export function BatchSwapRoute({ route }: Props) {
+export function BatchSwapRoute({ route, minimalWidth }: Props) {
+    const hopsWithoutLinear = route.hops.filter((hop) => hop.pool.type !== 'LINEAR');
+    const hops = hopsWithoutLinear.filter((hop, index) => {
+        if (minimalWidth) {
+            return index === hopsWithoutLinear.length - 1;
+        }
+
+        return true;
+    });
+
     return (
         <Box height="64px">
             <Flex flex="1" flexDirection="column" justifyContent="space-around">
@@ -27,14 +37,12 @@ export function BatchSwapRoute({ route }: Props) {
                         <Box flex="1">
                             <BatchSwapRouteDashedLineArrowSpacer />
                         </Box>
-                        {route.hops
-                            .filter((hop) => hop.pool.type !== 'LINEAR')
-                            .map((hop, index) => (
-                                <Fragment key={index}>
-                                    <BatchSwapHop hop={hop} />
-                                    <BatchSwapRouteDashedLineArrowSpacer />
-                                </Fragment>
-                            ))}
+                        {hops.map((hop, index) => (
+                            <Fragment key={index}>
+                                <BatchSwapHop hop={hop} />
+                                <BatchSwapRouteDashedLineArrowSpacer />
+                            </Fragment>
+                        ))}
                     </Flex>
                     <BatchSwapTokenAmount address={route.tokenOut} amount={route.tokenOutAmount} />
                 </Flex>

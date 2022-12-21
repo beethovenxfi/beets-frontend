@@ -799,32 +799,15 @@ type GqlProtocolMetrics {
     totalSwapVolume: BigDecimal!
 }
 
-type GqlReliquaryFarmLevelSnapshot {
-    balance: String!
-    id: ID!
-    level: String!
-}
-
 type GqlReliquaryFarmSnapshot {
     dailyDeposited: String!
     dailyWithdrawn: String!
     farmId: String!
     id: ID!
-    levelBalances: [GqlReliquaryFarmLevelSnapshot!]!
     relicCount: String!
     timestamp: Int!
-    tokenBalances: [GqlReliquaryTokenBalanceSnapshot!]!
     totalBalance: String!
     userCount: String!
-}
-
-type GqlReliquaryTokenBalanceSnapshot {
-    address: String!
-    balance: String!
-    decimals: Int!
-    id: ID!
-    name: String!
-    symbol: String!
 }
 
 type GqlSorGetBatchSwapForTokensInResponse {

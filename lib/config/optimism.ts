@@ -139,4 +139,15 @@ export const optimismNetworkConfig: NetworkConfig = {
                 'To account for the USD+ and DAI+ deposit/withdraw fee, this pool will charge a fee on both invest and withdraw of up to 0.06%.',
         },
     },
+    boostedByTypes: {
+        '0xde45f101250f2ca1c0f8adfc172576d10c12072d00000000000000000000003f': 'reaper-aave',
+        '0x6222ae1d2a9f6894da50aa25cb7b303497f9bebd000000000000000000000046': 'reaper-aave',
+        '0x1f131ec1175f023ee1534b16fa8ab237c00e238100000000000000000000004a': 'reaper-aave',
+        '0x05e7732bf9ae5592e6aa05afe8cd80f7ab0a7bea00020000000000000000005a': 'reaper-aave',
+        '0x479a7d1fcdd71ce0c2ed3184bfbe9d23b92e8337000000000000000000000049': 'reaper-aave',
+        '0x981fb05b738e981ac532a99e77170ecb4bc27aef00010000000000000000004b': 'reaper-aave',
+        '0xb0de49429fbb80c635432bbad0b3965b2856017700010000000000000000004e': 'reaper-aave-granary',
+        '0x359ea8618c405023fc4b98dab1b01f373792a12600010000000000000000004f': 'reaper-aave-granary',
+        '0xb1c9ac57594e9b1ec0f3787d9f6744ef4cb0a02400000000000000000000006e': 'overnight',
+    },
 };
