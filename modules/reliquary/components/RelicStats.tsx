@@ -38,7 +38,7 @@ export function RelicStats() {
                     <HStack width="full" spacing="12" alignItems="flex-start">
                         <VStack spacing="0" alignItems="flex-start">
                             <Text lineHeight="1rem" fontWeight="semibold" fontSize="sm" color="beets.base.50">
-                                Claimabe Rewards
+                                Pending Rewards
                             </Text>
                             <Text color="white" fontSize="1.75rem">
                                 {numberFormatUSDValue(999.99)}
