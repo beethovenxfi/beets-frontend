@@ -13,11 +13,27 @@ export function RelicHeader() {
     const relic = relicPositions && relicPositions[0];
 
     return (
-        <Flex alignItems="flex-end">
-            <Box flex="1">
+        <Flex
+            width="full"
+            flexDirection={{ base: 'column', md: 'row' }}
+            alignItems={{ base: 'flex-start', md: 'flex-end' }}
+        >
+            <Box width="full" flex="1">
                 <Heading size="lg">My Relic: #{relic.relicId}</Heading>
-                <HStack width="50%" pt="4" position="relative" spacing="0" justifyContent="center">
-                    <Box px="3" py="0.5" rounded="md" backgroundColor="beets.light" width="110px">
+                <HStack
+                    width={{ base: 'full', md: '50%' }}
+                    pt="4"
+                    position="relative"
+                    spacing="0"
+                    justifyContent="center"
+                >
+                    <Box
+                        px="3"
+                        py="0.5"
+                        rounded="md"
+                        backgroundColor="beets.light"
+                        width={{ base: '120px', md: '110px' }}
+                    >
                         <Text fontWeight="semibold">Level {relic?.level + 1}</Text>
                     </Box>
                     <AnimatedProgress
@@ -30,22 +46,10 @@ export function RelicHeader() {
                     />
                 </HStack>
             </Box>
-            <Box>
+            <Box width={{ base: 'full', md: 'fit-content' }} mt={{ base: '4', md: '0' }}>
                 <HStack>
-                    <PoolInvestModal
-                        activator={
-                            <Button width="140px" variant="primary">
-                                Invest
-                            </Button>
-                        }
-                    />
-                    <PoolWithdrawModal
-                        activator={
-                            <Button width="140px" variant="secondary">
-                                Withdraw
-                            </Button>
-                        }
-                    />
+                    <PoolInvestModal />
+                    <PoolWithdrawModal />
                 </HStack>
             </Box>
         </Flex>

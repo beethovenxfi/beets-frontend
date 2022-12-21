@@ -76,21 +76,25 @@ export function RelicStats() {
                             <Text lineHeight="1rem" fontWeight="semibold" fontSize="sm" color="beets.base.50">
                                 Token breakdown
                             </Text>
-                            <HStack>
+                            <HStack flexWrap="wrap">
                                 <TokenAmountPill
                                     key={`relic-token-${config.fbeets.address}`}
                                     address={config.fbeets.address}
                                     amount={relic.amount}
                                 />
                                 <Text fontWeight="bold">OR</Text>
-                                {data &&
-                                    data.map((token) => (
-                                        <TokenAmountPill
-                                            key={`relic-token-${token.address}`}
-                                            address={token.address}
-                                            amount={token.amount}
-                                        />
-                                    ))}
+                                <Box display={{ base: 'block', md: 'flex' }}>
+                                    {data &&
+                                        data.map((token) => (
+                                            <TokenAmountPill
+                                                mt={{ base: '2', md: '0' }}
+                                                ml={{ base: '0', md: '1' }}
+                                                key={`relic-token-${token.address}`}
+                                                address={token.address}
+                                                amount={token.amount}
+                                            />
+                                        ))}
+                                </Box>
                             </HStack>
                         </VStack>
                     </VStack>
