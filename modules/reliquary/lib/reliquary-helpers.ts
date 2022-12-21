@@ -1,11 +1,14 @@
+import { add, addSeconds, fromUnixTime } from 'date-fns';
 import { ReliquaryFarmPosition } from '~/lib/services/staking/reliquary.service';
 
-export function relicGetMaturityProgress(relic: ReliquaryFarmPosition, maturities: string[]) {
+export function relicGetMaturityProgress(relic: ReliquaryFarmPosition | null, maturities: string[]) {
     if (!relic || !maturities.length) {
         return {
             canUpgrade: false,
             canUpgradeTo: -1,
             progressToNextLevel: 0,
+            entryDate: new Date(),
+            levelUpDate: new Date(),
         };
     }
     const relicMaturityStart = relic.entry;
@@ -19,14 +22,21 @@ export function relicGetMaturityProgress(relic: ReliquaryFarmPosition, maturitie
 
     const currentLevelMaturity = parseInt(maturities[relic.level], 10);
     const timeElapsedSinceCurrentLevel = Date.now() - currentLevelMaturity;
-    const timeBetweenCurrentAndNextLevel = parseInt(maturities[relic.level + 1], 10) - currentLevelMaturity;
+    const timeBetweenCurrentAndNextLevel = isMaxMaturity
+        ? 3600
+        : parseInt(maturities[relic.level + 1], 10) - currentLevelMaturity;
     const progressToNextLevel = canUpgrade
         ? 100
         : (timeElapsedSinceCurrentLevel / timeBetweenCurrentAndNextLevel) * 100;
 
+    const entryDate = fromUnixTime(relicMaturityStart);
+    const levelUpDate = addSeconds(entryDate, timeBetweenCurrentAndNextLevel);
     return {
         canUpgrade,
         canUpgradeTo,
         progressToNextLevel,
+        isMaxMaturity,
+        entryDate,
+        levelUpDate,
     };
 }
