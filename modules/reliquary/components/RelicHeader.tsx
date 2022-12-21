@@ -14,7 +14,6 @@ export function RelicHeader() {
         maturityThresholds,
     );
     const [levelUpCountdown, setLevelUpCountdown] = useState('');
-    console.log({ entryDate, levelUpDate });
     //TODO: fix this
 
     useEffect(() => {

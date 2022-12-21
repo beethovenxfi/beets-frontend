@@ -1,13 +1,14 @@
-import { motion, useAnimation } from 'framer-motion';
+import { AnimatePresence, motion, useAnimation } from 'framer-motion';
 import { Box, Image } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react';
 import { getProvider } from '@wagmi/core';
 import useReliquary from '~/modules/reliquary/lib/useReliquary';
+import { useQuery } from 'react-query';
 
 export function RelicNFT() {
     const controls = useAnimation();
     const [imageURI, setImageURI] = useState('');
-    const { reliquaryService } = useReliquary();
+    const { reliquaryService, selectedRelicId } = useReliquary();
 
     const startAnimation = async () => {
         await controls.start({
@@ -17,24 +18,40 @@ export function RelicNFT() {
         });
     };
 
-    const fetchNFT = async () => {
-        //TODO: remove this hardcoded id
-        const imageURI = await reliquaryService.getRelicNFT({ tokenId: '1', provider: getProvider() });
-        setImageURI(imageURI);
-    };
-
+    const { isLoading } = useQuery(
+        ['relicNFT', selectedRelicId],
+        async () => {
+            if (selectedRelicId) {
+                return await reliquaryService.getRelicNFT({ tokenId: selectedRelicId, provider: getProvider() });
+            }
+        },
+        {
+            enabled: selectedRelicId !== null,
+            onSuccess: (imageURI) => {
+                setImageURI(imageURI);
+            },
+        },
+    );
     useEffect(() => {
-        fetchNFT();
         setTimeout(() => {
             startAnimation();
         }, 500);
     }, []);
 
     return (
-        <Box initial={{ transform: 'scale(0)', opacity: 0 }} animate={controls} as={motion.div} className="relic-glow">
-            <Box rounded="lg" overflow="hidden">
-                {imageURI && <Image alt="Relic NFT" src={imageURI} width="400px" height="400px" />}
-            </Box>
-        </Box>
+        <AnimatePresence>
+            {!isLoading && (
+                <Box
+                    initial={{ transform: 'scale(0)', opacity: 0 }}
+                    animate={controls}
+                    as={motion.div}
+                    className="relic-glow"
+                >
+                    <Box rounded="lg" overflow="hidden">
+                        {imageURI && <Image alt="Relic NFT" src={imageURI} width="400px" height="400px" />}
+                    </Box>
+                </Box>
+            )}
+        </AnimatePresence>
     );
 }
