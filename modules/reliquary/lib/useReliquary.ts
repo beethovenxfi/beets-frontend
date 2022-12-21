@@ -1,9 +1,8 @@
 import { useQuery } from 'react-query';
 import { useProvider } from 'wagmi';
-import { ReliquaryService } from '~/lib/services/staking/reliquary.service';
+import { reliquaryService } from '~/lib/services/staking/reliquary.service';
 import { useUserAccount } from '~/lib/user/useUserAccount';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
-import { useRef } from 'react';
 import { makeVar, useReactiveVar } from '@apollo/client';
 
 const selectedRelicId = makeVar<string | null>(null);
@@ -12,9 +11,6 @@ export default function useReliquary() {
     const { userAddress } = useUserAccount();
     const provider = useProvider();
     const networkConfig = useNetworkConfig();
-    const reliquaryService = useRef(
-        new ReliquaryService(networkConfig.reliquary.address, networkConfig.chainId, networkConfig.beets.address),
-    ).current;
 
     const { data: relicPositions = [], isLoading: isLoadingRelicPositions } = useQuery(
         ['reliquaryAllPositions', userAddress],

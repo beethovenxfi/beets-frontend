@@ -21,7 +21,7 @@ import { useRelicDepositBalance } from '~/modules/reliquary/lib/useRelicDepositB
 export function RelicStats() {
     const { data, relicBalanceUSD } = useRelicDepositBalance();
     const { pool } = usePool();
-    const { reliquaryService, maturityThresholds, relicPositions = [] } = useReliquary();
+    const { reliquaryService, maturityThresholds, relicPositions = [], isLoading } = useReliquary();
     const config = useNetworkConfig();
 
     //TODO: fix this
@@ -132,20 +132,17 @@ export function RelicStats() {
                     <Text lineHeight="1rem" fontWeight="semibold" fontSize="sm" color="beets.base.50">
                         My liquidity
                     </Text>
-                    {/*isLoading ? (
+                    {isLoading ? (
                         <Box>
                             <Skeleton height="34px" width="140px" mt="4px" mb="4px" />
                         </Box>
                     ) : (
                         <Text color="white" fontSize="1.75rem">
-                            {numberFormatUSDValue(userPoolBalanceUSD)}
+                            {numberFormatUSDValue(relicBalanceUSD)}
                         </Text>
-                    )*/}
-                    <Text color="white" fontSize="1.75rem">
-                        {numberFormatUSDValue(relicBalanceUSD)}
-                    </Text>
+                    )}
                 </VStack>
-                {/*<VStack spacing="0" alignItems="flex-start" mb="5" px="2">
+                <VStack spacing="0" alignItems="flex-start" mb="5" px="2">
                     <InfoButton
                         labelProps={{
                             lineHeight: '1rem',
@@ -153,26 +150,26 @@ export function RelicStats() {
                             fontSize: 'sm',
                             color: 'beets.base.50',
                         }}
-                        label="My staked share"
-                        infoText={`The size of your stake relative to all value staked in this pool. Your staked share represents the percent of liquidity incentives you are entitled to.`}
+                        label="My share"
+                        infoText={`The size of your relic relative to all value stored in relics. Your staked share represents the percent of liquidity incentives you are entitled to.`}
                     />
                     <VStack spacing="none" alignItems="flex-start">
-                        {isLoadingStake ? (
+                        {/*isLoading ? (
                             <Skeleton height="34px" width="140px" mt="4px" mb="4px" />
                         ) : (
                             <Text color="white" fontSize="1.75rem">
                                 {userShare < 0.0001 ? '< 0.01%' : numeral(userShare).format('0.00%')}
                             </Text>
-                        )}
-                        {isLoadingStake ? (
+                        )*/}
+                        {isLoading ? (
                             <Skeleton height="16px" width="45px" />
                         ) : (
                             <Text fontSize="1rem" lineHeight="1rem">
-                                {numeral(userStakedBptBalance).format('0.00a')}
+                                {numeral(relic.amount).format('0.00a')}
                                 {' / '}
                                 {numeral(data).format('0.00a')}{' '}
                                 <Text as="span" fontSize="md" color="beets.base.50">
-                                    BPT
+                                    fBEETS
                                 </Text>
                             </Text>
                         )}
@@ -189,7 +186,7 @@ export function RelicStats() {
                         label="My potential daily yield"
                         infoText="The potential daily value is an approximation based on swap fees, current token prices and your staked share. A number of external factors can influence this value from second to second."
                     />
-                    {isLoadingPendingRewards ? (
+                    {/*isLoading ? (
                         <Skeleton height="34px" width="140px" mt="4px" mb="4px" />
                     ) : (
                         <Text color="white" fontSize="1.75rem">
@@ -218,8 +215,8 @@ export function RelicStats() {
                                 </Text>
                             </HStack>
                         ))}
-                    </Box>
-                </VStack>*/}
+                    </Box>*/}
+                </VStack>
                 {/*pool.staking && (
                     <PoolUserStakedStats
                         poolAddress={pool.address}

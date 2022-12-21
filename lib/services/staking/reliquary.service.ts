@@ -7,6 +7,8 @@ import { AmountHumanReadable, TokenBase } from '../token/token-types';
 import { Multicaller } from '../util/multicaller.service';
 import { EncodeReliquaryUpdatePositionInput } from '../batch-relayer/relayer-types';
 import { Interface } from '@ethersproject/abi';
+import * as net from 'net';
+import { networkConfig } from '~/lib/config/network-config';
 
 export type ReliquaryFarmPosition = {
     farmId: string;
@@ -231,3 +233,9 @@ export class ReliquaryService {
         };
     }
 }
+
+export const reliquaryService = new ReliquaryService(
+    networkConfig.reliquary.address,
+    networkConfig.chainId,
+    networkConfig.beets.address,
+);
