@@ -835,16 +835,35 @@ export interface GqlProtocolMetrics {
     totalSwapVolume: Scalars['BigDecimal'];
 }
 
+export interface GqlReliquaryFarmLevelSnapshot {
+    __typename: 'GqlReliquaryFarmLevelSnapshot';
+    balance: Scalars['String'];
+    id: Scalars['ID'];
+    level: Scalars['String'];
+}
+
 export interface GqlReliquaryFarmSnapshot {
     __typename: 'GqlReliquaryFarmSnapshot';
     dailyDeposited: Scalars['String'];
     dailyWithdrawn: Scalars['String'];
     farmId: Scalars['String'];
     id: Scalars['ID'];
+    levelBalances: Array<GqlReliquaryFarmLevelSnapshot>;
     relicCount: Scalars['String'];
     timestamp: Scalars['Int'];
+    tokenBalances: Array<GqlReliquaryTokenBalanceSnapshot>;
     totalBalance: Scalars['String'];
     userCount: Scalars['String'];
+}
+
+export interface GqlReliquaryTokenBalanceSnapshot {
+    __typename: 'GqlReliquaryTokenBalanceSnapshot';
+    address: Scalars['String'];
+    balance: Scalars['String'];
+    decimals: Scalars['Int'];
+    id: Scalars['ID'];
+    name: Scalars['String'];
+    symbol: Scalars['String'];
 }
 
 export interface GqlSorGetBatchSwapForTokensInResponse {
@@ -1059,6 +1078,7 @@ export interface Mutation {
     poolLoadOnChainDataForPoolsWithActiveUpdates: Scalars['String'];
     poolLoadReliquarySnapshotsForAllFarms: Scalars['String'];
     poolLoadSnapshotsForAllPools: Scalars['String'];
+    poolLoadSnapshotsForPools: Scalars['String'];
     poolReloadAllPoolAprs: Scalars['String'];
     poolReloadAllTokenNestedPoolIds: Scalars['String'];
     poolReloadPoolNestedTokens: Scalars['String'];
@@ -1100,6 +1120,10 @@ export interface MutationLgeCreateArgs {
 
 export interface MutationPoolInitializeSnapshotsForPoolArgs {
     poolId: Scalars['String'];
+}
+
+export interface MutationPoolLoadSnapshotsForPoolsArgs {
+    poolIds: Array<Scalars['String']>;
 }
 
 export interface MutationPoolReloadPoolNestedTokensArgs {

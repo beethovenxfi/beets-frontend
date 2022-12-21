@@ -1,18 +1,13 @@
-import { Box, Button, Divider, Flex, Heading, HStack, Progress, StackDivider, Text, VStack } from '@chakra-ui/react';
+import { Box, Button, Heading, HStack, Image, Text, VStack } from '@chakra-ui/react';
 import { getProvider } from '@wagmi/core';
 import { motion, useAnimation } from 'framer-motion';
 import numeral from 'numeral';
 import React, { useEffect, useState } from 'react';
-import BeetsTooltip from '~/components/tooltip/BeetsTooltip';
-import { ReliquaryFarmPosition, ReliquaryService } from '~/lib/services/staking/reliquary.service';
+import { ReliquaryFarmPosition } from '~/lib/services/staking/reliquary.service';
 import { PoolInvestModal } from '~/modules/pool/invest/PoolInvestModal';
 import { PoolWithdrawModal } from '~/modules/pool/withdraw/PoolWithdrawModal';
 import useReliquary from '../hooks/useReliquary';
-import ReliquaryInvest from './ReliquaryInvest';
-import BeetsThinking from '~/assets/icons/beetx-thinking.svg';
-import Image from 'next/image';
 import { ToastType, useToast } from '~/components/toast/BeetsToast';
-import { BeetsBox } from '~/components/box/BeetsBox';
 import Card from '~/components/card/Card';
 import AnimatedProgress from '~/components/animated-progress/AnimatedProgress';
 import { numberFormatUSDValue } from '~/lib/util/number-formats';
@@ -20,45 +15,13 @@ import { usePoolUserDepositBalance } from '~/modules/pool/lib/usePoolUserDeposit
 import { TokenAmountPill } from '~/components/token/TokenAmountPill';
 import AprTooltip from '~/components/apr-tooltip/AprTooltip';
 import { usePool } from '~/modules/pool/lib/usePool';
-import { ChevronLeft, ChevronRight } from 'react-feather';
 import { useReliquaryLevelUp } from '../hooks/useReliquaryLevelUp';
 
 interface Props {
     positions: ReliquaryFarmPosition[];
 }
 
-function getMaturityProgress(relic: ReliquaryFarmPosition, maturities: string[]) {
-    if (!relic || !maturities.length) {
-        return {
-            canUpgrade: false,
-            canUpgradeTo: -1,
-            progressToNextLevel: 0,
-        };
-    }
-    const relicMaturityStart = relic.entry;
-    const timeElapsedSinceStart = Date.now() / 1000 - relicMaturityStart;
-    const nextLevelMaturityIndex = maturities.findIndex((maturity) => timeElapsedSinceStart < parseInt(maturity, 10));
-    const isMaxMaturity = timeElapsedSinceStart > parseInt(maturities[maturities.length - 1], 10);
-    const canUpgradeTo = isMaxMaturity ? maturities.length : nextLevelMaturityIndex + 1;
-    const canUpgrade =
-        (isMaxMaturity && relic.level < maturities.length) ||
-        (nextLevelMaturityIndex > 0 && nextLevelMaturityIndex > relic.level);
-
-    const currentLevelMaturity = parseInt(maturities[relic.level], 10);
-    const timeElapsedSinceCurrentLevel = Date.now() - currentLevelMaturity;
-    const timeBetweenCurrentAndNextLevel = parseInt(maturities[relic.level + 1], 10) - currentLevelMaturity;
-    const progressToNextLevel = canUpgrade
-        ? 100
-        : (timeElapsedSinceCurrentLevel / timeBetweenCurrentAndNextLevel) * 100;
-
-    return {
-        canUpgrade,
-        canUpgradeTo,
-        progressToNextLevel,
-    };
-}
-
-export default function ReliquaryNFT() {
+export function ReliquaryHeader() {
     const controls = useAnimation();
     const [imageURI, setImageURI] = useState('');
     const [depositOrWithdraw, setDepositOrWithdraw] = useState<'deposit' | 'withdraw'>();
@@ -67,10 +30,6 @@ export default function ReliquaryNFT() {
     const { data, userPoolBalanceUSD } = usePoolUserDepositBalance();
     const { pool } = usePool();
 
-    const { canUpgrade, canUpgradeTo, progressToNextLevel } = getMaturityProgress(
-        relicPositions[0],
-        maturityThresholds,
-    );
     const { showToast } = useToast();
     const hoverNFT = async (translate: number) => {
         controls.start({
@@ -108,7 +67,7 @@ export default function ReliquaryNFT() {
                         </Button>
                     </HStack>
                 ),
-                type: ToastType.Success,
+                type: ToastType.Warn,
             });
         }
     }, [canUpgrade]);
@@ -121,14 +80,11 @@ export default function ReliquaryNFT() {
     }, []);
 
     const relic = relicPositions && relicPositions[0];
+
     return (
         <VStack width="full" alignItems="center">
             <HStack width="full" alignItems="flex-start" spacing="0" height="full">
                 <VStack alignItems="flex-start" mt="8" spacing="4" width="40%">
-                    {/* <VStack alignItems="flex-start" marginTop="4" width="full">
-                        <Heading size="lg">Your relic</Heading>
-                        <Divider borderColor="whiteAlpha.400" />
-                    </VStack> */}
                     <Heading size="lg">Relic #{relic.relicId}</Heading>
 
                     <Card p="4" width="full">
@@ -173,7 +129,7 @@ export default function ReliquaryNFT() {
                                 </VStack>
                                 <VStack spacing="0" alignItems="flex-start">
                                     <Text lineHeight="1rem" fontWeight="semibold" fontSize="sm" color="beets.base.50">
-                                        Deposited BPT
+                                        Deposited fBEETS
                                     </Text>
                                     <HStack>
                                         <Text color="white" fontSize="1.75rem">
@@ -182,16 +138,7 @@ export default function ReliquaryNFT() {
                                     </HStack>
                                 </VStack>
                             </HStack>
-                            <HStack width="full" alignItems="flex-start">
-                                <VStack spacing="0" alignItems="flex-start">
-                                    <Text lineHeight="1rem" fontWeight="semibold" fontSize="sm" color="beets.base.50">
-                                        Relic level
-                                    </Text>
-                                    <Text color="white" fontSize="1.75rem">
-                                        {relic.level + 1}
-                                    </Text>
-                                </VStack>
-                            </HStack>
+
                             <VStack width="full" spacing="3" alignItems="flex-start">
                                 <Text lineHeight="1rem" fontWeight="semibold" fontSize="sm" color="beets.base.50">
                                     Token breakdown
@@ -231,40 +178,29 @@ export default function ReliquaryNFT() {
                             </HStack>
                         </VStack>
                     </Card>
-                    {/* <Box backgroundColor="whiteAlpha.100" py="3" px="4" rounded="md">
-                    <HStack divider={<StackDivider borderColor="whiteAlpha.100" />} spacing="8">
-                        <VStack spacing="0" alignItems="flex-start">
-                            <Text lineHeight="1rem" fontWeight="semibold" fontSize="sm" color="beets.base.50">
-                                Minimum APR
-                            </Text>
-                            <HStack>
-                                <div className="apr-stripes">{numeral('0.4').format('0.00%')}</div>
-                            </HStack>
-                        </VStack>
-                        <VStack spacing="0" alignItems="flex-start">
-                            <Text lineHeight="1rem" fontWeight="semibold" fontSize="sm" color="beets.base.50">
-                                Maximum APR
-                            </Text>
-                            <HStack>
-                                <div className="apr-stripes">{numeral('0.4').format('0.00%')}</div>
-                            </HStack>
-                        </VStack>
-                        <VStack spacing="0" alignItems="flex-start">
-                            <Text lineHeight="1rem" fontWeight="semibold" fontSize="sm" color="beets.base.50">
-                                Total Relics Minted
-                            </Text>
-                            <HStack>
-                                <div className="apr-stripes">{numeral('4').format('0')}</div>
-                            </HStack>
-                        </VStack>
-                    </HStack>
-                </Box> */}
                 </VStack>
                 <HStack flex={1}>
-                    <Box px="4">
-                        <ChevronLeft size={40} />
-                    </Box>
                     <VStack spacing="8" width="full" overflow="hidden">
+                        <HStack>
+                            <PoolInvestModal
+                                activator={
+                                    <Button
+                                        width="140px"
+                                        variant="primary"
+                                        onClick={() => setDepositOrWithdraw('deposit')}
+                                    >
+                                        Invest
+                                    </Button>
+                                }
+                            />
+                            <PoolWithdrawModal
+                                activator={
+                                    <Button width="140px" variant="secondary">
+                                        Withdraw
+                                    </Button>
+                                }
+                            />
+                        </HStack>
                         <VStack width="full" spacing="4" mt="8">
                             {/* <VStack spacing="4">
                             <HStack>
@@ -285,28 +221,8 @@ export default function ReliquaryNFT() {
                                 </BeetsTooltip>
                             </HStack>
                         </VStack> */}
-                            <HStack>
-                                <HStack spacing="0" rounded="lg" overflow="hidden">
-                                    <PoolInvestModal
-                                        activator={
-                                            <Button
-                                                rounded="none"
-                                                variant="primary"
-                                                onClick={() => setDepositOrWithdraw('deposit')}
-                                            >
-                                                Invest
-                                            </Button>
-                                        }
-                                    />
-                                    <PoolWithdrawModal
-                                        activator={
-                                            <Button rounded="none" variant="secondary">
-                                                Withdraw
-                                            </Button>
-                                        }
-                                    />
-                                </HStack>
-                                <BeetsTooltip
+
+                            {/*<BeetsTooltip
                                     label={
                                         canUpgradeTo
                                             ? `Click to upgrade your relic to level ${canUpgradeTo + 1}!`
@@ -314,11 +230,15 @@ export default function ReliquaryNFT() {
                                     }
                                     noImage
                                 >
-                                    <Button onClick={() => levelUp(parseInt(relic.relicId, 10))} color="beets.base.900" className="beets-glow" variant="primary">
+                                    <Button
+                                        onClick={() => levelUp(parseInt(relic.relicId, 10))}
+                                        color="beets.base.900"
+                                        className="beets-glow"
+                                        variant="primary"
+                                    >
                                         Level Up
                                     </Button>
-                                </BeetsTooltip>
-                            </HStack>
+                                </BeetsTooltip>*/}
                             <HStack width="80%" py="4" position="relative" spacing="0" justifyContent="center">
                                 <Box
                                     zIndex="tooltip"
@@ -341,7 +261,9 @@ export default function ReliquaryNFT() {
                                 animate={controls}
                                 as={motion.div}
                             >
-                                {imageURI && <Image alt="Relic NFT" src={imageURI} width="400px" height="400px" />}
+                                {imageURI && (
+                                    <Image alt="Relic NFT" src={imageURI} width="400px" height="400px" br="4" />
+                                )}
                             </Box>
                         </VStack>
 
@@ -380,9 +302,6 @@ export default function ReliquaryNFT() {
                             })}
                         </HStack> */}
                     </VStack>
-                    <Box px="4">
-                        <ChevronRight size={40} />
-                    </Box>
                 </HStack>
             </HStack>
         </VStack>
