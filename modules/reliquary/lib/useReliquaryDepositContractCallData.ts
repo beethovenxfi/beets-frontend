@@ -29,11 +29,10 @@ export function useReliquaryDepositContractCallData({
         let beetsAmount = '0';
         let ftmAmount = '0';
         let isNativeFtm = true;
-
         if (enabled) {
             beetsAmount = investTokensWithAmountsMap[networkConfig.beets.address].amount;
-            if (investTokensWithAmountsMap[networkConfig.eth.address]?.address) {
-                ftmAmount = investTokensWithAmountsMap[networkConfig.eth.address].amount;
+            if (investTokensWithAmountsMap[networkConfig.eth.address.toLowerCase()]?.address) {
+                ftmAmount = investTokensWithAmountsMap[networkConfig.eth.address.toLowerCase()].amount;
             } else {
                 ftmAmount = investTokensWithAmountsMap[networkConfig.wethAddress].amount;
                 isNativeFtm = false;

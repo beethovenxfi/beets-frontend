@@ -22,6 +22,7 @@ import { usePool } from '~/modules/pool/lib/usePool';
 import { BeetsModalBody, BeetsModalContent, BeetsModalHeader } from '~/components/modal/BeetsModal';
 import { usePoolUserTokenBalancesInWallet } from '~/modules/pool/lib/usePoolUserTokenBalancesInWallet';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
+import useReliquary from '~/modules/reliquary/hooks/useReliquary';
 
 interface Props {
     activator?: ReactNode;
@@ -36,7 +37,9 @@ export function PoolInvestModal({ activator }: Props) {
     const [investComplete, setInvestComplete] = useState(false);
     const { clearInvestState, setSelectedOptions, hasSelectedOptions } = useInvestState();
     const { optionsWithLargestBalances } = usePoolUserTokenBalancesInWallet();
-    const { warnings } = useNetworkConfig();
+    const { warnings, reliquary } = useNetworkConfig();
+    const { currentRelicPosition } = useReliquary();
+    const isReliquaryFBeetsPool = pool.id === reliquary.fbeets.poolId;
 
     useEffect(() => {
         if (modalState !== 'start') {
@@ -131,6 +134,14 @@ export function PoolInvestModal({ activator }: Props) {
                     <BeetsModalBody p="0">
                         {modalState === 'start' ? (
                             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+                                {currentRelicPosition && isReliquaryFBeetsPool && (
+                                    <Box px="4">
+                                        <Alert status="warning" mb="4">
+                                            <AlertIcon />
+                                            Investing more funds into your relic will affect your level up progress.
+                                        </Alert>
+                                    </Box>
+                                )}
                                 {warnings.poolInvest[pool.id] && (
                                     <Box px="4">
                                         <Alert status="warning" mb="4">
