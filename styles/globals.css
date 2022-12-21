@@ -384,10 +384,10 @@ a {
     animation: spin 20s linear infinite;
     z-index: -1;
     opacity: 0.35;
-    border-radius: 50rem;
+    border-radius: 10rem;
 }
 
-.relic-glow::before {
+/* .relic-glow::before {
     position: absolute;
     background-color: #FF0000;
     content: '';
@@ -398,21 +398,21 @@ a {
     animation: spin 25s linear infinite;
     z-index: -1;
     border-radius: 50rem;
-}
+} */
 
 @keyframes spin {
     0% {
       rotate: 0deg;
-      opacity: 0.5;
+      opacity: 0.55;
     }
     50% {
-        opacity: 0.15;
+        opacity: 0.25;
         rotate: 180deg;
 
     }
     100% {
         rotate: 360deg;
-        opacity: 0.5;
+        opacity: 0.55;
 
     }
   }

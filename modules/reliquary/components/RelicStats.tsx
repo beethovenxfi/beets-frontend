@@ -102,7 +102,7 @@ export function RelicStats() {
                     <HStack width="full" spacing="12" alignItems="flex-start">
                         <VStack spacing="0" alignItems="flex-start">
                             <Text lineHeight="1rem" fontWeight="semibold" fontSize="sm" color="beets.base.50">
-                                Maturity
+                                Projected Maturity
                             </Text>
                         </VStack>
                     </HStack>

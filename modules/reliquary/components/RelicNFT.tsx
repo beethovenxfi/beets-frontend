@@ -12,20 +12,20 @@ export function RelicNFT() {
 
     const { showToast } = useToast();
     const hoverNFT = async (translate: number) => {
-        controls.start({
-            transform: `translateY(${translate}px)`,
-            transition: { type: 'spring', mass: 15, damping: 15 },
-        });
-        setTimeout(() => {
-            hoverNFT(translate > 0 ? -1 : 1);
-        }, 1250);
+        // controls.start({
+        //     transform: `translateY(${translate}px)`,
+        //     transition: { type: 'spring', mass: 15, damping: 20 },
+        // });
+        // setTimeout(() => {
+        //     hoverNFT(translate > 0 ? -1 : 1);
+        // }, 1250);
     };
 
     const startAnimation = async () => {
         await controls.start({
             transform: 'scale(1)',
             opacity: 1,
-            transition: { type: 'spring', mass: 0.5, damping: 15 },
+            transition: { type: 'spring', mass: 0.5, damping: 10 },
         });
         hoverNFT(1);
     };
