@@ -50,7 +50,7 @@ export function RelicHeader() {
                         py="0.5"
                         rounded="md"
                         backgroundColor="beets.light"
-                        width={{ base: '120px', md: 'min-content' }}
+                        width={{ base: 'min-content' }}
                         whiteSpace="nowrap"
                     >
                         <Text fontWeight="semibold">Level {(selectedRelic?.level || 0) + 1}</Text>

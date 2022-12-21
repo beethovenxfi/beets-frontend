@@ -15,6 +15,7 @@ import {
     Tooltip,
     StackDivider,
     Link,
+    useBreakpointValue,
 } from '@chakra-ui/react';
 import { ExternalLink, Grid as GridIcon } from 'react-feather';
 import { BeetsBox } from '~/components/box/BeetsBox';
@@ -45,6 +46,7 @@ export function PoolInvestTypeChoice({ onShowProportional, onShowCustom }: Props
     const { priceForAmount, formattedPrice } = useGetTokens();
     const { userPoolTokenBalances, investableAmount } = usePoolUserTokenBalancesInWallet();
     const { canInvestProportionally } = useInvest();
+    const isMobile = useBreakpointValue({ base: true, md: false });
     const { data, isLoading } = usePoolGetMaxProportionalInvestmentAmount();
     const proportionalSupported =
         poolService.joinGetProportionalSuggestionForFixedAmount && pool.investConfig.proportionalEnabled;
@@ -60,6 +62,8 @@ export function PoolInvestTypeChoice({ onShowProportional, onShowCustom }: Props
         }
         return 'This pool does not support proportional investment.';
     }, [_canInvestProportionally]);
+
+    const ChoiceOrientation = isMobile ? VStack : HStack;
 
     return (
         <VStack width="full">
@@ -86,7 +90,7 @@ export function PoolInvestTypeChoice({ onShowProportional, onShowCustom }: Props
                     </Box>
                 </VStack>
 
-                <HStack width="full">
+                <ChoiceOrientation width="full">
                     <BeetsTooltip noImage label={_canInvestProportionally ? '' : disabledProportionalInvestmentTooltip}>
                         <Box width="full">
                             <Button
@@ -127,7 +131,7 @@ export function PoolInvestTypeChoice({ onShowProportional, onShowCustom }: Props
                             </Text>
                         </VStack>
                     </Button>
-                </HStack>
+                </ChoiceOrientation>
             </VStack>
             <VStack width="full" p="4" backgroundColor="blackAlpha.500" alignItems="flex-start">
                 <Text fontSize="md" fontWeight="semibold">
