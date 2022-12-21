@@ -10,11 +10,13 @@ import useReliquary from '~/modules/reliquary/hooks/useReliquary';
 import { useReliquaryLevelUp } from '~/modules/reliquary/hooks/useReliquaryLevelUp';
 import { usePoolUserDepositBalance } from '~/modules/pool/lib/usePoolUserDepositBalance';
 import { usePool } from '~/modules/pool/lib/usePool';
+import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 
 export function RelicStats() {
     const { data, userPoolBalanceUSD } = usePoolUserDepositBalance();
     const { pool } = usePool();
     const { reliquaryService, maturityThresholds, relicPositions = [] } = useReliquary();
+    const config = useNetworkConfig();
 
     //TODO: fix this
     const relic = relicPositions && relicPositions[0];
@@ -53,21 +55,11 @@ export function RelicStats() {
                     <HStack width="full" spacing="12" alignItems="flex-start">
                         <VStack spacing="0" alignItems="flex-start">
                             <Text lineHeight="1rem" fontWeight="semibold" fontSize="sm" color="beets.base.50">
-                                Total Liquidity
+                                My Liquidity
                             </Text>
                             <Text color="white" fontSize="1.75rem">
                                 {numberFormatUSDValue(userPoolBalanceUSD)}
                             </Text>
-                        </VStack>
-                        <VStack spacing="0" alignItems="flex-start">
-                            <Text lineHeight="1rem" fontWeight="semibold" fontSize="sm" color="beets.base.50">
-                                Deposited fBEETS
-                            </Text>
-                            <HStack>
-                                <Text color="white" fontSize="1.75rem">
-                                    {numeral(relic.amount).format('0.0000')}
-                                </Text>
-                            </HStack>
                         </VStack>
                     </HStack>
 
@@ -76,6 +68,12 @@ export function RelicStats() {
                             Token breakdown
                         </Text>
                         <HStack>
+                            <TokenAmountPill
+                                key={`relic-token-${config.fbeets.address}`}
+                                address={config.fbeets.address}
+                                amount={relic.amount}
+                            />
+                            <Text fontWeight="bold">OR</Text>
                             {data &&
                                 data.map((token) => (
                                     <TokenAmountPill
