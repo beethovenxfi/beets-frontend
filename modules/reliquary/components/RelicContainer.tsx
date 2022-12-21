@@ -9,11 +9,11 @@ export function RelicContainer() {
     return (
         <Box width="full">
             <RelicHeader />
-            <HStack position='relative' width="full" alignItems="flex-start" spacing="0" height="full">
+            <HStack position="relative" width="full" alignItems="flex-start" spacing="0" height="full">
                 <VStack alignItems="flex-start" mt="8" spacing="4" width="40%">
                     <RelicStats />
                 </VStack>
-                <HStack position='sticky' top='100px' flex={1} mt="4" alignItems="center" justifyContent="center">
+                <HStack position="sticky" top="100px" flex={1} mt="4" alignItems="center" justifyContent="center">
                     <RelicNFT />
                 </HStack>
             </HStack>

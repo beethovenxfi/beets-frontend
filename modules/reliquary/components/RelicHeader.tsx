@@ -13,7 +13,7 @@ export function RelicHeader() {
     const relic = relicPositions && relicPositions[0];
 
     return (
-        <Flex>
+        <Flex alignItems="center">
             <Box flex="1">
                 <Heading size="lg">My Relic: #{relic.relicId}</Heading>
                 <HStack width="50%" py="4" position="relative" spacing="0" justifyContent="center">
