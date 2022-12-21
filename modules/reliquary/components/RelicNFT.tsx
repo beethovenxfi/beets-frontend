@@ -31,14 +31,7 @@ export function RelicNFT() {
     }, []);
 
     return (
-        <Box
-            position="sticky"
-            top="0"
-            initial={{ transform: 'scale(0)', opacity: 0 }}
-            animate={controls}
-            as={motion.div}
-            className="relic-glow"
-        >
+        <Box initial={{ transform: 'scale(0)', opacity: 0 }} animate={controls} as={motion.div} className="relic-glow">
             <Box rounded="lg" overflow="hidden">
                 {imageURI && <Image alt="Relic NFT" src={imageURI} width="400px" height="400px" />}
             </Box>
