@@ -1,18 +1,11 @@
-import { Box, Button, Flex, Heading, HStack, Input, Text, VStack } from '@chakra-ui/react';
-import { animate, AnimatePresence, AnimateSharedLayout, motion, useAnimation, useMotionValue } from 'framer-motion';
-import React, { useEffect, useState } from 'react';
-import { BeetsTokenApprovalButton } from '~/components/button/BeetsTokenApprovalButton';
-import { WalletConnectButton } from '~/components/button/WalletConnectButton';
-import SwitchButton from '~/components/switch-button/SwitchButton';
+import { Box, Flex, Heading, HStack, Text, VStack } from '@chakra-ui/react';
+import { animate, AnimatePresence, motion, useAnimation, useMotionValue } from 'framer-motion';
+import React, { useState } from 'react';
 import { useUserAccount } from '~/lib/user/useUserAccount';
-import { PoolInvestCustom } from '../pool/invest/components/PoolInvestCustom';
-import { PoolInvestPreview } from '../pool/invest/components/PoolInvestPreview';
-import { PoolInvestProportional } from '../pool/invest/components/PoolInvestProportional';
-import ReliquaryCard from './components/ReliquaryCard';
 import ReliquaryConnectWallet from './components/ReliquaryConnectWallet';
 import ReliquaryInvest from './components/ReliquaryInvest';
-import ReliquaryNFT from './components/ReliquaryNFT';
 import useReliquary from './hooks/useReliquary';
+import { RelicContainer } from '~/modules/reliquary/components/RelicContainer';
 
 interface Props {}
 
@@ -87,7 +80,7 @@ export default function Reliquary(props: Props) {
                     >
                         <Flex justifyContent="center" alignItems="flex-start" width="full" height="full">
                             <VStack spacing="8" width="full" height="full">
-                                {relicPositions.length > 0 && <ReliquaryNFT positions={relicPositions} />}
+                                {relicPositions.length > 0 && <RelicContainer />}
                                 {relicPositions.length === 0 && (
                                     <VStack spacing="4">
                                         <VStack spacing="2">

@@ -2,7 +2,6 @@ import { Heading, Text, VStack } from '@chakra-ui/react';
 import { motion } from 'framer-motion';
 import React from 'react';
 import { WalletConnectButton } from '~/components/button/WalletConnectButton';
-import ReliquaryNFT from './ReliquaryNFT';
 
 interface Props {}
 
