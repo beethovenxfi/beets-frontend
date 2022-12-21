@@ -3,7 +3,7 @@ import { PoolInvestModal } from '~/modules/pool/invest/PoolInvestModal';
 import { PoolWithdrawModal } from '~/modules/pool/withdraw/PoolWithdrawModal';
 import React from 'react';
 import AnimatedProgress from '~/components/animated-progress/AnimatedProgress';
-import useReliquary from '~/modules/reliquary/hooks/useReliquary';
+import useReliquary from '~/modules/reliquary/lib/useReliquary';
 import { relicGetMaturityProgress } from '~/modules/reliquary/lib/reliquary-helpers';
 
 export function RelicHeader() {
@@ -13,10 +13,10 @@ export function RelicHeader() {
     const relic = relicPositions && relicPositions[0];
 
     return (
-        <Flex alignItems="center">
+        <Flex alignItems="flex-end">
             <Box flex="1">
                 <Heading size="lg">My Relic: #{relic.relicId}</Heading>
-                <HStack width="50%" py="4" position="relative" spacing="0" justifyContent="center">
+                <HStack width="50%" pt="4" position="relative" spacing="0" justifyContent="center">
                     <Box px="3" py="0.5" rounded="md" backgroundColor="beets.light" width="110px">
                         <Text fontWeight="semibold">Level {relic?.level + 1}</Text>
                     </Box>

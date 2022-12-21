@@ -22,7 +22,7 @@ import { usePool } from '~/modules/pool/lib/usePool';
 import { BeetsModalBody, BeetsModalContent, BeetsModalHeader } from '~/components/modal/BeetsModal';
 import { usePoolUserTokenBalancesInWallet } from '~/modules/pool/lib/usePoolUserTokenBalancesInWallet';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
-import useReliquary from '~/modules/reliquary/hooks/useReliquary';
+import useReliquary from '~/modules/reliquary/lib/useReliquary';
 
 interface Props {
     activator?: ReactNode;
@@ -38,7 +38,7 @@ export function PoolInvestModal({ activator }: Props) {
     const { clearInvestState, setSelectedOptions, hasSelectedOptions } = useInvestState();
     const { optionsWithLargestBalances } = usePoolUserTokenBalancesInWallet();
     const { warnings, reliquary } = useNetworkConfig();
-    const { currentRelicPosition } = useReliquary();
+    const { selectedRelic } = useReliquary();
     const isReliquaryFBeetsPool = pool.id === reliquary.fbeets.poolId;
 
     useEffect(() => {
@@ -134,7 +134,7 @@ export function PoolInvestModal({ activator }: Props) {
                     <BeetsModalBody p="0">
                         {modalState === 'start' ? (
                             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-                                {currentRelicPosition && isReliquaryFBeetsPool && (
+                                {selectedRelic && isReliquaryFBeetsPool && (
                                     <Box px="4">
                                         <Alert status="warning" mb="4">
                                             <AlertIcon />

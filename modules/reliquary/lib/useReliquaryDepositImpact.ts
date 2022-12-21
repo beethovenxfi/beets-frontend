@@ -13,24 +13,24 @@ import { BigNumber } from 'ethers';
 export function useReliquaryDepositImpact(amount: BigNumber) {
     const networkConfig = useNetworkConfig();
     const provider = useProvider();
-    const { currentRelicPosition } = useReliquary();
+    const { selectedRelic } = useReliquary();
     const reliquaryService = useRef(
         new ReliquaryService(networkConfig.reliquary.address, networkConfig.chainId, networkConfig.beets.address),
     ).current;
     const depositImpactQuery = useQuery(
         'relicDepositImpact',
         async () => {
-            if (!currentRelicPosition) {
+            if (!selectedRelic) {
                 return;
             }
             return await reliquaryService.getDepositImpact({
-                relicId: currentRelicPosition?.relicId,
+                relicId: selectedRelic?.relicId,
                 provider,
                 amount,
             });
         },
         {
-            enabled: currentRelicPosition !== null && amount !== null,
+            enabled: selectedRelic !== null && amount !== null,
         },
     );
 

@@ -2,23 +2,21 @@ import { motion, useAnimation } from 'framer-motion';
 import { Box, Image } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react';
 import { getProvider } from '@wagmi/core';
-import useReliquary from '~/modules/reliquary/hooks/useReliquary';
-import { useToast } from '~/components/toast/BeetsToast';
+import useReliquary from '~/modules/reliquary/lib/useReliquary';
 
 export function RelicNFT() {
     const controls = useAnimation();
     const [imageURI, setImageURI] = useState('');
     const { reliquaryService } = useReliquary();
 
-    const { showToast } = useToast();
     const hoverNFT = async (translate: number) => {
-        // controls.start({
-        //     transform: `translateY(${translate}px)`,
-        //     transition: { type: 'spring', mass: 15, damping: 20 },
-        // });
-        // setTimeout(() => {
-        //     hoverNFT(translate > 0 ? -1 : 1);
-        // }, 1250);
+        controls.start({
+            transform: `translateY(${translate}px)`,
+            transition: { type: 'spring', mass: 15, damping: 20 },
+        });
+        setTimeout(() => {
+            hoverNFT(translate > 0 ? -1 : 1);
+        }, 1250);
     };
 
     const startAnimation = async () => {

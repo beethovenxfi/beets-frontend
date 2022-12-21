@@ -9,7 +9,7 @@ interface Props {
 
 export default function AnimatedProgress({ value, ...rest }: Props & BoxProps) {
     return (
-        <BeetsBox zIndex='docked' borderRadius='2px' minWidth="100px" height="15px" overflow="hidden" {...rest}>
+        <BeetsBox borderRadius="2px" minWidth="100px" height="15px" overflow="hidden" {...rest}>
             <Box
                 initial={{ width: '0px' }}
                 animate={{ width: '100%', transition: { delay: 1, duration: 2 } }}

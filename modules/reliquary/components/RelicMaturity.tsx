@@ -3,15 +3,15 @@ import React, { useMemo } from 'react';
 import Card from '~/components/card/Card';
 import ReactECharts from 'echarts-for-react';
 import { EChartsOption, graphic } from 'echarts';
-import useReliquary from '../hooks/useReliquary';
+import useReliquary from '../lib/useReliquary';
 
 interface Props {}
 
 export default function RelicMaturity({}: Props) {
-    const { maturityThresholds, isLoading, currentRelicPosition } = useReliquary();
+    const { maturityThresholds, isLoading, selectedRelic } = useReliquary();
 
     const chartData = useMemo(() => {
-        const relicStart = currentRelicPosition?.entry;
+        const relicStart = selectedRelic?.entry;
         console.log('sart', relicStart, maturityThresholds);
         return maturityThresholds
             .map((maturityThreshold, i) => {

@@ -1,10 +1,5 @@
 import { initializeApolloClient, loadApolloState } from '~/apollo/client';
 import Head from 'next/head';
-import { TradeContainer } from '~/modules/trade/TradeContainer';
-import { PageMasthead } from '~/components/masthead/PageMasthead';
-import NextImage from 'next/image';
-import SwapMastheadImage from '~/assets/images/swap-masthead-image.png';
-import SwapMastheadOpImage from '~/assets/images/swap-masthead-image-OP.png';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 import { UserTokenBalancesProvider } from '~/lib/user/useUserTokenBalances';
 import Reliquary from '~/modules/reliquary/Reliquary';
@@ -15,7 +10,7 @@ import { PoolUserTokenBalancesInWalletProvider } from '~/modules/pool/lib/usePoo
 import { PoolUserBptBalanceProvider } from '~/modules/pool/lib/usePoolUserBptBalance';
 import { networkConfig } from '~/lib/config/network-config';
 import React from 'react';
-import { PoolUserDepositBalanceProvider } from '~/modules/pool/lib/usePoolUserDepositBalance';
+import { RelicDepositBalanceProvider } from '~/modules/reliquary/lib/useRelicDepositBalance';
 
 interface Props {
     pool: GqlPoolUnion;
@@ -42,7 +37,7 @@ function Stake({ pool }: Props) {
                 <PoolUserBptBalanceProvider>
                     <PoolUserTokenBalancesInWalletProvider>
                         <UserTokenBalancesProvider>
-                            <PoolUserDepositBalanceProvider>
+                            <RelicDepositBalanceProvider>
                                 {/* <PageMasthead
                                 title="Reliquary"
                                 image={
@@ -55,7 +50,7 @@ function Stake({ pool }: Props) {
                             /> */}
 
                                 <Reliquary />
-                            </PoolUserDepositBalanceProvider>
+                            </RelicDepositBalanceProvider>
                         </UserTokenBalancesProvider>
                     </PoolUserTokenBalancesInWalletProvider>
                 </PoolUserBptBalanceProvider>

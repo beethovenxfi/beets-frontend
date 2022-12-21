@@ -10,8 +10,8 @@ import { PoolInvestActions } from '~/modules/pool/invest/components/PoolInvestAc
 import { CardRow } from '~/components/card/CardRow';
 import TokenRow from '~/components/token/TokenRow';
 import React from 'react';
-import { useReliquaryDepositImpact } from '~/modules/reliquary/hooks/useReliquaryDepositImpact';
-import useReliquary from '~/modules/reliquary/hooks/useReliquary';
+import { useReliquaryDepositImpact } from '~/modules/reliquary/lib/useReliquaryDepositImpact';
+import useReliquary from '~/modules/reliquary/lib/useReliquary';
 import { usePool } from '../../lib/usePool';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 
@@ -24,7 +24,7 @@ export function PoolInvestPreview({ onInvestComplete, onClose }: Props) {
     const { priceForAmount } = useGetTokens();
     const { selectedInvestTokensWithAmounts } = useInvest();
     const networkConfig = useNetworkConfig();
-    const { currentRelicPosition } = useReliquary();
+    const { selectedRelic } = useReliquary();
     const { pool } = usePool();
     const isReliquaryFBeetsPool = pool.id === networkConfig.reliquary.fbeets.poolId;
     // const {} = useReliquaryDepositImpact();
@@ -33,7 +33,7 @@ export function PoolInvestPreview({ onInvestComplete, onClose }: Props) {
         <VStack spacing="4" width="full">
             <Box px="4" width="full">
                 <PoolInvestSummary mt="6" />
-                {currentRelicPosition && isReliquaryFBeetsPool && (
+                {selectedRelic && isReliquaryFBeetsPool && (
                     <Box>
                         <Alert status="warning" mb="4">
                             <AlertIcon />

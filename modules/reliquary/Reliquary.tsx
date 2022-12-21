@@ -4,58 +4,15 @@ import React, { useState } from 'react';
 import { useUserAccount } from '~/lib/user/useUserAccount';
 import ReliquaryConnectWallet from './components/ReliquaryConnectWallet';
 import ReliquaryInvest from './components/ReliquaryInvest';
-import useReliquary from './hooks/useReliquary';
-import { RelicContainer } from '~/modules/reliquary/components/RelicContainer';
+import useReliquary from './lib/useReliquary';
+import { Relic } from '~/modules/reliquary/components/Relic';
 
 interface Props {}
 
 export default function Reliquary(props: Props) {
-    const { relicPositions, isLoadingRelicPositions, depositableBalance, isLoading } = useReliquary();
+    const { relicPositions, isLoadingRelicPositions, isLoading } = useReliquary();
     const inputAnimation = useAnimation();
     const { isConnected } = useUserAccount();
-    const bpt = useMotionValue(5);
-    const [bptInput, setBptInput] = useState(0);
-    const [inputWidth, setInputWidth] = useState(0);
-    const [investmentStep, setInvestmentStep] = useState('proportional');
-
-    const setMaxBpt = () => {
-        const maxValue = parseFloat(parseFloat(depositableBalance).toFixed(4));
-        let width = parseFloat(depositableBalance).toFixed(4).length;
-        if (width === 1) {
-            width = width * 2;
-        } else if (width === 2) {
-            width = width * 1.5;
-        } else if (width > 2 && width < 8) {
-            width = width * 1.1;
-        }
-        inputAnimation.start({
-            width: `${width}ch`,
-        });
-        animate(bpt, maxValue, {
-            type: 'spring',
-            mass: 0.1,
-            stiffness: 150,
-            onUpdate: (value) => {
-                setBptInput(parseFloat(value.toFixed(4)));
-            },
-        });
-    };
-
-    const updateBptInput = (event: any) => {
-        setBptInput(event.target.value);
-        let width = event.target.value.length;
-        if (width === 1) {
-            width = width * 2;
-        } else if (width === 2) {
-            width = width * 1.5;
-        } else if (width > 2 && width < 8) {
-            width = width * 1.1;
-        }
-        inputAnimation.start({
-            width: `${width}ch`,
-        });
-        bpt.set(parseFloat(event.target.value));
-    };
 
     return (
         <Box
@@ -80,7 +37,7 @@ export default function Reliquary(props: Props) {
                     >
                         <Flex justifyContent="center" alignItems="flex-start" width="full" height="full">
                             <VStack spacing="8" width="full" height="full">
-                                {relicPositions.length > 0 && <RelicContainer />}
+                                {relicPositions.length > 0 && <Relic />}
                                 {relicPositions.length === 0 && (
                                     <VStack spacing="4">
                                         <VStack spacing="2">

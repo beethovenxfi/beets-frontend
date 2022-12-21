@@ -6,8 +6,8 @@ import { numberFormatUSDValue } from '~/lib/util/number-formats';
 import { TokenAmountPill } from '~/components/token/TokenAmountPill';
 import React, { useState } from 'react';
 import { useAnimation } from 'framer-motion';
-import useReliquary from '~/modules/reliquary/hooks/useReliquary';
-import { useReliquaryLevelUp } from '~/modules/reliquary/hooks/useReliquaryLevelUp';
+import useReliquary from '~/modules/reliquary/lib/useReliquary';
+import { useReliquaryLevelUp } from '~/modules/reliquary/lib/useReliquaryLevelUp';
 import { usePoolUserDepositBalance } from '~/modules/pool/lib/usePoolUserDepositBalance';
 import { usePool } from '~/modules/pool/lib/usePool';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
@@ -16,9 +16,10 @@ import { PoolUserStakedStats } from '~/modules/pool/detail/components/stats/Pool
 import { InfoButton } from '~/components/info-button/InfoButton';
 import TokenAvatar from '~/components/token/TokenAvatar';
 import { networkConfig } from '~/lib/config/network-config';
+import { useRelicDepositBalance } from '~/modules/reliquary/lib/useRelicDepositBalance';
 
 export function RelicStats() {
-    const { data, userPoolBalanceUSD } = usePoolUserDepositBalance();
+    const { data, relicBalanceUSD } = useRelicDepositBalance();
     const { pool } = usePool();
     const { reliquaryService, maturityThresholds, relicPositions = [] } = useReliquary();
     const config = useNetworkConfig();
@@ -63,7 +64,7 @@ export function RelicStats() {
                                 My Liquidity
                             </Text>
                             <Text color="white" fontSize="1.75rem">
-                                {numberFormatUSDValue(userPoolBalanceUSD)}
+                                {numberFormatUSDValue(relicBalanceUSD)}
                             </Text>
                         </VStack>
                     </HStack>
@@ -141,10 +142,10 @@ export function RelicStats() {
                         </Text>
                     )*/}
                     <Text color="white" fontSize="1.75rem">
-                        {numberFormatUSDValue(userPoolBalanceUSD)}
+                        {numberFormatUSDValue(relicBalanceUSD)}
                     </Text>
                 </VStack>
-                <VStack spacing="0" alignItems="flex-start" mb="5" px="2">
+                {/*<VStack spacing="0" alignItems="flex-start" mb="5" px="2">
                     <InfoButton
                         labelProps={{
                             lineHeight: '1rem',
@@ -218,7 +219,7 @@ export function RelicStats() {
                             </HStack>
                         ))}
                     </Box>
-                </VStack>
+                </VStack>*/}
                 {/*pool.staking && (
                     <PoolUserStakedStats
                         poolAddress={pool.address}
