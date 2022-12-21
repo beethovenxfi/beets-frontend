@@ -2,7 +2,7 @@ import { Button, HStack } from '@chakra-ui/react';
 import { useReliquaryFbeetsMigrateContractCallData } from '~/modules/reliquary/lib/useReliquaryFbeetsMigrateContractCallData';
 import { useReliquaryZap } from '~/modules/reliquary/lib/useReliquaryZap';
 import { useReliquaryWithdrawContractCallData } from '~/modules/reliquary/lib/useReliquaryWithdrawContractCallData';
-import useReliquary from '~/modules/reliquary/hooks/useReliquary';
+import useReliquary from '~/modules/reliquary/lib/useReliquary';
 import { usePool } from '~/modules/pool/lib/usePool';
 import { useBatchRelayerRelicApprove } from '~/modules/reliquary/lib/useBatchRelayerRelicApprove';
 import { useBatchRelayerHasRelicApproval } from '~/modules/reliquary/lib/useBatchRelayerHasRelicApproval';

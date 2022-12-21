@@ -3,34 +3,13 @@ import React, { useMemo } from 'react';
 import Card from '~/components/card/Card';
 import ReactECharts from 'echarts-for-react';
 import { EChartsOption, graphic } from 'echarts';
-import useReliquary from '../hooks/useReliquary';
 import { format, fromUnixTime } from 'date-fns';
+import useReliquary from '../lib/useReliquary';
 
 interface Props {}
 
 export default function RelicMaturity({}: Props) {
-    const { maturityThresholds, isLoading, currentRelicPosition } = useReliquary();
-
-    const chartData = useMemo(() => {
-        const relicStart = currentRelicPosition?.entry;
-        console.log('sart', relicStart, maturityThresholds);
-        return maturityThresholds
-            .map((maturityThreshold, i) => {
-                const threshold = parseInt(maturityThreshold, 10);
-                const nextThreshold = parseInt(maturityThresholds[i + 1], 10);
-                if (!maturityThresholds[i + 1]) return [];
-                return [threshold, nextThreshold, i + 1, `Level ${i + 1}`];
-            })
-            .map(function (item, index) {
-                return {
-                    value: item,
-                    itemStyle: {
-                        color: '#00F89C',
-                    },
-                };
-            });
-    }, [isLoading]);
-
+    const { maturityThresholds, isLoading, selectedRelic } = useReliquary();
     const chartOption: EChartsOption = useMemo(() => {
         return {
             title: {
@@ -61,7 +40,7 @@ export default function RelicMaturity({}: Props) {
                 boundaryGap: false,
                 data: maturityThresholds.map((threshold) => {
                     return format(
-                        fromUnixTime((currentRelicPosition?.entry || 0) + parseInt(threshold, 10)),
+                        fromUnixTime((selectedRelic?.entry || 0) + parseInt(threshold, 10)),
                         'dd/MM/yyyy HH:mm',
                     );
                 }),

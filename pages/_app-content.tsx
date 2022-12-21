@@ -38,9 +38,7 @@ export function AppContent({ Component, pageProps }: AppProps) {
             <Box pt="3" />
             <Navbar scrollY={scrollY} />
             <Box pt="1" />
-            <Flex width="full" justifyContent="center">
-                <SubNavBar />
-            </Flex>
+            <SubNavBar />
             <Box display="flex" justifyContent="center" mt="8">
                 <Box
                     width={{ base: 'full', '2xl': theme.breakpoints['2xl'] }}
