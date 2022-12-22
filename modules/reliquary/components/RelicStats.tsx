@@ -1,5 +1,5 @@
 import Card from '~/components/card/Card';
-import { Button, Flex, Heading, HStack, Skeleton, Text, Tooltip, VStack } from '@chakra-ui/react';
+import { Badge, Button, Flex, Heading, HStack, Skeleton, Text, Tooltip, VStack } from '@chakra-ui/react';
 import numeral from 'numeral';
 import AprTooltip from '~/components/apr-tooltip/AprTooltip';
 import { numberFormatUSDValue } from '~/lib/util/number-formats';
@@ -56,7 +56,19 @@ export function RelicStats() {
                                 <div className="apr-stripes">{numeral(selectedRelicApr).format('0.00%')}</div>
                                 <AprTooltip onlySparkles data={pool.dynamicData.apr} />
                             </HStack>
-                            <Text color="orange">{selectedRelicLevel?.allocationPoints}x maturity boost</Text>
+                            <HStack
+                                px="3"
+                                py="0.5"
+                                rounded="md"
+                                backgroundColor="beets.light"
+                                width={{ base: 'min-content' }}
+                                whiteSpace="nowrap"
+                            >
+                                <Text fontWeight="semibold">Maturity boost</Text>
+                                <Badge bg="none" colorScheme="green" p="1">
+                                    {selectedRelicLevel?.allocationPoints}x
+                                </Badge>
+                            </HStack>
                         </VStack>
                         <Box width="full">
                             <Divider />
