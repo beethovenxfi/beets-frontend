@@ -8,7 +8,7 @@ import { useQuery } from 'react-query';
 export function RelicNFT() {
     const controls = useAnimation();
     const [imageURI, setImageURI] = useState('');
-    const { reliquaryService, selectedRelicId } = useReliquary();
+    const { reliquaryService, selectedRelicId, selectedRelic } = useReliquary();
 
     const startAnimation = async () => {
         await controls.start({
@@ -26,12 +26,12 @@ export function RelicNFT() {
             }
         },
         {
-            enabled: selectedRelicId !== null,
             onSuccess: (imageURI) => {
                 setImageURI(imageURI);
             },
         },
     );
+
     useEffect(() => {
         setTimeout(() => {
             startAnimation();
