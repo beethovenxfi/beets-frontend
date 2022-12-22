@@ -40,6 +40,8 @@ export function RelicStats() {
     const { data: globalStats, loading: isLoadingGlobalStats } = useReliquaryGlobalStats();
     const weightedRelicAmount = parseFloat(selectedRelic?.amount || '0') * (selectedRelicLevel?.allocationPoints || 0);
     const relicShare = globalStats && selectedRelic ? weightedRelicAmount / weightedTotalBalance : 0;
+    const relicBeetsPerDay = beetsPerDay * relicShare;
+    const relicYieldPerDay = priceForAmount({ address: config.beets.address, amount: `${relicBeetsPerDay}` });
 
     return (
         <>
@@ -180,53 +182,43 @@ export function RelicStats() {
                             )}
                         </VStack>
                     </VStack>
+
+                    <VStack spacing="0" alignItems="flex-start" mt="8" px="2" flex="1">
+                        <InfoButton
+                            labelProps={{
+                                lineHeight: '1rem',
+                                fontWeight: 'semibold',
+                                fontSize: 'sm',
+                                color: 'beets.base.50',
+                            }}
+                            label="My potential daily yield"
+                            infoText="The potential daily value is an approximation based on swap fees, current token prices and your staked share. A number of external factors can influence this value from second to second."
+                        />
+                        {isLoading ? (
+                            <Skeleton height="34px" width="140px" mt="4px" mb="4px" />
+                        ) : (
+                            <Text color="white" fontSize="1.75rem">
+                                {numberFormatUSDValue(relicYieldPerDay)}
+                            </Text>
+                        )}
+                        <Box>
+                            {beetsPerDay > 0 && (
+                                <HStack spacing="1" mb="0.5">
+                                    <TokenAvatar height="20px" width="20px" address={networkConfig.beets.address} />
+                                    <Tooltip label={`BEETS emissions for reliquary are calculated per second.`}>
+                                        <Text fontSize="1rem" lineHeight="1rem">
+                                            {numeral(beetsPerDay).format('0,0')} / day
+                                        </Text>
+                                    </Tooltip>
+                                </HStack>
+                            )}
+                        </Box>
+                    </VStack>
                 </Card>
                 <RelicAchievements />
                 <RelicMaturity />
             </VStack>
             <Flex width="full" alignItems="flex-start" flex={1} flexDirection="column">
-                <VStack spacing="0" alignItems="flex-start" mb="8" px="2" flex="1">
-                    <InfoButton
-                        labelProps={{
-                            lineHeight: '1rem',
-                            fontWeight: 'semibold',
-                            fontSize: 'sm',
-                            color: 'beets.base.50',
-                        }}
-                        label="My potential daily yield"
-                        infoText="The potential daily value is an approximation based on swap fees, current token prices and your staked share. A number of external factors can influence this value from second to second."
-                    />
-                    {/*{isLoading ? (
-                        <Skeleton height="34px" width="140px" mt="4px" mb="4px" />
-                    ) : (
-                        <Text color="white" fontSize="1.75rem">
-                            {numberFormatUSDValue(dailyYieldUSD)}
-                        </Text>
-                    )}
-                    <Box>
-                        {beetsPerDay > 0 && (
-                            <HStack spacing="1" mb="0.5">
-                                <TokenAvatar height="20px" width="20px" address={networkConfig.beets.address} />
-                                <Tooltip
-                                    label={`BEETS emissions are calculated per block, so daily emissions are an estimate based on an average block time over last 5,000 blocks. Avg block time: ${blocksData?.avgBlockTime}s.`}
-                                >
-                                    <Text fontSize="1rem" lineHeight="1rem">
-                                        {numeral(beetsPerDay).format('0,0')} / day
-                                    </Text>
-                                </Tooltip>
-                            </HStack>
-                        )}
-                        {staking.farm?.rewarders?.map((rewarder) => (
-                            <HStack spacing="1" mb="0.5" key={rewarder.id}>
-                                <TokenAvatar height="20px" width="20px" address={rewarder.tokenAddress} />
-                                <Text fontSize="1rem" lineHeight="1rem">
-                                    {numeral(parseFloat(rewarder.rewardPerSecond) * 86400 * userShare).format('0,0')} /
-                                    day
-                                </Text>
-                            </HStack>
-                        ))}
-                    </Box>*/}
-                </VStack>
                 {/*pool.staking && (
                     <PoolUserStakedStats
                         poolAddress={pool.address}
