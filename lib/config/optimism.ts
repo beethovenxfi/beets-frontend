@@ -49,6 +49,9 @@ export const optimismNetworkConfig: NetworkConfig = {
             '0xa4e597c1bd01859b393b124ce18427aa4426a871': '0xfa0081569a9e5c80385f2ffb301db93288e53684', //op
             '0xa1a77e5d7d769bfbb790a08ec976dc738bf795b9': '0x2bce16d9e5bbaa737be124f7da16a5a7bc699bcb', //wbtc
             '0xc0d7013a05860271a1edb52415cf74bc85b2ace7': '0x87b57d325bc066890a400a5c88f34084a2454d91', //susd
+            '0x62ec8b26c08ffe504f22390a65e6e3c1e45e9877': '0x573f1fbde18ab2926a5e3fb80467ae50cf91d3f6', //soDAI
+            '0xb96c5bada4bf6a70e71795a3197ba94751dae2db': '0xbac75e5e03c68c3a9e0c200462d38440d8ffea45', //soUSDT
+            '0xedcfaf390906a8f91fb35b7bac23f3111dbaee1c': '0xe61b872d223362facb9fcbce359a56764bccfa36', //soUSDC
         },
         reaperManualRebalancer: '0xf070996cf89cd3d2582705fc269f2c800e9a6a21',
     },
