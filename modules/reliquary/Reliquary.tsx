@@ -1,4 +1,4 @@
-import { Box, Flex, Heading, HStack, Text, VStack } from '@chakra-ui/react';
+import { Box, Flex, Heading, HStack, Spinner, Text, VStack } from '@chakra-ui/react';
 import { animate, AnimatePresence, motion, useAnimation, useMotionValue } from 'framer-motion';
 import React, { useState } from 'react';
 import { useUserAccount } from '~/lib/user/useUserAccount';
@@ -10,7 +10,7 @@ import { Relic } from '~/modules/reliquary/components/Relic';
 interface Props {}
 
 export default function Reliquary(props: Props) {
-    const { relicPositions, isLoadingRelicPositions, isLoading } = useReliquary();
+    const { relicPositions, isLoadingRelicPositions, isLoading, selectedRelicId } = useReliquary();
     const inputAnimation = useAnimation();
     const { isConnected } = useUserAccount();
 
@@ -37,14 +37,20 @@ export default function Reliquary(props: Props) {
                     >
                         <Flex justifyContent="center" alignItems="flex-start" width="full" height="full">
                             <VStack spacing="8" width="full" height="full">
-                                {relicPositions.length > 0 && <Relic />}
-                                {relicPositions.length === 0 && (
+                                {isLoadingRelicPositions ? (
+                                    <Box mt="10">
+                                        <Spinner color="beets.highlight" size="xl" />
+                                    </Box>
+                                ) : selectedRelicId !== null ? (
+                                    <Relic />
+                                ) : (
                                     <VStack spacing="4">
                                         <VStack spacing="2">
                                             <Heading fontSize="1.75rem">Mint your first relic</Heading>
                                             <Text fontSize="1.15rem">
-                                                Looks like you don't have a relic yet. Let's get started by investing
-                                                into fBEETS.
+                                                {
+                                                    "Looks like you don't have a relic yet. Let's get started by investing into fBEETS."
+                                                }
                                             </Text>
                                         </VStack>
                                         <ReliquaryInvest onInvestComplete={() => false} />

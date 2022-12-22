@@ -1,5 +1,5 @@
 query GetReliquaryFarmSnapshots($id: String!, $range: GqlPoolSnapshotDataRange!) {
-    poolGetReliquaryFarmSnapshots(id: $id, range: $range) {
+    snapshots: poolGetReliquaryFarmSnapshots(id: $id, range: $range) {
         id
         farmId
         timestamp

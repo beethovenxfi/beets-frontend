@@ -731,6 +731,14 @@ export const GetPool = gql`
                         tokenAddress
                     }
                 }
+                reliquary {
+                    levels {
+                        level
+                        balance
+                        apr
+                    }
+                    beetsPerSecond
+                }
             }
             investConfig {
                 singleAssetEnabled
@@ -986,7 +994,7 @@ export const GetPoolFilters = gql`
 `;
 export const GetReliquaryFarmSnapshots = gql`
     query GetReliquaryFarmSnapshots($id: String!, $range: GqlPoolSnapshotDataRange!) {
-        poolGetReliquaryFarmSnapshots(id: $id, range: $range) {
+        snapshots: poolGetReliquaryFarmSnapshots(id: $id, range: $range) {
             id
             farmId
             timestamp

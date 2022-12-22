@@ -25,9 +25,10 @@ import { sum, sumBy } from 'lodash';
 import { tokenFormatAmount } from '~/lib/services/token/token-util';
 import { useRelicHarvestRewards } from '~/modules/reliquary/lib/useRelicHarvestRewards';
 import { BeetsSubmitTransactionButton } from '~/components/button/BeetsSubmitTransactionButton';
+import { useReliquaryGlobalStats } from '~/modules/reliquary/lib/useReliquaryGlobalStats';
 
 export function RelicStats() {
-    const { data, relicBalanceUSD } = useRelicDepositBalance();
+    const { data: relicTokenBalances, relicBalanceUSD } = useRelicDepositBalance();
     const { pool } = usePool();
     const { isLoading, selectedRelic } = useReliquary();
     const config = useNetworkConfig();
@@ -35,6 +36,9 @@ export function RelicStats() {
     const { data: pendingRewards = [], isLoading: isLoadingPendingRewards } = useRelicPendingRewards();
     const pendingRewardsUsdValue = sumBy(pendingRewards, priceForAmount);
     const { harvest, ...harvestQuery } = useRelicHarvestRewards();
+    const { data: globalStats, loading: isLoadingGlobalStats } = useReliquaryGlobalStats();
+    const relicShare =
+        globalStats && selectedRelic ? parseFloat(selectedRelic.amount) / parseFloat(globalStats.totalBalance) : 0;
 
     return (
         <>
@@ -107,14 +111,13 @@ export function RelicStats() {
                         <HStack width="full" spacing="12" alignItems="flex-start">
                             <VStack spacing="0" alignItems="flex-start">
                                 <Text lineHeight="1rem" fontWeight="semibold" fontSize="sm" color="beets.base.50">
-                                    My Liquidity
+                                    Relic liquidity
                                 </Text>
                                 <Text color="white" fontSize="1.75rem">
                                     {numberFormatUSDValue(relicBalanceUSD)}
                                 </Text>
                             </VStack>
                         </HStack>
-
                         <VStack width="full" spacing="3" alignItems="flex-start">
                             <Text lineHeight="1rem" fontWeight="semibold" fontSize="sm" color="beets.base.50">
                                 Token breakdown
@@ -129,8 +132,8 @@ export function RelicStats() {
                                     =
                                 </Text>
                                 <Box display={{ base: 'block', md: 'flex' }}>
-                                    {data &&
-                                        data.map((token) => (
+                                    {relicTokenBalances &&
+                                        relicTokenBalances.map((token) => (
                                             <TokenAmountPill
                                                 mt={{ base: '2', md: '0' }}
                                                 ml={{ base: '0', md: '1' }}
@@ -141,6 +144,39 @@ export function RelicStats() {
                                         ))}
                                 </Box>
                             </HStack>
+                        </VStack>
+                    </VStack>
+                    <VStack spacing="0" alignItems="flex-start" mt="5" px="2">
+                        <InfoButton
+                            labelProps={{
+                                lineHeight: '1rem',
+                                fontWeight: 'semibold',
+                                fontSize: 'sm',
+                                color: 'beets.base.50',
+                            }}
+                            label="Relic share"
+                            infoText={`The size of your relic relative to all value stored in relics. Your staked share represents the percent of liquidity incentives you are entitled to.`}
+                        />
+                        <VStack spacing="none" alignItems="flex-start">
+                            {isLoading || isLoadingGlobalStats ? (
+                                <Skeleton height="34px" width="140px" mt="4px" mb="4px" />
+                            ) : (
+                                <Text color="white" fontSize="1.75rem">
+                                    {relicShare < 0.0001 ? '< 0.01%' : numeral(relicShare).format('0.00%')}
+                                </Text>
+                            )}
+                            {isLoading || isLoadingGlobalStats ? (
+                                <Skeleton height="16px" width="45px" />
+                            ) : (
+                                <Text fontSize="1rem" lineHeight="1rem">
+                                    {numeral(selectedRelic?.amount || '0').format('0.00a')}
+                                    {' / '}
+                                    {numeral(globalStats?.totalBalance || '0').format('0.00a')}{' '}
+                                    <Text as="span" fontSize="md" color="beets.base.50">
+                                        fBEETS
+                                    </Text>
+                                </Text>
+                            )}
                         </VStack>
                     </VStack>
                 </Card>
@@ -161,53 +197,7 @@ export function RelicStats() {
                 <Box px="2" width="full">
                     <Divider mb="4" />
                 </Box>
-                <VStack spacing="0" alignItems="flex-start" mb="4" px="2">
-                    <Text lineHeight="1rem" fontWeight="semibold" fontSize="sm" color="beets.base.50">
-                        My liquidity
-                    </Text>
-                    {isLoading ? (
-                        <Box>
-                            <Skeleton height="34px" width="140px" mt="4px" mb="4px" />
-                        </Box>
-                    ) : (
-                        <Text color="white" fontSize="1.75rem">
-                            {numberFormatUSDValue(relicBalanceUSD)}
-                        </Text>
-                    )}
-                </VStack>
-                <VStack spacing="0" alignItems="flex-start" mb="5" px="2">
-                    <InfoButton
-                        labelProps={{
-                            lineHeight: '1rem',
-                            fontWeight: 'semibold',
-                            fontSize: 'sm',
-                            color: 'beets.base.50',
-                        }}
-                        label="My share"
-                        infoText={`The size of your relic relative to all value stored in relics. Your staked share represents the percent of liquidity incentives you are entitled to.`}
-                    />
-                    <VStack spacing="none" alignItems="flex-start">
-                        {/*isLoading ? (
-                            <Skeleton height="34px" width="140px" mt="4px" mb="4px" />
-                        ) : (
-                            <Text color="white" fontSize="1.75rem">
-                                {userShare < 0.0001 ? '< 0.01%' : numeral(userShare).format('0.00%')}
-                            </Text>
-                        )*/}
-                        {isLoading ? (
-                            <Skeleton height="16px" width="45px" />
-                        ) : (
-                            <Text fontSize="1rem" lineHeight="1rem">
-                                {numeral(selectedRelic?.amount || '0').format('0.00a')}
-                                {' / '}
-                                {numeral(data).format('0.00a')}{' '}
-                                <Text as="span" fontSize="md" color="beets.base.50">
-                                    fBEETS
-                                </Text>
-                            </Text>
-                        )}
-                    </VStack>
-                </VStack>
+
                 <VStack spacing="0" alignItems="flex-start" mb="8" px="2" flex="1">
                     <InfoButton
                         labelProps={{

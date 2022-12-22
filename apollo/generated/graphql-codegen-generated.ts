@@ -2236,6 +2236,16 @@ export type GetPoolQuery = {
                           tokenAddress: string;
                       }>;
                   } | null;
+                  reliquary?: {
+                      __typename: 'GqlPoolStakingReliquaryFarm';
+                      beetsPerSecond: string;
+                      levels?: Array<{
+                          __typename: 'GqlPoolStakingReliquarFarmLevel';
+                          level: number;
+                          balance: string;
+                          apr: string;
+                      }> | null;
+                  } | null;
               } | null;
               investConfig: {
                   __typename: 'GqlPoolInvestConfig';
@@ -2418,6 +2428,16 @@ export type GetPoolQuery = {
                           rewardPerSecond: string;
                           tokenAddress: string;
                       }>;
+                  } | null;
+                  reliquary?: {
+                      __typename: 'GqlPoolStakingReliquaryFarm';
+                      beetsPerSecond: string;
+                      levels?: Array<{
+                          __typename: 'GqlPoolStakingReliquarFarmLevel';
+                          level: number;
+                          balance: string;
+                          apr: string;
+                      }> | null;
                   } | null;
               } | null;
               investConfig: {
@@ -2736,6 +2756,16 @@ export type GetPoolQuery = {
                           tokenAddress: string;
                       }>;
                   } | null;
+                  reliquary?: {
+                      __typename: 'GqlPoolStakingReliquaryFarm';
+                      beetsPerSecond: string;
+                      levels?: Array<{
+                          __typename: 'GqlPoolStakingReliquarFarmLevel';
+                          level: number;
+                          balance: string;
+                          apr: string;
+                      }> | null;
+                  } | null;
               } | null;
               investConfig: {
                   __typename: 'GqlPoolInvestConfig';
@@ -2915,6 +2945,16 @@ export type GetPoolQuery = {
                           rewardPerSecond: string;
                           tokenAddress: string;
                       }>;
+                  } | null;
+                  reliquary?: {
+                      __typename: 'GqlPoolStakingReliquaryFarm';
+                      beetsPerSecond: string;
+                      levels?: Array<{
+                          __typename: 'GqlPoolStakingReliquarFarmLevel';
+                          level: number;
+                          balance: string;
+                          apr: string;
+                      }> | null;
                   } | null;
               } | null;
               investConfig: {
@@ -3234,6 +3274,16 @@ export type GetPoolQuery = {
                           tokenAddress: string;
                       }>;
                   } | null;
+                  reliquary?: {
+                      __typename: 'GqlPoolStakingReliquaryFarm';
+                      beetsPerSecond: string;
+                      levels?: Array<{
+                          __typename: 'GqlPoolStakingReliquarFarmLevel';
+                          level: number;
+                          balance: string;
+                          apr: string;
+                      }> | null;
+                  } | null;
               } | null;
               investConfig: {
                   __typename: 'GqlPoolInvestConfig';
@@ -3413,6 +3463,16 @@ export type GetPoolQuery = {
                           rewardPerSecond: string;
                           tokenAddress: string;
                       }>;
+                  } | null;
+                  reliquary?: {
+                      __typename: 'GqlPoolStakingReliquaryFarm';
+                      beetsPerSecond: string;
+                      levels?: Array<{
+                          __typename: 'GqlPoolStakingReliquarFarmLevel';
+                          level: number;
+                          balance: string;
+                          apr: string;
+                      }> | null;
                   } | null;
               } | null;
               investConfig: {
@@ -3730,6 +3790,16 @@ export type GetPoolQuery = {
                           rewardPerSecond: string;
                           tokenAddress: string;
                       }>;
+                  } | null;
+                  reliquary?: {
+                      __typename: 'GqlPoolStakingReliquaryFarm';
+                      beetsPerSecond: string;
+                      levels?: Array<{
+                          __typename: 'GqlPoolStakingReliquarFarmLevel';
+                          level: number;
+                          balance: string;
+                          apr: string;
+                      }> | null;
                   } | null;
               } | null;
               investConfig: {
@@ -4267,7 +4337,7 @@ export type GetReliquaryFarmSnapshotsQueryVariables = Exact<{
 
 export type GetReliquaryFarmSnapshotsQuery = {
     __typename: 'Query';
-    poolGetReliquaryFarmSnapshots: Array<{
+    snapshots: Array<{
         __typename: 'GqlReliquaryFarmSnapshot';
         id: string;
         farmId: string;
@@ -5840,6 +5910,14 @@ export const GetPoolDocument = gql`
                         tokenAddress
                     }
                 }
+                reliquary {
+                    levels {
+                        level
+                        balance
+                        apr
+                    }
+                    beetsPerSecond
+                }
             }
             investConfig {
                 singleAssetEnabled
@@ -6454,7 +6532,7 @@ export type GetPoolFiltersLazyQueryHookResult = ReturnType<typeof useGetPoolFilt
 export type GetPoolFiltersQueryResult = Apollo.QueryResult<GetPoolFiltersQuery, GetPoolFiltersQueryVariables>;
 export const GetReliquaryFarmSnapshotsDocument = gql`
     query GetReliquaryFarmSnapshots($id: String!, $range: GqlPoolSnapshotDataRange!) {
-        poolGetReliquaryFarmSnapshots(id: $id, range: $range) {
+        snapshots: poolGetReliquaryFarmSnapshots(id: $id, range: $range) {
             id
             farmId
             timestamp
