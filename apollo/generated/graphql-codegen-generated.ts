@@ -2244,6 +2244,7 @@ export type GetPoolQuery = {
                           level: number;
                           balance: string;
                           apr: string;
+                          allocationPoints: number;
                       }> | null;
                   } | null;
               } | null;
@@ -2437,6 +2438,7 @@ export type GetPoolQuery = {
                           level: number;
                           balance: string;
                           apr: string;
+                          allocationPoints: number;
                       }> | null;
                   } | null;
               } | null;
@@ -2764,6 +2766,7 @@ export type GetPoolQuery = {
                           level: number;
                           balance: string;
                           apr: string;
+                          allocationPoints: number;
                       }> | null;
                   } | null;
               } | null;
@@ -2954,6 +2957,7 @@ export type GetPoolQuery = {
                           level: number;
                           balance: string;
                           apr: string;
+                          allocationPoints: number;
                       }> | null;
                   } | null;
               } | null;
@@ -3282,6 +3286,7 @@ export type GetPoolQuery = {
                           level: number;
                           balance: string;
                           apr: string;
+                          allocationPoints: number;
                       }> | null;
                   } | null;
               } | null;
@@ -3472,6 +3477,7 @@ export type GetPoolQuery = {
                           level: number;
                           balance: string;
                           apr: string;
+                          allocationPoints: number;
                       }> | null;
                   } | null;
               } | null;
@@ -3799,6 +3805,7 @@ export type GetPoolQuery = {
                           level: number;
                           balance: string;
                           apr: string;
+                          allocationPoints: number;
                       }> | null;
                   } | null;
               } | null;
@@ -5915,6 +5922,7 @@ export const GetPoolDocument = gql`
                         level
                         balance
                         apr
+                        allocationPoints
                     }
                     beetsPerSecond
                 }

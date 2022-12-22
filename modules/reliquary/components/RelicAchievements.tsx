@@ -5,7 +5,7 @@ import Card from '~/components/card/Card';
 
 interface Props {}
 
-const TEMP_ACHIEVMENTS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+const TEMP_ACHIEVMENTS = [1, 2, 3, 4, 5, 6, 7, 8];
 
 export default function RelicAchievements({}: Props) {
     return (
@@ -24,8 +24,8 @@ export default function RelicAchievements({}: Props) {
                             float="left"
                             mr="2"
                             mb="2"
-                            width="50px"
-                            height="50px"
+                            width="158px"
+                            height="158px"
                             rounded="md"
                             backgroundColor="whiteAlpha.200"
                             initial={{ opacity: 0, transform: 'scale(0)' }}

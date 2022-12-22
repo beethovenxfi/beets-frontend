@@ -109,6 +109,7 @@ query GetPool($id: String!) {
                     level
                     balance
                     apr
+                    allocationPoints
                 }
                 beetsPerSecond
             }

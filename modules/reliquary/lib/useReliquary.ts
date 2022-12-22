@@ -5,6 +5,7 @@ import { useUserAccount } from '~/lib/user/useUserAccount';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 import { makeVar, useReactiveVar } from '@apollo/client';
 import { usePool } from '~/modules/pool/lib/usePool';
+import { sumBy } from 'lodash';
 
 const selectedRelicId = makeVar<string | null>(null);
 
@@ -45,9 +46,11 @@ export default function useReliquary() {
 
     const selectedRelic = (relicPositions || []).find((position) => position.relicId === selectedRelicId());
     const isLoading = isLoadingRelicPositions || isLoadingMaturityThresholds;
-    const selectedRelicLevel = (pool.staking?.reliquary?.levels || []).find(
-        (level) => level.level === selectedRelic?.level,
-    );
+
+    const beetsPerSecond = pool.staking?.reliquary?.beetsPerSecond || '0';
+    const reliquaryLevels = pool.staking?.reliquary?.levels || [];
+    const selectedRelicLevel = reliquaryLevels.find((level) => level.level === selectedRelic?.level);
+    const weightedTotalBalance = sumBy(reliquaryLevels, (level) => parseFloat(level.balance) * level.allocationPoints);
 
     return {
         relicPositions,
@@ -55,9 +58,12 @@ export default function useReliquary() {
         isLoading,
         reliquaryService,
         maturityThresholds,
-        beetsPerSecond: pool.staking?.reliquary?.beetsPerSecond || '0',
         selectedRelicId: useReactiveVar(selectedRelicId),
         selectedRelic: selectedRelic || null,
         selectedRelicApr: selectedRelicLevel?.apr || '0',
+        beetsPerSecond,
+        beetsPerDay: parseFloat(beetsPerSecond) * 86400,
+        selectedRelicLevel,
+        weightedTotalBalance,
     };
 }

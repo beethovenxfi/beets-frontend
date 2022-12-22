@@ -30,15 +30,16 @@ import { useReliquaryGlobalStats } from '~/modules/reliquary/lib/useReliquaryGlo
 export function RelicStats() {
     const { data: relicTokenBalances, relicBalanceUSD } = useRelicDepositBalance();
     const { pool } = usePool();
-    const { isLoading, selectedRelic, selectedRelicApr } = useReliquary();
+    const { isLoading, selectedRelic, selectedRelicApr, beetsPerDay, selectedRelicLevel, weightedTotalBalance } =
+        useReliquary();
     const config = useNetworkConfig();
     const { priceForAmount } = useGetTokens();
     const { data: pendingRewards = [], isLoading: isLoadingPendingRewards } = useRelicPendingRewards();
     const pendingRewardsUsdValue = sumBy(pendingRewards, priceForAmount);
     const { harvest, ...harvestQuery } = useRelicHarvestRewards();
     const { data: globalStats, loading: isLoadingGlobalStats } = useReliquaryGlobalStats();
-    const relicShare =
-        globalStats && selectedRelic ? parseFloat(selectedRelic.amount) / parseFloat(globalStats.totalBalance) : 0;
+    const weightedRelicAmount = parseFloat(selectedRelic?.amount || '0') * (selectedRelicLevel?.allocationPoints || 0);
+    const relicShare = globalStats && selectedRelic ? weightedRelicAmount / weightedTotalBalance : 0;
 
     return (
         <>
@@ -53,7 +54,7 @@ export function RelicStats() {
                                 <div className="apr-stripes">{numeral(selectedRelicApr).format('0.00%')}</div>
                                 <AprTooltip onlySparkles data={pool.dynamicData.apr} />
                             </HStack>
-                            <Text color="orange">1.8x maturity boost</Text>
+                            <Text color="orange">{selectedRelicLevel?.allocationPoints}x maturity boost</Text>
                         </VStack>
                         <Box width="full">
                             <Divider />
@@ -169,11 +170,11 @@ export function RelicStats() {
                                 <Skeleton height="16px" width="45px" />
                             ) : (
                                 <Text fontSize="1rem" lineHeight="1rem">
-                                    {numeral(selectedRelic?.amount || '0').format('0.00a')}
+                                    {numeral(weightedRelicAmount).format('0.00a')}
                                     {' / '}
-                                    {numeral(globalStats?.totalBalance || '0').format('0.00a')}{' '}
+                                    {numeral(weightedTotalBalance).format('0.00a')}{' '}
                                     <Text as="span" fontSize="md" color="beets.base.50">
-                                        fBEETS
+                                        weighted fBEETS
                                     </Text>
                                 </Text>
                             )}

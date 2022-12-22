@@ -736,6 +736,7 @@ export const GetPool = gql`
                         level
                         balance
                         apr
+                        allocationPoints
                     }
                     beetsPerSecond
                 }
