@@ -146,7 +146,7 @@ export interface GqlLgeUpdateInput {
 
 export interface GqlPoolApr {
     __typename: 'GqlPoolApr';
-hasRewardApr: Scalars['Boolean'];
+    hasRewardApr: Scalars['Boolean'];
     items: Array<GqlBalancePoolAprItem>;
     max?: Maybe<Scalars['BigDecimal']>;
     min?: Maybe<Scalars['BigDecimal']>;
@@ -835,16 +835,44 @@ export interface GqlProtocolMetrics {
     totalSwapVolume: Scalars['BigDecimal'];
 }
 
+export interface GqlRelicSnapshot {
+    __typename: 'GqlRelicSnapshot';
+    balance: Scalars['String'];
+    entryTimestamp: Scalars['Int'];
+    farmId: Scalars['String'];
+    level: Scalars['Int'];
+    relicId: Scalars['Int'];
+}
+
+export interface GqlReliquaryFarmLevelSnapshot {
+    __typename: 'GqlReliquaryFarmLevelSnapshot';
+    balance: Scalars['String'];
+    id: Scalars['ID'];
+    level: Scalars['String'];
+}
+
 export interface GqlReliquaryFarmSnapshot {
     __typename: 'GqlReliquaryFarmSnapshot';
     dailyDeposited: Scalars['String'];
     dailyWithdrawn: Scalars['String'];
     farmId: Scalars['String'];
     id: Scalars['ID'];
+    levelBalances: Array<GqlReliquaryFarmLevelSnapshot>;
     relicCount: Scalars['String'];
     timestamp: Scalars['Int'];
+    tokenBalances: Array<GqlReliquaryTokenBalanceSnapshot>;
     totalBalance: Scalars['String'];
     userCount: Scalars['String'];
+}
+
+export interface GqlReliquaryTokenBalanceSnapshot {
+    __typename: 'GqlReliquaryTokenBalanceSnapshot';
+    address: Scalars['String'];
+    balance: Scalars['String'];
+    decimals: Scalars['Int'];
+    id: Scalars['ID'];
+    name: Scalars['String'];
+    symbol: Scalars['String'];
 }
 
 export interface GqlSorGetBatchSwapForTokensInResponse {
@@ -1036,6 +1064,14 @@ export interface GqlUserPortfolioSnapshot {
     walletBalance: Scalars['AmountHumanReadable'];
 }
 
+export interface GqlUserRelicSnapshot {
+    __typename: 'GqlUserRelicSnapshot';
+    relicCount: Scalars['Int'];
+    relicSnapshots: Array<GqlRelicSnapshot>;
+    timestamp: Scalars['Int'];
+    totalBalance: Scalars['String'];
+}
+
 export type GqlUserSnapshotDataRange =
     | 'ALL_TIME'
     | 'NINETY_DAYS'
@@ -1088,6 +1124,7 @@ export interface Mutation {
     userInitStakedBalances: Scalars['String'];
     userInitWalletBalancesForAllPools: Scalars['String'];
     userInitWalletBalancesForPool: Scalars['String'];
+    userLoadAllRelicSnapshots: Scalars['String'];
     userSyncBalance: Scalars['String'];
     userSyncBalanceAllPools: Scalars['String'];
     userSyncChangedStakedBalances: Scalars['String'];
@@ -1192,6 +1229,7 @@ export interface Query {
     userGetPoolJoinExits: Array<GqlPoolJoinExit>;
     userGetPoolSnapshots: Array<GqlUserPoolSnapshot>;
     userGetPortfolioSnapshots: Array<GqlUserPortfolioSnapshot>;
+    userGetRelicSnapshots: Array<GqlUserRelicSnapshot>;
     userGetStaking: Array<GqlPoolStaking>;
     userGetSwaps: Array<GqlPoolSwap>;
 }
@@ -1323,6 +1361,11 @@ export interface QueryUserGetPoolSnapshotsArgs {
 
 export interface QueryUserGetPortfolioSnapshotsArgs {
     days: Scalars['Int'];
+}
+
+export interface QueryUserGetRelicSnapshotsArgs {
+    farmId: Scalars['String'];
+    range: GqlUserSnapshotDataRange;
 }
 
 export interface QueryUserGetSwapsArgs {

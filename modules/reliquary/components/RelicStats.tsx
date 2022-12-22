@@ -19,15 +19,19 @@ import { networkConfig } from '~/lib/config/network-config';
 import { useRelicDepositBalance } from '~/modules/reliquary/lib/useRelicDepositBalance';
 import RelicAchievements from './RelicAchievements';
 import RelicMaturity from './RelicMaturity';
+import { useRelicPendingRewards } from '~/modules/reliquary/lib/useRelicPendingRewards';
+import { useGetTokens } from '~/lib/global/useToken';
+import { sum, sumBy } from 'lodash';
+import { tokenFormatAmount } from '~/lib/services/token/token-util';
 
 export function RelicStats() {
     const { data, relicBalanceUSD } = useRelicDepositBalance();
     const { pool } = usePool();
-    const { reliquaryService, maturityThresholds, relicPositions = [], isLoading } = useReliquary();
+    const { reliquaryService, maturityThresholds, relicPositions = [], isLoading, selectedRelic } = useReliquary();
     const config = useNetworkConfig();
-
-    //TODO: fix this
-    const relic = relicPositions && relicPositions[0];
+    const { priceForAmount } = useGetTokens();
+    const { data: pendingRewards = [], isLoading: isLoadingPendingRewards } = useRelicPendingRewards();
+    const pendingRewardsUsdValue = sumBy(pendingRewards, priceForAmount);
 
     return (
         <>
@@ -35,7 +39,7 @@ export function RelicStats() {
                 <Card p="4" width="full">
                     <VStack width="full" spacing="8" justifyContent="flex-start">
                         <VStack width="full" spacing="0" alignItems="flex-start">
-                            <Heading lineHeight="1rem" fontWeight="semibold" size="" color="beets.base.50">
+                            <Heading lineHeight="1rem" fontWeight="semibold" size="sm" color="beets.base.50">
                                 Relic APR
                             </Heading>
                             <HStack>
@@ -46,12 +50,38 @@ export function RelicStats() {
                         </VStack>
                         <HStack width="full" spacing="12" alignItems="flex-start">
                             <VStack spacing="0" alignItems="flex-start">
-                                <Text lineHeight="1rem" fontWeight="semibold" fontSize="sm" color="beets.base.50">
-                                    Pending Rewards
-                                </Text>
-                                <Text color="white" fontSize="1.75rem">
-                                    {numberFormatUSDValue(999.99)}
-                                </Text>
+                                <InfoButton
+                                    labelProps={{
+                                        lineHeight: '1rem',
+                                        fontWeight: 'semibold',
+                                        fontSize: 'sm',
+                                    }}
+                                    label="My pending rewards"
+                                    infoText={`Your accumulated liquidity incentives for this relic. You can claim your rewards at any time.`}
+                                />
+                                {isLoadingPendingRewards ? (
+                                    <Skeleton height="34px" width="140px" mt="4px" mb="4px" />
+                                ) : (
+                                    <Text color="white" fontSize="1.75rem">
+                                        {numberFormatUSDValue(pendingRewardsUsdValue)}
+                                    </Text>
+                                )}
+                                <Box>
+                                    {pendingRewards.map((reward, index) => (
+                                        <HStack
+                                            key={index}
+                                            spacing="1"
+                                            mb={index === pendingRewards.length - 1 ? '0' : '0.5'}
+                                        >
+                                            <TokenAvatar height="20px" width="20px" address={reward.address} />
+                                            <Skeleton isLoaded={!isLoadingPendingRewards}>
+                                                <Text fontSize="1rem" lineHeight="1rem">
+                                                    {tokenFormatAmount(reward.amount)}
+                                                </Text>
+                                            </Skeleton>
+                                        </HStack>
+                                    ))}
+                                </Box>
                             </VStack>
                         </HStack>
                     </VStack>
@@ -80,9 +110,11 @@ export function RelicStats() {
                                 <TokenAmountPill
                                     key={`relic-token-${config.fbeets.address}`}
                                     address={config.fbeets.address}
-                                    amount={relic.amount}
+                                    amount={selectedRelic?.amount || '0'}
                                 />
-                                <Text fontWeight="bold">OR</Text>
+                                <Text fontWeight="bold" fontSize="2xl">
+                                    =
+                                </Text>
                                 <Box display={{ base: 'block', md: 'flex' }}>
                                     {data &&
                                         data.map((token) => (
@@ -153,7 +185,7 @@ export function RelicStats() {
                             <Skeleton height="16px" width="45px" />
                         ) : (
                             <Text fontSize="1rem" lineHeight="1rem">
-                                {numeral(relic.amount).format('0.00a')}
+                                {numeral(selectedRelic?.amount || '0').format('0.00a')}
                                 {' / '}
                                 {numeral(data).format('0.00a')}{' '}
                                 <Text as="span" fontSize="md" color="beets.base.50">

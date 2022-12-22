@@ -2,8 +2,8 @@ import { BaseProvider } from '@ethersproject/providers';
 import { formatFixed } from '@ethersproject/bignumber';
 import { BigNumber, Contract } from 'ethers';
 import ReliquaryAbi from '~/lib/abi/Reliquary.json';
-import { ReliquaryStakingPendingRewardAmount } from '~/lib/services/staking/staking-types';
-import { AmountHumanReadable, TokenBase } from '../token/token-types';
+import { ReliquaryStakingPendingRewardAmount, StakingPendingRewardAmount } from '~/lib/services/staking/staking-types';
+import { AmountHumanReadable, TokenAmountHumanReadable, TokenBase } from '../token/token-types';
 import { Multicaller } from '../util/multicaller.service';
 import { EncodeReliquaryUpdatePositionInput } from '../batch-relayer/relayer-types';
 import { Interface } from '@ethersproject/abi';
@@ -108,6 +108,20 @@ export class ReliquaryService {
                 amount: formatFixed(pendingReward, 18),
             };
         });
+    }
+
+    public async getPendingRewardsForRelic({
+        relicId,
+        provider,
+    }: {
+        relicId: string;
+        provider: BaseProvider;
+    }): Promise<TokenAmountHumanReadable[]> {
+        const reliquary = new Contract(this.reliquaryContractAddress, ReliquaryAbi, provider);
+        const pendingReward = await reliquary.pendingReward(relicId);
+
+        //TODO: will need to expand this for multi token rewarders
+        return [{ address: this.beetsAddress, amount: formatFixed(pendingReward, 18) }];
     }
 
     public async getAllPositions({
