@@ -4,6 +4,7 @@ import { reliquaryService } from '~/lib/services/staking/reliquary.service';
 import { useUserAccount } from '~/lib/user/useUserAccount';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 import { makeVar, useReactiveVar } from '@apollo/client';
+import { usePool } from '~/modules/pool/lib/usePool';
 
 const selectedRelicId = makeVar<string | null>(null);
 
@@ -11,6 +12,7 @@ export default function useReliquary() {
     const { userAddress } = useUserAccount();
     const provider = useProvider();
     const networkConfig = useNetworkConfig();
+    const { pool } = usePool();
 
     const { data: relicPositions = [], isLoading: isLoadingRelicPositions } = useQuery(
         ['reliquaryAllPositions', userAddress],
@@ -42,8 +44,10 @@ export default function useReliquary() {
     );
 
     const selectedRelic = (relicPositions || []).find((position) => position.relicId === selectedRelicId());
-
     const isLoading = isLoadingRelicPositions || isLoadingMaturityThresholds;
+    const selectedRelicLevel = (pool.staking?.reliquary?.levels || []).find(
+        (level) => level.level === selectedRelic?.level,
+    );
 
     return {
         relicPositions,
@@ -51,7 +55,9 @@ export default function useReliquary() {
         isLoading,
         reliquaryService,
         maturityThresholds,
+        beetsPerSecond: pool.staking?.reliquary?.beetsPerSecond || '0',
         selectedRelicId: useReactiveVar(selectedRelicId),
         selectedRelic: selectedRelic || null,
+        selectedRelicApr: selectedRelicLevel?.apr || '0',
     };
 }

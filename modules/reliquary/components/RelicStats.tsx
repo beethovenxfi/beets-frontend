@@ -30,7 +30,7 @@ import { useReliquaryGlobalStats } from '~/modules/reliquary/lib/useReliquaryGlo
 export function RelicStats() {
     const { data: relicTokenBalances, relicBalanceUSD } = useRelicDepositBalance();
     const { pool } = usePool();
-    const { isLoading, selectedRelic } = useReliquary();
+    const { isLoading, selectedRelic, selectedRelicApr } = useReliquary();
     const config = useNetworkConfig();
     const { priceForAmount } = useGetTokens();
     const { data: pendingRewards = [], isLoading: isLoadingPendingRewards } = useRelicPendingRewards();
@@ -50,7 +50,7 @@ export function RelicStats() {
                                 Relic APR
                             </Heading>
                             <HStack>
-                                <div className="apr-stripes">{numeral(pool.dynamicData.apr.total).format('0.00%')}</div>
+                                <div className="apr-stripes">{numeral(selectedRelicApr).format('0.00%')}</div>
                                 <AprTooltip onlySparkles data={pool.dynamicData.apr} />
                             </HStack>
                             <Text color="orange">1.8x maturity boost</Text>
@@ -184,20 +184,6 @@ export function RelicStats() {
                 <RelicMaturity />
             </VStack>
             <Flex width="full" alignItems="flex-start" flex={1} flexDirection="column">
-                <VStack spacing="0" alignItems="flex-start" mb="4" px="2">
-                    <Text lineHeight="1rem" fontWeight="semibold" fontSize="sm" color="beets.base.50">
-                        My APR
-                    </Text>
-                    <HStack>
-                        <div className="apr-stripes">{numeral(pool.dynamicData.apr.total).format('0.00%')}</div>
-                        <AprTooltip onlySparkles data={pool.dynamicData.apr} />
-                    </HStack>
-                </VStack>
-
-                <Box px="2" width="full">
-                    <Divider mb="4" />
-                </Box>
-
                 <VStack spacing="0" alignItems="flex-start" mb="8" px="2" flex="1">
                     <InfoButton
                         labelProps={{
@@ -209,7 +195,7 @@ export function RelicStats() {
                         label="My potential daily yield"
                         infoText="The potential daily value is an approximation based on swap fees, current token prices and your staked share. A number of external factors can influence this value from second to second."
                     />
-                    {/*isLoading ? (
+                    {/*{isLoading ? (
                         <Skeleton height="34px" width="140px" mt="4px" mb="4px" />
                     ) : (
                         <Text color="white" fontSize="1.75rem">
