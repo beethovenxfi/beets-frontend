@@ -23,15 +23,18 @@ import { useRelicPendingRewards } from '~/modules/reliquary/lib/useRelicPendingR
 import { useGetTokens } from '~/lib/global/useToken';
 import { sum, sumBy } from 'lodash';
 import { tokenFormatAmount } from '~/lib/services/token/token-util';
+import { useRelicHarvestRewards } from '~/modules/reliquary/lib/useRelicHarvestRewards';
+import { BeetsSubmitTransactionButton } from '~/components/button/BeetsSubmitTransactionButton';
 
 export function RelicStats() {
     const { data, relicBalanceUSD } = useRelicDepositBalance();
     const { pool } = usePool();
-    const { reliquaryService, maturityThresholds, relicPositions = [], isLoading, selectedRelic } = useReliquary();
+    const { isLoading, selectedRelic } = useReliquary();
     const config = useNetworkConfig();
     const { priceForAmount } = useGetTokens();
     const { data: pendingRewards = [], isLoading: isLoadingPendingRewards } = useRelicPendingRewards();
     const pendingRewardsUsdValue = sumBy(pendingRewards, priceForAmount);
+    const { harvest, ...harvestQuery } = useRelicHarvestRewards();
 
     return (
         <>
@@ -48,6 +51,9 @@ export function RelicStats() {
                             </HStack>
                             <Text color="orange">1.8x maturity boost</Text>
                         </VStack>
+                        <Box width="full">
+                            <Divider />
+                        </Box>
                         <HStack width="full" spacing="12" alignItems="flex-start">
                             <VStack spacing="0" alignItems="flex-start">
                                 <InfoButton
@@ -85,9 +91,16 @@ export function RelicStats() {
                             </VStack>
                         </HStack>
                     </VStack>
-                    <Button mt="4" width="full" variant="primary">
+
+                    <BeetsSubmitTransactionButton
+                        mt="4"
+                        width="full"
+                        variant="primary"
+                        {...harvestQuery}
+                        onClick={harvest}
+                    >
                         Claim now
-                    </Button>
+                    </BeetsSubmitTransactionButton>
                 </Card>
                 <Card p="4" width="full">
                     <VStack spacing="8">

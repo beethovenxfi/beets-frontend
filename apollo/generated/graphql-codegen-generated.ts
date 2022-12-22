@@ -4260,6 +4260,37 @@ export type GqlPoolMinimalFragment = {
     } | null;
 };
 
+export type GetReliquaryFarmSnapshotsQueryVariables = Exact<{
+    id: Scalars['String'];
+    range: GqlPoolSnapshotDataRange;
+}>;
+
+export type GetReliquaryFarmSnapshotsQuery = {
+    __typename: 'Query';
+    poolGetReliquaryFarmSnapshots: Array<{
+        __typename: 'GqlReliquaryFarmSnapshot';
+        id: string;
+        farmId: string;
+        timestamp: number;
+        totalBalance: string;
+        relicCount: string;
+        userCount: string;
+        levelBalances: Array<{
+            __typename: 'GqlReliquaryFarmLevelSnapshot';
+            id: string;
+            level: string;
+            balance: string;
+        }>;
+        tokenBalances: Array<{
+            __typename: 'GqlReliquaryTokenBalanceSnapshot';
+            id: string;
+            address: string;
+            balance: string;
+            symbol: string;
+        }>;
+    }>;
+};
+
 export type GetTokenRelativePriceChartDataQueryVariables = Exact<{
     tokenIn: Scalars['String'];
     tokenOut: Scalars['String'];
@@ -6421,6 +6452,72 @@ export function useGetPoolFiltersLazyQuery(
 export type GetPoolFiltersQueryHookResult = ReturnType<typeof useGetPoolFiltersQuery>;
 export type GetPoolFiltersLazyQueryHookResult = ReturnType<typeof useGetPoolFiltersLazyQuery>;
 export type GetPoolFiltersQueryResult = Apollo.QueryResult<GetPoolFiltersQuery, GetPoolFiltersQueryVariables>;
+export const GetReliquaryFarmSnapshotsDocument = gql`
+    query GetReliquaryFarmSnapshots($id: String!, $range: GqlPoolSnapshotDataRange!) {
+        poolGetReliquaryFarmSnapshots(id: $id, range: $range) {
+            id
+            farmId
+            timestamp
+            totalBalance
+            levelBalances {
+                id
+                level
+                balance
+            }
+            relicCount
+            totalBalance
+            userCount
+            tokenBalances {
+                id
+                address
+                balance
+                symbol
+            }
+        }
+    }
+`;
+
+/**
+ * __useGetReliquaryFarmSnapshotsQuery__
+ *
+ * To run a query within a React component, call `useGetReliquaryFarmSnapshotsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetReliquaryFarmSnapshotsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetReliquaryFarmSnapshotsQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *      range: // value for 'range'
+ *   },
+ * });
+ */
+export function useGetReliquaryFarmSnapshotsQuery(
+    baseOptions: Apollo.QueryHookOptions<GetReliquaryFarmSnapshotsQuery, GetReliquaryFarmSnapshotsQueryVariables>,
+) {
+    const options = { ...defaultOptions, ...baseOptions };
+    return Apollo.useQuery<GetReliquaryFarmSnapshotsQuery, GetReliquaryFarmSnapshotsQueryVariables>(
+        GetReliquaryFarmSnapshotsDocument,
+        options,
+    );
+}
+export function useGetReliquaryFarmSnapshotsLazyQuery(
+    baseOptions?: Apollo.LazyQueryHookOptions<GetReliquaryFarmSnapshotsQuery, GetReliquaryFarmSnapshotsQueryVariables>,
+) {
+    const options = { ...defaultOptions, ...baseOptions };
+    return Apollo.useLazyQuery<GetReliquaryFarmSnapshotsQuery, GetReliquaryFarmSnapshotsQueryVariables>(
+        GetReliquaryFarmSnapshotsDocument,
+        options,
+    );
+}
+export type GetReliquaryFarmSnapshotsQueryHookResult = ReturnType<typeof useGetReliquaryFarmSnapshotsQuery>;
+export type GetReliquaryFarmSnapshotsLazyQueryHookResult = ReturnType<typeof useGetReliquaryFarmSnapshotsLazyQuery>;
+export type GetReliquaryFarmSnapshotsQueryResult = Apollo.QueryResult<
+    GetReliquaryFarmSnapshotsQuery,
+    GetReliquaryFarmSnapshotsQueryVariables
+>;
 export const GetTokenRelativePriceChartDataDocument = gql`
     query GetTokenRelativePriceChartData($tokenIn: String!, $tokenOut: String!, $range: GqlTokenChartDataRange!) {
         prices: tokenGetRelativePriceChartData(tokenIn: $tokenIn, tokenOut: $tokenOut, range: $range) {
