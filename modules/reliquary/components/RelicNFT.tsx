@@ -8,7 +8,7 @@ import { useQuery } from 'react-query';
 export function RelicNFT() {
     const controls = useAnimation();
     const [imageURI, setImageURI] = useState('');
-    const { reliquaryService, selectedRelicId, selectedRelic } = useReliquary();
+    const { reliquaryService, selectedRelicId, isLoadingRelicPositions } = useReliquary();
 
     const startAnimation = async () => {
         await controls.start({
@@ -18,8 +18,8 @@ export function RelicNFT() {
         });
     };
 
-    const { isLoading } = useQuery(
-        ['relicNFT', selectedRelicId],
+    const nft = useQuery(
+        ['relicNFT', { selectedRelicId, isLoadingRelicPositions }],
         async () => {
             if (selectedRelicId) {
                 return await reliquaryService.getRelicNFT({ tokenId: selectedRelicId, provider: getProvider() });
@@ -39,19 +39,10 @@ export function RelicNFT() {
     }, []);
 
     return (
-        <AnimatePresence>
-            {!isLoading && (
-                <Box
-                    initial={{ transform: 'scale(0)', opacity: 0 }}
-                    animate={controls}
-                    as={motion.div}
-                    className="relic-glow"
-                >
-                    <Box rounded="lg" overflow="hidden">
-                        {imageURI && <Image alt="Relic NFT" src={imageURI} width="400px" height="400px" />}
-                    </Box>
-                </Box>
-            )}
-        </AnimatePresence>
+        <Box initial={{ transform: 'scale(0)', opacity: 0 }} animate={controls} as={motion.div} className="relic-glow">
+            <Box rounded="lg" overflow="hidden">
+                {imageURI && <Image alt="Relic NFT" src={imageURI} width="400px" height="400px" />}
+            </Box>
+        </Box>
     );
 }
