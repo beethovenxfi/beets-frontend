@@ -38,7 +38,11 @@ export const optimismNetworkConfig: NetworkConfig = {
         weightedPoolV2Factory: '0xad901309d9e9dbc5df19c84f729f429f0189a633',
         linearFactories: {
             erc4626: ['0x4c4287b07d293e361281bceee8715c8cdeb64e34'],
-            reaper: ['0x19968d4b7126904fd665ed25417599df9604df83', '0x0473136b0732606e826ffeb42f3abc81a7a766d5'],
+            reaper: [
+                '0x19968d4b7126904fd665ed25417599df9604df83',
+                '0x0473136b0732606e826ffeb42f3abc81a7a766d5',
+                '0xe4b88e745dce9084b9fc2439f85a9a4c5cd6f361',
+            ],
         },
         linearRebalancers: {
             '0xba7834bb3cd2db888e6a06fb45e82b4225cd0c71': '0xdc9d37d76e7a782460f94ffd811d4e0579f04756', //usdc
