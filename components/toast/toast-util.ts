@@ -8,7 +8,7 @@ export type BeetsTransactionType =
     | 'APPROVE'
     | 'WRAP'
     | 'UNWRAP'
-    | 'UPDATE';
+    | 'LEVEL_UP';
 export type ToastTransactionStatus = 'PENDING' | 'CONFIRMED' | 'ERROR';
 
 export function toastGetTransactionStatusHeadline(type: BeetsTransactionType, status: ToastTransactionStatus) {
@@ -113,6 +113,15 @@ export function toastGetTransactionStatusHeadline(type: BeetsTransactionType, st
                 return 'Unwrap confirmed';
             case 'ERROR':
                 return 'Unwrap error';
+        }
+    } else if (type === 'LEVEL_UP') {
+        switch (status) {
+            case 'PENDING':
+                return 'Level up relic pending';
+            case 'CONFIRMED':
+                return 'Level up relic confirmed';
+            case 'ERROR':
+                return 'Level up relic error';
         }
     }
 

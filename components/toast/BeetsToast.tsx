@@ -184,7 +184,6 @@ export default function BeetsToast({ children }: Props) {
                                 </Box>
                                 <Box>{toast.content}</Box>
                                 {toast.type === ToastType.Loading && <Spinner size="sm" />}
-                                {toast.type === ToastType.Success && <Check size={24} />}
                             </HStack>
                         </Box>
                     ))}

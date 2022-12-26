@@ -1,11 +1,44 @@
-import { Box, HStack, VStack } from '@chakra-ui/react';
-import React from 'react';
+import { Box, HStack, Text } from '@chakra-ui/react';
+import React, { useEffect } from 'react';
 import { RelicNFT } from '~/modules/reliquary/components/RelicNFT';
 import { RelicStats } from '~/modules/reliquary/components/RelicStats';
 import { RelicHeader } from '~/modules/reliquary/components/RelicHeader';
 import { motion } from 'framer-motion';
+import useReliquary from '../lib/useReliquary';
+import { relicGetMaturityProgress } from '../lib/reliquary-helpers';
+import { ToastType, useToast } from '~/components/toast/BeetsToast';
+import { BeetsSubmitTransactionButton } from '~/components/button/BeetsSubmitTransactionButton';
+import { useReliquaryLevelUp } from '../lib/useReliquaryLevelUp';
 
 export function Relic() {
+    const { selectedRelic, maturityThresholds } = useReliquary();
+    const { levelUp, ...levelUpQuery } = useReliquaryLevelUp();
+    const { canUpgrade, canUpgradeTo } = relicGetMaturityProgress(selectedRelic, maturityThresholds);
+
+    console.log({ canUpgrade, canUpgradeTo })
+
+    const { showToast } = useToast();
+
+    useEffect(() => {
+        if (canUpgrade && selectedRelic) {
+            showToast({
+                id: 'relic-level-up',
+                content: (
+                    <HStack spacing="4">
+                        <Text>You can upgrade your relic to {canUpgradeTo}</Text>
+                        <BeetsSubmitTransactionButton
+                            submittingText="Confirm..."
+                            pendingText="Waiting..."
+                            onClick={() => levelUp(selectedRelic.relicId)}
+                            {...levelUpQuery}
+                        >
+                            Level Up
+                        </BeetsSubmitTransactionButton>
+                    </HStack>
+                ),
+            });
+        }
+    }, []);
     return (
         <Box as={motion.div} initial={{ opacity: 0 }} animate={{ opacity: 1 }} width="full" mt="4" position="relative">
             <RelicHeader />

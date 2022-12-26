@@ -12,12 +12,12 @@ export function useReliquaryLevelUp() {
             contractInterface: ReliquaryAbi,
             functionName: 'updatePosition',
         },
-        transactionType: 'UPDATE',
+        transactionType: 'LEVEL_UP',
     });
 
-    function levelUp(relicId: number) {
+    function levelUp(relicId: string) {
         submit({
-            args: [relicId],
+            args: [parseInt(relicId, 10)],
             toastText: `Level Up relic #${relicId}`,
         });
     }

@@ -17,7 +17,7 @@ export function relicGetMaturityProgress(relic: ReliquaryFarmPosition | null, ma
     const isMaxMaturity = timeElapsedSinceStart > parseInt(maturities[maturities.length - 1], 10);
     const canUpgradeTo = isMaxMaturity ? maturities.length : nextLevelMaturityIndex + 1;
     const canUpgrade =
-        (isMaxMaturity && relic.level < maturities.length) ||
+        (isMaxMaturity && relic.level < maturities.length - 1) ||
         (nextLevelMaturityIndex > 0 && nextLevelMaturityIndex > relic.level);
 
     const currentLevelMaturity = parseInt(maturities[relic.level], 10);

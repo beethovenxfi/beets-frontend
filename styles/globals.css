@@ -387,26 +387,13 @@ a {
     border-radius: 10rem;
 }
 
-/* .relic-glow::before {
-    position: absolute;
-    background-color: #FF0000;
-    content: '';
-    filter: blur(75px);
-    width: 75%;
-    height: 75%;
-    top: 0;
-    animation: spin 25s linear infinite;
-    z-index: -1;
-    border-radius: 50rem;
-} */
-
 @keyframes spin {
     0% {
       rotate: 0deg;
       opacity: 0.55;
     }
     50% {
-        opacity: 0.25;
+        opacity: 0.35;
         rotate: 180deg;
 
     }
