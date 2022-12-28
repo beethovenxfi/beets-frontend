@@ -93,28 +93,28 @@ function BeetsApp(props: AppProps) {
 
     return (
         <ChakraProvider theme={chakraTheme}>
-            <BeetsToast>
-                <QueryClientProvider client={queryClient}>
-                    <WagmiConfig client={wagmiClient}>
-                        <RainbowKitProvider
-                            coolMode
-                            chains={networkChainDefinitions}
-                            showRecentTransactions={true}
-                            appInfo={{ appName: 'Beethoven X', learnMoreUrl: 'https://docs.beets.fi' }}
-                            theme={darkTheme()}
-                            avatar={() => <WalletUserAvatar />}
-                        >
-                            <ApolloProvider client={client}>
+            <QueryClientProvider client={queryClient}>
+                <WagmiConfig client={wagmiClient}>
+                    <RainbowKitProvider
+                        coolMode
+                        chains={networkChainDefinitions}
+                        showRecentTransactions={true}
+                        appInfo={{ appName: 'Beethoven X', learnMoreUrl: 'https://docs.beets.fi' }}
+                        theme={darkTheme()}
+                        avatar={() => <WalletUserAvatar />}
+                    >
+                        <ApolloProvider client={client}>
+                            <BeetsToast>
                                 <Compose providers={dataProviders}>
                                     <BeetsFonts />
                                     <TopProgressBar />
                                     <AppContent {...props} />
                                 </Compose>
-                            </ApolloProvider>
-                        </RainbowKitProvider>
-                    </WagmiConfig>
-                </QueryClientProvider>
-            </BeetsToast>
+                            </BeetsToast>
+                        </ApolloProvider>
+                    </RainbowKitProvider>
+                </WagmiConfig>
+            </QueryClientProvider>
         </ChakraProvider>
     );
 }

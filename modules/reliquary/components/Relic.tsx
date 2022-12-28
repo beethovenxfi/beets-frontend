@@ -6,18 +6,16 @@ import { RelicHeader } from '~/modules/reliquary/components/RelicHeader';
 import { motion } from 'framer-motion';
 import useReliquary from '../lib/useReliquary';
 import { relicGetMaturityProgress } from '../lib/reliquary-helpers';
-import { ToastType, useToast } from '~/components/toast/BeetsToast';
-import { BeetsSubmitTransactionButton } from '~/components/button/BeetsSubmitTransactionButton';
-import { useReliquaryLevelUp } from '../lib/useReliquaryLevelUp';
+import { useToast } from '~/components/toast/BeetsToast';
+import { PoolProvider, usePool } from '~/modules/pool/lib/usePool';
+import RelicLevelUpButton from './RelicLevelUpButton';
 
 export function Relic() {
     const { selectedRelic, maturityThresholds } = useReliquary();
-    const { levelUp, ...levelUpQuery } = useReliquaryLevelUp();
+    const { pool } = usePool();
     const { canUpgrade, canUpgradeTo } = relicGetMaturityProgress(selectedRelic, maturityThresholds);
 
-    console.log({ canUpgrade, canUpgradeTo })
-
-    const { showToast } = useToast();
+    const { showToast, removeToast } = useToast();
 
     useEffect(() => {
         if (canUpgrade && selectedRelic) {
@@ -26,19 +24,18 @@ export function Relic() {
                 content: (
                     <HStack spacing="4">
                         <Text>You can upgrade your relic to {canUpgradeTo}</Text>
-                        <BeetsSubmitTransactionButton
-                            submittingText="Confirm..."
-                            pendingText="Waiting..."
-                            onClick={() => levelUp(selectedRelic.relicId)}
-                            {...levelUpQuery}
-                        >
-                            Level Up
-                        </BeetsSubmitTransactionButton>
+                        <PoolProvider pool={pool}>
+                            <RelicLevelUpButton />
+                        </PoolProvider>
                     </HStack>
                 ),
             });
         }
-    }, []);
+        if (!canUpgrade) {
+            removeToast('relic-level-up');
+        }
+    }, [canUpgrade]);
+
     return (
         <Box as={motion.div} initial={{ opacity: 0 }} animate={{ opacity: 1 }} width="full" mt="4" position="relative">
             <RelicHeader />

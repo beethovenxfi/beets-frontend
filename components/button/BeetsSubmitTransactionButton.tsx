@@ -1,9 +1,8 @@
 import { ButtonOptions, ButtonProps } from '@chakra-ui/button';
-import React, { ReactNode, useEffect, useState } from 'react';
-import { Button, LinkProps, VStack, Text, useConst } from '@chakra-ui/react';
+import React, { ReactNode, useEffect, useRef, useState } from 'react';
+import { Button, LinkProps, VStack, Text } from '@chakra-ui/react';
 import { SubmitTransactionQuery } from '~/lib/util/useSubmitTransaction';
 import { motion, useAnimation } from 'framer-motion';
-import { omit } from 'lodash';
 
 interface BeetsSubmitTransactionButtonProps extends Omit<SubmitTransactionQuery, 'submit' | 'submitAsync'> {
     loadingText?: string;
@@ -18,6 +17,8 @@ interface BeetsSubmitTransactionButtonProps extends Omit<SubmitTransactionQuery,
     onConfirmed?: () => void;
 
     fullWidth?: boolean;
+
+    inline?: boolean;
 }
 
 export function BeetsSubmitTransactionButton({
@@ -42,11 +43,14 @@ export function BeetsSubmitTransactionButton({
     txReceipt,
     children,
     fullWidth,
+    inline = false,
     ...rest
 }: BeetsSubmitTransactionButtonProps & ButtonOptions & ButtonProps & LinkProps) {
     const controls = useAnimation();
     const [isAnimating, setIsAnimating] = useState(false);
+    const [initialButtonWidth, setInitialButtonWidth] = useState(0);
     const isProcessing = isSubmitting || isPending || isLoading || false;
+    const buttonRef = useRef<HTMLButtonElement>(null);
 
     useEffect(() => {
         if (isSubmitting && onSubmitting) {
@@ -73,6 +77,12 @@ export function BeetsSubmitTransactionButton({
     }, [isConfirmed]);
 
     useEffect(() => {
+        if (buttonRef.current) {
+            setInitialButtonWidth(buttonRef.current.offsetWidth);
+        }
+    }, []);
+
+    useEffect(() => {
         if (isProcessing && isProcessing !== undefined) {
             controls.set({
                 minWidth: '50px',
@@ -85,8 +95,7 @@ export function BeetsSubmitTransactionButton({
         } else {
             if (isAnimating) {
                 controls.start({
-                    width: 'auto',
-                    minWidth: '100%',
+                    width: `${initialButtonWidth}px`,
                     transition: { type: 'spring', bounce: 0, duration: 0.5 },
                 });
                 setIsAnimating(false);
@@ -98,12 +107,13 @@ export function BeetsSubmitTransactionButton({
 
     return (
         <VStack width={fullWidth ? 'full' : undefined}>
-            {isProcessing && (
+            {isProcessing && !inline && (
                 <Text fontWeight="semibold" fontSize="1rem">
                     {isSubmitting ? submittingText : isPending ? pendingText : loadingText}
                 </Text>
             )}
             <Button
+                ref={buttonRef}
                 variant="primary"
                 isDisabled={isDisabled || isLoading || isSubmitting || isPending}
                 isLoading={isLoading || isSubmitting || isPending}
