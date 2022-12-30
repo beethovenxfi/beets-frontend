@@ -14,7 +14,7 @@ export function useBalances(account: string | null, tokens: TokenBase[]) {
     const filteredTokens = tokens.filter((token) => token.address !== networkConfig.eth.address.toLowerCase());
 
     const ethBalance = useBalance({
-        addressOrName: account || '',
+        address: `0x${account}` || '',
         enabled: account !== null && containsEth,
         cacheTime: BALANCE_CACHE_TIME_MS,
     });
