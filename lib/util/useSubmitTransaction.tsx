@@ -1,32 +1,27 @@
-import { useContractWrite, useSigner, useWaitForTransaction } from 'wagmi';
-import {
-    UseContractWriteArgs,
-    UseContractWriteConfig,
-    UseContractWriteMutationArgs,
-} from 'wagmi/dist/declarations/src/hooks/contracts/useContractWrite';
+import { useContractWrite, usePrepareContractWrite, useSigner, useWaitForTransaction } from 'wagmi';
 import { BeetsTransactionType, toastGetTransactionStatusHeadline } from '~/components/toast/toast-util';
 import { networkConfig } from '~/lib/config/network-config';
 import { Vault__factory } from '@balancer-labs/typechain';
 import batchRelayerAbi from '~/lib/abi/BatchRelayer.json';
-import { UseWaitForTransactionConfig } from 'wagmi/dist/declarations/src/hooks/transactions/useWaitForTransaction';
-import { useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useAddRecentTransaction } from '@rainbow-me/rainbowkit';
 import { makeVar } from '@apollo/client';
 import { TransactionReceipt, TransactionResponse } from '@ethersproject/providers';
 import { ToastType, useToast } from '~/components/toast/BeetsToast';
 import { HStack, Text } from '@chakra-ui/react';
 
+// TODO: fix typing
 interface Props {
-    config: Omit<UseContractWriteArgs & UseContractWriteConfig, 'signerOrProvider'>;
-    waitForConfig?: UseWaitForTransactionConfig;
+    config: any;
+    waitForConfig?: any;
     transactionType: BeetsTransactionType;
 }
 
 export interface SubmitTransactionQuery {
-    submit: (config: UseContractWriteMutationArgs & { toastText: string; walletText?: string }) => void;
-    submitAsync: (
-        config: UseContractWriteMutationArgs & { toastText: string; walletText?: string },
-    ) => Promise<TransactionResponse>;
+    submit: (config: any & { toastText: string; walletText?: string }) => void;
+    submitAsync: (config: any & { toastText: string; walletText?: string }) => Promise<any>;
+
+    disabled: boolean;
 
     isSubmitting: boolean;
     submitError: Error | null;
@@ -38,7 +33,7 @@ export interface SubmitTransactionQuery {
     error: Error | null;
     reset: () => void;
 
-    txResponse?: TransactionResponse;
+    txResponse?: any;
     txReceipt?: TransactionReceipt;
 }
 
@@ -61,10 +56,21 @@ export function useSubmitTransaction({ config, transactionType, waitForConfig }:
     const toastText = useRef<string>('');
     const walletText = useRef<string>('');
     const addRecentTransaction = useAddRecentTransaction();
+    const [args, setArgs] = useState([]);
+    const [overrides, setOverrides] = useState({});
+
+    const { isSuccess, ...prepareContract } = usePrepareContractWrite({
+        address: config.addressOrName,
+        abi: config.contractInterface,
+        functionName: config.functionName,
+        signer: signer.data,
+        args,
+        overrides,
+        enabled: args.length !== 0,
+    });
 
     const contractWrite = useContractWrite({
-        signerOrProvider: signer.data,
-        ...config,
+        ...prepareContract.config,
         onSuccess(data, variables, context) {
             showToast({
                 id: data.hash,
@@ -120,21 +126,43 @@ export function useSubmitTransaction({ config, transactionType, waitForConfig }:
         },
     });
 
-    function submit(config: UseContractWriteMutationArgs & { toastText: string; walletText?: string }) {
+    useEffect(() => {
+        console.log('effect fired!');
+        if (isSuccess) {
+            console.log(args, overrides, contractWrite);
+            try {
+                contractWrite.write?.();
+            } catch (error) {
+                console.log('error: ', error);
+            }
+        }
+
+        return () => {
+            contractWrite.reset();
+        };
+    }, [args, overrides, isSuccess]);
+
+    function submit(config: any & { toastText: string; walletText?: string }) {
         toastText.current = config.toastText;
         walletText.current = config.walletText || config.toastText;
-        contractWrite.write(config);
+        setArgs(config.args);
+        if (config.overrides) {
+            setOverrides(config.overrides);
+        }
     }
 
-    async function submitAsync(config: UseContractWriteMutationArgs & { toastText: string; walletText?: string }) {
+    // TODO: this function isn't used, do we need to keep it?
+    async function submitAsync(config: any & { toastText: string; walletText?: string }) {
         toastText.current = config.toastText;
         walletText.current = config.walletText || config.toastText;
-        return contractWrite.writeAsync(config);
+        return contractWrite.writeAsync?.(config);
     }
 
     return {
         submit,
         submitAsync,
+
+        disabled: !isSuccess && args.length !== 0,
 
         isSubmitting: contractWrite.isLoading,
         submitError: contractWrite.error,
