@@ -38,7 +38,11 @@ export const optimismNetworkConfig: NetworkConfig = {
         weightedPoolV2Factory: '0xad901309d9e9dbc5df19c84f729f429f0189a633',
         linearFactories: {
             erc4626: ['0x4c4287b07d293e361281bceee8715c8cdeb64e34'],
-            reaper: ['0x19968d4b7126904fd665ed25417599df9604df83', '0x0473136b0732606e826ffeb42f3abc81a7a766d5'],
+            reaper: [
+                '0x19968d4b7126904fd665ed25417599df9604df83',
+                '0x0473136b0732606e826ffeb42f3abc81a7a766d5',
+                '0xe4b88e745dce9084b9fc2439f85a9a4c5cd6f361',
+            ],
         },
         linearRebalancers: {
             '0xba7834bb3cd2db888e6a06fb45e82b4225cd0c71': '0xdc9d37d76e7a782460f94ffd811d4e0579f04756', //usdc
@@ -49,6 +53,9 @@ export const optimismNetworkConfig: NetworkConfig = {
             '0xa4e597c1bd01859b393b124ce18427aa4426a871': '0xfa0081569a9e5c80385f2ffb301db93288e53684', //op
             '0xa1a77e5d7d769bfbb790a08ec976dc738bf795b9': '0x2bce16d9e5bbaa737be124f7da16a5a7bc699bcb', //wbtc
             '0xc0d7013a05860271a1edb52415cf74bc85b2ace7': '0x87b57d325bc066890a400a5c88f34084a2454d91', //susd
+            '0x62ec8b26c08ffe504f22390a65e6e3c1e45e9877': '0x573f1fbde18ab2926a5e3fb80467ae50cf91d3f6', //soDAI
+            '0xb96c5bada4bf6a70e71795a3197ba94751dae2db': '0xbac75e5e03c68c3a9e0c200462d38440d8ffea45', //soUSDT
+            '0xedcfaf390906a8f91fb35b7bac23f3111dbaee1c': '0xe61b872d223362facb9fcbce359a56764bccfa36', //soUSDC
         },
         reaperManualRebalancer: '0xf070996cf89cd3d2582705fc269f2c800e9a6a21',
     },
@@ -129,5 +136,17 @@ export const optimismNetworkConfig: NetworkConfig = {
             '0xb1c9ac57594e9b1ec0f3787d9f6744ef4cb0a02400000000000000000000006e':
                 'To account for the USD+ and DAI+ deposit/withdraw fee, this pool will charge a fee on both invest and withdraw of up to 0.06%.',
         },
+    },
+    boostedByTypes: {
+        '0xde45f101250f2ca1c0f8adfc172576d10c12072d00000000000000000000003f': 'reaper-aave',
+        '0x6222ae1d2a9f6894da50aa25cb7b303497f9bebd000000000000000000000046': 'reaper-aave',
+        '0x1f131ec1175f023ee1534b16fa8ab237c00e238100000000000000000000004a': 'reaper-aave',
+        '0x05e7732bf9ae5592e6aa05afe8cd80f7ab0a7bea00020000000000000000005a': 'reaper-aave',
+        '0x479a7d1fcdd71ce0c2ed3184bfbe9d23b92e8337000000000000000000000049': 'reaper-aave',
+        '0x981fb05b738e981ac532a99e77170ecb4bc27aef00010000000000000000004b': 'reaper-aave',
+        '0xb0de49429fbb80c635432bbad0b3965b2856017700010000000000000000004e': 'reaper-aave-granary',
+        '0x359ea8618c405023fc4b98dab1b01f373792a12600010000000000000000004f': 'reaper-aave-granary',
+        '0xb1c9ac57594e9b1ec0f3787d9f6744ef4cb0a02400000000000000000000006e': 'overnight',
+        '0x428e1cc3099cf461b87d124957a0d48273f334b100000000000000000000007f': 'reaper-sonne',
     },
 };

@@ -118,4 +118,5 @@ export const fantomNetworkConfig: NetworkConfig = {
         poolInvest: {},
         poolWithdraw: {},
     },
+    boostedByTypes: {},
 };
