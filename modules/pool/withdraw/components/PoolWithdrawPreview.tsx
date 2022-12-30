@@ -77,6 +77,7 @@ export function PoolWithdrawPreview({ onWithdrawComplete, onClose }: Props) {
             </FadeInBox>
 
             <BeetsTransactionStepsSubmit
+                isDisabled={exitPoolQuery.disabled}
                 isLoading={isLoadingContractCallData}
                 loadingButtonText=""
                 completeButtonText="Return to pool"

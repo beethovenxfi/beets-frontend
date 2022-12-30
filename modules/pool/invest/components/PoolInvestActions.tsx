@@ -120,6 +120,7 @@ export function PoolInvestActions({ onInvestComplete, onClose }: Props) {
                 pb={joinQuery.isConfirmed || joinQuery.isFailed || joinQuery.isPending ? '0' : '4'}
             >
                 <BeetsTransactionStepsSubmit
+                    isDisabled={joinQuery.disabled}
                     isLoading={steps === null || isLoadingBatchRelayerApproval}
                     loadingButtonText="Invest"
                     completeButtonText="Return to pool"

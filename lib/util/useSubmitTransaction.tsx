@@ -162,6 +162,7 @@ export function useSubmitTransaction({ config, transactionType, waitForConfig }:
         submit,
         submitAsync,
 
+        // TODO: check if this is really needed
         disabled: !isSuccess && args.length !== 0,
 
         isSubmitting: contractWrite.isLoading,
