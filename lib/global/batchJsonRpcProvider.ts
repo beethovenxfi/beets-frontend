@@ -1,8 +1,15 @@
 import { providers } from 'ethers';
-import { ChainProviderFn } from 'wagmi';
+import { Chain, ChainProviderFn } from 'wagmi';
 import { StaticJsonRpcBatchProvider } from '~/lib/services/rpc-provider/static-json-rpc-batch-provier';
 
 const providerCache: { [chainId: string]: StaticJsonRpcBatchProvider } = {};
+
+type FallbackProviderConfig = Omit<providers.FallbackProviderConfig, 'provider'>;
+
+type JsonRpcProviderConfig = FallbackProviderConfig & {
+    rpc: (chain: Chain) => { http: string; webSocket?: string } | null;
+    static?: boolean;
+};
 
 export function batchJsonRpcProvider({
     priority,
@@ -10,7 +17,7 @@ export function batchJsonRpcProvider({
     stallTimeout,
     static: static_ = true,
     weight,
-}: any): ChainProviderFn<providers.JsonRpcProvider, providers.WebSocketProvider> {
+}: JsonRpcProviderConfig): ChainProviderFn<providers.JsonRpcProvider, providers.WebSocketProvider> {
     return function (chain) {
         const rpcConfig = rpc(chain);
         if (!rpcConfig || rpcConfig.http === '') return null;
@@ -19,7 +26,7 @@ export function batchJsonRpcProvider({
                 ...chain,
                 rpcUrls: {
                     ...chain.rpcUrls,
-                    default: rpcConfig.http,
+                    default: { http: [rpcConfig.http] },
                 },
             },
             provider: () => {
