@@ -635,6 +635,8 @@ type GqlPoolStakingReliquaryFarm {
     beetsPerSecond: String!
     id: ID!
     levels: [GqlPoolStakingReliquarFarmLevel!]
+    totalBalance: String!
+    totalWeightedBalance: String!
 }
 
 enum GqlPoolStakingType {
@@ -799,15 +801,40 @@ type GqlProtocolMetrics {
     totalSwapVolume: BigDecimal!
 }
 
+type GqlRelicSnapshot {
+    balance: String!
+    entryTimestamp: Int!
+    farmId: String!
+    level: Int!
+    relicId: Int!
+}
+
+type GqlReliquaryFarmLevelSnapshot {
+    balance: String!
+    id: ID!
+    level: String!
+}
+
 type GqlReliquaryFarmSnapshot {
     dailyDeposited: String!
     dailyWithdrawn: String!
     farmId: String!
     id: ID!
+    levelBalances: [GqlReliquaryFarmLevelSnapshot!]!
     relicCount: String!
     timestamp: Int!
+    tokenBalances: [GqlReliquaryTokenBalanceSnapshot!]!
     totalBalance: String!
     userCount: String!
+}
+
+type GqlReliquaryTokenBalanceSnapshot {
+    address: String!
+    balance: String!
+    decimals: Int!
+    id: ID!
+    name: String!
+    symbol: String!
 }
 
 type GqlSorGetBatchSwapForTokensInResponse {
@@ -995,6 +1022,13 @@ type GqlUserPortfolioSnapshot {
     walletBalance: AmountHumanReadable!
 }
 
+type GqlUserRelicSnapshot {
+    relicCount: Int!
+    relicSnapshots: [GqlRelicSnapshot!]!
+    timestamp: Int!
+    totalBalance: String!
+}
+
 enum GqlUserSnapshotDataRange {
     ALL_TIME
     NINETY_DAYS
@@ -1023,6 +1057,7 @@ type Mutation {
     poolLoadOnChainDataForPoolsWithActiveUpdates: String!
     poolLoadReliquarySnapshotsForAllFarms: String!
     poolLoadSnapshotsForAllPools: String!
+    poolLoadSnapshotsForPools(poolIds: [String!]!): String!
     poolReloadAllPoolAprs: String!
     poolReloadAllTokenNestedPoolIds: String!
     poolReloadPoolNestedTokens(poolId: String!): String!
@@ -1051,6 +1086,7 @@ type Mutation {
     userInitStakedBalances(stakingTypes: [GqlPoolStakingType!]!): String!
     userInitWalletBalancesForAllPools: String!
     userInitWalletBalancesForPool(poolId: String!): String!
+    userLoadAllRelicSnapshots: String!
     userSyncBalance(poolId: String!): String!
     userSyncBalanceAllPools: String!
     userSyncChangedStakedBalances: String!
@@ -1127,6 +1163,7 @@ type Query {
     userGetPoolJoinExits(first: Int = 10, poolId: String!, skip: Int = 0): [GqlPoolJoinExit!]!
     userGetPoolSnapshots(poolId: String!, range: GqlUserSnapshotDataRange!): [GqlUserPoolSnapshot!]!
     userGetPortfolioSnapshots(days: Int!): [GqlUserPortfolioSnapshot!]!
+    userGetRelicSnapshots(farmId: String!, range: GqlUserSnapshotDataRange!): [GqlUserRelicSnapshot!]!
     userGetStaking: [GqlPoolStaking!]!
     userGetSwaps(first: Int = 10, poolId: String!, skip: Int = 0): [GqlPoolSwap!]!
 }
