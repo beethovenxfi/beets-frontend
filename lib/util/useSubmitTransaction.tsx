@@ -1,4 +1,4 @@
-import { useContractWrite, useWaitForTransaction } from 'wagmi';
+import { useContractWrite, useProvider, useSigner, useWaitForTransaction } from 'wagmi';
 import { BeetsTransactionType, toastGetTransactionStatusHeadline } from '~/components/toast/toast-util';
 import { networkConfig } from '~/lib/config/network-config';
 import { Vault__factory } from '@balancer-labs/typechain';
@@ -9,14 +9,15 @@ import { makeVar } from '@apollo/client';
 import { TransactionReceipt } from '@ethersproject/providers';
 import { ToastType, useToast } from '~/components/toast/BeetsToast';
 import { HStack, Text } from '@chakra-ui/react';
-import { BigNumberish } from 'ethers';
+import { Contract } from 'ethers';
+import { BigNumberish } from '@ethersproject/bignumber';
 
 type SendTransactionResult = {
     hash: `0x${string}`;
 };
 
 interface UseContractWriteMutationArgs {
-    args?: any[];
+    args: any[];
     overrides?: {
         value: BigNumberish;
     };
@@ -66,10 +67,12 @@ export const batchRelayerContractConfig = {
 export const txPendingVar = makeVar(false);
 
 export function useSubmitTransaction({ config, transactionType }: Props): SubmitTransactionQuery {
+    const { data: signer } = useSigner();
     const { showToast, updateToast } = useToast();
     const toastText = useRef<string>('');
     const walletText = useRef<string>('');
     const addRecentTransaction = useAddRecentTransaction();
+    const provider = useProvider();
 
     const contractWrite = useContractWrite({
         mode: 'recklesslyUnprepared',
@@ -130,7 +133,10 @@ export function useSubmitTransaction({ config, transactionType }: Props): Submit
         walletText.current = config.walletText || config.toastText;
         contractWrite.write!({
             recklesslySetUnpreparedArgs: config.args,
-            recklesslySetUnpreparedOverrides: config.overrides,
+            recklesslySetUnpreparedOverrides: {
+                ...config.overrides,
+                gasLimit: getGasLimitEstimate(config.args, config.overrides?.value as BigNumberish),
+            },
         });
     }
 
@@ -139,8 +145,21 @@ export function useSubmitTransaction({ config, transactionType }: Props): Submit
         walletText.current = config.walletText || config.toastText;
         return contractWrite.writeAsync!({
             recklesslySetUnpreparedArgs: config.args,
-            recklesslySetUnpreparedOverrides: config.overrides,
+            recklesslySetUnpreparedOverrides: {
+                ...config.overrides,
+                gasLimit: getGasLimitEstimate(config.args, config.overrides?.value as BigNumberish),
+            },
         });
+    }
+
+    async function getGasLimitEstimate(args: any[], value?: BigNumberish): Promise<number> {
+        const contract = new Contract(config.addressOrName, config.contractInterface, provider);
+        const data = contract.interface.encodeFunctionData(config.functionName, args);
+        //signer will always be defined here
+        const gasLimit = await signer!.estimateGas({ to: config.addressOrName, data, value });
+
+        //we add a 2% buffer to avoid out of gas errors
+        return Math.round(gasLimit.toNumber() * 1.02);
     }
 
     return {
