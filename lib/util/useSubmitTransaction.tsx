@@ -1,4 +1,4 @@
-import { useContract, useContractWrite, useProvider, useSigner, useWaitForTransaction } from 'wagmi';
+import { useContractWrite, useWaitForTransaction } from 'wagmi';
 import { BeetsTransactionType, toastGetTransactionStatusHeadline } from '~/components/toast/toast-util';
 import { networkConfig } from '~/lib/config/network-config';
 import { Vault__factory } from '@balancer-labs/typechain';
@@ -66,21 +66,10 @@ export const batchRelayerContractConfig = {
 export const txPendingVar = makeVar(false);
 
 export function useSubmitTransaction({ config, transactionType }: Props): SubmitTransactionQuery {
-    const { data: signer } = useSigner();
     const { showToast, updateToast } = useToast();
     const toastText = useRef<string>('');
     const walletText = useRef<string>('');
     const addRecentTransaction = useAddRecentTransaction();
-    const provider = useProvider();
-
-    // grab the function name here to use it for the gas estimate
-    const functionName = config.functionName;
-
-    const contract = useContract({
-        address: config.addressOrName as `0x${string}`,
-        abi: config.contractInterface,
-        signerOrProvider: signer ?? provider,
-    });
 
     const contractWrite = useContractWrite({
         mode: 'recklesslyUnprepared',
@@ -141,7 +130,7 @@ export function useSubmitTransaction({ config, transactionType }: Props): Submit
         walletText.current = config.walletText || config.toastText;
         contractWrite.write!({
             recklesslySetUnpreparedArgs: config.args,
-            recklesslySetUnpreparedOverrides: { ...config.overrides, gasLimit: getGasLimitEstimate(config.args || []) },
+            recklesslySetUnpreparedOverrides: config.overrides,
         });
     }
 
@@ -150,15 +139,8 @@ export function useSubmitTransaction({ config, transactionType }: Props): Submit
         walletText.current = config.walletText || config.toastText;
         return contractWrite.writeAsync!({
             recklesslySetUnpreparedArgs: config.args,
-            recklesslySetUnpreparedOverrides: { ...config.overrides, gasLimit: getGasLimitEstimate(config.args || []) },
+            recklesslySetUnpreparedOverrides: config.overrides,
         });
-    }
-
-    async function getGasLimitEstimate(args: any[]): Promise<number> {
-        const gasLimit = await contract?.estimateGas[functionName](...args);
-
-        // we add a 2% buffer to avoid out of gas errors
-        return Math.round(gasLimit!.toNumber() * 1.02);
     }
 
     return {
