@@ -119,7 +119,7 @@ export function useSubmitTransaction({ config, transactionType }: Props): Submit
 
     const waitForTransaction = useWaitForTransaction({
         hash: contractWrite.data?.hash,
-        onSettled(data, error) {
+        onSettled() {
             updateToast(contractWrite.data?.hash || '', {
                 type: ToastType.Success,
                 content: (
