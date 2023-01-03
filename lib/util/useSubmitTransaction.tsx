@@ -27,7 +27,7 @@ interface Props {
         addressOrName: string;
         contractInterface: any;
         functionName: string;
-        onSuccess?: (data: SendTransactionResult, variables: any, context: any) => void;
+        onSuccess?: (data: SendTransactionResult) => void;
     };
     transactionType: BeetsTransactionType;
 }
@@ -76,7 +76,7 @@ export function useSubmitTransaction({ config, transactionType }: Props): Submit
         address: config.addressOrName as `0x${string}`,
         abi: config.contractInterface,
         functionName: config.functionName,
-        onSuccess(data, variables, context) {
+        onSuccess(data) {
             showToast({
                 id: data.hash,
                 content: (
@@ -101,7 +101,7 @@ export function useSubmitTransaction({ config, transactionType }: Props): Submit
             txPendingVar(true);
 
             if (config?.onSuccess) {
-                return config.onSuccess(data, variables, context);
+                return config.onSuccess(data);
             }
         },
     });
