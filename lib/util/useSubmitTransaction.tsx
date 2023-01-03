@@ -151,6 +151,7 @@ export function useSubmitTransaction({ config, transactionType, waitForConfig }:
     async function getGasLimitEstimate(args: any[]): Promise<number> {
         const contract = new Contract(config.addressOrName, config.contractInterface, provider);
         const data = contract.interface.encodeFunctionData(config.functionName, args);
+        //signer will always be defined here
         const gasLimit = await signer!.estimateGas({ to: config.addressOrName, data });
 
         //we add a 2% buffer to avoid out of gas errors
