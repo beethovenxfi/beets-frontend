@@ -1,4 +1,4 @@
-import { useContractWrite, useSigner, useWaitForTransaction } from 'wagmi';
+import { useContractWrite, useProvider, useSigner, useWaitForTransaction } from 'wagmi';
 import {
     UseContractWriteArgs,
     UseContractWriteConfig,
@@ -9,12 +9,13 @@ import { networkConfig } from '~/lib/config/network-config';
 import { Vault__factory } from '@balancer-labs/typechain';
 import batchRelayerAbi from '~/lib/abi/BatchRelayer.json';
 import { UseWaitForTransactionConfig } from 'wagmi/dist/declarations/src/hooks/transactions/useWaitForTransaction';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { useAddRecentTransaction } from '@rainbow-me/rainbowkit';
 import { makeVar } from '@apollo/client';
 import { TransactionReceipt, TransactionResponse } from '@ethersproject/providers';
 import { ToastType, useToast } from '~/components/toast/BeetsToast';
 import { HStack, Text } from '@chakra-ui/react';
+import { Contract } from 'ethers';
 
 interface Props {
     config: Omit<UseContractWriteArgs & UseContractWriteConfig, 'signerOrProvider'>;
@@ -56,14 +57,15 @@ export const batchRelayerContractConfig = {
 export const txPendingVar = makeVar(false);
 
 export function useSubmitTransaction({ config, transactionType, waitForConfig }: Props): SubmitTransactionQuery {
-    const signer = useSigner();
+    const { data: signer } = useSigner();
     const { showToast, updateToast } = useToast();
     const toastText = useRef<string>('');
     const walletText = useRef<string>('');
     const addRecentTransaction = useAddRecentTransaction();
+    const provider = useProvider();
 
     const contractWrite = useContractWrite({
-        signerOrProvider: signer.data,
+        signerOrProvider: signer,
         ...config,
         onSuccess(data, variables, context) {
             showToast({
@@ -123,13 +125,36 @@ export function useSubmitTransaction({ config, transactionType, waitForConfig }:
     function submit(config: UseContractWriteMutationArgs & { toastText: string; walletText?: string }) {
         toastText.current = config.toastText;
         walletText.current = config.walletText || config.toastText;
-        contractWrite.write(config);
+
+        contractWrite.write({
+            ...config,
+            overrides: {
+                ...config.overrides,
+                gasLimit: getGasLimitEstimate(config.args),
+            },
+        });
     }
 
     async function submitAsync(config: UseContractWriteMutationArgs & { toastText: string; walletText?: string }) {
         toastText.current = config.toastText;
         walletText.current = config.walletText || config.toastText;
-        return contractWrite.writeAsync(config);
+
+        return contractWrite.writeAsync({
+            ...config,
+            overrides: {
+                ...config.overrides,
+                gasLimit: getGasLimitEstimate(config.args),
+            },
+        });
+    }
+
+    async function getGasLimitEstimate(args: any[]): Promise<number> {
+        const contract = new Contract(config.addressOrName, config.contractInterface, provider);
+        const data = contract.interface.encodeFunctionData(config.functionName, args);
+        const gasLimit = await signer!.estimateGas({ to: config.addressOrName, data });
+
+        //we add a 2% buffer to avoid out of gas errors
+        return Math.round(gasLimit.toNumber() * 1.02);
     }
 
     return {
