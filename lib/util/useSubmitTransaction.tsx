@@ -16,6 +16,7 @@ import { TransactionReceipt, TransactionResponse } from '@ethersproject/provider
 import { ToastType, useToast } from '~/components/toast/BeetsToast';
 import { HStack, Text } from '@chakra-ui/react';
 import { Contract } from 'ethers';
+import { BigNumberish } from '@ethersproject/bignumber';
 
 interface Props {
     config: Omit<UseContractWriteArgs & UseContractWriteConfig, 'signerOrProvider'>;
@@ -130,7 +131,7 @@ export function useSubmitTransaction({ config, transactionType, waitForConfig }:
             ...config,
             overrides: {
                 ...config.overrides,
-                gasLimit: getGasLimitEstimate(config.args),
+                gasLimit: getGasLimitEstimate(config.args, config.overrides?.value as BigNumberish),
             },
         });
     }
@@ -143,16 +144,16 @@ export function useSubmitTransaction({ config, transactionType, waitForConfig }:
             ...config,
             overrides: {
                 ...config.overrides,
-                gasLimit: getGasLimitEstimate(config.args),
+                gasLimit: getGasLimitEstimate(config.args, config.overrides?.value as BigNumberish),
             },
         });
     }
 
-    async function getGasLimitEstimate(args: any[]): Promise<number> {
+    async function getGasLimitEstimate(args: any[], value?: BigNumberish): Promise<number> {
         const contract = new Contract(config.addressOrName, config.contractInterface, provider);
         const data = contract.interface.encodeFunctionData(config.functionName, args);
         //signer will always be defined here
-        const gasLimit = await signer!.estimateGas({ to: config.addressOrName, data });
+        const gasLimit = await signer!.estimateGas({ to: config.addressOrName, data, value });
 
         //we add a 2% buffer to avoid out of gas errors
         return Math.round(gasLimit.toNumber() * 1.02);
