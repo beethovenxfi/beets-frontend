@@ -18,7 +18,9 @@ const response = configureChains(
                 decimals: networkConfig.eth.decimals,
             },
             rpcUrls: {
-                default: { http: [process.env.NEXT_PUBLIC_RPC_URL || networkConfig.rpcUrl] },
+                default: {
+                    http: [process.env.NEXT_PUBLIC_RPC_URL || networkConfig.rpcUrl],
+                },
             },
             blockExplorers: {
                 etherscan: {
