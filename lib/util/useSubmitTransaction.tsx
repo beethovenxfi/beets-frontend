@@ -1,4 +1,4 @@
-import { useContractWrite, useProvider, useSigner, useWaitForTransaction } from 'wagmi';
+import { Address, useContractWrite, useProvider, useSigner, useWaitForTransaction } from 'wagmi';
 import { BeetsTransactionType, toastGetTransactionStatusHeadline } from '~/components/toast/toast-util';
 import { networkConfig } from '~/lib/config/network-config';
 import { Vault__factory } from '@balancer-labs/typechain';
@@ -113,7 +113,7 @@ export function useSubmitTransaction({ config, transactionType }: Props): Submit
 
     const contractWrite = useContractWrite({
         mode: 'recklesslyUnprepared',
-        address: config.addressOrName as `0x${string}`,
+        address: config.addressOrName as Address,
         abi: config.contractInterface,
         functionName: config.functionName,
         onSuccess(data) {
