@@ -9,15 +9,52 @@ import { makeVar } from '@apollo/client';
 import { TransactionReceipt } from '@ethersproject/providers';
 import { ToastType, useToast } from '~/components/toast/BeetsToast';
 import { HStack, Text } from '@chakra-ui/react';
-import { Contract } from 'ethers';
+import { Contract, BigNumber } from 'ethers';
 import { BigNumberish } from '@ethersproject/bignumber';
+import { BatchSwapStep } from '@balancer-labs/balancer-js';
 
 type SendTransactionResult = {
     hash: `0x${string}`;
 };
 
+type BatchSwapTypeObj = {
+    sender: `0x${string}` | undefined;
+    fromInternalBalance: boolean;
+    recipient: `0x${string}` | undefined;
+    toInternalBalance: boolean;
+};
+
+type PoolTypeObjTemplate = {
+    assets: string[];
+    userData: string;
+};
+
+interface JoinPoolTypeObj extends PoolTypeObjTemplate {
+    maxAmountsIn: BigNumberish[];
+    fromInternalBalance: boolean;
+}
+
+interface ExitPoolTypeObj extends PoolTypeObjTemplate {
+    minAmountsOut: BigNumberish[];
+    toInternalBalance: boolean;
+}
+
+type Args =
+    | `0x${string}`
+    | undefined
+    | string[]
+    | string
+    | BigNumber
+    | boolean
+    | number
+    | BatchSwapStep[]
+    | BigNumberish[]
+    | BatchSwapTypeObj
+    | JoinPoolTypeObj
+    | ExitPoolTypeObj;
+
 interface UseContractWriteMutationArgs {
-    args: any[];
+    args: Args[];
     overrides?: {
         value: BigNumberish;
     };
@@ -152,7 +189,7 @@ export function useSubmitTransaction({ config, transactionType }: Props): Submit
         });
     }
 
-    async function getGasLimitEstimate(args: any[], value?: BigNumberish): Promise<number> {
+    async function getGasLimitEstimate(args: Args[], value?: BigNumberish): Promise<number> {
         const contract = new Contract(config.addressOrName, config.contractInterface, provider);
         const data = contract.interface.encodeFunctionData(config.functionName, args);
         //signer will always be defined here
