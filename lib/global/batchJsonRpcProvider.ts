@@ -1,10 +1,9 @@
 import { providers } from 'ethers';
 import { Chain, ChainProviderFn } from 'wagmi';
+import { FallbackProviderConfig } from '@wagmi/core';
 import { StaticJsonRpcBatchProvider } from '~/lib/services/rpc-provider/static-json-rpc-batch-provier';
 
 const providerCache: { [chainId: string]: StaticJsonRpcBatchProvider } = {};
-
-type FallbackProviderConfig = Omit<providers.FallbackProviderConfig, 'provider'>;
 
 type JsonRpcProviderConfig = FallbackProviderConfig & {
     rpc: (chain: Chain) => { http: string; webSocket?: string } | null;
