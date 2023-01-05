@@ -1,14 +1,9 @@
 import { providers } from 'ethers';
-import { Chain, ChainProviderFn } from 'wagmi';
-import { FallbackProviderConfig } from '@wagmi/core';
+import { ChainProviderFn } from 'wagmi';
 import { StaticJsonRpcBatchProvider } from '~/lib/services/rpc-provider/static-json-rpc-batch-provier';
+import { JsonRpcProviderConfig } from '@wagmi/core/dist/providers/jsonRpc';
 
 const providerCache: { [chainId: string]: StaticJsonRpcBatchProvider } = {};
-
-type JsonRpcProviderConfig = FallbackProviderConfig & {
-    rpc: (chain: Chain) => { http: string; webSocket?: string } | null;
-    static?: boolean;
-};
 
 export function batchJsonRpcProvider({
     priority,
