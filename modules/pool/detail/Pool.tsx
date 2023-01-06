@@ -1,4 +1,4 @@
-import { Box, Flex, Grid, GridItem, VStack, HStack } from '@chakra-ui/react';
+import { Box, Grid, GridItem, HStack, VStack } from '@chakra-ui/react';
 import PoolHeader from '~/modules/pool/detail/components/PoolHeader';
 import { PoolComposition } from '~/modules/pool/detail/components/composition/PoolComposition';
 import PoolStats from './components/stats/PoolStats';
@@ -11,10 +11,13 @@ import { usePool } from '~/modules/pool/lib/usePool';
 import { usePoolUserBptBalance } from '~/modules/pool/lib/usePoolUserBptBalance';
 import { PoolFbeetsWarning } from '~/modules/pool/detail/components/PoolFbeetsWarning';
 import { PoolOvernightWarning } from '~/modules/pool/detail/components/PoolOvernightWarning';
+import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
+import { PoolDetailWarning } from '~/modules/pool/detail/components/PoolDetailWarning';
 
 export function Pool() {
     const { pool, isFbeetsPool } = usePool();
     const { hasBpt } = usePoolUserBptBalance();
+    const { warnings, investDisabled } = useNetworkConfig();
 
     return (
         <Box marginBottom="8">
@@ -23,10 +26,11 @@ export function Pool() {
                 {pool.id === '0xb1c9ac57594e9b1ec0f3787d9f6744ef4cb0a02400000000000000000000006e' && (
                     <PoolOvernightWarning />
                 )}
+                {warnings.poolDetail[pool.id] && <PoolDetailWarning warning={warnings.poolDetail[pool.id]} />}
                 {pool.staking && !isFbeetsPool && <PoolStakeInFarmWarning />}
                 {isFbeetsPool && hasBpt && <PoolFbeetsWarning />}
                 <HStack width="full" justifyContent="flex-end">
-                    <PoolInvestModal />
+                    {!investDisabled[pool.id] && <PoolInvestModal />}
                     <PoolWithdrawModal />
                 </HStack>
                 <Grid gap="4" templateColumns={{ base: '1fr', lg: '300px 1fr' }} width="full">

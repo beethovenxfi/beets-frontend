@@ -15,7 +15,7 @@ import { GqlPoolMinimalFragment } from '~/apollo/generated/graphql-codegen-gener
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 
 function PoolList() {
-    const { boostedByTypes } = useNetworkConfig();
+    const { boostedByTypes, warnings } = useNetworkConfig();
     const { getToken } = useGetTokens();
     const { pools, refetch, loading, networkStatus, state, count, setPageSize, setPoolIds, showMyInvestments } =
         usePoolList();
@@ -78,6 +78,7 @@ function PoolList() {
                             }))}
                             hasUnstakedBpt={item.dynamicData.apr.hasRewardApr && hasBptInWalletForPool(item.id)}
                             boostedBy={boostedByTypes[item.id]}
+                            warningMessage={warnings.poolList[item.id]}
                         />
                     );
                 }}

@@ -127,7 +127,30 @@ export const optimismNetworkConfig: NetworkConfig = {
     },
     createPoolUrl: 'https://opv1.beets.fi/#/pool-create',
     warnings: {
-        poolDetail: {},
+        poolList: {
+            '0x1f131ec1175f023ee1534b16fa8ab237c00e238100000000000000000000004a':
+                'A vulnerability has been discovered that effects this pool. Existing investors should remove liquidity immediately, and no new investments should be made.',
+            '0x479a7d1fcdd71ce0c2ed3184bfbe9d23b92e8337000000000000000000000049':
+                'A vulnerability has been discovered that effects this pool. Existing investors should remove liquidity immediately, and no new investments should be made.',
+        },
+        poolDetail: {
+            '0x1f131ec1175f023ee1534b16fa8ab237c00e238100000000000000000000004a': {
+                id: 'composable-nested-vulnerability',
+                message:
+                    'A vulnerability has been discovered that effects this pool. Existing investors should remove liquidity immediately, and no new investments should be made.',
+                type: 'warning',
+                link: {
+                    url: 'https://www.google.com',
+                    text: 'Read more',
+                },
+            },
+            '0x479a7d1fcdd71ce0c2ed3184bfbe9d23b92e8337000000000000000000000049': {
+                id: 'composable-nested-vulnerability',
+                message:
+                    'A vulnerability has been discovered that effects this pool. Existing investors should remove liquidity immediately, and no new investments should be made.',
+                type: 'warning',
+            },
+        },
         poolInvest: {
             '0xb1c9ac57594e9b1ec0f3787d9f6744ef4cb0a02400000000000000000000006e':
                 'To account for the USD+ and DAI+ deposit/withdraw fee, this pool will charge a fee on both invest and withdraw of up to 0.06%.',
@@ -148,5 +171,9 @@ export const optimismNetworkConfig: NetworkConfig = {
         '0x359ea8618c405023fc4b98dab1b01f373792a12600010000000000000000004f': 'reaper-aave-granary',
         '0xb1c9ac57594e9b1ec0f3787d9f6744ef4cb0a02400000000000000000000006e': 'overnight',
         '0x428e1cc3099cf461b87d124957a0d48273f334b100000000000000000000007f': 'reaper-sonne',
+    },
+    investDisabled: {
+        '0x1f131ec1175f023ee1534b16fa8ab237c00e238100000000000000000000004a': true,
+        '0x479a7d1fcdd71ce0c2ed3184bfbe9d23b92e8337000000000000000000000049': true,
     },
 };
