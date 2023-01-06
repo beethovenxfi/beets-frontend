@@ -7,11 +7,15 @@ import { useElementScroll } from 'framer-motion';
 import { Footer } from '~/modules/nav/Footer';
 import { NavbarMobile } from '~/modules/nav/NavbarMobile';
 import { GlobalRenderer } from '~/modules/global/GlobalRenderer';
+import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
+import { useUserAccount } from '~/lib/user/useUserAccount';
+import { UserWarning } from '~/components/user-warning/UserWarning';
 
 export function AppContent({ Component, pageProps }: AppProps) {
     const ref = useRef(null);
     const { scrollY } = useElementScroll(ref);
     const theme = useTheme();
+    const { userAddress } = useUserAccount();
 
     return (
         <Box
@@ -51,6 +55,7 @@ export function AppContent({ Component, pageProps }: AppProps) {
 
             <Footer />
             <NavbarMobile />
+            <UserWarning />
         </Box>
     );
 }
