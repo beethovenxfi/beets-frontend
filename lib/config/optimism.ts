@@ -139,10 +139,10 @@ export const optimismNetworkConfig: NetworkConfig = {
                 message:
                     'A vulnerability has been discovered that effects this pool. Existing investors should remove liquidity immediately, and no new investments should be made.',
                 type: 'warning',
-                link: {
+                /*link: {
                     url: 'https://www.google.com',
                     text: 'Read more',
-                },
+                },*/
             },
             '0x479a7d1fcdd71ce0c2ed3184bfbe9d23b92e8337000000000000000000000049': {
                 id: 'composable-nested-vulnerability',
