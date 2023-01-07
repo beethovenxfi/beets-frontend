@@ -116,13 +116,13 @@ export const fantomNetworkConfig: NetworkConfig = {
     warnings: {
         poolList: {
             '0xa10285f445bcb521f1d623300dc4998b02f11c8f00000000000000000000043b':
-                'A vulnerability has been discovered that effects this pool. Existing investors should remove liquidity immediately, and no new investments should be made.',
+                'A vulnerability has been discovered that effects this pool. Existing liquidity providers should remove liquidity immediately, and no new deposits should be made.',
         },
         poolDetail: {
             '0xa10285f445bcb521f1d623300dc4998b02f11c8f00000000000000000000043b': {
                 id: 'composable-nested-vulnerability',
                 message:
-                    'A vulnerability has been discovered that effects this pool. Existing investors should remove liquidity immediately, and no new investments should be made.',
+                    'A vulnerability has been discovered that effects this pool. Existing liquidity providers should remove liquidity immediately, and no new deposits should be made.',
                 type: 'warning',
             },
         },

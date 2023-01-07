@@ -129,26 +129,30 @@ export const optimismNetworkConfig: NetworkConfig = {
     warnings: {
         poolList: {
             '0x1f131ec1175f023ee1534b16fa8ab237c00e238100000000000000000000004a':
-                'A vulnerability has been discovered that effects this pool. Existing investors should remove liquidity immediately, and no new investments should be made.',
+                'A vulnerability has been discovered that effects this pool. Existing liquidity providers should remove liquidity immediately, and no new deposits should be made.',
             '0x479a7d1fcdd71ce0c2ed3184bfbe9d23b92e8337000000000000000000000049':
-                'A vulnerability has been discovered that effects this pool. Existing investors should remove liquidity immediately, and no new investments should be made.',
+                'A vulnerability has been discovered that effects this pool. Existing liquidity providers should remove liquidity immediately, and no new deposits should be made.',
         },
         poolDetail: {
             '0x1f131ec1175f023ee1534b16fa8ab237c00e238100000000000000000000004a': {
                 id: 'composable-nested-vulnerability',
                 message:
-                    'A vulnerability has been discovered that effects this pool. Existing investors should remove liquidity immediately, and no new investments should be made.',
+                    'A vulnerability has been discovered that effects this pool. Existing liquidity providers should remove liquidity immediately, and no new deposits should be made.',
                 type: 'warning',
-                /*link: {
-                    url: 'https://www.google.com',
+                link: {
+                    url: 'https://twitter.com/beethoven_x/status/1611363903744937985?s=20&t=tiOYA-4RINQzF4eMbR4HgA',
                     text: 'Read more',
-                },*/
+                },
             },
             '0x479a7d1fcdd71ce0c2ed3184bfbe9d23b92e8337000000000000000000000049': {
                 id: 'composable-nested-vulnerability',
                 message:
-                    'A vulnerability has been discovered that effects this pool. Existing investors should remove liquidity immediately, and no new investments should be made.',
+                    'A vulnerability has been discovered that effects this pool. Existing liquidity providers should remove liquidity immediately, and no new deposits should be made.',
                 type: 'warning',
+                link: {
+                    url: 'https://twitter.com/beethoven_x/status/1611363903744937985?s=20&t=tiOYA-4RINQzF4eMbR4HgA',
+                    text: 'Read more',
+                },
             },
         },
         poolInvest: {
