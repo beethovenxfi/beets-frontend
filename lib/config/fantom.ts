@@ -122,7 +122,7 @@ export const fantomNetworkConfig: NetworkConfig = {
     },
     createPoolUrl: 'https://v1.beets.fi/#/pool-create',
     launchUrl: 'https://v1.beets.fi/#/launch',
-    stakeUrl: 'https://v1.beets.fi/#/stake',
+    stakeUrl: 'https://beets.fi/#/stake',
     warnings: {
         poolDetail: {},
         poolInvest: {},

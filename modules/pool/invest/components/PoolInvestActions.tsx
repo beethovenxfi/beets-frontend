@@ -58,8 +58,6 @@ export function PoolInvestActions({ onInvestComplete, onClose, isReliquaryDeposi
         enabled: isReliquaryDeposit,
     });
 
-    console.log('lmao', selectedInvestTokensWithAmounts);
-
     const { refetch: refetchUserTokenBalances } = usePoolUserTokenBalancesInWallet();
     const { refetch: refetchUserBptBalance } = usePoolUserBptBalance();
     const [userSyncBalance] = useUserSyncBalanceMutation();

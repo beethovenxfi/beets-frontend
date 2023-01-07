@@ -91,8 +91,6 @@ export function BeetsTransactionStepsSubmit({
         }
     }
 
-    console.log('esk', { steps, currentQuery, currentStep });
-
     return (
         <Box>
             {isLoading && !complete ? (

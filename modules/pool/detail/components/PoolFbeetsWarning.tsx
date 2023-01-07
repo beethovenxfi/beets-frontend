@@ -1,30 +1,36 @@
-import { Alert, AlertIcon, Box, Button, Flex, Link, useDisclosure } from '@chakra-ui/react';
-import { PoolStakeModal } from '~/modules/pool/stake/PoolStakeModal';
-import { usePoolUserBptBalance } from '~/modules/pool/lib/usePoolUserBptBalance';
-import { FadeInOutBox } from '~/components/animation/FadeInOutBox';
+import React, { useEffect } from 'react';
+import { Box, Button, HStack, Link, Text } from '@chakra-ui/react';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
+import { ToastType, useToast } from '~/components/toast/BeetsToast';
 
 export function PoolFbeetsWarning() {
-    const { hasBpt } = usePoolUserBptBalance();
-    const { isOpen, onOpen, onClose } = useDisclosure();
     const networkConfig = useNetworkConfig();
 
-    return (
-        <>
-            <FadeInOutBox isVisible={hasBpt} containerWidth="100%">
-                <Alert status="warning" borderRadius="md" mb="4" width="full">
-                    <Flex width="full" alignItems="center">
-                        <AlertIcon />
-                        <Box flex="1" mr="8">
-                            Your fBEETS position should be managed on the Stake page.
-                        </Box>
-                        <Button variant="outline" as={Link} href={networkConfig.stakeUrl}>
-                            Go to Stake
-                        </Button>
-                    </Flex>
-                </Alert>
-            </FadeInOutBox>
-            <PoolStakeModal isOpen={isOpen} onOpen={onOpen} onClose={onClose} />
-        </>
-    );
+    const { showToast } = useToast();
+
+    useEffect(() => {
+        showToast({
+            id: 'fbeets-stake-alert',
+            type: ToastType.Warn,
+            content: (
+                <HStack spacing="4" alignItems="center">
+                    <Box>
+                        <Text>You can utilise your fBEETS position further by staking it in a relic.</Text>
+                    </Box>
+                    <Button
+                        colorScheme="orange"
+                        variant="solid"
+                        backgroundColor="orange.300"
+                        as={Link}
+                        href={networkConfig.stakeUrl}
+                        _hover={{ textDecoration: 'none', backgroundColor: 'orange.400' }}
+                    >
+                        Go to Reliquary
+                    </Button>
+                </HStack>
+            ),
+        });
+    }, []);
+
+    return null;
 }
