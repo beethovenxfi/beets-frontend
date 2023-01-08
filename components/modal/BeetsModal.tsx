@@ -1,16 +1,23 @@
 import { ModalBody, ModalBodyProps, ModalContent, ModalContentProps, ModalHeaderProps } from '@chakra-ui/modal';
 import { Heading, ModalHeader, Text, TextProps } from '@chakra-ui/react';
 import { Box, HeadingProps } from '@chakra-ui/layout';
+import { forwardRef, Ref } from 'react';
+import { MotionProps } from 'framer-motion';
 
-export function BeetsModalContent(props: ModalContentProps) {
-    return (
-        <ModalContent {...props}>
-            <Box bg="blackAlpha.400">
-                <Box className="bg">{props.children}</Box>
-            </Box>
-        </ModalContent>
-    );
-}
+export const BeetsModalContent = forwardRef(
+    (props: ModalContentProps & MotionProps & { transparent?: boolean }, ref: Ref<HTMLDivElement>) => {
+        let containerBg = props.transparent ? 'transparent' : 'blackAlpha.400';
+        let innerBg = props.transparent ? '' : 'bg';
+        return (
+            <ModalContent ref={ref} {...props} background='none'>
+                <Box bg={containerBg}>
+                    <Box className={innerBg}>{props.children}</Box>
+                </Box>
+            </ModalContent>
+        );
+    },
+);
+BeetsModalContent.displayName = 'BeetsModalContent';
 
 export function BeetsModalHeader(props: ModalHeaderProps) {
     return <ModalHeader px="4" {...props} />;

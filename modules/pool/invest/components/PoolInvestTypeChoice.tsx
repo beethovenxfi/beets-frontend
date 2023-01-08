@@ -170,6 +170,8 @@ export function PoolInvestTypeChoice({ onShowProportional, onShowCustom }: Props
                                                     <TokenAvatar
                                                         width="40px"
                                                         height="40px"
+                                                        maxWidth="40px"
+                                                        maxHeight="40px"
                                                         address={tokenOption.address}
                                                     />
                                                     <Box>

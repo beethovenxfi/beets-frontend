@@ -13,10 +13,10 @@ import {
 import { PoolInvestProportional } from '~/modules/pool/invest/components/PoolInvestProportional';
 import { ChevronLeft } from 'react-feather';
 import { PoolInvestPreview } from '~/modules/pool/invest/components/PoolInvestPreview';
-import { ReactNode, useEffect, useRef, useState } from 'react';
+import React, { ReactNode, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { PoolInvestTypeChoice } from '~/modules/pool/invest/components/PoolInvestTypeChoice';
 import { PoolInvestCustom } from '~/modules/pool/invest/components/PoolInvestCustom';
-import { motion } from 'framer-motion';
+import { animate, AnimatePresence, motion, useAnimation } from 'framer-motion';
 import { useInvestState } from '~/modules/pool/invest/lib/useInvestState';
 import { usePool } from '~/modules/pool/lib/usePool';
 import { BeetsModalBody, BeetsModalContent, BeetsModalHeader } from '~/components/modal/BeetsModal';
@@ -28,6 +28,15 @@ interface Props {
     activator?: ReactNode;
 }
 
+function getInvertedTransform(startBounds: DOMRect, endBounds: DOMRect) {
+    return {
+        x: startBounds.x - endBounds.x,
+        y: startBounds.y - endBounds.y,
+        scaleX: startBounds.width / endBounds.width,
+        scaleY: startBounds.height / endBounds.height,
+    };
+}
+
 export function PoolInvestModal({ activator }: Props) {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const { pool, formattedTypeName } = usePool();
@@ -35,25 +44,12 @@ export function PoolInvestModal({ activator }: Props) {
     const [type, setInvestType] = useState<'proportional' | 'custom' | null>(null);
     const initialRef = useRef(null);
     const [investComplete, setInvestComplete] = useState(false);
-    const { clearInvestState, setSelectedOptions, hasSelectedOptions } = useInvestState();
-    const { optionsWithLargestBalances } = usePoolUserTokenBalancesInWallet();
     const { warnings, reliquary } = useNetworkConfig();
     const { selectedRelic } = useReliquary();
     const isReliquaryFBeetsPool = pool.id === reliquary.fbeets.poolId;
-
-    useEffect(() => {
-        if (modalState !== 'start') {
-            setModalState('start');
-        }
-
-        clearInvestState();
-    }, [pool.id]);
-
-    useEffect(() => {
-        if (isOpen && !hasSelectedOptions) {
-            setSelectedOptions(optionsWithLargestBalances);
-        }
-    }, [isOpen]);
+    const containerControls = useAnimation();
+    const modalContainerRef = useRef<HTMLDivElement | null>(null);
+    const lastModalBounds = useRef<DOMRect | null>(null);
 
     function onModalClose() {
         if (investComplete) {
@@ -63,134 +59,201 @@ export function PoolInvestModal({ activator }: Props) {
         onClose();
     }
 
+    useLayoutEffect(() => {
+        setTimeout(async () => {
+            if (isOpen) {
+                if (modalContainerRef.current) {
+                    containerControls.set({
+                        opacity: 0,
+                        transform: 'scale(.75)',
+                    });
+                }
+                await containerControls.start({
+                    opacity: 1,
+                    transform: 'scale(1)',
+                });
+
+                const bounds = modalContainerRef.current?.getBoundingClientRect();
+                if (bounds) {
+                    lastModalBounds.current = bounds;
+                }
+            } else {
+                containerControls.start({
+                    opacity: 0,
+                    transform: 'scale(0.75)',
+                });
+            }
+        }, 0);
+    }, [isOpen]);
+
+    useLayoutEffect(() => {
+        if (modalContainerRef.current) {
+            const bounds = modalContainerRef.current.getBoundingClientRect();
+            if (lastModalBounds.current) {
+                const invertedTransform = getInvertedTransform(lastModalBounds.current, bounds);
+                animate(invertedTransform.scaleY, 1, {
+                    onUpdate: (t) => {
+                        if (modalContainerRef.current) {
+                            modalContainerRef.current.style.transform = `scaleY(${t})`;
+                        }
+                    },
+                });
+            }
+            lastModalBounds.current = bounds;
+        }
+    }, [modalState]);
+
     return (
         <Box width={{ base: 'full', md: 'fit-content' }}>
             <Button variant="primary" onClick={onOpen} width={{ base: 'full', md: '140px' }}>
                 Invest
             </Button>
-            <Modal isOpen={isOpen} onClose={onModalClose} size="lg" initialFocusRef={initialRef}>
+            <Modal motionPreset="none" isOpen={isOpen} onClose={onModalClose} size="lg" initialFocusRef={initialRef}>
                 <ModalOverlay bg="blackAlpha.900" />
-                <BeetsModalContent>
-                    <ModalCloseButton />
-                    {modalState !== 'start' ? (
-                        <IconButton
-                            aria-label={'back-button'}
-                            icon={<ChevronLeft />}
-                            variant="ghost"
-                            p="0"
-                            width="32px"
-                            height="32px"
-                            minWidth="32px"
+                <AnimatePresence exitBeforeEnter>
+                    <BeetsModalContent position="relative" transparent>
+                        <Box
+                            as={motion.div}
+                            width="full"
+                            height="full"
                             position="absolute"
-                            top="12px"
-                            left="12px"
-                            onClick={() => {
-                                if (modalState === 'proportional' || modalState === 'custom') {
-                                    setModalState('start');
-                                } else if (modalState === 'preview') {
-                                    if (type === 'proportional') {
-                                        setModalState('proportional');
-                                    } else if (type === 'custom') {
-                                        setModalState('custom');
+                            top="0"
+                            left="0"
+                            right="0"
+                            zIndex={-1}
+                            animate={containerControls}
+                            ref={modalContainerRef}
+                            rounded="md"
+                            transformOrigin="top"
+                            background="gray.700"
+                        >
+                            <Box transformOrigin="top" width="full" height="full" background="blackAlpha.400">
+                                <Box width="full" height="full" className="bg" />
+                            </Box>
+                        </Box>
+                        <ModalCloseButton />
+                        {modalState !== 'start' ? (
+                            <IconButton
+                                aria-label={'back-button'}
+                                icon={<ChevronLeft />}
+                                variant="ghost"
+                                p="0"
+                                width="32px"
+                                height="32px"
+                                minWidth="32px"
+                                position="absolute"
+                                top="12px"
+                                left="12px"
+                                onClick={() => {
+                                    if (modalState === 'proportional' || modalState === 'custom') {
+                                        setModalState('start');
+                                    } else if (modalState === 'preview') {
+                                        if (type === 'proportional') {
+                                            setModalState('proportional');
+                                        } else if (type === 'custom') {
+                                            setModalState('custom');
+                                        }
                                     }
-                                }
-                            }}
-                        />
-                    ) : null}
-                    <BeetsModalHeader>
-                        {modalState === 'start' ? (
-                            <>
-                                <Heading size="md" noOfLines={1}>
-                                    Invest into {pool.name}
+                                }}
+                            />
+                        ) : null}
+                        <BeetsModalHeader>
+                            {modalState === 'start' ? (
+                                <>
+                                    <Heading size="md" noOfLines={1}>
+                                        Invest into {pool.name}
+                                    </Heading>
+                                    <Text color="gray.200" fontSize="md">
+                                        {formattedTypeName}
+                                    </Text>
+                                </>
+                            ) : null}
+
+                            {modalState === 'proportional' ? (
+                                <Heading size="md" marginLeft="8" textAlign="left">
+                                    Proportional investment
                                 </Heading>
-                                <Text color="gray.200" fontSize="md">
-                                    {formattedTypeName}
-                                </Text>
-                            </>
-                        ) : null}
+                            ) : null}
+                        </BeetsModalHeader>
+                        <BeetsModalBody p="0">
+                            {modalState === 'start' ? (
+                                <motion.div
+                                    style={{ minHeight: '200px' }}
+                                    initial={{ opacity: 0 }}
+                                    animate={{ opacity: 1, transition: { delay: 0.25 } }}
+                                    exit={{ opacity: 0 }}
+                                >
+                                    {selectedRelic && isReliquaryFBeetsPool && (
+                                        <Box px="4">
+                                            <Alert status="warning" mb="4">
+                                                <AlertIcon />
+                                                Investing more funds into your relic will affect your level up progress.
+                                            </Alert>
+                                        </Box>
+                                    )}
+                                    {warnings.poolInvest[pool.id] && (
+                                        <Box px="4">
+                                            <Alert status="warning" mb="4">
+                                                <AlertIcon />
+                                                {warnings.poolInvest[pool.id]}
+                                            </Alert>
+                                        </Box>
+                                    )}
+                                    <PoolInvestTypeChoice
+                                        onShowProportional={() => {
+                                            setInvestType('proportional');
+                                            setModalState('proportional');
+                                        }}
+                                        onShowCustom={() => {
+                                            setInvestType('custom');
+                                            setModalState('custom');
+                                        }}
+                                    />
+                                </motion.div>
+                            ) : null}
 
-                        {modalState === 'proportional' ? (
-                            <Heading size="md" marginLeft="8" textAlign="left">
-                                Proportional investment
-                            </Heading>
-                        ) : null}
-
-                        {modalState === 'custom' ? (
-                            <Heading size="md" marginLeft="8" textAlign="left">
-                                Custom investment
-                            </Heading>
-                        ) : null}
-
-                        {modalState === 'preview' ? (
-                            <Heading size="md" marginLeft="8" textAlign="left">
-                                Investment preview
-                            </Heading>
-                        ) : null}
-                    </BeetsModalHeader>
-                    <BeetsModalBody p="0">
-                        {modalState === 'start' ? (
-                            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-                                {selectedRelic && isReliquaryFBeetsPool && (
-                                    <Box px="4">
-                                        <Alert status="warning" mb="4">
-                                            <AlertIcon />
-                                            Investing more funds into your relic will affect your level up progress.
-                                        </Alert>
-                                    </Box>
-                                )}
-                                {warnings.poolInvest[pool.id] && (
-                                    <Box px="4">
-                                        <Alert status="warning" mb="4">
-                                            <AlertIcon />
-                                            {warnings.poolInvest[pool.id]}
-                                        </Alert>
-                                    </Box>
-                                )}
-                                <PoolInvestTypeChoice
-                                    onShowProportional={() => {
-                                        setInvestType('proportional');
-                                        setModalState('proportional');
-                                    }}
-                                    onShowCustom={() => {
-                                        setInvestType('custom');
-                                        setModalState('custom');
-                                    }}
-                                />
-                            </motion.div>
-                        ) : null}
-
-                        {modalState === 'proportional' ? (
-                            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-                                <PoolInvestProportional
-                                    onShowPreview={() => {
-                                        setInvestType('proportional');
-                                        setModalState('preview');
-                                    }}
-                                />
-                            </motion.div>
-                        ) : null}
-                        {modalState === 'custom' ? (
-                            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-                                <PoolInvestCustom
-                                    onShowPreview={() => {
-                                        setInvestType('custom');
-                                        setModalState('preview');
-                                    }}
-                                />
-                            </motion.div>
-                        ) : null}
-                        {modalState === 'preview' ? (
-                            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-                                <PoolInvestPreview
-                                    onInvestComplete={() => {
-                                        setInvestComplete(true);
-                                    }}
-                                    onClose={onModalClose}
-                                />
-                            </motion.div>
-                        ) : null}
-                    </BeetsModalBody>
-                </BeetsModalContent>
+                            {modalState === 'proportional' ? (
+                                <motion.div
+                                    style={{ minHeight: '620px' }}
+                                    initial={{ opacity: 0 }}
+                                    animate={{ opacity: 1, transition: { delay: 0.25 } }}
+                                    exit={{ opacity: 0 }}
+                                >
+                                    <PoolInvestProportional
+                                        onShowPreview={() => {
+                                            setInvestType('proportional');
+                                            setModalState('preview');
+                                        }}
+                                    />
+                                </motion.div>
+                            ) : null}
+                            {modalState === 'custom' ? (
+                                <motion.div
+                                    initial={{ opacity: 0 }}
+                                    animate={{ opacity: 1, transition: { delay: 0.25 } }}
+                                    exit={{ opacity: 0 }}
+                                >
+                                    <PoolInvestCustom
+                                        onShowPreview={() => {
+                                            setInvestType('custom');
+                                            setModalState('preview');
+                                        }}
+                                    />
+                                </motion.div>
+                            ) : null}
+                            {modalState === 'preview' ? (
+                                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                                    <PoolInvestPreview
+                                        onInvestComplete={() => {
+                                            setInvestComplete(true);
+                                        }}
+                                        onClose={onModalClose}
+                                    />
+                                </motion.div>
+                            ) : null}
+                        </BeetsModalBody>
+                    </BeetsModalContent>
+                </AnimatePresence>
             </Modal>
         </Box>
     );
