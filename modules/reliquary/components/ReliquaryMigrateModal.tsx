@@ -107,10 +107,10 @@ export default function ReliquaryMigrateModal() {
     const isComplete = legacyFbeetsBalance === 0 && parseFloat(legacyBptBalance) === 0;
     return (
         <Box width={{ base: 'full', md: 'fit-content' }}>
-            <Button variant="primary" onClick={onOpen} width={{ base: 'full', md: '140px' }}>
+            <Button variant="primary" onClick={onOpen} width={{ base: 'full', md: 'fit-content' }}>
                 Migrate
             </Button>
-            <Modal isOpen={isOpen} onClose={() => false} size="lg" initialFocusRef={initialRef}>
+            <Modal isOpen={isOpen} onClose={onClose} size="lg" initialFocusRef={initialRef}>
                 <ModalOverlay bg="blackAlpha.900" />
                 <BeetsModalContent width="full">
                     <AnimatePresence>

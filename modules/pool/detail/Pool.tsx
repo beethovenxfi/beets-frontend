@@ -1,4 +1,4 @@
-import { Box, Grid, GridItem, HStack, VStack } from '@chakra-ui/react';
+import { Box, Grid, GridItem, HStack, VStack, Text, Button } from '@chakra-ui/react';
 import PoolHeader from '~/modules/pool/detail/components/PoolHeader';
 import { PoolComposition } from '~/modules/pool/detail/components/composition/PoolComposition';
 import PoolStats from './components/stats/PoolStats';
@@ -7,14 +7,50 @@ import { PoolStakeInFarmWarning } from '~/modules/pool/detail/components/PoolSta
 import { PoolDetailCharts } from '~/modules/pool/detail/components/PoolDetailCharts';
 import { PoolInvestModal } from '~/modules/pool/invest/PoolInvestModal';
 import { PoolWithdrawModal } from '~/modules/pool/withdraw/PoolWithdrawModal';
-import { usePool } from '~/modules/pool/lib/usePool';
+import { PoolProvider, usePool } from '~/modules/pool/lib/usePool';
 import { usePoolUserBptBalance } from '~/modules/pool/lib/usePoolUserBptBalance';
 import { PoolFbeetsWarning } from '~/modules/pool/detail/components/PoolFbeetsWarning';
 import { PoolOvernightWarning } from '~/modules/pool/detail/components/PoolOvernightWarning';
+import { useEffect } from 'react';
+import { ToastType, useToast } from '~/components/toast/BeetsToast';
+import { useLegacyFBeetsBalance } from '~/modules/reliquary/lib/useLegacyFbeetsBalance';
+import ReliquaryMigrateModal from '~/modules/reliquary/components/ReliquaryMigrateModal';
+import { TokensProvider, useGetTokens } from '~/lib/global/useToken';
 
 export function Pool() {
     const { pool, isFbeetsPool } = usePool();
     const { hasBpt } = usePoolUserBptBalance();
+    const { total } = useLegacyFBeetsBalance();
+    const { showToast, removeToast } = useToast();
+    const {} = useGetTokens();
+
+    useEffect(() => {
+        if (total > 0) {
+            showToast({
+                id: 'migrate-fbeets',
+                type: ToastType.Warn,
+                content: (
+                    <HStack>
+                        <Text>You can migrate your legacy fBEETS position to a relic</Text>
+                        <TokensProvider>
+                            <PoolProvider pool={pool}>
+                                <ReliquaryMigrateModal />
+                            </PoolProvider>
+                        </TokensProvider>
+                    </HStack>
+                ),
+            });
+        } else {
+            removeToast('migrate-fbeets');
+        }
+    }, [total]);
+
+    useEffect(() => {
+        if (!isFbeetsPool && !hasBpt) {
+            console.log({ hasBpt, isFbeetsPool });
+            removeToast('migrate-fbeets');
+        }
+    }, [isFbeetsPool, hasBpt]);
 
     return (
         <Box marginBottom="8">
@@ -24,7 +60,7 @@ export function Pool() {
                     <PoolOvernightWarning />
                 )}
                 {pool.staking && !isFbeetsPool && <PoolStakeInFarmWarning />}
-                {isFbeetsPool && hasBpt && <PoolFbeetsWarning />}
+                {isFbeetsPool && hasBpt && total === 0 && <PoolFbeetsWarning />}
                 <HStack width="full" justifyContent="flex-end">
                     <PoolInvestModal />
                     <PoolWithdrawModal />
