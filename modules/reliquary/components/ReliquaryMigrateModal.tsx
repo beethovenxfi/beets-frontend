@@ -172,8 +172,9 @@ export default function ReliquaryMigrateModal() {
                                                 reliquaryZap(reliquaryContractCalls);
                                             }
                                         }}
-                                        isLoading={false}
+                                        isLoading={reliquaryMigrateQuery.isSubmitting || unstakeQuery.isSubmitting}
                                         steps={steps}
+                                        // TODO redirect to relic UI if not already there
                                         onConfirmed={() => false}
                                         queries={[
                                             { ...unstakeQuery, id: 'unstake' },
