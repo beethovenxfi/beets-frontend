@@ -43,9 +43,7 @@ export default function Reliquary(props: Props) {
                                     </Box>
                                 )}
                                 {!isLoadingRelicPositions && selectedRelicId && <Relic />}
-                                <ReliquaryMigrateModal />
-                                {/* {!isLoadingRelicPositions && !selectedRelicId && true && <ReliquaryMigrate />} */}
-                                {!isLoadingRelicPositions && selectedRelicId && !showMigrateUI && (
+                                {!isLoadingRelicPositions && !selectedRelicId && (
                                     <VStack spacing="4">
                                         <VStack spacing="2">
                                             <Heading fontSize="1.75rem">Mint your first relic</Heading>
