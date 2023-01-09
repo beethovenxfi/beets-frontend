@@ -665,6 +665,8 @@ export interface GqlPoolStakingReliquaryFarm {
     beetsPerSecond: Scalars['String'];
     id: Scalars['ID'];
     levels?: Maybe<Array<GqlPoolStakingReliquarFarmLevel>>;
+    totalBalance: Scalars['String'];
+    totalWeightedBalance: Scalars['String'];
 }
 
 export type GqlPoolStakingType = 'FRESH_BEETS' | 'GAUGE' | 'MASTER_CHEF' | 'RELIQUARY';

@@ -635,6 +635,8 @@ type GqlPoolStakingReliquaryFarm {
     beetsPerSecond: String!
     id: ID!
     levels: [GqlPoolStakingReliquarFarmLevel!]
+    totalBalance: String!
+    totalWeightedBalance: String!
 }
 
 enum GqlPoolStakingType {
