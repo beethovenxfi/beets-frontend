@@ -1,19 +1,19 @@
 import { Box, Flex, Heading, HStack, Spinner, Text, VStack } from '@chakra-ui/react';
-import { animate, AnimatePresence, motion, useAnimation, useMotionValue } from 'framer-motion';
-import React, { useState } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
 import { useUserAccount } from '~/lib/user/useUserAccount';
 import ReliquaryConnectWallet from './components/ReliquaryConnectWallet';
 import ReliquaryInvest from './components/ReliquaryInvest';
 import useReliquary from './lib/useReliquary';
 import { Relic } from '~/modules/reliquary/components/Relic';
+import ReliquaryMigrateModal from './components/ReliquaryMigrateModal';
 
 interface Props {}
 
 export default function Reliquary(props: Props) {
-    const { relicPositions, isLoadingRelicPositions, isLoading, selectedRelicId } = useReliquary();
-    const inputAnimation = useAnimation();
+    const { isLoadingRelicPositions, selectedRelicId, legacyFbeetsBalance } = useReliquary();
     const { isConnected } = useUserAccount();
 
+    const showMigrateUI = legacyFbeetsBalance;
     return (
         <Box
             minHeight="800px"
@@ -37,13 +37,15 @@ export default function Reliquary(props: Props) {
                     >
                         <Flex justifyContent="center" alignItems="flex-start" width="full" height="full">
                             <VStack spacing="8" width="full" height="full">
-                                {isLoadingRelicPositions ? (
+                                {isLoadingRelicPositions && (
                                     <Box mt="10">
                                         <Spinner color="beets.highlight" size="xl" />
                                     </Box>
-                                ) : selectedRelicId !== null ? (
-                                    <Relic />
-                                ) : (
+                                )}
+                                {!isLoadingRelicPositions && selectedRelicId && <Relic />}
+                                <ReliquaryMigrateModal />
+                                {/* {!isLoadingRelicPositions && !selectedRelicId && true && <ReliquaryMigrate />} */}
+                                {!isLoadingRelicPositions && selectedRelicId && !showMigrateUI && (
                                     <VStack spacing="4">
                                         <VStack spacing="2">
                                             <Heading fontSize="1.75rem">Mint your first relic</Heading>
