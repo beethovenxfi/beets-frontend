@@ -10,7 +10,7 @@ import Card from '~/components/card/Card';
 
 export default function RelicApr() {
     const { pool } = usePool();
-    const { maturityThresholds, isLoading, selectedRelic, selectedRelicApr } = useReliquary();
+    const { maturityThresholds, isLoading, selectedRelic, selectedRelicLevel, selectedRelicApr } = useReliquary();
     const { isMaxMaturity, entryDate, levelUpDate } = relicGetMaturityProgress(selectedRelic, maturityThresholds);
     const [levelUpCountdown, setLevelUpCountdown] = useState('');
     //TODO: fix this
@@ -47,16 +47,9 @@ export default function RelicApr() {
                     whiteSpace="nowrap"
                 >
                     <Text fontWeight="semibold">Maturity boost</Text>
-                    {isMaxMaturity && (
-                        <Badge bg="none" colorScheme="green" p="1">
-                            MAX LEVEL
-                        </Badge>
-                    )}
-                    {!isMaxMaturity && (
-                        <Badge bg="none" colorScheme="green" p="1">
-                            {levelUpCountdown}
-                        </Badge>
-                    )}
+                    <Badge bg="none" colorScheme="green" p="1">
+                        {selectedRelicLevel?.allocationPoints}x
+                    </Badge>
                 </HStack>
             </VStack>
         </Card>
