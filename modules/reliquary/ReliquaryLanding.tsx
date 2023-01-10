@@ -1,23 +1,7 @@
-import {
-    Button,
-    HStack,
-    ListItem,
-    Text,
-    UnorderedList,
-    VStack,
-    Image,
-    Grid,
-    GridItem,
-    Stack,
-    Badge,
-} from '@chakra-ui/react';
+import { Button, HStack, ListItem, Text, UnorderedList, VStack, Image, Stack } from '@chakra-ui/react';
 import React from 'react';
 import { InfoButton } from '~/components/info-button/InfoButton';
-import Card from '~/components/card/Card';
-import { numberFormatUSDValue } from '~/lib/util/number-formats';
-import TokenAvatar from '~/components/token/TokenAvatar';
-import numeral from 'numeral';
-import AprTooltip from '~/components/apr-tooltip/AprTooltip';
+import { RelicCarousel } from './components/RelicCarousel';
 import ReliquaryMyStats from './components/ReliquaryMyStats';
 
 const buttonWidth = {
@@ -90,6 +74,7 @@ export default function ReliquaryLanding() {
                     </VStack>
                 </Stack>
             </Stack>
+            <RelicCarousel />
             <ReliquaryMyStats />
         </Stack>
     );

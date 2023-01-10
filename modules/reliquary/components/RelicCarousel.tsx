@@ -49,9 +49,7 @@ export function RelicCarousel({ items = [], loading, cardHeight = '500px', ...re
                 }}
                 modules={[Pagination]}
             >
-                <SwiperSlide key="1">
-                    <Image src="https://beethoven-assets.s3.eu-central-1.amazonaws.com/reliquary/9.png" />
-                </SwiperSlide>
+                <SwiperSlide key="1"></SwiperSlide>
                 <SwiperSlide key="2">
                     <Image src="https://beethoven-assets.s3.eu-central-1.amazonaws.com/reliquary/9.png" />
                 </SwiperSlide>
@@ -64,9 +62,7 @@ export function RelicCarousel({ items = [], loading, cardHeight = '500px', ...re
                 <SwiperSlide key="5">
                     <Image src="https://beethoven-assets.s3.eu-central-1.amazonaws.com/reliquary/9.png" />
                 </SwiperSlide>
-                <SwiperSlide key="6">
-                    <Image src="https://beethoven-assets.s3.eu-central-1.amazonaws.com/reliquary/9.png" />
-                </SwiperSlide>
+                <SwiperSlide key="6"></SwiperSlide>
             </Swiper>
         </Box>
     );
