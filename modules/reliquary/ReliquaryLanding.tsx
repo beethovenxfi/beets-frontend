@@ -70,7 +70,6 @@ export default function ReliquaryLanding() {
                 </VStack>
                 <Stack direction={['column', 'row']} spacing="8">
                     {rqImages.map((image, index) => (
-                        // TODO: why is the 'mb' style overwritten for the seconf & third image?
                         <VStack key={index} mb={{ base: 4, lg: undefined }}>
                             <Image src={image.src} alt={image.alt} placeholder="blur" style={{ borderRadius: '8px' }} />
                             <InfoButton labelProps={infoButtonLabelProps} label={image.alt} infoText={image.info} />
