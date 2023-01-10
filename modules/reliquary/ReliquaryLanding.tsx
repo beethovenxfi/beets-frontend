@@ -7,6 +7,7 @@ import Rq1Image from '~/assets/images/rq-1.png';
 import Rq2Image from '~/assets/images/rq-2.png';
 import Rq3Image from '~/assets/images/rq-3.png';
 import Image from 'next/image';
+import { RelicStats } from './components/RelicStats';
 
 const buttonWidth = {
     base: 'full',
@@ -73,14 +74,17 @@ export default function ReliquaryLanding() {
                 </Stack>
             </Stack>
             <VStack py="4" spacing="8">
-                <Heading size="lg">Your relics</Heading>
+                <VStack>
+                    <Heading size="lg">Your relics</Heading>
+                    <Text>Click on a relic to see more detailed information.</Text>
+                </VStack>
                 <Box width="full">
-                    {/* <Heading>Your relics</Heading> */}
                     <RelicCarousel />
                 </Box>
             </VStack>
             <Box py="8">
-                <ReliquaryMyStats />
+                {/* <ReliquaryMyStats /> */}
+                {/* <RelicStats /> */}
             </Box>
         </Stack>
     );

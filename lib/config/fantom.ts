@@ -32,12 +32,14 @@ export const fantomNetworkConfig: NetworkConfig = {
         address: '0xfcef8a994209d6916eb2c86cdd2afd60aa6f54b1',
         farmId: '22',
         poolId: '0xcde5a11a4acb4ee4c805352cec57e236bdbc3837000200000000000000000019',
+        poolAddress: "0xcdE5a11a4ACB4eE4c805352Cec57E236bdBC3837"
     },
     reliquary: {
-        address: '0x1ed6411670c709f4e163854654bd52c74e66d7ec',
+        address: '0xb0fc43069089d0fa02baaa896ac2efcb596d7d05',
         fbeets: {
-            poolId: '0x9e4341acef4147196e99d648c5e43b3fc9d026780002000000000000000005ec',
-            poolAddress: '0x9e4341acef4147196e99d648c5e43b3fc9d02678',
+            //poolId: '0x9e4341acef4147196e99d648c5e43b3fc9d026780002000000000000000005ec',
+            poolId: '0xfb2aeb7df228872de762694e2bc3525cf33b940d0002000000000000000005ce',
+            poolAddress: '0xfb2aeb7df228872de762694e2bc3525cf33b940d',
             farmId: 1,
         },
     },
