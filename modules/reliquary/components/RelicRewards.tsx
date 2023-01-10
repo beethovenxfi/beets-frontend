@@ -12,7 +12,7 @@ import { useRelicHarvestRewards } from '../lib/useRelicHarvestRewards';
 
 export default function RelicRewards() {
     const { priceForAmount } = useGetTokens();
-    const { data: pendingRewards = [], isLoading: isLoadingPendingRewards } = useRelicPendingRewards();
+    const { data: pendingRewards, isLoading: isLoadingPendingRewards } = useRelicPendingRewards();
     const pendingRewardsUsdValue = sumBy(pendingRewards, priceForAmount);
     const { harvest, ...harvestQuery } = useRelicHarvestRewards();
 
@@ -30,7 +30,7 @@ export default function RelicRewards() {
                     </Text>
                 )}
                 <Box>
-                    {pendingRewards.map((reward, index) => (
+                    {pendingRewards?.map((reward, index) => (
                         <HStack key={index} spacing="1" mb={index === pendingRewards.length - 1 ? '0' : '0.5'}>
                             <TokenAvatar h="20px" w="20px" address={reward.address} />
                             <Skeleton isLoaded={!isLoadingPendingRewards}>
