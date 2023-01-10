@@ -74,27 +74,17 @@ export default function ReliquaryLanding() {
                 </Stack>
             </Stack>
             <VStack py="4" spacing="8">
-<<<<<<< Updated upstream
                 <VStack>
                     <Heading size="lg">Your relics</Heading>
                     <Text>Click on a relic to see more detailed information.</Text>
                 </VStack>
                 <Box width="full">
-=======
-                <Heading size="lg">Your relics</Heading>
-                <Box width="full">
-                    {/* <Heading>Your relics</Heading> */}
->>>>>>> Stashed changes
                     <RelicCarousel />
                 </Box>
             </VStack>
             <Box py="8">
-<<<<<<< Updated upstream
                 {/* <ReliquaryMyStats /> */}
                 {/* <RelicStats /> */}
-=======
-                <ReliquaryMyStats />
->>>>>>> Stashed changes
             </Box>
         </Stack>
     );
