@@ -1,4 +1,4 @@
-import { Button, HStack, ListItem, Text, UnorderedList, VStack, Stack } from '@chakra-ui/react';
+import { Button, HStack, ListItem, Text, UnorderedList, VStack, Stack, Heading, Box } from '@chakra-ui/react';
 import React from 'react';
 import { InfoButton } from '~/components/info-button/InfoButton';
 import { RelicCarousel } from './components/RelicCarousel';
@@ -41,19 +41,14 @@ const rqImages = [
 export default function ReliquaryLanding() {
     return (
         <Stack direction="column">
-            <Stack direction={['column', 'row']} alignItems="stretch" mb="16">
-                <VStack alignItems="flex-start" justifyContent="space-between" mr="16" mb={{ base: 8, lg: undefined }}>
+            <Stack bg="blackAlpha.500" px="8" py="14" direction={['column', 'row']} spacing="12">
+                <VStack alignItems="flex-start" justifyContent="space-between">
                     <Text color="beets.green" fontSize="sm">
                         rfBEETS
                     </Text>
-                    <Text
-                        color="white"
-                        as="h2"
-                        textStyle={{ base: undefined, lg: 'h2' }}
-                        fontSize={{ base: 'lg', lg: undefined }}
-                    >
+                    <Heading color="white" fontSize={{ base: 'lg', lg: '2rem' }}>
                         Extraordinary earnings & voting power
-                    </Text>
+                    </Heading>
                     <UnorderedList pl="5">
                         <ListItem>Consectetur adipiscing elit</ListItem>
                         <ListItem>Integer molestie lorem at massa</ListItem>
@@ -77,8 +72,16 @@ export default function ReliquaryLanding() {
                     ))}
                 </Stack>
             </Stack>
-            <RelicCarousel />
-            <ReliquaryMyStats />
+            <VStack py="4" spacing="8">
+                <Heading size="lg">Your relics</Heading>
+                <Box width="full">
+                    {/* <Heading>Your relics</Heading> */}
+                    <RelicCarousel />
+                </Box>
+            </VStack>
+            <Box py="8">
+                <ReliquaryMyStats />
+            </Box>
         </Stack>
     );
 }
