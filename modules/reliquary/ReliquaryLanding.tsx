@@ -42,7 +42,7 @@ export default function ReliquaryLanding() {
     return (
         <Stack direction="column">
             <Stack direction={['column', 'row']} alignItems="stretch" mb="16">
-                <VStack alignItems="flex-start" justifyContent="space-between" mr="16" mb={{ base: 4, lg: undefined }}>
+                <VStack alignItems="flex-start" justifyContent="space-between" mr="16" mb={{ base: 8, lg: undefined }}>
                     <Text color="beets.green" fontSize="sm">
                         rfBEETS
                     </Text>
@@ -70,7 +70,7 @@ export default function ReliquaryLanding() {
                 </VStack>
                 <Stack direction={['column', 'row']} spacing="8">
                     {rqImages.map((image, index) => (
-                        <VStack key={index} mb={{ base: 4, lg: undefined }}>
+                        <VStack key={index}>
                             <Image src={image.src} alt={image.alt} placeholder="blur" style={{ borderRadius: '8px' }} />
                             <InfoButton labelProps={infoButtonLabelProps} label={image.alt} infoText={image.info} />
                         </VStack>
