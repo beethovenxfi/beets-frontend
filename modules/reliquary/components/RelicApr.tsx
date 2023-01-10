@@ -1,32 +1,14 @@
 import { HStack, Text, VStack, Badge } from '@chakra-ui/react';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import numeral from 'numeral';
 import AprTooltip from '~/components/apr-tooltip/AprTooltip';
 import useReliquary from '../lib/useReliquary';
 import { usePool } from '~/modules/pool/lib/usePool';
-import { relicGetMaturityProgress } from '../lib/reliquary-helpers';
-import { formatDistance } from 'date-fns';
 import Card from '~/components/card/Card';
 
 export default function RelicApr() {
     const { pool } = usePool();
-    const { maturityThresholds, isLoading, selectedRelic, selectedRelicLevel, selectedRelicApr } = useReliquary();
-    const { isMaxMaturity, entryDate, levelUpDate } = relicGetMaturityProgress(selectedRelic, maturityThresholds);
-    const [levelUpCountdown, setLevelUpCountdown] = useState('');
-    //TODO: fix this
-
-    useEffect(() => {
-        let interval: NodeJS.Timer;
-        if (!isLoading) {
-            interval = setInterval(() => {
-                setLevelUpCountdown(formatDistance(levelUpDate, entryDate, { includeSeconds: true }));
-            }, 1000);
-        }
-
-        return () => {
-            clearInterval(interval);
-        };
-    }, [isLoading]);
+    const { selectedRelicLevel, selectedRelicApr } = useReliquary();
 
     return (
         <Card px="2" py="4" h="full">
