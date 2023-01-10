@@ -11,13 +11,13 @@ export default function ReliquaryMyStats() {
             <GridItem w="full">
                 <RelicApr />
             </GridItem>
-            <GridItem w="100%">
+            <GridItem w="full">
                 <RelicLiquidity />
             </GridItem>
-            <GridItem w="100%">
+            <GridItem w="full">
                 <RelicRewards />
             </GridItem>
-            <GridItem w="100%">
+            <GridItem w="full">
                 <RelicMaturity />
             </GridItem>
         </Grid>
