@@ -60,10 +60,10 @@ export default function ReliquaryLanding() {
                         <ListItem>Facilisis in pretium nisl aliquet</ListItem>
                     </UnorderedList>
                     <HStack>
-                        <Button variant="primary" width={buttonWidth}>
+                        <Button variant="primary" w={buttonWidth}>
                             Get rfBEETS
                         </Button>
-                        <Button variant="secondary" width={buttonWidth}>
+                        <Button variant="secondary" w={buttonWidth}>
                             Learn more
                         </Button>
                     </HStack>

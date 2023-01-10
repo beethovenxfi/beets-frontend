@@ -5,6 +5,7 @@ import ReactECharts from 'echarts-for-react';
 import { EChartsOption, graphic } from 'echarts';
 import { format, fromUnixTime } from 'date-fns';
 import useReliquary from '../lib/useReliquary';
+import { InfoButton } from '~/components/info-button/InfoButton';
 
 interface Props {}
 
@@ -90,16 +91,23 @@ export default function RelicMaturity({}: Props) {
         };
     }, [isLoading]);
     return (
-        <Card p="4" width="full">
+        <Card px="2" py="4" h="full">
             <VStack spacing="2">
-                <HStack width="full" spacing="12" alignItems="flex-start">
+                <HStack w="full" spacing="12" alignItems="flex-start">
                     <VStack spacing="0" alignItems="flex-start">
-                        <Text lineHeight="1rem" fontWeight="semibold" fontSize="sm" color="beets.base.50">
-                            Projected Maturity
-                        </Text>
+                        <InfoButton
+                            labelProps={{
+                                lineHeight: '1rem',
+                                fontWeight: 'semibold',
+                                fontSize: 'sm',
+                                color: 'beets.base.50',
+                            }}
+                            label="Projected maturity"
+                            infoText="Lorem ipsum dolor sit amet, Lorem ipsum dolor sit amet"
+                        />
                     </VStack>
                 </HStack>
-                <Box width="full" height="200px">
+                <Box w="full" h="150px">
                     <ReactECharts showLoading={isLoading} option={chartOption} style={{ height: '100%' }} />
                 </Box>
             </VStack>
