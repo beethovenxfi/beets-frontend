@@ -46,7 +46,7 @@ export function RelicStats() {
     return (
         <>
             <VStack spacing="4">
-                <HStack width="full" alignItems="flex-start" height="375px">
+                <HStack width="full" alignItems="flex-start" height="400px">
                     <Card display="flex" p="4" width="full" height="full" justifyContent="space-between">
                         <VStack width="full" spacing="8" justifyContent="flex-start">
                             <VStack width="full" spacing="0" alignItems="flex-start">

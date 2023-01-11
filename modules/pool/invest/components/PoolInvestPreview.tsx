@@ -1,16 +1,11 @@
-import { Alert, AlertIcon, Box, HStack, StackDivider, Text, VStack } from '@chakra-ui/react';
-import TokenAvatar from '~/components/token/TokenAvatar';
-import { tokenFormatAmount, tokenFormatAmountPrecise } from '~/lib/services/token/token-util';
-import { numberFormatUSDValue } from '~/lib/util/number-formats';
+import { Alert, AlertIcon, Box, StackDivider, VStack } from '@chakra-ui/react';
 import { BeetsBox } from '~/components/box/BeetsBox';
 import { useGetTokens } from '~/lib/global/useToken';
 import { useInvest } from '~/modules/pool/invest/lib/useInvest';
 import { PoolInvestSummary } from '~/modules/pool/invest/components/PoolInvestSummary';
 import { PoolInvestActions } from '~/modules/pool/invest/components/PoolInvestActions';
-import { CardRow } from '~/components/card/CardRow';
 import TokenRow from '~/components/token/TokenRow';
 import React from 'react';
-import { useReliquaryDepositImpact } from '~/modules/reliquary/lib/useReliquaryDepositImpact';
 import useReliquary from '~/modules/reliquary/lib/useReliquary';
 import { usePool } from '../../lib/usePool';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
@@ -18,9 +13,10 @@ import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 interface Props {
     onInvestComplete(): void;
     onClose(): void;
+    isReliquaryDeposit?: boolean;
 }
 
-export function PoolInvestPreview({ onInvestComplete, onClose }: Props) {
+export function PoolInvestPreview({ onInvestComplete, onClose, isReliquaryDeposit }: Props) {
     const { priceForAmount } = useGetTokens();
     const { selectedInvestTokensWithAmounts } = useInvest();
     const networkConfig = useNetworkConfig();

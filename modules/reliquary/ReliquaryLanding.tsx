@@ -2,12 +2,13 @@ import { Button, HStack, ListItem, Text, UnorderedList, VStack, Stack, Heading, 
 import React from 'react';
 import { InfoButton } from '~/components/info-button/InfoButton';
 import { RelicCarousel } from './components/RelicCarousel';
-import ReliquaryMyStats from './components/ReliquaryMyStats';
 import Rq1Image from '~/assets/images/rq-1.png';
 import Rq2Image from '~/assets/images/rq-2.png';
 import Rq3Image from '~/assets/images/rq-3.png';
 import Image from 'next/image';
 import { RelicStats } from './components/RelicStats';
+import useReliquary from './lib/useReliquary';
+import { PoolInvestModal } from '../pool/invest/PoolInvestModal';
 
 const buttonWidth = {
     base: 'full',
@@ -40,6 +41,7 @@ const rqImages = [
 ];
 
 export default function ReliquaryLanding() {
+    const { relicPositions, selectedRelicId } = useReliquary();
     return (
         <Stack direction="column">
             <Stack bg="blackAlpha.500" px="8" py="20" direction={['column', 'row']} spacing="12">
@@ -73,19 +75,26 @@ export default function ReliquaryLanding() {
                     ))}
                 </Stack>
             </Stack>
-            <VStack py="4" spacing="8">
+            <VStack py="4" spacing="8" shadow="lg">
                 <VStack>
                     <Heading size="lg">Your relics</Heading>
-                    <Text>Click on a relic to see more detailed information.</Text>
+                    {relicPositions.length > 0 && <Text>Click on a relic to see more detailed information.</Text>}
+                    {relicPositions.length === 0 && (
+                        <VStack spacing="4">
+                            <Text>Looks like you don't have a relic yet. Let's get started by creating one.</Text>
+                            <PoolInvestModal activatorLabel="Create Relic" />
+                        </VStack>
+                    )}
                 </VStack>
                 <Box width="full">
                     <RelicCarousel />
                 </Box>
             </VStack>
-            <Box py="8">
-                {/* <ReliquaryMyStats /> */}
-                <RelicStats />
-            </Box>
+            {selectedRelicId && (
+                <Box py="8">
+                    <RelicStats />
+                </Box>
+            )}
         </Stack>
     );
 }

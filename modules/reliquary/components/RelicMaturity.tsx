@@ -92,9 +92,9 @@ export default function RelicMaturity({}: Props) {
     }, [isLoading]);
     return (
         <Card px="2" py="4" h="full" width="50%">
-            <VStack spacing="2">
-                <HStack px="2" w="full" spacing="12" alignItems="flex-start">
-                    <VStack spacing="0" alignItems="flex-start">
+            <VStack spacing="2" height="full">
+                <HStack height="fit-content" px="2" w="full" spacing="12" alignItems="flex-start">
+                    <VStack spacing="0" alignItems="flex-start" height="fit-content">
                         <InfoButton
                             labelProps={{
                                 lineHeight: '1rem',
@@ -107,7 +107,7 @@ export default function RelicMaturity({}: Props) {
                         />
                     </VStack>
                 </HStack>
-                <Box px="2" w="full" h="150px">
+                <Box px="2" w="full" h="full">
                     <ReactECharts showLoading={isLoading} option={chartOption} style={{ height: '100%' }} />
                 </Box>
             </VStack>

@@ -13,19 +13,19 @@ import {
 import { PoolInvestProportional } from '~/modules/pool/invest/components/PoolInvestProportional';
 import { ChevronLeft } from 'react-feather';
 import { PoolInvestPreview } from '~/modules/pool/invest/components/PoolInvestPreview';
-import React, { ReactNode, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import React, { ReactNode, useLayoutEffect, useRef, useState } from 'react';
 import { PoolInvestTypeChoice } from '~/modules/pool/invest/components/PoolInvestTypeChoice';
 import { PoolInvestCustom } from '~/modules/pool/invest/components/PoolInvestCustom';
 import { animate, AnimatePresence, motion, useAnimation } from 'framer-motion';
-import { useInvestState } from '~/modules/pool/invest/lib/useInvestState';
 import { usePool } from '~/modules/pool/lib/usePool';
 import { BeetsModalBody, BeetsModalContent, BeetsModalHeader } from '~/components/modal/BeetsModal';
-import { usePoolUserTokenBalancesInWallet } from '~/modules/pool/lib/usePoolUserTokenBalancesInWallet';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 import useReliquary from '~/modules/reliquary/lib/useReliquary';
 
 interface Props {
     activator?: ReactNode;
+    isReliquaryDeposit?: boolean;
+    activatorLabel?: string;
 }
 
 function getInvertedTransform(startBounds: DOMRect, endBounds: DOMRect) {
@@ -37,7 +37,7 @@ function getInvertedTransform(startBounds: DOMRect, endBounds: DOMRect) {
     };
 }
 
-export function PoolInvestModal({ activator }: Props) {
+export function PoolInvestModal({ isReliquaryDeposit = false, activatorLabel }: Props) {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const { pool, formattedTypeName } = usePool();
     const [modalState, setModalState] = useState<'start' | 'proportional' | 'custom' | 'preview'>('start');
@@ -106,7 +106,7 @@ export function PoolInvestModal({ activator }: Props) {
     return (
         <Box width={{ base: 'full', md: 'fit-content' }}>
             <Button variant="primary" onClick={onOpen} width={{ base: 'full', md: '140px' }}>
-                Invest
+                {activatorLabel || 'Invest'}
             </Button>
             <Modal motionPreset="none" isOpen={isOpen} onClose={onModalClose} size="lg" initialFocusRef={initialRef}>
                 <ModalOverlay bg="blackAlpha.900" />
@@ -244,6 +244,7 @@ export function PoolInvestModal({ activator }: Props) {
                             {modalState === 'preview' ? (
                                 <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
                                     <PoolInvestPreview
+                                        isReliquaryDeposit={isReliquaryDeposit}
                                         onInvestComplete={() => {
                                             setInvestComplete(true);
                                         }}
