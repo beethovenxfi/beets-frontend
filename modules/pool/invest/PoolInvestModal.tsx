@@ -26,6 +26,7 @@ import useReliquary from '~/modules/reliquary/lib/useReliquary';
 
 interface Props {
     activator?: ReactNode;
+    createRelic?: boolean;
 }
 
 function getInvertedTransform(startBounds: DOMRect, endBounds: DOMRect) {
@@ -37,7 +38,7 @@ function getInvertedTransform(startBounds: DOMRect, endBounds: DOMRect) {
     };
 }
 
-export function PoolInvestModal({ activator }: Props) {
+export function PoolInvestModal({ activator, createRelic = false }: Props) {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const { pool, formattedTypeName } = usePool();
     const [modalState, setModalState] = useState<'start' | 'proportional' | 'custom' | 'preview'>('start');
@@ -45,16 +46,25 @@ export function PoolInvestModal({ activator }: Props) {
     const initialRef = useRef(null);
     const [investComplete, setInvestComplete] = useState(false);
     const { warnings, reliquary } = useNetworkConfig();
-    const { selectedRelic } = useReliquary();
+    const { selectedRelic, setCreateRelic } = useReliquary();
     const isReliquaryFBeetsPool = pool.id === reliquary.fbeets.poolId;
     const containerControls = useAnimation();
     const modalContainerRef = useRef<HTMLDivElement | null>(null);
     const lastModalBounds = useRef<DOMRect | null>(null);
 
+    function onModalOpen() {
+        if (createRelic) {
+            console.log('c', createRelic);
+            setCreateRelic(true);
+        }
+        onOpen();
+    }
+
     function onModalClose() {
         if (investComplete) {
             setModalState('start');
             setInvestType(null);
+            setCreateRelic(false);
         }
         onClose();
     }
@@ -104,9 +114,13 @@ export function PoolInvestModal({ activator }: Props) {
     }, [modalState]);
 
     return (
-        <Box width={{ base: 'full', md: 'fit-content' }}>
-            <Button variant="primary" onClick={onOpen} width={{ base: 'full', md: '140px' }}>
-                Invest
+        <Box width={isReliquaryFBeetsPool ? 'full' : { base: 'full', md: 'fit-content' }}>
+            <Button
+                variant="primary"
+                onClick={onModalOpen}
+                width={isReliquaryFBeetsPool ? 'full' : { base: 'full', md: '140px' }}
+            >
+                {isReliquaryFBeetsPool && createRelic ? 'Get fBEETS' : 'Invest'}
             </Button>
             <Modal motionPreset="none" isOpen={isOpen} onClose={onModalClose} size="lg" initialFocusRef={initialRef}>
                 <ModalOverlay bg="blackAlpha.900" />
@@ -183,7 +197,7 @@ export function PoolInvestModal({ activator }: Props) {
                                     animate={{ opacity: 1, transition: { delay: 0.25 } }}
                                     exit={{ opacity: 0 }}
                                 >
-                                    {selectedRelic && isReliquaryFBeetsPool && (
+                                    {!createRelic && selectedRelic && isReliquaryFBeetsPool && (
                                         <Box px="4">
                                             <Alert status="warning" mb="4">
                                                 <AlertIcon />

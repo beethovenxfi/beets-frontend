@@ -7,11 +7,10 @@ import Rq1Image from '~/assets/images/rq-1.png';
 import Rq2Image from '~/assets/images/rq-2.png';
 import Rq3Image from '~/assets/images/rq-3.png';
 import Image from 'next/image';
+import { PoolInvestModal } from '../pool/invest/PoolInvestModal';
 
-const buttonWidth = {
-    base: 'full',
-    md: '140px',
-};
+//temp
+import useReliquary from './lib/useReliquary';
 
 const infoButtonLabelProps = {
     lineHeight: '1rem',
@@ -39,6 +38,9 @@ const rqImages = [
 ];
 
 export default function ReliquaryLanding() {
+    //temp
+    const { relicPositions, setSelectedRelicId } = useReliquary();
+
     return (
         <Stack direction="column">
             <Stack bg="blackAlpha.500" px="8" py="14" direction={['column', 'row']} spacing="12">
@@ -54,11 +56,9 @@ export default function ReliquaryLanding() {
                         <ListItem>Integer molestie lorem at massa</ListItem>
                         <ListItem>Facilisis in pretium nisl aliquet</ListItem>
                     </UnorderedList>
-                    <HStack>
-                        <Button variant="primary" w={buttonWidth}>
-                            Get rfBEETS
-                        </Button>
-                        <Button variant="secondary" w={buttonWidth}>
+                    <HStack w="90%">
+                        <PoolInvestModal createRelic />
+                        <Button variant="secondary" w="full">
                             Learn more
                         </Button>
                     </HStack>
@@ -82,6 +82,14 @@ export default function ReliquaryLanding() {
             <Box py="8">
                 <ReliquaryMyStats />
             </Box>
+            {/* temp */}
+            <HStack>
+                {relicPositions.map((position, index) => (
+                    <Text key={index} onClick={() => setSelectedRelicId(position.relicId)}>
+                        {position.relicId}
+                    </Text>
+                ))}
+            </HStack>
         </Stack>
     );
 }
