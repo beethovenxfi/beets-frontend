@@ -91,15 +91,15 @@ export default function RelicMaturity({}: Props) {
         };
     }, [isLoading]);
     return (
-        <Card px="2" py="4" h="full">
+        <Card px="2" py="4" h="full" width="50%">
             <VStack spacing="2">
-                <HStack w="full" spacing="12" alignItems="flex-start">
+                <HStack px="2" w="full" spacing="12" alignItems="flex-start">
                     <VStack spacing="0" alignItems="flex-start">
                         <InfoButton
                             labelProps={{
                                 lineHeight: '1rem',
                                 fontWeight: 'semibold',
-                                fontSize: 'sm',
+                                fontSize: 'md',
                                 color: 'beets.base.50',
                             }}
                             label="Projected maturity"
@@ -107,7 +107,7 @@ export default function RelicMaturity({}: Props) {
                         />
                     </VStack>
                 </HStack>
-                <Box w="full" h="150px">
+                <Box px="2" w="full" h="150px">
                     <ReactECharts showLoading={isLoading} option={chartOption} style={{ height: '100%' }} />
                 </Box>
             </VStack>

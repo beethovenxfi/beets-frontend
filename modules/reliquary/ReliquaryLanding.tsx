@@ -42,7 +42,7 @@ const rqImages = [
 export default function ReliquaryLanding() {
     return (
         <Stack direction="column">
-            <Stack bg="blackAlpha.500" px="8" py="14" direction={['column', 'row']} spacing="12">
+            <Stack bg="blackAlpha.500" px="8" py="20" direction={['column', 'row']} spacing="12">
                 <VStack alignItems="flex-start" justifyContent="space-between">
                     <Text color="beets.green" fontSize="sm">
                         rfBEETS
@@ -84,7 +84,7 @@ export default function ReliquaryLanding() {
             </VStack>
             <Box py="8">
                 {/* <ReliquaryMyStats /> */}
-                {/* <RelicStats /> */}
+                <RelicStats />
             </Box>
         </Stack>
     );
