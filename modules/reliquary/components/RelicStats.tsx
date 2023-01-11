@@ -34,7 +34,11 @@ export function RelicStats() {
         useReliquary();
     const config = useNetworkConfig();
     const { priceForAmount } = useGetTokens();
-    const { data: pendingRewards = [], isLoading: isLoadingPendingRewards } = useRelicPendingRewards();
+    const {
+        data: pendingRewards = [],
+        refetch: refetchPendingRewards,
+        isLoading: isLoadingPendingRewards,
+    } = useRelicPendingRewards();
     const pendingRewardsUsdValue = sumBy(pendingRewards, priceForAmount);
     const { harvest, ...harvestQuery } = useRelicHarvestRewards();
     const { data: globalStats, loading: isLoadingGlobalStats } = useReliquaryGlobalStats();
@@ -118,6 +122,9 @@ export function RelicStats() {
                             variant="primary"
                             {...harvestQuery}
                             onClick={harvest}
+                            onConfirmed={() => {
+                                refetchPendingRewards();
+                            }}
                         >
                             Claim now
                         </BeetsSubmitTransactionButton>
@@ -229,7 +236,7 @@ export function RelicStats() {
                         </VStack>
                     </Card>
                 </HStack>
-                <HStack width='full' alignItems="flex-start" height='300px'>
+                <HStack width="full" alignItems="flex-start" height="300px">
                     <RelicAchievements />
                     <RelicMaturity />
                 </HStack>
