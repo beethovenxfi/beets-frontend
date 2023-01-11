@@ -182,7 +182,7 @@ export class ReliquaryService {
         const reliquary = new Contract(this.reliquaryContractAddress, ReliquaryAbi, provider);
         const poolLevelInfo = await reliquary.getLevelInfo(pid);
 
-        const maturityThresholds = poolLevelInfo.requiredMaturity.map((maturity: BigNumber) => maturity.toString());
+        const maturityThresholds = poolLevelInfo.requiredMaturities.map((maturity: BigNumber) => maturity.toString());
         return maturityThresholds;
     }
 

@@ -1,13 +1,20 @@
-import { Button, HStack, Spacer, Text, VStack } from '@chakra-ui/react';
+import { Box, Button, HStack, Spacer, Text, VStack } from '@chakra-ui/react';
 import React from 'react';
-import numeral from 'numeral';
 import Card from '~/components/card/Card';
-import TokenAvatar from '~/components/token/TokenAvatar';
 import { numberFormatUSDValue } from '~/lib/util/number-formats';
 import { useRelicDepositBalance } from '../lib/useRelicDepositBalance';
+import TokenAvatar from '~/components/token/TokenAvatar';
+import { useGetTokens } from '~/lib/global/useToken';
+import { tokenFormatAmount } from '~/lib/services/token/token-util';
 
 export default function RelicLiquidity() {
     const { data: relicTokenBalances, relicBalanceUSD } = useRelicDepositBalance();
+    const { getToken } = useGetTokens();
+
+    const relicTokenBalancesWithSymbol = relicTokenBalances?.map((token) => ({
+        ...token,
+        symbol: getToken(token.address)?.symbol,
+    }));
 
     return (
         <Card px="2" py="4" h="full">
@@ -18,17 +25,21 @@ export default function RelicLiquidity() {
                 <Text color="white" fontSize="1.75rem">
                     {numberFormatUSDValue(relicBalanceUSD)}
                 </Text>
-                <HStack spacing="1" mb="0.5" key="1">
-                    <TokenAvatar h="20px" w="20px" address="0xf24bcf4d1e507740041c9cfd2dddb29585adce1e" />
-                    <Text fontSize="1rem" lineHeight="1rem">
-                        {numeral(242123).format('0,0')} BEETS
-                    </Text>
-                </HStack>
-                <HStack spacing="1" mb="0.5" key="1">
-                    <TokenAvatar h="20px" w="20px" address="0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE" />
-                    <Text fontSize="1rem" lineHeight="1rem">
-                        {numeral(42123).format('0,0')} FTM
-                    </Text>
+                <HStack>
+                    {relicTokenBalancesWithSymbol?.map((token, index) => (
+                        <Box key={index}>
+                            <HStack spacing="1" mb="0.5">
+                                <TokenAvatar h="20px" w="20px" address={token.address} />
+                                <Text fontSize="1rem" lineHeight="1rem">
+                                    {tokenFormatAmount(token.amount)}
+                                </Text>
+                                <Text fontSize="1rem" lineHeight="1rem">
+                                    {token.symbol}
+                                </Text>
+                                {index === 0 ? <Text>&nbsp;/</Text> : undefined}
+                            </HStack>
+                        </Box>
+                    ))}
                 </HStack>
                 <Spacer />
                 <HStack w="full">
