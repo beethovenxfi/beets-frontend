@@ -9,6 +9,9 @@ import { SubmitTransactionQuery } from '~/lib/util/useSubmitTransaction';
 import { transactionMessageFromError } from '~/lib/util/transaction-util';
 import { BeetsBatchRelayerApprovalButton } from './BeetsBatchRelayerApprovalButton';
 import { useHasBatchRelayerApproval } from '~/lib/util/useHasBatchRelayerApproval';
+import { useBatchRelayerHasRelicApproval } from '~/modules/reliquary/lib/useBatchRelayerHasRelicApproval';
+import useReliquary from '~/modules/reliquary/lib/useReliquary';
+import { ReliquaryBatchRelayerApprovalButton } from '~/modules/reliquary/components/ReliquaryBatchRelayerApprovalButton';
 
 export type TransactionStep = TransactionTokenApprovalStep | TransactionOtherStep;
 
@@ -60,6 +63,12 @@ export function BeetsTransactionStepsSubmit({
     const currentQuery = queries.find((query) => query.id === currentStep?.id);
     const [complete, setComplete] = useState(false);
     const { refetch: refetchBatchRelayerApproval, data: hasBatchRelayerApproval } = useHasBatchRelayerApproval();
+
+    // reliquary
+    const { selectedRelicId } = useReliquary();
+    const { refetch: refetchBatchRelayerHasRelicApproval } = useBatchRelayerHasRelicApproval(
+        parseInt(selectedRelicId || ''),
+    );
 
     function setStepStatus(id: string, status: StepStatus) {
         setStepStatuses({ ...stepStatuses, [id]: status });
@@ -121,6 +130,15 @@ export function BeetsTransactionStepsSubmit({
                 <BeetsBatchRelayerApprovalButton
                     onConfirmed={() => {
                         refetchBatchRelayerApproval();
+                        internalOnConfirmed();
+                    }}
+                />
+            ) : null}
+            {/* reliquary */}
+            {steps && currentStep && currentStep.id === 'batch-relayer-relic' && !complete ? (
+                <ReliquaryBatchRelayerApprovalButton
+                    onConfirmed={() => {
+                        refetchBatchRelayerHasRelicApproval();
                         internalOnConfirmed();
                     }}
                 />

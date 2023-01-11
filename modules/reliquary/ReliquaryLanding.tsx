@@ -10,11 +10,6 @@ import { RelicStats } from './components/RelicStats';
 import useReliquary from './lib/useReliquary';
 import { PoolInvestModal } from '../pool/invest/PoolInvestModal';
 
-const buttonWidth = {
-    base: 'full',
-    md: '140px',
-};
-
 const infoButtonLabelProps = {
     lineHeight: '1rem',
     fontWeight: 'semibold',
@@ -42,6 +37,7 @@ const rqImages = [
 
 export default function ReliquaryLanding() {
     const { relicPositions, selectedRelicId } = useReliquary();
+
     return (
         <Stack direction="column">
             <Stack bg="blackAlpha.500" px="8" py="20" direction={['column', 'row']} spacing="12">
@@ -57,11 +53,9 @@ export default function ReliquaryLanding() {
                         <ListItem>Integer molestie lorem at massa</ListItem>
                         <ListItem>Facilisis in pretium nisl aliquet</ListItem>
                     </UnorderedList>
-                    <HStack>
-                        <Button variant="primary" w={buttonWidth}>
-                            Get rfBEETS
-                        </Button>
-                        <Button variant="secondary" w={buttonWidth}>
+                    <HStack w="90%">
+                        <PoolInvestModal createRelic />
+                        <Button variant="secondary" w="full">
                             Learn more
                         </Button>
                     </HStack>
@@ -95,6 +89,13 @@ export default function ReliquaryLanding() {
                     <RelicStats />
                 </Box>
             )}
+            {/* <HStack>
+                {relicPositions.map((position, index) => (
+                    <Text key={index} onClick={() => setSelectedRelicId(position.relicId)}>
+                        {position.relicId}
+                    </Text>
+                ))}
+            </HStack> */}
         </Stack>
     );
 }

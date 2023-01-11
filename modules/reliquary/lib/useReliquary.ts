@@ -7,7 +7,8 @@ import { makeVar, useReactiveVar } from '@apollo/client';
 import { usePool } from '~/modules/pool/lib/usePool';
 import { sumBy } from 'lodash';
 
-const selectedRelicId = makeVar<string | null>(null);
+const selectedRelicId = makeVar<string | undefined>(undefined);
+const createRelic = makeVar<boolean>(false);
 
 export default function useReliquary() {
     const { userAddress } = useUserAccount();
@@ -20,7 +21,7 @@ export default function useReliquary() {
         async () => {
             const positions = await reliquaryService.getAllPositions({ userAddress: userAddress || '', provider });
 
-            if (positions.length > 0 && selectedRelicId() === null) {
+            if (positions.length > 0 && selectedRelicId() === undefined) {
                 selectedRelicId(positions[0].relicId);
             }
 
@@ -52,6 +53,14 @@ export default function useReliquary() {
     const selectedRelicLevel = reliquaryLevels.find((level) => level.level === selectedRelic?.level);
     const weightedTotalBalance = sumBy(reliquaryLevels, (level) => parseFloat(level.balance) * level.allocationPoints);
 
+    function setCreateRelic(value: boolean) {
+        createRelic(value);
+    }
+
+    function setSelectedRelicId(value: string) {
+        selectedRelicId(value);
+    }
+
     return {
         relicPositions,
         isLoadingRelicPositions,
@@ -65,5 +74,9 @@ export default function useReliquary() {
         beetsPerDay: parseFloat(beetsPerSecond) * 86400,
         selectedRelicLevel,
         weightedTotalBalance,
+        createRelic: useReactiveVar(createRelic),
+
+        setCreateRelic,
+        setSelectedRelicId,
     };
 }

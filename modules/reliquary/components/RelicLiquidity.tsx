@@ -6,6 +6,7 @@ import { useRelicDepositBalance } from '../lib/useRelicDepositBalance';
 import TokenAvatar from '~/components/token/TokenAvatar';
 import { useGetTokens } from '~/lib/global/useToken';
 import { tokenFormatAmount } from '~/lib/services/token/token-util';
+import { PoolInvestModal } from '~/modules/pool/invest/PoolInvestModal';
 
 export default function RelicLiquidity() {
     const { data: relicTokenBalances, relicBalanceUSD } = useRelicDepositBalance();
@@ -43,9 +44,7 @@ export default function RelicLiquidity() {
                 </HStack>
                 <Spacer />
                 <HStack w="full">
-                    <Button w="full" variant="primary">
-                        Invest
-                    </Button>
+                    <PoolInvestModal createRelic={false} />
                     <Button w="full" variant="secondary">
                         Withdraw
                     </Button>
