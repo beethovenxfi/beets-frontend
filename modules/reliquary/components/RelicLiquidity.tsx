@@ -1,4 +1,4 @@
-import { Button, HStack, Spacer, Text, VStack } from '@chakra-ui/react';
+import { Box, Button, HStack, Spacer, Text, VStack } from '@chakra-ui/react';
 import React from 'react';
 import Card from '~/components/card/Card';
 import { numberFormatUSDValue } from '~/lib/util/number-formats';
@@ -27,8 +27,8 @@ export default function RelicLiquidity() {
                 </Text>
                 <HStack>
                     {relicTokenBalancesWithSymbol?.map((token, index) => (
-                        <>
-                            <HStack spacing="1" mb="0.5" key={index}>
+                        <Box key={index}>
+                            <HStack spacing="1" mb="0.5">
                                 <TokenAvatar h="20px" w="20px" address={token.address} />
                                 <Text fontSize="1rem" lineHeight="1rem">
                                     {tokenFormatAmount(token.amount)}
@@ -36,9 +36,9 @@ export default function RelicLiquidity() {
                                 <Text fontSize="1rem" lineHeight="1rem">
                                     {token.symbol}
                                 </Text>
+                                {index === 0 ? <Text>&nbsp;/</Text> : undefined}
                             </HStack>
-                            {index === 0 ? <Text>/</Text> : undefined}
-                        </>
+                        </Box>
                     ))}
                 </HStack>
                 <Spacer />
