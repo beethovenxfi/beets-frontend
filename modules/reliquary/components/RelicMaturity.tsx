@@ -89,7 +89,7 @@ export default function RelicMaturity({}: Props) {
                 },
             ],
         };
-    }, [isLoading]);
+    }, [isLoading, selectedRelic]);
     return (
         <Card px="2" py="4" h="full">
             <VStack spacing="2">
