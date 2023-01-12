@@ -1,119 +1,199 @@
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { ReactNode, useState } from 'react';
+import { Swiper, SwiperSlide, useSwiper, useSwiperSlide } from 'swiper/react';
+import { ReactNode, useEffect, useState } from 'react';
 import { Pagination } from 'swiper';
-import { Badge, Box, BoxProps, Heading, HStack, Image, Skeleton, VStack, Text } from '@chakra-ui/react';
+import { Badge, Box, BoxProps, Heading, HStack, Image, Skeleton, VStack, Text, Flex } from '@chakra-ui/react';
 import useReliquary from '../lib/useReliquary';
-import { AnimateSharedLayout, motion } from 'framer-motion';
-import { RelicStats } from './RelicStats';
+import { AnimatePresence, motion } from 'framer-motion';
+import { ReliquaryFarmPosition, reliquaryService } from '~/lib/services/staking/reliquary.service';
+import AnimatedProgress from '~/components/animated-progress/AnimatedProgress';
+import { relicGetMaturityProgress } from '../lib/reliquary-helpers';
+import Countdown from 'react-countdown';
+import RelicLevelUpButton from './RelicLevelUpButton';
+import { useQuery } from 'react-query';
+import { getProvider } from '@wagmi/core';
+import { PoolInvestModal } from '~/modules/pool/invest/PoolInvestModal';
+import { PoolWithdrawModal } from '~/modules/pool/withdraw/PoolWithdrawModal';
 
 interface Props extends BoxProps {
-    items: ReactNode[];
     loading?: boolean;
-    cardHeight?: string;
 }
 
-function SelectedRelic({ relicId }: any) {
+interface RelicSlideProps {
+    relic: ReliquaryFarmPosition;
+    isNext: boolean;
+    isActive: boolean;
+}
+
+function RelicSlide({ relic, isNext, isActive }: RelicSlideProps) {
+    const swiper = useSwiper();
+    const { maturityThresholds, selectedRelic, selectedRelicId, isLoadingRelicPositions, setSelectedRelicId } =
+        useReliquary();
+    const { progressToNextLevel, levelUpDate, canUpgrade, canUpgradeTo } = relicGetMaturityProgress(
+        selectedRelic,
+        maturityThresholds,
+    );
+
+    const { data: nftURI = '' } = useQuery(['relicNFT', { selectedRelicId, isLoadingRelicPositions }], async () => {
+        if (selectedRelicId) {
+            return await reliquaryService.getRelicNFT({ tokenId: selectedRelicId, provider: getProvider() });
+        }
+    });
+
+    useEffect(() => {
+        setSelectedRelicId(relic.relicId);
+    }, [isActive]);
+
+    const handleClick = (isNext: boolean) => {
+        if (isActive) return;
+        if (isNext) {
+            swiper.slideNext();
+        } else {
+            swiper.slidePrev();
+        }
+    };
+
     return (
-        <Box
-            position="absolute"
-            height="full"
-            top="0"
-            left="0"
-            right="0"
-            bg="gray.600"
-            zIndex={2}
-            width="75%"
-            mx="auto"
-            rounded="md"
-            as={motion.div}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-        >
-            <HStack>
-                <HStack layoutId={`image-${relicId}`} as={motion.div} width="50%" height="100%">
-                    <Image src="https://beethoven-assets.s3.eu-central-1.amazonaws.com/reliquary/9.png" />
-                </HStack>
-                <Box width="50%" overflow="scroll" height="400px">
-                    <RelicStats />
-                </Box>
-            </HStack>
-        </Box>
+        <AnimatePresence>
+            <VStack
+                onClick={() => handleClick(isNext)}
+                as={motion.div}
+                animate={{
+                    opacity: isActive ? 1 : 0.35,
+                    transform: isActive ? 'scale(1)' : 'scale(0.5)',
+                    transition: { type: 'spring', mass: 0.1 },
+                }}
+                rounded="lg"
+                spacing="8"
+            >
+                <Flex position="relative" className={isActive ? 'relic-glow' : ''} as={motion.div}>
+                    {canUpgrade && isActive && (
+                        <Flex
+                            animate={{ opacity: 1, transition: { delay: 0.1 } }}
+                            initial={{ opacity: 0 }}
+                            exit={{ opacity: 0 }}
+                            alignItems="center"
+                            justifyContent="center"
+                            rounded="lg"
+                            width="full"
+                            height="full"
+                            position="absolute"
+                            bg="blackAlpha.500"
+                            as={motion.div}
+                            zIndex={2}
+                        >
+                            <RelicLevelUpButton />
+                        </Flex>
+                    )}
+
+                    <Box
+                        filter="auto"
+                        blur={isActive && canUpgrade ? '10px' : '0px'}
+                        style={{ marginTop: '0 !important' }}
+                        rounded="lg"
+                        overflow="hidden"
+                    >
+                        <Image height="400px" width="400px" src={nftURI} />
+                    </Box>
+                </Flex>
+                {isActive && (
+                    <VStack
+                        as={motion.div}
+                        animate={{ opacity: 1, transform: 'scale(1)', transition: { delay: 0.3 } }}
+                        initial={{ opacity: 0, transform: 'scale(0.75)' }}
+                        exit={{ opacity: 0, transform: 'scale(0.75)' }}
+                        overflow="hidden"
+                        width="full"
+                        position="relative"
+                    >
+                        <Box width="60%" rounded="lg" background="whiteAlpha.200">
+                            <VStack spacing="3" width="full">
+                                <VStack width="full">
+                                    <VStack alignItems="flex-start" spacing="0" rounded="lg" width="full" p="4">
+                                        <Heading textAlign="center" size="md">
+                                            Level {relic?.level}: (Relic Level Name)
+                                        </Heading>
+                                        <Text>Relic ID - {relic?.relicId}</Text>
+                                    </VStack>
+                                    <HStack px="2" width="full">
+                                        <PoolInvestModal
+                                            createRelic
+                                            activatorProps={{ width: 'full', size: 'sm', rounded: 'lg' }}
+                                        />
+                                        <PoolWithdrawModal
+                                            activatorProps={{ width: 'full', size: 'sm', rounded: 'lg' }}
+                                        />
+                                    </HStack>
+                                </VStack>
+                                <AnimatedProgress rounded="none" color="black" width="full" value={progressToNextLevel}>
+                                    <HStack spacing="1">
+                                        <Text>Next level in</Text>
+                                        <Countdown date={levelUpDate} />
+                                    </HStack>
+                                </AnimatedProgress>
+                            </VStack>
+                        </Box>
+                    </VStack>
+                )}
+            </VStack>
+        </AnimatePresence>
     );
 }
 
-export function RelicCarousel({ items = [], loading, cardHeight = '500px', ...rest }: Props) {
-    const { relicPositions } = useReliquary();
+export function RelicCarousel({ loading, ...rest }: Props) {
+    const { relicPositions, isLoadingRelicPositions } = useReliquary();
     const [show, setShow] = useState<string | null>(null);
 
     function showDetailed(relicId: string) {
         setShow(relicId || null);
     }
+
     return (
-        <AnimateSharedLayout>
-            <Box
-                sx={{
-                    '.swiper-pagination': {
-                        bottom: '0px',
-                        display: 'flex',
-                        alignItems: 'flex-end',
-                        justifyContent: 'center',
-                    },
-                    '.swiper': {
-                        paddingBottom: '6',
-                        //overflowY: 'visible',
-                    },
-                    '.swiper-slide': {
-                        transform: 'scale(0.7)',
-                        transition: 'transform 300ms',
-                        opacity: '0.4',
-                    },
-                    '.swiper-slide-next': {
-                        transform: 'scale(1)',
-                        opacity: '1',
-                    },
-                }}
-                {...rest}
-                position="relative"
-            >
-                {show && <SelectedRelic relicId={show} />}
-                <Swiper
-                    slidesPerView={3}
-                    spaceBetween={0}
-                    /*breakpoints={{
+        <Box
+            sx={{
+                '.swiper-pagination': {
+                    display: 'flex',
+                    alignItems: 'flex-end',
+                    justifyContent: 'center',
+                    bottom: -5,
+                },
+                '.swiper': {
+                    paddingBottom: '6',
+                    overflow: 'visible',
+                },
+                '.swiper-slide': {
+                    transition: 'transform 300ms',
+                },
+                '.swiper-slide-next': {
+                    transform: 'scale(1)',
+                    opacity: '1',
+                },
+            }}
+            {...rest}
+            position="relative"
+        >
+            <Swiper
+                slidesPerView={3}
+                spaceBetween={-300}
+                loop={relicPositions.length > 3}
+                centeredSlides
+                /*breakpoints={{
                     720: { slidesPerView: 3 },
                     992: { slidesPerView: 2 },
                     1124: { slidesPerView: 3 },
                 }}*/
-                    pagination={{
-                        clickable: true,
-                    }}
-                    modules={[Pagination]}
-                >
-                    {relicPositions.map((relic) => {
-                        return (
-                            <SwiperSlide key={`relic-carousel-${relic.relicId}`}>
-                                <VStack as={motion.div} bg="blackAlpha.400" rounded="lg" overflow="hidden">
-                                    <VStack px="4" pb="2" pt="4" width="full">
-                                        <HStack width="full" justifyContent="center" alignItems="flex-start">
-                                            {/* <Heading size="md">{relic.relicId}</Heading> */}
-                                            <Badge rounded="md" colorScheme="blue" py="1" px="2">
-                                                Relic #{relic.level + 1} | Level {relic.level + 1}
-                                            </Badge>
-                                            <Badge rounded="md" colorScheme="green" py="1" px="2">
-                                                40% APR
-                                            </Badge>
-                                        </HStack>
-                                    </VStack>
-                                    <Box as={motion.div} layoutId={`image-${relic.relicId}`}>
-                                        <Image src="https://beethoven-assets.s3.eu-central-1.amazonaws.com/reliquary/9.png" />
-                                    </Box>
-                                </VStack>
-                            </SwiperSlide>
-                        );
-                    })}
-                </Swiper>
-            </Box>
-        </AnimateSharedLayout>
+                pagination={{
+                    clickable: true,
+                }}
+                modules={[Pagination]}
+            >
+                {relicPositions.map((relic) => (
+                    <SwiperSlide onsw key={`relic-carousel-${relic.relicId}`}>
+                        {({ isActive, isNext }) => (
+                            <RelicSlide isNext={isNext} isActive={isActive} relic={relicPositions[0]} />
+                        )}
+                    </SwiperSlide>
+                ))}
+            </Swiper>
+        </Box>
     );
 }

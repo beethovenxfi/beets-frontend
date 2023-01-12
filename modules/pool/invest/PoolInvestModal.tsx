@@ -4,6 +4,7 @@ import {
     AlertIcon,
     Box,
     Button,
+    ButtonProps,
     Heading,
     IconButton,
     ModalOverlay,
@@ -26,6 +27,7 @@ interface Props {
     activator?: ReactNode;
     createRelic?: boolean;
     activatorLabel?: string;
+    activatorProps?: ButtonProps
 }
 
 function getInvertedTransform(startBounds: DOMRect, endBounds: DOMRect) {
@@ -37,7 +39,7 @@ function getInvertedTransform(startBounds: DOMRect, endBounds: DOMRect) {
     };
 }
 
-export function PoolInvestModal({ createRelic = false, activatorLabel }: Props) {
+export function PoolInvestModal({ createRelic = false, activatorLabel, activatorProps = {} }: Props) {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const { pool, formattedTypeName } = usePool();
     const [modalState, setModalState] = useState<'start' | 'proportional' | 'custom' | 'preview'>('start');
@@ -118,6 +120,7 @@ export function PoolInvestModal({ createRelic = false, activatorLabel }: Props) 
                 variant="primary"
                 onClick={onModalOpen}
                 width={isReliquaryFBeetsPool ? 'full' : { base: 'full', md: '140px' }}
+                {...activatorProps}
             >
                 {isReliquaryFBeetsPool && createRelic ? 'Get fBEETS' : activatorLabel || 'Invest'}
             </Button>

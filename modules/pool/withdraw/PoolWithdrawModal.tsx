@@ -4,6 +4,7 @@ import {
     AlertIcon,
     Box,
     Button,
+    ButtonProps,
     Heading,
     IconButton,
     ModalHeader,
@@ -24,8 +25,9 @@ import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 
 interface Props {
     activator?: ReactNode;
+    activatorProps?: ButtonProps;
 }
-export function PoolWithdrawModal({ activator }: Props) {
+export function PoolWithdrawModal({ activatorProps = {} }: Props) {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const { pool, formattedTypeName } = usePool();
     const [modalState, setModalState] = useState<'start' | 'proportional' | 'single-asset' | 'preview'>('start');
@@ -51,7 +53,7 @@ export function PoolWithdrawModal({ activator }: Props) {
 
     return (
         <>
-            <Button onClick={onOpen} variant="secondary" width={{ base: 'full', md: '140px' }}>
+            <Button onClick={onOpen} variant="secondary" width={{ base: 'full', md: '140px' }} {...activatorProps}>
                 Withdraw
             </Button>
             <Modal
