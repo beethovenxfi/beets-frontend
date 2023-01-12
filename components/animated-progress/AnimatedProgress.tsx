@@ -5,19 +5,19 @@ import { BeetsBox } from '../box/BeetsBox';
 
 interface Props {
     value: number;
-    children: ReactNode | ReactNode[];
+    children?: ReactNode | ReactNode[];
 }
 
 export default function AnimatedProgress({ value, children, ...rest }: Props & BoxProps) {
     return (
-        <BeetsBox position="relative" minWidth="100px" height="24px" overflow="hidden" {...rest}>
+        <BeetsBox position="relative" minWidth="100px" height="15px" overflow="hidden" {...rest}>
             <Box
                 position="absolute"
                 left="0"
                 width="100%"
                 transformOrigin="left"
-                initial={{ transform: 'scaleX(0)' }}
-                animate={{ transform: 'scaleX(1)', transition: { delay: 0.5, duration: 2 } }}
+                initial={{ transform: `scaleX(0)` }}
+                animate={{ transform: `scaleX(${value / 100})`, transition: { delay: 0.5, duration: 2 } }}
                 bgColor="beets.highlight"
                 as={motion.div}
                 height="full"
