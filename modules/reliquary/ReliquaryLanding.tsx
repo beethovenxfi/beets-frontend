@@ -9,6 +9,7 @@ import Image from 'next/image';
 import { RelicStats } from './components/RelicStats';
 import useReliquary from './lib/useReliquary';
 import { PoolInvestModal } from '../pool/invest/PoolInvestModal';
+import ReliquaryGlobalStats from './components/ReliquaryGlobalStats';
 
 const infoButtonLabelProps = {
     lineHeight: '1rem',
@@ -89,6 +90,7 @@ export default function ReliquaryLanding() {
                     <RelicStats />
                 </Box>
             )}
+            <ReliquaryGlobalStats />
             {/* <HStack>
                 {relicPositions.map((position, index) => (
                     <Text key={index} onClick={() => setSelectedRelicId(position.relicId)}>
