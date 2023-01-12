@@ -47,10 +47,6 @@ export class ReliquaryStakingService {
     public encodeHarvestAll(params: EncodeReliquaryHarvestAllInput): string {
         const reliquaryStakingLibrary = new Interface(ReliquaryStakingAbi);
 
-        return reliquaryStakingLibrary.encodeFunctionData('reliquaryHarvestAll', [
-            params.recipient,
-            params.relicIds,
-            params.recipient,
-        ]);
+        return reliquaryStakingLibrary.encodeFunctionData('reliquaryHarvestAll', [params.relicIds, params.recipient]);
     }
 }

@@ -26,12 +26,21 @@ import { tokenFormatAmount } from '~/lib/services/token/token-util';
 import { useRelicHarvestRewards } from '~/modules/reliquary/lib/useRelicHarvestRewards';
 import { BeetsSubmitTransactionButton } from '~/components/button/BeetsSubmitTransactionButton';
 import { useReliquaryGlobalStats } from '~/modules/reliquary/lib/useReliquaryGlobalStats';
+import { useReliquaryHarvestAllRewards } from '../lib/useReliquaryHarvestAllRewards';
+import { useReliquaryHarvestAllContractCallData } from '../lib/useReliquaryHarvestAllContractCallData';
 
 export function RelicStats() {
     const { data: relicTokenBalances, relicBalanceUSD } = useRelicDepositBalance();
     const { pool } = usePool();
-    const { isLoading, selectedRelic, selectedRelicApr, beetsPerDay, selectedRelicLevel, weightedTotalBalance } =
-        useReliquary();
+    const {
+        isLoading,
+        selectedRelic,
+        selectedRelicApr,
+        beetsPerDay,
+        selectedRelicLevel,
+        weightedTotalBalance,
+        relicIds, // temp
+    } = useReliquary();
     const config = useNetworkConfig();
     const { priceForAmount } = useGetTokens();
     const {
@@ -46,6 +55,12 @@ export function RelicStats() {
     const relicShare = globalStats && selectedRelic ? weightedRelicAmount / weightedTotalBalance : 0;
     const relicBeetsPerDay = beetsPerDay * relicShare;
     const relicYieldPerDay = priceForAmount({ address: config.beets.address, amount: `${relicBeetsPerDay}` });
+
+    // temp
+    const { harvestAll, ...harvestAllQuery } = useReliquaryHarvestAllRewards();
+    const { data: contractCalls } = useReliquaryHarvestAllContractCallData({
+        relicIds,
+    });
 
     return (
         <>
@@ -127,6 +142,20 @@ export function RelicStats() {
                             }}
                         >
                             Claim now
+                        </BeetsSubmitTransactionButton>
+
+                        {/* temp */}
+                        <BeetsSubmitTransactionButton
+                            mt="4"
+                            width="full"
+                            variant="primary"
+                            {...harvestAllQuery}
+                            onClick={() => harvestAll(contractCalls || [])}
+                            onConfirmed={() => {
+                                refetchPendingRewards();
+                            }}
+                        >
+                            Claim all
                         </BeetsSubmitTransactionButton>
                     </Card>
                     <Card p="4" height="full" width="full" display="flex">

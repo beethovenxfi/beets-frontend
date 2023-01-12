@@ -230,6 +230,22 @@ export class ReliquaryZapService {
         return [withdrawBptFromRelic, exitFbeetsPool];
     }
 
+    // harvest all relic rewards
+    public async getReliquaryHarvestAllContractCallData({
+        relicIds,
+        recipient,
+    }: {
+        relicIds: number[];
+        recipient: string;
+    }) {
+        const harvestAll = this.batchRelayerService.reliquaryEncodeHarvestAll({
+            relicIds,
+            recipient,
+        });
+
+        return [harvestAll];
+    }
+
     private getExitFidelioCallData({
         bptIn,
         userAddress,

@@ -47,6 +47,7 @@ export default function useReliquary() {
 
     const selectedRelic = (relicPositions || []).find((position) => position.relicId === selectedRelicId());
     const isLoading = isLoadingRelicPositions || isLoadingMaturityThresholds;
+    const relicIds = relicPositions.map((relic) => parseInt(relic.relicId));
 
     const beetsPerSecond = pool.staking?.reliquary?.beetsPerSecond || '0';
     const reliquaryLevels = pool.staking?.reliquary?.levels || [];
@@ -75,6 +76,7 @@ export default function useReliquary() {
         selectedRelicLevel,
         weightedTotalBalance,
         createRelic: useReactiveVar(createRelic),
+        relicIds,
 
         setCreateRelic,
         setSelectedRelicId,
