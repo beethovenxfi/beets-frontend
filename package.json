@@ -66,5 +66,8 @@
         "typescript": "4.6.4",
         "use-debounce": "^8.0.1",
         "wagmi": "^0.5.12"
+    },
+    "dependencies": {
+        "react-countdown": "^2.3.5"
     }
 }

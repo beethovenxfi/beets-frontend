@@ -70,16 +70,9 @@ export default function ReliquaryLanding() {
                     ))}
                 </Stack>
             </Stack>
-            <VStack py="4" spacing="8" shadow="lg">
-                <VStack>
+            <VStack py="4" spacing="8">
+                <VStack width='full' alignItems='flex-start'>
                     <Heading size="lg">Your relics</Heading>
-                    {relicPositions.length > 0 && <Text>Click on a relic to see more detailed information.</Text>}
-                    {relicPositions.length === 0 && (
-                        <VStack spacing="4">
-                            <Text>Looks like you don't have a relic yet. Let's get started by creating one.</Text>
-                            <PoolInvestModal activatorLabel="Create Relic" />
-                        </VStack>
-                    )}
                 </VStack>
                 <Box width="full">
                     <RelicCarousel />

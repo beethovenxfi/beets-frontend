@@ -113,7 +113,7 @@ export default function BeetsToast({ children }: Props) {
             case ToastType.Info:
                 return 'beets.base.300';
             case ToastType.Error:
-                return 'beets.red';
+                return 'red.400';
             case ToastType.Success:
                 return 'green.400';
             case ToastType.Warn:
