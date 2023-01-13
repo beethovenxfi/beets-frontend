@@ -9,7 +9,7 @@ import { networkConfig } from '~/lib/config/network-config';
 import { useGetTokens } from '~/lib/global/useToken';
 import { InfoButton } from '~/components/info-button/InfoButton';
 import Card from '~/components/card/Card';
-import { useReliquaryGlobalStats } from '../lib/useReliquaryGlobalStats';
+import { useReliquaryGlobalStats } from '../../lib/useReliquaryGlobalStats';
 
 export default function ReliquaryOverallStats() {
     const { pool } = usePool();

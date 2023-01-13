@@ -9,7 +9,7 @@ import Image from 'next/image';
 import { RelicStats } from './components/RelicStats';
 import useReliquary from './lib/useReliquary';
 import { PoolInvestModal } from '../pool/invest/PoolInvestModal';
-import ReliquaryGlobalStats from './components/ReliquaryGlobalStats';
+import ReliquaryGlobalStats from './components/stats/ReliquaryGlobalStats';
 
 const infoButtonLabelProps = {
     lineHeight: '1rem',
@@ -71,7 +71,7 @@ export default function ReliquaryLanding() {
                 </Stack>
             </Stack>
             <VStack py="4" spacing="8">
-                <VStack width='full' alignItems='flex-start'>
+                <VStack width="full" alignItems="flex-start">
                     <Heading size="lg">Your relics</Heading>
                 </VStack>
                 <Box width="full">

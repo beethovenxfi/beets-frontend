@@ -24,12 +24,13 @@ export function ReliquaryCurveChart() {
         xAxis: {
             type: 'value',
             splitLine: { show: false },
+            interval: 1,
         },
         yAxis: {
             splitLine: { show: false },
         },
         grid: {
-            left: '5%',
+            left: '7.5%',
             right: '5%',
             top: '10%',
             bottom: '10%',
@@ -54,7 +55,7 @@ export function ReliquaryCurveChart() {
     };
 
     return (
-        <Card height="full" minHeight="200px" px="4" py="8">
+        <Card height="full" minHeight="250px" px="4" py="8">
             <HStack>
                 <InfoButton
                     labelProps={{
