@@ -1,31 +1,26 @@
 import { HStack, Select } from '@chakra-ui/react';
 import Card from '~/components/card/Card';
-import { PoolDetailBptPriceChart } from '~/modules/pool/detail/components/charts/PoolDetailBptPriceChart';
 import { useState } from 'react';
-import { PoolDetailVolumeLiquidityChart } from '~/modules/pool/detail/components/charts/PoolDetailVolumeLiquidityChart';
-import { PoolDetailFeesChart } from '~/modules/pool/detail/components/charts/PoolDetailFeesChart';
 import {
     GqlPoolSnapshotDataRange,
     useGetReliquaryFarmSnapshotsQuery,
 } from '~/apollo/generated/graphql-codegen-generated';
-import { usePool } from '~/modules/pool/lib/usePool';
 import { networkConfig } from '~/lib/config/network-config';
 import { ReliquaryMaturityChart } from './ReliquaryMaturityChart';
+import { ReliquaryLiquidityChart } from './ReliquaryLiquidityChart';
+import { ReliquaryRelicsCountChart } from './ReliquaryRelicsCountChart';
 
 type ChartType = 'REL_MAT' | 'RELICS' | 'TVL';
 
 export function ReliquaryDetailsCharts() {
-    const { pool } = usePool();
     const [chartType, setChartType] = useState<ChartType>('REL_MAT');
     const [range, setRange] = useState<GqlPoolSnapshotDataRange>('THIRTY_DAYS');
     const { data } = useGetReliquaryFarmSnapshotsQuery({
         variables: { id: networkConfig.reliquary.fbeets.farmId.toString(), range },
     });
 
-    console.log(data);
-
     return (
-        <Card height="full" minHeight="300px">
+        <Card height="full" minHeight="300px" px="4" py="8">
             <HStack padding={{ base: '2', lg: '4' }} pb="0" justify={{ base: 'space-between', lg: 'flex-start' }}>
                 <Select
                     value={chartType}
@@ -53,8 +48,8 @@ export function ReliquaryDetailsCharts() {
                 )}
             </HStack>
             {chartType === 'REL_MAT' && <ReliquaryMaturityChart />}
-            {/*{chartType === 'TVL' && <PoolDetailVolumeLiquidityChart data={data?.snapshots || []} />}
-            {chartType === 'RELICS' && <PoolDetailFeesChart data={data?.snapshots || []} />} */}
+            {chartType === 'TVL' && <ReliquaryLiquidityChart data={data?.snapshots || []} />}
+            {chartType === 'RELICS' && <ReliquaryRelicsCountChart data={data?.snapshots || []} />}
         </Card>
     );
 }

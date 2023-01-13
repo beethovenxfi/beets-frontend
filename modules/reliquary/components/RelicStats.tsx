@@ -18,7 +18,7 @@ import TokenAvatar from '~/components/token/TokenAvatar';
 import { networkConfig } from '~/lib/config/network-config';
 import { useRelicDepositBalance } from '~/modules/reliquary/lib/useRelicDepositBalance';
 import RelicAchievements from './RelicAchievements';
-import RelicMaturity from './RelicMaturity';
+import RelicMaturity from './charts/RelicMaturity';
 import { useRelicPendingRewards } from '~/modules/reliquary/lib/useRelicPendingRewards';
 import { useGetTokens } from '~/lib/global/useToken';
 import { sum, sumBy } from 'lodash';

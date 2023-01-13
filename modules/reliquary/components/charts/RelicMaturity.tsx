@@ -4,8 +4,9 @@ import Card from '~/components/card/Card';
 import ReactECharts from 'echarts-for-react';
 import { EChartsOption, graphic } from 'echarts';
 import { format, fromUnixTime } from 'date-fns';
-import useReliquary from '../lib/useReliquary';
+import useReliquary from '../../lib/useReliquary';
 import { InfoButton } from '~/components/info-button/InfoButton';
+import numeral from 'numeral';
 
 interface Props {}
 
@@ -21,7 +22,7 @@ export default function RelicMaturity({}: Props) {
                 axisPointer: {
                     type: 'cross',
                 },
-                valueFormatter: (value) => `Level ${value}`,
+                valueFormatter: (value) => `Level ${(value as number) - 1}`,
             },
             grid: {
                 left: '1%',
@@ -54,6 +55,11 @@ export default function RelicMaturity({}: Props) {
                 },
                 axisPointer: {
                     snap: true,
+                    label: {
+                        formatter: function (params) {
+                            return numeral((params.value as number) - 1).format('0a');
+                        },
+                    },
                 },
             },
             visualMap: {

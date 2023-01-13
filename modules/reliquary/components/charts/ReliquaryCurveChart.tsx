@@ -7,33 +7,58 @@ import { networkConfig } from '~/lib/config/network-config';
 import { InfoButton } from '~/components/info-button/InfoButton';
 import { HStack, Link } from '@chakra-ui/react';
 import { ExternalLink } from 'react-feather';
+import numeral from 'numeral';
 
 export function ReliquaryCurveChart() {
     const { pool } = usePool();
 
-    const levels = pool.staking?.reliquary?.levels?.slice().sort((a, b) => a.level - b.level);
-    const data = levels?.map((level) => ({
+    const data = pool.staking?.reliquary?.levels?.map((level) => ({
         level: level.level,
         allocationPoints: level.allocationPoints,
     }));
 
     const option: EChartsOption = {
         tooltip: {
-            show: false,
+            show: true,
+            trigger: 'axis',
+            axisPointer: {
+                type: 'cross',
+                crossStyle: {
+                    color: '#999',
+                },
+            },
+            // any -> https://github.com/apache/echarts/issues/14277
+            formatter: (params: any) =>
+                `Level ${params[0].data[0]}: ${numeral(params[0].data[1]).format('0a')} allocation points`,
         },
         xAxis: {
+            name: 'Levels',
+            nameLocation: 'middle',
+            nameGap: 35,
             type: 'value',
             splitLine: { show: false },
             interval: 1,
+            axisLabel: {
+                margin: 12,
+            },
+            axisPointer: {
+                label: {
+                    formatter: (params) => numeral(params.value).format('0a'),
+                },
+            },
         },
         yAxis: {
             splitLine: { show: false },
+            name: 'Allocation Points',
+            nameLocation: 'middle',
+            nameRotate: 90,
+            nameGap: 35,
         },
         grid: {
-            left: '7.5%',
+            left: '10%',
             right: '5%',
             top: '10%',
-            bottom: '10%',
+            bottom: '22.5%',
             containLabel: false,
         },
         series: [
@@ -55,7 +80,7 @@ export function ReliquaryCurveChart() {
     };
 
     return (
-        <Card height="full" minHeight="250px" px="4" py="8">
+        <Card height="full" minHeight="250px" px="4" py="4">
             <HStack>
                 <InfoButton
                     labelProps={{

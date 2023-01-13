@@ -3,7 +3,6 @@ import ReactECharts from 'echarts-for-react';
 import { useMemo } from 'react';
 import { EChartsOption, graphic } from 'echarts';
 import numeral from 'numeral';
-import { format } from 'date-fns';
 import { chartGetPrimaryColor } from '~/modules/pool/detail/components/charts/chart-util';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 import { usePool } from '~/modules/pool/lib/usePool';
@@ -12,8 +11,6 @@ export function ReliquaryMaturityChart() {
     const { pool } = usePool();
     const { colors } = useTheme();
     const networkConfig = useNetworkConfig();
-
-    const levels = pool.staking?.reliquary?.levels?.slice().sort((a, b) => a.level - b.level);
 
     const option = useMemo<EChartsOption>(
         () => ({
@@ -26,15 +23,20 @@ export function ReliquaryMaturityChart() {
                         color: '#999',
                     },
                 },
+                // any -> https://github.com/apache/echarts/issues/14277
+                formatter: (params: any) =>
+                    `Level ${params[0].data[0]}: ${numeral(params[0].data[1]).format('0a')} fBEETS`,
             },
             grid: {
-                bottom: '2%',
-                right: '1.5%',
-                left: '1.5%',
+                left: '7.5%',
+                right: '5%',
                 top: '10%',
-                containLabel: true,
+                bottom: '15%',
             },
             xAxis: {
+                name: 'Levels',
+                nameLocation: 'middle',
+                nameGap: 35,
                 type: 'value',
                 splitLine: { show: false },
                 axisTick: { show: true, length: 10 },
@@ -43,35 +45,42 @@ export function ReliquaryMaturityChart() {
                         return value - 1;
                     },
                     color: colors.gray['200'],
-                    interval: 'auto',
                     showMaxLabel: false,
                     showMinLabel: false,
+                    margin: 16,
                 },
                 axisLine: { show: true },
+                interval: 1,
+                axisPointer: {
+                    label: {
+                        formatter: (params) => numeral(params.value).format('0a'),
+                    },
+                },
             },
             yAxis: {
+                name: '# of fBEETS',
+                nameLocation: 'middle',
+                nameRotate: 90,
+                nameGap: 35,
                 type: 'value',
                 axisLine: { show: true },
                 minorSplitLine: { show: false },
                 splitLine: { show: false },
                 axisLabel: {
-                    formatter: function (value: number, index: number) {
-                        return `$${numeral(value).format('0a')}`;
-                    },
                     color: colors.beets.base['100'],
                     showMinLabel: false,
                 },
                 axisPointer: {
                     label: {
                         formatter: function (params) {
-                            return `$${numeral(params.value).format('0a')}`;
+                            return numeral(params.value).format('0a');
                         },
                     },
                 },
             },
             series: [
                 {
-                    data: levels?.map((level) => [level.level + 1, level.balance]),
+                    data: pool.staking?.reliquary?.levels?.map((level) => [level.level + 1, level.balance]),
                     type: 'bar',
                     tooltip: {
                         valueFormatter: function (value) {
@@ -90,7 +99,7 @@ export function ReliquaryMaturityChart() {
                 },
             ],
         }),
-        [JSON.stringify(levels)],
+        [JSON.stringify(pool.staking?.reliquary?.levels)],
     );
 
     return <ReactECharts option={option} style={{ height: '100%' }} />;

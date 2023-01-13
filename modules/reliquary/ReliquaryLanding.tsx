@@ -70,20 +70,28 @@ export default function ReliquaryLanding() {
                     ))}
                 </Stack>
             </Stack>
+            {selectedRelicId && (
+                <>
+                    <VStack py="4" spacing="8">
+                        <VStack width="full" alignItems="flex-start">
+                            <Heading size="lg">Your relics</Heading>
+                        </VStack>
+                        <Box width="full">
+                            <RelicCarousel />
+                        </Box>
+                    </VStack>
+
+                    <Box py="8">
+                        <RelicStats />
+                    </Box>
+                </>
+            )}
             <VStack py="4" spacing="8">
                 <VStack width="full" alignItems="flex-start">
-                    <Heading size="lg">Your relics</Heading>
+                    <Heading size="lg">Global maBEETS</Heading>
                 </VStack>
-                <Box width="full">
-                    <RelicCarousel />
-                </Box>
+                <ReliquaryGlobalStats />
             </VStack>
-            {selectedRelicId && (
-                <Box py="8">
-                    <RelicStats />
-                </Box>
-            )}
-            <ReliquaryGlobalStats />
             {/* <HStack>
                 {relicPositions.map((position, index) => (
                     <Text key={index} onClick={() => setSelectedRelicId(position.relicId)}>
