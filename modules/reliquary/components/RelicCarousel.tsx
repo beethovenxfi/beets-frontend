@@ -26,8 +26,14 @@ interface RelicSlideProps {
 
 function RelicSlide({ relic, isNext, isActive }: RelicSlideProps) {
     const swiper = useSwiper();
-    const { maturityThresholds, selectedRelic, selectedRelicId, isLoadingRelicPositions, setSelectedRelicId } =
-        useReliquary();
+    const {
+        maturityThresholds,
+        selectedRelic,
+        selectedRelicId,
+        isLoadingRelicPositions,
+        setSelectedRelicId,
+        relicPositions,
+    } = useReliquary();
     const { progressToNextLevel, levelUpDate, canUpgrade, canUpgradeTo } = relicGetMaturityProgress(
         selectedRelic,
         maturityThresholds,
@@ -39,15 +45,16 @@ function RelicSlide({ relic, isNext, isActive }: RelicSlideProps) {
         }
     });
 
-    useEffect(() => {
-        setSelectedRelicId(relic.relicId);
-    }, [isActive]);
-
     const handleClick = (isNext: boolean) => {
         if (isActive) return;
+
+        const relicPositionIndex = relicPositions.findIndex((position) => position.relicId === relic.relicId);
+
         if (isNext) {
+            setSelectedRelicId(relicPositions[relicPositionIndex + 1].relicId);
             swiper.slideNext();
         } else {
+            setSelectedRelicId(relicPositions[relicPositionIndex - 1].relicId);
             swiper.slidePrev();
         }
     };
@@ -128,7 +135,7 @@ function RelicSlide({ relic, isNext, isActive }: RelicSlideProps) {
                                     </VStack>
                                     <HStack width="full">
                                         <PoolInvestModal
-                                            createRelic
+                                            activatorLabel="Deposit"
                                             activatorProps={{ width: 'full', size: 'sm', rounded: 'lg' }}
                                         />
                                         <PoolWithdrawModal
@@ -146,7 +153,7 @@ function RelicSlide({ relic, isNext, isActive }: RelicSlideProps) {
 }
 
 export function RelicCarousel({ loading, ...rest }: Props) {
-    const { relicPositions, isLoadingRelicPositions } = useReliquary();
+    const { relicPositions, isLoadingRelicPositions, selectedRelic } = useReliquary();
     const [show, setShow] = useState<string | null>(null);
 
     function showDetailed(relicId: string) {
@@ -195,7 +202,11 @@ export function RelicCarousel({ loading, ...rest }: Props) {
                 {relicPositions.map((relic) => (
                     <SwiperSlide key={`relic-carousel-${relic.relicId}`}>
                         {({ isActive, isNext }) => (
-                            <RelicSlide isNext={isNext} isActive={isActive} relic={relicPositions[0]} />
+                            <RelicSlide
+                                isNext={isNext}
+                                isActive={isActive}
+                                relic={selectedRelic || relicPositions[0]}
+                            />
                         )}
                     </SwiperSlide>
                 ))}
