@@ -27,7 +27,7 @@ interface Props {
     activator?: ReactNode;
     createRelic?: boolean;
     activatorLabel?: string;
-    activatorProps?: ButtonProps
+    activatorProps?: ButtonProps;
 }
 
 function getInvertedTransform(startBounds: DOMRect, endBounds: DOMRect) {
@@ -55,7 +55,6 @@ export function PoolInvestModal({ createRelic = false, activatorLabel, activator
 
     function onModalOpen() {
         if (createRelic) {
-            console.log('c', createRelic);
             setCreateRelic(true);
         }
         onOpen();
