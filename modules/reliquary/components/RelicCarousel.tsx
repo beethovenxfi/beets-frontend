@@ -105,16 +105,28 @@ function RelicSlide({ relic, isNext, isActive }: RelicSlideProps) {
                         width="full"
                         position="relative"
                     >
-                        <Box width="60%" rounded="lg" background="whiteAlpha.200">
+                        <Box width="60%" rounded="lg" background="whiteAlpha.200" p="4">
                             <VStack spacing="3" width="full">
-                                <VStack width="full">
-                                    <VStack alignItems="flex-start" spacing="0" rounded="lg" width="full" p="4">
+                                <VStack width="full" spacing="4">
+                                    <VStack alignItems="flex-start" spacing="0" rounded="lg" width="full">
                                         <Heading textAlign="center" size="md">
                                             Level {relic?.level}: (Relic Level Name)
                                         </Heading>
                                         <Text>Relic ID - {relic?.relicId}</Text>
+                                        <VStack spacing="1" width="full" alignItems="flex-start">
+                                            <HStack spacing="1" color="beets.green">
+                                                <Text>Next level in</Text>
+                                                <Countdown date={levelUpDate} />
+                                            </HStack>
+                                            <AnimatedProgress
+                                                rounded="none"
+                                                color="black"
+                                                width="full"
+                                                value={progressToNextLevel}
+                                            />
+                                        </VStack>
                                     </VStack>
-                                    <HStack px="2" width="full">
+                                    <HStack width="full">
                                         <PoolInvestModal
                                             createRelic
                                             activatorProps={{ width: 'full', size: 'sm', rounded: 'lg' }}
@@ -124,12 +136,6 @@ function RelicSlide({ relic, isNext, isActive }: RelicSlideProps) {
                                         />
                                     </HStack>
                                 </VStack>
-                                <AnimatedProgress rounded="none" color="black" width="full" value={progressToNextLevel}>
-                                    <HStack spacing="1">
-                                        <Text>Next level in</Text>
-                                        <Countdown date={levelUpDate} />
-                                    </HStack>
-                                </AnimatedProgress>
                             </VStack>
                         </Box>
                     </VStack>
@@ -187,7 +193,7 @@ export function RelicCarousel({ loading, ...rest }: Props) {
                 modules={[Pagination]}
             >
                 {relicPositions.map((relic) => (
-                    <SwiperSlide onsw key={`relic-carousel-${relic.relicId}`}>
+                    <SwiperSlide key={`relic-carousel-${relic.relicId}`}>
                         {({ isActive, isNext }) => (
                             <RelicSlide isNext={isNext} isActive={isActive} relic={relicPositions[0]} />
                         )}
