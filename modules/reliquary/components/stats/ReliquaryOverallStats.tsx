@@ -10,11 +10,17 @@ import { useGetTokens } from '~/lib/global/useToken';
 import { InfoButton } from '~/components/info-button/InfoButton';
 import Card from '~/components/card/Card';
 import { useReliquaryGlobalStats } from '../../lib/useReliquaryGlobalStats';
+import { numberFormatUSDValue } from '~/lib/util/number-formats';
+import startOfWeek from 'date-fns/startOfWeek';
+import { useGetReliquaryFarmSnapshotsQuery } from '~/apollo/generated/graphql-codegen-generated';
 
 export default function ReliquaryOverallStats() {
     const { pool } = usePool();
     const { priceFor, getToken } = useGetTokens();
     const { data: globalStats } = useReliquaryGlobalStats();
+    const { data: snapshotData } = useGetReliquaryFarmSnapshotsQuery({
+        variables: { id: networkConfig.reliquary.fbeets.farmId.toString(), range: 'THIRTY_DAYS' },
+    });
 
     const data = pool.dynamicData;
 
@@ -32,6 +38,29 @@ export default function ReliquaryOverallStats() {
         ...token,
         symbol: getToken(token.address)?.symbol,
     }));
+
+    const relicMaturityLevels = globalStats?.levelBalances.map((balance) => ({
+        level: parseInt(balance.level),
+        percentageOfTotal: parseFloat(balance.balance) / parseFloat(globalStats.totalBalance),
+    }));
+    const avgRelicMaturity = relicMaturityLevels?.reduce((total, obj) => total + obj.level * obj.percentageOfTotal, 0);
+
+    const maxPercentageOfLevels = relicMaturityLevels?.reduce((prev, curr) =>
+        prev.percentageOfTotal > curr.percentageOfTotal ? prev : curr,
+    );
+
+    const avgValuePerRelic = parseInt(globalStats?.totalLiquidity || '') / parseInt(globalStats?.relicCount || '');
+
+    const today = Date.now();
+    const cutOffDate = startOfWeek(today).getTime();
+    const snapshotsThisWeek = snapshotData?.snapshots.filter((snapshot) => snapshot.timestamp >= cutOffDate / 1000);
+
+    let numberOfRelicsThisWeek = 0;
+    if (snapshotsThisWeek) {
+        numberOfRelicsThisWeek =
+            parseInt(snapshotsThisWeek[snapshotsThisWeek.length - 1].relicCount || '') -
+            parseInt(snapshotsThisWeek[0].relicCount || '');
+    }
 
     return (
         <Card px="2" py="4" h="full" w="full">
@@ -100,6 +129,43 @@ export default function ReliquaryOverallStats() {
                         </Box>
                     </VStack>
                 )}
+                <VStack spacing="0" alignItems="flex-start">
+                    <Text lineHeight="1rem" fontWeight="semibold" fontSize="sm" color="beets.base.50">
+                        Relic Maturity
+                    </Text>
+                    <Text color="white" fontSize="1.75rem">
+                        {avgRelicMaturity}
+                        <Text as="span" fontSize="md">
+                            &nbsp;avg level
+                        </Text>
+                    </Text>
+                    <Text fontSize="1rem" lineHeight="1rem">
+                        {`${numeral(maxPercentageOfLevels?.percentageOfTotal).format('0%')} of all relics are level ${
+                            maxPercentageOfLevels?.level
+                        }`}
+                    </Text>
+                </VStack>
+                <VStack spacing="0" alignItems="flex-start">
+                    <InfoButton
+                        labelProps={{
+                            lineHeight: '1rem',
+                            fontWeight: 'semibold',
+                            fontSize: 'sm',
+                            color: 'beets.base.50',
+                        }}
+                        label="Relics minted"
+                        infoText="Lorem ipsum dolor sit amet, Lorem ipsum dolor sit amet"
+                    />
+                    <Text color="white" fontSize="1.75rem">
+                        {numeral(globalStats?.relicCount).format('0,0')}
+                    </Text>
+                    <Text fontSize="1rem" lineHeight="1rem">
+                        {`Average value per relic is ${numberFormatUSDValue(avgValuePerRelic)}`}
+                    </Text>
+                    <Text fontSize="1rem" lineHeight="1rem">
+                        {`${numberOfRelicsThisWeek} relics minted this week`}
+                    </Text>
+                </VStack>
             </VStack>
         </Card>
     );
