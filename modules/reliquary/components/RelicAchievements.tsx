@@ -9,7 +9,7 @@ const TEMP_ACHIEVMENTS = [1, 2, 3, 4, 5, 6, 7, 8];
 
 export default function RelicAchievements({}: Props) {
     return (
-        <Card p="4" width="50%" height='full'>
+        <Card p="4" width={{ base: 'full', lg: "50%" }} height='full'>
             <VStack spacing="4">
                 <HStack width="full" spacing="12" alignItems="flex-start">
                     <VStack spacing="0" alignItems="flex-start">

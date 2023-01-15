@@ -1,4 +1,4 @@
-import { HStack, Select } from '@chakra-ui/react';
+import { Box, HStack, Select } from '@chakra-ui/react';
 import Card from '~/components/card/Card';
 import { useState } from 'react';
 import {
@@ -20,8 +20,8 @@ export function ReliquaryDetailsCharts() {
     });
 
     return (
-        <Card height="full" minHeight="300px" px="4" py="8">
-            <HStack padding={{ base: '2', lg: '4' }} pb="0" justify={{ base: 'space-between', lg: 'flex-start' }}>
+        <Card height="full" p="4">
+            {/* <HStack padding={{ base: '2', lg: '2' }} pb="0" justify={{ base: 'space-between', lg: 'flex-start' }}>
                 <Select
                     value={chartType}
                     onChange={(e) => setChartType(e.currentTarget.value as ChartType)}
@@ -46,10 +46,12 @@ export function ReliquaryDetailsCharts() {
                         <option value="ALL_TIME">All time</option>
                     </Select>
                 )}
-            </HStack>
-            {chartType === 'REL_MAT' && <ReliquaryMaturityChart />}
-            {chartType === 'TVL' && <ReliquaryLiquidityChart data={data?.snapshots || []} />}
-            {chartType === 'RELICS' && <ReliquaryRelicsCountChart data={data?.snapshots || []} />}
+            </HStack> */}
+            <Box height="full">
+                {chartType === 'REL_MAT' && <ReliquaryMaturityChart />}
+                {chartType === 'TVL' && <ReliquaryLiquidityChart data={data?.snapshots || []} />}
+                {chartType === 'RELICS' && <ReliquaryRelicsCountChart data={data?.snapshots || []} />}
+            </Box>
         </Card>
     );
 }

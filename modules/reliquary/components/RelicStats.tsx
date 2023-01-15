@@ -11,7 +11,7 @@ import { useReliquaryLevelUp } from '~/modules/reliquary/lib/useReliquaryLevelUp
 import { usePoolUserDepositBalance } from '~/modules/pool/lib/usePoolUserDepositBalance';
 import { usePool } from '~/modules/pool/lib/usePool';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
-import { Box, Divider } from '@chakra-ui/layout';
+import { Box, Divider, Stack } from '@chakra-ui/layout';
 import { PoolUserStakedStats } from '~/modules/pool/detail/components/stats/PoolUserStakedStats';
 import { InfoButton } from '~/components/info-button/InfoButton';
 import TokenAvatar from '~/components/token/TokenAvatar';
@@ -65,7 +65,7 @@ export function RelicStats() {
     return (
         <>
             <VStack spacing="4">
-                <HStack width="full" alignItems="flex-start" height="400px">
+                <Stack width="full" alignItems="flex-start" height="400px" direction={{ base: 'column', lg: 'row' }}>
                     <Card display="flex" p="4" width="full" height="full" justifyContent="space-between">
                         <VStack width="full" spacing="8" justifyContent="flex-start">
                             <VStack width="full" spacing="0" alignItems="flex-start">
@@ -264,11 +264,11 @@ export function RelicStats() {
                             </Box>
                         </VStack>
                     </Card>
-                </HStack>
-                <HStack width="full" alignItems="flex-start" height="300px">
+                </Stack>
+                <Stack width="full" alignItems="flex-start" height="300px" direction={{ base: 'column', lg: 'row' }}>
                     <RelicAchievements />
                     <RelicMaturity />
-                </HStack>
+                </Stack>
             </VStack>
             <Flex width="full" alignItems="flex-start" flex={1} flexDirection="column">
                 {/*pool.staking && (

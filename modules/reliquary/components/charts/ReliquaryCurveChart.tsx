@@ -5,7 +5,7 @@ import { usePool } from '~/modules/pool/lib/usePool';
 import { chartGetPrimaryColor } from '~/modules/pool/detail/components/charts/chart-util';
 import { networkConfig } from '~/lib/config/network-config';
 import { InfoButton } from '~/components/info-button/InfoButton';
-import { HStack, Link } from '@chakra-ui/react';
+import { Box, HStack, Link } from '@chakra-ui/react';
 import { ExternalLink } from 'react-feather';
 import numeral from 'numeral';
 
@@ -55,11 +55,11 @@ export function ReliquaryCurveChart() {
             nameGap: 35,
         },
         grid: {
-            left: '10%',
+            left: '5%',
             right: '5%',
-            top: '10%',
-            bottom: '22.5%',
-            containLabel: false,
+            top: '5%',
+            bottom: '7.5%',
+            containLabel: true
         },
         series: [
             {
@@ -80,7 +80,7 @@ export function ReliquaryCurveChart() {
     };
 
     return (
-        <Card height="full" minHeight="250px" px="4" py="4">
+        <Card height="full" px="4" py="4">
             <HStack>
                 <InfoButton
                     labelProps={{
@@ -96,7 +96,9 @@ export function ReliquaryCurveChart() {
                     <ExternalLink size="16" />
                 </Link>
             </HStack>
-            <ReactECharts option={option} style={{ height: '100%' }} />
+            <Box height="full">
+                <ReactECharts option={option} style={{ height: '100%' }} />
+            </Box>
         </Card>
     );
 }

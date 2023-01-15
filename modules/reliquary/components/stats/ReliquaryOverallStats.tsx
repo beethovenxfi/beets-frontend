@@ -58,8 +58,8 @@ export default function ReliquaryOverallStats() {
     let numberOfRelicsThisWeek = 0;
     if (snapshotsThisWeek) {
         numberOfRelicsThisWeek =
-            parseInt(snapshotsThisWeek[snapshotsThisWeek.length - 1].relicCount || '') -
-            parseInt(snapshotsThisWeek[0].relicCount || '');
+            parseInt(snapshotsThisWeek[snapshotsThisWeek.length - 1]?.relicCount || '') -
+            parseInt(snapshotsThisWeek[0]?.relicCount || '');
     }
 
     return (
@@ -77,29 +77,79 @@ export default function ReliquaryOverallStats() {
                     </HStack>
                 </VStack>
                 <Divider />
-                <VStack spacing="0" alignItems="flex-start">
-                    <Text lineHeight="1rem" fontWeight="semibold" fontSize="sm" color="beets.base.50">
-                        TVL
-                    </Text>
-                    <Text color="white" fontSize="1.75rem">
-                        {numeral(data.totalLiquidity).format('$0,0.00a')}
-                    </Text>
-                    <VStack spacing="0" alignItems="flex-start" mb="2">
-                        {relicTokenBalancesWithSymbol?.map((token, index) => (
-                            <HStack spacing="1" mb="0.5" key={index}>
-                                <TokenAvatar h="20px" w="20px" address={token.address} />
-                                <Text fontSize="1rem" lineHeight="1rem">
-                                    {tokenFormatAmount(token.balance)}
-                                </Text>
-                                <Text fontSize="1rem" lineHeight="1rem">
-                                    {token.symbol}
-                                </Text>
-                            </HStack>
-                        ))}
+                <VStack width="full" spacing="8" alignItems="flex-start">
+                    <VStack spacing="4" alignItems="flex-start">
+                        <VStack width='full' alignItems='flex-start' spacing='0'>
+                            <Text lineHeight="1rem" fontWeight="semibold" fontSize="sm" color="beets.base.50">
+                                TVL
+                            </Text>
+                            <Text color="white" fontSize="1.75rem">
+                                {numeral(data.totalLiquidity).format('$0,0.00a')}
+                            </Text>
+                            <PercentChangeBadge percentChange={tvlPercentChange} />
+                        </VStack>
+                        <VStack width="full" spacing="0" alignItems="flex-start">
+                            <VStack spacing="1" alignItems="flex-start" mb="2">
+                                {relicTokenBalancesWithSymbol?.map((token, index) => (
+                                    <HStack spacing="1" mb="0.5" key={index}>
+                                        <TokenAvatar h="20px" w="20px" address={token.address} />
+                                        <Text fontSize="1rem" lineHeight="1rem">
+                                            {tokenFormatAmount(token.balance)}
+                                        </Text>
+                                        <Text fontSize="1rem" lineHeight="1rem">
+                                            {token.symbol}
+                                        </Text>
+                                    </HStack>
+                                ))}
+                            </VStack>
+                        </VStack>
                     </VStack>
-                    <PercentChangeBadge percentChange={tvlPercentChange} />
-                </VStack>
-                {pool.staking?.reliquary && (
+                    {pool.staking?.reliquary && (
+                        <VStack spacing="0" alignItems="flex-start">
+                            <InfoButton
+                                labelProps={{
+                                    lineHeight: '1rem',
+                                    fontWeight: 'semibold',
+                                    fontSize: 'sm',
+                                    color: 'beets.base.50',
+                                }}
+                                label="Liquidity incentives"
+                                infoText="Lorem ipsum dolor sit amet, Lorem ipsum dolor sit amet"
+                            />
+                            <Text color="white" fontSize="1.75rem">
+                                ~{numeral(incentivesDailyValue).format('$0,0.00a')}
+                                <Text as="span" fontSize="md">
+                                    &nbsp;/ day
+                                </Text>
+                            </Text>
+                            <Box>
+                                {beetsPerDay > 0 && (
+                                    <HStack spacing="1" mb="0.5">
+                                        <TokenAvatar height="20px" width="20px" address={networkConfig.beets.address} />
+                                        <Text fontSize="1rem" lineHeight="1rem">
+                                            {numeral(beetsPerDay).format('0,0')}&nbsp;/ day
+                                        </Text>
+                                    </HStack>
+                                )}
+                            </Box>
+                        </VStack>
+                    )}
+                    <VStack spacing="0" alignItems="flex-start">
+                        <Text lineHeight="1rem" fontWeight="semibold" fontSize="sm" color="beets.base.50">
+                            Relic Maturity
+                        </Text>
+                        <Text color="white" fontSize="1.75rem">
+                            {avgRelicMaturity}
+                            <Text as="span" fontSize="md">
+                                &nbsp;avg level
+                            </Text>
+                        </Text>
+                        <Text fontSize="1rem" lineHeight="1rem">
+                            {`${numeral(maxPercentageOfLevels?.percentageOfTotal).format(
+                                '0%',
+                            )} of all relics are level ${maxPercentageOfLevels?.level}`}
+                        </Text>
+                    </VStack>
                     <VStack spacing="0" alignItems="flex-start">
                         <InfoButton
                             labelProps={{
@@ -108,63 +158,19 @@ export default function ReliquaryOverallStats() {
                                 fontSize: 'sm',
                                 color: 'beets.base.50',
                             }}
-                            label="Liquidity incentives"
+                            label="Relics minted"
                             infoText="Lorem ipsum dolor sit amet, Lorem ipsum dolor sit amet"
                         />
                         <Text color="white" fontSize="1.75rem">
-                            ~{numeral(incentivesDailyValue).format('$0,0.00a')}
-                            <Text as="span" fontSize="md">
-                                &nbsp;/ day
-                            </Text>
+                            {numeral(globalStats?.relicCount).format('0,0')}
                         </Text>
-                        <Box>
-                            {beetsPerDay > 0 && (
-                                <HStack spacing="1" mb="0.5">
-                                    <TokenAvatar height="20px" width="20px" address={networkConfig.beets.address} />
-                                    <Text fontSize="1rem" lineHeight="1rem">
-                                        {numeral(beetsPerDay).format('0,0')}&nbsp;/ day
-                                    </Text>
-                                </HStack>
-                            )}
-                        </Box>
+                        <Text fontSize="1rem" lineHeight="1rem">
+                            {`Average value per relic is ${numberFormatUSDValue(avgValuePerRelic)}`}
+                        </Text>
+                        <Text fontSize="1rem" lineHeight="1rem">
+                            {`${numberOfRelicsThisWeek} relics minted this week`}
+                        </Text>
                     </VStack>
-                )}
-                <VStack spacing="0" alignItems="flex-start">
-                    <Text lineHeight="1rem" fontWeight="semibold" fontSize="sm" color="beets.base.50">
-                        Relic Maturity
-                    </Text>
-                    <Text color="white" fontSize="1.75rem">
-                        {avgRelicMaturity}
-                        <Text as="span" fontSize="md">
-                            &nbsp;avg level
-                        </Text>
-                    </Text>
-                    <Text fontSize="1rem" lineHeight="1rem">
-                        {`${numeral(maxPercentageOfLevels?.percentageOfTotal).format('0%')} of all relics are level ${
-                            maxPercentageOfLevels?.level
-                        }`}
-                    </Text>
-                </VStack>
-                <VStack spacing="0" alignItems="flex-start">
-                    <InfoButton
-                        labelProps={{
-                            lineHeight: '1rem',
-                            fontWeight: 'semibold',
-                            fontSize: 'sm',
-                            color: 'beets.base.50',
-                        }}
-                        label="Relics minted"
-                        infoText="Lorem ipsum dolor sit amet, Lorem ipsum dolor sit amet"
-                    />
-                    <Text color="white" fontSize="1.75rem">
-                        {numeral(globalStats?.relicCount).format('0,0')}
-                    </Text>
-                    <Text fontSize="1rem" lineHeight="1rem">
-                        {`Average value per relic is ${numberFormatUSDValue(avgValuePerRelic)}`}
-                    </Text>
-                    <Text fontSize="1rem" lineHeight="1rem">
-                        {`${numberOfRelicsThisWeek} relics minted this week`}
-                    </Text>
                 </VStack>
             </VStack>
         </Card>

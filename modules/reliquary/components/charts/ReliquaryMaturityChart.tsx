@@ -28,10 +28,11 @@ export function ReliquaryMaturityChart() {
                     `Level ${params[0].data[0]}: ${numeral(params[0].data[1]).format('0a')} fBEETS`,
             },
             grid: {
-                left: '7.5%',
+                left: '5%',
                 right: '5%',
-                top: '10%',
-                bottom: '15%',
+                top: '5%',
+                bottom: '5%',
+                containLabel: true
             },
             xAxis: {
                 name: 'Levels',

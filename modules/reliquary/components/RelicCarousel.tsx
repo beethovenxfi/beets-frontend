@@ -112,7 +112,7 @@ function RelicSlide({ relic, isNext, isActive }: RelicSlideProps) {
                         width="full"
                         position="relative"
                     >
-                        <Box width="60%" rounded="lg" background="whiteAlpha.200" p="4">
+                        <Box width={{ base: '100%', lg: "60%" }} rounded="lg" background="whiteAlpha.200" p="4">
                             <VStack spacing="3" width="full">
                                 <VStack width="full" spacing="4">
                                     <VStack alignItems="flex-start" spacing="0" rounded="lg" width="full">
