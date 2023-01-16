@@ -37,7 +37,7 @@ const rqImages = [
 ];
 
 export default function ReliquaryLanding() {
-    const { relicPositions, selectedRelicId } = useReliquary();
+    const { relicPositions, selectedRelicId, isLoadingRelicPositions } = useReliquary();
 
     return (
         <Stack direction="column">
@@ -70,22 +70,22 @@ export default function ReliquaryLanding() {
                     ))}
                 </Stack>
             </Stack>
-            {selectedRelicId && (
-                <>
-                    <VStack py="4" spacing="8">
-                        <VStack width="full" alignItems="flex-start">
-                            <Heading size="lg">Your relics</Heading>
-                        </VStack>
-                        <Box width="full">
-                            <RelicCarousel />
-                        </Box>
+            <>
+                <VStack py="4" spacing="8">
+                    <VStack width="full" alignItems="flex-start">
+                        <Heading size="lg">Your relics</Heading>
                     </VStack>
+                    <Box width="full">
+                        <RelicCarousel />
+                    </Box>
+                </VStack>
 
+                {relicPositions.length > 0 && (
                     <Box py="8">
                         <RelicStats />
                     </Box>
-                </>
-            )}
+                )}
+            </>
             <VStack py="4" spacing="8">
                 <VStack width="full" alignItems="flex-start">
                     <Heading size="lg">Global maBEETS</Heading>
