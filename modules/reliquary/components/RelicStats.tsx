@@ -65,7 +65,12 @@ export function RelicStats() {
     return (
         <>
             <VStack spacing="4">
-                <Stack width="full" alignItems="flex-start" height="400px" direction={{ base: 'column', lg: 'row' }}>
+                <Stack
+                    width="full"
+                    alignItems="flex-start"
+                    height={{ base: undefined, lg: '400px' }}
+                    direction={{ base: 'column', lg: 'row' }}
+                >
                     <Card display="flex" p="4" width="full" height="full" justifyContent="space-between">
                         <VStack width="full" spacing="8" justifyContent="flex-start">
                             <VStack width="full" spacing="0" alignItems="flex-start">
@@ -265,7 +270,12 @@ export function RelicStats() {
                         </VStack>
                     </Card>
                 </Stack>
-                <Stack width="full" alignItems="flex-start" height="300px" direction={{ base: 'column', lg: 'row' }}>
+                <Stack
+                    width="full"
+                    alignItems="flex-start"
+                    height={{ base: undefined, lg: '300px' }}
+                    direction={{ base: 'column', lg: 'row' }}
+                >
                     <RelicAchievements />
                     <RelicMaturity />
                 </Stack>

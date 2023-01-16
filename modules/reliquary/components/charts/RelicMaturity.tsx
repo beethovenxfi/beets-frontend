@@ -97,7 +97,7 @@ export default function RelicMaturity({}: Props) {
         };
     }, [isLoading, selectedRelic]);
     return (
-        <Card px="2" py="4" h="full" width="50%">
+        <Card px="2" py="4" h="full" width={{ base: 'full', lg: '50%' }}>
             <VStack spacing="2" height="full">
                 <HStack height="fit-content" px="2" w="full" spacing="12" alignItems="flex-start">
                     <VStack spacing="0" alignItems="flex-start" height="fit-content">
