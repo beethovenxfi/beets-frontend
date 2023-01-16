@@ -21,7 +21,7 @@ export function ReliquaryDetailsCharts() {
 
     return (
         <Card height="full" p="4">
-            {/* <HStack padding={{ base: '2', lg: '2' }} pb="0" justify={{ base: 'space-between', lg: 'flex-start' }}>
+            <HStack padding={{ base: '2', lg: '2' }} pb="0" justify={{ base: 'space-between', lg: 'flex-start' }}>
                 <Select
                     value={chartType}
                     onChange={(e) => setChartType(e.currentTarget.value as ChartType)}
@@ -46,7 +46,7 @@ export function ReliquaryDetailsCharts() {
                         <option value="ALL_TIME">All time</option>
                     </Select>
                 )}
-            </HStack> */}
+            </HStack>
             <Box height="full">
                 {chartType === 'REL_MAT' && <ReliquaryMaturityChart />}
                 {chartType === 'TVL' && <ReliquaryLiquidityChart data={data?.snapshots || []} />}
