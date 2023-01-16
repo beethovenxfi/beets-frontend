@@ -8,7 +8,7 @@ export default function ReliquaryGlobalStats() {
     return (
         <Grid
             templateColumns={{ base: '1fr', lg: '400px 1fr 1fr' }}
-            templateRows={{ base: 'repeat(4, 1fr)', lg: 'repeat(2, 400px)' }}
+            templateRows={{ base: 'repeat(3, 1fr)', lg: 'repeat(2, 400px)' }}
             templateAreas={{
                 base: `"stats"
                        "details-charts"
