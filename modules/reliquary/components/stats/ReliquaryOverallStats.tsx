@@ -60,6 +60,9 @@ export default function ReliquaryOverallStats() {
         numberOfRelicsThisWeek =
             parseInt(snapshotsThisWeek[snapshotsThisWeek.length - 1]?.relicCount || '') -
             parseInt(snapshotsThisWeek[0]?.relicCount || '');
+        if (Number.isNaN(numberOfRelicsThisWeek)) {
+            numberOfRelicsThisWeek = 0;
+        }
     }
 
     return (
@@ -79,7 +82,7 @@ export default function ReliquaryOverallStats() {
                 <Divider />
                 <VStack width="full" spacing="8" alignItems="flex-start">
                     <VStack spacing="4" alignItems="flex-start">
-                        <VStack width='full' alignItems='flex-start' spacing='0'>
+                        <VStack width="full" alignItems="flex-start" spacing="0">
                             <Text lineHeight="1rem" fontWeight="semibold" fontSize="sm" color="beets.base.50">
                                 TVL
                             </Text>
