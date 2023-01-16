@@ -92,13 +92,6 @@ export default function ReliquaryLanding() {
                 </VStack>
                 <ReliquaryGlobalStats />
             </VStack>
-            {/* <HStack>
-                {relicPositions.map((position, index) => (
-                    <Text key={index} onClick={() => setSelectedRelicId(position.relicId)}>
-                        {position.relicId}
-                    </Text>
-                ))}
-            </HStack> */}
         </Stack>
     );
 }
