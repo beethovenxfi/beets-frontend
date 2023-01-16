@@ -7,22 +7,33 @@ import { format, fromUnixTime } from 'date-fns';
 import useReliquary from '../../lib/useReliquary';
 import { InfoButton } from '~/components/info-button/InfoButton';
 import numeral from 'numeral';
+import { usePool } from '~/modules/pool/lib/usePool';
 
 interface Props {}
 
 export default function RelicMaturity({}: Props) {
     const { maturityThresholds, isLoading, selectedRelic } = useReliquary();
+    const { pool } = usePool();
+
+    const levels = pool.staking?.reliquary?.levels;
+    const poolDataBefore = levels?.map((level, index) =>
+        selectedRelic && index > selectedRelic.level ? '' : level.allocationPoints,
+    );
+    const poolDataAfter = levels?.map((level, index) =>
+        selectedRelic && index < selectedRelic.level ? '' : level.allocationPoints,
+    );
+
     const chartOption: EChartsOption = useMemo(() => {
         return {
-            title: {
-                show: false,
-            },
             tooltip: {
                 trigger: 'axis',
                 axisPointer: {
-                    type: 'cross',
+                    type: 'line',
                 },
-                valueFormatter: (value) => `Level ${(value as number) - 1}`,
+                // any -> https://github.com/apache/echarts/issues/14277
+                formatter: (params: any) => {
+                    return `Level ${params[0].dataIndex + 1}<br>Maturity date: ${params[0].name}`;
+                },
             },
             grid: {
                 left: '1%',
@@ -30,21 +41,12 @@ export default function RelicMaturity({}: Props) {
                 right: '1%',
                 top: '2%',
             },
-            toolbox: {
-                show: false,
-                feature: {
-                    saveAsImage: {},
-                },
-            },
             xAxis: {
                 type: 'category',
                 show: false,
                 boundaryGap: false,
                 data: maturityThresholds.map((threshold) => {
-                    return format(
-                        fromUnixTime((selectedRelic?.entry || 0) + parseInt(threshold, 10)),
-                        'dd/MM/yyyy HH:mm',
-                    );
+                    return format(fromUnixTime((selectedRelic?.entry || 0) + parseInt(threshold)), 'dd/MM/yyyy HH:mm');
                 }),
             },
             yAxis: {
@@ -54,6 +56,7 @@ export default function RelicMaturity({}: Props) {
                     formatter: '{value} W',
                 },
                 axisPointer: {
+                    show: false,
                     snap: true,
                     label: {
                         formatter: function (params) {
@@ -62,36 +65,36 @@ export default function RelicMaturity({}: Props) {
                     },
                 },
             },
-            visualMap: {
-                show: false,
-                dimension: 0,
-                pieces: [
-                    {
-                        lte: 8,
-                        color: '#00FFFF',
-                    },
-
-                    {
-                        gt: 8,
-                        lte: 14,
-                        color: '#00FFFF',
-                    },
-                    {
-                        gt: 14,
-                        color: '#FF0000',
-                    },
-                ],
-            },
             series: [
                 {
+                    name: 'myline',
                     type: 'line',
                     smooth: true,
-                    areaStyle: {
-                        opacity: 0.2,
+                    itemStyle: {
+                        color: '#f30103',
                     },
-                    step: 'middle',
-                    // prettier-ignore
-                    data: maturityThresholds.map((_, i) => i + 1),
+                    lineStyle: {
+                        color: '#f30103',
+                    },
+                    areaStyle: {
+                        color: 'rgba(73, 21, 54, 0.4)',
+                    },
+                    data: poolDataAfter,
+                },
+                {
+                    name: 'myline',
+                    type: 'line',
+                    smooth: true,
+                    itemStyle: {
+                        color: '#00ffff',
+                    },
+                    lineStyle: {
+                        color: '#00ffff',
+                    },
+                    areaStyle: {
+                        color: 'rgba(0, 69, 87, 0.4)',
+                    },
+                    data: poolDataBefore,
                 },
             ],
         };
