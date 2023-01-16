@@ -13,7 +13,7 @@ export function ReliquaryCurveChart() {
     const { pool } = usePool();
 
     const data = pool.staking?.reliquary?.levels?.map((level) => ({
-        level: level.level,
+        level: level.level + 1,
         allocationPoints: level.allocationPoints,
     }));
 
@@ -32,7 +32,7 @@ export function ReliquaryCurveChart() {
                 `Level ${params[0].data[0]}: ${numeral(params[0].data[1]).format('0a')} allocation points`,
         },
         xAxis: {
-            name: 'Levels',
+            name: 'Level',
             nameLocation: 'middle',
             nameGap: 35,
             type: 'value',
@@ -40,6 +40,8 @@ export function ReliquaryCurveChart() {
             interval: 1,
             axisLabel: {
                 margin: 12,
+                showMaxLabel: false,
+                showMinLabel: false,
             },
             axisPointer: {
                 label: {
@@ -58,8 +60,8 @@ export function ReliquaryCurveChart() {
             left: '5%',
             right: '5%',
             top: '5%',
-            bottom: '7.5%',
-            containLabel: true
+            bottom: '10%',
+            containLabel: true,
         },
         series: [
             {

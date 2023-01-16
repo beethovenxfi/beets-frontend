@@ -31,11 +31,11 @@ export function ReliquaryMaturityChart() {
                 left: '5%',
                 right: '5%',
                 top: '5%',
-                bottom: '5%',
-                containLabel: true
+                bottom: '10%',
+                containLabel: true,
             },
             xAxis: {
-                name: 'Levels',
+                name: 'Level',
                 nameLocation: 'middle',
                 nameGap: 35,
                 type: 'value',
@@ -43,7 +43,7 @@ export function ReliquaryMaturityChart() {
                 axisTick: { show: true, length: 10 },
                 axisLabel: {
                     formatter: (value: number, index: number) => {
-                        return value - 1;
+                        return value;
                     },
                     color: colors.gray['200'],
                     showMaxLabel: false,

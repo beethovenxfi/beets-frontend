@@ -40,11 +40,11 @@ export default function ReliquaryOverallStats() {
     }));
 
     const relicMaturityLevels = globalStats?.levelBalances.map((balance) => ({
-        level: parseInt(balance.level),
+        level: parseInt(balance.level) + 1,
         percentageOfTotal: parseFloat(balance.balance) / parseFloat(globalStats.totalBalance),
     }));
     const avgRelicMaturity = numeral(
-        relicMaturityLevels?.reduce((total, obj) => total + obj.level * obj.percentageOfTotal, 1),
+        relicMaturityLevels?.reduce((total, obj) => total + obj.level * obj.percentageOfTotal, 0),
     ).format('0.00');
 
     const maxPercentageOfLevels = relicMaturityLevels?.reduce((prev, curr) =>
