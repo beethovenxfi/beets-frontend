@@ -223,23 +223,6 @@ function RelicSlide({ relic, isNext, isActive }: RelicSlideProps) {
                                             />
                                         </HStack>
                                     </VStack>
-                                    <HStack width="full">
-                                        {!batchRelayerHasRelicApproval ? (
-                                            <Box w="full">
-                                                <ReliquaryBatchRelayerApprovalButton onConfirmed={() => refetch()} />
-                                            </Box>
-                                        ) : (
-                                            <>
-                                                <PoolInvestModal
-                                                    activatorLabel="Deposit"
-                                                    activatorProps={{ width: 'full', size: 'sm', rounded: 'lg' }}
-                                                />
-                                                <PoolWithdrawModal
-                                                    activatorProps={{ width: 'full', size: 'sm', rounded: 'lg' }}
-                                                />
-                                            </>
-                                        )}
-                                    </HStack>
                                 </VStack>
                             </Box>
                         </VStack>
