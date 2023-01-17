@@ -29,8 +29,6 @@ export function relicGetMaturityProgress(relic: ReliquaryFarmPosition | null, ma
         ? 100
         : (timeElapsedSinceCurrentLevel / timeBetweenCurrentAndNextLevel) * 100;
 
-    console.log('esk', progressToNextLevel);
-
     const entryDate = fromUnixTime(relicMaturityStart);
     const levelUpDate = addSeconds(entryDate, timeBetweenCurrentAndNextLevel);
     return {

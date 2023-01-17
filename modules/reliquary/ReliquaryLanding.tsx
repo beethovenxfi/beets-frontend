@@ -70,8 +70,8 @@ export default function ReliquaryLanding() {
                     ))}
                 </Stack>
             </Stack>
-            <>
-                <VStack py="4" spacing="8">
+            <VStack width="full" spacing="16">
+                <VStack width='full' py="4" spacing="8">
                     <VStack width="full" alignItems="flex-start">
                         <Heading size="lg">Your relics</Heading>
                     </VStack>
@@ -79,18 +79,12 @@ export default function ReliquaryLanding() {
                         <RelicCarousel />
                     </Box>
                 </VStack>
-
-                {relicPositions.length > 0 && (
-                    <Box py="8">
-                        <RelicStats />
-                    </Box>
-                )}
-            </>
-            <VStack py="4" spacing="8">
-                <VStack width="full" alignItems="flex-start">
-                    <Heading size="lg">Global maBEETS</Heading>
+                <VStack width='full' py="4" spacing="8">
+                    <VStack width="full" alignItems="flex-start">
+                        <Heading size="lg">Global maBEETS</Heading>
+                    </VStack>
+                    <ReliquaryGlobalStats />
                 </VStack>
-                <ReliquaryGlobalStats />
             </VStack>
         </Stack>
     );

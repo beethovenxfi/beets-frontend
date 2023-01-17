@@ -10,7 +10,7 @@ interface Props {
 
 export default function AnimatedProgress({ value, children, ...rest }: Props & BoxProps) {
     return (
-        <BeetsBox position="relative" minWidth="100px" height="15px" overflow="hidden" {...rest}>
+        <BeetsBox position="relative" minWidth="100px" height="12.5px" rounded="md" overflow="hidden" {...rest}>
             <Box
                 position="absolute"
                 left="0"
@@ -22,7 +22,6 @@ export default function AnimatedProgress({ value, children, ...rest }: Props & B
                 as={motion.div}
                 height="full"
                 zIndex={-1}
-                rounded="md"
             />
             <Box zIndex={3} px="2">
                 {children}

@@ -265,7 +265,6 @@ export function RelicStats() {
                     height={{ base: undefined, lg: '300px' }}
                     direction={{ base: 'column', lg: 'row' }}
                 >
-                    <RelicAchievements />
                     <RelicMaturity />
                 </Stack>
             </VStack>
