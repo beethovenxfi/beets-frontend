@@ -26,12 +26,24 @@ import { tokenFormatAmount } from '~/lib/services/token/token-util';
 import { useRelicHarvestRewards } from '~/modules/reliquary/lib/useRelicHarvestRewards';
 import { BeetsSubmitTransactionButton } from '~/components/button/BeetsSubmitTransactionButton';
 import { useReliquaryGlobalStats } from '~/modules/reliquary/lib/useReliquaryGlobalStats';
+import { ReliquaryBatchRelayerApprovalButton } from './ReliquaryBatchRelayerApprovalButton';
+import { useBatchRelayerHasRelicApproval } from '../lib/useBatchRelayerHasRelicApproval';
 
 export function RelicStats() {
     const { data: relicTokenBalances, relicBalanceUSD } = useRelicDepositBalance();
     const { pool } = usePool();
-    const { isLoading, selectedRelic, selectedRelicApr, beetsPerDay, selectedRelicLevel, weightedTotalBalance } =
-        useReliquary();
+    const {
+        isLoading,
+        selectedRelic,
+        selectedRelicApr,
+        selectedRelicId,
+        beetsPerDay,
+        selectedRelicLevel,
+        weightedTotalBalance,
+    } = useReliquary();
+    const { data: batchRelayerHasRelicApproval, refetch } = useBatchRelayerHasRelicApproval(
+        parseInt(selectedRelicId || ''),
+    );
     const config = useNetworkConfig();
     const { priceForAmount } = useGetTokens();
     const {
@@ -120,19 +132,25 @@ export function RelicStats() {
                                 </VStack>
                             </HStack>
                         </VStack>
-
-                        <BeetsSubmitTransactionButton
-                            mt="4"
-                            width="full"
-                            variant="primary"
-                            {...harvestQuery}
-                            onClick={harvest}
-                            onConfirmed={() => {
-                                refetchPendingRewards();
-                            }}
-                        >
-                            Claim now
-                        </BeetsSubmitTransactionButton>
+                        {!batchRelayerHasRelicApproval ? (
+                            <Box w="full">
+                                <ReliquaryBatchRelayerApprovalButton />
+                            </Box>
+                        ) : (
+                            <BeetsSubmitTransactionButton
+                                mt="4"
+                                width="full"
+                                variant="primary"
+                                {...harvestQuery}
+                                onClick={harvest}
+                                onConfirmed={() => {
+                                    refetchPendingRewards();
+                                    refetch();
+                                }}
+                            >
+                                Claim now
+                            </BeetsSubmitTransactionButton>
+                        )}
                     </Card>
                     <Card p="4" height="full" width="full" display="flex">
                         <VStack spacing="8">

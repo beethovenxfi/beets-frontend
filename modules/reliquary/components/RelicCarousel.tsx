@@ -13,6 +13,8 @@ import { useQuery } from 'react-query';
 import { getProvider } from '@wagmi/core';
 import { PoolInvestModal } from '~/modules/pool/invest/PoolInvestModal';
 import { PoolWithdrawModal } from '~/modules/pool/withdraw/PoolWithdrawModal';
+import { useBatchRelayerHasRelicApproval } from '../lib/useBatchRelayerHasRelicApproval';
+import { ReliquaryBatchRelayerApprovalButton } from './ReliquaryBatchRelayerApprovalButton';
 
 interface Props extends BoxProps {
     loading?: boolean;
@@ -37,6 +39,9 @@ function RelicSlide({ relic, isNext, isActive }: RelicSlideProps) {
     const { progressToNextLevel, levelUpDate, canUpgrade, canUpgradeTo } = relicGetMaturityProgress(
         selectedRelic,
         maturityThresholds,
+    );
+    const { data: batchRelayerHasRelicApproval, refetch } = useBatchRelayerHasRelicApproval(
+        parseInt(selectedRelicId || ''),
     );
 
     const { data: nftURI = '' } = useQuery(['relicNFT', { selectedRelicId, isLoadingRelicPositions }], async () => {
@@ -112,7 +117,7 @@ function RelicSlide({ relic, isNext, isActive }: RelicSlideProps) {
                         width="full"
                         position="relative"
                     >
-                        <Box width={{ base: '100%', lg: "60%" }} rounded="lg" background="whiteAlpha.200" p="4">
+                        <Box width={{ base: '100%', lg: '60%' }} rounded="lg" background="whiteAlpha.200" p="4">
                             <VStack spacing="3" width="full">
                                 <VStack width="full" spacing="4">
                                     <VStack alignItems="flex-start" spacing="0" rounded="lg" width="full">
@@ -134,13 +139,21 @@ function RelicSlide({ relic, isNext, isActive }: RelicSlideProps) {
                                         </VStack>
                                     </VStack>
                                     <HStack width="full">
-                                        <PoolInvestModal
-                                            activatorLabel="Deposit"
-                                            activatorProps={{ width: 'full', size: 'sm', rounded: 'lg' }}
-                                        />
-                                        <PoolWithdrawModal
-                                            activatorProps={{ width: 'full', size: 'sm', rounded: 'lg' }}
-                                        />
+                                        {!batchRelayerHasRelicApproval ? (
+                                            <Box w="full">
+                                                <ReliquaryBatchRelayerApprovalButton onConfirmed={() => refetch()} />
+                                            </Box>
+                                        ) : (
+                                            <>
+                                                <PoolInvestModal
+                                                    activatorLabel="Deposit"
+                                                    activatorProps={{ width: 'full', size: 'sm', rounded: 'lg' }}
+                                                />
+                                                <PoolWithdrawModal
+                                                    activatorProps={{ width: 'full', size: 'sm', rounded: 'lg' }}
+                                                />
+                                            </>
+                                        )}
                                     </HStack>
                                 </VStack>
                             </VStack>
