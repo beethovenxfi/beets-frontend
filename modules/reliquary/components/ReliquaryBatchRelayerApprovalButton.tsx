@@ -20,16 +20,14 @@ export function ReliquaryBatchRelayerApprovalButton({ ...rest }: Props) {
         <BeetsSubmitTransactionButton
             {...query}
             width="full"
-            onClick={() => {
-                approve(parseInt(selectedRelicId || ''));
-            }}
+            onClick={() => approve(parseInt(selectedRelicId || ''))}
             {...rest}
             borderColor="beets.green"
             _focus={{ boxShadow: 'none' }}
             submittingText="Confirm..."
             pendingText="Waiting..."
         >
-            Approve Batch Relayer for relic
+            Approve Batch Relayer for relic {selectedRelicId}
         </BeetsSubmitTransactionButton>
     );
 }

@@ -56,6 +56,8 @@ export function PoolInvestModal({ createRelic = false, activatorLabel, activator
     function onModalOpen() {
         if (createRelic) {
             setCreateRelic(true);
+        } else {
+            setCreateRelic(false);
         }
         onOpen();
     }
@@ -259,7 +261,6 @@ export function PoolInvestModal({ createRelic = false, activatorLabel, activator
                             {modalState === 'preview' ? (
                                 <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
                                     <PoolInvestPreview
-                                        isReliquaryDeposit={createRelic}
                                         onInvestComplete={() => {
                                             setInvestComplete(true);
                                         }}

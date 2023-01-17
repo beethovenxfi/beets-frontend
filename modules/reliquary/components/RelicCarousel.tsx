@@ -29,6 +29,8 @@ import { PoolInvestModal } from '~/modules/pool/invest/PoolInvestModal';
 import { PoolWithdrawModal } from '~/modules/pool/withdraw/PoolWithdrawModal';
 import { ChevronLeft, ChevronRight } from 'react-feather';
 import BeetsTooltip from '~/components/tooltip/BeetsTooltip';
+import { useBatchRelayerHasRelicApproval } from '../lib/useBatchRelayerHasRelicApproval';
+import { ReliquaryBatchRelayerApprovalButton } from './ReliquaryBatchRelayerApprovalButton';
 
 interface Props extends BoxProps {
     loading?: boolean;
@@ -62,6 +64,9 @@ function RelicSlide({ relic, isNext, isActive }: RelicSlideProps) {
     }, [isLoadingRelicPositions]);
 
     const hasNoRelics = relicPositions.length === 0;
+    const { data: batchRelayerHasRelicApproval, refetch } = useBatchRelayerHasRelicApproval(
+        parseInt(selectedRelicId || ''),
+    );
 
     const { data: nftURI = '' } = useQuery(['relicNFT', { selectedRelicId, isLoadingRelicPositions }], async () => {
         if (!_isLoadingRelicPositions && hasNoRelics) {
@@ -218,6 +223,23 @@ function RelicSlide({ relic, isNext, isActive }: RelicSlideProps) {
                                             />
                                         </HStack>
                                     </VStack>
+                                    <HStack width="full">
+                                        {!batchRelayerHasRelicApproval ? (
+                                            <Box w="full">
+                                                <ReliquaryBatchRelayerApprovalButton onConfirmed={() => refetch()} />
+                                            </Box>
+                                        ) : (
+                                            <>
+                                                <PoolInvestModal
+                                                    activatorLabel="Deposit"
+                                                    activatorProps={{ width: 'full', size: 'sm', rounded: 'lg' }}
+                                                />
+                                                <PoolWithdrawModal
+                                                    activatorProps={{ width: 'full', size: 'sm', rounded: 'lg' }}
+                                                />
+                                            </>
+                                        )}
+                                    </HStack>
                                 </VStack>
                             </Box>
                         </VStack>

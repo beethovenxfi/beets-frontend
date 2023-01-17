@@ -26,8 +26,8 @@ import { tokenFormatAmount } from '~/lib/services/token/token-util';
 import { useRelicHarvestRewards } from '~/modules/reliquary/lib/useRelicHarvestRewards';
 import { BeetsSubmitTransactionButton } from '~/components/button/BeetsSubmitTransactionButton';
 import { useReliquaryGlobalStats } from '~/modules/reliquary/lib/useReliquaryGlobalStats';
-import { useReliquaryHarvestAllRewards } from '../lib/useReliquaryHarvestAllRewards';
-import { useReliquaryHarvestAllContractCallData } from '../lib/useReliquaryHarvestAllContractCallData';
+import { ReliquaryBatchRelayerApprovalButton } from './ReliquaryBatchRelayerApprovalButton';
+import { useBatchRelayerHasRelicApproval } from '../lib/useBatchRelayerHasRelicApproval';
 
 export function RelicStats() {
     const { data: relicTokenBalances, relicBalanceUSD } = useRelicDepositBalance();
@@ -36,11 +36,14 @@ export function RelicStats() {
         isLoading,
         selectedRelic,
         selectedRelicApr,
+        selectedRelicId,
         beetsPerDay,
         selectedRelicLevel,
         weightedTotalBalance,
-        relicIds, // temp
     } = useReliquary();
+    const { data: batchRelayerHasRelicApproval, refetch } = useBatchRelayerHasRelicApproval(
+        parseInt(selectedRelicId || ''),
+    );
     const config = useNetworkConfig();
     const { priceForAmount } = useGetTokens();
     const {
@@ -55,12 +58,6 @@ export function RelicStats() {
     const relicShare = globalStats && selectedRelic ? weightedRelicAmount / weightedTotalBalance : 0;
     const relicBeetsPerDay = beetsPerDay * relicShare;
     const relicYieldPerDay = priceForAmount({ address: config.beets.address, amount: `${relicBeetsPerDay}` });
-
-    // temp
-    const { harvestAll, ...harvestAllQuery } = useReliquaryHarvestAllRewards();
-    const { data: contractCalls } = useReliquaryHarvestAllContractCallData({
-        relicIds,
-    });
 
     return (
         <>
@@ -135,33 +132,25 @@ export function RelicStats() {
                                 </VStack>
                             </HStack>
                         </VStack>
-
-                        <BeetsSubmitTransactionButton
-                            mt="4"
-                            width="full"
-                            variant="primary"
-                            {...harvestQuery}
-                            onClick={harvest}
-                            onConfirmed={() => {
-                                refetchPendingRewards();
-                            }}
-                        >
-                            Claim now
-                        </BeetsSubmitTransactionButton>
-
-                        {/* temp */}
-                        <BeetsSubmitTransactionButton
-                            mt="4"
-                            width="full"
-                            variant="primary"
-                            {...harvestAllQuery}
-                            onClick={() => harvestAll(contractCalls || [])}
-                            onConfirmed={() => {
-                                refetchPendingRewards();
-                            }}
-                        >
-                            Claim all
-                        </BeetsSubmitTransactionButton>
+                        {!batchRelayerHasRelicApproval ? (
+                            <Box w="full">
+                                <ReliquaryBatchRelayerApprovalButton />
+                            </Box>
+                        ) : (
+                            <BeetsSubmitTransactionButton
+                                mt="4"
+                                width="full"
+                                variant="primary"
+                                {...harvestQuery}
+                                onClick={harvest}
+                                onConfirmed={() => {
+                                    refetchPendingRewards();
+                                    refetch();
+                                }}
+                            >
+                                Claim now
+                            </BeetsSubmitTransactionButton>
+                        )}
                     </Card>
                     <Card p="4" height="full" width="full" display="flex">
                         <VStack spacing="8">
