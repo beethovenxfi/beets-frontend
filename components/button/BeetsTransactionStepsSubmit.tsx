@@ -135,7 +135,7 @@ export function BeetsTransactionStepsSubmit({
                 />
             ) : null}
             {/* reliquary */}
-            {steps && currentStep && currentStep.id === 'batch-relayer-relic' && !complete ? (
+            {steps && currentStep && currentStep.id === 'batch-relayer-reliquary' && !complete ? (
                 <ReliquaryBatchRelayerApprovalButton
                     onConfirmed={() => {
                         refetchBatchRelayerHasRelicApproval();
