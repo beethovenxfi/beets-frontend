@@ -78,13 +78,14 @@ function RelicSlide({ relic, isNext, isActive }: RelicSlideProps) {
     });
 
     const handleClick = (isNext: boolean) => {
-        if (isActive) return;
         const relicPositionIndex = relicPositions.findIndex((position) => position.relicId === relic.relicId);
 
         if (isNext) {
             setSelectedRelicId(relicPositions[relicPositionIndex + 1].relicId);
+            swiper.slideNext();
         } else {
             setSelectedRelicId(relicPositions[relicPositionIndex - 1].relicId);
+            swiper.slidePrev();
         }
     };
 
@@ -168,7 +169,10 @@ function RelicSlide({ relic, isNext, isActive }: RelicSlideProps) {
                                 left="3rem"
                                 top="50%"
                                 transform="translateY(-50%)"
-                                onClick={() => swiper.slidePrev()}
+                                onClick={() => handleClick(false)}
+                                isDisabled={
+                                    relicPositions.findIndex((position) => position.relicId === relic.relicId) === 0
+                                }
                             >
                                 <ChevronLeft />
                             </Button>
@@ -234,7 +238,11 @@ function RelicSlide({ relic, isNext, isActive }: RelicSlideProps) {
                                 right="3rem"
                                 top="50%"
                                 transform="translateY(-50%)"
-                                onClick={() => swiper.slideNext()}
+                                onClick={() => handleClick(true)}
+                                isDisabled={
+                                    relicPositions.findIndex((position) => position.relicId === relic.relicId) ===
+                                    relicPositions.length - 1
+                                }
                             >
                                 <ChevronRight />
                             </Button>
