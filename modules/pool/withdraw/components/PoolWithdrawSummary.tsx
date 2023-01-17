@@ -10,20 +10,27 @@ import { usePoolExitGetBptInForSingleAssetWithdraw } from '~/modules/pool/withdr
 import { useWithdrawState } from '~/modules/pool/withdraw/lib/useWithdrawState';
 import { CardRow } from '~/components/card/CardRow';
 import { SlippageTextLinkMenu } from '~/components/slippage/SlippageTextLinkMenu';
+import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
+import { usePool } from '../../lib/usePool';
 
 interface Props extends BoxProps {}
 
 export function PoolWithdrawSummary({ ...rest }: Props) {
+    const { reliquary } = useNetworkConfig();
+    const { pool } = usePool();
+    const isReliquaryFBeetsPool = pool.id === reliquary.fbeets.poolId;
+
     const { selectedWithdrawType, singleAssetWithdraw } = useWithdrawState();
-    const { data, isLoading } = usePoolExitGetProportionalWithdrawEstimate();
+    const { data, isLoading } = usePoolExitGetProportionalWithdrawEstimate(isReliquaryFBeetsPool);
     const { priceForAmount, formattedPrice } = useGetTokens();
-    const totalValue = sum((data || []).map(priceForAmount));
     const {
         hasHighPriceImpact,
         hasMediumPriceImpact,
         formattedPriceImpact,
         isLoading: isLoadingSingleAsset,
     } = usePoolExitGetBptInForSingleAssetWithdraw();
+
+    const totalValue = sum((data || []).map(priceForAmount));
 
     return (
         <BeetsBox p="2" {...rest}>
