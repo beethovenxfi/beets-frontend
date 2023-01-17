@@ -13,7 +13,7 @@ interface Props {
 }
 
 export function ReliquaryBatchRelayerApprovalButton({ ...rest }: Props) {
-    const { approveAll, ...query } = useBatchRelayerRelicApprove(true);
+    const { approveAll, approve, ...query } = useBatchRelayerRelicApprove(true);
 
     return (
         <Box position="relative">

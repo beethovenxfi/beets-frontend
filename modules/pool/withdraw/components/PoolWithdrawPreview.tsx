@@ -18,7 +18,7 @@ import { usePool } from '~/modules/pool/lib/usePool';
 import { usePoolUserBptBalance } from '~/modules/pool/lib/usePoolUserBptBalance';
 import { useUserSyncBalanceMutation } from '~/apollo/generated/graphql-codegen-generated';
 import useReliquary from '~/modules/reliquary/lib/useReliquary';
-import { useReliquaryWithdrawContractCallData } from '~/modules/reliquary/lib/useReliquaryWithdrawContractCallData';
+import { useReliquaryWithdrawAndHarvestContractCallData } from '~/modules/reliquary/lib/useReliquaryWithdrawAndHarvestContractCallData';
 import { useReliquaryZap } from '~/modules/reliquary/lib/useReliquaryZap';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 
@@ -41,7 +41,7 @@ export function PoolWithdrawPreview({ onWithdrawComplete, onClose }: Props) {
     const [userSyncBalance, { loading }] = useUserSyncBalanceMutation();
 
     const { selectedRelic } = useReliquary();
-    const { data: reliquaryContractCalls } = useReliquaryWithdrawContractCallData({
+    const { data: reliquaryContractCalls } = useReliquaryWithdrawAndHarvestContractCallData({
         relicId: parseInt(selectedRelic?.relicId || ''),
         bptAmount: (proportionalPercent * parseInt(selectedRelic?.amount || '')).toString(),
         poolTotalShares: pool.dynamicData.totalShares,

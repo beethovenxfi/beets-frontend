@@ -5,7 +5,7 @@ import { useSlippage } from '~/lib/global/useSlippage';
 import { AmountHumanReadable } from '~/lib/services/token/token-types';
 import { GqlPoolTokenBase } from '~/apollo/generated/graphql-codegen-generated';
 
-export function useReliquaryWithdrawContractCallData({
+export function useReliquaryWithdrawAndHarvestContractCallData({
     relicId,
     bptAmount,
     poolTokens,
@@ -20,9 +20,9 @@ export function useReliquaryWithdrawContractCallData({
     const { slippage } = useSlippage();
 
     return useQuery(
-        ['reliquaryWithdrawContractCallData', userAddress, slippage, relicId, bptAmount],
+        ['reliquaryWithdrawAndHarvestContractCallData', userAddress, slippage, relicId, bptAmount],
         async () => {
-            return reliquaryZapService.getReliquaryWithdrawContractCallData({
+            return reliquaryZapService.getReliquaryWithdrawAndHarvestContractCallData({
                 userAddress: userAddress || '',
                 relicId: relicId || 0,
                 bptAmount,

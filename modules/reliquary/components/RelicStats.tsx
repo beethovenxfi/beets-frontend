@@ -27,7 +27,7 @@ import { useRelicHarvestRewards } from '~/modules/reliquary/lib/useRelicHarvestR
 import { BeetsSubmitTransactionButton } from '~/components/button/BeetsSubmitTransactionButton';
 import { useReliquaryGlobalStats } from '~/modules/reliquary/lib/useReliquaryGlobalStats';
 import { ReliquaryBatchRelayerApprovalButton } from './ReliquaryBatchRelayerApprovalButton';
-import { useBatchRelayerHasRelicApproval } from '../lib/useBatchRelayerHasRelicApproval';
+import { useBatchRelayerHasApprovedForAll } from '../lib/useBatchRelayerHasApprovedForAll';
 
 export function RelicStats() {
     const { data: relicTokenBalances, relicBalanceUSD } = useRelicDepositBalance();
@@ -41,9 +41,7 @@ export function RelicStats() {
         selectedRelicLevel,
         weightedTotalBalance,
     } = useReliquary();
-    const { data: batchRelayerHasRelicApproval, refetch } = useBatchRelayerHasRelicApproval(
-        parseInt(selectedRelicId || ''),
-    );
+    const { data: batchRelayerHasApprovedForAll, refetch } = useBatchRelayerHasApprovedForAll();
     const config = useNetworkConfig();
     const { priceForAmount } = useGetTokens();
     const {
@@ -58,6 +56,8 @@ export function RelicStats() {
     const relicShare = globalStats && selectedRelic ? weightedRelicAmount / weightedTotalBalance : 0;
     const relicBeetsPerDay = beetsPerDay * relicShare;
     const relicYieldPerDay = priceForAmount({ address: config.beets.address, amount: `${relicBeetsPerDay}` });
+
+    console.log(batchRelayerHasApprovedForAll);
 
     return (
         <>
@@ -132,9 +132,13 @@ export function RelicStats() {
                                 </VStack>
                             </HStack>
                         </VStack>
-                        {!batchRelayerHasRelicApproval ? (
+                        {!batchRelayerHasApprovedForAll ? (
                             <Box w="full">
-                                <ReliquaryBatchRelayerApprovalButton />
+                                <ReliquaryBatchRelayerApprovalButton
+                                    onConfirmed={() => {
+                                        refetch();
+                                    }}
+                                />
                             </Box>
                         ) : (
                             <BeetsSubmitTransactionButton
@@ -145,7 +149,6 @@ export function RelicStats() {
                                 onClick={harvest}
                                 onConfirmed={() => {
                                     refetchPendingRewards();
-                                    refetch();
                                 }}
                             >
                                 Claim now

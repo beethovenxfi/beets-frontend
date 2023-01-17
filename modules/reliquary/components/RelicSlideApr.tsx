@@ -2,7 +2,6 @@ import { useSwiper, useSwiperSlide } from 'swiper/react';
 import { useEffect, useState } from 'react';
 import { Badge, Box, Heading, HStack, Skeleton, VStack, Text, Divider } from '@chakra-ui/react';
 import useReliquary from '../lib/useReliquary';
-import { useBatchRelayerHasRelicApproval } from '../lib/useBatchRelayerHasRelicApproval';
 import { numberFormatUSDValue } from '~/lib/util/number-formats';
 import AprTooltip from '~/components/apr-tooltip/AprTooltip';
 import numeral from 'numeral';
@@ -18,6 +17,7 @@ import { BeetsSubmitTransactionButton } from '~/components/button/BeetsSubmitTra
 import { useRelicHarvestRewards } from '../lib/useRelicHarvestRewards';
 import BeetsTooltip from '~/components/tooltip/BeetsTooltip';
 import { motion } from 'framer-motion';
+import { useBatchRelayerHasApprovedForAll } from '../lib/useBatchRelayerHasApprovedForAll';
 
 interface Props {}
 
@@ -40,9 +40,7 @@ export default function RelicSlideApr(props: Props) {
         setIsLoadingRelicPositions(isLoadingRelicPositions);
     }, [isLoadingRelicPositions]);
 
-    const { data: batchRelayerHasRelicApproval, refetch } = useBatchRelayerHasRelicApproval(
-        parseInt(selectedRelicId || ''),
-    );
+    const { data: batchRelayerHasApprovedForAll, refetch } = useBatchRelayerHasApprovedForAll();
     const { priceForAmount } = useGetTokens();
     const pendingRewardsUsdValue = sumBy(pendingRewards, priceForAmount);
 
@@ -122,10 +120,14 @@ export default function RelicSlideApr(props: Props) {
                     </Box>
                 </VStack>
             </HStack>
-            {!batchRelayerHasRelicApproval ? (
+            {!batchRelayerHasApprovedForAll ? (
                 <BeetsTooltip label="To claim your pending rewards, you first need to approve the batch relayer.">
                     <Box w="full">
-                        <ReliquaryBatchRelayerApprovalButton />
+                        <ReliquaryBatchRelayerApprovalButton
+                            onConfirmed={() => {
+                                refetch();
+                            }}
+                        />
                     </Box>
                 </BeetsTooltip>
             ) : (
@@ -137,7 +139,6 @@ export default function RelicSlideApr(props: Props) {
                     onClick={harvest}
                     onConfirmed={() => {
                         refetchPendingRewards();
-                        refetch();
                     }}
                 >
                     Claim now
