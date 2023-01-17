@@ -17,6 +17,10 @@ import { sum } from 'lodash';
 import { usePool } from '~/modules/pool/lib/usePool';
 import { usePoolUserBptBalance } from '~/modules/pool/lib/usePoolUserBptBalance';
 import { useUserSyncBalanceMutation } from '~/apollo/generated/graphql-codegen-generated';
+import useReliquary from '~/modules/reliquary/lib/useReliquary';
+import { useReliquaryWithdrawContractCallData } from '~/modules/reliquary/lib/useReliquaryWithdrawContractCallData';
+import { useReliquaryZap } from '~/modules/reliquary/lib/useReliquaryZap';
+import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 
 interface Props {
     onWithdrawComplete(): void;
@@ -25,13 +29,25 @@ interface Props {
 
 export function PoolWithdrawPreview({ onWithdrawComplete, onClose }: Props) {
     const { pool } = usePool();
+    const { reliquary } = useNetworkConfig();
+    const isReliquaryFBeetsPool = pool.id === reliquary.fbeets.poolId;
+
     const { getToken } = useGetTokens();
-    const { selectedWithdrawType, singleAssetWithdraw, proportionalAmounts } = useWithdrawState();
+    const { selectedWithdrawType, singleAssetWithdraw, proportionalAmounts, proportionalPercent } = useWithdrawState();
     const { priceForAmount } = useGetTokens();
     const { exitPool, ...exitPoolQuery } = useExitPool(pool);
     const { data: contractCallData, isLoading: isLoadingContractCallData } = usePoolExitGetContractCallData();
     const { refetch } = usePoolUserBptBalance();
     const [userSyncBalance, { loading }] = useUserSyncBalanceMutation();
+
+    const { selectedRelic } = useReliquary();
+    const { data: reliquaryContractCalls } = useReliquaryWithdrawContractCallData({
+        relicId: parseInt(selectedRelic?.relicId || ''),
+        bptAmount: (proportionalPercent * parseInt(selectedRelic?.amount || '')).toString(),
+        poolTotalShares: pool.dynamicData.totalShares,
+        poolTokens: pool.tokens,
+    });
+    const { reliquaryZap, ...reliquaryZapQuery } = useReliquaryZap('WITHDRAW');
 
     const withdrawAmounts =
         selectedWithdrawType === 'SINGLE_ASSET' && singleAssetWithdraw
@@ -67,7 +83,7 @@ export function PoolWithdrawPreview({ onWithdrawComplete, onClose }: Props) {
                     Transaction details
                 </Text>
                 <TransactionSubmittedContent
-                    width='full'
+                    width="full"
                     query={exitPoolQuery}
                     confirmedMessage={`You've successfully withdrawn ${numberFormatUSDValue(totalWithdrawValue)} from ${
                         pool.name
@@ -82,8 +98,11 @@ export function PoolWithdrawPreview({ onWithdrawComplete, onClose }: Props) {
                 completeButtonText="Return to pool"
                 onCompleteButtonClick={onClose}
                 onSubmit={() => {
-                    if (contractCallData) {
+                    if (contractCallData && !isReliquaryFBeetsPool) {
                         exitPool(contractCallData, withdrawAmounts);
+                    }
+                    if (reliquaryContractCalls && isReliquaryFBeetsPool) {
+                        reliquaryZap(reliquaryContractCalls);
                     }
                 }}
                 onConfirmed={async (id) => {
@@ -94,7 +113,7 @@ export function PoolWithdrawPreview({ onWithdrawComplete, onClose }: Props) {
                     }
                 }}
                 steps={[{ id: 'exit', tooltipText: '', type: 'other', buttonText: 'Withdraw' }]}
-                queries={[{ ...exitPoolQuery, id: 'exit' }]}
+                queries={[{ ...(isReliquaryFBeetsPool ? reliquaryZapQuery : exitPoolQuery), id: 'exit' }]}
             />
         </Box>
     );
