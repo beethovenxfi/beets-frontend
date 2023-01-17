@@ -13,14 +13,13 @@ import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 interface Props {
     onInvestComplete(): void;
     onClose(): void;
-    isReliquaryDeposit?: boolean;
 }
 
-export function PoolInvestPreview({ onInvestComplete, onClose, isReliquaryDeposit }: Props) {
+export function PoolInvestPreview({ onInvestComplete, onClose }: Props) {
     const { priceForAmount } = useGetTokens();
     const { selectedInvestTokensWithAmounts } = useInvest();
     const networkConfig = useNetworkConfig();
-    const { selectedRelic } = useReliquary();
+    const { selectedRelic, createRelic } = useReliquary();
     const { pool } = usePool();
     const isReliquaryFBeetsPool = pool.id === networkConfig.reliquary.fbeets.poolId;
     // const {} = useReliquaryDepositImpact();
@@ -29,7 +28,7 @@ export function PoolInvestPreview({ onInvestComplete, onClose, isReliquaryDeposi
         <VStack spacing="4" width="full">
             <Box px="4" width="full">
                 <PoolInvestSummary mt="6" />
-                {selectedRelic && isReliquaryFBeetsPool && (
+                {!createRelic && selectedRelic && isReliquaryFBeetsPool && (
                     <Box>
                         <Alert status="warning" mb="4">
                             <AlertIcon />
@@ -46,7 +45,11 @@ export function PoolInvestPreview({ onInvestComplete, onClose, isReliquaryDeposi
                     </VStack>
                 </BeetsBox>
             </Box>
-            <PoolInvestActions isReliquaryDeposit onInvestComplete={onInvestComplete} onClose={onClose} />
+            <PoolInvestActions
+                isReliquaryDeposit={isReliquaryFBeetsPool}
+                onInvestComplete={onInvestComplete}
+                onClose={onClose}
+            />
         </VStack>
     );
 }
