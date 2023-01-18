@@ -12,7 +12,7 @@ interface Props {
 }
 
 export function BeetsBatchRelayerUnapprovalButton({ ...rest }: Props) {
-    const { unapprove, ...query } = useApproveBatchRelayer();
+    const { unapprove, approve, ...query } = useApproveBatchRelayer();
 
     return (
         <BeetsSubmitTransactionButton
