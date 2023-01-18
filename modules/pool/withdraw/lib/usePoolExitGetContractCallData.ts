@@ -9,16 +9,21 @@ import { usePoolUserBptBalance } from '~/modules/pool/lib/usePoolUserBptBalance'
 import { useUserAccount } from '~/lib/user/useUserAccount';
 import { usePool } from '~/modules/pool/lib/usePool';
 import { usePoolExitGetSingleAssetWithdrawForBptIn } from '~/modules/pool/withdraw/lib/usePoolExitGetSingleAssetWithdrawForBptIn';
+import useReliquary from '~/modules/reliquary/lib/useReliquary';
 
 export function usePoolExitGetContractCallData() {
     const { userAddress } = useUserAccount();
-    const { type, singleAsset, proportionalPercent } = useReactiveVar(withdrawStateVar);
+    const { type, singleAsset, proportionalPercent, isReliquaryWithdraw } = useReactiveVar(withdrawStateVar);
     const { poolService, pool } = usePool();
     const { userWalletBptBalance } = usePoolUserBptBalance();
     const { data: proportionalAmountsOut, error, isLoading } = usePoolExitGetProportionalWithdrawEstimate();
     const { data: singleAssetWithdrawEstimate } = usePoolExitGetBptInForSingleAssetWithdraw();
     const { data: singleAssetWithdrawForMaxBptIn } = usePoolExitGetSingleAssetWithdrawForBptIn();
     const { slippage } = useSlippage();
+
+    const { selectedRelic } = useReliquary();
+
+    const bptIn = isReliquaryWithdraw ? selectedRelic?.amount || '' : userWalletBptBalance;
 
     return useQuery(
         [
@@ -33,9 +38,7 @@ export function usePoolExitGetContractCallData() {
         ],
         () => {
             if (type === 'PROPORTIONAL' && proportionalAmountsOut) {
-                const userBptRatio = oldBnumToHumanReadable(
-                    oldBnumScaleAmount(userWalletBptBalance).times(proportionalPercent / 100),
-                );
+                const userBptRatio = oldBnumToHumanReadable(oldBnumScaleAmount(bptIn).times(proportionalPercent / 100));
 
                 return poolService.exitGetContractCallData({
                     kind: 'ExactBPTInForTokensOut',
@@ -54,7 +57,7 @@ export function usePoolExitGetContractCallData() {
 
                 return poolService.exitGetContractCallData({
                     kind: 'ExactBPTInForOneTokenOut',
-                    bptAmountIn: isSingleAssetMax ? userWalletBptBalance : singleAssetWithdrawEstimate.bptIn,
+                    bptAmountIn: isSingleAssetMax ? bptIn : singleAssetWithdrawEstimate.bptIn,
                     tokenOutAddress: singleAsset.address,
                     slippage,
                     amountOut: singleAsset.amount,

@@ -9,6 +9,7 @@ interface WithdrawState {
     proportionalPercent: number;
     selectedOptions: { [poolTokenIndex: string]: string };
     proportionalAmounts: TokenAmountHumanReadable[] | null;
+    isReliquaryWithdraw: boolean;
 }
 
 export const withdrawStateVar = makeVar<WithdrawState>({
@@ -17,6 +18,7 @@ export const withdrawStateVar = makeVar<WithdrawState>({
     singleAsset: null,
     selectedOptions: {},
     proportionalAmounts: null,
+    isReliquaryWithdraw: false,
 });
 
 export function useWithdrawState() {
@@ -59,6 +61,10 @@ export function useWithdrawState() {
         });
     }
 
+    function setIsReliquaryWithdraw(isReliquaryWithdraw: boolean) {
+        withdrawStateVar({ ...withdrawStateVar(), isReliquaryWithdraw });
+    }
+
     function clearWithdrawState() {
         withdrawStateVar({
             type: 'PROPORTIONAL',
@@ -66,6 +72,7 @@ export function useWithdrawState() {
             singleAsset: null,
             selectedOptions: {},
             proportionalAmounts: null,
+            isReliquaryWithdraw: false,
         });
     }
 
@@ -78,11 +85,13 @@ export function useWithdrawState() {
         proportionalPercent: withdrawState.proportionalPercent,
         selectedOptions: withdrawState.selectedOptions,
         proportionalAmounts: withdrawState.proportionalAmounts,
+        isReliquaryWithdraw: withdrawState.isReliquaryWithdraw,
         setProportionalWithdraw,
         setSingleAssetWithdraw,
         setSingleAssetWithdrawAmount,
         setSelectedOption,
         clearWithdrawState,
         setProportionalAmounts,
+        setIsReliquaryWithdraw,
     };
 }

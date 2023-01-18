@@ -21,6 +21,10 @@ import useReliquary from '~/modules/reliquary/lib/useReliquary';
 import { useReliquaryWithdrawAndHarvestContractCallData } from '~/modules/reliquary/lib/useReliquaryWithdrawAndHarvestContractCallData';
 import { useReliquaryZap } from '~/modules/reliquary/lib/useReliquaryZap';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
+import { oldBnumToHumanReadable, oldBnumScaleAmount } from '~/lib/services/pool/lib/old-big-number';
+import { PoolExitPoolContractCallData } from '~/lib/services/pool/pool-types';
+import { usePoolExitGetBptInForSingleAssetWithdraw } from '../lib/usePoolExitGetBptInForSingleAssetWithdraw';
+import { usePoolExitGetSingleAssetWithdrawForBptIn } from '../lib/usePoolExitGetSingleAssetWithdrawForBptIn';
 
 interface Props {
     onWithdrawComplete(): void;
@@ -37,16 +41,32 @@ export function PoolWithdrawPreview({ onWithdrawComplete, onClose }: Props) {
     const { priceForAmount } = useGetTokens();
     const { exitPool, ...exitPoolQuery } = useExitPool(pool);
     const { data: contractCallData, isLoading: isLoadingContractCallData } = usePoolExitGetContractCallData();
+    const { data: singleAssetWithdrawEstimate } = usePoolExitGetBptInForSingleAssetWithdraw();
+    const { data: singleAssetWithdrawForMaxBptIn } = usePoolExitGetSingleAssetWithdrawForBptIn();
     const { refetch } = usePoolUserBptBalance();
     const [userSyncBalance, { loading }] = useUserSyncBalanceMutation();
 
     const { selectedRelic } = useReliquary();
-    const { data: reliquaryContractCalls } = useReliquaryWithdrawAndHarvestContractCallData({
-        relicId: parseInt(selectedRelic?.relicId || ''),
-        bptAmount: (proportionalPercent * parseInt(selectedRelic?.amount || '')).toString(),
-        poolTotalShares: pool.dynamicData.totalShares,
-        poolTokens: pool.tokens,
-    });
+
+    const isSingleAssetMax = singleAssetWithdraw?.amount === singleAssetWithdrawForMaxBptIn?.tokenAmount;
+
+    const reliquaryContractCallData =
+        selectedWithdrawType === 'SINGLE_ASSET'
+            ? {
+                  relicId: parseInt(selectedRelic?.relicId || ''),
+                  bptAmount: isSingleAssetMax ? selectedRelic?.amount || '' : singleAssetWithdrawEstimate?.bptIn || '',
+                  minAmountsOut: (contractCallData as PoolExitPoolContractCallData)?.minAmountsOut,
+              }
+            : {
+                  relicId: parseInt(selectedRelic?.relicId || ''),
+                  bptAmount: oldBnumToHumanReadable(
+                      oldBnumScaleAmount(selectedRelic?.amount || '').times(proportionalPercent / 100),
+                  ),
+                  poolTotalShares: pool.dynamicData.totalShares,
+                  poolTokens: pool.tokens,
+              };
+    const { data: reliquaryContractCalls } = useReliquaryWithdrawAndHarvestContractCallData(reliquaryContractCallData);
+
     const { reliquaryZap, ...reliquaryZapQuery } = useReliquaryZap('WITHDRAW');
 
     const withdrawAmounts =

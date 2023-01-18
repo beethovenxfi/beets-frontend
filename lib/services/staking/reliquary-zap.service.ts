@@ -197,6 +197,7 @@ export class ReliquaryZapService {
         slippage,
         poolTokens,
         poolTotalShares,
+        minAmountsOut,
     }: {
         userAddress: string;
         bptAmount: AmountHumanReadable;
@@ -204,6 +205,7 @@ export class ReliquaryZapService {
         slippage: AmountHumanReadable;
         poolTokens: GqlPoolTokenBase[];
         poolTotalShares: AmountHumanReadable;
+        minAmountsOut: BigNumberish[];
     }): Promise<string[]> {
         const bptAmountScaled = parseFixed(bptAmount, 18);
 
@@ -214,17 +216,33 @@ export class ReliquaryZapService {
             outputReference: this.batchRelayerService.toChainedReference('0'),
         });
 
-        const proportionalAmounts = poolGetProportionalExitAmountsForBptIn(bptAmount, poolTokens, poolTotalShares);
+        const proportionalAmounts =
+            poolTokens && poolTotalShares
+                ? poolGetProportionalExitAmountsForBptIn(bptAmount, poolTokens, poolTotalShares)
+                : [];
+
+        const isProportional = !!proportionalAmounts.length;
+
+        const minAmountsOutArray =
+            minAmountsOut && !isProportional
+                ? minAmountsOut.map((amount) =>
+                      oldBnum(amount.toString()).minus(oldBnum(amount.toString()).times(slippage)).toFixed(0),
+                  )
+                : proportionalAmounts.map((amount) => {
+                      const poolToken = poolTokens.find((token) => token.address === amount.address);
+                      const amountScaled = parseUnits(amount.amount, poolToken?.decimals || 18).toString();
+                      console.log(oldBnum(amountScaled).minus(oldBnum(amountScaled).times(slippage)).toFixed(0));
+                      return oldBnum(amountScaled).minus(oldBnum(amountScaled).times(slippage)).toFixed(0);
+                  });
+
+        const poolTokenIndex = minAmountsOut ? minAmountsOutArray.findIndex((amount) => amount !== '0') : 0;
 
         const exitFbeetsPool = this.getNewFbeetsPoolExitCallData({
             userAddress,
             //we set these to 0 for the peek, they get filled in for the actual call data
-            minAmountsOut: proportionalAmounts.map((amount) => {
-                const poolToken = poolTokens.find((token) => token.address === amount.address);
-                const amountScaled = parseUnits(amount.amount, poolToken?.decimals || 18).toString();
-
-                return oldBnum(amountScaled).minus(oldBnum(amountScaled).times(slippage)).toFixed(0);
-            }),
+            minAmountsOut: minAmountsOutArray,
+            poolTokenIndex,
+            isProportional,
         });
 
         return [withdrawBptFromRelic, exitFbeetsPool];
@@ -335,10 +353,21 @@ export class ReliquaryZapService {
     private getNewFbeetsPoolExitCallData({
         userAddress,
         minAmountsOut,
+        poolTokenIndex,
+        isProportional,
     }: {
         userAddress: string;
         minAmountsOut: string[];
+        poolTokenIndex: number;
+        isProportional: boolean;
     }) {
+        const userData = isProportional
+            ? WeightedPoolEncoder.exitExactBPTInForTokensOut(this.batchRelayerService.toChainedReference('0'))
+            : WeightedPoolEncoder.exitExactBPTInForOneTokenOut(
+                  this.batchRelayerService.toChainedReference('0'),
+                  poolTokenIndex,
+              );
+
         return this.batchRelayerService.vaultEncodeExitPool({
             poolId: networkConfig.reliquary.fbeets.poolId,
             poolKind: 0,
@@ -347,9 +376,7 @@ export class ReliquaryZapService {
             exitPoolRequest: {
                 assets: [networkConfig.wethAddress, networkConfig.beets.address],
                 minAmountsOut,
-                userData: WeightedPoolEncoder.exitExactBPTInForTokensOut(
-                    this.batchRelayerService.toChainedReference('0'),
-                ),
+                userData,
                 toInternalBalance: false,
             },
             outputReferences: [

@@ -9,6 +9,8 @@ import { PoolWithdrawSettings } from '~/modules/pool/withdraw/components/PoolWit
 import { BeetsTokenInputWithSlider } from '~/components/inputs/BeetsTokenInputWithSlider';
 import { usePool } from '~/modules/pool/lib/usePool';
 import { useHasBatchRelayerApproval } from '~/lib/util/useHasBatchRelayerApproval';
+import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
+import { useEffectOnce } from '~/lib/util/custom-hooks';
 
 interface Props extends BoxProps {
     onShowPreview: () => void;
@@ -17,10 +19,17 @@ interface Props extends BoxProps {
 export function PoolWithdrawSingleAsset({ onShowPreview, ...rest }: Props) {
     const { allTokens, pool, requiresBatchRelayerOnExit } = usePool();
     const { data: hasBatchRelayerApproval } = useHasBatchRelayerApproval();
-    const { singleAssetWithdraw, setSingleAssetWithdrawAmount, setSingleAssetWithdraw } = useWithdrawState();
+    const { singleAssetWithdraw, setSingleAssetWithdrawAmount, setSingleAssetWithdraw, setIsReliquaryWithdraw } =
+        useWithdrawState();
     const singleAssetWithdrawForBptIn = usePoolExitGetSingleAssetWithdrawForBptIn();
     const { hasHighPriceImpact, formattedPriceImpact } = usePoolExitGetBptInForSingleAssetWithdraw();
     const [acknowledgeHighPriceImpact, { toggle: toggleAcknowledgeHighPriceImpact }] = useBoolean(false);
+    const { reliquary } = useNetworkConfig();
+    const isReliquaryFBeetsPool = pool.id === reliquary.fbeets.poolId;
+
+    useEffectOnce(() => {
+        setIsReliquaryWithdraw(isReliquaryFBeetsPool);
+    });
 
     useEffect(() => {
         const defaultSingleAsset = pool.withdrawConfig.options[0]?.tokenOptions[0]?.address;
