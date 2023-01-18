@@ -57,8 +57,6 @@ export function RelicStats() {
     const relicBeetsPerDay = beetsPerDay * relicShare;
     const relicYieldPerDay = priceForAmount({ address: config.beets.address, amount: `${relicBeetsPerDay}` });
 
-    console.log(batchRelayerHasApprovedForAll);
-
     return (
         <>
             <VStack spacing="4">

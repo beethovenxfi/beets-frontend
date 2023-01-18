@@ -35,7 +35,7 @@ export class ReliquaryStakingService {
 
     public encodeWithdrawAndHarvest(params: EncodeReliquaryWithdrawAndHarvestInput): string {
         const reliquaryStakingLibrary = new Interface(ReliquaryStakingAbi);
-        console.log(params);
+
         return reliquaryStakingLibrary.encodeFunctionData('reliquaryWithdrawAndHarvest', [
             params.recipient,
             params.relicId,
