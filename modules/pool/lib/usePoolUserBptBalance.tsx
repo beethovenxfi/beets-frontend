@@ -78,7 +78,7 @@ function usePoolUserBptWalletBalance() {
     };
 }
 
-function usePoolUserStakedBalance() {
+export function usePoolUserStakedBalance() {
     const { pool } = usePool();
     const { userAddress } = useUserAccount();
     const provider = useProvider();

@@ -42,7 +42,6 @@ export const fantomNetworkConfig: NetworkConfig = {
             farmId: 1,
         },
     },
-
     balancer: {
         vault: '0x20dd72Ed959b6147912C2e529F0a0C651c33c9ce',
         batchRelayer: '0x419f7925b8c9e409b6ee8792242556fa210a7a09',
