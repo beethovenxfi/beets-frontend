@@ -50,7 +50,7 @@ export default function BeetsCarousel({ children = [] }: CarouselProps) {
         >
             {(children || []).map((child, i) => {
                 return (
-                    <Box animate={controls} onClick={() => setActiveIndex(i)} as={motion.div}>
+                    <Box animate={controls} onClick={() => setActiveIndex(i)} as={motion.div} key={i}>
                         <BeetsCarouselItem>{child}</BeetsCarouselItem>
                     </Box>
                 );
