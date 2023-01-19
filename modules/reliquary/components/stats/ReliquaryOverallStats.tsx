@@ -27,10 +27,6 @@ export default function ReliquaryOverallStats() {
     const [{ apr: minApr }] = data.apr.items.filter((item) => item.title.includes('Min'));
     const [{ apr: maxApr }] = data.apr.items.filter((item) => item.title.includes('Max'));
 
-    const tvlPercentChange =
-        (parseFloat(data.totalLiquidity) - parseFloat(data.totalLiquidity24hAgo)) /
-        parseFloat(data.totalLiquidity24hAgo);
-
     const beetsPerDay = parseFloat(pool.staking?.reliquary?.beetsPerSecond || '0') * 86400;
     const incentivesDailyValue = beetsPerDay * priceFor(networkConfig.beets.address);
 
@@ -51,7 +47,7 @@ export default function ReliquaryOverallStats() {
         prev.percentageOfTotal > curr.percentageOfTotal ? prev : curr,
     );
 
-    const avgValuePerRelic = parseInt(globalStats?.totalLiquidity || '') / parseInt(globalStats?.relicCount || '');
+    const avgValuePerRelic = parseFloat(globalStats?.totalLiquidity || '') / parseInt(globalStats?.relicCount || '');
 
     const today = Date.now();
     const cutOffDate = startOfWeek(today).getTime();
@@ -89,9 +85,8 @@ export default function ReliquaryOverallStats() {
                                 TVL
                             </Text>
                             <Text color="white" fontSize="1.75rem">
-                                {numeral(data.totalLiquidity).format('$0,0.00a')}
+                                {numeral(globalStats?.totalLiquidity).format('$0,0.00a')}
                             </Text>
-                            <PercentChangeBadge percentChange={tvlPercentChange} />
                         </VStack>
                         <VStack width="full" spacing="0" alignItems="flex-start">
                             <VStack spacing="1" alignItems="flex-start" mb="2">
