@@ -5,6 +5,7 @@ import { Box, BoxProps, Heading, VStack, Flex, useBreakpointValue } from '@chakr
 import useReliquary from '../lib/useReliquary';
 import { PoolInvestModal } from '~/modules/pool/invest/PoolInvestModal';
 import RelicSlide from './RelicSlide';
+import { PoolWithdrawModal } from '~/modules/pool/withdraw/PoolWithdrawModal';
 
 interface Props extends BoxProps {
     loading?: boolean;
@@ -14,6 +15,10 @@ export function RelicCarousel({ loading, ...rest }: Props) {
     const { relicPositions, isLoadingRelicPositions, selectedRelic } = useReliquary();
     // hack to get around next.js hydration issues with swiper
     const [_isLoadingRelicPositions, setIsLoadingRelicPositions] = useState(false);
+
+    const [isInvestModalVisible, setIsInvestModalVisible] = useState(false);
+    const [isWithdrawModalVisible, setIsWithdrawModalVisible] = useState(false);
+
     const isMobile = useBreakpointValue({ base: true, lg: false });
     const hasNoRelics = relicPositions.length === 0;
 
@@ -51,6 +56,12 @@ export function RelicCarousel({ loading, ...rest }: Props) {
                     '.swiper-slide-next': {
                         transform: 'scale(1)',
                         opacity: '1',
+                        zIndex: -1,
+                    },
+                    '.swiper-slide-active': {
+                        transform: 'scale(1)',
+                        opacity: '1',
+                        zIndex: 1,
                     },
                 }}
                 {...rest}
@@ -74,16 +85,34 @@ export function RelicCarousel({ loading, ...rest }: Props) {
                 >
                     {relicPositions.map((relic) => (
                         <SwiperSlide key={`relic-carousel-${relic.relicId}`}>
-                            <RelicSlide relic={selectedRelic || relicPositions[0]} />
+                            <RelicSlide
+                                openInvestModal={() => setIsInvestModalVisible(true)}
+                                openWithdrawModal={() => setIsWithdrawModalVisible(true)}
+                                relic={selectedRelic || relicPositions[0]}
+                            />
                         </SwiperSlide>
                     ))}
                     {!relicPositions.length && (
                         <SwiperSlide key={`dummy-slide`}>
-                            <RelicSlide relic={selectedRelic || relicPositions[0]} />
+                            <RelicSlide
+                                openInvestModal={() => setIsInvestModalVisible(true)}
+                                openWithdrawModal={() => setIsWithdrawModalVisible(true)}
+                                relic={selectedRelic || relicPositions[0]}
+                            />
                         </SwiperSlide>
                     )}
                 </Swiper>
             </Box>
+            <PoolInvestModal
+                onClose={() => setIsInvestModalVisible(false)}
+                isVisible={isInvestModalVisible}
+                noActivator
+            />
+            <PoolWithdrawModal
+                onClose={() => setIsWithdrawModalVisible(false)}
+                isVisible={isWithdrawModalVisible}
+                noActivator
+            />
         </Box>
     );
 }

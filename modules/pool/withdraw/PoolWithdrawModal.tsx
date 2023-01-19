@@ -2,7 +2,6 @@ import { Modal, ModalBody, ModalCloseButton, ModalContent } from '@chakra-ui/mod
 import {
     Alert,
     AlertIcon,
-    Box,
     Button,
     ButtonProps,
     Heading,
@@ -13,7 +12,7 @@ import {
     useDisclosure,
 } from '@chakra-ui/react';
 import { ChevronLeft } from 'react-feather';
-import { ReactNode, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { PoolWithdrawTypeChoice } from '~/modules/pool/withdraw/components/PoolWithdrawTypeChoice';
 import { PoolWithdrawProportional } from '~/modules/pool/withdraw/components/PoolWithdrawProportional';
 import { PoolWithdrawSingleAsset } from '~/modules/pool/withdraw/components/PoolWithdrawSingleAsset';
@@ -24,10 +23,12 @@ import { usePool } from '~/modules/pool/lib/usePool';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 
 interface Props {
-    activator?: ReactNode;
     activatorProps?: ButtonProps;
+    noActivator?: boolean;
+    isVisible?: boolean;
+    onClose?: () => void;
 }
-export function PoolWithdrawModal({ activatorProps = {} }: Props) {
+export function PoolWithdrawModal({ activatorProps = {}, noActivator = false, onClose: _onClose, isVisible = false }: Props) {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const { pool, formattedTypeName } = usePool();
     const [modalState, setModalState] = useState<'start' | 'proportional' | 'single-asset' | 'preview'>('start');
@@ -49,13 +50,24 @@ export function PoolWithdrawModal({ activatorProps = {} }: Props) {
         }
 
         onClose();
+        _onClose && _onClose();
     }
+
+    useEffect(() => {
+        if (isVisible) {
+            onOpen();
+        } else {
+            onModalClose();
+        }
+    }, [isVisible]);
 
     return (
         <>
-            <Button onClick={onOpen} variant="secondary" width={{ base: 'full', md: '140px' }} {...activatorProps}>
-                Withdraw
-            </Button>
+            {!noActivator && (
+                <Button onClick={onOpen} variant="secondary" width={{ base: 'full', md: '140px' }} {...activatorProps}>
+                    Withdraw
+                </Button>
+            )}
             <Modal
                 isOpen={isOpen}
                 onClose={onModalClose}

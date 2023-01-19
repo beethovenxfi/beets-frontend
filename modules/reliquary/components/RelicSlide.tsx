@@ -1,31 +1,26 @@
 import { useSwiper, useSwiperSlide } from 'swiper/react';
 import { useEffect, useState } from 'react';
-import { Badge, Box, Heading, HStack, Image, Skeleton, VStack, Text, Flex, Button } from '@chakra-ui/react';
+import { Badge, Box, Heading, HStack, Image, Skeleton, VStack, Flex, Stack } from '@chakra-ui/react';
 import useReliquary from '../lib/useReliquary';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ReliquaryFarmPosition, reliquaryService } from '~/lib/services/staking/reliquary.service';
-import AnimatedProgress from '~/components/animated-progress/AnimatedProgress';
 import { relicGetMaturityProgress } from '../lib/reliquary-helpers';
-import Countdown from 'react-countdown';
 import RelicLevelUpButton from './RelicLevelUpButton';
 import { useQuery } from 'react-query';
 import { getProvider } from '@wagmi/core';
-import { PoolInvestModal } from '~/modules/pool/invest/PoolInvestModal';
-import { PoolWithdrawModal } from '~/modules/pool/withdraw/PoolWithdrawModal';
-import { ChevronLeft, ChevronRight } from 'react-feather';
 import { useRelicDepositBalance } from '../lib/useRelicDepositBalance';
-import { numberFormatUSDValue } from '~/lib/util/number-formats';
-import { BeetsBox } from '~/components/box/BeetsBox';
-import { TokenAmountPill } from '~/components/token/TokenAmountPill';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 import RelicSlideApr from './RelicSlideApr';
 import RelicSlideInfo from './RelicSlideInfo';
+import RelicSlideMainInfo from './RelicSlideMainInfo';
 
 export interface RelicSlideProps {
     relic: ReliquaryFarmPosition;
+    openInvestModal: () => void;
+    openWithdrawModal: () => void;
 }
 
-export default function RelicSlide({ relic }: RelicSlideProps) {
+export default function RelicSlide({ relic, openInvestModal, openWithdrawModal }: RelicSlideProps) {
     const swiper = useSwiper();
     const { isActive } = useSwiperSlide();
     const [showRelicInfo, setShowRelicInfo] = useState(false);
@@ -38,12 +33,7 @@ export default function RelicSlide({ relic }: RelicSlideProps) {
         setSelectedRelicId,
         relicPositions,
     } = useReliquary();
-    const { progressToNextLevel, levelUpDate, canUpgrade } = relicGetMaturityProgress(
-        selectedRelic,
-        maturityThresholds,
-    );
-    const config = useNetworkConfig();
-    const { relicBalanceUSD } = useRelicDepositBalance();
+    const { canUpgrade } = relicGetMaturityProgress(selectedRelic, maturityThresholds);
     const [_isLoadingRelicPositions, setIsLoadingRelicPositions] = useState(false);
 
     // hack to get around next.js hydration issues with swiper
@@ -61,17 +51,6 @@ export default function RelicSlide({ relic }: RelicSlideProps) {
             return await reliquaryService.getRelicNFT({ tokenId: selectedRelicId, provider: getProvider() });
         }
     });
-
-    const handleClick = (isNext: boolean) => {
-        if (isActive) return;
-        const relicPositionIndex = relicPositions.findIndex((position) => position.relicId === relic.relicId);
-
-        if (isNext) {
-            setSelectedRelicId(relicPositions[relicPositionIndex + 1].relicId);
-        } else {
-            setSelectedRelicId(relicPositions[relicPositionIndex - 1].relicId);
-        }
-    };
 
     function getContainerOpacity() {
         if (hasNoRelics) {
@@ -105,6 +84,7 @@ export default function RelicSlide({ relic }: RelicSlideProps) {
                 }}
                 rounded="lg"
                 spacing="8"
+                zIndex={isActive ? 1 : -1}
             >
                 <Flex justifyContent="center" width={{ base: '100%', lg: '47.5%' }} rounded="lg">
                     <HStack spacing="4" width="full" alignItems="start">
@@ -153,125 +133,15 @@ export default function RelicSlide({ relic }: RelicSlideProps) {
                         {!_isLoadingRelicPositions && <Image height="400px" width="400px" src={nftURI} />}
                     </Box>
                 </Flex>
-                <Box position="relative" width="full">
+                <Stack direction={{ base: 'column', lg: 'row' }} position="relative" height="310px" width="full">
+                    <RelicSlideMainInfo
+                        openInvestModal={openInvestModal}
+                        openWithdrawModal={openWithdrawModal}
+                        isLoading={_isLoadingRelicPositions}
+                    />
                     <RelicSlideApr />
-                    {isActive && !_isLoadingRelicPositions && (
-                        <Box position="relative" width="full">
-                            {relicPositions.length > 1 && (
-                                <Button
-                                    px="2"
-                                    zIndex={2}
-                                    position="absolute"
-                                    left="3rem"
-                                    top="50%"
-                                    transform="translateY(-50%)"
-                                    onClick={() => swiper.slidePrev()}
-                                >
-                                    <ChevronLeft />
-                                </Button>
-                            )}
-
-                            <VStack
-                                as={motion.div}
-                                animate={{ opacity: 1, transform: 'scale(1)', transition: { delay: 0.1 } }}
-                                initial={{ opacity: 0, transform: 'scale(0.75)' }}
-                                exit={{ opacity: 0, transform: 'scale(0.75)' }}
-                                overflow="hidden"
-                                width="full"
-                                position="relative"
-                            >
-                                <Box width={{ base: '100%', lg: '60%' }} rounded="lg" background="whiteAlpha.200" p="4">
-                                    <VStack spacing="3" width="full">
-                                        <VStack width="full" spacing="4">
-                                            <VStack alignItems="flex-start" spacing="4" rounded="lg" width="full">
-                                                <VStack spacing="1" alignItems="flex-start">
-                                                    <Box>
-                                                        <Text
-                                                            lineHeight="1rem"
-                                                            fontWeight="semibold"
-                                                            fontSize="md"
-                                                            color="beets.base.50"
-                                                        >
-                                                            Relic liquidity
-                                                        </Text>
-                                                        <Text color="white" fontSize="1.75rem">
-                                                            {numberFormatUSDValue(relicBalanceUSD)}
-                                                        </Text>
-                                                    </Box>
-                                                    <BeetsBox>
-                                                        <TokenAmountPill
-                                                            key={`relic-token-${config.fbeets.address}`}
-                                                            address={config.fbeets.address}
-                                                            amount={selectedRelic?.amount || '0'}
-                                                        />
-                                                        {/* <Box display={{ base: 'block', md: 'flex' }}>
-                                                                    {relicTokenBalances &&
-                                                                        relicTokenBalances.map((token) => (
-                                                                            <TokenAmountPill
-                                                                                mt={{ base: '2', md: '0' }}
-                                                                                ml={{ base: '0', md: '1' }}
-                                                                                key={`relic-token-${token.address}`}
-                                                                                address={token.address}
-                                                                                amount={token.amount}
-                                                                            />
-                                                                        ))}
-                                                                </Box> */}
-                                                    </BeetsBox>
-                                                </VStack>
-                                                <VStack spacing="1" width="full" alignItems="flex-start">
-                                                    <HStack spacing="1" color="beets.green">
-                                                        <Text>Next level in</Text>
-                                                        <Countdown date={levelUpDate} />
-                                                    </HStack>
-                                                    <AnimatedProgress
-                                                        rounded="none"
-                                                        color="black"
-                                                        width="full"
-                                                        value={progressToNextLevel}
-                                                    />
-                                                </VStack>
-                                            </VStack>
-                                            <HStack width="full">
-                                                <PoolInvestModal
-                                                    activatorLabel="Deposit"
-                                                    activatorProps={{
-                                                        width: 'full',
-                                                        size: 'sm',
-                                                        rounded: 'lg',
-                                                        disabled: hasNoRelics,
-                                                    }}
-                                                />
-                                                <PoolWithdrawModal
-                                                    activatorProps={{
-                                                        width: 'full',
-                                                        size: 'sm',
-                                                        rounded: 'lg',
-                                                        disabled: hasNoRelics,
-                                                    }}
-                                                />
-                                            </HStack>
-                                        </VStack>
-                                    </VStack>
-                                </Box>
-                            </VStack>
-
-                            {relicPositions.length > 1 && (
-                                <Button
-                                    px="2"
-                                    zIndex={2}
-                                    position="absolute"
-                                    right="3rem"
-                                    top="50%"
-                                    transform="translateY(-50%)"
-                                    onClick={() => swiper.slideNext()}
-                                >
-                                    <ChevronRight />
-                                </Button>
-                            )}
-                        </Box>
-                    )}
                     <RelicSlideInfo />
-                </Box>
+                </Stack>
             </VStack>
         </AnimatePresence>
     );

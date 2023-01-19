@@ -25,14 +25,11 @@ import { motion } from 'framer-motion';
 interface Props {}
 
 export default function RelicSlideInfo(props: Props) {
-    const { pool } = usePool();
     const { isActive } = useSwiperSlide();
     const {
         selectedRelicId,
         isLoadingRelicPositions,
         selectedRelicLevel,
-        relicPositions,
-        selectedRelicApr,
         selectedRelic,
         weightedTotalBalance,
         beetsPerDay,
@@ -67,10 +64,11 @@ export default function RelicSlideInfo(props: Props) {
 
     return (
         <VStack
-            right="-42.5%"
+            right={{ base: '0', lg: '-41.25%' }}
+            height="full"
             top="0"
             rounded="md"
-            position="absolute"
+            position={{ base: 'relative', lg: 'absolute' }}
             spacing="4"
             width={{ base: '100%', lg: '60%' }}
             alignItems="flex-start"

@@ -14,7 +14,7 @@ import {
 import { PoolInvestProportional } from '~/modules/pool/invest/components/PoolInvestProportional';
 import { ChevronLeft } from 'react-feather';
 import { PoolInvestPreview } from '~/modules/pool/invest/components/PoolInvestPreview';
-import React, { ReactNode, useLayoutEffect, useRef, useState } from 'react';
+import React, { ReactNode, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { PoolInvestTypeChoice } from '~/modules/pool/invest/components/PoolInvestTypeChoice';
 import { PoolInvestCustom } from '~/modules/pool/invest/components/PoolInvestCustom';
 import { animate, AnimatePresence, motion, useAnimation } from 'framer-motion';
@@ -24,10 +24,12 @@ import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 import useReliquary from '~/modules/reliquary/lib/useReliquary';
 
 interface Props {
-    activator?: ReactNode;
     createRelic?: boolean;
     activatorLabel?: string;
     activatorProps?: ButtonProps;
+    noActivator?: boolean;
+    isVisible?: boolean;
+    onClose?: () => void;
 }
 
 function getInvertedTransform(startBounds: DOMRect, endBounds: DOMRect) {
@@ -39,7 +41,14 @@ function getInvertedTransform(startBounds: DOMRect, endBounds: DOMRect) {
     };
 }
 
-export function PoolInvestModal({ createRelic = false, activatorLabel, activatorProps = {} }: Props) {
+export function PoolInvestModal({
+    createRelic = false,
+    activatorLabel,
+    activatorProps = {},
+    noActivator,
+    onClose: _onClose,
+    isVisible = false,
+}: Props) {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const { pool, formattedTypeName } = usePool();
     const [modalState, setModalState] = useState<'start' | 'proportional' | 'custom' | 'preview'>('start');
@@ -69,7 +78,16 @@ export function PoolInvestModal({ createRelic = false, activatorLabel, activator
             setCreateRelic(false);
         }
         onClose();
+        _onClose && _onClose();
     }
+
+    useEffect(() => {
+        if (isVisible) {
+            onModalOpen();
+        } else {
+            onModalClose();
+        }
+    }, [isVisible]);
 
     useLayoutEffect(() => {
         setTimeout(async () => {
@@ -117,14 +135,16 @@ export function PoolInvestModal({ createRelic = false, activatorLabel, activator
 
     return (
         <Box width={isReliquaryFBeetsPool ? 'full' : { base: 'full', md: 'fit-content' }}>
-            <Button
-                variant="primary"
-                onClick={onModalOpen}
-                width={isReliquaryFBeetsPool ? 'full' : { base: 'full', md: '140px' }}
-                {...activatorProps}
-            >
-                {isReliquaryFBeetsPool && createRelic ? 'Get fBEETS' : activatorLabel || 'Invest'}
-            </Button>
+            {!noActivator && (
+                <Button
+                    variant="primary"
+                    onClick={onModalOpen}
+                    width={isReliquaryFBeetsPool ? 'full' : { base: 'full', md: '140px' }}
+                    {...activatorProps}
+                >
+                    {isReliquaryFBeetsPool && createRelic ? 'Get fBEETS' : activatorLabel || 'Invest'}
+                </Button>
+            )}
             <Modal motionPreset="none" isOpen={isOpen} onClose={onModalClose} size="lg" initialFocusRef={initialRef}>
                 <ModalOverlay bg="blackAlpha.900" />
                 <AnimatePresence exitBeforeEnter>
