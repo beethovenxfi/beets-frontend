@@ -82,13 +82,7 @@ export function NavbarPendingRewards() {
                             w={{ base: 'full', lg: '48%' }}
                             mr={{ base: undefined, lg: '2' }}
                         />
-                        <Divider
-                            orientation={isMobile ? 'horizontal' : 'vertical'}
-                            w={{ base: 'full', lg: '2%' }}
-                            // props below are needed for a bug in Chrome :(
-                            h="auto"
-                            alignSelf="stretch"
-                        />
+                        {isMobile && <Divider orientation="horizontal" w={{ base: 'full', lg: '2%' }} />}
                         <VStack alignItems="stretch" w={{ base: 'full', lg: '48%' }}>
                             <BeetsBox px="4" py="2">
                                 <Box color="gray.200" pb="2" fontSize="sm">

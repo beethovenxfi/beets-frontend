@@ -27,7 +27,7 @@ export function ReliquaryBatchRelayerApprovalButton({ ...rest }: Props) {
                 submittingText="Confirm..."
                 pendingText="Waiting..."
             >
-                Approve Batch Relayer For All Relics
+                Approve Batch Relayer
             </BeetsSubmitTransactionButton>
         </Box>
     );

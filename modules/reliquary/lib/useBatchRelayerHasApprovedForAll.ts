@@ -21,6 +21,6 @@ export function useBatchRelayerHasApprovedForAll() {
 
     return {
         ...rest,
-        data,
+        data: data ? data[0] : false,
     };
 }

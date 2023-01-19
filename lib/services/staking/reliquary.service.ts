@@ -103,7 +103,6 @@ export class ReliquaryService {
 
         return Object.entries(rewardsByRelicId).map(([index, pendingReward]) => {
             const position: ReliquaryFarmPosition = allPositions[parseInt(index)];
-            console.log(position);
             return {
                 id: position.farmId,
                 relicId: position.relicId,
