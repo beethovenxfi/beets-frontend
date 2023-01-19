@@ -57,9 +57,7 @@ export function useReliquaryDepositContractCallData({
                 beetsAmount: investData.beetsAmount,
                 ftmAmount: investData.ftmAmount,
                 isNativeFtm: investData.isNativeFtm,
-                //TODO: set a relic id here if the user already has a relic
                 relicId: createRelic ? undefined : parseInt(selectedRelicId || ''),
-                //relicId: undefined,
             });
         },
         { enabled: !!userAddress && enabled },
