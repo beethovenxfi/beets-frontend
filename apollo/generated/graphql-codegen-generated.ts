@@ -864,6 +864,7 @@ export interface GqlReliquaryFarmSnapshot {
     timestamp: Scalars['Int'];
     tokenBalances: Array<GqlReliquaryTokenBalanceSnapshot>;
     totalBalance: Scalars['String'];
+    totalLiquidity: Scalars['String'];
     userCount: Scalars['String'];
 }
 
@@ -4352,6 +4353,7 @@ export type GetReliquaryFarmSnapshotsQuery = {
         farmId: string;
         timestamp: number;
         totalBalance: string;
+        totalLiquidity: string;
         relicCount: string;
         userCount: string;
         levelBalances: Array<{
@@ -6547,6 +6549,7 @@ export const GetReliquaryFarmSnapshotsDocument = gql`
             farmId
             timestamp
             totalBalance
+            totalLiquidity
             levelBalances {
                 id
                 level

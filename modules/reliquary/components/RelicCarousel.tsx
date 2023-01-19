@@ -1,73 +1,89 @@
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { ReactNode } from 'react';
+import { useEffect, useState } from 'react';
 import { Pagination } from 'swiper';
-import { Box, BoxProps, Image, Skeleton } from '@chakra-ui/react';
+import { Box, BoxProps, Heading, VStack, Flex, useBreakpointValue } from '@chakra-ui/react';
+import useReliquary from '../lib/useReliquary';
+import { PoolInvestModal } from '~/modules/pool/invest/PoolInvestModal';
+import RelicSlide from './RelicSlide';
 
 interface Props extends BoxProps {
-    items: ReactNode[];
     loading?: boolean;
-    cardHeight?: string;
 }
 
-export function RelicCarousel({ items = [], loading, cardHeight = '500px', ...rest }: Props) {
+export function RelicCarousel({ loading, ...rest }: Props) {
+    const { relicPositions, isLoadingRelicPositions, selectedRelic } = useReliquary();
+    // hack to get around next.js hydration issues with swiper
+    const [_isLoadingRelicPositions, setIsLoadingRelicPositions] = useState(false);
+    const isMobile = useBreakpointValue({ base: true, lg: false });
+    const hasNoRelics = relicPositions.length === 0;
+
+    // hack to get around next.js hydration issues with swiper
+    useEffect(() => {
+        setIsLoadingRelicPositions(isLoadingRelicPositions);
+    }, [isLoadingRelicPositions]);
     return (
-        <Box
-            sx={{
-                '.swiper-pagination': {
-                    bottom: '0px',
-                    display: 'flex',
-                    alignItems: 'flex-end',
-                    justifyContent: 'center',
-                },
-                '.swiper': {
-                    paddingBottom: '6',
-                    //overflowY: 'visible',
-                },
-                '.swiper-slide': {
-                    transform: 'scale(0.7)',
-                    transition: 'transform 300ms',
-                    opacity: '0.4',
-                },
-                '.swiper-slide-next': {
-                    transform: 'scale(1)',
-                    opacity: '1',
-                },
-            }}
-            {...rest}
-        >
-            <Swiper
-                slidesPerView={3}
-                spaceBetween={0}
-                /*breakpoints={{
+        <Box position="relative" minH="600px">
+            {hasNoRelics && !_isLoadingRelicPositions && (
+                <Flex justifyContent="center" zIndex={2} width="full" position="absolute" left="0" right="0" top="30%">
+                    <VStack spacing="4" alignItems="center">
+                        <Heading size="md">Get started by minting your own relic</Heading>
+                        <Box>
+                            <PoolInvestModal createRelic activatorProps={{ size: 'lg', width: '200px', mx: 'auto' }} />
+                        </Box>
+                    </VStack>
+                </Flex>
+            )}
+            <Box
+                sx={{
+                    '.swiper-pagination': {
+                        display: 'flex',
+                        alignItems: 'flex-end',
+                        justifyContent: 'center',
+                        bottom: -5,
+                    },
+                    '.swiper': {
+                        paddingBottom: '6',
+                        overflow: 'visible',
+                    },
+                    '.swiper-slide': {
+                        transition: 'transform 300ms',
+                    },
+                    '.swiper-slide-next': {
+                        transform: 'scale(1)',
+                        opacity: '1',
+                    },
+                }}
+                {...rest}
+                position="relative"
+            >
+                <Swiper
+                    slidesPerView={3}
+                    spaceBetween={-300}
+                    loop={relicPositions.length > 1}
+                    centeredSlides
+                    /*breakpoints={{
                     720: { slidesPerView: 3 },
                     992: { slidesPerView: 2 },
                     1124: { slidesPerView: 3 },
                 }}*/
-                pagination={{
-                    //dynamicBullets: items.length > 8,
-                    clickable: true,
-                }}
-                modules={[Pagination]}
-            >
-                <SwiperSlide key="1">
-                    <Image src="https://beethoven-assets.s3.eu-central-1.amazonaws.com/reliquary/9.png" />
-                </SwiperSlide>
-                <SwiperSlide key="2">
-                    <Image src="https://beethoven-assets.s3.eu-central-1.amazonaws.com/reliquary/9.png" />
-                </SwiperSlide>
-                <SwiperSlide key="3">
-                    <Image src="https://beethoven-assets.s3.eu-central-1.amazonaws.com/reliquary/9.png" />
-                </SwiperSlide>
-                <SwiperSlide key="4">
-                    <Image src="https://beethoven-assets.s3.eu-central-1.amazonaws.com/reliquary/9.png" />
-                </SwiperSlide>
-                <SwiperSlide key="5">
-                    <Image src="https://beethoven-assets.s3.eu-central-1.amazonaws.com/reliquary/9.png" />
-                </SwiperSlide>
-                <SwiperSlide key="6">
-                    <Image src="https://beethoven-assets.s3.eu-central-1.amazonaws.com/reliquary/9.png" />
-                </SwiperSlide>
-            </Swiper>
+                    pagination={{
+                        clickable: true,
+                    }}
+                    allowTouchMove={isMobile}
+                    modules={[Pagination]}
+                >
+                    {relicPositions.map((relic) => (
+                        <SwiperSlide key={`relic-carousel-${relic.relicId}`}>
+                            <RelicSlide relic={selectedRelic || relicPositions[0]} />
+                        </SwiperSlide>
+                    ))}
+                    {!relicPositions.length && (
+                        <SwiperSlide key={`dummy-slide`}>
+                            <RelicSlide relic={selectedRelic || relicPositions[0]} />
+                        </SwiperSlide>
+                    )}
+                </Swiper>
+            </Box>
         </Box>
     );
 }

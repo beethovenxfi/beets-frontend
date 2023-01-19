@@ -5,12 +5,18 @@ import { oldBnumScaleAmount, oldBnumToHumanReadable } from '~/lib/services/pool/
 import { usePoolUserBptBalance } from '~/modules/pool/lib/usePoolUserBptBalance';
 import { useWithdraw } from '~/modules/pool/withdraw/lib/useWithdraw';
 import { usePool } from '~/modules/pool/lib/usePool';
+import useReliquary from '~/modules/reliquary/lib/useReliquary';
 
-export function usePoolExitGetProportionalWithdrawEstimate() {
+export function usePoolExitGetProportionalWithdrawEstimate(isReliquaryWithdraw = false) {
     const { poolService, pool } = usePool();
     const { userWalletBptBalance } = usePoolUserBptBalance();
     const { proportionalPercent } = useReactiveVar(withdrawStateVar);
-    const bptIn = oldBnumToHumanReadable(oldBnumScaleAmount(userWalletBptBalance).times(proportionalPercent / 100));
+    const { selectedRelic } = useReliquary();
+    const bptIn = oldBnumToHumanReadable(
+        oldBnumScaleAmount(isReliquaryWithdraw ? selectedRelic?.amount || '' : userWalletBptBalance).times(
+            proportionalPercent / 100,
+        ),
+    );
     const { selectedWithdrawTokenAddresses } = useWithdraw();
 
     return useQuery(

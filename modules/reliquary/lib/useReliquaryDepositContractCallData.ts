@@ -8,6 +8,7 @@ import { AmountHumanReadable } from '~/lib/services/token/token-types';
 import { GqlPoolToken } from '~/apollo/generated/graphql-codegen-generated';
 import { useMemo } from 'react';
 import { keyBy } from 'lodash';
+import useReliquary from './useReliquary';
 
 export function useReliquaryDepositContractCallData({
     investTokensWithAmounts,
@@ -19,6 +20,7 @@ export function useReliquaryDepositContractCallData({
     const { userAddress } = useUserAccount();
     const { slippage } = useSlippage();
     const networkConfig = useNetworkConfig();
+    const { selectedRelicId, createRelic } = useReliquary();
 
     const investTokensWithAmountsMap = useMemo(
         () => keyBy(investTokensWithAmounts, 'address'),
@@ -55,8 +57,7 @@ export function useReliquaryDepositContractCallData({
                 beetsAmount: investData.beetsAmount,
                 ftmAmount: investData.ftmAmount,
                 isNativeFtm: investData.isNativeFtm,
-                //TODO: set a relic id here if the user already has a relic
-                relicId: undefined,
+                relicId: createRelic ? undefined : parseInt(selectedRelicId || ''),
             });
         },
         { enabled: !!userAddress && enabled },

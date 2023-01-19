@@ -1,22 +1,31 @@
 import { Box, BoxProps } from '@chakra-ui/layout';
 import { motion } from 'framer-motion';
-import React from 'react';
+import React, { ReactNode } from 'react';
 import { BeetsBox } from '../box/BeetsBox';
 
 interface Props {
     value: number;
+    children?: ReactNode | ReactNode[];
 }
 
-export default function AnimatedProgress({ value, ...rest }: Props & BoxProps) {
+export default function AnimatedProgress({ value, children, ...rest }: Props & BoxProps) {
     return (
-        <BeetsBox borderRadius="2px" minWidth="100px" height="15px" overflow="hidden" {...rest}>
+        <BeetsBox position="relative" minWidth="100px" height="12.5px" rounded="md" overflow="hidden" {...rest}>
             <Box
-                initial={{ width: '0px' }}
-                animate={{ width: '100%', transition: { delay: 1, duration: 2 } }}
-                bgColor="orange.400"
+                position="absolute"
+                left="0"
+                width="100%"
+                transformOrigin="left"
+                initial={{ transform: `scaleX(0)` }}
+                animate={{ transform: `scaleX(${value / 100})`, transition: { delay: 0.5, duration: 2 } }}
+                bgColor="beets.highlight"
                 as={motion.div}
                 height="full"
+                zIndex={-1}
             />
+            <Box zIndex={3} px="2">
+                {children}
+            </Box>
         </BeetsBox>
     );
 }

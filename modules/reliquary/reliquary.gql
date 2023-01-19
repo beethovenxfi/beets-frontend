@@ -4,6 +4,7 @@ query GetReliquaryFarmSnapshots($id: String!, $range: GqlPoolSnapshotDataRange!)
         farmId
         timestamp
         totalBalance
+        totalLiquidity
         levelBalances {
             id
             level

@@ -825,6 +825,7 @@ type GqlReliquaryFarmSnapshot {
     timestamp: Int!
     tokenBalances: [GqlReliquaryTokenBalanceSnapshot!]!
     totalBalance: String!
+    totalLiquidity: String!
     userCount: String!
 }
 

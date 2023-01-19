@@ -11,7 +11,8 @@ import { TokenBase } from '~/lib/services/token/token-types';
 import { useUserBalances } from '~/lib/user/useUserBalances';
 import { useLegacyFBeetsBalance } from './useLegacyFbeetsBalance';
 
-const selectedRelicId = makeVar<string | null>(null);
+const selectedRelicId = makeVar<string | undefined>(undefined);
+const createRelic = makeVar<boolean>(false);
 
 export default function useReliquary() {
     const { userAddress } = useUserAccount();
@@ -39,7 +40,7 @@ export default function useReliquary() {
         async () => {
             const positions = await reliquaryService.getAllPositions({ userAddress: userAddress || '', provider });
 
-            if (positions.length > 0 && selectedRelicId() === null) {
+            if (positions.length > 0 && selectedRelicId() === undefined) {
                 selectedRelicId(positions[0].relicId);
             }
 
@@ -65,11 +66,20 @@ export default function useReliquary() {
 
     const selectedRelic = (relicPositions || []).find((position) => position.relicId === selectedRelicId());
     const isLoading = isLoadingRelicPositions || isLoadingMaturityThresholds;
+    const relicIds = relicPositions.map((relic) => parseInt(relic.relicId));
 
     const beetsPerSecond = pool.staking?.reliquary?.beetsPerSecond || '0';
     const reliquaryLevels = pool.staking?.reliquary?.levels || [];
     const selectedRelicLevel = reliquaryLevels.find((level) => level.level === selectedRelic?.level);
     const weightedTotalBalance = sumBy(reliquaryLevels, (level) => parseFloat(level.balance) * level.allocationPoints);
+
+    function setCreateRelic(value: boolean) {
+        createRelic(value);
+    }
+
+    function setSelectedRelicId(value: string) {
+        selectedRelicId(value);
+    }
 
     return {
         relicPositions,
@@ -84,7 +94,12 @@ export default function useReliquary() {
         beetsPerDay: parseFloat(beetsPerSecond) * 86400,
         selectedRelicLevel,
         weightedTotalBalance,
+        createRelic: useReactiveVar(createRelic),
+        relicIds,
         legacyBptBalance,
         legacyFbeetsBalance,
+
+        setCreateRelic,
+        setSelectedRelicId,
     };
 }

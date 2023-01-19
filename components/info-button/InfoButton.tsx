@@ -36,8 +36,8 @@ export function InfoButton({ iconSize, infoText, moreInfoUrl, moreInfoLinkText, 
                 borderRadius="md"
                 p="2"
             >
-                <HStack spacing='2'>
-                    <Image width='120px' height='120px' src={BeetsThinking} alt="thinking-emoji" />
+                <HStack spacing="2">
+                    <Image width="120px" height="120px" src={BeetsThinking} alt="thinking-emoji" />
                     <Box>
                         {infoText}
                         {moreInfoUrl ? ' ' : ''}

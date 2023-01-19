@@ -2,7 +2,6 @@ import { initializeApolloClient, loadApolloState } from '~/apollo/client';
 import Head from 'next/head';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 import { UserTokenBalancesProvider } from '~/lib/user/useUserTokenBalances';
-import Reliquary from '~/modules/reliquary/Reliquary';
 import { GetPoolQuery, GetPoolQueryVariables, GqlPoolUnion } from '~/apollo/generated/graphql-codegen-generated';
 import { GetPool } from '~/apollo/generated/operations';
 import { PoolProvider } from '~/modules/pool/lib/usePool';
@@ -12,6 +11,7 @@ import { networkConfig } from '~/lib/config/network-config';
 import React from 'react';
 import { RelicDepositBalanceProvider } from '~/modules/reliquary/lib/useRelicDepositBalance';
 import { PoolUserDepositBalanceProvider } from '~/modules/pool/lib/usePoolUserDepositBalance';
+import ReliquaryLanding from '~/modules/reliquary/ReliquaryLanding';
 
 interface Props {
     pool: GqlPoolUnion;
@@ -40,18 +40,7 @@ function Stake({ pool }: Props) {
                         <UserTokenBalancesProvider>
                             <PoolUserDepositBalanceProvider>
                                 <RelicDepositBalanceProvider>
-                                    {/* <PageMasthead
-                                title="Reliquary"
-                                image={
-                                    <NextImage
-                                        src={chainId === '10' ? SwapMastheadOpImage : SwapMastheadImage}
-                                        width="213.71px"
-                                        height="68px"
-                                    />
-                                }
-                            /> */}
-
-                                    <Reliquary />
+                                    <ReliquaryLanding />
                                 </RelicDepositBalanceProvider>
                             </PoolUserDepositBalanceProvider>
                         </UserTokenBalancesProvider>

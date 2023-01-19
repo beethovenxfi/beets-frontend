@@ -24,6 +24,8 @@ import { CardRow } from '~/components/card/CardRow';
 import { PoolWithdrawSettings } from '~/modules/pool/withdraw/components/PoolWithdrawSettings';
 import { useWithdraw } from '~/modules/pool/withdraw/lib/useWithdraw';
 import { usePool } from '~/modules/pool/lib/usePool';
+import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
+import ReliquaryTokenBreakdown from '~/modules/reliquary/components/ReliquaryTokensBreakdown';
 
 interface Props extends BoxProps {
     onShowPreview: () => void;
@@ -31,6 +33,8 @@ interface Props extends BoxProps {
 
 export function PoolWithdrawProportional({ onShowPreview, ...rest }: Props) {
     const { pool } = usePool();
+    const { reliquary } = useNetworkConfig();
+    const isReliquaryFBeetsPool = pool.id === reliquary.fbeets.poolId;
     const {
         setProportionalPercent,
         proportionalPercent,
@@ -46,7 +50,7 @@ export function PoolWithdrawProportional({ onShowPreview, ...rest }: Props) {
         setProportionalWithdraw();
     });
 
-    const { data, isLoading } = usePoolExitGetProportionalWithdrawEstimate();
+    const { data, isLoading } = usePoolExitGetProportionalWithdrawEstimate(isReliquaryFBeetsPool);
     const proportionalAmounts = data || [];
 
     const withdrawOptions = pool.withdrawConfig.options;
@@ -77,56 +81,62 @@ export function PoolWithdrawProportional({ onShowPreview, ...rest }: Props) {
                 </Slider>
             </Box>
             <BeetsBox mt="4" p="2">
-                {withdrawOptions.map((option, index) => {
-                    const tokenOption =
-                        option.tokenOptions.find((tokenOption) =>
-                            selectedWithdrawTokenAddresses.includes(tokenOption.address),
-                        ) || option.tokenOptions[0];
-                    const last = index === withdrawOptions.length - 1;
-                    const proportionalAmount =
-                        proportionalAmounts.find((tokenAmount) => tokenAmount.address === tokenOption.address)
-                            ?.amount || '0';
+                {isReliquaryFBeetsPool ? (
+                    <ReliquaryTokenBreakdown />
+                ) : (
+                    withdrawOptions.map((option, index) => {
+                        const tokenOption =
+                            option.tokenOptions.find((tokenOption) =>
+                                selectedWithdrawTokenAddresses.includes(tokenOption.address),
+                            ) || option.tokenOptions[0];
+                        const last = index === withdrawOptions.length - 1;
+                        const proportionalAmount =
+                            proportionalAmounts.find((tokenAmount) => tokenAmount.address === tokenOption.address)
+                                ?.amount || '0';
 
-                    return (
-                        <CardRow key={index} mb={last ? '0' : '1'}>
-                            {option.tokenOptions.length > 1 ? (
-                                <Box flex="1">
-                                    <TokenSelectInline
-                                        tokenOptions={option.tokenOptions}
-                                        selectedAddress={
-                                            selectedOptions[`${option.poolTokenIndex}`] ||
-                                            option.tokenOptions[0].address
-                                        }
-                                        onOptionSelect={(address) => setSelectedOption(option.poolTokenIndex, address)}
-                                    />
-                                </Box>
-                            ) : (
-                                <HStack spacing="1.5" flex="1">
-                                    <TokenAvatar size="xs" address={tokenOption.address} />
-                                    <Text>{tokenOption.symbol}</Text>
-                                </HStack>
-                            )}
-                            <Box display="flex" alignItems="flex-end" flexDirection="column">
-                                {isLoading ? (
-                                    <>
-                                        <Skeleton height="20px" marginBottom="4px" width="64px" />
-                                        <Skeleton height="18px" marginBottom="3px" width="44px" />
-                                    </>
+                        return (
+                            <CardRow key={index} mb={last ? '0' : '1'}>
+                                {option.tokenOptions.length > 1 ? (
+                                    <Box flex="1">
+                                        <TokenSelectInline
+                                            tokenOptions={option.tokenOptions}
+                                            selectedAddress={
+                                                selectedOptions[`${option.poolTokenIndex}`] ||
+                                                option.tokenOptions[0].address
+                                            }
+                                            onOptionSelect={(address) =>
+                                                setSelectedOption(option.poolTokenIndex, address)
+                                            }
+                                        />
+                                    </Box>
                                 ) : (
-                                    <>
-                                        <Box textAlign="right">{tokenFormatAmount(proportionalAmount)}</Box>
-                                        <Box textAlign="right" fontSize="sm" color="gray.200">
-                                            {formattedPrice({
-                                                address: tokenOption.address,
-                                                amount: proportionalAmount,
-                                            })}
-                                        </Box>
-                                    </>
+                                    <HStack spacing="1.5" flex="1">
+                                        <TokenAvatar size="xs" address={tokenOption.address} />
+                                        <Text>{tokenOption.symbol}</Text>
+                                    </HStack>
                                 )}
-                            </Box>
-                        </CardRow>
-                    );
-                })}
+                                <Box display="flex" alignItems="flex-end" flexDirection="column">
+                                    {isLoading ? (
+                                        <>
+                                            <Skeleton height="20px" marginBottom="4px" width="64px" />
+                                            <Skeleton height="18px" marginBottom="3px" width="44px" />
+                                        </>
+                                    ) : (
+                                        <>
+                                            <Box textAlign="right">{tokenFormatAmount(proportionalAmount)}</Box>
+                                            <Box textAlign="right" fontSize="sm" color="gray.200">
+                                                {formattedPrice({
+                                                    address: tokenOption.address,
+                                                    amount: proportionalAmount,
+                                                })}
+                                            </Box>
+                                        </>
+                                    )}
+                                </Box>
+                            </CardRow>
+                        );
+                    })
+                )}
             </BeetsBox>
 
             <PoolWithdrawSummary mt="6" />

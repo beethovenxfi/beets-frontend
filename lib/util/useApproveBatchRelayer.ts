@@ -20,7 +20,15 @@ export function useApproveBatchRelayer() {
         });
     }
 
+    function unapprove() {
+        submit({
+            args: [userAddress, networkConfig.balancer.batchRelayer, false],
+            toastText: `Approve Batch Relayer`,
+        });
+    }
+
     return {
+        unapprove,
         approve,
         ...rest,
     };

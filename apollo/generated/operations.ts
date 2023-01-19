@@ -1000,6 +1000,7 @@ export const GetReliquaryFarmSnapshots = gql`
             farmId
             timestamp
             totalBalance
+            totalLiquidity
             levelBalances {
                 id
                 level
