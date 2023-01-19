@@ -30,6 +30,7 @@ export interface NetworkConfig {
         address: string;
         farmId: string;
         poolId: string;
+        poolAddress: string;
     };
     reliquary: {
         address: string;

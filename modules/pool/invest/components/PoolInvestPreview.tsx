@@ -18,9 +18,10 @@ import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 interface Props {
     onInvestComplete(): void;
     onClose(): void;
+    isReliquaryDeposit?: boolean;
 }
 
-export function PoolInvestPreview({ onInvestComplete, onClose }: Props) {
+export function PoolInvestPreview({ onInvestComplete, onClose, isReliquaryDeposit }: Props) {
     const { priceForAmount } = useGetTokens();
     const { selectedInvestTokensWithAmounts } = useInvest();
     const networkConfig = useNetworkConfig();
@@ -50,7 +51,11 @@ export function PoolInvestPreview({ onInvestComplete, onClose }: Props) {
                     </VStack>
                 </BeetsBox>
             </Box>
-            <PoolInvestActions isReliquaryDeposit onInvestComplete={onInvestComplete} onClose={onClose} />
+            <PoolInvestActions
+                isReliquaryDeposit={isReliquaryDeposit}
+                onInvestComplete={onInvestComplete}
+                onClose={onClose}
+            />
         </VStack>
     );
 }

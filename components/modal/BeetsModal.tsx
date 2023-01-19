@@ -5,11 +5,12 @@ import { forwardRef, Ref } from 'react';
 import { MotionProps } from 'framer-motion';
 
 export const BeetsModalContent = forwardRef(
-    (props: ModalContentProps & MotionProps & { transparent?: boolean }, ref: Ref<HTMLDivElement>) => {
-        let containerBg = props.transparent ? 'transparent' : 'blackAlpha.400';
-        let innerBg = props.transparent ? '' : 'bg';
+    (props: ModalContentProps & MotionProps & { isTransparent?: boolean }, ref: Ref<HTMLDivElement>) => {
+        let containerBg = props.isTransparent ? 'transparent' : 'blackAlpha.400';
+        let innerBg = props.isTransparent ? '' : 'bg';
+        let modalBg = props.isTransparent ? 'none' : 'gray.700';
         return (
-            <ModalContent ref={ref} {...props} background='none'>
+            <ModalContent ref={ref} {...props} background={modalBg}>
                 <Box bg={containerBg}>
                     <Box className={innerBg}>{props.children}</Box>
                 </Box>

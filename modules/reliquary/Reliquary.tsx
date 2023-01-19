@@ -1,23 +1,23 @@
 import { Box, Flex, Heading, HStack, Spinner, Text, VStack } from '@chakra-ui/react';
-import { animate, AnimatePresence, motion, useAnimation, useMotionValue } from 'framer-motion';
-import React, { useState } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
 import { useUserAccount } from '~/lib/user/useUserAccount';
 import ReliquaryConnectWallet from './components/ReliquaryConnectWallet';
 import ReliquaryInvest from './components/ReliquaryInvest';
 import useReliquary from './lib/useReliquary';
 import { Relic } from '~/modules/reliquary/components/Relic';
+import ReliquaryMigrateModal from './components/ReliquaryMigrateModal';
 import { RelicCarousel } from '~/modules/reliquary/components/RelicCarousel';
 
 interface Props {}
 
 export default function Reliquary(props: Props) {
-    const { relicPositions, isLoadingRelicPositions, isLoading, selectedRelicId } = useReliquary();
-    const inputAnimation = useAnimation();
+    const { isLoadingRelicPositions, selectedRelicId, legacyFbeetsBalance } = useReliquary();
     const { isConnected } = useUserAccount();
 
+    const showMigrateUI = legacyFbeetsBalance;
     return (
         <Box>
-            <RelicCarousel />
+            {/* <RelicCarousel /> */}
             <Box
                 minHeight="800px"
                 width="full"

@@ -14,7 +14,7 @@ export function Relic() {
     const { selectedRelic, maturityThresholds } = useReliquary();
     const { pool } = usePool();
     const { canUpgrade, canUpgradeTo } = relicGetMaturityProgress(selectedRelic, maturityThresholds);
-
+    
     const { showToast, removeToast } = useToast();
 
     useEffect(() => {
