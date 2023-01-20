@@ -47,15 +47,14 @@ export function NavbarPendingRewardsReliquary({ ...rest }: BoxProps) {
                     Pending Reliquary rewards
                 </Box>
                 {rewards.map((item, index) => (
-                    <>
-                        <Box fontSize="xl" fontWeight="normal" lineHeight="26px" key={index}>
+                    <Box key={index}>
+                        <Box fontSize="xl" fontWeight="normal" lineHeight="26px">
                             {tokenFormatAmount(item.amount)} {getToken(item.address)?.symbol}
                         </Box>
-
                         <Box pt="2" color="gray.200">
                             {numberFormatUSDValue(priceForAmount(item))}
                         </Box>
-                    </>
+                    </Box>
                 ))}
             </BeetsBox>
             <Box mt="4" justifySelf="flex-end">
