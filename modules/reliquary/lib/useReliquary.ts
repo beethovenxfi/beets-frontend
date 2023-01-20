@@ -64,8 +64,6 @@ export default function useReliquary() {
         },
     );
 
-    console.log(pool);
-
     const selectedRelic = (relicPositions || []).find((position) => position.relicId === selectedRelicId());
     const isLoading = isLoadingRelicPositions || isLoadingMaturityThresholds;
     const relicIds = relicPositions.map((relic) => parseInt(relic.relicId));
