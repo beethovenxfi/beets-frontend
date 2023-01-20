@@ -183,20 +183,22 @@ export function PoolWithdrawTypeChoice({ onShowProportional, onShowSingleAsset }
             <Button
                 variant="primary"
                 width="full"
-                mb="2"
                 isDisabled={isReliquaryFBeetsPool ? relicBalanceUSD <= 0 : !hasBptInWallet}
                 onClick={onShowProportional}
             >
                 Withdraw proportionally
             </Button>
-            <Button
-                variant="secondary"
-                width="full"
-                isDisabled={isReliquaryFBeetsPool ? relicBalanceUSD <= 0 : !hasBptInWallet}
-                onClick={onShowSingleAsset}
-            >
-                Single asset withdraw
-            </Button>
+            {!isReliquaryFBeetsPool && (
+                <Button
+                    variant="secondary"
+                    width="full"
+                    mt="2"
+                    isDisabled={isReliquaryFBeetsPool ? relicBalanceUSD <= 0 : !hasBptInWallet}
+                    onClick={onShowSingleAsset}
+                >
+                    Single asset withdraw
+                </Button>
+            )}
 
             <PoolUnstakeModal {...unstakeDisclosure} />
         </Box>
