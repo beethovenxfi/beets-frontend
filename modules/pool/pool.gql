@@ -112,6 +112,7 @@ query GetPool($id: String!) {
                     allocationPoints
                 }
                 beetsPerSecond
+                totalBalance
             }
         }
         investConfig {

@@ -30,7 +30,7 @@ export default function ReliquaryOverallStats() {
     const beetsPerDay = parseFloat(pool.staking?.reliquary?.beetsPerSecond || '0') * 86400;
     const incentivesDailyValue = beetsPerDay * priceFor(networkConfig.beets.address);
 
-    const relicTokenBalancesWithSymbol = globalStats?.tokenBalances?.map((token) => ({
+    const relicTokenBalancesWithSymbol = pool.tokens.map((token) => ({
         ...token,
         symbol: getToken(token.address)?.symbol,
     }));
@@ -47,8 +47,6 @@ export default function ReliquaryOverallStats() {
         prev.percentageOfTotal > curr.percentageOfTotal ? prev : curr,
     );
 
-    const avgValuePerRelic = parseFloat(globalStats?.totalLiquidity || '') / parseInt(globalStats?.relicCount || '');
-
     const today = Date.now();
     const cutOffDate = startOfWeek(today).getTime();
     const snapshotsThisWeek = snapshotData?.snapshots.filter((snapshot) => snapshot.timestamp >= cutOffDate / 1000);
@@ -62,6 +60,10 @@ export default function ReliquaryOverallStats() {
             numberOfRelicsThisWeek = 0;
         }
     }
+
+    const reliquaryPoolRatio = parseFloat(globalStats?.totalBalance || '') / parseFloat(data.totalShares);
+    const tvl = reliquaryPoolRatio * parseFloat(data.totalLiquidity);
+    const avgValuePerRelic = tvl / parseInt(globalStats?.relicCount || '');
 
     return (
         <Card px="2" py="4" h="full" w="full">
@@ -85,7 +87,7 @@ export default function ReliquaryOverallStats() {
                                 TVL
                             </Text>
                             <Text color="white" fontSize="1.75rem">
-                                {numeral(globalStats?.totalLiquidity).format('$0,0.00a')}
+                                {numeral(tvl).format('$0,0.00a')}
                             </Text>
                         </VStack>
                         <VStack width="full" spacing="0" alignItems="flex-start">
@@ -94,7 +96,7 @@ export default function ReliquaryOverallStats() {
                                     <HStack spacing="1" mb="0.5" key={index}>
                                         <TokenAvatar h="20px" w="20px" address={token.address} />
                                         <Text fontSize="1rem" lineHeight="1rem">
-                                            {tokenFormatAmount(token.balance)}
+                                            {tokenFormatAmount(reliquaryPoolRatio * parseFloat(token.totalBalance))}
                                         </Text>
                                         <Text fontSize="1rem" lineHeight="1rem">
                                             {token.symbol}

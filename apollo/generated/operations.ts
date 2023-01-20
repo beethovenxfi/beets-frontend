@@ -739,6 +739,7 @@ export const GetPool = gql`
                         allocationPoints
                     }
                     beetsPerSecond
+                    totalBalance
                 }
             }
             investConfig {

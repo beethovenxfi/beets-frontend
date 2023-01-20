@@ -2242,6 +2242,7 @@ export type GetPoolQuery = {
                   reliquary?: {
                       __typename: 'GqlPoolStakingReliquaryFarm';
                       beetsPerSecond: string;
+                      totalBalance: string;
                       levels?: Array<{
                           __typename: 'GqlPoolStakingReliquarFarmLevel';
                           level: number;
@@ -2436,6 +2437,7 @@ export type GetPoolQuery = {
                   reliquary?: {
                       __typename: 'GqlPoolStakingReliquaryFarm';
                       beetsPerSecond: string;
+                      totalBalance: string;
                       levels?: Array<{
                           __typename: 'GqlPoolStakingReliquarFarmLevel';
                           level: number;
@@ -2764,6 +2766,7 @@ export type GetPoolQuery = {
                   reliquary?: {
                       __typename: 'GqlPoolStakingReliquaryFarm';
                       beetsPerSecond: string;
+                      totalBalance: string;
                       levels?: Array<{
                           __typename: 'GqlPoolStakingReliquarFarmLevel';
                           level: number;
@@ -2955,6 +2958,7 @@ export type GetPoolQuery = {
                   reliquary?: {
                       __typename: 'GqlPoolStakingReliquaryFarm';
                       beetsPerSecond: string;
+                      totalBalance: string;
                       levels?: Array<{
                           __typename: 'GqlPoolStakingReliquarFarmLevel';
                           level: number;
@@ -3284,6 +3288,7 @@ export type GetPoolQuery = {
                   reliquary?: {
                       __typename: 'GqlPoolStakingReliquaryFarm';
                       beetsPerSecond: string;
+                      totalBalance: string;
                       levels?: Array<{
                           __typename: 'GqlPoolStakingReliquarFarmLevel';
                           level: number;
@@ -3475,6 +3480,7 @@ export type GetPoolQuery = {
                   reliquary?: {
                       __typename: 'GqlPoolStakingReliquaryFarm';
                       beetsPerSecond: string;
+                      totalBalance: string;
                       levels?: Array<{
                           __typename: 'GqlPoolStakingReliquarFarmLevel';
                           level: number;
@@ -3803,6 +3809,7 @@ export type GetPoolQuery = {
                   reliquary?: {
                       __typename: 'GqlPoolStakingReliquaryFarm';
                       beetsPerSecond: string;
+                      totalBalance: string;
                       levels?: Array<{
                           __typename: 'GqlPoolStakingReliquarFarmLevel';
                           level: number;
@@ -5929,6 +5936,7 @@ export const GetPoolDocument = gql`
                         allocationPoints
                     }
                     beetsPerSecond
+                    totalBalance
                 }
             }
             investConfig {
