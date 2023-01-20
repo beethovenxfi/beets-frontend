@@ -9,9 +9,8 @@ import { SubmitTransactionQuery } from '~/lib/util/useSubmitTransaction';
 import { transactionMessageFromError } from '~/lib/util/transaction-util';
 import { BeetsBatchRelayerApprovalButton } from './BeetsBatchRelayerApprovalButton';
 import { useHasBatchRelayerApproval } from '~/lib/util/useHasBatchRelayerApproval';
-import { useBatchRelayerHasRelicApproval } from '~/modules/reliquary/lib/useBatchRelayerHasRelicApproval';
-import useReliquary from '~/modules/reliquary/lib/useReliquary';
 import { ReliquaryBatchRelayerApprovalButton } from '~/modules/reliquary/components/ReliquaryBatchRelayerApprovalButton';
+import { useBatchRelayerHasApprovedForAll } from '~/modules/reliquary/lib/useBatchRelayerHasApprovedForAll';
 
 export type TransactionStep = TransactionTokenApprovalStep | TransactionOtherStep;
 
@@ -65,10 +64,7 @@ export function BeetsTransactionStepsSubmit({
     const { refetch: refetchBatchRelayerApproval, data: hasBatchRelayerApproval } = useHasBatchRelayerApproval();
 
     // reliquary
-    const { selectedRelicId } = useReliquary();
-    const { refetch: refetchBatchRelayerHasRelicApproval } = useBatchRelayerHasRelicApproval(
-        parseInt(selectedRelicId || ''),
-    );
+    const { refetch: refetchBatchRelayerHasApprovedForAll } = useBatchRelayerHasApprovedForAll();
 
     function setStepStatus(id: string, status: StepStatus) {
         setStepStatuses({ ...stepStatuses, [id]: status });
@@ -138,7 +134,7 @@ export function BeetsTransactionStepsSubmit({
             {steps && currentStep && currentStep.id === 'batch-relayer-reliquary' && !complete ? (
                 <ReliquaryBatchRelayerApprovalButton
                     onConfirmed={() => {
-                        refetchBatchRelayerHasRelicApproval();
+                        refetchBatchRelayerHasApprovedForAll();
                         internalOnConfirmed();
                     }}
                 />

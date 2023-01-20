@@ -2,7 +2,6 @@ import { useSwiper, useSwiperSlide } from 'swiper/react';
 import { useEffect, useState } from 'react';
 import { Badge, Box, Heading, HStack, Skeleton, VStack, Text, Divider, Tooltip, StackDivider } from '@chakra-ui/react';
 import useReliquary from '../lib/useReliquary';
-import { useBatchRelayerHasRelicApproval } from '../lib/useBatchRelayerHasRelicApproval';
 import { numberFormatUSDValue } from '~/lib/util/number-formats';
 import AprTooltip from '~/components/apr-tooltip/AprTooltip';
 import numeral from 'numeral';
@@ -60,9 +59,6 @@ export default function RelicSlideInfo(props: Props) {
         setIsLoadingRelicPositions(isLoadingRelicPositions);
     }, [isLoadingRelicPositions]);
 
-    const { data: batchRelayerHasRelicApproval, refetch } = useBatchRelayerHasRelicApproval(
-        parseInt(selectedRelicId || ''),
-    );
     const pendingRewardsUsdValue = sumBy(pendingRewards, priceForAmount);
 
     return (
