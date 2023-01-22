@@ -40,9 +40,9 @@ export default function ReliquaryLanding() {
     const { relicPositions, selectedRelicId, isLoadingRelicPositions } = useReliquary();
 
     return (
-        <Stack direction="column" width='full'>
-            <Stack bg="blackAlpha.500" px="8" py="20" direction={['column', 'row']} spacing="12" width='full'>
-                <VStack width='full' alignItems="flex-start" justifyContent="space-between">
+        <Stack direction="column" width="full">
+            <Stack bg="blackAlpha.500" px="8" py="20" direction={['column', 'row']} spacing="12" width="full">
+                <VStack width="full" alignItems="flex-start" justifyContent="space-between">
                     <Text color="beets.green" fontSize="sm">
                         rfBEETS
                     </Text>

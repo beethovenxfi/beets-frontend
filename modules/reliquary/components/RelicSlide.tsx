@@ -139,7 +139,7 @@ export default function RelicSlide({ relic, openInvestModal, openWithdrawModal }
                         openWithdrawModal={openWithdrawModal}
                         isLoading={_isLoadingRelicPositions}
                     />
-                    <RelicSlideApr />
+                <RelicSlideApr />
                     <RelicSlideInfo />
                 </Stack>
             </VStack>
