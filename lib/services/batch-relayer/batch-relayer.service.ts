@@ -20,7 +20,7 @@ import {
     EncodeReliquaryCreateRelicAndDepositInput,
     EncodeReliquaryDepositInput,
     EncodeReliquaryHarvestAllInput,
-    EncodeReliquaryWithdrawInput,
+    EncodeReliquaryWithdrawAndHarvestInput,
     EncodeUnwrapErc4626Input,
     EncodeWrapErc4626Input,
     ExitPoolData,
@@ -130,8 +130,8 @@ export class BatchRelayerService {
         return this.reliquaryStakingService.encodeDeposit(params);
     }
 
-    public reliquaryEncodeWithdraw(params: EncodeReliquaryWithdrawInput) {
-        return this.reliquaryStakingService.encodeWithdraw(params);
+    public reliquaryEncodeWithdrawAndHarvest(params: EncodeReliquaryWithdrawAndHarvestInput) {
+        return this.reliquaryStakingService.encodeWithdrawAndHarvest(params);
     }
 
     public reliquaryEncodeHarvestAll(params: EncodeReliquaryHarvestAllInput) {

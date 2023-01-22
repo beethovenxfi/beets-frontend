@@ -243,7 +243,7 @@ export interface EncodeReliquaryDepositInput {
     outputReference: BigNumberish;
 }
 
-export interface EncodeReliquaryWithdrawInput {
+export interface EncodeReliquaryWithdrawAndHarvestInput {
     recipient: string;
     relicId: number;
     amount: BigNumberish;

@@ -739,6 +739,7 @@ export const GetPool = gql`
                         allocationPoints
                     }
                     beetsPerSecond
+                    totalBalance
                 }
             }
             investConfig {
@@ -1000,6 +1001,7 @@ export const GetReliquaryFarmSnapshots = gql`
             farmId
             timestamp
             totalBalance
+            totalLiquidity
             levelBalances {
                 id
                 level

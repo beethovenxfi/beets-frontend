@@ -5,7 +5,7 @@ import {
     EncodeReliquaryDepositInput,
     EncodeReliquaryHarvestAllInput,
     EncodeReliquaryUpdatePositionInput,
-    EncodeReliquaryWithdrawInput,
+    EncodeReliquaryWithdrawAndHarvestInput,
 } from '~/lib/services/batch-relayer/relayer-types';
 
 export class ReliquaryStakingService {
@@ -33,10 +33,10 @@ export class ReliquaryStakingService {
         ]);
     }
 
-    public encodeWithdraw(params: EncodeReliquaryWithdrawInput): string {
+    public encodeWithdrawAndHarvest(params: EncodeReliquaryWithdrawAndHarvestInput): string {
         const reliquaryStakingLibrary = new Interface(ReliquaryStakingAbi);
 
-        return reliquaryStakingLibrary.encodeFunctionData('reliquaryWithdraw', [
+        return reliquaryStakingLibrary.encodeFunctionData('reliquaryWithdrawAndHarvest', [
             params.recipient,
             params.relicId,
             params.amount,

@@ -5,7 +5,11 @@ import { useUserAccount } from '~/lib/user/useUserAccount';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 import { makeVar, useReactiveVar } from '@apollo/client';
 import { usePool } from '~/modules/pool/lib/usePool';
-import { sumBy } from 'lodash';
+import { keyBy, sumBy } from 'lodash';
+import { useRef } from 'react';
+import { TokenBase } from '~/lib/services/token/token-types';
+import { useUserBalances } from '~/lib/user/useUserBalances';
+import { useLegacyFBeetsBalance } from './useLegacyFbeetsBalance';
 
 const selectedRelicId = makeVar<string | undefined>(undefined);
 const createRelic = makeVar<boolean>(false);
@@ -14,7 +18,22 @@ export default function useReliquary() {
     const { userAddress } = useUserAccount();
     const provider = useProvider();
     const networkConfig = useNetworkConfig();
+    const legacyBpt = useRef<TokenBase>({
+        address: networkConfig.fbeets.poolAddress,
+        symbol: 'BPT',
+        name: 'BPT',
+        decimals: 18,
+    });
     const { pool } = usePool();
+
+    const { userBalances: legacyBalances = [], isLoading: isLoadingLegacyBalances } = useUserBalances(
+        [networkConfig.fbeets.address, networkConfig.fbeets.poolAddress],
+        [legacyBpt.current],
+    );
+
+    const userBalancesMap = keyBy(legacyBalances, 'address');
+    const legacyBptBalance = userBalancesMap[legacyBpt.current.address]?.amount || '0';
+    const { total: legacyFbeetsBalance } = useLegacyFBeetsBalance();
 
     const { data: relicPositions = [], isLoading: isLoadingRelicPositions } = useQuery(
         ['reliquaryAllPositions', userAddress],
@@ -77,6 +96,8 @@ export default function useReliquary() {
         weightedTotalBalance,
         createRelic: useReactiveVar(createRelic),
         relicIds,
+        legacyBptBalance,
+        legacyFbeetsBalance,
 
         setCreateRelic,
         setSelectedRelicId,

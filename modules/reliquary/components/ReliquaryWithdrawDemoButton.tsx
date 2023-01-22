@@ -1,7 +1,7 @@
 import { Button, HStack } from '@chakra-ui/react';
 import { useReliquaryFbeetsMigrateContractCallData } from '~/modules/reliquary/lib/useReliquaryFbeetsMigrateContractCallData';
 import { useReliquaryZap } from '~/modules/reliquary/lib/useReliquaryZap';
-import { useReliquaryWithdrawContractCallData } from '~/modules/reliquary/lib/useReliquaryWithdrawContractCallData';
+import { useReliquaryWithdrawAndHarvestContractCallData } from '~/modules/reliquary/lib/useReliquaryWithdrawAndHarvestContractCallData';
 import useReliquary from '~/modules/reliquary/lib/useReliquary';
 import { usePool } from '~/modules/pool/lib/usePool';
 import { useBatchRelayerRelicApprove } from '~/modules/reliquary/lib/useBatchRelayerRelicApprove';
@@ -13,7 +13,7 @@ export function ReliquaryWithdrawDemoButton() {
     const relicId = relicPositions.length > 0 ? parseInt(relicPositions[0].relicId) : undefined;
     const { data: batchRelayerHasRelicApproval } = useBatchRelayerHasRelicApproval(relicId);
     const { approve } = useBatchRelayerRelicApprove();
-    const { data: contractCalls } = useReliquaryWithdrawContractCallData({
+    const { data: contractCalls } = useReliquaryWithdrawAndHarvestContractCallData({
         relicId,
         bptAmount: '0.1',
         poolTotalShares: pool.dynamicData.totalShares,

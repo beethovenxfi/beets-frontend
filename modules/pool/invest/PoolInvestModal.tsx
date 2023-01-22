@@ -148,7 +148,7 @@ export function PoolInvestModal({
             <Modal motionPreset="none" isOpen={isOpen} onClose={onModalClose} size="lg" initialFocusRef={initialRef}>
                 <ModalOverlay bg="blackAlpha.900" />
                 <AnimatePresence exitBeforeEnter>
-                    <BeetsModalContent position="relative" transparent>
+                    <BeetsModalContent position="relative" isTransparent={true}>
                         <Box
                             as={motion.div}
                             width="full"

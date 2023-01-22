@@ -85,7 +85,7 @@ export class ReliquaryService {
     }: {
         farmIds: string[];
         userAddress: string;
-        tokens: TokenBase[];
+        // tokens: TokenBase[];
         provider: BaseProvider;
     }): Promise<ReliquaryStakingPendingRewardAmount[]> {
         const multicaller = new Multicaller(this.chainId, provider, ReliquaryAbi);
@@ -93,7 +93,9 @@ export class ReliquaryService {
         const allPositions = await this.getAllPositions({ userAddress, provider });
         for (let i = 0; i < allPositions.length; i++) {
             if (farmIds.includes(allPositions[i].farmId)) {
-                multicaller.call(i.toString(), this.reliquaryContractAddress, 'pendingReward');
+                multicaller.call(i.toString(), this.reliquaryContractAddress, 'pendingReward', [
+                    allPositions[i].relicId,
+                ]);
             }
         }
 

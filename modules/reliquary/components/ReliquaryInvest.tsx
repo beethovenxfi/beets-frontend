@@ -84,7 +84,11 @@ export default function ReliquaryInvest({ onInvestComplete }: Props) {
                         minWidth="550px"
                         maxWidth="550px"
                     >
-                        <PoolInvestPreview onInvestComplete={onInvestComplete} onClose={() => false} />
+                        <PoolInvestPreview
+                            isReliquaryDeposit
+                            onInvestComplete={onInvestComplete}
+                            onClose={() => false}
+                        />
                     </Box>
                 )}
             </AnimatePresence>

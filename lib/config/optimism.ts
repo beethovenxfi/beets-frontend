@@ -30,6 +30,7 @@ export const optimismNetworkConfig: NetworkConfig = {
         address: '',
         farmId: '',
         poolId: '',
+        poolAddress: '',
     },
     reliquary: {
         address: '',

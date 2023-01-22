@@ -190,7 +190,7 @@ export class ReliquaryZapService {
     }
 
     // withdraw bpt from relic -> exit pool with beets/wftm
-    public async getReliquaryWithdrawContractCallData({
+    public async getReliquaryWithdrawAndHarvestContractCallData({
         userAddress,
         bptAmount,
         relicId,
@@ -207,7 +207,7 @@ export class ReliquaryZapService {
     }): Promise<string[]> {
         const bptAmountScaled = parseFixed(bptAmount, 18);
 
-        const withdrawBptFromRelic = this.batchRelayerService.reliquaryEncodeWithdraw({
+        const withdrawBptFromRelic = this.batchRelayerService.reliquaryEncodeWithdrawAndHarvest({
             recipient: networkConfig.balancer.batchRelayer,
             relicId,
             amount: bptAmountScaled,

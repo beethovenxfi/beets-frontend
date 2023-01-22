@@ -18,6 +18,8 @@ import { SubTransactionSubmittedContent } from '~/components/transaction/SubTran
 import { transactionMessageFromError } from '~/lib/util/transaction-util';
 import { useReliquaryDepositContractCallData } from '~/modules/reliquary/lib/useReliquaryDepositContractCallData';
 import { useReliquaryZap } from '~/modules/reliquary/lib/useReliquaryZap';
+import useReliquary from '~/modules/reliquary/lib/useReliquary';
+import { useBatchRelayerHasApprovedForAll } from '~/modules/reliquary/lib/useBatchRelayerHasApprovedForAll';
 
 interface Props {
     onInvestComplete(): void;
@@ -52,18 +54,21 @@ export function PoolInvestActions({ onInvestComplete, onClose, isReliquaryDeposi
     );
 
     // reliquary invest - disabled during the normal invest flow
+    const { createRelic } = useReliquary();
     const { reliquaryZap, ...reliquaryJoinQuery } = useReliquaryZap('DEPOSIT');
     const { data: reliquaryContractCalls } = useReliquaryDepositContractCallData({
         investTokensWithAmounts: selectedInvestTokensWithAmounts,
         enabled: isReliquaryDeposit,
     });
+    const { data: batchRelayerHasApprovedForAll } = useBatchRelayerHasApprovedForAll();
 
     const { refetch: refetchUserTokenBalances } = usePoolUserTokenBalancesInWallet();
     const { refetch: refetchUserBptBalance } = usePoolUserBptBalance();
     const [userSyncBalance] = useUserSyncBalanceMutation();
 
     const isLoading = isLoadingUserAllowances || isLoadingContractCallData || isLoadingBatchRelayerApproval;
-    const isBatchRelayerApprovalRequired = requiresBatchRelayerOnJoin || zapEnabled || isReliquaryDeposit;
+    const isBatchRelayerApprovalRequired =
+        requiresBatchRelayerOnJoin || zapEnabled || !isReliquaryDeposit || createRelic;
 
     useEffect(() => {
         refetchBatchRelayerApproval({});
@@ -109,6 +114,15 @@ export function PoolInvestActions({ onInvestComplete, onClose, isReliquaryDeposi
                     type: 'other',
                     buttonText: 'Approve Batch Relayer',
                     tooltipText: 'This pool requires you to approve the batch relayer.',
+                });
+            }
+
+            if (isReliquaryDeposit && !createRelic && !batchRelayerHasApprovedForAll) {
+                steps.unshift({
+                    id: 'batch-relayer-reliquary',
+                    type: 'other',
+                    buttonText: 'Approve Batch Relayer for all relics',
+                    tooltipText: 'This relic requires you to approve the batch relayer.',
                 });
             }
 

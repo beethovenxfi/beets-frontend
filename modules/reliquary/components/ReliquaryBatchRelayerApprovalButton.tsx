@@ -1,8 +1,6 @@
 import { Box } from '@chakra-ui/react';
 import { BeetsSubmitTransactionButton } from '~/components/button/BeetsSubmitTransactionButton';
-import BeetsTooltip from '~/components/tooltip/BeetsTooltip';
 import { useBatchRelayerRelicApprove } from '../lib/useBatchRelayerRelicApprove';
-import useReliquary from '../lib/useReliquary';
 
 interface Props {
     contractToApprove?: string;
@@ -15,15 +13,14 @@ interface Props {
 }
 
 export function ReliquaryBatchRelayerApprovalButton({ ...rest }: Props) {
-    const { approve, ...query } = useBatchRelayerRelicApprove();
-    const { selectedRelicId } = useReliquary();
+    const { approveAll, approve, ...query } = useBatchRelayerRelicApprove(true);
 
     return (
         <Box position="relative">
             <BeetsSubmitTransactionButton
                 {...query}
                 width="full"
-                onClick={() => approve(parseInt(selectedRelicId || ''))}
+                onClick={() => approveAll(true)}
                 {...rest}
                 borderColor="beets.green"
                 _focus={{ boxShadow: 'none' }}
