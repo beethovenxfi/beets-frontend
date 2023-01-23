@@ -1,6 +1,6 @@
 import { useSwiper, useSwiperSlide } from 'swiper/react';
 import { useEffect, useState } from 'react';
-import { Badge, Box, Heading, HStack, Image, Skeleton, VStack, Flex, Stack } from '@chakra-ui/react';
+import { Badge, Box, Heading, HStack, Skeleton, VStack, Flex, Stack } from '@chakra-ui/react';
 import useReliquary from '../lib/useReliquary';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ReliquaryFarmPosition, reliquaryService } from '~/lib/services/staking/reliquary.service';
@@ -13,6 +13,11 @@ import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 import RelicSlideApr from './RelicSlideApr';
 import RelicSlideInfo from './RelicSlideInfo';
 import RelicSlideMainInfo from './RelicSlideMainInfo';
+import Image from 'next/image';
+import RelicLevel1 from '~/assets/images/reliquary/1.jpg';
+import RelicLevel2 from '~/assets/images/reliquary/2.jpg';
+import RelicLevel3 from '~/assets/images/reliquary/3.jpg';
+import RelicLevel4 from '~/assets/images/reliquary/4.jpg';
 
 export interface RelicSlideProps {
     relic: ReliquaryFarmPosition;
@@ -52,6 +57,21 @@ export default function RelicSlide({ relic, openInvestModal, openWithdrawModal }
         }
     });
 
+    function getImage(level: number) {
+        switch (level) {
+            case 1:
+                return RelicLevel1;
+            case 2:
+                return RelicLevel2;
+            case 3:
+                return RelicLevel3;
+            case 4:
+                return RelicLevel4;
+            default:
+                return RelicLevel1;
+        }
+    }
+
     function getContainerOpacity() {
         if (hasNoRelics) {
             return 0.25;
@@ -90,7 +110,7 @@ export default function RelicSlide({ relic, openInvestModal, openWithdrawModal }
                     <HStack spacing="4" width="full" alignItems="start">
                         <Badge rounded="md" colorScheme="green" p="2">
                             <Heading textAlign="center" size="sm">
-                                Level {relic?.level} - Baby Boo
+                                Level {relic?.level + 1} - Baby Boo
                             </Heading>
                         </Badge>
                         <Badge p="2" rounded="md" colorScheme="purple">
@@ -125,12 +145,7 @@ export default function RelicSlide({ relic, openInvestModal, openWithdrawModal }
                         rounded="lg"
                         overflow="hidden"
                     >
-                        {_isLoadingRelicPositions && (
-                            <Skeleton>
-                                <Image height="400px" width="400px" src={nftURI} />
-                            </Skeleton>
-                        )}
-                        {!_isLoadingRelicPositions && <Image height="400px" width="400px" src={nftURI} />}
+                        <Image src={getImage(relic?.level + 1)} alt="reliquary" placeholder="blur" />
                     </Box>
                 </Flex>
                 <Stack direction={{ base: 'column', lg: 'row' }} position="relative" height="310px" width="full">
