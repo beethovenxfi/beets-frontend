@@ -57,6 +57,10 @@ export default function RelicSlide({ relic, openInvestModal, openWithdrawModal }
         }
     });
 
+    if (isActive) {
+        setSelectedRelicId(relic.relicId);
+    }
+
     function getImage(level: number) {
         switch (level) {
             case 1:
