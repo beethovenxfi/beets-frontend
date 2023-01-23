@@ -89,7 +89,7 @@ export default function RelicSlideApr(props: Props) {
             <Box width="full">
                 <Divider />
             </Box>
-            <HStack width="full" spacing="12" alignItems="flex-start">
+            <HStack width="full" spacing="12" alignItems="flex-start" flexGrow="1">
                 <VStack spacing="0" alignItems="flex-start">
                     <InfoButton
                         labelProps={{
@@ -133,7 +133,7 @@ export default function RelicSlideApr(props: Props) {
                 </BeetsTooltip>
             ) : (
                 <BeetsSubmitTransactionButton
-                    mt="4"
+                    fullWidth
                     width="full"
                     variant="primary"
                     {...harvestQuery}
