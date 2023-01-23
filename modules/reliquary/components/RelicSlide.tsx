@@ -52,21 +52,6 @@ export default function RelicSlide({ relic, openInvestModal, openWithdrawModal }
         }
     });
 
-<<<<<<< HEAD
-=======
-    const handleClick = (isNext: boolean) => {
-        const relicPositionIndex = relicPositions.findIndex((position) => position.relicId === relic.relicId);
-
-        if (isNext) {
-            setSelectedRelicId(relicPositions[relicPositionIndex + 1].relicId);
-            swiper.slideNext();
-        } else {
-            setSelectedRelicId(relicPositions[relicPositionIndex - 1].relicId);
-            swiper.slidePrev();
-        }
-    };
-
->>>>>>> origin/feature/reliquary
     function getContainerOpacity() {
         if (hasNoRelics) {
             return 0.25;
