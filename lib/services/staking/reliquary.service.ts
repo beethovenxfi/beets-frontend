@@ -193,7 +193,7 @@ export class ReliquaryService {
         relicId,
         provider,
     }: {
-        amount: BigNumber;
+        amount: number;
         relicId: string;
         provider: BaseProvider;
     }): Promise<ReliquaryDepositImpact> {
@@ -213,12 +213,11 @@ export class ReliquaryService {
         const levelOnUpdate = await this.getLevelOnUpdate({ relicId, provider });
 
         const poolLevelInfo = await reliquary.getLevelInfo(position.farmId);
-        const maturityLevels: BigNumber[] = poolLevelInfo.requiredMaturity;
+        const maturityLevels: BigNumber[] = poolLevelInfo.requiredMaturities;
 
-        const weight =
-            parseFloat(formatFixed(amount, 18)) / (parseFloat(formatFixed(amount, 18)) + parseFloat(position.amount));
+        const weight = amount / (amount + parseFloat(position.amount));
 
-        const nowTimestamp = Math.floor(new Date('2012.08.10').getTime() / 1000);
+        const nowTimestamp = Date.now() / 1000;
 
         const maturity = nowTimestamp - position.entry;
         const entryTimestampAfterDeposit = Math.round(position.entry + maturity * weight);
