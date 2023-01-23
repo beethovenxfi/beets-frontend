@@ -40,9 +40,9 @@ export default function ReliquaryLanding() {
     const { relicPositions, selectedRelicId, isLoadingRelicPositions } = useReliquary();
 
     return (
-        <Stack direction="column">
-            <Stack bg="blackAlpha.500" px="8" py="20" direction={['column', 'row']} spacing="12">
-                <VStack alignItems="flex-start" justifyContent="space-between">
+        <Stack direction="column" width="full">
+            <Stack bg="blackAlpha.500" px="8" py="20" direction={['column', 'row']} spacing="12" width="full">
+                <VStack width="full" alignItems="flex-start" justifyContent="space-between">
                     <Text color="beets.green" fontSize="sm">
                         rfBEETS
                     </Text>
@@ -70,8 +70,8 @@ export default function ReliquaryLanding() {
                     ))}
                 </Stack>
             </Stack>
-            <VStack width="full" spacing="16">
-                <VStack width='full' py="4" spacing="8">
+            <Box width="full">
+                <VStack width="full" py="4" spacing="8">
                     <VStack width="full" alignItems="flex-start">
                         <Heading size="lg">Your relics</Heading>
                     </VStack>
@@ -79,13 +79,13 @@ export default function ReliquaryLanding() {
                         <RelicCarousel />
                     </Box>
                 </VStack>
-                <VStack width='full' py="4" spacing="8">
+                <VStack width="full" py="4" spacing="8" mt={{ base: '32rem', lg: '16' }}>
                     <VStack width="full" alignItems="flex-start">
                         <Heading size="lg">Global maBEETS</Heading>
                     </VStack>
                     <ReliquaryGlobalStats />
                 </VStack>
-            </VStack>
+            </Box>
         </Stack>
     );
 }

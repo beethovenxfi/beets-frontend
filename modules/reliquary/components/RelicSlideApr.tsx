@@ -46,9 +46,9 @@ export default function RelicSlideApr(props: Props) {
 
     return (
         <VStack
-            left="-42.5%"
+            left={{ base: '0', lg: '-42.5%' }}
             rounded="md"
-            position="absolute"
+            position={{ base: 'relative', lg: 'absolute' }}
             spacing="4"
             width={{ base: '100%', lg: '60%' }}
             top="0"
@@ -62,6 +62,7 @@ export default function RelicSlideApr(props: Props) {
                 transform: `scale(${isActive ? '1' : '0.75'})`,
                 transition: { delay: 0.1 },
             }}
+            minHeight="310px"
         >
             <VStack spacing="0" alignItems="flex-start">
                 <Heading lineHeight="1rem" fontWeight="semibold" size="sm" color="beets.base.50">
@@ -88,7 +89,7 @@ export default function RelicSlideApr(props: Props) {
             <Box width="full">
                 <Divider />
             </Box>
-            <HStack width="full" spacing="12" alignItems="flex-start">
+            <HStack width="full" spacing="12" alignItems="flex-start" flexGrow="1">
                 <VStack spacing="0" alignItems="flex-start">
                     <InfoButton
                         labelProps={{
@@ -132,7 +133,7 @@ export default function RelicSlideApr(props: Props) {
                 </BeetsTooltip>
             ) : (
                 <BeetsSubmitTransactionButton
-                    mt="4"
+                    fullWidth
                     width="full"
                     variant="primary"
                     {...harvestQuery}
