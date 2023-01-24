@@ -70,7 +70,6 @@ export function RelicCarousel({ loading, ...rest }: Props) {
                 <Swiper
                     slidesPerView={3}
                     spaceBetween={-300}
-                    loop={relicPositions.length > 1}
                     centeredSlides
                     /*breakpoints={{
                     720: { slidesPerView: 3 },

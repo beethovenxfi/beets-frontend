@@ -32,23 +32,9 @@ export default function RelicSlideMainInfo({ isLoading, openInvestModal, openWit
     const hasNoRelics = relicPositions.length === 0;
 
     return (
-        <Box height="full" width='full'>
+        <Box height="full" width="full">
             {isActive && !isLoading && (
                 <Box position="relative" height="full">
-                    {relicPositions.length > 1 && (
-                        <Button
-                            px="2"
-                            zIndex={2}
-                            position="absolute"
-                            left="3rem"
-                            top="50%"
-                            transform="translateY(-50%)"
-                            onClick={() => swiper.slidePrev()}
-                        >
-                            <ChevronLeft />
-                        </Button>
-                    )}
-
                     <VStack
                         as={motion.div}
                         animate={{ opacity: 1, transform: 'scale(1)', transition: { delay: 0.1 } }}
@@ -171,20 +157,6 @@ export default function RelicSlideMainInfo({ isLoading, openInvestModal, openWit
                             </VStack>
                         </Box>
                     </VStack>
-
-                    {relicPositions.length > 1 && (
-                        <Button
-                            px="2"
-                            zIndex={2}
-                            position="absolute"
-                            right="3rem"
-                            top="50%"
-                            transform="translateY(-50%)"
-                            onClick={() => swiper.slideNext()}
-                        >
-                            <ChevronRight />
-                        </Button>
-                    )}
                 </Box>
             )}
         </Box>

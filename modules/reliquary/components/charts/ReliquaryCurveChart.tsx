@@ -35,14 +35,14 @@ export function ReliquaryCurveChart() {
             name: 'Level',
             nameLocation: 'middle',
             nameGap: 35,
-            type: 'value',
+            type: 'category',
             splitLine: { show: false },
-            interval: 1,
             axisLabel: {
                 margin: 12,
                 showMaxLabel: false,
                 showMinLabel: false,
             },
+            boundaryGap: false,
             axisPointer: {
                 label: {
                     formatter: (params) => numeral(params.value).format('0a'),
@@ -55,11 +55,12 @@ export function ReliquaryCurveChart() {
             nameLocation: 'middle',
             nameRotate: 90,
             nameGap: 35,
+            boundaryGap: false,
         },
         grid: {
             left: '5%',
             right: '5%',
-            top: '5%',
+            top: '15%',
             bottom: '10%',
             containLabel: true,
         },
