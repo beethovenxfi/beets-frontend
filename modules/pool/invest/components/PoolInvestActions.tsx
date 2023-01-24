@@ -187,7 +187,6 @@ export function PoolInvestActions({ onInvestComplete, onClose, isReliquaryDeposi
                     ]}
                 />
             </Box>
-            )
             <FadeInBox width="full" isVisible={joinQuery.isConfirmed || joinQuery.isPending || joinQuery.isFailed}>
                 <SubTransactionSubmittedContent query={joinQuery} />
             </FadeInBox>

@@ -87,19 +87,19 @@ export function RelicCarousel({ loading, ...rest }: Props) {
                             <RelicSlide
                                 openInvestModal={() => setIsInvestModalVisible(true)}
                                 openWithdrawModal={() => setIsWithdrawModalVisible(true)}
-                                relic={selectedRelic || relicPositions[0]}
+                                relic={relic}
                             />
                         </SwiperSlide>
                     ))}
-                    {!relicPositions.length && (
+                    {/* {!relicPositions.length && (
                         <SwiperSlide key={`dummy-slide`}>
                             <RelicSlide
                                 openInvestModal={() => setIsInvestModalVisible(true)}
                                 openWithdrawModal={() => setIsWithdrawModalVisible(true)}
-                                relic={selectedRelic || relicPositions[0]}
+                                relic={relicPositions[0]}
                             />
                         </SwiperSlide>
-                    )}
+                    )} */}
                 </Swiper>
             </Box>
             <PoolInvestModal
