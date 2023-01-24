@@ -90,7 +90,7 @@ export default function RelicSlide({ relic, openInvestModal, openWithdrawModal }
                     <HStack spacing="4" width="full" alignItems="start">
                         <Badge rounded="md" colorScheme="green" p="2">
                             <Heading textAlign="center" size="sm">
-                                Level {relic?.level} - Baby Boo
+                                Level {relic?.level} - Baby Ludwig
                             </Heading>
                         </Badge>
                         <Badge p="2" rounded="md" colorScheme="purple">

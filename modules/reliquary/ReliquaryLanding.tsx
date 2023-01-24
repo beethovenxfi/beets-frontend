@@ -84,7 +84,7 @@ export default function ReliquaryLanding() {
             <Box width="full">
                 <VStack width="full" py="4" spacing="8">
                     <VStack width="full" alignItems="flex-start">
-                        <Heading size="lg">Your relics</Heading>
+                        <Heading size="lg">maBEETS</Heading>
                     </VStack>
                     <Box width="full">
                         <RelicCarousel />

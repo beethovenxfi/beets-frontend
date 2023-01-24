@@ -53,7 +53,7 @@ export default function RelicSlideMainInfo({ isLoading, openInvestModal, openWit
                             p="4"
                         >
                             <VStack spacing="3" width="full" height="full">
-                                <VStack width="full" spacing="4" height="full">
+                                <VStack width="full" spacing="2" height="full">
                                     <VStack
                                         alignItems="flex-start"
                                         justifyContent="space-between"
@@ -134,8 +134,7 @@ export default function RelicSlideMainInfo({ isLoading, openInvestModal, openWit
                                         <Button
                                             variant="primary"
                                             width="full"
-                                            size="sm"
-                                            rounded="lg"
+                                            rounded="xl"
                                             disabled={hasNoRelics}
                                             onClick={openInvestModal}
                                         >
@@ -144,8 +143,7 @@ export default function RelicSlideMainInfo({ isLoading, openInvestModal, openWit
                                         <Button
                                             variant="secondary"
                                             width="full"
-                                            size="sm"
-                                            rounded="lg"
+                                            rounded="xl"
                                             disabled={hasNoRelics}
                                             onClick={openWithdrawModal}
                                             zIndex={2}
