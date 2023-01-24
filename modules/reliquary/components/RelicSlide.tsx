@@ -41,6 +41,20 @@ export default function RelicSlide({ relic, openInvestModal, openWithdrawModal }
     const { canUpgrade } = relicGetMaturityProgress(selectedRelic, maturityThresholds);
     const [_isLoadingRelicPositions, setIsLoadingRelicPositions] = useState(false);
 
+    const relicLevelNames = [
+        'The Initiate',
+        'The Neophyte',
+        'The Wanderer',
+        'The Rebel',
+        'The Skeptic',
+        'The Apprentice',
+        'The Journeyman',
+        'The Savant',
+        'The Creator',
+        'The Scholar',
+        'The Awakened',
+    ];
+
     // hack to get around next.js hydration issues with swiper
     useEffect(() => {
         setIsLoadingRelicPositions(isLoadingRelicPositions);
@@ -114,7 +128,7 @@ export default function RelicSlide({ relic, openInvestModal, openWithdrawModal }
                     <HStack spacing="4" width="full" alignItems="start">
                         <Badge rounded="md" colorScheme="green" p="2">
                             <Heading textAlign="center" size="sm">
-                                Level {relic?.level} - Baby Ludwig
+                                Level {relic?.level + 1} - {relicLevelNames[relic.level]}
                             </Heading>
                         </Badge>
                         <Badge p="2" rounded="md" colorScheme="purple">
