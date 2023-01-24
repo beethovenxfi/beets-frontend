@@ -9,6 +9,7 @@ import Image from 'next/image';
 import useReliquary from './lib/useReliquary';
 import { PoolInvestModal } from '../pool/invest/PoolInvestModal';
 import ReliquaryGlobalStats from './components/stats/ReliquaryGlobalStats';
+import { motion } from 'framer-motion';
 
 const infoButtonLabelProps = {
     lineHeight: '1rem',
@@ -63,8 +64,18 @@ export default function ReliquaryLanding() {
                 </VStack>
                 <Stack direction={['column', 'row']} spacing="8">
                     {rqImages.map((image, index) => (
-                        <VStack key={index}>
-                            <Image src={image.src} alt={image.alt} placeholder="blur" style={{ borderRadius: '8px' }} />
+                        <VStack spacing="4" key={index}>
+                            <Box
+                                as={motion.div}
+                                whileHover={{ scale: 1.2, transition: { type: 'spring', stiffness: 400, damping: 10 } }}
+                            >
+                                <Image
+                                    src={image.src}
+                                    alt={image.alt}
+                                    placeholder="blur"
+                                    style={{ borderRadius: '8px' }}
+                                />
+                            </Box>
                             <InfoButton labelProps={infoButtonLabelProps} label={image.alt} infoText={image.info} />
                         </VStack>
                     ))}
