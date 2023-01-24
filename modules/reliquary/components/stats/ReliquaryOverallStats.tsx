@@ -160,11 +160,14 @@ export default function ReliquaryOverallStats() {
                                 fontSize: 'sm',
                                 color: 'beets.base.50',
                             }}
-                            label="Relics minted"
+                            label="Total minted"
                             infoText="Lorem ipsum dolor sit amet, Lorem ipsum dolor sit amet"
                         />
                         <Text color="white" fontSize="1.75rem">
                             {numeral(globalStats?.relicCount).format('0,0')}
+                            <Text as="span" fontSize="md">
+                                &nbsp;relics
+                            </Text>
                         </Text>
                         <Text fontSize="1rem" lineHeight="1rem">
                             {`Average value per relic is ${numberFormatUSDValue(avgValuePerRelic)}`}

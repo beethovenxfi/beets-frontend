@@ -1,6 +1,6 @@
 import { useSwiper, useSwiperSlide } from 'swiper/react';
 import { useEffect, useState } from 'react';
-import { Badge, Box, Heading, HStack, Skeleton, VStack, Text, Divider } from '@chakra-ui/react';
+import { Badge, Box, Heading, HStack, Skeleton, VStack, Text, Divider, Spacer } from '@chakra-ui/react';
 import useReliquary from '../lib/useReliquary';
 import { numberFormatUSDValue } from '~/lib/util/number-formats';
 import AprTooltip from '~/components/apr-tooltip/AprTooltip';
@@ -49,7 +49,7 @@ export default function RelicSlideApr(props: Props) {
             left={{ base: '0', lg: '-42.5%' }}
             rounded="md"
             position={{ base: 'relative', lg: 'absolute' }}
-            spacing="4"
+            //spacing="4"
             width={{ base: '100%', lg: '60%' }}
             top="0"
             alignItems="flex-start"
@@ -63,11 +63,12 @@ export default function RelicSlideApr(props: Props) {
                 transition: { delay: 0.1 },
             }}
             minHeight="310px"
+            justifyContent="stretch"
         >
-            <VStack spacing="0" alignItems="flex-start">
-                <Heading lineHeight="1rem" fontWeight="semibold" size="sm" color="beets.base.50">
+            <VStack alignItems="flex-start" height="50%" w="full">
+                <Text lineHeight="1rem" fontWeight="semibold" fontSize="md" color="beets.base.50">
                     Relic APR
-                </Heading>
+                </Text>
                 <HStack>
                     <div className="apr-stripes">{numeral(selectedRelicApr).format('0.00%')}</div>
                     <AprTooltip onlySparkles data={pool.dynamicData.apr} />
@@ -85,66 +86,67 @@ export default function RelicSlideApr(props: Props) {
                         {selectedRelicLevel?.allocationPoints}x
                     </Badge>
                 </HStack>
-            </VStack>
-            <Box width="full">
+                <Spacer />
                 <Divider />
-            </Box>
-            <HStack width="full" spacing="12" alignItems="flex-start" flexGrow="1">
-                <VStack spacing="0" alignItems="flex-start">
-                    <InfoButton
-                        labelProps={{
-                            lineHeight: '1rem',
-                            fontWeight: 'semibold',
-                            fontSize: 'sm',
-                        }}
-                        label="My pending rewards"
-                        infoText={`Your accumulated liquidity incentives for this relic. You can claim your rewards at any time.`}
-                    />
-                    {isLoadingPendingRewards ? (
-                        <Skeleton height="34px" width="140px" mt="4px" mb="4px" />
-                    ) : (
-                        <Text color="white" fontSize="1.75rem">
-                            {numberFormatUSDValue(pendingRewardsUsdValue)}
-                        </Text>
-                    )}
-                    <Box>
-                        {pendingRewards.map((reward, index) => (
-                            <HStack key={index} spacing="1" mb={index === pendingRewards.length - 1 ? '0' : '0.5'}>
-                                <TokenAvatar height="20px" width="20px" address={reward.address} />
-                                <Skeleton isLoaded={!isLoadingPendingRewards}>
-                                    <Text fontSize="1rem" lineHeight="1rem">
-                                        {tokenFormatAmount(reward.amount)}
-                                    </Text>
-                                </Skeleton>
-                            </HStack>
-                        ))}
-                    </Box>
-                </VStack>
-            </HStack>
-            {!batchRelayerHasApprovedForAll ? (
-                <BeetsTooltip label="To claim your pending rewards, you first need to approve the batch relayer.">
-                    <Box w="full">
-                        <ReliquaryBatchRelayerApprovalButton
-                            onConfirmed={() => {
-                                refetch();
+            </VStack>
+            <VStack alignItems="flex-start" height="50%" w="full" flexGrow="1">
+                <HStack width="full" spacing="12" alignItems="flex-start" flexGrow="1">
+                    <VStack spacing="0" alignItems="flex-start">
+                        <InfoButton
+                            labelProps={{
+                                lineHeight: '1rem',
+                                fontWeight: 'semibold',
+                                fontSize: 'sm',
                             }}
+                            label="My pending rewards"
+                            infoText={`Your accumulated liquidity incentives for this relic. You can claim your rewards at any time.`}
                         />
-                    </Box>
-                </BeetsTooltip>
-            ) : (
-                <BeetsSubmitTransactionButton
-                    fullWidth
-                    width="full"
-                    variant="primary"
-                    {...harvestQuery}
-                    onClick={harvest}
-                    onConfirmed={() => {
-                        refetchPendingRewards();
-                    }}
-                >
-                    Claim now
-                </BeetsSubmitTransactionButton>
-            )}
+                        {isLoadingPendingRewards ? (
+                            <Skeleton height="34px" width="140px" mt="4px" mb="4px" />
+                        ) : (
+                            <Text color="white" fontSize="1.75rem">
+                                {numberFormatUSDValue(pendingRewardsUsdValue)}
+                            </Text>
+                        )}
+                        <Box>
+                            {pendingRewards.map((reward, index) => (
+                                <HStack key={index} spacing="1" mb={index === pendingRewards.length - 1 ? '0' : '0.5'}>
+                                    <TokenAvatar height="20px" width="20px" address={reward.address} />
+                                    <Skeleton isLoaded={!isLoadingPendingRewards}>
+                                        <Text fontSize="1rem" lineHeight="1rem">
+                                            {tokenFormatAmount(reward.amount)}
+                                        </Text>
+                                    </Skeleton>
+                                </HStack>
+                            ))}
+                        </Box>
+                    </VStack>
+                </HStack>
+                {!batchRelayerHasApprovedForAll ? (
+                    <BeetsTooltip label="To claim your pending rewards, you first need to approve the batch relayer.">
+                        <Box w="full">
+                            <ReliquaryBatchRelayerApprovalButton
+                                onConfirmed={() => {
+                                    refetch();
+                                }}
+                            />
+                        </Box>
+                    </BeetsTooltip>
+                ) : (
+                    <BeetsSubmitTransactionButton
+                        fullWidth
+                        width="full"
+                        variant="primary"
+                        {...harvestQuery}
+                        onClick={harvest}
+                        onConfirmed={() => {
+                            refetchPendingRewards();
+                        }}
+                    >
+                        Claim now
+                    </BeetsSubmitTransactionButton>
+                )}
+            </VStack>
         </VStack>
     );
 }

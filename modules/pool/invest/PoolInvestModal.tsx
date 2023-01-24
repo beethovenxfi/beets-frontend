@@ -142,7 +142,7 @@ export function PoolInvestModal({
                     width={isReliquaryFBeetsPool ? 'full' : { base: 'full', md: '140px' }}
                     {...activatorProps}
                 >
-                    {isReliquaryFBeetsPool && createRelic ? 'Get fBEETS' : activatorLabel || 'Invest'}
+                    {isReliquaryFBeetsPool && createRelic ? 'Get maBEETS' : activatorLabel || 'Invest'}
                 </Button>
             )}
             <Modal motionPreset="none" isOpen={isOpen} onClose={onModalClose} size="lg" initialFocusRef={initialRef}>

@@ -1,6 +1,6 @@
 import { useSwiper, useSwiperSlide } from 'swiper/react';
 import { useEffect, useState } from 'react';
-import { Badge, Box, Heading, HStack, Skeleton, VStack, Text, Divider, Tooltip, StackDivider } from '@chakra-ui/react';
+import { HStack, Skeleton, VStack, Text, Divider, Tooltip, Spacer } from '@chakra-ui/react';
 import useReliquary from '../lib/useReliquary';
 import { numberFormatUSDValue } from '~/lib/util/number-formats';
 import AprTooltip from '~/components/apr-tooltip/AprTooltip';
@@ -70,7 +70,6 @@ export default function RelicSlideInfo(props: Props) {
             alignItems="flex-start"
             background="whiteAlpha.200"
             p="4"
-            divider={<StackDivider />}
             hidden={!isActive}
             as={motion.div}
             animate={{
@@ -79,18 +78,18 @@ export default function RelicSlideInfo(props: Props) {
                 transition: { delay: 0.1 },
             }}
         >
-            <VStack spacing="0" alignItems="flex-start">
+            <VStack spacing="0" h="50%" w="full" alignItems="flex-start">
                 <InfoButton
                     labelProps={{
                         lineHeight: '1rem',
                         fontWeight: 'semibold',
-                        fontSize: 'sm',
+                        fontSize: 'md',
                         color: 'beets.base.50',
                     }}
                     label="Relic share"
                     infoText={`The size of your relic relative to all value stored in relics. Your staked share represents the percent of liquidity incentives you are entitled to.`}
                 />
-                <VStack spacing="none" alignItems="flex-start">
+                <VStack alignItems="flex-start">
                     {isLoading || isLoadingGlobalStats ? (
                         <Skeleton height="34px" width="140px" mt="4px" mb="4px" />
                     ) : (
@@ -111,9 +110,10 @@ export default function RelicSlideInfo(props: Props) {
                         </Text>
                     )}
                 </VStack>
+                <Spacer />
+                <Divider />
             </VStack>
-
-            <VStack spacing="0" alignItems="flex-start" flex="1">
+            <VStack spacing="0" h="50%" w="full" alignItems="flex-start">
                 <InfoButton
                     labelProps={{
                         lineHeight: '1rem',
@@ -131,18 +131,16 @@ export default function RelicSlideInfo(props: Props) {
                         {numberFormatUSDValue(relicYieldPerDay)}
                     </Text>
                 )}
-                <Box>
-                    {beetsPerDay > 0 && (
-                        <HStack spacing="1" mb="0.5">
-                            <TokenAvatar height="20px" width="20px" address={networkConfig.beets.address} />
-                            <Tooltip label={`BEETS emissions for reliquary are calculated per second.`}>
-                                <Text fontSize="1rem" lineHeight="1rem">
-                                    {numeral(beetsPerDay).format('0,0')} / day
-                                </Text>
-                            </Tooltip>
-                        </HStack>
-                    )}
-                </Box>
+                {beetsPerDay > 0 && (
+                    <HStack spacing="1" mb="0.5">
+                        <TokenAvatar height="20px" width="20px" address={networkConfig.beets.address} />
+                        <Tooltip label={`BEETS emissions for reliquary are calculated per second.`}>
+                            <Text fontSize="1rem" lineHeight="1rem">
+                                {numeral(beetsPerDay).format('0,0')} / day
+                            </Text>
+                        </Tooltip>
+                    </HStack>
+                )}
             </VStack>
         </VStack>
     );

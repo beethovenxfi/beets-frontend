@@ -6,7 +6,6 @@ import Rq1Image from '~/assets/images/rq-1.png';
 import Rq2Image from '~/assets/images/rq-2.png';
 import Rq3Image from '~/assets/images/rq-3.png';
 import Image from 'next/image';
-import { RelicStats } from './components/RelicStats';
 import useReliquary from './lib/useReliquary';
 import { PoolInvestModal } from '../pool/invest/PoolInvestModal';
 import ReliquaryGlobalStats from './components/stats/ReliquaryGlobalStats';
@@ -16,6 +15,7 @@ const infoButtonLabelProps = {
     fontWeight: 'semibold',
     fontSize: 'sm',
     color: 'beets.base.50',
+    marginTop: '4',
 };
 
 const rqImages = [
@@ -31,7 +31,7 @@ const rqImages = [
     },
     {
         src: Rq3Image,
-        alt: 'fBEETS',
+        alt: 'maBEETS',
         info: 'Lorem ipsum dolor sit amet, Lorem ipsum dolor sit amet',
     },
 ];
@@ -44,19 +44,19 @@ export default function ReliquaryLanding() {
             <Stack bg="blackAlpha.500" px="8" py="20" direction={['column', 'row']} spacing="12" width="full">
                 <VStack width="full" alignItems="flex-start" justifyContent="space-between">
                     <Text color="beets.green" fontSize="sm">
-                        rfBEETS
+                        maBEETS
                     </Text>
                     <Heading color="white" fontSize={{ base: 'lg', lg: '2rem' }}>
-                        Extraordinary earnings & voting power
+                        A brand new primitive waiting to be explored.
                     </Heading>
                     <UnorderedList pl="5">
-                        <ListItem>Consectetur adipiscing elit</ListItem>
-                        <ListItem>Integer molestie lorem at massa</ListItem>
-                        <ListItem>Facilisis in pretium nisl aliquet</ListItem>
+                        <ListItem>Participate in BEETS governance</ListItem>
+                        <ListItem>Unlock maturity adjusted rewards</ListItem>
+                        <ListItem>Access evolving Ludwig fNFTs</ListItem>
                     </UnorderedList>
                     <HStack w="90%">
                         <PoolInvestModal createRelic />
-                        <Button variant="secondary" w="full">
+                        <Button variant="secondary" w="full" as="a" href="https://docs.beets.fi" target="_blank">
                             Learn more
                         </Button>
                     </HStack>
@@ -73,7 +73,7 @@ export default function ReliquaryLanding() {
             <Box width="full">
                 <VStack width="full" py="4" spacing="8">
                     <VStack width="full" alignItems="flex-start">
-                        <Heading size="lg">Your relics</Heading>
+                        <Heading size="lg">My maBEETS</Heading>
                     </VStack>
                     <Box width="full">
                         <RelicCarousel />
