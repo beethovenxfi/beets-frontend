@@ -27,67 +27,44 @@ export function ReliquaryMaturityChart() {
                 formatter: (params: any) =>
                     `Level ${params[0].data[0]}: ${numeral(params[0].data[1]).format('0a')} fBEETS`,
             },
-            grid: {
-                left: '5%',
-                right: '5%',
-                top: '5%',
-                bottom: '10%',
-                containLabel: true,
-            },
             xAxis: {
                 name: 'Level',
                 nameLocation: 'middle',
                 nameGap: 35,
-                type: 'value',
+                type: 'category',
                 splitLine: { show: false },
-                axisTick: { show: true, length: 10 },
+                axisTick: { show: false, alignWithLabel: true },
+                interval: 1,
                 axisLabel: {
-                    formatter: (value: number, index: number) => {
-                        return value;
-                    },
                     color: colors.gray['200'],
-                    showMaxLabel: false,
-                    showMinLabel: false,
                     margin: 16,
                 },
-                axisLine: { show: true },
-                interval: 1,
-                axisPointer: {
-                    label: {
-                        formatter: (params) => numeral(params.value).format('0a'),
-                    },
-                },
+                axisLine: { show: false },
             },
             yAxis: {
-                name: '# of fBEETS',
+                name: 'fBEETS',
                 nameLocation: 'middle',
                 nameRotate: 90,
-                nameGap: 35,
                 type: 'value',
-                axisLine: { show: true },
+                axisLine: { show: false },
                 minorSplitLine: { show: false },
                 splitLine: { show: false },
                 axisLabel: {
-                    color: colors.beets.base['100'],
-                    showMinLabel: false,
+                    show: false,
                 },
-                axisPointer: {
-                    label: {
-                        formatter: function (params) {
-                            return numeral(params.value).format('0a');
-                        },
-                    },
-                },
+                axisTick: { show: false },
+            },
+            grid: {
+                bottom: '5.5%',
+                right: '1.5%',
+                left: '4.5%',
+                top: '10%',
+                containLabel: true,
             },
             series: [
                 {
                     data: pool.staking?.reliquary?.levels?.map((level) => [level.level + 1, level.balance]),
                     type: 'bar',
-                    tooltip: {
-                        valueFormatter: function (value) {
-                            return numeral(value).format('0a');
-                        },
-                    },
                     itemStyle: {
                         opacity: 1,
                         borderRadius: [5, 5, 0, 0],

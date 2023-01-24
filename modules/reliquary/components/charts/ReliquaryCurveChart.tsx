@@ -5,12 +5,13 @@ import { usePool } from '~/modules/pool/lib/usePool';
 import { chartGetPrimaryColor } from '~/modules/pool/detail/components/charts/chart-util';
 import { networkConfig } from '~/lib/config/network-config';
 import { InfoButton } from '~/components/info-button/InfoButton';
-import { Box, HStack, Link } from '@chakra-ui/react';
+import { Box, HStack, Link, useTheme } from '@chakra-ui/react';
 import { ExternalLink } from 'react-feather';
 import numeral from 'numeral';
 
 export function ReliquaryCurveChart() {
     const { pool } = usePool();
+    const { colors } = useTheme();
 
     const data = pool.staking?.reliquary?.levels?.map((level) => ({
         level: level.level + 1,
@@ -29,48 +30,48 @@ export function ReliquaryCurveChart() {
             },
             // any -> https://github.com/apache/echarts/issues/14277
             formatter: (params: any) =>
-                `Level ${params[0].data[0]}: ${numeral(params[0].data[1]).format('0a')} allocation points`,
+                `Level ${params[0].data[0]}: ${numeral(params[0].data[1]).format('0a')}x maturity boost`,
         },
         xAxis: {
             name: 'Level',
             nameLocation: 'middle',
             nameGap: 35,
-            type: 'value',
+            type: 'category',
             splitLine: { show: false },
+            axisTick: { show: false, alignWithLabel: true },
             interval: 1,
             axisLabel: {
-                margin: 12,
-                showMaxLabel: false,
-                showMinLabel: false,
+                color: colors.gray['200'],
+                margin: 16,
             },
-            axisPointer: {
-                label: {
-                    formatter: (params) => numeral(params.value).format('0a'),
-                },
-            },
+            axisLine: { show: false },
         },
         yAxis: {
-            splitLine: { show: false },
-            name: 'Allocation Points',
+            name: 'Maturity boost',
             nameLocation: 'middle',
             nameRotate: 90,
-            nameGap: 35,
+            type: 'value',
+            axisLine: { show: false },
+            splitLine: { show: false },
+            axisLabel: {
+                show: false,
+            },
+            axisTick: { show: false },
         },
         grid: {
-            left: '5%',
-            right: '5%',
-            top: '5%',
-            bottom: '10%',
+            bottom: '5%',
+            right: '1.5%',
+            left: '4.5%',
+            top: '10%',
             containLabel: true,
         },
         series: [
             {
                 type: 'line',
                 smooth: true,
-                name: 'BEETronix',
                 data: data?.map((item) => [item.level, item.allocationPoints]),
                 areaStyle: {
-                    opacity: networkConfig.chainId === '10' ? 0.75 : 0.2,
+                    opacity: 0.2,
                     color: new graphic.LinearGradient(0, 0, 0, 1, [
                         { offset: 0, color: chartGetPrimaryColor(networkConfig.chainId, 1) },
                         { offset: 0.5, color: chartGetPrimaryColor(networkConfig.chainId, 1) },
