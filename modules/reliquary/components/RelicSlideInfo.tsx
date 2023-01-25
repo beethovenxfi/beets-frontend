@@ -111,7 +111,7 @@ export default function RelicSlideInfo(props: Props) {
                     )}
                 </VStack>
                 <Spacer />
-                <Divider />
+                <Divider pt={{ base: '4', lg: undefined }} />
             </VStack>
             <VStack spacing="0" h="50%" w="full" alignItems="flex-start">
                 <InfoButton

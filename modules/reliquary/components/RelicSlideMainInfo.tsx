@@ -71,7 +71,7 @@ export default function RelicSlideMainInfo({ isLoading, openInvestModal, openWit
                                 <Spacer />
                                 <Divider />
                             </VStack>
-                            <VStack spacing="0" h="50%" w="full">
+                            <VStack spacing="0" h="50%" w="full" pt={{ base: '1', lg: undefined }}>
                                 <VStack spacing="0" w="full" alignItems="flex-start" flexGrow="1">
                                     <Text lineHeight="1rem" fontWeight="semibold" fontSize="md" color="beets.base.50">
                                         Relic progress
@@ -89,7 +89,13 @@ export default function RelicSlideMainInfo({ isLoading, openInvestModal, openWit
                                         />
                                     </VStack>
                                 </VStack>
-                                <HStack h="full" w="full" alignItems="flex-end">
+                                <HStack
+                                    h="full"
+                                    w="full"
+                                    alignItems="flex-end"
+                                    pt={{ base: '4', xl: undefined }}
+                                    pb={{ base: '6', xl: undefined }}
+                                >
                                     <Button
                                         variant="primary"
                                         w="full"

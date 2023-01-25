@@ -89,7 +89,7 @@ export default function RelicSlideApr(props: Props) {
                 <Spacer />
                 <Divider />
             </VStack>
-            <VStack alignItems="flex-start" height="50%" w="full" flexGrow="1">
+            <VStack alignItems="flex-start" height="50%" w="full" flexGrow="1" pt={{ base: '1', lg: undefined }}>
                 <HStack width="full" spacing="12" alignItems="flex-start" flexGrow="1">
                     <VStack spacing="0" alignItems="flex-start">
                         <InfoButton

@@ -68,16 +68,14 @@ export function RelicCarousel({ loading, ...rest }: Props) {
                 position="relative"
             >
                 <Swiper
-                    slidesPerView={3}
-                    spaceBetween={-300}
+                    slidesPerView={1}
+                    spaceBetween={isMobile ? 10 : -300}
                     centeredSlides
-                    /*breakpoints={{
-                    720: { slidesPerView: 3 },
-                    992: { slidesPerView: 2 },
-                    1124: { slidesPerView: 3 },
-                }}*/
+                    breakpoints={{
+                        1024: { slidesPerView: 3 },
+                    }}
                     pagination={{
-                        clickable: true,
+                        clickable: !isMobile,
                     }}
                     allowTouchMove={isMobile}
                     modules={[Pagination]}
