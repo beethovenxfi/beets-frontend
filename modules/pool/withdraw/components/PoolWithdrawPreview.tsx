@@ -21,6 +21,7 @@ import useReliquary from '~/modules/reliquary/lib/useReliquary';
 import { useReliquaryWithdrawAndHarvestContractCallData } from '~/modules/reliquary/lib/useReliquaryWithdrawAndHarvestContractCallData';
 import { useReliquaryZap } from '~/modules/reliquary/lib/useReliquaryZap';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
+import { oldBnumToHumanReadable, oldBnumScaleAmount } from '~/lib/services/pool/lib/old-big-number';
 
 interface Props {
     onWithdrawComplete(): void;
@@ -43,7 +44,9 @@ export function PoolWithdrawPreview({ onWithdrawComplete, onClose }: Props) {
     const { selectedRelic } = useReliquary();
     const { data: reliquaryContractCalls } = useReliquaryWithdrawAndHarvestContractCallData({
         relicId: parseInt(selectedRelic?.relicId || ''),
-        bptAmount: (proportionalPercent * parseInt(selectedRelic?.amount || '')).toString(),
+        bptAmount: oldBnumToHumanReadable(
+            oldBnumScaleAmount(selectedRelic?.amount || '').times(proportionalPercent / 100),
+        ),
         poolTotalShares: pool.dynamicData.totalShares,
         poolTokens: pool.tokens,
     });
