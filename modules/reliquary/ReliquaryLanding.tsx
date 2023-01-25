@@ -42,7 +42,15 @@ export default function ReliquaryLanding() {
 
     return (
         <Stack direction="column" width="full">
-            <Stack bg="blackAlpha.500" px="8" py="20" direction={['column', 'row']} spacing="12" width="full">
+            <Stack
+                bg="blackAlpha.500"
+                px={{ base: '0', xl: '8' }}
+                pt={{ base: '8', xl: '20' }}
+                pb={{ base: '12', xl: '20' }}
+                direction={['column', 'row']}
+                spacing="12"
+                width="full"
+            >
                 <VStack width="full" alignItems="flex-start" justifyContent="space-between">
                     <Text color="beets.green" fontSize="sm">
                         maBEETS
@@ -55,7 +63,7 @@ export default function ReliquaryLanding() {
                         <ListItem>Unlock maturity adjusted rewards</ListItem>
                         <ListItem>Access evolving Ludwig fNFTs</ListItem>
                     </UnorderedList>
-                    <HStack w="90%">
+                    <HStack w={{ base: 'full', xl: '90%' }}>
                         <PoolInvestModal createRelic />
                         <Button variant="secondary" w="full" as="a" href="https://docs.beets.fi" target="_blank">
                             Learn more
@@ -64,7 +72,7 @@ export default function ReliquaryLanding() {
                 </VStack>
                 <Stack direction={['column', 'row']} spacing="8">
                     {rqImages.map((image, index) => (
-                        <VStack spacing="4" key={index}>
+                        <VStack spacing="0" key={index}>
                             <Box
                                 as={motion.div}
                                 whileHover={{ scale: 1.2, transition: { type: 'spring', stiffness: 400, damping: 10 } }}

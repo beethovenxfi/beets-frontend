@@ -44,7 +44,7 @@ export function RelicCarousel({ loading, ...rest }: Props) {
                         display: 'flex',
                         alignItems: 'flex-end',
                         justifyContent: 'center',
-                        bottom: -5,
+                        bottom: isMobile ? 350 : -5,
                     },
                     '.swiper': {
                         paddingBottom: '6',
@@ -75,7 +75,7 @@ export function RelicCarousel({ loading, ...rest }: Props) {
                         1024: { slidesPerView: 3 },
                     }}
                     pagination={{
-                        clickable: !isMobile,
+                        clickable: true,
                     }}
                     allowTouchMove={isMobile}
                     modules={[Pagination]}

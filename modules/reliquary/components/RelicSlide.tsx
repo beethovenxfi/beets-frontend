@@ -1,15 +1,11 @@
-import { useSwiper, useSwiperSlide } from 'swiper/react';
+import { useSwiperSlide } from 'swiper/react';
 import { useEffect, useState } from 'react';
-import { Badge, Box, Heading, HStack, Skeleton, VStack, Flex, Stack } from '@chakra-ui/react';
+import { Badge, Box, Heading, HStack, VStack, Flex, Stack, Spacer } from '@chakra-ui/react';
 import useReliquary from '../lib/useReliquary';
 import { AnimatePresence, motion } from 'framer-motion';
-import { ReliquaryFarmPosition, reliquaryService } from '~/lib/services/staking/reliquary.service';
+import { ReliquaryFarmPosition } from '~/lib/services/staking/reliquary.service';
 import { relicGetMaturityProgress } from '../lib/reliquary-helpers';
 import RelicLevelUpButton from './RelicLevelUpButton';
-import { useQuery } from 'react-query';
-import { getProvider } from '@wagmi/core';
-import { useRelicDepositBalance } from '../lib/useRelicDepositBalance';
-import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 import RelicSlideApr from './RelicSlideApr';
 import RelicSlideInfo from './RelicSlideInfo';
 import RelicSlideMainInfo from './RelicSlideMainInfo';
@@ -26,19 +22,10 @@ export interface RelicSlideProps {
 }
 
 export default function RelicSlide({ relic, openInvestModal, openWithdrawModal }: RelicSlideProps) {
-    const swiper = useSwiper();
     const { isActive } = useSwiperSlide();
-    const [showRelicInfo, setShowRelicInfo] = useState(false);
 
-    const {
-        maturityThresholds,
-        selectedRelic,
-        selectedRelicId,
-        isLoadingRelicPositions,
-        setSelectedRelicId,
-        relicPositions,
-    } = useReliquary();
-    const { canUpgrade } = relicGetMaturityProgress(selectedRelic, maturityThresholds);
+    const { maturityThresholds, isLoadingRelicPositions, setSelectedRelicId, relicPositions } = useReliquary();
+    const { canUpgrade } = relicGetMaturityProgress(relic, maturityThresholds);
     const [_isLoadingRelicPositions, setIsLoadingRelicPositions] = useState(false);
 
     const relicLevelNames = [
@@ -61,15 +48,6 @@ export default function RelicSlide({ relic, openInvestModal, openWithdrawModal }
     }, [isLoadingRelicPositions]);
 
     const hasNoRelics = relicPositions.length === 0;
-
-    const { data: nftURI = '' } = useQuery(['relicNFT', { selectedRelicId, isLoadingRelicPositions }], async () => {
-        if (!_isLoadingRelicPositions && hasNoRelics) {
-            return 'https://beethoven-assets.s3.eu-central-1.amazonaws.com/reliquary/9.png';
-        }
-        if (selectedRelicId) {
-            return await reliquaryService.getRelicNFT({ tokenId: selectedRelicId, provider: getProvider() });
-        }
-    });
 
     if (isActive) {
         setSelectedRelicId(relic.relicId);
@@ -124,8 +102,13 @@ export default function RelicSlide({ relic, openInvestModal, openWithdrawModal }
                 spacing="8"
                 zIndex={isActive ? 1 : -1}
             >
-                <Flex justifyContent="center" width={{ base: '100%', lg: '47.5%' }} rounded="lg">
-                    <HStack spacing="4" width="full" alignItems="start">
+                <Flex justifyContent="center" width={{ base: '100%', lg: '50%' }} rounded="lg">
+                    <HStack
+                        spacing="4"
+                        width="full"
+                        alignItems="start"
+                        justifyContent={{ base: 'space-between', xl: undefined }}
+                    >
                         <Badge rounded="md" colorScheme="green" p="2">
                             <Heading textAlign="center" size="sm">
                                 Level {relic?.level + 1} - {relicLevelNames[relic.level]}

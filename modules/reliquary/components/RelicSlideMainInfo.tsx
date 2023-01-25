@@ -72,7 +72,7 @@ export default function RelicSlideMainInfo({ isLoading, openInvestModal, openWit
                                 <Divider />
                             </VStack>
                             <VStack spacing="0" h="50%" w="full" pt={{ base: '1', lg: undefined }}>
-                                <VStack spacing="0" w="full" alignItems="flex-start" flexGrow="1">
+                                <VStack spacing="0" w="full" alignItems="flex-start">
                                     <Text lineHeight="1rem" fontWeight="semibold" fontSize="md" color="beets.base.50">
                                         Relic progress
                                     </Text>
@@ -93,8 +93,8 @@ export default function RelicSlideMainInfo({ isLoading, openInvestModal, openWit
                                     h="full"
                                     w="full"
                                     alignItems="flex-end"
-                                    pt={{ base: '4', xl: undefined }}
-                                    pb={{ base: '6', xl: undefined }}
+                                    pt={{ base: '4', xl: '0' }}
+                                    pb={{ base: '6', xl: '0' }}
                                 >
                                     <Button
                                         variant="primary"
