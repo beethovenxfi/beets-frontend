@@ -13,7 +13,13 @@ export function relicGetMaturityProgress(relic: ReliquaryFarmPosition | null, ma
     }
     const relicMaturityStart = relic.entry;
     const timeElapsedSinceStart = Date.now() / 1000 - relicMaturityStart;
-    const nextLevelMaturityIndex = maturities.findIndex((maturity) => timeElapsedSinceStart >= parseInt(maturity, 10));
+    // reverse the maturities because otherwise findIndex will always be 0
+    const maturitiesReversed = [...maturities];
+    maturitiesReversed.reverse();
+    const nextLevelMaturityIndex =
+        maturities.length -
+        1 -
+        maturitiesReversed.findIndex((maturity) => timeElapsedSinceStart >= parseInt(maturity, 10));
     const isMaxMaturity = timeElapsedSinceStart > parseInt(maturities[maturities.length - 1], 10);
     const canUpgradeTo = isMaxMaturity ? maturities.length : nextLevelMaturityIndex + 1;
     const canUpgrade =
@@ -22,9 +28,7 @@ export function relicGetMaturityProgress(relic: ReliquaryFarmPosition | null, ma
 
     const currentLevelMaturity = parseInt(maturities[relic.level], 10);
     const timeElapsedSinceCurrentLevel = Date.now() / 1000 - (currentLevelMaturity + relic.entry);
-    const timeBetweenCurrentAndNextLevel = isMaxMaturity
-        ? 3600
-        : parseInt(maturities[relic.level + 1], 10) - currentLevelMaturity;
+    const timeBetweenCurrentAndNextLevel = isMaxMaturity ? 3600 : parseInt(maturities[relic.level + 1], 10);
     const progressToNextLevel = canUpgrade
         ? 100
         : (timeElapsedSinceCurrentLevel / timeBetweenCurrentAndNextLevel) * 100;

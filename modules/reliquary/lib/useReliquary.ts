@@ -35,7 +35,11 @@ export default function useReliquary() {
     const legacyBptBalance = userBalancesMap[legacyBpt.current.address]?.amount || '0';
     const { total: legacyFbeetsBalance } = useLegacyFBeetsBalance();
 
-    const { data: relicPositions = [], isLoading: isLoadingRelicPositions } = useQuery(
+    const {
+        data: relicPositions = [],
+        isLoading: isLoadingRelicPositions,
+        refetch: refetchRelicPositions,
+    } = useQuery(
         ['reliquaryAllPositions', userAddress],
         async () => {
             const positions = await reliquaryService.getAllPositions({ userAddress: userAddress || '', provider });
@@ -51,7 +55,11 @@ export default function useReliquary() {
         },
     );
 
-    const { data: maturityThresholds = [], isLoading: isLoadingMaturityThresholds } = useQuery<string[]>(
+    const {
+        data: maturityThresholds = [],
+        isLoading: isLoadingMaturityThresholds,
+        refetch: refetchMaturityThresholds,
+    } = useQuery<string[]>(
         ['maturityThresholds', networkConfig.reliquary.fbeets.farmId],
         async () => {
             return await reliquaryService.getMaturityThresholds({
@@ -101,5 +109,7 @@ export default function useReliquary() {
 
         setCreateRelic,
         setSelectedRelicId,
+        refetchRelicPositions,
+        refetchMaturityThresholds,
     };
 }

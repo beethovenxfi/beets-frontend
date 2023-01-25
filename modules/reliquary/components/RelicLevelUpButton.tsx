@@ -8,10 +8,9 @@ import { useReliquaryLevelUp } from '../lib/useReliquaryLevelUp';
 interface Props {}
 
 export default function RelicLevelUpButton({}: Props) {
-    const { selectedRelic } = useReliquary();
+    const { selectedRelic, refetchRelicPositions, refetchMaturityThresholds } = useReliquary();
     const { levelUp, ...levelUpQuery } = useReliquaryLevelUp();
     const { showToast } = useToast();
-    if (!selectedRelic) return null;
 
     useEffect(() => {
         if (levelUpQuery.submitError) {
@@ -27,12 +26,19 @@ export default function RelicLevelUpButton({}: Props) {
             });
         }
     }, [levelUpQuery.submitError]);
+
+    if (!selectedRelic) return null;
+
     return (
         <BeetsSubmitTransactionButton
             inline
             submittingText="Confirm..."
             pendingText="Waiting..."
             onClick={() => levelUp(selectedRelic.relicId)}
+            onConfirmed={() => {
+                refetchRelicPositions();
+                refetchMaturityThresholds();
+            }}
             {...levelUpQuery}
         >
             Level Up
