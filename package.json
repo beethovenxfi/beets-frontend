@@ -44,7 +44,7 @@
         "echarts-for-react": "^3.0.2",
         "eslint": "8.14.0",
         "eslint-config-next": "12.2.0",
-        "ethers": "^5.6.6",
+        "ethers": "5.6.6",
         "formik": "^2.2.9",
         "framer-motion": "^6.3.3",
         "graphql": "^16.4.0",
