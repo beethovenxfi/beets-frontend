@@ -6,10 +6,11 @@ import Rq1Image from '~/assets/images/rq-1.png';
 import Rq2Image from '~/assets/images/rq-2.png';
 import Rq3Image from '~/assets/images/rq-3.png';
 import Image from 'next/image';
-import useReliquary from './lib/useReliquary';
 import { PoolInvestModal } from '../pool/invest/PoolInvestModal';
 import ReliquaryGlobalStats from './components/stats/ReliquaryGlobalStats';
 import { motion } from 'framer-motion';
+import { useUserAccount } from '~/lib/user/useUserAccount';
+import ReliquaryConnectWallet from './components/ReliquaryConnectWallet';
 
 const infoButtonLabelProps = {
     lineHeight: '1rem',
@@ -38,7 +39,7 @@ const rqImages = [
 ];
 
 export default function ReliquaryLanding() {
-    const { relicPositions, selectedRelicId, isLoadingRelicPositions } = useReliquary();
+    const { isConnected } = useUserAccount();
 
     return (
         <Stack direction="column" width="full">
@@ -91,12 +92,21 @@ export default function ReliquaryLanding() {
             </Stack>
             <Box width="full">
                 <VStack width="full" py="4" spacing="8">
-                    <VStack width="full" alignItems="flex-start">
-                        <Heading size="lg">My maBEETS</Heading>
-                    </VStack>
-                    <Box width="full">
-                        <RelicCarousel />
-                    </Box>
+                    {!isConnected && (
+                        <VStack minH="300px" justifyContent="center" alignItems="center">
+                            <ReliquaryConnectWallet />
+                        </VStack>
+                    )}
+                    {isConnected && (
+                        <>
+                            <VStack width="full" alignItems="flex-start">
+                                <Heading size="lg">My maBEETS</Heading>
+                            </VStack>
+                            <Box width="full">
+                                <RelicCarousel />
+                            </Box>
+                        </>
+                    )}
                 </VStack>
                 <VStack width="full" py="4" spacing="8" mt={{ base: '32rem', lg: '16' }}>
                     <VStack width="full" alignItems="flex-start">

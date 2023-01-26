@@ -18,10 +18,10 @@ export default function ReliquaryConnectWallet(props: Props) {
             justifyContent="center"
             alignItems="center"
         >
-            <VStack spacing="1">
-                <Heading fontSize="1.75rem">Welcome to the Beets Reliquary</Heading>
-                <Text fontSize="1.15rem">Connect your wallet to get started.</Text>
-            </VStack>
+            <Heading size="md" flexGrow="1">
+                Get started by connecting your wallet
+            </Heading>
+
             <WalletConnectButton
                 as={motion.button}
                 initial={{ transform: 'scale(0.2)', opacity: 0 }}
