@@ -40,7 +40,8 @@ export function NavbarPendingRewards() {
     const loading = pendingRewardsLoading || userDataLoading;
     const { harvestAll, ...harvestQuery } = useUserHarvestAllPendingRewards();
     const farmIds = staking.map((stake) => stake?.farm?.id || '');
-    const isMasterChefOrFreshBeets = stakingType === 'MASTER_CHEF' || stakingType === 'FRESH_BEETS';
+    const isMasterChefOrFreshBeets =
+        stakingType === 'MASTER_CHEF' || stakingType === 'FRESH_BEETS' || stakingType === 'RELIQUARY';
     const isMobile = useBreakpointValue({ base: true, lg: false });
 
     return (

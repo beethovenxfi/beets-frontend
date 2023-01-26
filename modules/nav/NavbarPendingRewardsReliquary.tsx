@@ -76,6 +76,7 @@ export function NavbarPendingRewardsReliquary({ ...rest }: BoxProps) {
                         width="full"
                         submittingText="Confirm..."
                         pendingText="Waiting..."
+                        onConfirmed={() => refetchPendingRewards()}
                     >
                         Claim Reliquary rewards
                     </BeetsSubmitTransactionButton>
