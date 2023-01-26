@@ -14,7 +14,7 @@ import { useLegacyFBeetsBalance } from './useLegacyFbeetsBalance';
 const selectedRelicId = makeVar<string | undefined>(undefined);
 const createRelic = makeVar<boolean>(false);
 
-export default function useReliquary() {
+export default function useReliquary(farmId = '1') {
     const { userAddress } = useUserAccount();
     const provider = useProvider();
     const networkConfig = useNetworkConfig();
@@ -106,6 +106,7 @@ export default function useReliquary() {
         relicIds,
         legacyBptBalance,
         legacyFbeetsBalance,
+        relicPositionsForFarmId: relicPositions.filter((position) => position.farmId.toString() === farmId),
 
         setCreateRelic,
         setSelectedRelicId,

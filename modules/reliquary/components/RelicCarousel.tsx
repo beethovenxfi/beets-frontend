@@ -12,7 +12,7 @@ interface Props extends BoxProps {
 }
 
 export function RelicCarousel({ loading, ...rest }: Props) {
-    const { relicPositions, isLoadingRelicPositions, selectedRelic } = useReliquary();
+    const { relicPositionsForFarmId: relicPositions, isLoadingRelicPositions, selectedRelic } = useReliquary();
     // hack to get around next.js hydration issues with swiper
     const [_isLoadingRelicPositions, setIsLoadingRelicPositions] = useState(false);
 
