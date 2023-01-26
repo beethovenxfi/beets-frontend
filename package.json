@@ -7,7 +7,8 @@
         "build": "next build",
         "start": "next start",
         "lint": "next lint",
-        "generate": "DOTENV_CONFIG_PATH=./.env.local graphql-codegen --config codegen.yml -r dotenv/config"
+        "generate": "DOTENV_CONFIG_PATH=./.env.local graphql-codegen --config codegen.yml -r dotenv/config",
+        "postinstall": "patch-package"
     },
     "devDependencies": {
         "@apollo/client": "^3.6.9",
@@ -52,6 +53,8 @@
         "next-transpile-modules": "^9.0.0",
         "nprogress": "^0.2.0",
         "numeral": "^2.0.6",
+        "patch-package": "^6.5.1",
+        "postinstall-postinstall": "^2.1.0",
         "prettier": "^2.6.2",
         "rc-pagination": "^3.1.17",
         "react": "18.1.0",
