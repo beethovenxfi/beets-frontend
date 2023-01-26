@@ -77,10 +77,10 @@ export function BeetsSubmitTransactionButton({
     }, [isConfirmed]);
 
     useEffect(() => {
-        if (buttonRef.current) {
+        if (buttonRef.current && buttonRef.current.offsetWidth !== 0) {
             setInitialButtonWidth(buttonRef.current.offsetWidth);
         }
-    }, []);
+    }, [buttonRef.current]);
 
     useEffect(() => {
         if (isProcessing && isProcessing !== undefined) {
