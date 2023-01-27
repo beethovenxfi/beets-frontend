@@ -1,6 +1,6 @@
 import { useSwiperSlide } from 'swiper/react';
 import { useEffect, useState } from 'react';
-import { Badge, Box, Heading, HStack, VStack, Flex, Stack, Spacer } from '@chakra-ui/react';
+import { Badge, Box, Heading, HStack, VStack, Flex, Stack, Spacer, Button } from '@chakra-ui/react';
 import useReliquary from '../lib/useReliquary';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ReliquaryFarmPosition } from '~/lib/services/staking/reliquary.service';
@@ -14,6 +14,7 @@ import RelicLevel1 from '~/assets/images/reliquary/1.jpg';
 import RelicLevel2 from '~/assets/images/reliquary/2.jpg';
 import RelicLevel3 from '~/assets/images/reliquary/3.jpg';
 import RelicLevel4 from '~/assets/images/reliquary/4.jpg';
+import RelicBurnButton from './RelicBurnButton';
 
 export interface RelicSlideProps {
     relic: ReliquaryFarmPosition;
@@ -48,6 +49,8 @@ export default function RelicSlide({ relic, openInvestModal, openWithdrawModal }
     }, [isLoadingRelicPositions]);
 
     const hasNoRelics = relicPositions.length === 0;
+
+    const isRelicAmountZero = relic.amount === '0.0';
 
     if (isActive) {
         setSelectedRelicId(relic.relicId);
@@ -111,7 +114,9 @@ export default function RelicSlide({ relic, openInvestModal, openWithdrawModal }
                     >
                         <Badge rounded="md" colorScheme="green" p="2">
                             <Heading textAlign="center" size="sm">
-                                Level {relic?.level + 1} - {relicLevelNames[relic.level]}
+                                {isRelicAmountZero
+                                    ? 'No level'
+                                    : `Level ${relic?.level + 1} - ${relicLevelNames[relic.level]}`}
                             </Heading>
                         </Badge>
                         <Badge p="2" rounded="md" colorScheme="purple">
@@ -139,6 +144,30 @@ export default function RelicSlide({ relic, openInvestModal, openWithdrawModal }
                         </Flex>
                     )}
 
+                    {isActive && isRelicAmountZero && (
+                        <Flex
+                            animate={{ opacity: 1 }}
+                            initial={{ opacity: 0 }}
+                            exit={{ opacity: 0 }}
+                            alignItems="center"
+                            justifyContent="center"
+                            rounded="lg"
+                            width="full"
+                            height="full"
+                            position="absolute"
+                            bg="blackAlpha.500"
+                            as={motion.div}
+                            zIndex={2}
+                        >
+                            <HStack w="full" spacing="2" justifyContent="center">
+                                <Button variant="primary" size="md" rounded="lg" onClick={openInvestModal} w="100px">
+                                    Deposit
+                                </Button>
+                                <RelicBurnButton size="md" rounded="lg" w="100px" />
+                            </HStack>
+                        </Flex>
+                    )}
+
                     <Box
                         filter="auto"
                         blur={isActive && canUpgrade && !_isLoadingRelicPositions ? '10px' : '0px'}
@@ -149,14 +178,24 @@ export default function RelicSlide({ relic, openInvestModal, openWithdrawModal }
                         <Image src={getImage(relic?.level + 1)} alt="reliquary" placeholder="blur" />
                     </Box>
                 </Flex>
+
                 <Stack direction={{ base: 'column', lg: 'row' }} position="relative" height="310px" width="full">
-                    <RelicSlideMainInfo
-                        openInvestModal={openInvestModal}
-                        openWithdrawModal={openWithdrawModal}
-                        isLoading={_isLoadingRelicPositions}
-                    />
-                    <RelicSlideApr />
-                    <RelicSlideInfo />
+                    {isActive && !isRelicAmountZero && (
+                        <>
+                            <RelicSlideMainInfo
+                                openInvestModal={openInvestModal}
+                                openWithdrawModal={openWithdrawModal}
+                                isLoading={_isLoadingRelicPositions}
+                            />
+                            <RelicSlideApr />
+                            <RelicSlideInfo />
+                        </>
+                    )}
+                    {isActive && isRelicAmountZero && (
+                        <VStack alignItems="center" justifyContent="center" w="full">
+                            <Heading>Deposit again to show the stats.</Heading>
+                        </VStack>
+                    )}
                 </Stack>
             </VStack>
         </AnimatePresence>
