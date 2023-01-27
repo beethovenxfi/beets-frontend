@@ -1,5 +1,28 @@
+diff --git a/node_modules/@ethersproject/providers/lib.esm/json-rpc-batch-provider.js b/node_modules/@ethersproject/providers/lib.esm/json-rpc-batch-provider.js
+index 7db7f78..fceec5c 100644
+--- a/node_modules/@ethersproject/providers/lib.esm/json-rpc-batch-provider.js
++++ b/node_modules/@ethersproject/providers/lib.esm/json-rpc-batch-provider.js
+@@ -41,10 +41,16 @@ export class JsonRpcBatchProvider extends JsonRpcProvider {
+                         response: result,
+                         provider: this
+                     });
++                    
++                    const resultMap = result.reduce((resultMap, payload) => {
++                        resultMap[payload.id] = payload;
++                        return resultMap;
++                    }, {});
++
+                     // For each result, feed it to the correct Promise, depending
+                     // on whether it was a success or error
+-                    batch.forEach((inflightRequest, index) => {
+-                        const payload = result[index];
++                    batch.forEach((inflightRequest) => {
++                        const payload = resultMap[inflightRequest.request.id];
+                         if (payload.error) {
+                             const error = new Error(payload.error.message);
+                             error.code = payload.error.code;
 diff --git a/node_modules/@ethersproject/providers/src.ts/json-rpc-batch-provider.ts b/node_modules/@ethersproject/providers/src.ts/json-rpc-batch-provider.ts
-index d2bf8c8..e96f963 100644
+index d2bf8c8..4acdeef 100644
 --- a/node_modules/@ethersproject/providers/src.ts/json-rpc-batch-provider.ts
 +++ b/node_modules/@ethersproject/providers/src.ts/json-rpc-batch-provider.ts
 @@ -1,4 +1,3 @@
