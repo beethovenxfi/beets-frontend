@@ -68,6 +68,6 @@
         "swiper": "^8.2.4",
         "typescript": "4.7.4",
         "use-debounce": "^8.0.1",
-        "wagmi": "^0.11.0"
+        "wagmi": "^0.10.0"
     }
 }
