@@ -19,14 +19,14 @@ export function BeetsTokenApprovalButton({
     contractToApprove = networkConfig.balancer.vault,
     ...rest
 }: Props) {
-    const query = useApproveToken(tokenWithAmount);
+    const { approve, ...query } = useApproveToken(tokenWithAmount);
 
     return (
         <BeetsSubmitTransactionButton
             {...query}
             width="full"
             onClick={() => {
-                query.approve(contractToApprove);
+                approve(contractToApprove);
             }}
             {...rest}
         >
