@@ -30,6 +30,8 @@ export function PoolDetailAboutThisPool() {
         variables: { addresses: tokensOfInterest.map((token) => token.address) },
     });
 
+    const readablePoolAge = formatDistanceToNow(new Date(pool.createTime * 1000));
+    const readablePoolCreateTime = format(new Date(pool.createTime * 1000), 'MMM. d, yyyy');
     return (
         <Grid templateColumns={{ base: '1fr', lg: '2fr 1fr' }} gap="4" width="full">
             <GridItem>
@@ -60,9 +62,9 @@ export function PoolDetailAboutThisPool() {
                             Created
                         </Box>
                         <VStack spacing="0" alignItems="flex-end">
-                            <Box>{format(new Date(pool.createTime * 1000), 'MMM. d, yyyy')}</Box>
+                            <Box>{readablePoolCreateTime}</Box>
                             <Box fontSize="sm" color="gray.200">
-                                {formatDistanceToNow(new Date(pool.createTime * 1000))} old
+                                {readablePoolAge} old
                             </Box>
                         </VStack>
                     </CardRow>

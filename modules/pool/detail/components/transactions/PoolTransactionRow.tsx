@@ -141,6 +141,9 @@ export default function PoolTransactionItem({ transaction, ...rest }: Props) {
     const gridItemMb = { base: '4', lg: '0' };
     const justifyContent = { base: 'flex-start', lg: 'flex-end' };
 
+    const readableTxTimestamp = formatDistanceToNow(new Date(transaction.transaction.timestamp * 1000), {
+        addSuffix: true,
+    });
     return (
         <Grid
             px="4"
@@ -178,11 +181,7 @@ export default function PoolTransactionItem({ transaction, ...rest }: Props) {
                 <GridItem area="time" mb={gridItemMb}>
                     <MobileLabel text="Time" />
                     <HStack width="full" justify={justifyContent}>
-                        <Text fontSize="md">
-                            {formatDistanceToNow(new Date(transaction.transaction.timestamp * 1000), {
-                                addSuffix: true,
-                            })}
-                        </Text>
+                        <Text fontSize="md">{readableTxTimestamp}</Text>
                         <Link href={etherscanGetTxUrl(transaction.transaction.tx)} isExternal>
                             <ExternalLink size={14} />
                         </Link>
