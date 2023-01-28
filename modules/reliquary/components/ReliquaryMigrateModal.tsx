@@ -1,4 +1,4 @@
-import React, { useMemo, useRef } from 'react';
+import React, { useMemo, useRef, useState } from 'react';
 import TokenRow from '~/components/token/TokenRow';
 import {
     Alert,
@@ -6,6 +6,11 @@ import {
     Box,
     Button,
     Heading,
+    HStack,
+    Menu,
+    MenuButton,
+    MenuItem,
+    MenuList,
     Modal,
     ModalOverlay,
     StackDivider,
@@ -26,9 +31,13 @@ import { useReliquaryFbeetsMigrateContractCallData } from '../lib/useReliquaryFb
 import { useReliquaryZap } from '../lib/useReliquaryZap';
 import useReliquary from '../lib/useReliquary';
 import { BeetsBox } from '~/components/box/BeetsBox';
+import { ReliquaryFarmPosition } from '~/lib/services/staking/reliquary.service';
+import { ChevronDown } from 'react-feather';
+import BeetsTooltip from '~/components/tooltip/BeetsTooltip';
 
 export default function ReliquaryMigrateModal() {
     const { isOpen, onOpen, onClose } = useDisclosure();
+    const [migrationTarget, setMigrationTarget] = useState<number | null>(null);
 
     const initialRef = useRef(null);
     const networkConfig = useNetworkConfig();
@@ -36,11 +45,11 @@ export default function ReliquaryMigrateModal() {
     const { getToken } = useGetTokens();
     const legacyfBeets = getToken(networkConfig.fbeets.address);
 
-    const { legacyBptBalance, legacyFbeetsBalance } = useReliquary();
+    const { legacyBptBalance, legacyFbeetsBalance, relicPositions } = useReliquary();
     const { data: hasBatchRelayerApproval, isLoading: isLoadingBatchRelayerApproval } = useHasBatchRelayerApproval();
     const { staked, isLoading: isLoadingLegacyFbeetsBalance, unstaked } = useLegacyFBeetsBalance();
     const { reliquaryZap, ...reliquaryMigrateQuery } = useReliquaryZap('MIGRATE');
-    const { data: reliquaryContractCalls } = useReliquaryFbeetsMigrateContractCallData();
+    const { data: reliquaryContractCalls } = useReliquaryFbeetsMigrateContractCallData(migrationTarget);
     // TODO FIX TYPE
     const { withdraw, ...unstakeQuery } = useStakingWithdraw({
         farm: { id: networkConfig.fbeets.farmId, type: 'FRESH_BEETS' },
@@ -70,6 +79,7 @@ export default function ReliquaryMigrateModal() {
                 tooltipText: 'The migration flow requires you to approve the batch relayer.',
             });
         }
+
         // unstake fbeets
         if (parseFloat(staked || '0') > 0) {
             _steps.unshift({
@@ -157,6 +167,48 @@ export default function ReliquaryMigrateModal() {
                                             )}
                                         </VStack>
                                     </BeetsBox>
+                                )}
+                                {!isComplete && relicPositions.length > 0 && (
+                                    <Menu>
+                                        <BeetsTooltip label="Click here to change if you want to migrate your legacy balance to a new relic or an existing one.">
+                                            <MenuButton
+                                                fontSize="lg"
+                                                userSelect="none"
+                                                color="beets.green"
+                                                fontWeight="bold"
+                                                p="2"
+                                                rounded="lg"
+                                                _hover={{ cursor: 'pointer', bgColor: 'whiteAlpha.200' }}
+                                            >
+                                                <HStack>
+                                                    <Box>
+                                                        Migrating to{' '}
+                                                        {migrationTarget ? `Relic ${migrationTarget}` : 'a new relic'}
+                                                    </Box>
+                                                    <ChevronDown />
+                                                </HStack>
+                                            </MenuButton>
+                                        </BeetsTooltip>
+                                        <MenuList bgColor="beets.base.800" borderColor="gray.400" shadow="lg">
+                                            <MenuItem
+                                                display="flex"
+                                                alignItems="center"
+                                                onClick={() => setMigrationTarget(null)}
+                                            >
+                                                <Box flex="1">New relic</Box>
+                                            </MenuItem>
+                                            {relicPositions.map((relic) => (
+                                                <MenuItem
+                                                    display="flex"
+                                                    alignItems="center"
+                                                    key={`migrate-to-${relic.relicId}`}
+                                                    onClick={() => setMigrationTarget(parseInt(relic.relicId, 10))}
+                                                >
+                                                    <Box flex="1">{relic.relicId}</Box>
+                                                </MenuItem>
+                                            ))}
+                                        </MenuList>
+                                    </Menu>
                                 )}
                                 <Box width="full">
                                     <BeetsTransactionStepsSubmit

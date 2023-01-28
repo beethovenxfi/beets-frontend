@@ -24,9 +24,7 @@ export function Pool() {
     const { hasBpt } = usePoolUserBptBalance();
     const { total } = useLegacyFBeetsBalance();
     const { showToast, removeToast } = useToast();
-    const {} = useGetTokens();
 
-    // TODO move to component so it can be chucked into the relic ui too
     useEffect(() => {
         if (total > 0) {
             showToast({

@@ -1,5 +1,5 @@
 import { Button, HStack, ListItem, Text, UnorderedList, VStack, Stack, Heading, Box } from '@chakra-ui/react';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { InfoButton } from '~/components/info-button/InfoButton';
 import { RelicCarousel } from './components/RelicCarousel';
 import Rq1Image from '~/assets/images/rq-1.png';
@@ -11,6 +11,11 @@ import ReliquaryGlobalStats from './components/stats/ReliquaryGlobalStats';
 import { motion } from 'framer-motion';
 import { useUserAccount } from '~/lib/user/useUserAccount';
 import ReliquaryConnectWallet from './components/ReliquaryConnectWallet';
+import { ToastType, useToast } from '~/components/toast/BeetsToast';
+import { TokensProvider } from '~/lib/global/useToken';
+import { PoolProvider, usePool } from '../pool/lib/usePool';
+import ReliquaryMigrateModal from './components/ReliquaryMigrateModal';
+import { useLegacyFBeetsBalance } from './lib/useLegacyFbeetsBalance';
 
 const infoButtonLabelProps = {
     lineHeight: '1rem',
@@ -40,6 +45,30 @@ const rqImages = [
 
 export default function ReliquaryLanding() {
     const { isConnected } = useUserAccount();
+    const { total } = useLegacyFBeetsBalance();
+    const { showToast, removeToast } = useToast();
+    const { pool, isFbeetsPool } = usePool();
+
+    useEffect(() => {
+        if (total > 0) {
+            showToast({
+                id: 'migrate-fbeets',
+                type: ToastType.Info,
+                content: (
+                    <HStack>
+                        <Text>You have a legacy fBEETS balance that can be migrated to maBEETS</Text>
+                        <TokensProvider>
+                            <PoolProvider pool={pool}>
+                                <ReliquaryMigrateModal />
+                            </PoolProvider>
+                        </TokensProvider>
+                    </HStack>
+                ),
+            });
+        } else {
+            // removeToast('migrate-fbeets');
+        }
+    }, [total]);
 
     return (
         <Stack direction="column" width="full">

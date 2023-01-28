@@ -18,19 +18,21 @@ export function useLegacyFBeetsBalance() {
     const userBalancesMap = keyBy(legacyBalances, 'address');
     const legacyFbeetsBalance = userBalancesMap[networkConfig.fbeets.address]?.amount || '0';
 
-    const { data: stakedBalance = '0', isLoading: isLoadingStakedBalance} = useQuery(
+    const { data: stakedBalance = '0', isLoading: isLoadingStakedBalance } = useQuery(
         ['legacyFbeetsBalances', userAddress || ''],
         async (): Promise<AmountHumanReadable> => {
-            if (!userAddress) {
+            if (!userAddress || userAddress === '') {
                 return '0';
             }
 
-            return freshBeetsService.getUserStakedBalance({
+            const stakedBalance = freshBeetsService.getUserStakedBalance({
                 userAddress,
                 farmId: networkConfig.fbeets.farmId,
                 provider,
                 fBeetsRatio: '1',
             });
+
+            return stakedBalance;
         },
         {},
     );
