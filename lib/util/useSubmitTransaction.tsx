@@ -1,24 +1,32 @@
-import { useContractWrite, useSigner, useWaitForTransaction } from 'wagmi';
-import {
-    UseContractWriteArgs,
-    UseContractWriteConfig,
-    UseContractWriteMutationArgs,
-} from 'wagmi/dist/declarations/src/hooks/contracts/useContractWrite';
+import { Address, useContractWrite, useProvider, useSigner, useWaitForTransaction } from 'wagmi';
 import { BeetsTransactionType, toastGetTransactionStatusHeadline } from '~/components/toast/toast-util';
 import { networkConfig } from '~/lib/config/network-config';
 import { Vault__factory } from '@balancer-labs/typechain';
 import batchRelayerAbi from '~/lib/abi/BatchRelayer.json';
-import { UseWaitForTransactionConfig } from 'wagmi/dist/declarations/src/hooks/transactions/useWaitForTransaction';
 import { useRef } from 'react';
 import { useAddRecentTransaction } from '@rainbow-me/rainbowkit';
 import { makeVar } from '@apollo/client';
-import { TransactionReceipt, TransactionResponse } from '@ethersproject/providers';
+import { TransactionReceipt } from '@ethersproject/providers';
 import { ToastType, useToast } from '~/components/toast/BeetsToast';
 import { HStack, Text } from '@chakra-ui/react';
+import { Contract } from 'ethers';
+import { BigNumberish } from '@ethersproject/bignumber';
+import { SendTransactionResult } from 'wagmi/actions';
+
+interface UseContractWriteMutationArgs {
+    args: unknown[];
+    overrides?: {
+        value: BigNumberish;
+    };
+}
 
 interface Props {
-    config: Omit<UseContractWriteArgs & UseContractWriteConfig, 'signerOrProvider'>;
-    waitForConfig?: UseWaitForTransactionConfig;
+    config: {
+        addressOrName: string;
+        contractInterface: any;
+        functionName: string;
+        onSuccess?: (data: SendTransactionResult) => void;
+    };
     transactionType: BeetsTransactionType;
 }
 
@@ -26,7 +34,7 @@ export interface SubmitTransactionQuery {
     submit: (config: UseContractWriteMutationArgs & { toastText: string; walletText?: string }) => void;
     submitAsync: (
         config: UseContractWriteMutationArgs & { toastText: string; walletText?: string },
-    ) => Promise<TransactionResponse>;
+    ) => Promise<SendTransactionResult>;
 
     isSubmitting: boolean;
     submitError: Error | null;
@@ -38,7 +46,7 @@ export interface SubmitTransactionQuery {
     error: Error | null;
     reset: () => void;
 
-    txResponse?: TransactionResponse;
+    txResponse?: SendTransactionResult;
     txReceipt?: TransactionReceipt;
 }
 
@@ -55,17 +63,20 @@ export const batchRelayerContractConfig = {
 
 export const txPendingVar = makeVar(false);
 
-export function useSubmitTransaction({ config, transactionType, waitForConfig }: Props): SubmitTransactionQuery {
-    const signer = useSigner();
+export function useSubmitTransaction({ config, transactionType }: Props): SubmitTransactionQuery {
+    const { data: signer } = useSigner();
     const { showToast, updateToast } = useToast();
     const toastText = useRef<string>('');
     const walletText = useRef<string>('');
     const addRecentTransaction = useAddRecentTransaction();
+    const provider = useProvider();
 
     const contractWrite = useContractWrite({
-        signerOrProvider: signer.data,
-        ...config,
-        onSuccess(data, variables, context) {
+        mode: 'recklesslyUnprepared',
+        address: config.addressOrName as Address,
+        abi: config.contractInterface,
+        functionName: config.functionName,
+        onSuccess(data) {
             showToast({
                 id: data.hash,
                 content: (
@@ -90,16 +101,14 @@ export function useSubmitTransaction({ config, transactionType, waitForConfig }:
             txPendingVar(true);
 
             if (config?.onSuccess) {
-                return config.onSuccess(data, variables, context);
+                return config.onSuccess(data);
             }
         },
     });
 
     const waitForTransaction = useWaitForTransaction({
         hash: contractWrite.data?.hash,
-        wait: contractWrite.data?.wait,
-        ...waitForConfig,
-        onSettled(data, error) {
+        onSettled() {
             updateToast(contractWrite.data?.hash || '', {
                 type: ToastType.Success,
                 content: (
@@ -113,23 +122,41 @@ export function useSubmitTransaction({ config, transactionType, waitForConfig }:
                 auto: true,
             });
             txPendingVar(false);
-
-            if (waitForConfig?.onSettled) {
-                return waitForConfig.onSettled(data, error);
-            }
         },
     });
 
     function submit(config: UseContractWriteMutationArgs & { toastText: string; walletText?: string }) {
         toastText.current = config.toastText;
         walletText.current = config.walletText || config.toastText;
-        contractWrite.write(config);
+        contractWrite.write!({
+            recklesslySetUnpreparedArgs: config.args,
+            recklesslySetUnpreparedOverrides: {
+                ...config.overrides,
+                gasLimit: getGasLimitEstimate(config.args, config.overrides?.value as BigNumberish),
+            },
+        });
     }
 
     async function submitAsync(config: UseContractWriteMutationArgs & { toastText: string; walletText?: string }) {
         toastText.current = config.toastText;
         walletText.current = config.walletText || config.toastText;
-        return contractWrite.writeAsync(config);
+        return contractWrite.writeAsync!({
+            recklesslySetUnpreparedArgs: config.args,
+            recklesslySetUnpreparedOverrides: {
+                ...config.overrides,
+                gasLimit: getGasLimitEstimate(config.args, config.overrides?.value as BigNumberish),
+            },
+        });
+    }
+
+    async function getGasLimitEstimate(args: unknown[], value?: BigNumberish): Promise<number> {
+        const contract = new Contract(config.addressOrName, config.contractInterface, provider);
+        const data = contract.interface.encodeFunctionData(config.functionName, args);
+        //signer will always be defined here
+        const gasLimit = await signer!.estimateGas({ to: config.addressOrName, data, value });
+
+        //we add a 2% buffer to avoid out of gas errors
+        return Math.round(gasLimit.toNumber() * 1.02);
     }
 
     return {

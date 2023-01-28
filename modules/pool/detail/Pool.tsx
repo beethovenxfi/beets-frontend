@@ -16,6 +16,8 @@ import { ToastType, useToast } from '~/components/toast/BeetsToast';
 import { useLegacyFBeetsBalance } from '~/modules/reliquary/lib/useLegacyFbeetsBalance';
 import ReliquaryMigrateModal from '~/modules/reliquary/components/ReliquaryMigrateModal';
 import { TokensProvider, useGetTokens } from '~/lib/global/useToken';
+import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
+import { PoolDetailWarning } from '~/modules/pool/detail/components/PoolDetailWarning';
 
 export function Pool() {
     const { pool, isFbeetsPool } = usePool();
@@ -60,10 +62,11 @@ export function Pool() {
                 {pool.id === '0xb1c9ac57594e9b1ec0f3787d9f6744ef4cb0a02400000000000000000000006e' && (
                     <PoolOvernightWarning />
                 )}
+                {warnings.poolDetail[pool.id] && <PoolDetailWarning warning={warnings.poolDetail[pool.id]} />}
                 {pool.staking && !isFbeetsPool && <PoolStakeInFarmWarning />}
                 {isFbeetsPool && hasBpt && total === 0 && <PoolFbeetsWarning />}
                 <HStack width="full" justifyContent="flex-end">
-                    <PoolInvestModal />
+                    {!investDisabled[pool.id] && <PoolInvestModal />}
                     <PoolWithdrawModal />
                 </HStack>
                 <Grid gap="4" templateColumns={{ base: '1fr', lg: '300px 1fr' }} width="full">

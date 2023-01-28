@@ -124,9 +124,23 @@ export const fantomNetworkConfig: NetworkConfig = {
     launchUrl: 'https://v1.beets.fi/#/launch',
     stakeUrl: 'https://beets.fi/#/stake',
     warnings: {
-        poolDetail: {},
+        poolList: {
+            '0xa10285f445bcb521f1d623300dc4998b02f11c8f00000000000000000000043b':
+                'A vulnerability has been discovered that effects this pool. Existing liquidity providers should remove liquidity immediately, and no new deposits should be made.',
+        },
+        poolDetail: {
+            '0xa10285f445bcb521f1d623300dc4998b02f11c8f00000000000000000000043b': {
+                id: 'composable-nested-vulnerability',
+                message:
+                    'A vulnerability has been discovered that effects this pool. Existing liquidity providers should remove liquidity immediately, and no new deposits should be made.',
+                type: 'warning',
+            },
+        },
         poolInvest: {},
         poolWithdraw: {},
     },
     boostedByTypes: {},
+    investDisabled: {
+        '0xa10285f445bcb521f1d623300dc4998b02f11c8f00000000000000000000043b': true,
+    },
 };

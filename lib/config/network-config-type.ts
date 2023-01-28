@@ -1,4 +1,16 @@
+import { ToastType } from '~/components/toast/BeetsToast';
+
 export type BoostedByType = 'reaper-aave' | 'reaper-aave-granary' | 'yearn' | 'reaper-sonne' | 'overnight';
+
+export interface PoolDetailWarning {
+    id: string;
+    message: string;
+    type: 'info' | 'warning' | 'error';
+    link?: {
+        url: string;
+        text: string;
+    };
+}
 
 export interface NetworkConfig {
     appName: string;
@@ -80,10 +92,12 @@ export interface NetworkConfig {
     launchUrl?: string;
     stakeUrl?: string;
     warnings: {
-        poolDetail: { [poolId: string]: string };
+        poolDetail: { [poolId: string]: PoolDetailWarning };
         poolInvest: { [poolId: string]: string };
         poolWithdraw: { [poolId: string]: string };
+        poolList: { [poolId: string]: string };
     };
+    investDisabled: { [poolId: string]: boolean };
     boostedByTypes: {
         [poolId: string]: BoostedByType;
     };

@@ -47,7 +47,11 @@ export const optimismNetworkConfig: NetworkConfig = {
         weightedPoolV2Factory: '0xad901309d9e9dbc5df19c84f729f429f0189a633',
         linearFactories: {
             erc4626: ['0x4c4287b07d293e361281bceee8715c8cdeb64e34'],
-            reaper: ['0x19968d4b7126904fd665ed25417599df9604df83', '0x0473136b0732606e826ffeb42f3abc81a7a766d5'],
+            reaper: [
+                '0x19968d4b7126904fd665ed25417599df9604df83',
+                '0x0473136b0732606e826ffeb42f3abc81a7a766d5',
+                '0xe4b88e745dce9084b9fc2439f85a9a4c5cd6f361',
+            ],
         },
         linearRebalancers: {
             '0xba7834bb3cd2db888e6a06fb45e82b4225cd0c71': '0xdc9d37d76e7a782460f94ffd811d4e0579f04756', //usdc
@@ -58,6 +62,9 @@ export const optimismNetworkConfig: NetworkConfig = {
             '0xa4e597c1bd01859b393b124ce18427aa4426a871': '0xfa0081569a9e5c80385f2ffb301db93288e53684', //op
             '0xa1a77e5d7d769bfbb790a08ec976dc738bf795b9': '0x2bce16d9e5bbaa737be124f7da16a5a7bc699bcb', //wbtc
             '0xc0d7013a05860271a1edb52415cf74bc85b2ace7': '0x87b57d325bc066890a400a5c88f34084a2454d91', //susd
+            '0x62ec8b26c08ffe504f22390a65e6e3c1e45e9877': '0x573f1fbde18ab2926a5e3fb80467ae50cf91d3f6', //soDAI
+            '0xb96c5bada4bf6a70e71795a3197ba94751dae2db': '0xbac75e5e03c68c3a9e0c200462d38440d8ffea45', //soUSDT
+            '0xedcfaf390906a8f91fb35b7bac23f3111dbaee1c': '0xe61b872d223362facb9fcbce359a56764bccfa36', //soUSDC
         },
         reaperManualRebalancer: '0xf070996cf89cd3d2582705fc269f2c800e9a6a21',
         balancerQueries: '0xe39b5e3b6d74016b2f6a9673d7d7493b6df549d5',
@@ -130,7 +137,34 @@ export const optimismNetworkConfig: NetworkConfig = {
     },
     createPoolUrl: 'https://opv1.beets.fi/#/pool-create',
     warnings: {
-        poolDetail: {},
+        poolList: {
+            '0x1f131ec1175f023ee1534b16fa8ab237c00e238100000000000000000000004a':
+                'A vulnerability has been discovered that effects this pool. Existing liquidity providers should remove liquidity immediately, and no new deposits should be made.',
+            '0x479a7d1fcdd71ce0c2ed3184bfbe9d23b92e8337000000000000000000000049':
+                'A vulnerability has been discovered that effects this pool. Existing liquidity providers should remove liquidity immediately, and no new deposits should be made.',
+        },
+        poolDetail: {
+            '0x1f131ec1175f023ee1534b16fa8ab237c00e238100000000000000000000004a': {
+                id: 'composable-nested-vulnerability',
+                message:
+                    'A vulnerability has been discovered that effects this pool. Existing liquidity providers should remove liquidity immediately, and no new deposits should be made.',
+                type: 'warning',
+                link: {
+                    url: 'https://twitter.com/beethoven_x/status/1611363903744937985?s=20&t=tiOYA-4RINQzF4eMbR4HgA',
+                    text: 'Read more',
+                },
+            },
+            '0x479a7d1fcdd71ce0c2ed3184bfbe9d23b92e8337000000000000000000000049': {
+                id: 'composable-nested-vulnerability',
+                message:
+                    'A vulnerability has been discovered that effects this pool. Existing liquidity providers should remove liquidity immediately, and no new deposits should be made.',
+                type: 'warning',
+                link: {
+                    url: 'https://twitter.com/beethoven_x/status/1611363903744937985?s=20&t=tiOYA-4RINQzF4eMbR4HgA',
+                    text: 'Read more',
+                },
+            },
+        },
         poolInvest: {
             '0xb1c9ac57594e9b1ec0f3787d9f6744ef4cb0a02400000000000000000000006e':
                 'To account for the USD+ and DAI+ deposit/withdraw fee, this pool will charge a fee on both invest and withdraw of up to 0.06%.',
@@ -150,5 +184,10 @@ export const optimismNetworkConfig: NetworkConfig = {
         '0xb0de49429fbb80c635432bbad0b3965b2856017700010000000000000000004e': 'reaper-aave-granary',
         '0x359ea8618c405023fc4b98dab1b01f373792a12600010000000000000000004f': 'reaper-aave-granary',
         '0xb1c9ac57594e9b1ec0f3787d9f6744ef4cb0a02400000000000000000000006e': 'overnight',
+        '0x428e1cc3099cf461b87d124957a0d48273f334b100000000000000000000007f': 'reaper-sonne',
+    },
+    investDisabled: {
+        '0x1f131ec1175f023ee1534b16fa8ab237c00e238100000000000000000000004a': true,
+        '0x479a7d1fcdd71ce0c2ed3184bfbe9d23b92e8337000000000000000000000049': true,
     },
 };

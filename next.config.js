@@ -4,9 +4,8 @@ const transpiled = require('next-transpile-modules')(['echarts', 'zrender']);
 
 const nextConfig = {
     reactStrictMode: true,
-    images: {
-        domains: ['beethoven-assets.s3.eu-central-1.amazonaws.com'],
-      },
+    productionBrowserSourceMaps: true,
+
     webpack(config) {
         config.resolve.alias['~'] = path.join(__dirname, 'src');
         return config;

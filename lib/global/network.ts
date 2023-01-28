@@ -18,7 +18,12 @@ const response = configureChains(
                 decimals: networkConfig.eth.decimals,
             },
             rpcUrls: {
-                default: networkConfig.rpcUrl,
+                default: {
+                    http: [process.env.NEXT_PUBLIC_RPC_URL || networkConfig.rpcUrl],
+                },
+                public: {
+                    http: [process.env.NEXT_PUBLIC_RPC_URL || networkConfig.rpcUrl],
+                },
             },
             blockExplorers: {
                 etherscan: {
@@ -35,7 +40,7 @@ const response = configureChains(
     ],
     [
         batchJsonRpcProvider({
-            rpc: (chain) => ({ http: networkConfig.rpcUrl }),
+            rpc: () => ({ http: process.env.NEXT_PUBLIC_RPC_URL || networkConfig.rpcUrl }),
         }),
     ],
 );

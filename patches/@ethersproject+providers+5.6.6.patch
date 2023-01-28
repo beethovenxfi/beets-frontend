@@ -1,0 +1,428 @@
+diff --git a/node_modules/@ethersproject/providers/lib.esm/json-rpc-batch-provider.d.ts b/node_modules/@ethersproject/providers/lib.esm/json-rpc-batch-provider.d.ts
+index 2ad7763..fbf5c04 100644
+--- a/node_modules/@ethersproject/providers/lib.esm/json-rpc-batch-provider.d.ts
++++ b/node_modules/@ethersproject/providers/lib.esm/json-rpc-batch-provider.d.ts
+@@ -1,5 +1,5 @@
+ /// <reference types="node" />
+-import { JsonRpcProvider } from "./json-rpc-provider";
++import { JsonRpcProvider } from './json-rpc-provider';
+ export declare class JsonRpcBatchProvider extends JsonRpcProvider {
+     _pendingBatchAggregator: NodeJS.Timer;
+     _pendingBatch: Array<{
+@@ -7,7 +7,7 @@ export declare class JsonRpcBatchProvider extends JsonRpcProvider {
+             method: string;
+             params: Array<any>;
+             id: number;
+-            jsonrpc: "2.0";
++            jsonrpc: '2.0';
+         };
+         resolve: (result: any) => void;
+         reject: (error: Error) => void;
+diff --git a/node_modules/@ethersproject/providers/lib.esm/json-rpc-batch-provider.d.ts.map b/node_modules/@ethersproject/providers/lib.esm/json-rpc-batch-provider.d.ts.map
+index c2efbf0..3de2e36 100644
+--- a/node_modules/@ethersproject/providers/lib.esm/json-rpc-batch-provider.d.ts.map
++++ b/node_modules/@ethersproject/providers/lib.esm/json-rpc-batch-provider.d.ts.map
+@@ -1 +1 @@
+-{"version":3,"file":"json-rpc-batch-provider.d.ts","sourceRoot":"","sources":["../src.ts/json-rpc-batch-provider.ts"],"names":[],"mappings":";AAIA,OAAO,EAAE,eAAe,EAAE,MAAM,qBAAqB,CAAC;AAItD,qBAAa,oBAAqB,SAAQ,eAAe;IACrD,uBAAuB,EAAE,MAAM,CAAC,KAAK,CAAC;IACtC,aAAa,EAAE,KAAK,CAAC;QACjB,OAAO,EAAE;YAAE,MAAM,EAAE,MAAM,CAAC;YAAC,MAAM,EAAE,KAAK,CAAC,GAAG,CAAC,CAAC;YAAC,EAAE,EAAE,MAAM,CAAC;YAAC,OAAO,EAAE,KAAK,CAAA;SAAE,CAAC;QAC5E,OAAO,EAAE,CAAC,MAAM,EAAE,GAAG,KAAK,IAAI,CAAC;QAC/B,MAAM,EAAE,CAAC,KAAK,EAAE,KAAK,KAAK,IAAI,CAAA;KACjC,CAAC,CAAC;IAEH,IAAI,CAAC,MAAM,EAAE,MAAM,EAAE,MAAM,EAAE,KAAK,CAAC,GAAG,CAAC,GAAG,OAAO,CAAC,GAAG,CAAC;CAgFzD"}
+\ No newline at end of file
++{"version":3,"file":"json-rpc-batch-provider.d.ts","sourceRoot":"","sources":["../src.ts/json-rpc-batch-provider.ts"],"names":[],"mappings":";AAGA,OAAO,EAAE,eAAe,EAAE,MAAM,qBAAqB,CAAC;AAetD,qBAAa,oBAAqB,SAAQ,eAAe;IACvD,uBAAuB,EAAE,MAAM,CAAC,KAAK,CAAC;IACtC,aAAa,EAAE,KAAK,CAAC;QACnB,OAAO,EAAE;YAAE,MAAM,EAAE,MAAM,CAAC;YAAC,MAAM,EAAE,KAAK,CAAC,GAAG,CAAC,CAAC;YAAC,EAAE,EAAE,MAAM,CAAC;YAAC,OAAO,EAAE,KAAK,CAAA;SAAE,CAAC;QAC5E,OAAO,EAAE,CAAC,MAAM,EAAE,GAAG,KAAK,IAAI,CAAC;QAC/B,MAAM,EAAE,CAAC,KAAK,EAAE,KAAK,KAAK,IAAI,CAAC;KAChC,CAAC,CAAC;IAEH,IAAI,CAAC,MAAM,EAAE,MAAM,EAAE,MAAM,EAAE,KAAK,CAAC,GAAG,CAAC,GAAG,OAAO,CAAC,GAAG,CAAC;CAqFvD"}
+\ No newline at end of file
+diff --git a/node_modules/@ethersproject/providers/lib.esm/json-rpc-batch-provider.js b/node_modules/@ethersproject/providers/lib.esm/json-rpc-batch-provider.js
+index 7db7f78..8658444 100644
+--- a/node_modules/@ethersproject/providers/lib.esm/json-rpc-batch-provider.js
++++ b/node_modules/@ethersproject/providers/lib.esm/json-rpc-batch-provider.js
+@@ -1,14 +1,13 @@
+-import { deepCopy } from "@ethersproject/properties";
+-import { fetchJson } from "@ethersproject/web";
+-import { JsonRpcProvider } from "./json-rpc-provider";
+-// Experimental
++import { deepCopy } from '@ethersproject/properties';
++import { fetchJson } from '@ethersproject/web';
++import { JsonRpcProvider } from './json-rpc-provider';
+ export class JsonRpcBatchProvider extends JsonRpcProvider {
+     send(method, params) {
+         const request = {
+             method: method,
+             params: params,
+-            id: (this._nextId++),
+-            jsonrpc: "2.0"
++            id: this._nextId++,
++            jsonrpc: '2.0',
+         };
+         if (this._pendingBatch == null) {
+             this._pendingBatch = [];
+@@ -29,22 +28,26 @@ export class JsonRpcBatchProvider extends JsonRpcProvider {
+                 this._pendingBatchAggregator = null;
+                 // Get the request as an array of requests
+                 const request = batch.map((inflight) => inflight.request);
+-                this.emit("debug", {
+-                    action: "requestBatch",
++                this.emit('debug', {
++                    action: 'requestBatch',
+                     request: deepCopy(request),
+-                    provider: this
++                    provider: this,
+                 });
+                 return fetchJson(this.connection, JSON.stringify(request)).then((result) => {
+-                    this.emit("debug", {
+-                        action: "response",
++                    this.emit('debug', {
++                        action: 'response',
+                         request: request,
+                         response: result,
+-                        provider: this
++                        provider: this,
+                     });
++                    const resultMap = result.reduce((resultMap, payload) => {
++                        resultMap[payload.id] = payload;
++                        return resultMap;
++                    }, {});
+                     // For each result, feed it to the correct Promise, depending
+                     // on whether it was a success or error
+-                    batch.forEach((inflightRequest, index) => {
+-                        const payload = result[index];
++                    batch.forEach((inflightRequest) => {
++                        const payload = resultMap[inflightRequest.request.id];
+                         if (payload.error) {
+                             const error = new Error(payload.error.message);
+                             error.code = payload.error.code;
+@@ -56,11 +59,11 @@ export class JsonRpcBatchProvider extends JsonRpcProvider {
+                         }
+                     });
+                 }, (error) => {
+-                    this.emit("debug", {
+-                        action: "response",
++                    this.emit('debug', {
++                        action: 'response',
+                         error: error,
+                         request: request,
+-                        provider: this
++                        provider: this,
+                     });
+                     batch.forEach((inflightRequest) => {
+                         inflightRequest.reject(error);
+diff --git a/node_modules/@ethersproject/providers/lib.esm/json-rpc-batch-provider.js.map b/node_modules/@ethersproject/providers/lib.esm/json-rpc-batch-provider.js.map
+index 7a19ad4..4787375 100644
+--- a/node_modules/@ethersproject/providers/lib.esm/json-rpc-batch-provider.js.map
++++ b/node_modules/@ethersproject/providers/lib.esm/json-rpc-batch-provider.js.map
+@@ -1 +1 @@
+-{"version":3,"file":"json-rpc-batch-provider.js","sourceRoot":"","sources":["../src.ts/json-rpc-batch-provider.ts"],"names":[],"mappings":"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"}
+\ No newline at end of file
++{"version":3,"file":"json-rpc-batch-provider.js","sourceRoot":"","sources":["../src.ts/json-rpc-batch-provider.ts"],"names":[],"mappings":"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"}
+\ No newline at end of file
+diff --git a/node_modules/@ethersproject/providers/lib/json-rpc-batch-provider.d.ts b/node_modules/@ethersproject/providers/lib/json-rpc-batch-provider.d.ts
+index 2ad7763..fbf5c04 100644
+--- a/node_modules/@ethersproject/providers/lib/json-rpc-batch-provider.d.ts
++++ b/node_modules/@ethersproject/providers/lib/json-rpc-batch-provider.d.ts
+@@ -1,5 +1,5 @@
+ /// <reference types="node" />
+-import { JsonRpcProvider } from "./json-rpc-provider";
++import { JsonRpcProvider } from './json-rpc-provider';
+ export declare class JsonRpcBatchProvider extends JsonRpcProvider {
+     _pendingBatchAggregator: NodeJS.Timer;
+     _pendingBatch: Array<{
+@@ -7,7 +7,7 @@ export declare class JsonRpcBatchProvider extends JsonRpcProvider {
+             method: string;
+             params: Array<any>;
+             id: number;
+-            jsonrpc: "2.0";
++            jsonrpc: '2.0';
+         };
+         resolve: (result: any) => void;
+         reject: (error: Error) => void;
+diff --git a/node_modules/@ethersproject/providers/lib/json-rpc-batch-provider.d.ts.map b/node_modules/@ethersproject/providers/lib/json-rpc-batch-provider.d.ts.map
+index c2efbf0..3de2e36 100644
+--- a/node_modules/@ethersproject/providers/lib/json-rpc-batch-provider.d.ts.map
++++ b/node_modules/@ethersproject/providers/lib/json-rpc-batch-provider.d.ts.map
+@@ -1 +1 @@
+-{"version":3,"file":"json-rpc-batch-provider.d.ts","sourceRoot":"","sources":["../src.ts/json-rpc-batch-provider.ts"],"names":[],"mappings":";AAIA,OAAO,EAAE,eAAe,EAAE,MAAM,qBAAqB,CAAC;AAItD,qBAAa,oBAAqB,SAAQ,eAAe;IACrD,uBAAuB,EAAE,MAAM,CAAC,KAAK,CAAC;IACtC,aAAa,EAAE,KAAK,CAAC;QACjB,OAAO,EAAE;YAAE,MAAM,EAAE,MAAM,CAAC;YAAC,MAAM,EAAE,KAAK,CAAC,GAAG,CAAC,CAAC;YAAC,EAAE,EAAE,MAAM,CAAC;YAAC,OAAO,EAAE,KAAK,CAAA;SAAE,CAAC;QAC5E,OAAO,EAAE,CAAC,MAAM,EAAE,GAAG,KAAK,IAAI,CAAC;QAC/B,MAAM,EAAE,CAAC,KAAK,EAAE,KAAK,KAAK,IAAI,CAAA;KACjC,CAAC,CAAC;IAEH,IAAI,CAAC,MAAM,EAAE,MAAM,EAAE,MAAM,EAAE,KAAK,CAAC,GAAG,CAAC,GAAG,OAAO,CAAC,GAAG,CAAC;CAgFzD"}
+\ No newline at end of file
++{"version":3,"file":"json-rpc-batch-provider.d.ts","sourceRoot":"","sources":["../src.ts/json-rpc-batch-provider.ts"],"names":[],"mappings":";AAGA,OAAO,EAAE,eAAe,EAAE,MAAM,qBAAqB,CAAC;AAetD,qBAAa,oBAAqB,SAAQ,eAAe;IACvD,uBAAuB,EAAE,MAAM,CAAC,KAAK,CAAC;IACtC,aAAa,EAAE,KAAK,CAAC;QACnB,OAAO,EAAE;YAAE,MAAM,EAAE,MAAM,CAAC;YAAC,MAAM,EAAE,KAAK,CAAC,GAAG,CAAC,CAAC;YAAC,EAAE,EAAE,MAAM,CAAC;YAAC,OAAO,EAAE,KAAK,CAAA;SAAE,CAAC;QAC5E,OAAO,EAAE,CAAC,MAAM,EAAE,GAAG,KAAK,IAAI,CAAC;QAC/B,MAAM,EAAE,CAAC,KAAK,EAAE,KAAK,KAAK,IAAI,CAAC;KAChC,CAAC,CAAC;IAEH,IAAI,CAAC,MAAM,EAAE,MAAM,EAAE,MAAM,EAAE,KAAK,CAAC,GAAG,CAAC,GAAG,OAAO,CAAC,GAAG,CAAC;CAqFvD"}
+\ No newline at end of file
+diff --git a/node_modules/@ethersproject/providers/lib/json-rpc-batch-provider.js b/node_modules/@ethersproject/providers/lib/json-rpc-batch-provider.js
+index 20f35c5..80ac4fd 100644
+--- a/node_modules/@ethersproject/providers/lib/json-rpc-batch-provider.js
++++ b/node_modules/@ethersproject/providers/lib/json-rpc-batch-provider.js
+@@ -19,7 +19,6 @@ exports.JsonRpcBatchProvider = void 0;
+ var properties_1 = require("@ethersproject/properties");
+ var web_1 = require("@ethersproject/web");
+ var json_rpc_provider_1 = require("./json-rpc-provider");
+-// Experimental
+ var JsonRpcBatchProvider = /** @class */ (function (_super) {
+     __extends(JsonRpcBatchProvider, _super);
+     function JsonRpcBatchProvider() {
+@@ -30,8 +29,8 @@ var JsonRpcBatchProvider = /** @class */ (function (_super) {
+         var request = {
+             method: method,
+             params: params,
+-            id: (this._nextId++),
+-            jsonrpc: "2.0"
++            id: this._nextId++,
++            jsonrpc: '2.0',
+         };
+         if (this._pendingBatch == null) {
+             this._pendingBatch = [];
+@@ -52,22 +51,26 @@ var JsonRpcBatchProvider = /** @class */ (function (_super) {
+                 _this._pendingBatchAggregator = null;
+                 // Get the request as an array of requests
+                 var request = batch.map(function (inflight) { return inflight.request; });
+-                _this.emit("debug", {
+-                    action: "requestBatch",
++                _this.emit('debug', {
++                    action: 'requestBatch',
+                     request: (0, properties_1.deepCopy)(request),
+-                    provider: _this
++                    provider: _this,
+                 });
+                 return (0, web_1.fetchJson)(_this.connection, JSON.stringify(request)).then(function (result) {
+-                    _this.emit("debug", {
+-                        action: "response",
++                    _this.emit('debug', {
++                        action: 'response',
+                         request: request,
+                         response: result,
+-                        provider: _this
++                        provider: _this,
+                     });
++                    var resultMap = result.reduce(function (resultMap, payload) {
++                        resultMap[payload.id] = payload;
++                        return resultMap;
++                    }, {});
+                     // For each result, feed it to the correct Promise, depending
+                     // on whether it was a success or error
+-                    batch.forEach(function (inflightRequest, index) {
+-                        var payload = result[index];
++                    batch.forEach(function (inflightRequest) {
++                        var payload = resultMap[inflightRequest.request.id];
+                         if (payload.error) {
+                             var error = new Error(payload.error.message);
+                             error.code = payload.error.code;
+@@ -79,11 +82,11 @@ var JsonRpcBatchProvider = /** @class */ (function (_super) {
+                         }
+                     });
+                 }, function (error) {
+-                    _this.emit("debug", {
+-                        action: "response",
++                    _this.emit('debug', {
++                        action: 'response',
+                         error: error,
+                         request: request,
+-                        provider: _this
++                        provider: _this,
+                     });
+                     batch.forEach(function (inflightRequest) {
+                         inflightRequest.reject(error);
+diff --git a/node_modules/@ethersproject/providers/lib/json-rpc-batch-provider.js.map b/node_modules/@ethersproject/providers/lib/json-rpc-batch-provider.js.map
+index 3ba7722..7d940a8 100644
+--- a/node_modules/@ethersproject/providers/lib/json-rpc-batch-provider.js.map
++++ b/node_modules/@ethersproject/providers/lib/json-rpc-batch-provider.js.map
+@@ -1 +1 @@
+-{"version":3,"file":"json-rpc-batch-provider.js","sourceRoot":"","sources":["../src.ts/json-rpc-batch-provider.ts"],"names":[],"mappings":"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"}
+\ No newline at end of file
++{"version":3,"file":"json-rpc-batch-provider.js","sourceRoot":"","sources":["../src.ts/json-rpc-batch-provider.ts"],"names":[],"mappings":"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"}
+\ No newline at end of file
+diff --git a/node_modules/@ethersproject/providers/src.ts/json-rpc-batch-provider.ts b/node_modules/@ethersproject/providers/src.ts/json-rpc-batch-provider.ts
+index d2bf8c8..91b3e0d 100644
+--- a/node_modules/@ethersproject/providers/src.ts/json-rpc-batch-provider.ts
++++ b/node_modules/@ethersproject/providers/src.ts/json-rpc-batch-provider.ts
+@@ -1,97 +1,112 @@
++import { deepCopy } from '@ethersproject/properties';
++import { fetchJson } from '@ethersproject/web';
+ 
+-import { deepCopy } from "@ethersproject/properties";
+-import { fetchJson } from "@ethersproject/web";
+-
+-import { JsonRpcProvider } from "./json-rpc-provider";
++import { JsonRpcProvider } from './json-rpc-provider';
+ 
+ // Experimental
+ 
++interface RpcResult {
++  jsonrpc: '2.0';
++  id: number;
++  result?: string;
++  error?: {
++    code: number;
++    message: string;
++    data?: any;
++  };
++}
++
+ export class JsonRpcBatchProvider extends JsonRpcProvider {
+-    _pendingBatchAggregator: NodeJS.Timer;
+-    _pendingBatch: Array<{
+-        request: { method: string, params: Array<any>, id: number, jsonrpc: "2.0" },
+-        resolve: (result: any) => void,
+-        reject: (error: Error) => void
+-    }>;
+-
+-    send(method: string, params: Array<any>): Promise<any> {
+-        const request = {
+-            method: method,
+-            params: params,
+-            id: (this._nextId++),
+-            jsonrpc: "2.0"
+-        };
+-
+-        if (this._pendingBatch == null) {
+-            this._pendingBatch = [ ];
+-        }
+-
+-        const inflightRequest: any = { request, resolve: null, reject: null };
+-
+-        const promise = new Promise((resolve, reject) => {
+-            inflightRequest.resolve = resolve;
+-            inflightRequest.reject = reject;
++  _pendingBatchAggregator: NodeJS.Timer;
++  _pendingBatch: Array<{
++    request: { method: string; params: Array<any>; id: number; jsonrpc: '2.0' };
++    resolve: (result: any) => void;
++    reject: (error: Error) => void;
++  }>;
++
++  send(method: string, params: Array<any>): Promise<any> {
++    const request = {
++      method: method,
++      params: params,
++      id: this._nextId++,
++      jsonrpc: '2.0',
++    };
++
++    if (this._pendingBatch == null) {
++      this._pendingBatch = [];
++    }
++
++    const inflightRequest: any = { request, resolve: null, reject: null };
++
++    const promise = new Promise((resolve, reject) => {
++      inflightRequest.resolve = resolve;
++      inflightRequest.reject = reject;
++    });
++
++    this._pendingBatch.push(inflightRequest);
++
++    if (!this._pendingBatchAggregator) {
++      // Schedule batch for next event loop + short duration
++      this._pendingBatchAggregator = setTimeout(() => {
++        // Get teh current batch and clear it, so new requests
++        // go into the next batch
++        const batch = this._pendingBatch;
++        this._pendingBatch = null;
++        this._pendingBatchAggregator = null;
++
++        // Get the request as an array of requests
++        const request = batch.map((inflight) => inflight.request);
++
++        this.emit('debug', {
++          action: 'requestBatch',
++          request: deepCopy(request),
++          provider: this,
+         });
+ 
+-        this._pendingBatch.push(inflightRequest);
+-
+-        if (!this._pendingBatchAggregator) {
+-            // Schedule batch for next event loop + short duration
+-            this._pendingBatchAggregator = setTimeout(() => {
+-
+-                // Get teh current batch and clear it, so new requests
+-                // go into the next batch
+-                const batch = this._pendingBatch;
+-                this._pendingBatch = null;
+-                this._pendingBatchAggregator = null;
+-
+-                // Get the request as an array of requests
+-                const request = batch.map((inflight) => inflight.request);
+-
+-                this.emit("debug", {
+-                    action: "requestBatch",
+-                    request: deepCopy(request),
+-                    provider: this
+-                });
+-
+-                return fetchJson(this.connection, JSON.stringify(request)).then((result) => {
+-                    this.emit("debug", {
+-                        action: "response",
+-                        request: request,
+-                        response: result,
+-                        provider: this
+-                    });
+-
+-                    // For each result, feed it to the correct Promise, depending
+-                    // on whether it was a success or error
+-                    batch.forEach((inflightRequest, index) => {
+-                        const payload = result[index];
+-                        if (payload.error) {
+-                            const error = new Error(payload.error.message);
+-                            (<any>error).code = payload.error.code;
+-                            (<any>error).data = payload.error.data;
+-                            inflightRequest.reject(error);
+-                        } else {
+-                            inflightRequest.resolve(payload.result);
+-                        }
+-                    });
+-
+-                }, (error) => {
+-                    this.emit("debug", {
+-                        action: "response",
+-                        error: error,
+-                        request: request,
+-                        provider: this
+-                    });
+-
+-                    batch.forEach((inflightRequest) => {
+-                        inflightRequest.reject(error);
+-                    });
+-                });
+-
+-            }, 10);
+-        }
+-
+-        return promise;
++        return fetchJson(this.connection, JSON.stringify(request)).then(
++          (result: RpcResult[]) => {
++            this.emit('debug', {
++              action: 'response',
++              request: request,
++              response: result,
++              provider: this,
++            });
++
++            const resultMap = result.reduce((resultMap, payload) => {
++              resultMap[payload.id] = payload;
++              return resultMap;
++            }, {} as Record<number, RpcResult>);
++
++            // For each result, feed it to the correct Promise, depending
++            // on whether it was a success or error
++            batch.forEach((inflightRequest) => {
++              const payload = resultMap[inflightRequest.request.id];
++              if (payload.error) {
++                const error = new Error(payload.error.message);
++                (<any>error).code = payload.error.code;
++                (<any>error).data = payload.error.data;
++                inflightRequest.reject(error);
++              } else {
++                inflightRequest.resolve(payload.result);
++              }
++            });
++          },
++          (error) => {
++            this.emit('debug', {
++              action: 'response',
++              error: error,
++              request: request,
++              provider: this,
++            });
++
++            batch.forEach((inflightRequest) => {
++              inflightRequest.reject(error);
++            });
++          }
++        );
++      }, 10);
+     }
++
++    return promise;
++  }
+ }

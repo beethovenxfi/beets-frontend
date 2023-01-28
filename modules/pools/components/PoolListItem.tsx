@@ -10,6 +10,7 @@ import { TokenAvatarSetInList, TokenAvatarSetInListTokenData } from '~/component
 import { memo } from 'react';
 import { BoostedBadgeSmall } from '~/components/boosted-badge/BoostedBadgeSmall';
 import { BoostedByType } from '~/lib/config/network-config-type';
+import { PoolListItemWarning } from '~/modules/pools/components/PoolListItemWarning';
 
 interface Props extends BoxProps {
     pool: GqlPoolMinimalFragment;
@@ -18,6 +19,7 @@ interface Props extends BoxProps {
     tokens: TokenAvatarSetInListTokenData[];
     hasUnstakedBpt?: boolean;
     boostedBy?: BoostedByType;
+    warningMessage?: string;
 }
 
 const MemoizedTokenAvatarSetInList = memo(TokenAvatarSetInList);
@@ -30,6 +32,7 @@ export function PoolListItem({
     tokens,
     hasUnstakedBpt,
     boostedBy,
+    warningMessage,
     ...rest
 }: Props) {
     return (
@@ -84,6 +87,7 @@ export function PoolListItem({
                             <Text fontSize={{ base: 'xl', lg: 'md' }} fontWeight={{ base: 'bold', lg: 'normal' }}>
                                 {pool.name}
                             </Text>
+                            {warningMessage && <PoolListItemWarning ml="2" message={warningMessage} />}
                         </GridItem>
                         {showUserBalance && (
                             <GridItem

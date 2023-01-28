@@ -50,14 +50,14 @@ export function SubTransactionSubmittedContent({ query, showSpinnerOnPending, ..
                     </Link>
                 </HStack>
             )}
-            {txResponse?.to && (
+            {txReceipt?.to && (
                 <HStack width="full" justifyContent="space-between">
                     <Text color="gray.100" fontSize=".85rem">
                         Contract
                     </Text>
-                    <Link href={etherscanGetAddressUrl(txResponse.to)} target="_blank">
+                    <Link href={etherscanGetAddressUrl(txReceipt.to)} target="_blank">
                         <HStack>
-                            <Text fontSize=".85rem">{getContractName(txResponse.to)}</Text>
+                            <Text fontSize=".85rem">{getContractName(txReceipt.to)}</Text>
                             <ExternalLink size="16" />
                         </HStack>
                     </Link>

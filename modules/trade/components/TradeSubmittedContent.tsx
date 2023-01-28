@@ -13,13 +13,12 @@ interface Props {
 export function TradeSubmittedContent({ query }: Props) {
     const { reactiveTradeState } = useTrade();
     const { refetch } = useUserTokenBalances();
-    const { isConfirmed, isFailed, isPending, error, txReceipt, txResponse } = query;
 
     useEffect(() => {
-        if (isConfirmed) {
+        if (query.isConfirmed) {
             refetch();
         }
-    }, [isConfirmed]);
+    }, [query.isConfirmed]);
 
     return (
         <Box pt="4">

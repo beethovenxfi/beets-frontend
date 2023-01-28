@@ -74,7 +74,7 @@ export function TradePreviewContent({ query, onTransactionSubmitted }: Props) {
                         <HStack justifyContent="space-between" width="full">
                             <HStack>
                                 <TokenAvatar width="40px" height="40px" address={swapInfo.tokenIn} />
-                                <Text>
+                                <Box>
                                     You sell
                                     <HStack spacing="1">
                                         <Text fontWeight="bold">{tokenIn?.symbol}</Text>
@@ -82,7 +82,7 @@ export function TradePreviewContent({ query, onTransactionSubmitted }: Props) {
                                             <ExternalLink size={14} />
                                         </Link>
                                     </HStack>
-                                </Text>
+                                </Box>
                             </HStack>
                             <VStack alignItems="flex-end" spacing="0">
                                 <Text>{tokenFormatAmountPrecise(swapInfo.tokenInAmount, tokenInPrecision)}</Text>
@@ -98,7 +98,7 @@ export function TradePreviewContent({ query, onTransactionSubmitted }: Props) {
                         <HStack justifyContent="space-between" width="full">
                             <HStack>
                                 <TokenAvatar width="40px" height="40px" address={swapInfo.tokenOut} />
-                                <Text>
+                                <Box>
                                     to receive
                                     <HStack spacing="1">
                                         <Text fontWeight="bold">{tokenOut?.symbol}</Text>
@@ -106,7 +106,7 @@ export function TradePreviewContent({ query, onTransactionSubmitted }: Props) {
                                             <ExternalLink size={14} />
                                         </Link>
                                     </HStack>
-                                </Text>
+                                </Box>
                             </HStack>
                             <VStack alignItems="flex-end" spacing="0">
                                 <Text>{tokenFormatAmountPrecise(swapInfo.tokenOutAmount, tokenOutPrecision)}</Text>
