@@ -4,6 +4,7 @@ const transpiled = require('next-transpile-modules')(['echarts', 'zrender']);
 
 const nextConfig = {
     reactStrictMode: true,
+    productionBrowserSourceMaps: true,
 
     webpack(config) {
         config.resolve.alias['~'] = path.join(__dirname, 'src');

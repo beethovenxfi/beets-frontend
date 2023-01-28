@@ -21,6 +21,9 @@ const response = configureChains(
                 default: {
                     http: [process.env.NEXT_PUBLIC_RPC_URL || networkConfig.rpcUrl],
                 },
+                public: {
+                    http: [process.env.NEXT_PUBLIC_RPC_URL || networkConfig.rpcUrl],
+                },
             },
             blockExplorers: {
                 etherscan: {
