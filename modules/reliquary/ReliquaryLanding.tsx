@@ -28,17 +28,17 @@ const rqImages = [
     {
         src: Rq1Image,
         alt: 'fBEETS',
-        info: 'Lorem ipsum dolor sit amet, Lorem ipsum dolor sit amet',
+        info: 'fBEETS represent your liquidity share for the FreshBEETS pool. Deposit them into a relic to receive additional liquidity incentives and to gain governance voting power.',
     },
     {
         src: Rq2Image,
         alt: 'Reliquary',
-        info: 'Lorem ipsum dolor sit amet, Lorem ipsum dolor sit amet',
+        info: 'Reliquary is an incentive distribution system which gives users fine grained control over their investments and rewards.',
     },
     {
         src: Rq3Image,
         alt: 'maBEETS',
-        info: 'Lorem ipsum dolor sit amet, Lorem ipsum dolor sit amet',
+        info: 'maBEETS are the financial NFTs which represent the underlying fBEETS positions, able to be traded without removing the underlying liquidity.',
     },
 ];
 

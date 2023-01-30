@@ -116,7 +116,7 @@ export default function ReliquaryOverallStats() {
                                     color: 'beets.base.50',
                                 }}
                                 label="Liquidity incentives"
-                                infoText="Lorem ipsum dolor sit amet, Lorem ipsum dolor sit amet"
+                                infoText="Liquidity incentives are additional incentives which are available for maBEETS holders. The daily value is an approximation based on current token prices and emissions."
                             />
                             <Text color="white" fontSize="1.75rem">
                                 ~{numeral(incentivesDailyValue).format('$0,0.00a')}
@@ -160,8 +160,8 @@ export default function ReliquaryOverallStats() {
                                 fontSize: 'sm',
                                 color: 'beets.base.50',
                             }}
-                            label="Total minted"
-                            infoText="Lorem ipsum dolor sit amet, Lorem ipsum dolor sit amet"
+                            label="Total relics"
+                            infoText="The total number of 'active' relics, which have been minted. Burnt relics are not counted."
                         />
                         <Text color="white" fontSize="1.75rem">
                             {numeral(globalStats?.relicCount).format('0,0')}
