@@ -10,10 +10,17 @@ import RelicSlideApr from './RelicSlideApr';
 import RelicSlideInfo from './RelicSlideInfo';
 import RelicSlideMainInfo from './RelicSlideMainInfo';
 import Image from 'next/image';
-import RelicLevel1 from '~/assets/images/reliquary/1.jpg';
-import RelicLevel2 from '~/assets/images/reliquary/2.jpg';
-import RelicLevel3 from '~/assets/images/reliquary/3.jpg';
-import RelicLevel4 from '~/assets/images/reliquary/4.jpg';
+import RelicLevel1 from '~/assets/images/reliquary/1.png';
+import RelicLevel2 from '~/assets/images/reliquary/2.png';
+import RelicLevel3 from '~/assets/images/reliquary/3.png';
+import RelicLevel4 from '~/assets/images/reliquary/4.png';
+import RelicLevel5 from '~/assets/images/reliquary/5.png';
+import RelicLevel6 from '~/assets/images/reliquary/6.png';
+import RelicLevel7 from '~/assets/images/reliquary/7.png';
+import RelicLevel8 from '~/assets/images/reliquary/8.png';
+import RelicLevel9 from '~/assets/images/reliquary/9.png';
+import RelicLevel10 from '~/assets/images/reliquary/10.png';
+import RelicLevel11 from '~/assets/images/reliquary/11.png';
 
 export interface RelicSlideProps {
     relic: ReliquaryFarmPosition;
@@ -63,6 +70,20 @@ export default function RelicSlide({ relic, openInvestModal, openWithdrawModal }
                 return RelicLevel3;
             case 4:
                 return RelicLevel4;
+            case 5:
+                return RelicLevel5;
+            case 6:
+                return RelicLevel6;
+            case 7:
+                return RelicLevel7;
+            case 8:
+                return RelicLevel8;
+            case 9:
+                return RelicLevel9;
+            case 10:
+                return RelicLevel10;
+            case 11:
+                return RelicLevel11;
             default:
                 return RelicLevel1;
         }
@@ -146,7 +167,13 @@ export default function RelicSlide({ relic, openInvestModal, openWithdrawModal }
                         rounded="lg"
                         overflow="hidden"
                     >
-                        <Image src={getImage(relic?.level + 1)} alt="reliquary" placeholder="blur" />
+                        <Image
+                            src={getImage(relic?.level + 1)}
+                            width="400px"
+                            height="400px"
+                            alt="reliquary"
+                            placeholder="blur"
+                        />
                     </Box>
                 </Flex>
                 <Stack direction={{ base: 'column', lg: 'row' }} position="relative" height="310px" width="full">
