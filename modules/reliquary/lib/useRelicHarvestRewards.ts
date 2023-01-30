@@ -20,7 +20,8 @@ export function useRelicHarvestRewards() {
     function harvest() {
         submit({
             args: [selectedRelicId, userAddress],
-            toastText: `Harvest rewards for relic #${selectedRelicId}`,
+            toastText: `Harvesting rewards for relic #${selectedRelicId}`,
+            walletText: `Harvest rewards for relic #${selectedRelicId}`,
         });
     }
 

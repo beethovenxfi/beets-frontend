@@ -160,7 +160,7 @@ export function PoolInvestActions({ onInvestComplete, onClose, isReliquaryDeposi
                 <BeetsTransactionStepsSubmit
                     isLoading={steps === null || isLoadingBatchRelayerApproval}
                     loadingButtonText="Invest"
-                    completeButtonText="Return to pool"
+                    completeButtonText={isReliquaryDeposit ? 'Return to maBEETS' : 'Return to pool'}
                     onCompleteButtonClick={onClose}
                     steps={steps || []}
                     onSubmit={(id) => {

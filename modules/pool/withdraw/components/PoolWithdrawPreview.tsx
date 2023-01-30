@@ -98,7 +98,7 @@ export function PoolWithdrawPreview({ onWithdrawComplete, onClose }: Props) {
             <BeetsTransactionStepsSubmit
                 isLoading={isLoadingContractCallData}
                 loadingButtonText=""
-                completeButtonText="Return to pool"
+                completeButtonText={isReliquaryFBeetsPool ? 'Return to maBEETS' : 'Return to pool'}
                 onCompleteButtonClick={onClose}
                 onSubmit={() => {
                     if (contractCallData && !isReliquaryFBeetsPool) {

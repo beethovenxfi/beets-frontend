@@ -9,7 +9,8 @@ export function useReliquaryHarvestAllRewards() {
     function harvestAll(calls: string[]) {
         submit({
             args: [calls],
-            toastText: 'Harvest all pending relic rewards',
+            toastText: 'Harvesting all pending relic rewards',
+            walletText: 'Harvest all pending relic rewards',
         });
     }
 

@@ -93,7 +93,7 @@ export function ReliquaryCurveChart() {
                         color: 'beets.base.50',
                     }}
                     label="BEETronix"
-                    infoText="Lorem ipsum dolor sit amet, Lorem ipsum dolor sit amet"
+                    infoText="This curve shows the maturity boost per level."
                 />
                 <Link href="link.to.docs" target="_blank">
                     <ExternalLink size="16" />

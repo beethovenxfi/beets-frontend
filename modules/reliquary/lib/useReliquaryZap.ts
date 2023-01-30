@@ -11,16 +11,16 @@ export function useReliquaryZap(type: 'MIGRATE' | 'DEPOSIT' | 'WITHDRAW') {
             args: [calls],
             toastText:
                 type === 'WITHDRAW'
-                    ? 'Withdraw toast text'
+                    ? 'Withdrawing from maBEETS'
                     : type === 'MIGRATE'
-                    ? 'Migrate toast text'
-                    : 'Join toast text',
+                    ? 'Migrating into maBEETS'
+                    : 'Depositing into maBEETS',
             walletText:
                 type === 'WITHDRAW'
-                    ? 'Withdraw wallet text'
+                    ? 'Withdraw from maBEETS'
                     : type === 'MIGRATE'
-                    ? 'Migrate wallet text'
-                    : 'Join wallet text',
+                    ? 'Migrate into maBEETS'
+                    : 'Deposit into maBEETS',
         });
     }
 
