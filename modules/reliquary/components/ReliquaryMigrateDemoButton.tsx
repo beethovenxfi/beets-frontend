@@ -3,16 +3,17 @@ import { useReliquaryFbeetsMigrateContractCallData } from '~/modules/reliquary/l
 import { useReliquaryZap } from '~/modules/reliquary/lib/useReliquaryZap';
 
 export function ReliquaryMigrateDemoButton() {
-    const { data: contractCalls, fbeetsBalance } = useReliquaryFbeetsMigrateContractCallData();
-    const { reliquaryZap } = useReliquaryZap('MIGRATE');
+    // const { data: contractCalls, fbeetsBalance } = useReliquaryFbeetsMigrateContractCallData();
+    // const { reliquaryZap } = useReliquaryZap('MIGRATE');
 
-    return (
-        <Button
-            onClick={() => {
-                reliquaryZap(contractCalls || []);
-            }}
-        >
-            Migrate fBeets to reliquary {fbeetsBalance}
-        </Button>
-    );
+    // return (
+    //     <Button
+    //         onClick={() => {
+    //             reliquaryZap(contractCalls || []);
+    //         }}
+    //     >
+    //         Migrate fBeets to reliquary {fbeetsBalance}
+    //     </Button>
+    // );
+    return null;
 }
