@@ -99,7 +99,7 @@ export default function ReliquaryLanding() {
                         </Button>
                     </HStack>
                 </VStack>
-                <Stack direction={['column', 'row']} spacing="8">
+                <Stack display={{ base: 'none', md: 'flex' }} direction={['column', 'row']} spacing="8">
                     {rqImages.map((image, index) => (
                         <VStack spacing="4" key={index}>
                             <Box
