@@ -13,6 +13,7 @@ import {
     MenuList,
     Modal,
     ModalOverlay,
+    Select,
     StackDivider,
     Text,
     useDisclosure,
@@ -37,7 +38,7 @@ import BeetsTooltip from '~/components/tooltip/BeetsTooltip';
 
 export default function ReliquaryMigrateModal() {
     const { isOpen, onOpen, onClose } = useDisclosure();
-    const [migrationTarget, setMigrationTarget] = useState<number | null>(null);
+    const [migrationTarget, setMigrationTarget] = useState<number | undefined>(undefined);
 
     const initialRef = useRef(null);
     const networkConfig = useNetworkConfig();
@@ -169,46 +170,34 @@ export default function ReliquaryMigrateModal() {
                                     </BeetsBox>
                                 )}
                                 {!isComplete && relicPositions.length > 0 && (
-                                    <Menu>
-                                        <BeetsTooltip label="Click here to change if you want to migrate your legacy balance to a new relic or an existing one.">
-                                            <MenuButton
-                                                fontSize="lg"
-                                                userSelect="none"
-                                                color="beets.green"
-                                                fontWeight="bold"
-                                                p="2"
-                                                rounded="lg"
-                                                _hover={{ cursor: 'pointer', bgColor: 'whiteAlpha.200' }}
-                                            >
-                                                <HStack>
-                                                    <Box>
-                                                        Migrating to{' '}
-                                                        {migrationTarget ? `Relic ${migrationTarget}` : 'a new relic'}
-                                                    </Box>
-                                                    <ChevronDown />
-                                                </HStack>
-                                            </MenuButton>
-                                        </BeetsTooltip>
-                                        <MenuList bgColor="beets.base.800" borderColor="gray.400" shadow="lg">
-                                            <MenuItem
-                                                display="flex"
-                                                alignItems="center"
-                                                onClick={() => setMigrationTarget(null)}
-                                            >
-                                                <Box flex="1">New relic</Box>
-                                            </MenuItem>
+                                    <VStack width="full" alignItems='flex-start'>
+                                        <Text>Choose where to migrate your balance to:</Text>
+                                        <Select
+                                            value={migrationTarget}
+                                            onChange={(e) =>
+                                                setMigrationTarget(
+                                                    e.currentTarget.value === undefined
+                                                        ? undefined
+                                                        : parseInt(e.currentTarget.value, 10),
+                                                )
+                                            }
+                                            width="full"
+                                            variant="filled"
+                                        >
+                                            <option value={undefined}>New relic</option>
                                             {relicPositions.map((relic) => (
-                                                <MenuItem
-                                                    display="flex"
-                                                    alignItems="center"
+                                                <option
+                                                    value={relic.relicId}
                                                     key={`migrate-to-${relic.relicId}`}
                                                     onClick={() => setMigrationTarget(parseInt(relic.relicId, 10))}
                                                 >
-                                                    <Box flex="1">{relic.relicId}</Box>
-                                                </MenuItem>
+                                                    <Box flex="1">
+                                                        Relic {relic.relicId} - Level {relic.level}
+                                                    </Box>
+                                                </option>
                                             ))}
-                                        </MenuList>
-                                    </Menu>
+                                        </Select>
+                                    </VStack>
                                 )}
                                 <Box width="full">
                                     <BeetsTransactionStepsSubmit

@@ -5,7 +5,7 @@ import { useSlippage } from '~/lib/global/useSlippage';
 import { useBalances } from '~/lib/util/useBalances';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 
-export function useReliquaryFbeetsMigrateContractCallData(relicId: number | null) {
+export function useReliquaryFbeetsMigrateContractCallData(relicId: number | undefined) {
     const { userAddress } = useUserAccount();
     const { slippage } = useSlippage();
     const networkConfig = useNetworkConfig();
