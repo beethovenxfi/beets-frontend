@@ -22,7 +22,6 @@ const infoButtonLabelProps = {
     fontWeight: 'semibold',
     fontSize: 'sm',
     color: 'beets.base.50',
-    marginTop: '4',
 };
 
 const rqImages = [
@@ -102,7 +101,7 @@ export default function ReliquaryLanding() {
                 </VStack>
                 <Stack direction={['column', 'row']} spacing="8">
                     {rqImages.map((image, index) => (
-                        <VStack spacing="0" key={index}>
+                        <VStack spacing="4" key={index}>
                             <Box
                                 as={motion.div}
                                 whileHover={{ scale: 1.2, transition: { type: 'spring', stiffness: 400, damping: 10 } }}
