@@ -15,7 +15,7 @@ import { useEffect } from 'react';
 import { ToastType, useToast } from '~/components/toast/BeetsToast';
 import { useLegacyFBeetsBalance } from '~/modules/reliquary/lib/useLegacyFbeetsBalance';
 import ReliquaryMigrateModal from '~/modules/reliquary/components/ReliquaryMigrateModal';
-import { TokensProvider, useGetTokens } from '~/lib/global/useToken';
+import { TokensProvider } from '~/lib/global/useToken';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 import { PoolDetailWarning } from '~/modules/pool/detail/components/PoolDetailWarning';
 
@@ -24,6 +24,7 @@ export function Pool() {
     const { hasBpt } = usePoolUserBptBalance();
     const { total } = useLegacyFBeetsBalance();
     const { showToast, removeToast } = useToast();
+    const { warnings, investDisabled } = useNetworkConfig();
 
     useEffect(() => {
         if (total > 0) {

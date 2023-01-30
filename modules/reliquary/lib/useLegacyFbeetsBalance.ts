@@ -21,7 +21,7 @@ export function useLegacyFBeetsBalance() {
     const { data: stakedBalance = '0', isLoading: isLoadingStakedBalance } = useQuery(
         ['legacyFbeetsBalances', userAddress || ''],
         async (): Promise<AmountHumanReadable> => {
-            if (!userAddress || userAddress === '') {
+            if (!userAddress) {
                 return '0';
             }
 
