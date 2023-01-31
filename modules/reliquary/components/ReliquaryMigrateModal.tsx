@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import TokenRow from '~/components/token/TokenRow';
 import {
     Alert,
@@ -35,18 +35,20 @@ import { BeetsBox } from '~/components/box/BeetsBox';
 import { ReliquaryFarmPosition } from '~/lib/services/staking/reliquary.service';
 import { ChevronDown } from 'react-feather';
 import BeetsTooltip from '~/components/tooltip/BeetsTooltip';
+import { useToast } from '~/components/toast/BeetsToast';
 
 export default function ReliquaryMigrateModal() {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [migrationTarget, setMigrationTarget] = useState<number | undefined>(undefined);
-
+    const [steps, setSteps] = useState<TransactionStep[]>([]);
     const initialRef = useRef(null);
     const networkConfig = useNetworkConfig();
+    const { removeToast } = useToast();
 
     const { getToken } = useGetTokens();
     const legacyfBeets = getToken(networkConfig.fbeets.address);
 
-    const { legacyBptBalance, legacyFbeetsBalance, relicPositions } = useReliquary();
+    const { legacyBptBalance, legacyFbeetsBalance, relicPositions, refetchRelicPositions } = useReliquary();
     const { data: hasBatchRelayerApproval, isLoading: isLoadingBatchRelayerApproval } = useHasBatchRelayerApproval();
     const { staked, isLoading: isLoadingLegacyFbeetsBalance, unstaked } = useLegacyFBeetsBalance();
     const { reliquaryZap, ...reliquaryMigrateQuery } = useReliquaryZap('MIGRATE');
@@ -61,7 +63,7 @@ export default function ReliquaryMigrateModal() {
         data: allowances,
     } = useUserAllowances([legacyfBeets], networkConfig.balancer.vault);
 
-    const steps = useMemo<TransactionStep[]>(() => {
+    useEffect(() => {
         const _steps: TransactionStep[] = [
             {
                 id: 'reliquary-migrate',
@@ -104,7 +106,15 @@ export default function ReliquaryMigrateModal() {
             });
         }
 
-        return _steps;
+        if (
+            _steps.length < steps?.length ||
+            isLoadingBatchRelayerApproval ||
+            isLoadingUserAllowances ||
+            isLoadingLegacyFbeetsBalance
+        ) {
+            return;
+        }
+        setSteps(_steps);
     }, [
         hasBatchRelayerApproval,
         isLoadingBatchRelayerApproval,
@@ -116,6 +126,13 @@ export default function ReliquaryMigrateModal() {
     ]);
 
     const isComplete = legacyFbeetsBalance === 0 && parseFloat(legacyBptBalance) === 0;
+
+    const handleOnClose = () => {
+        if (isComplete) {
+            removeToast('migrate-fbeets');
+        }
+        onClose();
+    }
     return (
         <Box width={{ base: 'full', md: 'fit-content' }}>
             <Button variant="primary" onClick={onOpen} width={{ base: 'full', md: 'fit-content' }}>
@@ -170,7 +187,7 @@ export default function ReliquaryMigrateModal() {
                                     </BeetsBox>
                                 )}
                                 {!isComplete && relicPositions.length > 0 && (
-                                    <VStack width="full" alignItems='flex-start'>
+                                    <VStack width="full" alignItems="flex-start">
                                         <Text>Choose where to migrate your balance to:</Text>
                                         <Select
                                             value={migrationTarget}
@@ -202,8 +219,8 @@ export default function ReliquaryMigrateModal() {
                                 <Box width="full">
                                     <BeetsTransactionStepsSubmit
                                         // TODO implement hide hide modal
-                                        onCompleteButtonClick={onClose}
-                                        loadingButtonText="Migrate"
+                                        onCompleteButtonClick={handleOnClose}
+                                        loadingButtonText=""
                                         completeButtonText="Return"
                                         onSubmit={(id) => {
                                             if (id === 'unstake') {
@@ -213,10 +230,10 @@ export default function ReliquaryMigrateModal() {
                                                 reliquaryZap(reliquaryContractCalls);
                                             }
                                         }}
-                                        isLoading={reliquaryMigrateQuery.isSubmitting || unstakeQuery.isSubmitting}
+                                        isLoading={false}
                                         steps={steps}
                                         // TODO redirect to relic UI if not already there
-                                        onConfirmed={() => false}
+                                        onConfirmed={() => refetchRelicPositions()}
                                         queries={[
                                             { ...unstakeQuery, id: 'unstake' },
                                             { ...reliquaryMigrateQuery, id: 'reliquary-migrate' },
