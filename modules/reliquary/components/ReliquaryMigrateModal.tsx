@@ -119,8 +119,6 @@ export default function ReliquaryMigrateModal() {
         hasBatchRelayerApproval,
         isLoadingBatchRelayerApproval,
         isLoadingLegacyFbeetsBalance,
-        staked,
-        allowances,
         isLoadingUserAllowances,
         legacyfBeets,
     ]);
@@ -132,7 +130,7 @@ export default function ReliquaryMigrateModal() {
             removeToast('migrate-fbeets');
         }
         onClose();
-    }
+    };
     return (
         <Box width={{ base: 'full', md: 'fit-content' }}>
             <Button variant="primary" onClick={onOpen} width={{ base: 'full', md: 'fit-content' }}>
@@ -208,9 +206,7 @@ export default function ReliquaryMigrateModal() {
                                                     key={`migrate-to-${relic.relicId}`}
                                                     onClick={() => setMigrationTarget(parseInt(relic.relicId, 10))}
                                                 >
-                                                    <Box flex="1">
-                                                        Relic {relic.relicId} - Level {relic.level}
-                                                    </Box>
+                                                    Relic {relic.relicId} - Level {relic.level}
                                                 </option>
                                             ))}
                                         </Select>
