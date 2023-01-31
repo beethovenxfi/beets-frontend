@@ -124,6 +124,9 @@ export function BeetsTransactionStepsSubmit({
             ) : null}
             {steps && currentStep && currentStep.id === 'batch-relayer' && !complete ? (
                 <BeetsBatchRelayerApprovalButton
+                    onSubmitting={() => setStepStatus(currentStep.id, 'submitting')}
+                    onPending={() => setStepStatus(currentStep.id, 'pending')}
+                    onCanceled={() => setStepStatus(currentStep.id, 'current')}
                     onConfirmed={() => {
                         refetchBatchRelayerApproval();
                         internalOnConfirmed();
@@ -133,6 +136,9 @@ export function BeetsTransactionStepsSubmit({
             {/* reliquary */}
             {steps && currentStep && currentStep.id === 'batch-relayer-reliquary' && !complete ? (
                 <ReliquaryBatchRelayerApprovalButton
+                    onSubmitting={() => setStepStatus(currentStep.id, 'submitting')}
+                    onPending={() => setStepStatus(currentStep.id, 'pending')}
+                    onCanceled={() => setStepStatus(currentStep.id, 'current')}
                     onConfirmed={() => {
                         refetchBatchRelayerHasApprovedForAll();
                         internalOnConfirmed();

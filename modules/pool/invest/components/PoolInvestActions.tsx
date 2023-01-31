@@ -54,24 +54,33 @@ export function PoolInvestActions({ onInvestComplete, onClose, isReliquaryDeposi
     );
 
     // reliquary invest - disabled during the normal invest flow
-    const { createRelic } = useReliquary();
+    const { createRelic, refetchRelicPositions } = useReliquary();
     const { reliquaryZap, ...reliquaryJoinQuery } = useReliquaryZap('DEPOSIT');
     const { data: reliquaryContractCalls } = useReliquaryDepositContractCallData({
         investTokensWithAmounts: selectedInvestTokensWithAmounts,
         enabled: isReliquaryDeposit,
     });
-    const { data: batchRelayerHasApprovedForAll } = useBatchRelayerHasApprovedForAll();
+    const {
+        data: batchRelayerHasApprovedForAll,
+        isLoading: isLoadingBatchRelayerHasApprovedForAll,
+        refetch: refetchBatchRelayerHasApprovedForAll,
+    } = useBatchRelayerHasApprovedForAll();
 
     const { refetch: refetchUserTokenBalances } = usePoolUserTokenBalancesInWallet();
     const { refetch: refetchUserBptBalance } = usePoolUserBptBalance();
     const [userSyncBalance] = useUserSyncBalanceMutation();
 
-    const isLoading = isLoadingUserAllowances || isLoadingContractCallData || isLoadingBatchRelayerApproval;
+    const isLoading =
+        isLoadingUserAllowances ||
+        isLoadingContractCallData ||
+        isLoadingBatchRelayerApproval ||
+        isLoadingBatchRelayerHasApprovedForAll;
     const isBatchRelayerApprovalRequired =
         requiresBatchRelayerOnJoin || zapEnabled || !isReliquaryDeposit || createRelic;
 
     useEffect(() => {
         refetchBatchRelayerApproval({});
+        refetchBatchRelayerHasApprovedForAll({});
     }, []);
 
     useEffect(() => {
@@ -92,7 +101,7 @@ export function PoolInvestActions({ onInvestComplete, onClose, isReliquaryDeposi
                 investStep = {
                     id: 'reliquary-invest',
                     type: 'other',
-                    buttonText: 'Invest into your relic',
+                    buttonText: `Invest into ${createRelic ? 'a new' : 'your'} relic`,
                     tooltipText: 'Invest into fBeets and deposit into your relic',
                 };
             }
@@ -158,7 +167,9 @@ export function PoolInvestActions({ onInvestComplete, onClose, isReliquaryDeposi
                 pb={joinQuery.isConfirmed || joinQuery.isFailed || joinQuery.isPending ? '0' : '4'}
             >
                 <BeetsTransactionStepsSubmit
-                    isLoading={steps === null || isLoadingBatchRelayerApproval}
+                    isLoading={
+                        steps === null || isLoadingBatchRelayerApproval || isLoadingBatchRelayerHasApprovedForAll
+                    }
                     loadingButtonText="Invest"
                     completeButtonText={isReliquaryDeposit ? 'Return to maBEETS' : 'Return to pool'}
                     onCompleteButtonClick={onClose}
@@ -172,9 +183,10 @@ export function PoolInvestActions({ onInvestComplete, onClose, isReliquaryDeposi
                         }
                     }}
                     onConfirmed={(id) => {
-                        if (id !== 'invest') {
+                        if (id !== 'invest' && id !== 'reliquary-invest') {
                             refetchUserAllowances();
                         } else {
+                            refetchRelicPositions();
                             refetchUserTokenBalances();
                             refetchUserBptBalance();
                             userSyncBalance({ variables: { poolId: pool.id } });
