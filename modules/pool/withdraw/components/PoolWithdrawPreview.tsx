@@ -41,7 +41,7 @@ export function PoolWithdrawPreview({ onWithdrawComplete, onClose }: Props) {
     const { refetch } = usePoolUserBptBalance();
     const [userSyncBalance, { loading }] = useUserSyncBalanceMutation();
 
-    const { selectedRelic } = useReliquary();
+    const { selectedRelic, refetchRelicPositions } = useReliquary();
     const { data: reliquaryContractCalls } = useReliquaryWithdrawAndHarvestContractCallData({
         relicId: parseInt(selectedRelic?.relicId || ''),
         bptAmount: oldBnumToHumanReadable(
@@ -113,6 +113,7 @@ export function PoolWithdrawPreview({ onWithdrawComplete, onClose }: Props) {
                         onWithdrawComplete();
                         refetch();
                         userSyncBalance({ variables: { poolId: pool.id } });
+                        refetchRelicPositions();
                     }
                 }}
                 steps={[{ id: 'exit', tooltipText: '', type: 'other', buttonText: 'Withdraw' }]}
