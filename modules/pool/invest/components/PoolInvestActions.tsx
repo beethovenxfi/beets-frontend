@@ -158,7 +158,9 @@ export function PoolInvestActions({ onInvestComplete, onClose, isReliquaryDeposi
                 pb={joinQuery.isConfirmed || joinQuery.isFailed || joinQuery.isPending ? '0' : '4'}
             >
                 <BeetsTransactionStepsSubmit
-                    isLoading={steps === null || isLoadingBatchRelayerApproval}
+                    isLoading={
+                        steps === null || isLoadingBatchRelayerApproval || isLoadingBatchRelayerHasApprovedForAll
+                    }
                     loadingButtonText="Invest"
                     completeButtonText={isReliquaryDeposit ? 'Return to maBEETS' : 'Return to pool'}
                     onCompleteButtonClick={onClose}
