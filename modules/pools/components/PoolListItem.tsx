@@ -50,10 +50,12 @@ export function PoolListItem({
                         height={{ lg: '63.5px' }}
                         templateColumns={{
                             base: '1fr 1fr',
-                            lg: showUserBalance ? '90px 1fr 150px 200px 0px 200px' : '90px 1fr 100px 146px 200px 200px',
+                            lg: showUserBalance
+                                ? '90px 1fr 150px 200px 0px 200px 200px'
+                                : '90px 1fr 100px 146px 200px 200px 200px',
                             xl: showUserBalance
-                                ? '90px 1fr 150px 200px 200px 200px'
-                                : '90px 1fr 100px 146px 200px 200px',
+                                ? '90px 1fr 150px 200px 200px 200px 200px'
+                                : '90px 1fr 100px 146px 200px 200px 200px',
                         }}
                         gap="0"
                         templateAreas={
@@ -64,14 +66,14 @@ export function PoolListItem({
                                              "apr tvl"
                                              "fees volume"
                                              "icons icons"`,
-                                      lg: `"icons name userBalance tvl volume apr"`,
+                                      lg: `"icons name userBalance tvl volume fees apr"`,
                                   }
                                 : {
                                       base: `"name boosted"
                                              "apr tvl"
                                              "fees volume"
                                              "icons icons"`,
-                                      lg: `"icons name boosted tvl volume apr"`,
+                                      lg: `"icons name boosted tvl volume fees apr"`,
                                   }
                         }
                     >
@@ -139,6 +141,21 @@ export function PoolListItem({
                             </Text>
                         </StatGridItem>
                         <StatGridItem
+                            area="fees"
+                            display={
+                                showUserBalance
+                                    ? { base: 'block', lg: 'none', xl: 'flex' }
+                                    : { base: 'block', lg: 'flex' }
+                            }
+                            justifyContent="flex-end"
+                            alignItems="center"
+                        >
+                            <MobileLabel text="FEES (24H)" />
+                            <Text fontSize={{ base: 'xl', lg: 'md' }}>
+                                {numeral(pool.dynamicData.fees24h).format('$0,0')}
+                            </Text>
+                        </StatGridItem>
+                        <StatGridItem
                             area="apr"
                             display={{ base: 'block', lg: 'flex' }}
                             justifyContent={{ base: 'flex-start', lg: 'end' }}
@@ -149,12 +166,6 @@ export function PoolListItem({
                                 data={pool.dynamicData.apr}
                                 textProps={{ fontWeight: 'normal', fontSize: { base: 'xl', lg: 'md' } }}
                             />
-                        </StatGridItem>
-                        <StatGridItem area="fees" display={{ base: 'block', lg: 'none' }}>
-                            <MobileLabel text="FEES (24H)" />
-                            <Text fontSize={{ base: 'xl', lg: 'md' }}>
-                                {numeral(pool.dynamicData.fees24h).format('$0,0')}
-                            </Text>
                         </StatGridItem>
                     </Grid>
                 </a>

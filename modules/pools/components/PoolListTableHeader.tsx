@@ -20,8 +20,8 @@ export function PoolListTableHeader() {
                 mb={{ base: '4', lg: '0' }}
                 templateColumns={
                     showMyInvestments
-                        ? { base: '1fr 150px 200px 200px', xl: '1fr 150px 200px 200px 200px' }
-                        : '1fr 200px 200px 200px'
+                        ? { base: '1fr 150px 200px 200px 200px', xl: '1fr 150px 200px 200px 200px 200px' }
+                        : '1fr 200px 200px 200px 200px'
                 }
                 gap="0"
                 display={{ base: 'none', lg: 'grid' }}
@@ -67,6 +67,22 @@ export function PoolListTableHeader() {
                             title="Volume (24h)"
                             orderDirection={state.orderBy === 'volume24h' ? state.orderDirection : null}
                             onClick={() => changeSort('volume24h')}
+                        />
+                    )}
+                </GridItem>
+                <GridItem
+                    textAlign="right"
+                    display={showMyInvestments ? { base: 'block', lg: 'none', xl: 'block' } : 'block'}
+                >
+                    {showMyInvestments ? (
+                        <Text fontSize="md" fontWeight="semibold" color="beets.base.100">
+                            Fees (24h)
+                        </Text>
+                    ) : (
+                        <PoolListSortLink
+                            title="Fees (24h)"
+                            orderDirection={state.orderBy === 'fees24h' ? state.orderDirection : null}
+                            onClick={() => changeSort('fees24h')}
                         />
                     )}
                 </GridItem>
