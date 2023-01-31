@@ -10,6 +10,7 @@ import useReliquary from '~/modules/reliquary/lib/useReliquary';
 import { usePool } from '../../lib/usePool';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 import { useReliquaryDepositImpact } from '~/modules/reliquary/lib/useReliquaryDepositImpact';
+import formatDistanceToNow from 'date-fns/formatDistanceToNow';
 
 interface Props {
     onInvestComplete(): void;
@@ -34,6 +35,16 @@ export function PoolInvestPreview({ onInvestComplete, onClose, isReliquaryDeposi
 
     const { data: depositImpact, isLoading: depositImpactLoading } = useReliquaryDepositImpact(fBEETSAmountEstimate);
 
+    const isSameLevel = depositImpact?.newLevel === depositImpact?.oldLevel;
+    const isSameLevelText = isSameLevel
+        ? ' The relic maturity will stay the same.'
+        : ` The relic maturity will drop from level ${depositImpact?.oldLevel} to level ${depositImpact?.newLevel}.`;
+
+    const now = Date.now();
+    const newLevelProgress = depositImpact && depositImpact.newLevelProgress.split('/');
+    const newLevelProgressDiff = newLevelProgress && parseInt(newLevelProgress[1]) - parseInt(newLevelProgress[0]);
+    const newDate = depositImpact && newLevelProgressDiff && new Date(now + newLevelProgressDiff * 1000);
+
     return (
         <VStack spacing="4" width="full">
             <Box px="4" width="full">
@@ -41,12 +52,11 @@ export function PoolInvestPreview({ onInvestComplete, onClose, isReliquaryDeposi
                 {!createRelic && selectedRelic && isReliquaryFBeetsPool && (
                     <Box>
                         <Alert status="warning" mb="4">
-                            <AlertIcon />
-
-                            {!depositImpactLoading && depositImpact !== undefined ? (
-                                `Investing more funds into your relic will affect your level up progress. It will take you  ${
-                                    depositImpact?.oldMaturity - depositImpact?.newMaturity
-                                } more seconds to reach your next level after investing.`
+                            <AlertIcon alignSelf="center" />
+                            {!depositImpactLoading && depositImpact !== undefined && newDate ? (
+                                `Investing more funds into your relic will affect your level up progress.${isSameLevelText} After investing it will take you ${formatDistanceToNow(
+                                    newDate,
+                                )} to reach the next level.`
                             ) : (
                                 <SkeletonText noOfLines={3} spacing="4" skeletonHeight="2" />
                             )}

@@ -217,7 +217,7 @@ export class ReliquaryService {
 
         const weight = amount / (amount + parseFloat(position.amount));
 
-        const nowTimestamp = Date.now() / 1000;
+        const nowTimestamp = Math.floor(Date.now() / 1000);
 
         const maturity = nowTimestamp - position.entry;
         const entryTimestampAfterDeposit = Math.round(position.entry + maturity * weight);
