@@ -92,7 +92,7 @@ export function PoolInvestActions({ onInvestComplete, onClose, isReliquaryDeposi
                 investStep = {
                     id: 'reliquary-invest',
                     type: 'other',
-                    buttonText: 'Invest into your relic',
+                    buttonText: `Invest into ${createRelic ? 'a new' : 'your'} relic`,
                     tooltipText: 'Invest into fBeets and deposit into your relic',
                 };
             }
