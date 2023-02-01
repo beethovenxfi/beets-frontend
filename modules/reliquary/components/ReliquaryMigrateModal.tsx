@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import TokenRow from '~/components/token/TokenRow';
 import {
     Alert,
@@ -6,11 +6,6 @@ import {
     Box,
     Button,
     Heading,
-    HStack,
-    Menu,
-    MenuButton,
-    MenuItem,
-    MenuList,
     Modal,
     ModalOverlay,
     Select,
@@ -32,9 +27,6 @@ import { useReliquaryFbeetsMigrateContractCallData } from '../lib/useReliquaryFb
 import { useReliquaryZap } from '../lib/useReliquaryZap';
 import useReliquary from '../lib/useReliquary';
 import { BeetsBox } from '~/components/box/BeetsBox';
-import { ReliquaryFarmPosition } from '~/lib/services/staking/reliquary.service';
-import { ChevronDown } from 'react-feather';
-import BeetsTooltip from '~/components/tooltip/BeetsTooltip';
 import { useToast } from '~/components/toast/BeetsToast';
 
 export default function ReliquaryMigrateModal() {
