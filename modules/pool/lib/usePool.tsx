@@ -41,6 +41,31 @@ export function PoolProvider({ pool: poolFromProps, children }: { pool: GqlPoolU
     });
 
     const pool = (data?.pool || poolFromProps) as GqlPoolUnion;
+
+    // drop FTM as an invest option from the FreshBeets pool for now
+    let freshBeetsPool: GqlPoolUnion | null = null;
+    if (pool.address === networkConfig.reliquary.fbeets.poolAddress) {
+        const wFTMIndex = pool.investConfig.options.findIndex(
+            (option) => option.poolTokenAddress.toLowerCase() === networkConfig.wethAddress,
+        );
+        const filteredTokenOptions = pool.investConfig.options[wFTMIndex].tokenOptions.filter(
+            (option) => option.address.toLowerCase() !== networkConfig.eth.address.toLowerCase(),
+        );
+        freshBeetsPool = {
+            ...pool,
+            investConfig: {
+                ...pool.investConfig,
+                options: [
+                    {
+                        ...pool.investConfig.options[wFTMIndex],
+                        tokenOptions: filteredTokenOptions,
+                    },
+                    ...pool.investConfig.options.filter((option, index) => index !== wFTMIndex),
+                ],
+            },
+        };
+    }
+
     const poolService = poolGetServiceForPool(pool);
 
     const bpt: TokenBase = {
@@ -97,7 +122,7 @@ export function PoolProvider({ pool: poolFromProps, children }: { pool: GqlPoolU
     return (
         <PoolContext.Provider
             value={{
-                pool,
+                pool: freshBeetsPool ?? pool, // necessary for now because we're dropping FTM from the FreshBeets pool
                 poolService,
                 bpt,
                 allTokens,
