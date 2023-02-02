@@ -1,6 +1,5 @@
 import { Alert, AlertIcon, Box, SkeletonText, StackDivider, VStack } from '@chakra-ui/react';
 import { BeetsBox } from '~/components/box/BeetsBox';
-import { useGetTokens } from '~/lib/global/useToken';
 import { useInvest } from '~/modules/pool/invest/lib/useInvest';
 import { PoolInvestSummary } from '~/modules/pool/invest/components/PoolInvestSummary';
 import { PoolInvestActions } from '~/modules/pool/invest/components/PoolInvestActions';
@@ -10,7 +9,9 @@ import useReliquary from '~/modules/reliquary/lib/useReliquary';
 import { usePool } from '../../lib/usePool';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 import { useReliquaryDepositImpact } from '~/modules/reliquary/lib/useReliquaryDepositImpact';
-import formatDistanceToNow from 'date-fns/formatDistanceToNow';
+import formatDistanceToNowStrict from 'date-fns/formatDistanceToNowStrict';
+import { numberFormatUSDValue } from '~/lib/util/number-formats';
+import { usePoolJoinGetBptOutAndPriceImpactForTokensIn } from '../lib/usePoolJoinGetBptOutAndPriceImpactForTokensIn';
 
 interface Props {
     onInvestComplete(): void;
@@ -19,31 +20,19 @@ interface Props {
 }
 
 export function PoolInvestPreview({ onInvestComplete, onClose, isReliquaryDeposit }: Props) {
-    const { priceForAmount } = useGetTokens();
     const { selectedInvestTokensWithAmounts } = useInvest();
     const networkConfig = useNetworkConfig();
     const { selectedRelic, createRelic } = useReliquary();
     const { pool } = usePool();
+    const { totalInvestValue } = useInvest();
+    const { bptOutAndPriceImpact, isLoading: bptOutAndPriceImpactLoading } =
+        usePoolJoinGetBptOutAndPriceImpactForTokensIn();
+
     const isReliquaryFBeetsPool = pool.id === networkConfig.reliquary.fbeets.poolId;
 
-    const totalInvestAmount = selectedInvestTokensWithAmounts.reduce(
-        (total, { address, amount }) => total + priceForAmount({ address, amount }),
-        0,
+    const { data: depositImpact, isLoading: depositImpactLoading } = useReliquaryDepositImpact(
+        parseFloat(bptOutAndPriceImpact?.minBptReceived || ''),
     );
-    const fBEETSPrice = priceForAmount({ address: networkConfig.fbeets.address, amount: '1' });
-    const fBEETSAmountEstimate = totalInvestAmount / fBEETSPrice;
-
-    const { data: depositImpact, isLoading: depositImpactLoading } = useReliquaryDepositImpact(fBEETSAmountEstimate);
-
-    const isSameLevel = depositImpact?.newLevel === depositImpact?.oldLevel;
-    const isSameLevelText = isSameLevel
-        ? ' The relic maturity will stay the same.'
-        : ` The relic maturity will drop from level ${depositImpact?.oldLevel} to level ${depositImpact?.newLevel}.`;
-
-    const now = Date.now();
-    const newLevelProgress = depositImpact && depositImpact.newLevelProgress.split('/');
-    const newLevelProgressDiff = newLevelProgress && parseInt(newLevelProgress[1]) - parseInt(newLevelProgress[0]);
-    const newDate = depositImpact && newLevelProgressDiff && new Date(now + newLevelProgressDiff * 1000);
 
     return (
         <VStack spacing="4" width="full">
@@ -53,10 +42,12 @@ export function PoolInvestPreview({ onInvestComplete, onClose, isReliquaryDeposi
                     <Box>
                         <Alert status="warning" mb="4">
                             <AlertIcon alignSelf="center" />
-                            {!depositImpactLoading && depositImpact !== undefined && newDate ? (
-                                `Investing more funds into your relic will affect your level up progress.${isSameLevelText} After investing it will take you ${formatDistanceToNow(
-                                    newDate,
-                                )} to reach the next level.`
+                            {!depositImpactLoading && !bptOutAndPriceImpactLoading && depositImpact !== undefined ? (
+                                `Investing ${numberFormatUSDValue(
+                                    totalInvestValue,
+                                )} into this relic will affect its maturity. It will take an additional ${formatDistanceToNowStrict(
+                                    depositImpact.diffDate,
+                                )} to reach maximum maturity.`
                             ) : (
                                 <SkeletonText noOfLines={3} spacing="4" skeletonHeight="2" />
                             )}
