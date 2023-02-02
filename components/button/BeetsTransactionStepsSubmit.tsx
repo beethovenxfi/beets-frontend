@@ -42,6 +42,8 @@ interface Props {
     steps: TransactionStep[];
     queries: (Omit<SubmitTransactionQuery, 'submit' | 'submitAsync'> & { id: string })[];
     buttonSize?: string;
+
+    onComplete?: () => void;
 }
 
 export function BeetsTransactionStepsSubmit({
@@ -52,6 +54,7 @@ export function BeetsTransactionStepsSubmit({
     steps,
     onSubmit,
     onConfirmed,
+    onComplete,
     queries,
     isDisabled,
     buttonSize = 'lg',
@@ -95,6 +98,10 @@ export function BeetsTransactionStepsSubmit({
             setCurrentStepIdx(currentStepIdx + 1);
         }
     }
+
+    useEffect(() => {
+        onComplete && onComplete();
+    }, [complete]);
 
     return (
         <Box>

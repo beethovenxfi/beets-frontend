@@ -32,6 +32,7 @@ import { useToast } from '~/components/toast/BeetsToast';
 export default function ReliquaryMigrateModal() {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [migrationTarget, setMigrationTarget] = useState<number | undefined>(undefined);
+    const [migrateCompleted, setMigrateCompleted] = useState(false);
     const [steps, setSteps] = useState<TransactionStep[]>([]);
     const initialRef = useRef(null);
     const networkConfig = useNetworkConfig();
@@ -121,13 +122,17 @@ export default function ReliquaryMigrateModal() {
         legacyfBeets,
     ]);
 
-    const isComplete = legacyFbeetsBalance === 0 && !isLoadingLegacyFbeetsBalance;
+    const isComplete = legacyFbeetsBalance === 0 && !isLoadingLegacyFbeetsBalance && migrateCompleted;
 
     const handleOnClose = () => {
         if (isComplete) {
             removeToast('migrate-fbeets');
         }
         onClose();
+    };
+
+    const handleCompleteMigrate = () => {
+        setMigrateCompleted(true);
     };
     return (
         <Box width={{ base: 'full', md: 'fit-content' }}>
@@ -208,6 +213,7 @@ export default function ReliquaryMigrateModal() {
                                     <BeetsTransactionStepsSubmit
                                         // TODO implement hide hide modal
                                         onCompleteButtonClick={handleOnClose}
+                                        onComplete={handleCompleteMigrate}
                                         loadingButtonText=""
                                         completeButtonText="Return"
                                         onSubmit={(id) => {

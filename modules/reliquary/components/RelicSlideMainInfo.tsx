@@ -74,7 +74,7 @@ export default function RelicSlideMainInfo({ isLoading, openInvestModal, openWit
                             <VStack spacing="0" h="50%" w="full" pt={{ base: '1', lg: undefined }}>
                                 <VStack spacing="0" w="full" alignItems="flex-start">
                                     <Text lineHeight="1rem" fontWeight="semibold" fontSize="md" color="beets.base.50">
-                                        Relic progress
+                                        Level up progress
                                     </Text>
                                     <VStack alignItems="flex-start" w="full">
                                         <HStack spacing="1" color="beets.green">
