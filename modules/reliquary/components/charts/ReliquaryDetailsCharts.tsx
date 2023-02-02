@@ -21,11 +21,16 @@ export function ReliquaryDetailsCharts() {
 
     return (
         <Card height="full" p="4">
-            <HStack padding={{ base: '2', lg: '2' }} pb="0" justify={{ base: 'space-between', lg: 'flex-start' }}>
+            <HStack
+                spacing={{ base: '0', lg: '1' }}
+                padding={{ base: '0', lg: '2' }}
+                pb="0"
+                justify={{ base: 'space-between', lg: 'flex-start' }}
+            >
                 <Select
                     value={chartType}
                     onChange={(e) => setChartType(e.currentTarget.value as ChartType)}
-                    width="180px"
+                    width={{ base: '165px', lg: '180px' }}
                     variant="filled"
                 >
                     <option value="REL_MAT">Relic maturity</option>
@@ -34,9 +39,10 @@ export function ReliquaryDetailsCharts() {
                 </Select>
                 {chartType !== 'REL_MAT' && (
                     <Select
+                        pl={{ base: '1', lg: undefined }}
                         value={range}
                         onChange={(e) => setRange(e.currentTarget.value as GqlPoolSnapshotDataRange)}
-                        width="160px"
+                        width={{ base: '155px', lg: '160px' }}
                         variant="filled"
                     >
                         <option value="THIRTY_DAYS">last 30 days</option>
