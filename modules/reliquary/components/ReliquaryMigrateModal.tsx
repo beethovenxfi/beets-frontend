@@ -28,6 +28,7 @@ import { useReliquaryZap } from '../lib/useReliquaryZap';
 import useReliquary from '../lib/useReliquary';
 import { BeetsBox } from '~/components/box/BeetsBox';
 import { useToast } from '~/components/toast/BeetsToast';
+import { useBatchRelayerHasApprovedForAll } from '../lib/useBatchRelayerHasApprovedForAll';
 
 export default function ReliquaryMigrateModal() {
     const { isOpen, onOpen, onClose } = useDisclosure();
@@ -61,6 +62,8 @@ export default function ReliquaryMigrateModal() {
         isLoading: isLoadingUserAllowances,
         data: allowances,
     } = useUserAllowances([legacyfBeets], networkConfig.balancer.vault);
+    const { data: batchRelayerHasApprovedForAll, isLoading: isLoadingBatchRelayerApprovalForAll } =
+        useBatchRelayerHasApprovedForAll();
 
     useEffect(() => {
         if (!migratableBalance) {
@@ -85,6 +88,15 @@ export default function ReliquaryMigrateModal() {
                 type: 'other',
                 buttonText: 'Approve Batch Relayer',
                 tooltipText: 'The migration flow requires you to approve the batch relayer.',
+            });
+        }
+
+        if (!batchRelayerHasApprovedForAll) {
+            _steps.unshift({
+                id: 'batch-relayer-reliquary',
+                type: 'other',
+                buttonText: 'Approve Batch Relayer for all Relics',
+                tooltipText: 'This will approve the batch relayer for all future relic interactions.',
             });
         }
 
@@ -114,6 +126,7 @@ export default function ReliquaryMigrateModal() {
         if (
             _steps.length < steps?.length ||
             isLoadingBatchRelayerApproval ||
+            isLoadingBatchRelayerApprovalForAll ||
             isLoadingUserAllowances ||
             isLoadingLegacyFbeetsBalance
         ) {
@@ -123,6 +136,7 @@ export default function ReliquaryMigrateModal() {
     }, [
         hasBatchRelayerApproval,
         isLoadingBatchRelayerApproval,
+        isLoadingBatchRelayerApprovalForAll,
         isLoadingLegacyFbeetsBalance,
         isLoadingUserAllowances,
         legacyfBeets,
