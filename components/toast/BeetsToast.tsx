@@ -1,10 +1,9 @@
 import { Box } from '@chakra-ui/layout';
 import { Portal } from '@chakra-ui/portal';
 import { CloseButton, HStack, Spinner, useBreakpointValue } from '@chakra-ui/react';
-import { animate, AnimatePresence, animateVisualElement, motion, useAnimation } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import { sum } from 'lodash';
-import React, { ReactNode, useCallback, useContext, useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { Check } from 'react-feather';
+import React, { ReactNode, useContext, useRef, useState } from 'react';
 
 interface Props {
     children: ReactNode | ReactNode[];
@@ -58,7 +57,7 @@ export default function BeetsToast({ children }: Props) {
         setContainerHeight(height);
 
         setToastList([
-            ...toastList,
+            ...toastListRef.current,
             {
                 ...toast,
                 type: toast.type || ToastType.Info,
@@ -83,8 +82,9 @@ export default function BeetsToast({ children }: Props) {
     };
 
     function removeToast(id: string) {
+        console.log('ding', id);
         if (!toastListRef.current.length) return;
-
+        console.log('dong');
         let indexOfEl = toastList.findIndex((toast) => toast.id === id);
         let heightOfEl = toastContainerRef.current[indexOfEl]?.offsetHeight || 0;
 

@@ -100,7 +100,9 @@ export function BeetsTransactionStepsSubmit({
     }
 
     useEffect(() => {
-        onComplete && onComplete();
+        if (complete) {
+            onComplete && onComplete();
+        }
     }, [complete]);
 
     return (

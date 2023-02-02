@@ -33,15 +33,15 @@ export default function ReliquaryMigrateModal() {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [migrationTarget, setMigrationTarget] = useState<number | undefined>(undefined);
     const [migrateCompleted, setMigrateCompleted] = useState(false);
+    const [migratableBalance, setMigratableBalance] = useState(0);
     const [steps, setSteps] = useState<TransactionStep[]>([]);
     const initialRef = useRef(null);
     const networkConfig = useNetworkConfig();
     const { removeToast } = useToast();
-
     const { getToken } = useGetTokens();
     const legacyfBeets = getToken(networkConfig.fbeets.address);
 
-    const { legacyBptBalance, legacyFbeetsBalance, relicPositions, refetchRelicPositions } = useReliquary();
+    const { legacyFbeetsBalance, relicPositions, refetchRelicPositions } = useReliquary();
     const { data: hasBatchRelayerApproval, isLoading: isLoadingBatchRelayerApproval } = useHasBatchRelayerApproval();
     const {
         staked,
@@ -61,6 +61,12 @@ export default function ReliquaryMigrateModal() {
         isLoading: isLoadingUserAllowances,
         data: allowances,
     } = useUserAllowances([legacyfBeets], networkConfig.balancer.vault);
+
+    useEffect(() => {
+        if (!migratableBalance) {
+            setMigratableBalance(legacyFbeetsBalance);
+        }
+    }, [legacyFbeetsBalance]);
 
     useEffect(() => {
         const _steps: TransactionStep[] = [
@@ -122,7 +128,7 @@ export default function ReliquaryMigrateModal() {
         legacyfBeets,
     ]);
 
-    const isComplete = legacyFbeetsBalance === 0 && !isLoadingLegacyFbeetsBalance && migrateCompleted;
+    const isComplete = !isLoadingLegacyFbeetsBalance && migrateCompleted;
 
     const handleOnClose = () => {
         if (isComplete) {
@@ -172,7 +178,7 @@ export default function ReliquaryMigrateModal() {
                                             divider={<StackDivider borderColor="whiteAlpha.200" />}
                                             p="4"
                                         >
-                                            {legacyFbeetsBalance > 0 && (
+                                            {migratableBalance > 0 && (
                                                 <TokenRow
                                                     address={networkConfig.fbeets.address}
                                                     amount={legacyFbeetsBalance.toString()}
