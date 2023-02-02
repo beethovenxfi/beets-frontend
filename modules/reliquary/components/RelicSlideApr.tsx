@@ -32,6 +32,7 @@ import BeetsTooltip from '~/components/tooltip/BeetsTooltip';
 import { motion } from 'framer-motion';
 import { useBatchRelayerHasApprovedForAll } from '../lib/useBatchRelayerHasApprovedForAll';
 import RelicMaturityModal from './RelicMaturityModal';
+import { BarChart } from 'react-feather';
 
 interface Props {}
 
@@ -89,24 +90,26 @@ export default function RelicSlideApr(props: Props) {
                         <div className="apr-stripes">{numeral(selectedRelicApr).format('0.00%')}</div>
                         <AprTooltip onlySparkles data={pool.dynamicData.apr} />
                     </HStack>
-                    <BeetsTooltip noImage label="Click here to see the maturity curve.">
+                    <HStack>
                         <HStack
-                            as="button"
                             px="3"
                             py="0.5"
                             rounded="md"
                             backgroundColor="beets.light"
                             width={{ base: 'min-content' }}
                             whiteSpace="nowrap"
-                            _hover={{ background: 'beets.base.300' }}
-                            onClick={onOpen}
                         >
                             <Text fontWeight="semibold">Maturity boost</Text>
                             <Badge bg="none" colorScheme="green" p="1">
                                 {selectedRelicLevel?.allocationPoints}x
                             </Badge>
                         </HStack>
-                    </BeetsTooltip>
+                        <BeetsTooltip noImage label="Click here to see the maturity curve.">
+                            <Button onClick={onOpen} height="full" p="1.5">
+                                <BarChart height="18px" />
+                            </Button>
+                        </BeetsTooltip>
+                    </HStack>
                     <Spacer />
                     <Divider />
                 </VStack>
