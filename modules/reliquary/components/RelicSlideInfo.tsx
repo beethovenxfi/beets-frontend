@@ -105,7 +105,7 @@ export default function RelicSlideInfo(props: Props) {
                             {' / '}
                             {numeral(weightedTotalBalance).format('0.00a')}{' '}
                             <Text as="span" fontSize="md" color="beets.base.50">
-                                weighted fBEETS
+                                maBEETS
                             </Text>
                         </Text>
                     )}

@@ -16,7 +16,7 @@ import ReliquaryLanding from '~/modules/reliquary/ReliquaryLanding';
 interface Props {
     pool: GqlPoolUnion;
 }
-function Stake({ pool }: Props) {
+function MaBEETS({ pool }: Props) {
     const { chainId } = useNetworkConfig();
 
     const TITLE = 'Beethoven X | Reliquary';
@@ -69,4 +69,4 @@ export async function getStaticProps({ params }: { params: { poolId: string } })
     });
 }
 
-export default Stake;
+export default MaBEETS;
