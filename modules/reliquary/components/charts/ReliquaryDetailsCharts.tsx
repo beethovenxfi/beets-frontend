@@ -9,11 +9,12 @@ import { networkConfig } from '~/lib/config/network-config';
 import { ReliquaryMaturityChart } from './ReliquaryMaturityChart';
 import { ReliquaryLiquidityChart } from './ReliquaryLiquidityChart';
 import { ReliquaryRelicsCountChart } from './ReliquaryRelicsCountChart';
+import { ReliquaryMaBEETSLevelChart } from './ReliquaryMaBEETSLevelChart';
 
-type ChartType = 'REL_MAT' | 'RELICS' | 'TVL';
+type ChartType = 'FB_LEV' | 'RELICS' | 'TVL' | 'MAB_LEV';
 
 export function ReliquaryDetailsCharts() {
-    const [chartType, setChartType] = useState<ChartType>('REL_MAT');
+    const [chartType, setChartType] = useState<ChartType>('FB_LEV');
     const [range, setRange] = useState<GqlPoolSnapshotDataRange>('THIRTY_DAYS');
     const { data } = useGetReliquaryFarmSnapshotsQuery({
         variables: { id: networkConfig.reliquary.fbeets.farmId.toString(), range },
@@ -33,11 +34,12 @@ export function ReliquaryDetailsCharts() {
                     width={{ base: '165px', lg: '180px' }}
                     variant="filled"
                 >
-                    <option value="REL_MAT">Relic maturity</option>
+                    <option value="FB_LEV">fBEETS ??</option>
+                    <option value="MAB_LEV">maBEETS ??</option>
                     <option value="RELICS">Relics</option>
                     <option value="TVL">TVL</option>
                 </Select>
-                {chartType !== 'REL_MAT' && (
+                {chartType !== 'FB_LEV' && chartType !== 'MAB_LEV' && (
                     <Select
                         pl={{ base: '1', lg: undefined }}
                         value={range}
@@ -54,7 +56,8 @@ export function ReliquaryDetailsCharts() {
                 )}
             </HStack>
             <Box height="full">
-                {chartType === 'REL_MAT' && <ReliquaryMaturityChart />}
+                {chartType === 'FB_LEV' && <ReliquaryMaturityChart />}
+                {chartType === 'MAB_LEV' && <ReliquaryMaBEETSLevelChart />}
                 {chartType === 'TVL' && <ReliquaryLiquidityChart data={data?.snapshots || []} />}
                 {chartType === 'RELICS' && <ReliquaryRelicsCountChart data={data?.snapshots || []} />}
             </Box>
