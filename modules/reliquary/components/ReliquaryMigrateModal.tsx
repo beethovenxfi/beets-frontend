@@ -42,7 +42,13 @@ export default function ReliquaryMigrateModal() {
 
     const { legacyBptBalance, legacyFbeetsBalance, relicPositions, refetchRelicPositions } = useReliquary();
     const { data: hasBatchRelayerApproval, isLoading: isLoadingBatchRelayerApproval } = useHasBatchRelayerApproval();
-    const { staked, isLoading: isLoadingLegacyFbeetsBalance, unstaked } = useLegacyFBeetsBalance();
+    const {
+        staked,
+        isLoading: isLoadingLegacyFbeetsBalance,
+        unstaked,
+        refetchLegacyFbeetsBalance,
+        refetchStakedBalance,
+    } = useLegacyFBeetsBalance();
     const { reliquaryZap, ...reliquaryMigrateQuery } = useReliquaryZap('MIGRATE');
     const { data: reliquaryContractCalls } = useReliquaryFbeetsMigrateContractCallData(migrationTarget);
     // TODO FIX TYPE
@@ -115,7 +121,8 @@ export default function ReliquaryMigrateModal() {
         legacyfBeets,
     ]);
 
-    const isComplete = legacyFbeetsBalance === 0;
+    const isComplete = legacyFbeetsBalance === 0 && !isLoadingLegacyFbeetsBalance;
+
     const handleOnClose = () => {
         if (isComplete) {
             removeToast('migrate-fbeets');
@@ -214,7 +221,11 @@ export default function ReliquaryMigrateModal() {
                                         isLoading={false}
                                         steps={steps}
                                         // TODO redirect to relic UI if not already there
-                                        onConfirmed={() => refetchRelicPositions()}
+                                        onConfirmed={() => {
+                                            refetchRelicPositions();
+                                            refetchLegacyFbeetsBalance();
+                                            refetchStakedBalance();
+                                        }}
                                         queries={[
                                             { ...unstakeQuery, id: 'unstake' },
                                             { ...reliquaryMigrateQuery, id: 'reliquary-migrate' },

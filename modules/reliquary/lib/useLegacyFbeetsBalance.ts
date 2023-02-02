@@ -11,14 +11,20 @@ export function useLegacyFBeetsBalance() {
     const { userAddress } = useUserAccount();
     const provider = useProvider();
     const networkConfig = useNetworkConfig();
-    const { userBalances: legacyBalances = [], isLoading: isLoadingLegacyBalances } = useUserBalances([
-        networkConfig.fbeets.address,
-    ]);
+    const {
+        userBalances: legacyBalances = [],
+        isLoading: isLoadingLegacyBalances,
+        refetch: refetchLegacyFbeetsBalance,
+    } = useUserBalances([networkConfig.fbeets.address]);
 
     const userBalancesMap = keyBy(legacyBalances, 'address');
     const legacyFbeetsBalance = userBalancesMap[networkConfig.fbeets.address]?.amount || '0';
 
-    const { data: stakedBalance = '0', isLoading: isLoadingStakedBalance } = useQuery(
+    const {
+        data: stakedBalance = '0',
+        isLoading: isLoadingStakedBalance,
+        refetch: refetchStakedBalance,
+    } = useQuery(
         ['legacyFbeetsBalances', userAddress || ''],
         async (): Promise<AmountHumanReadable> => {
             if (!userAddress) {
@@ -42,5 +48,7 @@ export function useLegacyFBeetsBalance() {
         unstaked: legacyFbeetsBalance,
         isLoading: isLoadingStakedBalance || isLoadingLegacyBalances,
         total: parseFloat(stakedBalance || '0') + parseFloat(legacyFbeetsBalance || '0'),
+        refetchLegacyFbeetsBalance,
+        refetchStakedBalance,
     };
 }
