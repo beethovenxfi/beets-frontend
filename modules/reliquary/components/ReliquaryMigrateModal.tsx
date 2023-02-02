@@ -115,8 +115,7 @@ export default function ReliquaryMigrateModal() {
         legacyfBeets,
     ]);
 
-    const isComplete = legacyFbeetsBalance === 0 && parseFloat(legacyBptBalance) === 0;
-
+    const isComplete = legacyFbeetsBalance === 0;
     const handleOnClose = () => {
         if (isComplete) {
             removeToast('migrate-fbeets');
@@ -165,12 +164,6 @@ export default function ReliquaryMigrateModal() {
                                                 <TokenRow
                                                     address={networkConfig.fbeets.address}
                                                     amount={legacyFbeetsBalance.toString()}
-                                                />
-                                            )}
-                                            {parseFloat(legacyBptBalance) > 0 && (
-                                                <TokenRow
-                                                    address={networkConfig.fbeets.poolAddress}
-                                                    amount={legacyBptBalance}
                                                 />
                                             )}
                                         </VStack>

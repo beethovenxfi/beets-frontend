@@ -21,7 +21,6 @@ export function useReliquaryFbeetsMigrateContractCallData(relicId: number | unde
                 userAddress: userAddress || '',
                 fbeetsAmount: fbeetsBalance,
                 slippage,
-                //TODO: set a relic id here if the user already has a relic
                 relicId: relicId || undefined,
             });
         },
