@@ -3,20 +3,21 @@ import { Highlight } from '@chakra-ui/react';
 export function ReliquaryWithdrawDescription() {
     return (
         <>
-            <Highlight query={['sit amet', 'tempor incididunt']} styles={{ fontWeight: 'bold', color: 'white' }}>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
-                dolore magna aliqua.
+            <Highlight
+                query={['Withdrawing proportionally', 'not', 'price impact']}
+                styles={{ fontWeight: 'bold', color: 'white' }}
+            >
+                Withdrawing proportionally from this relic ensures you will not be subject to the potential fees caused
+                by price impact.
             </Highlight>
             <br />
             <br />
-            <Highlight query={['sit amet', 'tempor incididunt']} styles={{ fontWeight: 'bold', color: 'white' }}>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
-                dolore magna aliqua.
+            <Highlight query={['single asset', 'not', 'later']} styles={{ fontWeight: 'bold', color: 'white' }}>
+                For now withdrawing in a single asset is not available. This will be implemented at a later date.
             </Highlight>
             <br />
             <br />
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
-            dolore magna aliqua.
+            When withdrawing from any relic, your fBEETS are exchanged for the underlying assets.
         </>
     );
 }
