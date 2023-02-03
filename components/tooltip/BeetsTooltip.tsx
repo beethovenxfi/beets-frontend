@@ -13,7 +13,7 @@ interface Props {
 
 function BeetsTooltipLabel({ label, noImage }: { label: ReactNode | ReactNode[]; noImage: boolean }) {
     return (
-        <HStack>
+        <HStack alignItems='flex-start'>
             {!noImage && (
                 <Box>
                     <Image src={BeetsThinking} alt="thinking-emoji" />
