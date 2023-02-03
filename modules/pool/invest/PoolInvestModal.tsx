@@ -134,12 +134,12 @@ export function PoolInvestModal({
     }, [modalState]);
 
     return (
-        <Box width={isReliquaryFBeetsPool ? 'full' : { base: 'full', md: 'fit-content' }}>
+        <Box width={isReliquaryFBeetsPool && createRelic ? 'full' : { base: 'full', md: 'fit-content' }}>
             {!noActivator && (
                 <Button
                     variant="primary"
                     onClick={onModalOpen}
-                    width={isReliquaryFBeetsPool ? 'full' : { base: 'full', md: '140px' }}
+                    width={isReliquaryFBeetsPool && createRelic ? 'full' : { base: 'full', md: '140px' }}
                     {...activatorProps}
                 >
                     {isReliquaryFBeetsPool && createRelic ? 'Get maBEETS' : activatorLabel || 'Invest'}
