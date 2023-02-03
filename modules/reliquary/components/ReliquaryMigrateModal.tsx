@@ -223,7 +223,7 @@ export default function ReliquaryMigrateModal() {
                                                     key={`migrate-to-${relic.relicId}`}
                                                     onClick={() => setMigrationTarget(parseInt(relic.relicId, 10))}
                                                 >
-                                                    Relic {relic.relicId} - Level {relic.level}
+                                                    Relic {relic.relicId} - Level {relic.level + 1}
                                                 </option>
                                             ))}
                                         </Select>
