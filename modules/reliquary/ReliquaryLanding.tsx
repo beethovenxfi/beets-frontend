@@ -138,7 +138,7 @@ export default function ReliquaryLanding() {
                 </VStack>
                 <VStack width="full" py="4" spacing="8" mt={{ base: '32rem', lg: '16' }}>
                     <VStack width="full" alignItems="flex-start">
-                        <Heading size="lg">All relics stats</Heading>
+                        <Heading size="lg">All relics</Heading>
                     </VStack>
                     <ReliquaryGlobalStats />
                 </VStack>
