@@ -11,6 +11,8 @@ export function relicGetMaturityProgress(relic: ReliquaryFarmPosition | null, ma
             levelUpDate: new Date(),
         };
     }
+
+    const weekInSeconds = 60 * 60 * 24 * 7;
     const relicMaturityStart = relic.entry;
     const timeElapsedSinceStart = Date.now() / 1000 - relicMaturityStart;
     // reverse the maturities because otherwise findIndex will always be 0
@@ -28,13 +30,11 @@ export function relicGetMaturityProgress(relic: ReliquaryFarmPosition | null, ma
 
     const currentLevelMaturity = parseInt(maturities[relic.level], 10);
     const timeElapsedSinceCurrentLevel = Date.now() / 1000 - (currentLevelMaturity + relic.entry);
-    const timeBetweenCurrentAndNextLevel = isMaxMaturity ? 3600 : parseInt(maturities[relic.level + 1], 10);
-    const progressToNextLevel = canUpgrade
-        ? 100
-        : (timeElapsedSinceCurrentLevel / timeBetweenCurrentAndNextLevel) * 100;
+    const timeBetweenEntryAndNextLevel = isMaxMaturity ? 3600 : parseInt(maturities[relic.level + 1], 10);
+    const progressToNextLevel = canUpgrade ? 100 : (timeElapsedSinceCurrentLevel / weekInSeconds) * 100;
 
     const entryDate = fromUnixTime(relicMaturityStart);
-    const levelUpDate = addSeconds(entryDate, timeBetweenCurrentAndNextLevel);
+    const levelUpDate = addSeconds(entryDate, timeBetweenEntryAndNextLevel);
     return {
         canUpgrade,
         canUpgradeTo,
