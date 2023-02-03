@@ -65,7 +65,7 @@ export function ReliquaryMaBEETSLevelChart() {
                 {
                     data: pool.staking?.reliquary?.levels?.map((level) => [
                         level.level + 1,
-                        parseInt(level.balance) * (level.allocationPoints / 100),
+                        parseFloat(level.balance) * level.allocationPoints,
                     ]),
                     type: 'bar',
                     itemStyle: {
