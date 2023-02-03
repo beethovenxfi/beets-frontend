@@ -7,14 +7,12 @@ import {
     Button,
     Heading,
     HStack,
-    ListIcon,
     ListItem,
     Modal,
     ModalOverlay,
     Select,
     StackDivider,
     Text,
-    Tooltip,
     UnorderedList,
     useDisclosure,
     VStack,
@@ -34,7 +32,6 @@ import useReliquary from '../lib/useReliquary';
 import { BeetsBox } from '~/components/box/BeetsBox';
 import { useToast } from '~/components/toast/BeetsToast';
 import { useBatchRelayerHasApprovedForAll } from '../lib/useBatchRelayerHasApprovedForAll';
-import { Info } from 'react-feather';
 import BeetsTooltip from '~/components/tooltip/BeetsTooltip';
 import BeetsThinking from '~/assets/icons/beetx-thinking.svg';
 
@@ -53,11 +50,7 @@ export default function ReliquaryMigrateModal() {
     const legacyfBeets = getToken(networkConfig.fbeets.address);
 
     const { legacyFbeetsBalance, relicPositions, refetchRelicPositions } = useReliquary();
-    const {
-        data: hasBatchRelayerApproval,
-        isLoading: isLoadingBatchRelayerApproval,
-        refetch: refetchBatchRelayerApproval,
-    } = useHasBatchRelayerApproval();
+    const { data: hasBatchRelayerApproval, isLoading: isLoadingBatchRelayerApproval } = useHasBatchRelayerApproval();
     const {
         staked,
         isLoading: isLoadingLegacyFbeetsBalance,
@@ -66,24 +59,22 @@ export default function ReliquaryMigrateModal() {
         refetchStakedBalance,
     } = useLegacyFBeetsBalance();
     const { reliquaryZap, ...reliquaryMigrateQuery } = useReliquaryZap('MIGRATE');
-    const { data: reliquaryContractCalls } = useReliquaryFbeetsMigrateContractCallData(migrationTarget);
     // TODO FIX TYPE
     const { withdraw, ...unstakeQuery } = useStakingWithdraw({
         farm: { id: networkConfig.fbeets.farmId, type: 'FRESH_BEETS' },
     } as any);
-    const {
-        hasApprovalForAmount,
-        isLoading: isLoadingUserAllowances,
-        data: allowances,
-        refetch: refetchApprovalForAmount,
-    } = useUserAllowances([legacyfBeets], networkConfig.balancer.vault);
-    const {
-        data: batchRelayerHasApprovedForAll,
-        isLoading: isLoadingBatchRelayerApprovalForAll,
-        refetch: refetchBatchRelayerHasApprovedForAll,
-    } = useBatchRelayerHasApprovedForAll();
-
+    const { hasApprovalForAmount, isLoading: isLoadingUserAllowances } = useUserAllowances(
+        [legacyfBeets],
+        networkConfig.balancer.vault,
+    );
+    const { data: batchRelayerHasApprovedForAll, isLoading: isLoadingBatchRelayerApprovalForAll } =
+        useBatchRelayerHasApprovedForAll();
     const hasApprovalForFbeetsAmount = hasApprovalForAmount(networkConfig.fbeets.address, unstaked);
+
+    const { data: reliquaryContractCalls } = useReliquaryFbeetsMigrateContractCallData(
+        migrationTarget,
+        isOpen && hasApprovalForFbeetsAmount && !!batchRelayerHasApprovedForAll && !!hasBatchRelayerApproval,
+    );
 
     useEffect(() => {
         if (!migratableBalance) {
@@ -102,7 +93,6 @@ export default function ReliquaryMigrateModal() {
         ];
 
         // migrate pre-requisites
-
         if (!batchRelayerHasApprovedForAll) {
             _steps.unshift({
                 id: 'batch-relayer-reliquary',
@@ -175,6 +165,7 @@ export default function ReliquaryMigrateModal() {
     const handleCompleteMigrate = () => {
         setMigrateCompleted(true);
     };
+
     return (
         <Box width={{ base: 'full', md: 'fit-content' }}>
             <Button variant="primary" onClick={onOpen} width={{ base: 'full', md: 'fit-content' }}>
@@ -192,12 +183,9 @@ export default function ReliquaryMigrateModal() {
                                         label={
                                             <VStack spacing="1" width="full" alignItems="flex-start">
                                                 <Text>To migrate your fBEETS the following steps are needed:</Text>
-                                                <UnorderedList pl='4'>
+                                                <UnorderedList pl="4">
                                                     <ListItem>
                                                         (Optional) Unstake your fBEETS from the Beethoven X farm{' '}
-                                                        <Tooltip label="If your fBEETS are staked in a farm other than Beethoven X, you will need to unstake them yourselves. Once they are in your wallet, you can return here to continue the migration.">
-                                                            <ListIcon as={Info} />
-                                                        </Tooltip>
                                                     </ListItem>
                                                     <ListItem>Approve the vault to spend your fBEETS</ListItem>
                                                     <ListItem>Approve the batch relayer to create a new relic</ListItem>
@@ -284,18 +272,10 @@ export default function ReliquaryMigrateModal() {
                                         isLoading={false}
                                         steps={steps}
                                         // TODO redirect to relic UI if not already there
-                                        onConfirmed={(id) => {
-                                            if (id === 'approve-vault') {
-                                                refetchApprovalForAmount();
-                                            } else if (id === 'batch-relayer-reliquary') {
-                                                refetchBatchRelayerHasApprovedForAll();
-                                            } else if (id === 'batch-relayer') {
-                                                refetchBatchRelayerApproval();
-                                            } else {
-                                                refetchRelicPositions();
-                                                refetchLegacyFbeetsBalance();
-                                                refetchStakedBalance();
-                                            }
+                                        onConfirmed={() => {
+                                            refetchRelicPositions();
+                                            refetchLegacyFbeetsBalance();
+                                            refetchStakedBalance();
                                         }}
                                         queries={[
                                             { ...unstakeQuery, id: 'unstake' },
