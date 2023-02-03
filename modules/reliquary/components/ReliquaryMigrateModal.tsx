@@ -6,11 +6,15 @@ import {
     Box,
     Button,
     Heading,
+    ListIcon,
+    ListItem,
     Modal,
     ModalOverlay,
     Select,
     StackDivider,
     Text,
+    Tooltip,
+    UnorderedList,
     useDisclosure,
     VStack,
 } from '@chakra-ui/react';
@@ -29,6 +33,7 @@ import useReliquary from '../lib/useReliquary';
 import { BeetsBox } from '~/components/box/BeetsBox';
 import { useToast } from '~/components/toast/BeetsToast';
 import { useBatchRelayerHasApprovedForAll } from '../lib/useBatchRelayerHasApprovedForAll';
+import { Info } from 'react-feather';
 
 export default function ReliquaryMigrateModal() {
     const { isOpen, onOpen, onClose } = useDisclosure();
@@ -43,7 +48,11 @@ export default function ReliquaryMigrateModal() {
     const legacyfBeets = getToken(networkConfig.fbeets.address);
 
     const { legacyFbeetsBalance, relicPositions, refetchRelicPositions } = useReliquary();
-    const { data: hasBatchRelayerApproval, isLoading: isLoadingBatchRelayerApproval } = useHasBatchRelayerApproval();
+    const {
+        data: hasBatchRelayerApproval,
+        isLoading: isLoadingBatchRelayerApproval,
+        refetch: refetchBatchRelayerApproval,
+    } = useHasBatchRelayerApproval();
     const {
         staked,
         isLoading: isLoadingLegacyFbeetsBalance,
@@ -61,9 +70,15 @@ export default function ReliquaryMigrateModal() {
         hasApprovalForAmount,
         isLoading: isLoadingUserAllowances,
         data: allowances,
+        refetch: refetchApprovalForAmount,
     } = useUserAllowances([legacyfBeets], networkConfig.balancer.vault);
-    const { data: batchRelayerHasApprovedForAll, isLoading: isLoadingBatchRelayerApprovalForAll } =
-        useBatchRelayerHasApprovedForAll();
+    const {
+        data: batchRelayerHasApprovedForAll,
+        isLoading: isLoadingBatchRelayerApprovalForAll,
+        refetch: refetchBatchRelayerHasApprovedForAll,
+    } = useBatchRelayerHasApprovedForAll();
+
+    const hasApprovalForFbeetsAmount = hasApprovalForAmount(networkConfig.fbeets.address, unstaked);
 
     useEffect(() => {
         if (!migratableBalance) {
@@ -76,27 +91,41 @@ export default function ReliquaryMigrateModal() {
             {
                 id: 'reliquary-migrate',
                 type: 'other',
-                buttonText: 'Migrate',
-                tooltipText: 'Migrate your old fBeets to a relic',
+                buttonText: 'Migrate your fBEETS',
+                tooltipText: 'Migrate your fBEETS to a new or existing relic',
             },
         ];
 
         // migrate pre-requisites
-        if (!hasBatchRelayerApproval) {
-            _steps.unshift({
-                id: 'batch-relayer',
-                type: 'other',
-                buttonText: 'Approve Batch Relayer',
-                tooltipText: 'The migration flow requires you to approve the batch relayer.',
-            });
-        }
 
         if (!batchRelayerHasApprovedForAll) {
             _steps.unshift({
                 id: 'batch-relayer-reliquary',
                 type: 'other',
-                buttonText: 'Approve Batch Relayer for all Relics',
-                tooltipText: 'This will approve the batch relayer for all future relic interactions.',
+                buttonText: 'Approve Batch Relayer for all relic actions',
+                tooltipText: 'Approve the batch relayer to deposit, withdraw & claim rewards for all relics',
+            });
+        }
+        if (!hasBatchRelayerApproval) {
+            _steps.unshift({
+                id: 'batch-relayer',
+                type: 'other',
+                buttonText: 'Approve batch relayer for relic creation',
+                tooltipText: 'Approve the batch relayer to create a new relic',
+            });
+        }
+
+        // approve the vault to spend legacy fbeets
+        if (!hasApprovalForFbeetsAmount && legacyfBeets) {
+            _steps.unshift({
+                id: 'approve-vault',
+                tooltipText: 'Approve the vault to spend your fBEETS',
+                type: 'tokenApproval',
+                buttonText: 'Approve the vault',
+                token: {
+                    ...(legacyfBeets || {}),
+                    amount: unstaked,
+                },
             });
         }
 
@@ -104,22 +133,9 @@ export default function ReliquaryMigrateModal() {
         if (parseFloat(staked || '0') > 0) {
             _steps.unshift({
                 id: 'unstake',
-                tooltipText: 'Unstake your fBEETS',
+                tooltipText: 'Unstake your fBEETS from the farm',
                 type: 'other',
-                buttonText: 'Unstake fBEETS',
-            });
-        }
-        // approve the vault to spend legacy fbeets
-        if (!hasApprovalForAmount(networkConfig.fbeets.address, unstaked) && legacyfBeets) {
-            _steps.unshift({
-                id: 'approve-vault',
-                tooltipText: 'Approve the vault to spend your fBEETS',
-                type: 'tokenApproval',
-                buttonText: 'Approve Vault',
-                token: {
-                    ...(legacyfBeets || {}),
-                    amount: unstaked,
-                },
+                buttonText: 'Unstake your fBEETS',
             });
         }
 
@@ -168,23 +184,31 @@ export default function ReliquaryMigrateModal() {
                                 <VStack width="full" alignItems="flex-start">
                                     <Heading fontSize="1.25rem">Migrate to a relic</Heading>
                                     <VStack spacing="1" width="full" alignItems="flex-start">
-                                        <Text>
-                                            To get started with a Relic, let's begin by migrating your old fBEETS stake
-                                            and BPT to a relic.
-                                        </Text>
-                                        {!isComplete && (
-                                            <Text>Your existing stake and BPT balances are shown below.</Text>
-                                        )}
+                                        <Text>To migrate your fBEETS the following steps are needed:</Text>
+                                        <UnorderedList px="8">
+                                            <ListItem>
+                                                (Optional) Unstake your fBEETS from the Beethoven X farm{' '}
+                                                <Tooltip label="If your fBEETS are staked in a farm other than Beethoven X, you will need to unstake them yourselves. Once they are in your wallet, you can return here to continue the migration.">
+                                                    <ListIcon as={Info} />
+                                                </Tooltip>
+                                            </ListItem>
+                                            <ListItem>Approve the vault to spend your fBEETS</ListItem>
+                                            <ListItem>Approve the batch relayer to create a new relic</ListItem>
+                                            <ListItem>
+                                                Approve the batch relayer to deposit, withdraw & claim rewards for all
+                                                relics
+                                            </ListItem>
+                                            <ListItem>Migrate your fBEETS to a new or existing relic</ListItem>
+                                        </UnorderedList>
                                     </VStack>
                                 </VStack>
                                 {isComplete && (
                                     <Alert status="success">
                                         <AlertIcon />
-                                        You've successfully migrated your fBeets to a relic. Click return and check out
-                                        your new relic.
+                                        You&apos;ve successfully migrated your fBeets to a relic. Click return and check
+                                        it out.
                                     </Alert>
                                 )}
-
                                 {!isComplete && (
                                     <BeetsBox width="full">
                                         <VStack
@@ -247,10 +271,18 @@ export default function ReliquaryMigrateModal() {
                                         isLoading={false}
                                         steps={steps}
                                         // TODO redirect to relic UI if not already there
-                                        onConfirmed={() => {
-                                            refetchRelicPositions();
-                                            refetchLegacyFbeetsBalance();
-                                            refetchStakedBalance();
+                                        onConfirmed={(id) => {
+                                            if (id === 'approve-vault') {
+                                                refetchApprovalForAmount();
+                                            } else if (id === 'batch-relayer-reliquary') {
+                                                refetchBatchRelayerHasApprovedForAll();
+                                            } else if (id === 'batch-relayer') {
+                                                refetchBatchRelayerApproval();
+                                            } else {
+                                                refetchRelicPositions();
+                                                refetchLegacyFbeetsBalance();
+                                                refetchStakedBalance();
+                                            }
                                         }}
                                         queries={[
                                             { ...unstakeQuery, id: 'unstake' },
