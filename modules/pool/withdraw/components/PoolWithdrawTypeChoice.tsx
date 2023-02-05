@@ -6,7 +6,6 @@ import {
     Flex,
     Grid,
     GridItem,
-    Heading,
     HStack,
     Skeleton,
     Text,
@@ -27,11 +26,6 @@ import { useWithdrawState } from '~/modules/pool/withdraw/lib/useWithdrawState';
 import { PoolWithdrawWeightedPoolDescription } from '~/modules/pool/withdraw/components/PoolWithdrawWeightedPoolDescription';
 import { PoolWithdrawStablePoolDescription } from '~/modules/pool/withdraw/components/PoolWithdrawStablePoolDescription';
 import { usePool } from '~/modules/pool/lib/usePool';
-import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
-import { useRelicDepositBalance } from '~/modules/reliquary/lib/useRelicDepositBalance';
-import ReliquaryTokenBreakdown from '~/modules/reliquary/components/ReliquaryTokensBreakdown';
-import useReliquary from '~/modules/reliquary/lib/useReliquary';
-import { ReliquaryWithdrawDescription } from '~/modules/reliquary/components/ReliquaryWithdrawDescription';
 
 interface Props {
     onShowProportional(): void;
@@ -51,120 +45,104 @@ export function PoolWithdrawTypeChoice({ onShowProportional, onShowSingleAsset }
     const { selectedOptions, setSelectedOption } = useWithdrawState();
     const isStablePool = pool.__typename === 'GqlPoolStable' || pool.__typename === 'GqlPoolPhantomStable';
 
-    const { relicBalanceUSD, isLoading: isRelicDepositBalanceLoading } = useRelicDepositBalance();
-    const { selectedRelicId } = useReliquary();
-    const { reliquary } = useNetworkConfig();
-    const isReliquaryFBeetsPool = pool.id === reliquary.fbeets.poolId;
-
-    const isLoading = isPoolUserDepositBalanceLoading || isRelicDepositBalanceLoading;
-    const balance = isReliquaryFBeetsPool ? relicBalanceUSD : userPoolBalanceUSD;
-
     return (
         <Box>
             <Grid mt="4" mb="6" gap="8" templateColumns={{ base: '1fr', md: '1fr', lg: '1fr 1fr' }}>
                 <GridItem>
                     <BeetsBox p="2" mb="6">
-                        <Flex mb={!isReliquaryFBeetsPool ? '4' : undefined}>
+                        <Flex mb="4">
                             <Text fontSize="lg" fontWeight="semibold" flex="1">
-                                {isReliquaryFBeetsPool ? `Relic #${selectedRelicId}` : 'My'} balance
+                                My balance
                             </Text>
-                            <Skeleton isLoaded={!isLoading}>
+                            <Skeleton isLoaded={!isPoolUserDepositBalanceLoading}>
                                 <Text fontSize="lg" fontWeight="semibold">
-                                    {numberFormatUSDValue(balance)}
+                                    {numberFormatUSDValue(userPoolBalanceUSD)}
                                 </Text>
                             </Skeleton>
                         </Flex>
-                        {!isReliquaryFBeetsPool && pool.staking ? (
+                        {pool.staking && (
                             <>
                                 <CardRow>
                                     <Text flex="1">Wallet balance</Text>
-                                    <Skeleton isLoaded={!isLoading}>
+                                    <Skeleton isLoaded={!isPoolUserDepositBalanceLoading}>
                                         <Text>{numberFormatUSDValue(valueInWallet)}</Text>
                                     </Skeleton>
                                 </CardRow>
                                 <CardRow mb="0">
                                     <Text flex="1">Staked balance</Text>
-                                    <Skeleton isLoaded={!isLoading}>
+                                    <Skeleton isLoaded={!isPoolUserDepositBalanceLoading}>
                                         <Text>{numberFormatUSDValue(valueStaked)}</Text>
                                     </Skeleton>
                                 </CardRow>
                             </>
-                        ) : null}
+                        )}
                     </BeetsBox>
 
                     <BeetsBox p="2">
                         <Text fontSize="lg" fontWeight="semibold" mb="4">
                             Pool tokens breakdown
                         </Text>
-                        {isReliquaryFBeetsPool ? (
-                            <ReliquaryTokenBreakdown showTotal />
-                        ) : (
-                            pool.withdrawConfig.options.map((option, index) => {
-                                const hasOptions = option.tokenOptions.length > 1;
-                                const token =
-                                    option.tokenOptions.find((tokenOption) =>
-                                        selectedWithdrawTokenAddresses.includes(tokenOption.address),
-                                    ) || option.tokenOptions[0];
-                                const balance = data?.find((item) => item.address === token.address)?.amount || '0';
+                        {pool.withdrawConfig.options.map((option, index) => {
+                            const hasOptions = option.tokenOptions.length > 1;
+                            const token =
+                                option.tokenOptions.find((tokenOption) =>
+                                    selectedWithdrawTokenAddresses.includes(tokenOption.address),
+                                ) || option.tokenOptions[0];
+                            const balance = data?.find((item) => item.address === token.address)?.amount || '0';
 
-                                return (
-                                    <CardRow
-                                        key={token.address}
-                                        mb={index === pool.tokens.length - 1 ? '0' : '1'}
-                                        alignItems="center"
-                                        pl={hasOptions ? '1' : '2'}
-                                    >
-                                        <Box flex="1">
-                                            {hasOptions ? (
-                                                <TokenSelectInline
-                                                    tokenOptions={option.tokenOptions}
-                                                    selectedAddress={
-                                                        selectedOptions[`${option.poolTokenIndex}`] ||
-                                                        option.tokenOptions[0].address
-                                                    }
-                                                    onOptionSelect={(address) =>
-                                                        setSelectedOption(option.poolTokenIndex, address)
-                                                    }
-                                                />
-                                            ) : (
-                                                <HStack spacing="1.5">
-                                                    <TokenAvatar size="xs" address={token.address} />
-                                                    <Text fontSize="lg">{token.symbol}</Text>
-                                                </HStack>
-                                            )}
+                            return (
+                                <CardRow
+                                    key={token.address}
+                                    mb={index === pool.tokens.length - 1 ? '0' : '1'}
+                                    alignItems="center"
+                                    pl={hasOptions ? '1' : '2'}
+                                >
+                                    <Box flex="1">
+                                        {hasOptions ? (
+                                            <TokenSelectInline
+                                                tokenOptions={option.tokenOptions}
+                                                selectedAddress={
+                                                    selectedOptions[`${option.poolTokenIndex}`] ||
+                                                    option.tokenOptions[0].address
+                                                }
+                                                onOptionSelect={(address) =>
+                                                    setSelectedOption(option.poolTokenIndex, address)
+                                                }
+                                            />
+                                        ) : (
+                                            <HStack spacing="1.5">
+                                                <TokenAvatar size="xs" address={token.address} />
+                                                <Text fontSize="lg">{token.symbol}</Text>
+                                            </HStack>
+                                        )}
+                                    </Box>
+
+                                    <Box>
+                                        <Box textAlign="right" fontSize="lg">
+                                            <Skeleton isLoaded={!isPoolUserDepositBalanceLoading}>
+                                                {tokenFormatAmount(balance)}
+                                            </Skeleton>
                                         </Box>
 
-                                        <Box>
-                                            <Box textAlign="right" fontSize="lg">
-                                                <Skeleton isLoaded={!isLoading}>{tokenFormatAmount(balance)}</Skeleton>
-                                            </Box>
-
-                                            <Box textAlign="right" fontSize="sm" color="gray.200">
-                                                <Skeleton isLoaded={!isLoading}>
-                                                    {numberFormatUSDValue(
-                                                        priceForAmount({
-                                                            address: token.address,
-                                                            amount: balance,
-                                                        }),
-                                                    )}
-                                                </Skeleton>
-                                            </Box>
+                                        <Box textAlign="right" fontSize="sm" color="gray.200">
+                                            <Skeleton isLoaded={!isPoolUserDepositBalanceLoading}>
+                                                {numberFormatUSDValue(
+                                                    priceForAmount({
+                                                        address: token.address,
+                                                        amount: balance,
+                                                    }),
+                                                )}
+                                            </Skeleton>
                                         </Box>
-                                    </CardRow>
-                                );
-                            })
-                        )}
+                                    </Box>
+                                </CardRow>
+                            );
+                        })}
                     </BeetsBox>
                 </GridItem>
                 <GridItem>
                     <BeetsBox p="4">
-                        {isStablePool ? (
-                            <PoolWithdrawStablePoolDescription />
-                        ) : isReliquaryFBeetsPool ? (
-                            <ReliquaryWithdrawDescription />
-                        ) : (
-                            <PoolWithdrawWeightedPoolDescription />
-                        )}
+                        {isStablePool ? <PoolWithdrawStablePoolDescription /> : <PoolWithdrawWeightedPoolDescription />}
                     </BeetsBox>
                 </GridItem>
             </Grid>
@@ -180,25 +158,12 @@ export function PoolWithdrawTypeChoice({ onShowProportional, onShowSingleAsset }
                     </Button>
                 </Alert>
             )}
-            <Button
-                variant="primary"
-                width="full"
-                isDisabled={isReliquaryFBeetsPool ? relicBalanceUSD <= 0 : !hasBptInWallet}
-                onClick={onShowProportional}
-            >
+            <Button variant="primary" width="full" isDisabled={!hasBptInWallet} onClick={onShowProportional}>
                 Withdraw proportionally
             </Button>
-            {!isReliquaryFBeetsPool && (
-                <Button
-                    variant="secondary"
-                    width="full"
-                    mt="2"
-                    isDisabled={isReliquaryFBeetsPool ? relicBalanceUSD <= 0 : !hasBptInWallet}
-                    onClick={onShowSingleAsset}
-                >
-                    Single asset withdraw
-                </Button>
-            )}
+            <Button variant="secondary" width="full" mt="2" isDisabled={!hasBptInWallet} onClick={onShowSingleAsset}>
+                Single asset withdraw
+            </Button>
 
             <PoolUnstakeModal {...unstakeDisclosure} />
         </Box>

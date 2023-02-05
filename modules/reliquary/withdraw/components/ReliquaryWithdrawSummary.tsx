@@ -3,26 +3,26 @@ import { InfoButton } from '~/components/info-button/InfoButton';
 import { BeetsBox } from '~/components/box/BeetsBox';
 import { numberFormatUSDValue } from '~/lib/util/number-formats';
 
-import { usePoolExitGetProportionalWithdrawEstimate } from '~/modules/pool/withdraw/lib/usePoolExitGetProportionalWithdrawEstimate';
+import { useReliquaryExitGetProportionalWithdrawEstimate } from '~/modules/reliquary/withdraw/lib/useReliquaryExitGetProportionalWithdrawEstimate';
 import { sum } from 'lodash';
 import { useGetTokens } from '~/lib/global/useToken';
-import { usePoolExitGetBptInForSingleAssetWithdraw } from '~/modules/pool/withdraw/lib/usePoolExitGetBptInForSingleAssetWithdraw';
-import { useWithdrawState } from '~/modules/pool/withdraw/lib/useWithdrawState';
+import { useReliquaryExitGetBptInForSingleAssetWithdraw } from '~/modules/reliquary/withdraw/lib/useReliquaryExitGetBptInForSingleAssetWithdraw';
+import { useReliquaryWithdrawState } from '~/modules/reliquary/withdraw/lib/useReliquaryWithdrawState';
 import { CardRow } from '~/components/card/CardRow';
 import { SlippageTextLinkMenu } from '~/components/slippage/SlippageTextLinkMenu';
 
 interface Props extends BoxProps {}
 
-export function PoolWithdrawSummary({ ...rest }: Props) {
-    const { selectedWithdrawType, singleAssetWithdraw } = useWithdrawState();
-    const { data, isLoading } = usePoolExitGetProportionalWithdrawEstimate();
+export function ReliquaryWithdrawSummary({ ...rest }: Props) {
+    const { selectedWithdrawType, singleAssetWithdraw } = useReliquaryWithdrawState();
+    const { data, isLoading } = useReliquaryExitGetProportionalWithdrawEstimate();
     const { priceForAmount, formattedPrice } = useGetTokens();
     const {
         hasHighPriceImpact,
         hasMediumPriceImpact,
         formattedPriceImpact,
         isLoading: isLoadingSingleAsset,
-    } = usePoolExitGetBptInForSingleAssetWithdraw();
+    } = useReliquaryExitGetBptInForSingleAssetWithdraw();
 
     const totalValue = sum((data || []).map(priceForAmount));
 

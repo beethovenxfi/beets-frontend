@@ -1,7 +1,7 @@
 import { useQuery } from 'react-query';
 import { useGetTokens } from '~/lib/global/useToken';
 import { sumBy } from 'lodash';
-import { useWithdraw } from '~/modules/pool/withdraw/lib/useWithdraw';
+import { useReliquaryWithdraw } from '~/modules/reliquary/withdraw/lib/useReliquaryWithdraw';
 import { usePool } from '~/modules/pool/lib/usePool';
 import { createContext, ReactNode, useContext } from 'react';
 import useReliquary from '~/modules/reliquary/lib/useReliquary';
@@ -9,7 +9,7 @@ import useReliquary from '~/modules/reliquary/lib/useReliquary';
 export function _useRelicDepositBalance() {
     const { poolService } = usePool();
     const { priceForAmount } = useGetTokens();
-    const { selectedWithdrawTokenAddresses } = useWithdraw();
+    const { selectedWithdrawTokenAddresses } = useReliquaryWithdraw();
     const { selectedRelic } = useReliquary();
 
     const query = useQuery(

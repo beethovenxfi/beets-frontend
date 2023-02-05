@@ -5,7 +5,7 @@ import { Box, BoxProps, Heading, VStack, Flex, useBreakpointValue } from '@chakr
 import useReliquary from '../lib/useReliquary';
 import { PoolInvestModal } from '~/modules/pool/invest/PoolInvestModal';
 import RelicSlide from './RelicSlide';
-import { PoolWithdrawModal } from '~/modules/pool/withdraw/PoolWithdrawModal';
+import { ReliquaryWithdrawModal } from '~/modules/reliquary/withdraw/ReliquaryWithdrawModal';
 
 interface Props extends BoxProps {
     loading?: boolean;
@@ -105,7 +105,7 @@ export function RelicCarousel({ loading, ...rest }: Props) {
                 isVisible={isInvestModalVisible}
                 noActivator
             />
-            <PoolWithdrawModal
+            <ReliquaryWithdrawModal
                 onClose={() => setIsWithdrawModalVisible(false)}
                 isVisible={isWithdrawModalVisible}
                 noActivator

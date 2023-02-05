@@ -13,11 +13,11 @@ export function ReliquaryWithdrawDescription() {
             <br />
             <br />
             <Highlight query={['single asset', 'not', 'later']} styles={{ fontWeight: 'bold', color: 'white' }}>
-                For now withdrawing in a single asset is not available. This will be implemented at a later date.
+                For now withdrawing a single asset is not available. This will be implemented at a later date.
             </Highlight>
             <br />
             <br />
-            When withdrawing from any relic, your fBEETS are exchanged for the underlying assets.
+            When withdrawing from any relic, your fBEETS are exchanged for the underlying tokens.
         </>
     );
 }

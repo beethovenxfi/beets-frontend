@@ -6,14 +6,14 @@ import { tokenFormatAmount } from '~/lib/services/token/token-util';
 import { numberFormatUSDValue } from '~/lib/util/number-formats';
 import { useGetTokens } from '~/lib/global/useToken';
 import TokenAvatar from '~/components/token/TokenAvatar';
-import { useWithdrawState } from '~/modules/pool/withdraw/lib/useWithdrawState';
+import { useReliquaryWithdrawState } from '~/modules/reliquary/withdraw/lib/useReliquaryWithdrawState';
 
 interface Props {
     showTotal?: boolean;
 }
 
 export default function ReliquaryTokenBreakdown({ showTotal = false }: Props) {
-    const { proportionalPercent, selectedWithdrawType } = useWithdrawState();
+    const { proportionalPercent, selectedWithdrawType } = useReliquaryWithdrawState();
     const { getToken, priceForAmount } = useGetTokens();
     const { data: relicTokenBalances, isLoading } = useRelicDepositBalance();
 
