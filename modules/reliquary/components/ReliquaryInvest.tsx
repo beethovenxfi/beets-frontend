@@ -2,9 +2,9 @@ import { VStack, Box } from '@chakra-ui/react';
 import { AnimatePresence, motion } from 'framer-motion';
 import React, { useState } from 'react';
 import SwitchButton from '~/components/switch-button/SwitchButton';
-import { PoolInvestCustom } from '~/modules/pool/invest/components/PoolInvestCustom';
-import { PoolInvestPreview } from '~/modules/pool/invest/components/PoolInvestPreview';
-import { PoolInvestProportional } from '~/modules/pool/invest/components/PoolInvestProportional';
+import { ReliquaryInvestCustom } from '~/modules/reliquary/invest/components/ReliquaryInvestCustom';
+import { ReliquaryInvestPreview } from '~/modules/reliquary/invest/components/ReliquaryInvestPreview';
+import { ReliquaryInvestProportional } from '~/modules/reliquary/invest/components/ReliquaryInvestProportional';
 
 interface Props {
     onInvestComplete: () => void;
@@ -44,7 +44,7 @@ export default function ReliquaryInvest({ onInvestComplete }: Props) {
                         minWidth="550px"
                         maxWidth="550px"
                     >
-                        <PoolInvestCustom onShowPreview={() => setInvestmentStep('preview')} />
+                        <ReliquaryInvestCustom onShowPreview={() => setInvestmentStep('preview')} />
                     </Box>
                 )}
                 {investmentStep === 'proportional' && (
@@ -64,7 +64,7 @@ export default function ReliquaryInvest({ onInvestComplete }: Props) {
                         minWidth="550px"
                         maxWidth="550px"
                     >
-                        <PoolInvestProportional onShowPreview={() => setInvestmentStep('preview')} />
+                        <ReliquaryInvestProportional onShowPreview={() => setInvestmentStep('preview')} />
                     </Box>
                 )}
                 {investmentStep === 'preview' && (
@@ -84,7 +84,7 @@ export default function ReliquaryInvest({ onInvestComplete }: Props) {
                         minWidth="550px"
                         maxWidth="550px"
                     >
-                        <PoolInvestPreview
+                        <ReliquaryInvestPreview
                             isReliquaryDeposit
                             onInvestComplete={onInvestComplete}
                             onClose={() => false}

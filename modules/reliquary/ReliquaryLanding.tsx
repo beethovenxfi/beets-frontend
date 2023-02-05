@@ -6,7 +6,7 @@ import Rq1Image from '~/assets/images/rq-1.png';
 import Rq2Image from '~/assets/images/rq-2.png';
 import Rq3Image from '~/assets/images/rq-3.png';
 import Image from 'next/image';
-import { PoolInvestModal } from '../pool/invest/PoolInvestModal';
+import { ReliquaryInvestModal } from './invest/ReliquaryInvestModal';
 import ReliquaryGlobalStats from './components/stats/ReliquaryGlobalStats';
 import { motion } from 'framer-motion';
 import { useUserAccount } from '~/lib/user/useUserAccount';
@@ -93,7 +93,7 @@ export default function ReliquaryLanding() {
                         <ListItem>Access evolving Ludwig fNFTs</ListItem>
                     </UnorderedList>
                     <HStack w={{ base: 'full', xl: '90%' }}>
-                        <PoolInvestModal createRelic />
+                        <ReliquaryInvestModal createRelic />
                         <Button variant="secondary" w="full" as="a" href="https://docs.beets.fi" target="_blank">
                             Learn more
                         </Button>
