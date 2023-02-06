@@ -49,7 +49,7 @@ export default function ReliquaryMigrateModal() {
     const { getToken } = useGetTokens();
     const legacyfBeets = getToken(networkConfig.fbeets.address);
 
-    const { legacyFbeetsBalance, relicPositions, refetchRelicPositions } = useReliquary();
+    const { legacyFbeetsBalance, relicPositionsForFarmId, refetchRelicPositions } = useReliquary();
     const { data: hasBatchRelayerApproval, isLoading: isLoadingBatchRelayerApproval } = useHasBatchRelayerApproval();
     const {
         staked,
@@ -226,7 +226,7 @@ export default function ReliquaryMigrateModal() {
                                         </VStack>
                                     </BeetsBox>
                                 )}
-                                {!isComplete && relicPositions.length > 0 && (
+                                {!isComplete && relicPositionsForFarmId.length > 0 && (
                                     <VStack width="full" alignItems="flex-start">
                                         <Text>Choose where to migrate your balance to:</Text>
                                         <Select
@@ -242,7 +242,7 @@ export default function ReliquaryMigrateModal() {
                                             variant="filled"
                                         >
                                             <option value={undefined}>New relic</option>
-                                            {relicPositions.map((relic) => (
+                                            {relicPositionsForFarmId.map((relic) => (
                                                 <option
                                                     value={relic.relicId}
                                                     key={`migrate-to-${relic.relicId}`}
