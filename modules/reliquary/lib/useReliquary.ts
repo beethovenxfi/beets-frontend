@@ -36,7 +36,7 @@ export default function useReliquary() {
     const { total: legacyFbeetsBalance } = useLegacyFBeetsBalance();
 
     const {
-        data: relicPositions = [],
+        data: relicPositionsUnsorted = [],
         isLoading: isLoadingRelicPositions,
         refetch: refetchRelicPositions,
     } = useQuery(
@@ -54,6 +54,8 @@ export default function useReliquary() {
             enabled: !!userAddress,
         },
     );
+
+    const relicPositions = relicPositionsUnsorted.sort((a, b) => parseInt(a.relicId) - parseInt(b.relicId));
 
     const {
         data: maturityThresholds = [],
