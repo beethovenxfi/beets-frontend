@@ -1,4 +1,4 @@
-import { Button, HStack, ListItem, Text, UnorderedList, VStack, Stack, Heading, Box } from '@chakra-ui/react';
+import { Button, HStack, ListItem, Text, UnorderedList, VStack, Stack, Heading, Box, Spacer } from '@chakra-ui/react';
 import React, { useEffect } from 'react';
 import { InfoButton } from '~/components/info-button/InfoButton';
 import { RelicCarousel } from './components/RelicCarousel';
@@ -80,18 +80,16 @@ export default function ReliquaryLanding() {
                 spacing="12"
                 width="full"
             >
-                <VStack width="full" alignItems="flex-start" justifyContent="space-between">
-                    <Text color="beets.green" fontSize="sm">
-                        maBEETS
-                    </Text>
+                <VStack width="full" alignItems="flex-start">
                     <Heading color="white" fontSize={{ base: 'lg', lg: '2rem' }}>
-                        A brand new primitive waiting to be explored.
+                        Maturity adjusted voting power and BEETS rewards.
                     </Heading>
                     <UnorderedList pl="5">
                         <ListItem>Participate in BEETS governance</ListItem>
                         <ListItem>Unlock maturity adjusted rewards</ListItem>
                         <ListItem>Access evolving Ludwig fNFTs</ListItem>
                     </UnorderedList>
+                    <Spacer />
                     <HStack w={{ base: 'full', xl: '90%' }}>
                         <PoolInvestModal createRelic />
                         <Button variant="secondary" w="full" as="a" href="https://docs.beets.fi" target="_blank">
