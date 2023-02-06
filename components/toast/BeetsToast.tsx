@@ -82,9 +82,7 @@ export default function BeetsToast({ children }: Props) {
     };
 
     function removeToast(id: string) {
-        console.log('ding', id);
         if (!toastListRef.current.length) return;
-        console.log('dong');
         let indexOfEl = toastList.findIndex((toast) => toast.id === id);
         let heightOfEl = toastContainerRef.current[indexOfEl]?.offsetHeight || 0;
 
