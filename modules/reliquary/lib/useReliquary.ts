@@ -107,7 +107,7 @@ export default function useReliquary() {
         legacyBptBalance,
         legacyFbeetsBalance,
         relicPositionsForFarmId: relicPositions.filter(
-            (position) => position.farmId.toString() === networkConfig.fbeets.farmId,
+            (position) => position.farmId.toString() === networkConfig.reliquary.fbeets.farmId.toString(),
         ),
 
         setCreateRelic,
