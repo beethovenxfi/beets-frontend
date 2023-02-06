@@ -6,7 +6,7 @@ import Image from 'next/image';
 
 interface Props {
     children: ReactNode | ReactNode[];
-    label: ReactNode | ReactNode[];
+    label: ReactNode | ReactNode[] | null;
     noImage?: boolean;
     hasArrow?: boolean;
 }

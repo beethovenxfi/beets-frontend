@@ -154,6 +154,7 @@ export default function ReliquaryMigrateModal() {
     ]);
 
     const isComplete = !isLoadingLegacyFbeetsBalance && migrateCompleted;
+    const completedPrequisites = steps.length === 1 && steps[0].id === 'reliquary-migrate';
 
     const handleOnClose = () => {
         if (isComplete) {
@@ -165,6 +166,19 @@ export default function ReliquaryMigrateModal() {
     const handleCompleteMigrate = () => {
         setMigrateCompleted(true);
     };
+
+    const tooltipLabel = (
+        <VStack spacing="1" width="full" alignItems="flex-start">
+            <Text>To migrate your fBEETS the following steps are needed:</Text>
+            <UnorderedList pl="4">
+                <ListItem>(Optional) Unstake your fBEETS from the Beethoven X farm </ListItem>
+                <ListItem>Approve the vault to spend your fBEETS</ListItem>
+                <ListItem>Approve the batch relayer to create a new relic</ListItem>
+                <ListItem>Approve the batch relayer to deposit, withdraw & claim rewards for all relics</ListItem>
+                <ListItem>Migrate your fBEETS to a new or existing relic</ListItem>
+            </UnorderedList>
+        </VStack>
+    );
 
     return (
         <Box width={{ base: 'full', md: 'fit-content' }}>
@@ -179,25 +193,7 @@ export default function ReliquaryMigrateModal() {
                             <VStack spacing="4" width="full">
                                 <HStack width="full" alignItems="flex-start">
                                     <Heading fontSize="1.25rem">Migrate to a relic</Heading>
-                                    <BeetsTooltip
-                                        label={
-                                            <VStack spacing="1" width="full" alignItems="flex-start">
-                                                <Text>To migrate your fBEETS the following steps are needed:</Text>
-                                                <UnorderedList pl="4">
-                                                    <ListItem>
-                                                        (Optional) Unstake your fBEETS from the Beethoven X farm{' '}
-                                                    </ListItem>
-                                                    <ListItem>Approve the vault to spend your fBEETS</ListItem>
-                                                    <ListItem>Approve the batch relayer to create a new relic</ListItem>
-                                                    <ListItem>
-                                                        Approve the batch relayer to deposit, withdraw & claim rewards
-                                                        for all relics
-                                                    </ListItem>
-                                                    <ListItem>Migrate your fBEETS to a new or existing relic</ListItem>
-                                                </UnorderedList>
-                                            </VStack>
-                                        }
-                                    >
+                                    <BeetsTooltip label={completedPrequisites ? null : tooltipLabel}>
                                         <Box _hover={{ transform: 'scale(1.2)' }}>
                                             <Image src={BeetsThinking} width="24" height="24" alt="beets-balanced" />
                                         </Box>
