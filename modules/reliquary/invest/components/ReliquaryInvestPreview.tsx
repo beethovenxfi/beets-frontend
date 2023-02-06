@@ -9,7 +9,7 @@ import useReliquary from '~/modules/reliquary/lib/useReliquary';
 import { useReliquaryDepositImpact } from '~/modules/reliquary/lib/useReliquaryDepositImpact';
 import formatDistanceToNowStrict from 'date-fns/formatDistanceToNowStrict';
 import { numberFormatUSDValue } from '~/lib/util/number-formats';
-import { usePoolJoinGetBptOutAndPriceImpactForTokensIn } from '~/modules/pool/invest/lib/usePoolJoinGetBptOutAndPriceImpactForTokensIn';
+import { useReliquaryJoinGetBptOutAndPriceImpactForTokensIn } from '~/modules/reliquary/invest/lib/useReliquaryJoinGetBptOutAndPriceImpactForTokensIn';
 
 interface Props {
     onInvestComplete(): void;
@@ -21,13 +21,11 @@ export function ReliquaryInvestPreview({ onInvestComplete, onClose }: Props) {
     const { selectedRelic, createRelic } = useReliquary();
     const { totalInvestValue } = useReliquaryInvest();
     const { bptOutAndPriceImpact, isLoading: bptOutAndPriceImpactLoading } =
-        usePoolJoinGetBptOutAndPriceImpactForTokensIn();
+        useReliquaryJoinGetBptOutAndPriceImpactForTokensIn();
 
     const { data: depositImpact, isLoading: depositImpactLoading } = useReliquaryDepositImpact(
         parseFloat(bptOutAndPriceImpact?.minBptReceived || ''),
     );
-
-    console.log(selectedInvestTokensWithAmounts);
 
     return (
         <VStack spacing="4" width="full">
