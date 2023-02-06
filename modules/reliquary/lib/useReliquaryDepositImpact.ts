@@ -26,7 +26,7 @@ export function useReliquaryDepositImpact(amount: number) {
             });
         },
         {
-            enabled: selectedRelic !== null && amount !== null,
+            enabled: selectedRelic !== null && !Number.isNaN(amount),
         },
     );
 
