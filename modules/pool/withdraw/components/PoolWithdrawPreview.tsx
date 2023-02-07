@@ -5,7 +5,6 @@ import { numberFormatUSDValue } from '~/lib/util/number-formats';
 import { BeetsBox } from '~/components/box/BeetsBox';
 import { useGetTokens } from '~/lib/global/useToken';
 import { useWithdrawState } from '~/modules/pool/withdraw/lib/useWithdrawState';
-import { usePoolExitGetProportionalWithdrawEstimate } from '~/modules/pool/withdraw/lib/usePoolExitGetProportionalWithdrawEstimate';
 import { PoolWithdrawSummary } from '~/modules/pool/withdraw/components/PoolWithdrawSummary';
 import { useExitPool } from '~/modules/pool/withdraw/lib/useExitPool';
 import { usePoolExitGetContractCallData } from '~/modules/pool/withdraw/lib/usePoolExitGetContractCallData';
@@ -17,11 +16,6 @@ import { sum } from 'lodash';
 import { usePool } from '~/modules/pool/lib/usePool';
 import { usePoolUserBptBalance } from '~/modules/pool/lib/usePoolUserBptBalance';
 import { useUserSyncBalanceMutation } from '~/apollo/generated/graphql-codegen-generated';
-import useReliquary from '~/modules/reliquary/lib/useReliquary';
-import { useReliquaryWithdrawAndHarvestContractCallData } from '~/modules/reliquary/lib/useReliquaryWithdrawAndHarvestContractCallData';
-import { useReliquaryZap } from '~/modules/reliquary/lib/useReliquaryZap';
-import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
-import { oldBnumToHumanReadable, oldBnumScaleAmount } from '~/lib/services/pool/lib/old-big-number';
 
 interface Props {
     onWithdrawComplete(): void;
@@ -30,9 +24,6 @@ interface Props {
 
 export function PoolWithdrawPreview({ onWithdrawComplete, onClose }: Props) {
     const { pool } = usePool();
-    const { reliquary } = useNetworkConfig();
-    const isReliquaryFBeetsPool = pool.id === reliquary.fbeets.poolId;
-
     const { getToken } = useGetTokens();
     const { selectedWithdrawType, singleAssetWithdraw, proportionalAmounts, proportionalPercent } = useWithdrawState();
     const { priceForAmount } = useGetTokens();
@@ -40,17 +31,6 @@ export function PoolWithdrawPreview({ onWithdrawComplete, onClose }: Props) {
     const { data: contractCallData, isLoading: isLoadingContractCallData } = usePoolExitGetContractCallData();
     const { refetch } = usePoolUserBptBalance();
     const [userSyncBalance, { loading }] = useUserSyncBalanceMutation();
-
-    const { selectedRelic, refetchRelicPositions } = useReliquary();
-    const { data: reliquaryContractCalls } = useReliquaryWithdrawAndHarvestContractCallData({
-        relicId: parseInt(selectedRelic?.relicId || ''),
-        bptAmount: oldBnumToHumanReadable(
-            oldBnumScaleAmount(selectedRelic?.amount || '').times(proportionalPercent / 100),
-        ),
-        poolTotalShares: pool.dynamicData.totalShares,
-        poolTokens: pool.tokens,
-    });
-    const { reliquaryZap, ...reliquaryZapQuery } = useReliquaryZap('WITHDRAW');
 
     const withdrawAmounts =
         selectedWithdrawType === 'SINGLE_ASSET' && singleAssetWithdraw
@@ -98,14 +78,11 @@ export function PoolWithdrawPreview({ onWithdrawComplete, onClose }: Props) {
             <BeetsTransactionStepsSubmit
                 isLoading={isLoadingContractCallData}
                 loadingButtonText=""
-                completeButtonText={isReliquaryFBeetsPool ? 'Return to maBEETS' : 'Return to pool'}
+                completeButtonText="Return to pool"
                 onCompleteButtonClick={onClose}
                 onSubmit={() => {
-                    if (contractCallData && !isReliquaryFBeetsPool) {
+                    if (contractCallData) {
                         exitPool(contractCallData, withdrawAmounts);
-                    }
-                    if (reliquaryContractCalls && isReliquaryFBeetsPool) {
-                        reliquaryZap(reliquaryContractCalls);
                     }
                 }}
                 onConfirmed={async (id) => {
@@ -113,11 +90,10 @@ export function PoolWithdrawPreview({ onWithdrawComplete, onClose }: Props) {
                         onWithdrawComplete();
                         refetch();
                         userSyncBalance({ variables: { poolId: pool.id } });
-                        refetchRelicPositions();
                     }
                 }}
                 steps={[{ id: 'exit', tooltipText: '', type: 'other', buttonText: 'Withdraw' }]}
-                queries={[{ ...(isReliquaryFBeetsPool ? reliquaryZapQuery : exitPoolQuery), id: 'exit' }]}
+                queries={[{ ...exitPoolQuery, id: 'exit' }]}
             />
         </Box>
     );
