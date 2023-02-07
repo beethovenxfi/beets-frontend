@@ -191,7 +191,7 @@ export function ReliquaryInvestModal({
                             {modalState === 'start' ? (
                                 <>
                                     <Heading size="md" noOfLines={1}>
-                                        Get {createRelic ? ' ' : 'more '}maBEETS
+                                        Invest into {createRelic ? 'a new  ' : 'an existing '}relic
                                     </Heading>
                                     <Text fontSize="1rem" fontWeight="normal">
                                         Placeholder for a short (2 lines?) explainer. Can be different for create new
