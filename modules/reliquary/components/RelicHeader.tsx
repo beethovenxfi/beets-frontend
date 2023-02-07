@@ -1,5 +1,5 @@
 import { Badge, Box, Button, Flex, Heading, HStack, Text } from '@chakra-ui/react';
-import { PoolInvestModal } from '~/modules/pool/invest/PoolInvestModal';
+import { ReliquaryInvestModal } from '~/modules/reliquary/invest/ReliquaryInvestModal';
 import { PoolWithdrawModal } from '~/modules/pool/withdraw/PoolWithdrawModal';
 import React, { useEffect, useState } from 'react';
 import AnimatedProgress from '~/components/animated-progress/AnimatedProgress';
@@ -83,7 +83,7 @@ export function RelicHeader() {
             </Box>
             <Box width={{ base: 'full', md: 'fit-content' }} mt={{ base: '4', md: '0' }}>
                 <HStack>
-                    <PoolInvestModal />
+                    <ReliquaryInvestModal />
                     <PoolWithdrawModal />
                 </HStack>
             </Box>

@@ -1,15 +1,15 @@
 import { Box, BoxProps, Heading, HStack, VStack } from '@chakra-ui/react';
 import AprTooltip from '~/components/apr-tooltip/AprTooltip';
 import { numberFormatUSDValue } from '~/lib/util/number-formats';
-import { useInvest } from '~/modules/pool/invest/lib/useInvest';
+import { useReliquaryInvest } from '~/modules/reliquary/invest/lib/useReliquaryInvest';
 import { usePool } from '~/modules/pool/lib/usePool';
 import React from 'react';
 
 interface Props extends BoxProps {}
 
-export function PoolInvestSummary({ ...rest }: Props) {
+export function ReliquaryInvestSummary({ ...rest }: Props) {
     const { pool } = usePool();
-    const { totalInvestValue } = useInvest();
+    const { totalInvestValue } = useReliquaryInvest();
     const weeklyYield = (totalInvestValue * parseFloat(pool.dynamicData.apr.total)) / 52;
 
     return (
