@@ -9,6 +9,7 @@ import {
     IconButton,
     ModalOverlay,
     useDisclosure,
+    Text,
 } from '@chakra-ui/react';
 import { ChevronLeft } from 'react-feather';
 import { ReliquaryInvestPreview } from '~/modules/reliquary/invest/components/ReliquaryInvestPreview';
@@ -185,9 +186,15 @@ export function ReliquaryInvestModal({
                         ) : null}
                         <BeetsModalHeader>
                             {modalState === 'start' ? (
-                                <Heading size="md" noOfLines={1}>
-                                    Invest into Reliquary
-                                </Heading>
+                                <>
+                                    <Heading size="md" noOfLines={1}>
+                                        Get {createRelic ? ' ' : 'more '}maBEETS
+                                    </Heading>
+                                    <Text fontSize="1rem" fontWeight="normal">
+                                        Placeholder for a short (2 lines?) explainer. Can be different for create new
+                                        relic and deposit into existing relic
+                                    </Text>
+                                </>
                             ) : null}
                             {modalState === 'proportional' ? (
                                 <Heading size="md" marginLeft="8" textAlign="left">
