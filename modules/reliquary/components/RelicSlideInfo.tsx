@@ -136,7 +136,7 @@ export default function RelicSlideInfo(props: Props) {
                         <TokenAvatar height="20px" width="20px" address={networkConfig.beets.address} />
                         <Tooltip label={`BEETS emissions for reliquary are calculated per second.`}>
                             <Text fontSize="1rem" lineHeight="1rem">
-                                {numeral(beetsPerDay).format('0,0')} / day
+                                {numeral(relicShare * beetsPerDay).format('0,0.000')} / day
                             </Text>
                         </Tooltip>
                     </HStack>
