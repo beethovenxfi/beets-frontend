@@ -34,8 +34,8 @@ export function ReliquaryDetailsCharts() {
                     width={{ base: '165px', lg: '180px' }}
                     variant="filled"
                 >
-                    <option value="FB_LEV">fBEETS ??</option>
-                    <option value="MAB_LEV">maBEETS ??</option>
+                    <option value="FB_LEV">fBEETS</option>
+                    <option value="MAB_LEV">maBEETS</option>
                     <option value="RELICS">Relics</option>
                     <option value="TVL">TVL</option>
                 </Select>

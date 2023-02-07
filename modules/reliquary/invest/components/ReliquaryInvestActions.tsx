@@ -1,32 +1,29 @@
 import React, { useEffect, useState } from 'react';
 import { useUserAllowances } from '~/lib/util/useUserAllowances';
-import { useInvest } from '~/modules/pool/invest/lib/useInvest';
-import { usePoolJoinGetBptOutAndPriceImpactForTokensIn } from '~/modules/pool/invest/lib/usePoolJoinGetBptOutAndPriceImpactForTokensIn';
-import { usePoolJoinGetContractCallData } from '~/modules/pool/invest/lib/usePoolJoinGetContractCallData';
-import { useJoinPool } from '~/modules/pool/invest/lib/useJoinPool';
+import { useReliquaryInvest } from '~/modules/reliquary/invest/lib/useReliquaryInvest';
 import { BeetsTransactionStepsSubmit, TransactionStep } from '~/components/button/BeetsTransactionStepsSubmit';
 import { Alert, AlertIcon, Box, VStack } from '@chakra-ui/react';
 import { FadeInBox } from '~/components/animation/FadeInBox';
 import { numberFormatUSDValue } from '~/lib/util/number-formats';
-import { usePoolUserTokenBalancesInWallet } from '~/modules/pool/lib/usePoolUserTokenBalancesInWallet';
-import { usePoolUserBptBalance } from '~/modules/pool/lib/usePoolUserBptBalance';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 import { usePool } from '~/modules/pool/lib/usePool';
-import { useUserSyncBalanceMutation } from '~/apollo/generated/graphql-codegen-generated';
 import { useHasBatchRelayerApproval } from '~/lib/util/useHasBatchRelayerApproval';
 import { SubTransactionSubmittedContent } from '~/components/transaction/SubTransactionSubmittedContent';
 import { transactionMessageFromError } from '~/lib/util/transaction-util';
+import { useReliquaryDepositContractCallData } from '~/modules/reliquary/lib/useReliquaryDepositContractCallData';
+import { useReliquaryZap } from '~/modules/reliquary/lib/useReliquaryZap';
+import useReliquary from '~/modules/reliquary/lib/useReliquary';
+import { useBatchRelayerHasApprovedForAll } from '~/modules/reliquary/lib/useBatchRelayerHasApprovedForAll';
 
 interface Props {
     onInvestComplete(): void;
     onClose(): void;
 }
 
-export function PoolInvestActions({ onInvestComplete, onClose }: Props) {
+export function ReliquaryInvestActions({ onInvestComplete, onClose }: Props) {
     const networkConfig = useNetworkConfig();
-    const { pool, requiresBatchRelayerOnJoin } = usePool();
-    const { selectedInvestTokensWithAmounts, totalInvestValue, zapEnabled } = useInvest();
-    const { joinPool, ...joinQuery } = useJoinPool(pool, zapEnabled);
+    const { pool } = usePool();
+    const { selectedInvestTokensWithAmounts, totalInvestValue } = useReliquaryInvest();
     const allInvestTokens = pool.investConfig.options.map((option) => option.tokenOptions).flat();
     const {
         hasApprovalForAmount,
@@ -40,21 +37,24 @@ export function PoolInvestActions({ onInvestComplete, onClose }: Props) {
         refetch: refetchBatchRelayerApproval,
     } = useHasBatchRelayerApproval();
 
-    const { bptOutAndPriceImpact } = usePoolJoinGetBptOutAndPriceImpactForTokensIn();
-    const { data: contractCallData, isLoading: isLoadingContractCallData } = usePoolJoinGetContractCallData(
-        bptOutAndPriceImpact?.minBptReceived || null,
-        zapEnabled,
-    );
+    const { createRelic, refetchRelicPositions } = useReliquary();
+    const { reliquaryZap, ...reliquaryJoinQuery } = useReliquaryZap('DEPOSIT');
+    const {
+        data: batchRelayerHasApprovedForAll,
+        isLoading: isLoadingBatchRelayerHasApprovedForAll,
+        refetch: refetchBatchRelayerHasApprovedForAll,
+    } = useBatchRelayerHasApprovedForAll();
+    const { data: reliquaryContractCalls } = useReliquaryDepositContractCallData({
+        investTokensWithAmounts: selectedInvestTokensWithAmounts,
+        enabled: batchRelayerHasApprovedForAll,
+    });
 
-    const { refetch: refetchUserTokenBalances } = usePoolUserTokenBalancesInWallet();
-    const { refetch: refetchUserBptBalance } = usePoolUserBptBalance();
-    const [userSyncBalance] = useUserSyncBalanceMutation();
-
-    const isLoading = isLoadingUserAllowances || isLoadingContractCallData || isLoadingBatchRelayerApproval;
-    const isBatchRelayerApprovalRequired = requiresBatchRelayerOnJoin || zapEnabled;
+    const isLoading =
+        isLoadingUserAllowances || isLoadingBatchRelayerApproval || isLoadingBatchRelayerHasApprovedForAll;
 
     useEffect(() => {
         refetchBatchRelayerApproval({});
+        refetchBatchRelayerHasApprovedForAll({});
     }, []);
 
     useEffect(() => {
@@ -66,10 +66,10 @@ export function PoolInvestActions({ onInvestComplete, onClose }: Props) {
             );
 
             const investStep: TransactionStep = {
-                id: 'invest',
+                id: 'reliquary-invest',
                 type: 'other',
-                buttonText: 'Invest',
-                tooltipText: 'Invest into this pool',
+                buttonText: `Invest into ${createRelic ? 'a new' : 'your'} relic`,
+                tooltipText: 'Invest into fBeets and deposit into your relic',
             };
 
             const steps: TransactionStep[] = [
@@ -83,12 +83,21 @@ export function PoolInvestActions({ onInvestComplete, onClose }: Props) {
                 investStep,
             ];
 
-            if (isBatchRelayerApprovalRequired && !hasBatchRelayerApproval) {
+            if (!hasBatchRelayerApproval) {
                 steps.unshift({
                     id: 'batch-relayer',
                     type: 'other',
                     buttonText: 'Approve Batch Relayer',
                     tooltipText: 'This pool requires you to approve the batch relayer.',
+                });
+            }
+
+            if (!batchRelayerHasApprovedForAll) {
+                steps.unshift({
+                    id: 'batch-relayer-reliquary',
+                    type: 'other',
+                    buttonText: 'Approve Batch Relayer for all relics',
+                    tooltipText: 'This relic requires you to approve the batch relayer.',
                 });
             }
 
@@ -98,22 +107,20 @@ export function PoolInvestActions({ onInvestComplete, onClose }: Props) {
 
     return (
         <VStack width="full" spacing="4">
-            {joinQuery.error && (
+            {reliquaryJoinQuery.error && (
                 <Box width="full" px="4">
                     <Alert width="full" status="error">
                         <AlertIcon />
-                        {transactionMessageFromError(joinQuery.error)}
+                        {transactionMessageFromError(reliquaryJoinQuery.error)}
                     </Alert>
                 </Box>
             )}
-            {joinQuery.isConfirmed && (
+            {reliquaryJoinQuery.isConfirmed && (
                 <Box width="full" px="4">
-                    <FadeInBox isVisible={joinQuery.isConfirmed}>
+                    <FadeInBox isVisible={reliquaryJoinQuery.isConfirmed}>
                         <Alert status="success" borderRadius="md">
                             <AlertIcon />
-                            {`You've successfully invested ${numberFormatUSDValue(totalInvestValue)} into ${
-                                pool.name
-                            }.`}
+                            {`You've successfully invested ${numberFormatUSDValue(totalInvestValue)} into a relic.`}
                         </Alert>
                     </FadeInBox>
                 </Box>
@@ -121,34 +128,43 @@ export function PoolInvestActions({ onInvestComplete, onClose }: Props) {
             <Box
                 px="4"
                 width="full"
-                pb={joinQuery.isConfirmed || joinQuery.isFailed || joinQuery.isPending ? '0' : '4'}
+                pb={
+                    reliquaryJoinQuery.isConfirmed || reliquaryJoinQuery.isFailed || reliquaryJoinQuery.isPending
+                        ? '0'
+                        : '4'
+                }
             >
                 <BeetsTransactionStepsSubmit
-                    isLoading={steps === null || isLoadingBatchRelayerApproval}
+                    isLoading={
+                        steps === null || isLoadingBatchRelayerApproval || isLoadingBatchRelayerHasApprovedForAll
+                    }
                     loadingButtonText="Invest"
-                    completeButtonText="Return to pool"
+                    completeButtonText="Return to maBEETS"
                     onCompleteButtonClick={onClose}
                     steps={steps || []}
                     onSubmit={(id) => {
-                        if (id === 'invest' && contractCallData) {
-                            joinPool(contractCallData, selectedInvestTokensWithAmounts);
+                        if (id === 'reliquary-invest' && reliquaryContractCalls) {
+                            reliquaryZap(reliquaryContractCalls);
                         }
                     }}
                     onConfirmed={(id) => {
-                        if (id !== 'invest') {
+                        if (id !== 'reliquary-invest') {
                             refetchUserAllowances();
                         } else {
-                            refetchUserTokenBalances();
-                            refetchUserBptBalance();
-                            userSyncBalance({ variables: { poolId: pool.id } });
+                            refetchRelicPositions();
                             onInvestComplete();
                         }
                     }}
-                    queries={[{ ...joinQuery, id: 'invest' }]}
+                    queries={[{ ...reliquaryJoinQuery, id: 'reliquary-invest' }]}
                 />
             </Box>
-            <FadeInBox width="full" isVisible={joinQuery.isConfirmed || joinQuery.isPending || joinQuery.isFailed}>
-                <SubTransactionSubmittedContent query={joinQuery} />
+            <FadeInBox
+                width="full"
+                isVisible={
+                    reliquaryJoinQuery.isConfirmed || reliquaryJoinQuery.isPending || reliquaryJoinQuery.isFailed
+                }
+            >
+                <SubTransactionSubmittedContent query={reliquaryJoinQuery} />
             </FadeInBox>
         </VStack>
     );

@@ -1,12 +1,11 @@
-import { Box, Button, VStack, Text, HStack, Spacer, Divider, Flex } from '@chakra-ui/react';
+import { Box, Button, VStack, Text, HStack, Spacer, Divider, Badge } from '@chakra-ui/react';
 import { motion } from 'framer-motion';
 import React from 'react';
 import Countdown from 'react-countdown';
-import { ChevronLeft, ChevronRight } from 'react-feather';
 import { useSwiper, useSwiperSlide } from 'swiper/react';
 import AnimatedProgress from '~/components/animated-progress/AnimatedProgress';
-import { TokenAmountPill } from '~/components/token/TokenAmountPill';
 import TokenAvatar from '~/components/token/TokenAvatar';
+import BeetsTooltip from '~/components/tooltip/BeetsTooltip';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 import { tokenFormatAmount } from '~/lib/services/token/token-util';
 import { numberFormatUSDValue } from '~/lib/util/number-formats';
@@ -24,10 +23,9 @@ export default function RelicSlideMainInfo({ isLoading, openInvestModal, openWit
     const { isActive } = useSwiperSlide();
     const { relicPositions, selectedRelic, maturityThresholds } = useReliquary();
     const config = useNetworkConfig();
-    const swiper = useSwiper();
-    const { data: relicTokenBalances, relicBalanceUSD } = useRelicDepositBalance();
+    const { relicBalanceUSD } = useRelicDepositBalance();
 
-    const { progressToNextLevel, levelUpDate, canUpgrade } = relicGetMaturityProgress(
+    const { progressToNextLevel, levelUpDate, isMaxMaturity } = relicGetMaturityProgress(
         selectedRelic,
         maturityThresholds,
     );
@@ -77,10 +75,19 @@ export default function RelicSlideMainInfo({ isLoading, openInvestModal, openWit
                                         Level up progress
                                     </Text>
                                     <VStack alignItems="flex-start" w="full">
-                                        <HStack spacing="1" color="beets.green">
-                                            <Text>Next level in</Text>
-                                            <Countdown date={levelUpDate} />
-                                        </HStack>
+                                        {!isMaxMaturity && (
+                                            <HStack spacing="1" color="beets.green">
+                                                <Text>Next level in</Text>
+                                                <Countdown date={levelUpDate} />
+                                            </HStack>
+                                        )}
+                                        {isMaxMaturity && (
+                                            <BeetsTooltip noImage label="You've achieved the max level, nice!">
+                                                <Box>
+                                                    <Badge colorScheme="green">MAX LEVEL</Badge>
+                                                </Box>
+                                            </BeetsTooltip>
+                                        )}
                                         <AnimatedProgress
                                             rounded="5"
                                             color="black"
@@ -89,6 +96,7 @@ export default function RelicSlideMainInfo({ isLoading, openInvestModal, openWit
                                         />
                                     </VStack>
                                 </VStack>
+
                                 <HStack
                                     h="full"
                                     w="full"

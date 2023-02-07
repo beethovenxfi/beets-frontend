@@ -2,7 +2,7 @@ import { useQuery } from 'react-query';
 import { reliquaryZapService } from '~/lib/services/staking/reliquary-zap.service';
 import { useUserAccount } from '~/lib/user/useUserAccount';
 
-export function useReliquaryHarvestAllContractCallData({ relicIds }: { relicIds: number[] }) {
+export function useReliquaryHarvestAllContractCallData(relicIds: number[]) {
     const { userAddress } = useUserAccount();
 
     return useQuery(
