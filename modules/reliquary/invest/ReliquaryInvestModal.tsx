@@ -20,6 +20,7 @@ import useReliquary from '~/modules/reliquary/lib/useReliquary';
 import { ReliquaryInvestTypeChoice } from './components/ReliquaryInvestTypeChoice';
 import { ReliquaryInvestCustom } from './components/ReliquaryInvestCustom';
 import { ReliquaryInvestProportional } from './components/ReliquaryInvestProportional';
+import { useReliquaryInvestState } from './lib/useReliquaryInvestState';
 
 interface Props {
     createRelic?: boolean;
@@ -56,6 +57,7 @@ export function ReliquaryInvestModal({
     const containerControls = useAnimation();
     const modalContainerRef = useRef<HTMLDivElement | null>(null);
     const lastModalBounds = useRef<DOMRect | null>(null);
+    const { clearInvestState } = useReliquaryInvestState();
 
     function onModalOpen() {
         if (createRelic) {
@@ -68,10 +70,11 @@ export function ReliquaryInvestModal({
 
     function onModalClose() {
         if (investComplete) {
-            setModalState('start');
             setInvestType(null);
             setCreateRelic(false);
         }
+        setModalState('start');
+        clearInvestState();
         onClose();
         _onClose && _onClose();
     }
@@ -222,10 +225,12 @@ export function ReliquaryInvestModal({
                                         onShowProportional={() => {
                                             setInvestType('proportional');
                                             setModalState('proportional');
+                                            clearInvestState();
                                         }}
                                         onShowCustom={() => {
                                             setInvestType('custom');
                                             setModalState('custom');
+                                            clearInvestState();
                                         }}
                                     />
                                 </motion.div>
