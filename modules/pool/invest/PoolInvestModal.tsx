@@ -21,10 +21,8 @@ import { animate, AnimatePresence, motion, useAnimation } from 'framer-motion';
 import { usePool } from '~/modules/pool/lib/usePool';
 import { BeetsModalBody, BeetsModalContent, BeetsModalHeader } from '~/components/modal/BeetsModal';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
-import useReliquary from '~/modules/reliquary/lib/useReliquary';
 
 interface Props {
-    createRelic?: boolean;
     activatorLabel?: string;
     activatorProps?: ButtonProps;
     noActivator?: boolean;
@@ -42,7 +40,6 @@ function getInvertedTransform(startBounds: DOMRect, endBounds: DOMRect) {
 }
 
 export function PoolInvestModal({
-    createRelic = false,
     activatorLabel,
     activatorProps = {},
     noActivator,
@@ -55,27 +52,15 @@ export function PoolInvestModal({
     const [type, setInvestType] = useState<'proportional' | 'custom' | null>(null);
     const initialRef = useRef(null);
     const [investComplete, setInvestComplete] = useState(false);
-    const { warnings, reliquary } = useNetworkConfig();
-    const { selectedRelic, setCreateRelic } = useReliquary();
-    const isReliquaryFBeetsPool = pool.id === reliquary.fbeets.poolId;
+    const { warnings } = useNetworkConfig();
     const containerControls = useAnimation();
     const modalContainerRef = useRef<HTMLDivElement | null>(null);
     const lastModalBounds = useRef<DOMRect | null>(null);
-
-    function onModalOpen() {
-        if (createRelic) {
-            setCreateRelic(true);
-        } else {
-            setCreateRelic(false);
-        }
-        onOpen();
-    }
 
     function onModalClose() {
         if (investComplete) {
             setModalState('start');
             setInvestType(null);
-            setCreateRelic(false);
         }
         onClose();
         _onClose && _onClose();
@@ -83,7 +68,7 @@ export function PoolInvestModal({
 
     useEffect(() => {
         if (isVisible) {
-            onModalOpen();
+            onOpen();
         } else {
             onModalClose();
         }
@@ -134,15 +119,10 @@ export function PoolInvestModal({
     }, [modalState]);
 
     return (
-        <Box width={isReliquaryFBeetsPool && createRelic ? 'full' : { base: 'full', md: 'fit-content' }}>
+        <Box width={{ base: 'full', md: 'fit-content' }}>
             {!noActivator && (
-                <Button
-                    variant="primary"
-                    onClick={onModalOpen}
-                    width={isReliquaryFBeetsPool && createRelic ? 'full' : { base: 'full', md: '140px' }}
-                    {...activatorProps}
-                >
-                    {isReliquaryFBeetsPool && createRelic ? 'Get maBEETS' : activatorLabel || 'Invest'}
+                <Button variant="primary" onClick={onOpen} width={{ base: 'full', md: '140px' }} {...activatorProps}>
+                    {activatorLabel || 'Invest'}
                 </Button>
             )}
             <Modal motionPreset="none" isOpen={isOpen} onClose={onModalClose} size="lg" initialFocusRef={initialRef}>
@@ -220,14 +200,6 @@ export function PoolInvestModal({
                                     animate={{ opacity: 1, transition: { delay: 0.25 } }}
                                     exit={{ opacity: 0 }}
                                 >
-                                    {!createRelic && selectedRelic && isReliquaryFBeetsPool && (
-                                        <Box px="4">
-                                            <Alert status="warning" mb="4">
-                                                <AlertIcon />
-                                                Investing more funds into your relic will affect your level up progress.
-                                            </Alert>
-                                        </Box>
-                                    )}
                                     {warnings.poolInvest[pool.id] && (
                                         <Box px="4">
                                             <Alert status="warning" mb="4">
