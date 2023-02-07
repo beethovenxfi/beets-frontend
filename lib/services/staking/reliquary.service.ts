@@ -89,7 +89,12 @@ export class ReliquaryService {
         userAddress: string;
         // tokens: TokenBase[];
         provider: BaseProvider;
-    }): Promise<{ rewards: { address: string; amount: string }[]; relicIds: number[] }> {
+    }): Promise<{
+        rewards: { address: string; amount: string }[];
+        relicIds: number[];
+        numberOfRelics: number;
+        fBEETSTotalBalance: string;
+    }> {
         const multicaller = new Multicaller(this.chainId, provider, ReliquaryAbi);
 
         const allPositions = await this.getAllPositions({ userAddress, provider });
@@ -110,6 +115,7 @@ export class ReliquaryService {
                 relicId: position.relicId,
                 address: this.beetsAddress,
                 amount: formatFixed(pendingReward, 18),
+                fBEETSBalance: position.amount,
             };
         });
 
@@ -133,6 +139,8 @@ export class ReliquaryService {
         return {
             rewards,
             relicIds,
+            numberOfRelics: relicIds.length,
+            fBEETSTotalBalance: sumBy(pendingRewards, (reward) => parseFloat(reward.fBEETSBalance)).toString(),
         };
     }
 

@@ -33,17 +33,29 @@ export function _useUserData() {
         }
     }, [userAddress]);
 
+    // TODO: need to check this?
     const fbeetsBalance = data?.fbeetsBalance || { totalBalance: '0', stakedBalance: '0', walletBalance: '0' };
-    const poolBalances = data?.balances || [];
-    const staking = data?.staking || [];
+    // filter out the reliquary fbeets pool
+    const poolBalances = data?.balances.filter((pool) => pool.poolId !== networkConfig.reliquary.fbeets.poolId) || [];
+    // and here...
+    const staking = data?.staking.filter((pool) => pool.type !== 'RELIQUARY') || [];
+    // get just the reliquary fbeets balance
+    const newFbeetsBalance =
+        data?.balances.filter((pool) => pool.poolId === networkConfig.reliquary.fbeets.poolId) || [];
 
     const fbeetsValueUSD = priceForAmount({
         address: networkConfig.fbeets.address,
         amount: fbeetsBalance.totalBalance,
     });
 
+    const newFbeetsValueUSD = sum(
+        newFbeetsBalance.map((balance) => parseFloat(balance.totalBalance) * balance.tokenPrice),
+    );
+
     const portfolioValueUSD =
-        fbeetsValueUSD + sum(poolBalances.map((balance) => parseFloat(balance.totalBalance) * balance.tokenPrice));
+        fbeetsValueUSD +
+        newFbeetsValueUSD +
+        sum(poolBalances.map((balance) => parseFloat(balance.totalBalance) * balance.tokenPrice));
 
     const stakedValueUSD =
         priceForAmount({
@@ -91,6 +103,7 @@ export function _useUserData() {
         loading: loading || userAddressChanged,
         refetch,
         fbeetsValueUSD,
+        newFbeetsValueUSD,
         portfolioValueUSD,
         poolBalances,
         fbeetsBalance,

@@ -11,9 +11,11 @@ import { sumBy } from 'lodash';
 import { useBatchRelayerHasApprovedForAll } from '../reliquary/lib/useBatchRelayerHasApprovedForAll';
 import BeetsTooltip from '~/components/tooltip/BeetsTooltip';
 import { ReliquaryBatchRelayerApprovalButton } from '../reliquary/components/ReliquaryBatchRelayerApprovalButton';
+import { useUserData } from '~/lib/user/useUserData';
 
 export function NavbarPendingRewardsReliquary({ ...rest }: BoxProps) {
     const { priceForAmount, getToken } = useGetTokens();
+    const { newFbeetsValueUSD } = useUserData();
     const { harvestAll, ...harvestQuery } = useReliquaryHarvestAllRewards();
     const { data: batchRelayerHasApprovedForAll, refetch } = useBatchRelayerHasApprovedForAll();
     const {
@@ -27,10 +29,10 @@ export function NavbarPendingRewardsReliquary({ ...rest }: BoxProps) {
     const pendingRewardsTotalUSD = sumBy(rewards?.rewards.map((reward) => priceForAmount(reward)));
 
     return (
-        <VStack {...rest} alignItems="stretch">
+        <VStack {...rest} alignItems="stretch" spacing="4">
             <BeetsBox px="4" py="2" flexGrow="1">
                 <Box color="gray.200" pb="2" fontSize="sm">
-                    Pending Reliquary rewards
+                    Pending maBEETS rewards
                 </Box>
                 {rewards?.rewards.map((item, index) => (
                     <Box key={index}>
@@ -42,6 +44,17 @@ export function NavbarPendingRewardsReliquary({ ...rest }: BoxProps) {
                         </Box>
                     </Box>
                 ))}
+            </BeetsBox>
+            <BeetsBox mt="4" px="4" py="2">
+                <Box color="gray.200" pb="2" fontSize="sm">
+                    Total deposited
+                </Box>
+                <Box fontSize="xl" fontWeight="normal" lineHeight="26px">
+                    {numberFormatUSDValue(newFbeetsValueUSD)}
+                </Box>
+                <Box color="gray.200" pt="2" fontSize="sm">
+                    in {rewards?.numberOfRelics} relic(s)
+                </Box>
             </BeetsBox>
             <Box mt="4" justifySelf="flex-end">
                 {!batchRelayerHasApprovedForAll ? (
@@ -65,7 +78,7 @@ export function NavbarPendingRewardsReliquary({ ...rest }: BoxProps) {
                         pendingText="Waiting..."
                         onConfirmed={() => refetchPendingRewards()}
                     >
-                        Claim Reliquary rewards
+                        Claim all maBEETS rewards
                     </BeetsSubmitTransactionButton>
                 )}
             </Box>
