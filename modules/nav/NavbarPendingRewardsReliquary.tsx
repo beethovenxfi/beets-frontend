@@ -17,28 +17,14 @@ export function NavbarPendingRewardsReliquary({ ...rest }: BoxProps) {
     const { harvestAll, ...harvestQuery } = useReliquaryHarvestAllRewards();
     const { data: batchRelayerHasApprovedForAll, refetch } = useBatchRelayerHasApprovedForAll();
     const {
-        data: pendingRewards = [],
+        data: rewards,
         refetch: refetchPendingRewards,
         isLoading: isLoadingPendingRewards,
     } = useReliquaryPendingRewards();
 
-    const relicIds = pendingRewards.map((reward) => parseInt(reward.relicId || ''));
-    const { data: harvestAllContractCallData } = useReliquaryHarvestAllContractCallData({ relicIds });
+    const { data: harvestAllContractCallData } = useReliquaryHarvestAllContractCallData(rewards?.relicIds || []);
 
-    const rewardTokens = Object.values(pendingRewards.map((reward) => reward.address)).filter(
-        (v, i, a) => a.indexOf(v) === i,
-    );
-    const rewards = rewardTokens.map((address) => {
-        const amount = sumBy(
-            pendingRewards.filter((reward) => reward.address === address).map((reward) => parseFloat(reward.amount)),
-        ).toString();
-        return {
-            address,
-            amount,
-        };
-    });
-
-    const pendingRewardsTotalUSD = sumBy(rewards.map((reward) => priceForAmount(reward)));
+    const pendingRewardsTotalUSD = sumBy(rewards?.rewards.map((reward) => priceForAmount(reward)));
 
     return (
         <VStack {...rest} alignItems="stretch">
@@ -46,7 +32,7 @@ export function NavbarPendingRewardsReliquary({ ...rest }: BoxProps) {
                 <Box color="gray.200" pb="2" fontSize="sm">
                     Pending Reliquary rewards
                 </Box>
-                {rewards.map((item, index) => (
+                {rewards?.rewards.map((item, index) => (
                     <Box key={index}>
                         <Box fontSize="xl" fontWeight="normal" lineHeight="26px">
                             {tokenFormatAmount(item.amount)} {getToken(item.address)?.symbol}
@@ -62,6 +48,7 @@ export function NavbarPendingRewardsReliquary({ ...rest }: BoxProps) {
                     <BeetsTooltip label="To claim your pending rewards, you first need to approve the batch relayer.">
                         <Box w="full">
                             <ReliquaryBatchRelayerApprovalButton
+                                buttonText="Approve Batch Relayer"
                                 onConfirmed={() => {
                                     refetch();
                                 }}

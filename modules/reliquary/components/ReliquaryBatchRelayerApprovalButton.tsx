@@ -10,9 +10,10 @@ interface Props {
     onCanceled?: () => void;
     isDisabled?: boolean;
     size?: string;
+    buttonText?: string;
 }
 
-export function ReliquaryBatchRelayerApprovalButton({ ...rest }: Props) {
+export function ReliquaryBatchRelayerApprovalButton({ buttonText, ...rest }: Props) {
     const { approveAll, approve, ...query } = useBatchRelayerRelicApprove(true);
 
     return (
@@ -27,7 +28,7 @@ export function ReliquaryBatchRelayerApprovalButton({ ...rest }: Props) {
                 submittingText="Confirm..."
                 pendingText="Waiting..."
             >
-                Approve Batch Relayer for all Relics
+                {buttonText ? buttonText : 'Approve Batch Relayer for all Relics'}
             </BeetsSubmitTransactionButton>
         </Box>
     );

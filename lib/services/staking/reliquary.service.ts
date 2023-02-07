@@ -9,6 +9,7 @@ import { EncodeReliquaryUpdatePositionInput } from '../batch-relayer/relayer-typ
 import { Interface } from '@ethersproject/abi';
 import * as net from 'net';
 import { networkConfig } from '~/lib/config/network-config';
+import { sumBy } from 'lodash';
 
 export type ReliquaryFarmPosition = {
     farmId: string;
@@ -88,7 +89,7 @@ export class ReliquaryService {
         userAddress: string;
         // tokens: TokenBase[];
         provider: BaseProvider;
-    }): Promise<ReliquaryStakingPendingRewardAmount[]> {
+    }): Promise<{ rewards: { address: string; amount: string }[]; relicIds: number[] }> {
         const multicaller = new Multicaller(this.chainId, provider, ReliquaryAbi);
 
         const allPositions = await this.getAllPositions({ userAddress, provider });
@@ -102,7 +103,7 @@ export class ReliquaryService {
 
         const rewardsByRelicId: { [index: string]: BigNumber } = await multicaller.execute();
 
-        return Object.entries(rewardsByRelicId).map(([index, pendingReward]) => {
+        const pendingRewards = Object.entries(rewardsByRelicId).map(([index, pendingReward]) => {
             const position: ReliquaryFarmPosition = allPositions[parseInt(index)];
             return {
                 id: position.farmId,
@@ -111,6 +112,28 @@ export class ReliquaryService {
                 amount: formatFixed(pendingReward, 18),
             };
         });
+
+        const relicIds = pendingRewards.map((reward) => parseInt(reward.relicId || ''));
+
+        const rewardTokens = Object.values(pendingRewards.map((reward) => reward.address)).filter(
+            (v, i, a) => a.indexOf(v) === i,
+        );
+        const rewards = rewardTokens.map((address) => {
+            const amount = sumBy(
+                pendingRewards
+                    .filter((reward) => reward.address === address)
+                    .map((reward) => parseFloat(reward.amount)),
+            ).toString();
+            return {
+                address,
+                amount,
+            };
+        });
+
+        return {
+            rewards,
+            relicIds,
+        };
     }
 
     public async getPendingRewardsForRelic({

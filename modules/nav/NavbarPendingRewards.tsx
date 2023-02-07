@@ -26,6 +26,8 @@ import { useUserHarvestAllPendingRewards } from './lib/useUserHarvestAllPendingR
 import { BeetsSubmitTransactionButton } from '~/components/button/BeetsSubmitTransactionButton';
 import { tokenFormatAmount } from '~/lib/services/token/token-util';
 import { NavbarPendingRewardsReliquary } from './NavbarPendingRewardsReliquary';
+import { useReliquaryPendingRewards } from '../reliquary/lib/useReliquaryPendingRewards';
+import { sumBy } from 'lodash';
 
 export function NavbarPendingRewards() {
     const {
@@ -36,13 +38,21 @@ export function NavbarPendingRewards() {
         isLoading: pendingRewardsLoading,
     } = useUserPendingRewards();
     const { stakedValueUSD, loading: userDataLoading } = useUserData();
-    const { getToken } = useGetTokens();
+    const { priceForAmount, getToken } = useGetTokens();
     const loading = pendingRewardsLoading || userDataLoading;
     const { harvestAll, ...harvestQuery } = useUserHarvestAllPendingRewards();
     const farmIds = staking.map((stake) => stake?.farm?.id || '');
     const isMasterChefOrFreshBeets =
         stakingType === 'MASTER_CHEF' || stakingType === 'FRESH_BEETS' || stakingType === 'RELIQUARY';
     const isMobile = useBreakpointValue({ base: true, lg: false });
+
+    const { data: pendingReliquaryRewards } = useReliquaryPendingRewards();
+
+    const pendingReliquaryRewardsTotalUSD = sumBy(
+        pendingReliquaryRewards?.rewards.map((reward) => priceForAmount(reward)),
+    );
+
+    const totalPendingRewardsUSD = pendingRewardsTotalUSD + pendingReliquaryRewardsTotalUSD;
 
     return (
         <Popover>
@@ -67,7 +77,7 @@ export function NavbarPendingRewards() {
                         <Skeleton height="7.5px" width="36px" mt="1.5" mb="2px" />
                     ) : (
                         <Box fontSize="11px" pt="0.5">
-                            {numberFormatUSDValue(pendingRewardsTotalUSD)}
+                            {numberFormatUSDValue(totalPendingRewardsUSD)}
                         </Box>
                     )}
                     <Skeleton />
