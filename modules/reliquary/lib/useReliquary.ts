@@ -1,6 +1,6 @@
 import { useQuery } from 'react-query';
 import { useProvider } from 'wagmi';
-import { reliquaryService } from '~/lib/services/staking/reliquary.service';
+import { ReliquaryFarmPosition, reliquaryService } from '~/lib/services/staking/reliquary.service';
 import { useUserAccount } from '~/lib/user/useUserAccount';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 import { makeVar, useReactiveVar } from '@apollo/client';
@@ -42,7 +42,10 @@ export default function useReliquary() {
     } = useQuery(
         ['reliquaryAllPositions', userAddress],
         async () => {
-            const positions = await reliquaryService.getAllPositions({ userAddress: userAddress || '', provider });
+            const positions: ReliquaryFarmPosition[] = await reliquaryService.getAllPositions({
+                userAddress: userAddress || '',
+                provider,
+            });
 
             if (positions.length > 0 && selectedRelicId() === undefined) {
                 selectedRelicId(positions[0].relicId);

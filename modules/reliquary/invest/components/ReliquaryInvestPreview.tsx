@@ -1,4 +1,4 @@
-import { Alert, AlertIcon, Box, SkeletonText, StackDivider, VStack } from '@chakra-ui/react';
+import { Box, StackDivider, VStack } from '@chakra-ui/react';
 import { BeetsBox } from '~/components/box/BeetsBox';
 import { useReliquaryInvest } from '~/modules/reliquary/invest/lib/useReliquaryInvest';
 import { ReliquaryInvestSummary } from '~/modules/reliquary/invest/components/ReliquaryInvestSummary';
@@ -6,10 +6,7 @@ import { ReliquaryInvestActions } from '~/modules/reliquary/invest/components/Re
 import TokenRow from '~/components/token/TokenRow';
 import React from 'react';
 import useReliquary from '~/modules/reliquary/lib/useReliquary';
-import { useReliquaryDepositImpact } from '~/modules/reliquary/lib/useReliquaryDepositImpact';
-import formatDistanceToNowStrict from 'date-fns/formatDistanceToNowStrict';
-import { numberFormatUSDValue } from '~/lib/util/number-formats';
-import { useReliquaryJoinGetBptOutAndPriceImpactForTokensIn } from '~/modules/reliquary/invest/lib/useReliquaryJoinGetBptOutAndPriceImpactForTokensIn';
+import { ReliquaryInvestDepositImpact } from './ReliquaryInvestDepositImpact';
 
 interface Props {
     onInvestComplete(): void;
@@ -20,32 +17,13 @@ export function ReliquaryInvestPreview({ onInvestComplete, onClose }: Props) {
     const { selectedInvestTokensWithAmounts } = useReliquaryInvest();
     const { selectedRelic, createRelic } = useReliquary();
     const { totalInvestValue } = useReliquaryInvest();
-    const { bptOutAndPriceImpact, isLoading: bptOutAndPriceImpactLoading } =
-        useReliquaryJoinGetBptOutAndPriceImpactForTokensIn();
-
-    const { data: depositImpact, isLoading: depositImpactLoading } = useReliquaryDepositImpact(
-        parseFloat(bptOutAndPriceImpact?.minBptReceived || ''),
-    );
 
     return (
         <VStack spacing="4" width="full">
             <Box px="4" width="full">
                 <ReliquaryInvestSummary mt="6" />
                 {!createRelic && selectedRelic && (
-                    <Box>
-                        <Alert status="warning" mb="4">
-                            <AlertIcon alignSelf="center" />
-                            {!depositImpactLoading && !bptOutAndPriceImpactLoading && depositImpact !== undefined ? (
-                                `Investing ${numberFormatUSDValue(
-                                    totalInvestValue,
-                                )} into this relic will affect its maturity. It will take an additional ${formatDistanceToNowStrict(
-                                    depositImpact.diffDate,
-                                )} to reach maximum maturity.`
-                            ) : (
-                                <SkeletonText noOfLines={3} spacing="4" skeletonHeight="2" />
-                            )}
-                        </Alert>
-                    </Box>
+                    <ReliquaryInvestDepositImpact totalInvestValue={totalInvestValue} relicId={selectedRelic.relicId} />
                 )}
                 <BeetsBox>
                     <VStack width="full" divider={<StackDivider borderColor="whiteAlpha.200" />} mt="4" p="2">

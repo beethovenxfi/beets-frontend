@@ -36,20 +36,23 @@ import BeetsTooltip from '~/components/tooltip/BeetsTooltip';
 import BeetsThinking from '~/assets/icons/beetx-thinking.svg';
 
 import Image from 'next/image';
+import { ReliquaryInvestDepositImpact } from '../invest/components/ReliquaryInvestDepositImpact';
 
 export default function ReliquaryMigrateModal() {
     const { isOpen, onOpen, onClose } = useDisclosure();
-    const [migrationTarget, setMigrationTarget] = useState<number | undefined>(undefined);
+    const [migrationTarget, setMigrationTarget] = useState<number>(-1);
     const [migrateCompleted, setMigrateCompleted] = useState(false);
     const [migratableBalance, setMigratableBalance] = useState(0);
     const [steps, setSteps] = useState<TransactionStep[]>([]);
     const initialRef = useRef(null);
     const networkConfig = useNetworkConfig();
     const { removeToast } = useToast();
-    const { getToken } = useGetTokens();
+    const { getToken, priceForAmount } = useGetTokens();
+
     const legacyfBeets = getToken(networkConfig.fbeets.address);
 
-    const { legacyFbeetsBalance, relicPositionsForFarmId, refetchRelicPositions } = useReliquary();
+    const { legacyFbeetsBalance, relicPositionsForFarmId, refetchRelicPositions, setSelectedRelicId, selectedRelic } =
+        useReliquary();
     const { data: hasBatchRelayerApproval, isLoading: isLoadingBatchRelayerApproval } = useHasBatchRelayerApproval();
     const {
         staked,
@@ -227,28 +230,28 @@ export default function ReliquaryMigrateModal() {
                                         <Text>Choose where to migrate your balance to:</Text>
                                         <Select
                                             value={migrationTarget}
-                                            onChange={(e) =>
-                                                setMigrationTarget(
-                                                    e.currentTarget.value === undefined
-                                                        ? undefined
-                                                        : parseInt(e.currentTarget.value, 10),
-                                                )
-                                            }
+                                            onChange={(e) => setMigrationTarget(parseInt(e.currentTarget.value, 10))}
                                             width="full"
                                             variant="filled"
                                         >
-                                            <option value={undefined}>New relic</option>
+                                            <option value={-1}>New relic</option>
                                             {relicPositionsForFarmId.map((relic) => (
-                                                <option
-                                                    value={relic.relicId}
-                                                    key={`migrate-to-${relic.relicId}`}
-                                                    onClick={() => setMigrationTarget(parseInt(relic.relicId, 10))}
-                                                >
+                                                <option value={relic.relicId} key={`migrate-to-${relic.relicId}`}>
                                                     Relic {relic.relicId} - Level {relic.level + 1}
                                                 </option>
                                             ))}
                                         </Select>
                                     </VStack>
+                                )}
+                                {!isComplete && migrationTarget !== -1 && (
+                                    <ReliquaryInvestDepositImpact
+                                        bptIn={legacyFbeetsBalance.toString()}
+                                        totalInvestValue={priceForAmount({
+                                            address: networkConfig.fbeets.address,
+                                            amount: legacyFbeetsBalance.toString(),
+                                        })}
+                                        relicId={migrationTarget.toString()}
+                                    />
                                 )}
                                 <Box width="full">
                                     <BeetsTransactionStepsSubmit
