@@ -123,7 +123,7 @@ export default function RelicSlideApr(props: Props) {
                                     fontSize: 'sm',
                                 }}
                                 label="My pending rewards"
-                                infoText={`Your accumulated liquidity incentives for this relic. You can claim your rewards at any time.`}
+                                infoText={`Your accumulated liquidity incentives for this relic. At any time you can claim your rewards as long as the amount is more than $0.01`}
                             />
                             {isLoadingPendingRewards ? (
                                 <Skeleton height="34px" width="140px" mt="4px" mb="4px" />
@@ -170,6 +170,7 @@ export default function RelicSlideApr(props: Props) {
                             onConfirmed={() => {
                                 refetchPendingRewards();
                             }}
+                            disabled={pendingRewardsUsdValue < 0.01}
                         >
                             Claim now
                         </BeetsSubmitTransactionButton>
