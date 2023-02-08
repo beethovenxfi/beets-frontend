@@ -34,6 +34,7 @@ export default function RelicMaturity({}: Props) {
                 formatter: (params: any) => {
                     return `Level ${params[0].dataIndex + 1}<br>Maturity date: ${params[0].name}`;
                 },
+                confine: true,
             },
             grid: {
                 left: '1%',
@@ -100,7 +101,7 @@ export default function RelicMaturity({}: Props) {
         };
     }, [isLoading, selectedRelic]);
     return (
-        <Card px="2" py="4" h="full" height='250px' width={{ base: 'full', lg: 'full' }}>
+        <Card px="2" py="4" h="full" height="250px" width={{ base: 'full', lg: 'full' }}>
             <VStack spacing="2" height="full">
                 <HStack height="fit-content" px="2" w="full" spacing="12" alignItems="flex-start">
                     <VStack spacing="0" alignItems="flex-start" height="fit-content">
@@ -112,7 +113,7 @@ export default function RelicMaturity({}: Props) {
                                 color: 'beets.base.50',
                             }}
                             label="Projected maturity"
-                            infoText="Lorem ipsum dolor sit amet, Lorem ipsum dolor sit amet"
+                            infoText="This graph shows where this relics position is on the maturity curve and if you hover or tap, it will show an ETA for the next levels!"
                         />
                     </VStack>
                 </HStack>
