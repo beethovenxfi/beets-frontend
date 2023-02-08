@@ -31,6 +31,7 @@ export function ReliquaryCurveChart() {
             // any -> https://github.com/apache/echarts/issues/14277
             formatter: (params: any) =>
                 `Level ${params[0].data[0]}: ${numeral(params[0].data[1]).format('0a')}x maturity boost`,
+            confine: true,
         },
         xAxis: {
             name: 'Level',
