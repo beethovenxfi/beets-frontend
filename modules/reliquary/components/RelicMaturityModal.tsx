@@ -1,4 +1,4 @@
-import { Modal, ModalOverlay } from '@chakra-ui/react';
+import { Modal, ModalCloseButton, ModalOverlay } from '@chakra-ui/react';
 import React from 'react';
 import { BeetsModalContent } from '~/components/modal/BeetsModal';
 import RelicMaturity from './charts/RelicMaturity';
@@ -14,6 +14,7 @@ export default function RelicMaturityModal({ isOpen, onClose }: Props) {
             <ModalOverlay bg="blackAlpha.900" />
             <BeetsModalContent width="full">
                 <RelicMaturity />
+                <ModalCloseButton />
             </BeetsModalContent>
         </Modal>
     );
