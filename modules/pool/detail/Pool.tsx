@@ -1,4 +1,4 @@
-import { Box, Grid, GridItem, HStack, VStack, Text, Button } from '@chakra-ui/react';
+import { Box, Grid, GridItem, HStack, VStack, Text } from '@chakra-ui/react';
 import PoolHeader from '~/modules/pool/detail/components/PoolHeader';
 import { PoolComposition } from '~/modules/pool/detail/components/composition/PoolComposition';
 import PoolStats from './components/stats/PoolStats';
@@ -27,7 +27,13 @@ export function Pool() {
     const { warnings, investDisabled } = useNetworkConfig();
 
     useEffect(() => {
-        if (total > 0) {
+        return () => {
+            removeToast('migrate-fbeets');
+        };
+    }, []);
+
+    useEffect(() => {
+        if (total > 0 && isFbeetsPool) {
             showToast({
                 id: 'migrate-fbeets',
                 type: ToastType.Warn,
@@ -46,13 +52,6 @@ export function Pool() {
             removeToast('migrate-fbeets');
         }
     }, [total]);
-
-    useEffect(() => {
-        if (!isFbeetsPool && !hasBpt) {
-            console.log({ hasBpt, isFbeetsPool });
-            removeToast('migrate-fbeets');
-        }
-    }, [isFbeetsPool, hasBpt]);
 
     return (
         <Box marginBottom="8">
