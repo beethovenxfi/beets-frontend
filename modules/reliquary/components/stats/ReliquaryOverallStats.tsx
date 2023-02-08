@@ -172,7 +172,7 @@ export default function ReliquaryOverallStats() {
                         <Text fontSize="1rem" lineHeight="1rem">
                             {`Average value per relic is ${numberFormatUSDValue(avgValuePerRelic)}`}
                         </Text>
-                        <Text fontSize="1rem" lineHeight="1rem">
+                        <Text fontSize="1rem" lineHeight="1rem" pt="2">
                             {`${numberOfRelicsThisWeek} relics minted this week`}
                         </Text>
                     </VStack>
