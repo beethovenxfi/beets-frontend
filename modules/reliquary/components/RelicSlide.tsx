@@ -146,7 +146,7 @@ export default function RelicSlide({ relic, openInvestModal, openWithdrawModal }
                     </HStack>
                 </Flex>
                 <Flex position="relative" className={getUnderglowClass()} as={motion.div}>
-                    {canUpgrade && isActive && (
+                    {canUpgrade && isActive && !isRelicAmountZero && (
                         <Flex
                             animate={{ opacity: 1 }}
                             initial={{ opacity: 0 }}
