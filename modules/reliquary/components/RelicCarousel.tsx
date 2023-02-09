@@ -82,6 +82,7 @@ export function RelicCarousel({ loading, ...rest }: Props) {
                     }}
                     allowTouchMove={isMobile}
                     modules={[Pagination]}
+                    onClick={(swiper) => swiper.slideTo(swiper.clickedIndex)}
                 >
                     {relicPositions.map((relic) => (
                         <SwiperSlide key={`relic-carousel-${relic.relicId}`}>

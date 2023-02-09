@@ -197,6 +197,7 @@ export default function RelicSlide({ relic, openInvestModal, openWithdrawModal }
                         overflow="hidden"
                     >
                         <Image
+                            style={{ cursor: 'pointer' }}
                             src={getImage(relic?.level + 1)}
                             width="400px"
                             height="400px"
