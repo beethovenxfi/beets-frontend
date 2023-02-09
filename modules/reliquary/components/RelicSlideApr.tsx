@@ -1,18 +1,17 @@
-import { useSwiper, useSwiperSlide } from 'swiper/react';
+import { useSwiperSlide } from 'swiper/react';
 import { useEffect, useState } from 'react';
 import {
     Badge,
     Box,
-    Heading,
     HStack,
     Skeleton,
     VStack,
     Text,
-    Divider,
-    Spacer,
     Button,
     useDisclosure,
     Portal,
+    Stack,
+    StackDivider,
 } from '@chakra-ui/react';
 import useReliquary from '../lib/useReliquary';
 import { numberFormatUSDValue } from '~/lib/util/number-formats';
@@ -34,14 +33,11 @@ import { useBatchRelayerHasApprovedForAll } from '../lib/useBatchRelayerHasAppro
 import RelicMaturityModal from './RelicMaturityModal';
 import { BarChart } from 'react-feather';
 
-interface Props {}
-
-export default function RelicSlideApr(props: Props) {
+export default function RelicSlideApr() {
     const { pool } = usePool();
     const { isActive } = useSwiperSlide();
     const { isOpen, onOpen, onClose } = useDisclosure();
-    const { selectedRelicId, isLoadingRelicPositions, selectedRelicLevel, relicPositions, selectedRelicApr } =
-        useReliquary();
+    const { isLoadingRelicPositions, selectedRelicLevel, relicPositions, selectedRelicApr } = useReliquary();
 
     const {
         data: pendingRewards = [],
@@ -62,7 +58,8 @@ export default function RelicSlideApr(props: Props) {
 
     return (
         <>
-            <VStack
+            <Stack
+                divider={<StackDivider />}
                 left={{ base: '0', lg: '-42.5%' }}
                 rounded="md"
                 position={{ base: 'relative', lg: 'absolute' }}
@@ -82,7 +79,7 @@ export default function RelicSlideApr(props: Props) {
                 minHeight="310px"
                 justifyContent="stretch"
             >
-                <VStack alignItems="flex-start" height="50%" w="full">
+                <VStack alignItems="flex-start" height="50%" w="full" spacing="3">
                     <Text lineHeight="1rem" fontWeight="semibold" fontSize="md" color="beets.base.50">
                         Relic APR
                     </Text>
@@ -110,8 +107,6 @@ export default function RelicSlideApr(props: Props) {
                             </Button>
                         </BeetsTooltip>
                     </HStack>
-                    <Spacer />
-                    <Divider />
                 </VStack>
                 <VStack alignItems="flex-start" height="50%" w="full" flexGrow="1" pt={{ base: '1', lg: undefined }}>
                     <HStack width="full" spacing="12" alignItems="flex-start" flexGrow="1">
@@ -176,7 +171,7 @@ export default function RelicSlideApr(props: Props) {
                         </BeetsSubmitTransactionButton>
                     )}
                 </VStack>
-            </VStack>
+            </Stack>
             <Portal>
                 <RelicMaturityModal isOpen={isOpen} onClose={onClose} />
             </Portal>

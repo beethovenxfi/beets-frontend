@@ -1,39 +1,24 @@
-import { useSwiper, useSwiperSlide } from 'swiper/react';
+import { useSwiperSlide } from 'swiper/react';
 import { useEffect, useState } from 'react';
-import { HStack, Skeleton, VStack, Text, Divider, Tooltip, Spacer } from '@chakra-ui/react';
+import { HStack, Skeleton, VStack, Text, Tooltip, Stack, StackDivider } from '@chakra-ui/react';
 import useReliquary from '../lib/useReliquary';
 import { numberFormatUSDValue } from '~/lib/util/number-formats';
-import AprTooltip from '~/components/apr-tooltip/AprTooltip';
 import numeral from 'numeral';
-import { usePool } from '~/modules/pool/lib/usePool';
 import { InfoButton } from '~/components/info-button/InfoButton';
 import TokenAvatar from '~/components/token/TokenAvatar';
-import { tokenFormatAmount } from '~/lib/services/token/token-util';
 import { useRelicPendingRewards } from '../lib/useRelicPendingRewards';
 import { sumBy } from 'lodash';
 import { useGetTokens } from '~/lib/global/useToken';
-import { ReliquaryBatchRelayerApprovalButton } from './ReliquaryBatchRelayerApprovalButton';
-import { BeetsSubmitTransactionButton } from '~/components/button/BeetsSubmitTransactionButton';
 import { useRelicHarvestRewards } from '../lib/useRelicHarvestRewards';
-import BeetsTooltip from '~/components/tooltip/BeetsTooltip';
 import { useReliquaryGlobalStats } from '../lib/useReliquaryGlobalStats';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 import { networkConfig } from '~/lib/config/network-config';
 import { motion } from 'framer-motion';
 
-interface Props {}
-
-export default function RelicSlideInfo(props: Props) {
+export default function RelicSlideInfo() {
     const { isActive } = useSwiperSlide();
-    const {
-        selectedRelicId,
-        isLoadingRelicPositions,
-        selectedRelicLevel,
-        selectedRelic,
-        weightedTotalBalance,
-        beetsPerDay,
-        isLoading,
-    } = useReliquary();
+    const { isLoadingRelicPositions, selectedRelicLevel, selectedRelic, weightedTotalBalance, beetsPerDay, isLoading } =
+        useReliquary();
     const { priceForAmount } = useGetTokens();
     const config = useNetworkConfig();
 
@@ -43,23 +28,18 @@ export default function RelicSlideInfo(props: Props) {
     const relicBeetsPerDay = beetsPerDay * relicShare;
     const relicYieldPerDay = priceForAmount({ address: config.beets.address, amount: `${relicBeetsPerDay}` });
 
-    const {
-        data: pendingRewards = [],
-        refetch: refetchPendingRewards,
-        isLoading: isLoadingPendingRewards,
-    } = useRelicPendingRewards();
+    const { data: pendingRewards = [], refetch: refetchPendingRewards } = useRelicPendingRewards();
     const [_isLoadingRelicPositions, setIsLoadingRelicPositions] = useState(false);
-    const { harvest, ...harvestQuery } = useRelicHarvestRewards();
+    const { harvest } = useRelicHarvestRewards();
 
     // hack to get around next.js hydration issues with swiper
     useEffect(() => {
         setIsLoadingRelicPositions(isLoadingRelicPositions);
     }, [isLoadingRelicPositions]);
 
-    const pendingRewardsUsdValue = sumBy(pendingRewards, priceForAmount);
-
     return (
-        <VStack
+        <Stack
+            divider={<StackDivider />}
             right={{ base: '0', lg: '-41.25%' }}
             height="full"
             top="0"
@@ -110,8 +90,6 @@ export default function RelicSlideInfo(props: Props) {
                         </Text>
                     )}
                 </VStack>
-                <Spacer />
-                <Divider pt={{ base: '4', lg: undefined }} />
             </VStack>
             <VStack spacing="0" h="50%" w="full" alignItems="flex-start">
                 <InfoButton
@@ -142,6 +120,6 @@ export default function RelicSlideInfo(props: Props) {
                     </HStack>
                 )}
             </VStack>
-        </VStack>
+        </Stack>
     );
 }

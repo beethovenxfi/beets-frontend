@@ -1,8 +1,8 @@
-import { Box, Button, VStack, Text, HStack, Spacer, Divider, Badge } from '@chakra-ui/react';
+import { Box, Button, VStack, Text, HStack, Badge, Stack, StackDivider } from '@chakra-ui/react';
 import { motion } from 'framer-motion';
 import React from 'react';
 import Countdown from 'react-countdown';
-import { useSwiper, useSwiperSlide } from 'swiper/react';
+import { useSwiperSlide } from 'swiper/react';
 import AnimatedProgress from '~/components/animated-progress/AnimatedProgress';
 import TokenAvatar from '~/components/token/TokenAvatar';
 import BeetsTooltip from '~/components/tooltip/BeetsTooltip';
@@ -44,7 +44,8 @@ export default function RelicSlideMainInfo({ isLoading, openInvestModal, openWit
                         height="full"
                         position="relative"
                     >
-                        <VStack
+                        <Stack
+                            divider={<StackDivider />}
                             width={{ base: '100%', lg: '60%' }}
                             height="full"
                             rounded="md"
@@ -66,8 +67,6 @@ export default function RelicSlideMainInfo({ isLoading, openInvestModal, openWit
                                         {tokenFormatAmount(selectedRelic?.amount || '0')}
                                     </Text>
                                 </HStack>
-                                <Spacer />
-                                <Divider />
                             </VStack>
                             <VStack spacing="0" h="50%" w="full" pt={{ base: '1', lg: undefined }}>
                                 <VStack spacing="0" w="full" alignItems="flex-start">
@@ -127,7 +126,7 @@ export default function RelicSlideMainInfo({ isLoading, openInvestModal, openWit
                                     </Button>
                                 </HStack>
                             </VStack>
-                        </VStack>
+                        </Stack>
                     </VStack>
                 </Box>
             )}
