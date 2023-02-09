@@ -83,6 +83,10 @@ export function _useUserData() {
             return fbeetsValueUSD + bptValueUSD;
         }
 
+        if (poolId === networkConfig.reliquary.fbeets.poolId) {
+            return newFbeetsValueUSD;
+        }
+
         const balance = poolBalances.find((pool) => pool.poolId === poolId);
 
         if (!balance) {
@@ -111,6 +115,7 @@ export function _useUserData() {
         userPoolIds: [
             ...poolBalances.map((balance) => balance.poolId),
             ...(fbeetsValueUSD > 0 ? [networkConfig.fbeets.poolId] : []),
+            ...(newFbeetsValueUSD > 0 ? [networkConfig.reliquary.fbeets.poolId] : []),
         ],
         bptBalanceForPool,
         usdBalanceForPool,
