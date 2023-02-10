@@ -37,6 +37,8 @@ import BeetsThinking from '~/assets/icons/beetx-thinking.svg';
 
 import Image from 'next/image';
 import { ReliquaryInvestDepositImpact } from '../invest/components/ReliquaryInvestDepositImpact';
+import { ReliquaryInvestImage } from '../invest/components/ReliquaryInvestImage';
+import { useCurrentStep } from '../lib/useReliquaryCurrentStep';
 
 export default function ReliquaryMigrateModal() {
     const { isOpen, onOpen, onClose } = useDisclosure();
@@ -78,6 +80,8 @@ export default function ReliquaryMigrateModal() {
         migrationTarget,
         isOpen && hasApprovalForFbeetsAmount && !!batchRelayerHasApprovedForAll && !!hasBatchRelayerApproval,
     );
+
+    const { currentStep } = useCurrentStep();
 
     useEffect(() => {
         if (!migratableBalance) {
@@ -157,7 +161,6 @@ export default function ReliquaryMigrateModal() {
     ]);
 
     const isComplete = !isLoadingLegacyFbeetsBalance && migrateCompleted;
-    const completedPrequisites = steps.length === 1 && steps[0].id === 'reliquary-migrate';
 
     const handleOnClose = () => {
         if (isComplete) {
@@ -194,14 +197,8 @@ export default function ReliquaryMigrateModal() {
                     <AnimatePresence>
                         <Box p="4" width="full">
                             <VStack spacing="4" width="full">
-                                <HStack width="full" alignItems="flex-start">
-                                    <Heading fontSize="1.25rem">Migrate to a relic</Heading>
-                                    <BeetsTooltip label={completedPrequisites ? null : tooltipLabel}>
-                                        <Box _hover={{ transform: 'scale(1.2)' }}>
-                                            <Image src={BeetsThinking} width="24" height="24" alt="beets-balanced" />
-                                        </Box>
-                                    </BeetsTooltip>
-                                </HStack>
+                                <Heading fontSize="1.25rem">Migrate to a relic</Heading>
+                                <ReliquaryInvestImage />
                                 {isComplete && (
                                     <Alert status="success">
                                         <AlertIcon />
@@ -225,24 +222,28 @@ export default function ReliquaryMigrateModal() {
                                         </VStack>
                                     </BeetsBox>
                                 )}
-                                {!isComplete && relicPositionsForFarmId.length > 0 && (
-                                    <VStack width="full" alignItems="flex-start">
-                                        <Text>Choose where to migrate your balance to:</Text>
-                                        <Select
-                                            value={migrationTarget}
-                                            onChange={(e) => setMigrationTarget(parseInt(e.currentTarget.value, 10))}
-                                            width="full"
-                                            variant="filled"
-                                        >
-                                            <option value={-1}>New relic</option>
-                                            {relicPositionsForFarmId.map((relic) => (
-                                                <option value={relic.relicId} key={`migrate-to-${relic.relicId}`}>
-                                                    Relic {relic.relicId} - Level {relic.level + 1}
-                                                </option>
-                                            ))}
-                                        </Select>
-                                    </VStack>
-                                )}
+                                {!isComplete &&
+                                    relicPositionsForFarmId.length > 0 &&
+                                    currentStep === 'reliquary-migrate' && (
+                                        <VStack width="full" alignItems="flex-start">
+                                            <Text>Choose where to migrate your balance to:</Text>
+                                            <Select
+                                                value={migrationTarget}
+                                                onChange={(e) =>
+                                                    setMigrationTarget(parseInt(e.currentTarget.value, 10))
+                                                }
+                                                width="full"
+                                                variant="filled"
+                                            >
+                                                <option value={-1}>New relic</option>
+                                                {relicPositionsForFarmId.map((relic) => (
+                                                    <option value={relic.relicId} key={`migrate-to-${relic.relicId}`}>
+                                                        Relic {relic.relicId} - Level {relic.level + 1}
+                                                    </option>
+                                                ))}
+                                            </Select>
+                                        </VStack>
+                                    )}
                                 {!isComplete && migrationTarget !== -1 && (
                                     <ReliquaryInvestDepositImpact
                                         bptIn={legacyFbeetsBalance.toString()}

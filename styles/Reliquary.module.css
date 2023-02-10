@@ -1,11 +1,27 @@
 .overlapGrid {
     display: grid;
+    height: 400px;
+    width: 400px;
     grid-template-areas: 'overlay';
+    margin-bottom: -20px;
 }
 
-.overlapGrid > span {
-    grid-area: overlay;
+.overlapGrid > div:nth-child(2),
+.overlapGrid > span:nth-child(2) {
+    height: 400px !important;
+    width: 400px !important;
+    left: -50px;
 }
+
+.overlapGrid > div:nth-child(1),
+.overlapGrid > span:nth-child(1) {
+    height: 300px !important;
+    width: 450px !important;
+    top: 75px;
+    left: -25px;
+}
+
+.overlapGrid > span,
 .overlapGrid > div {
     grid-area: overlay;
 }
