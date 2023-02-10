@@ -21,7 +21,7 @@ export function useReliquaryFbeetsMigrateContractCallData(relicId: number | unde
                 userAddress: userAddress || '',
                 fbeetsAmount: fbeetsBalance,
                 slippage,
-                relicId: relicId || undefined,
+                relicId: relicId !== -1 ? relicId : undefined,
             });
         },
         { enabled: enabled && !!userAddress },
