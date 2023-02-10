@@ -7,6 +7,8 @@ import TokenRow from '~/components/token/TokenRow';
 import React from 'react';
 import useReliquary from '~/modules/reliquary/lib/useReliquary';
 import { ReliquaryInvestDepositImpact } from './ReliquaryInvestDepositImpact';
+import { ReliquaryInvestImage } from './ReliquaryInvestImage';
+import { CurrentStepProvider } from '~/modules/reliquary/lib/useReliquaryCurrentStep';
 
 interface Props {
     onInvestComplete(): void;
@@ -19,21 +21,27 @@ export function ReliquaryInvestPreview({ onInvestComplete, onClose }: Props) {
     const { totalInvestValue } = useReliquaryInvest();
 
     return (
-        <VStack spacing="4" width="full">
-            <Box px="4" width="full">
-                <ReliquaryInvestSummary mt="6" />
-                {!createRelic && selectedRelic && (
-                    <ReliquaryInvestDepositImpact totalInvestValue={totalInvestValue} relicId={selectedRelic.relicId} />
-                )}
-                <BeetsBox>
-                    <VStack width="full" divider={<StackDivider borderColor="whiteAlpha.200" />} mt="4" p="2">
-                        {selectedInvestTokensWithAmounts.map((token, index) => {
-                            return <TokenRow key={token.address} address={token.address} amount={token.amount} />;
-                        })}
-                    </VStack>
-                </BeetsBox>
-            </Box>
-            <ReliquaryInvestActions onInvestComplete={onInvestComplete} onClose={onClose} />
-        </VStack>
+        <CurrentStepProvider>
+            <VStack spacing="4" width="full">
+                <Box px="4" width="full">
+                    <ReliquaryInvestImage />
+                    <ReliquaryInvestSummary mt="6" />
+                    {!createRelic && selectedRelic && (
+                        <ReliquaryInvestDepositImpact
+                            totalInvestValue={totalInvestValue}
+                            relicId={selectedRelic.relicId}
+                        />
+                    )}
+                    <BeetsBox>
+                        <VStack width="full" divider={<StackDivider borderColor="whiteAlpha.200" />} mt="4" p="2">
+                            {selectedInvestTokensWithAmounts.map((token, index) => {
+                                return <TokenRow key={token.address} address={token.address} amount={token.amount} />;
+                            })}
+                        </VStack>
+                    </BeetsBox>
+                </Box>
+                <ReliquaryInvestActions onInvestComplete={onInvestComplete} onClose={onClose} />
+            </VStack>
+        </CurrentStepProvider>
     );
 }

@@ -16,6 +16,7 @@ import { TokensProvider } from '~/lib/global/useToken';
 import { PoolProvider, usePool } from '../pool/lib/usePool';
 import ReliquaryMigrateModal from './components/ReliquaryMigrateModal';
 import { useLegacyFBeetsBalance } from './lib/useLegacyFbeetsBalance';
+import { CurrentStepProvider } from './lib/useReliquaryCurrentStep';
 
 const infoButtonLabelProps = {
     lineHeight: '1rem',
@@ -58,7 +59,9 @@ export default function ReliquaryLanding() {
                         <Text>You have a legacy fBEETS balance that can be migrated to maBEETS</Text>
                         <TokensProvider>
                             <PoolProvider pool={pool}>
-                                <ReliquaryMigrateModal />
+                                <CurrentStepProvider>
+                                    <ReliquaryMigrateModal />
+                                </CurrentStepProvider>
                             </PoolProvider>
                         </TokensProvider>
                     </HStack>
