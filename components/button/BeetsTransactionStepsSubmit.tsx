@@ -148,6 +148,7 @@ export function BeetsTransactionStepsSubmit({
                         refetchBatchRelayerApproval();
                         internalOnConfirmed();
                     }}
+                    buttonText={currentStep.buttonText}
                 />
             ) : null}
             {/* reliquary */}
@@ -160,6 +161,7 @@ export function BeetsTransactionStepsSubmit({
                         refetchBatchRelayerHasApprovedForAll();
                         internalOnConfirmed();
                     }}
+                    buttonText={currentStep.buttonText}
                 />
             ) : null}
             {steps && currentStep && currentStep.type === 'tokenApproval' && !complete ? (
