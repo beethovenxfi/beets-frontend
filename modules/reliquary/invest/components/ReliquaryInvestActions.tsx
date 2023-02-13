@@ -68,8 +68,8 @@ export function ReliquaryInvestActions({ onInvestComplete, onClose }: Props) {
             const investStep: TransactionStep = {
                 id: 'reliquary-invest',
                 type: 'other',
-                buttonText: `Invest into ${createRelic ? 'a new' : 'your'} relic`,
-                tooltipText: 'Invest into fBeets and deposit into your relic',
+                buttonText: `${createRelic ? 'CREATE and ' : ''}DEPOSIT`,
+                tooltipText: 'Create and/or deposit into your relic',
             };
 
             const steps: TransactionStep[] = [
@@ -77,27 +77,27 @@ export function ReliquaryInvestActions({ onInvestComplete, onClose }: Props) {
                     id: token.symbol,
                     type: 'tokenApproval' as const,
                     buttonText: `Approve ${token.symbol}`,
-                    tooltipText: `Approve ${token.symbol} for investing`,
+                    tooltipText: `Approve ${token.symbol} for depositing`,
                     token,
                 })),
                 investStep,
             ];
 
-            if (!hasBatchRelayerApproval) {
-                steps.unshift({
-                    id: 'batch-relayer',
-                    type: 'other',
-                    buttonText: 'Approve Batch Relayer',
-                    tooltipText: 'This pool requires you to approve the batch relayer.',
-                });
-            }
-
             if (!batchRelayerHasApprovedForAll) {
                 steps.unshift({
                     id: 'batch-relayer-reliquary',
                     type: 'other',
-                    buttonText: 'Approve Batch Relayer for all relics',
-                    tooltipText: 'This relic requires you to approve the batch relayer.',
+                    buttonText: 'Approve TRANSACTIONS',
+                    tooltipText: 'Transacting with all (future) relics requires you to approve the batch relayer.',
+                });
+            }
+
+            if (!hasBatchRelayerApproval) {
+                steps.unshift({
+                    id: 'batch-relayer',
+                    type: 'other',
+                    buttonText: 'Approve RELIC',
+                    tooltipText: 'Creating a relic requires you to approve the batch relayer.',
                 });
             }
 
