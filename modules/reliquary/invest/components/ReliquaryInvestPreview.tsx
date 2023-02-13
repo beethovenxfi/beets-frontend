@@ -9,6 +9,7 @@ import useReliquary from '~/modules/reliquary/lib/useReliquary';
 import { ReliquaryInvestDepositImpact } from './ReliquaryInvestDepositImpact';
 import { ReliquaryInvestImage } from './ReliquaryInvestImage';
 import { CurrentStepProvider } from '~/modules/reliquary/lib/useReliquaryCurrentStep';
+import { ReliquaryInvestTitle } from './ReliquaryInvestTitle';
 
 interface Props {
     onInvestComplete(): void;
@@ -23,9 +24,10 @@ export function ReliquaryInvestPreview({ onInvestComplete, onClose }: Props) {
     return (
         <CurrentStepProvider>
             <VStack spacing="4" width="full">
-                <VStack px="4" width="full">
+                <VStack px="4" width="full" spacing="0">
                     <ReliquaryInvestImage />
-                    <ReliquaryInvestSummary mt="6" />
+                    <ReliquaryInvestTitle investTypeText="maBEETS" />
+                    <ReliquaryInvestSummary />
                     {!createRelic && selectedRelic && (
                         <ReliquaryInvestDepositImpact
                             totalInvestValue={totalInvestValue}
