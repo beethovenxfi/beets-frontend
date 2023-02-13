@@ -94,7 +94,7 @@ export default function ReliquaryMigrateModal() {
             {
                 id: 'reliquary-migrate',
                 type: 'other',
-                buttonText: 'Migrate your fBEETS',
+                buttonText: 'Complete MIGRATION',
                 tooltipText: 'Migrate your fBEETS to a new or existing relic',
             },
         ];
@@ -104,7 +104,7 @@ export default function ReliquaryMigrateModal() {
             _steps.unshift({
                 id: 'batch-relayer-reliquary',
                 type: 'other',
-                buttonText: 'Approve Batch Relayer for all relic actions',
+                buttonText: 'Approve TRANSACTIONS',
                 tooltipText: 'Approve the batch relayer to deposit, withdraw & claim rewards for all relics',
             });
         }
@@ -112,7 +112,7 @@ export default function ReliquaryMigrateModal() {
             _steps.unshift({
                 id: 'batch-relayer',
                 type: 'other',
-                buttonText: 'Approve batch relayer for relic creation',
+                buttonText: 'Approve RELIC',
                 tooltipText: 'Approve the batch relayer to create a new relic',
             });
         }
@@ -123,7 +123,7 @@ export default function ReliquaryMigrateModal() {
                 id: 'approve-vault',
                 tooltipText: 'Approve the vault to spend your fBEETS',
                 type: 'tokenApproval',
-                buttonText: 'Approve the vault',
+                buttonText: 'Approve VAULT',
                 token: {
                     ...(legacyfBeets || {}),
                     amount: unstaked,
@@ -137,7 +137,7 @@ export default function ReliquaryMigrateModal() {
                 id: 'unstake',
                 tooltipText: 'Unstake your fBEETS from the farm',
                 type: 'other',
-                buttonText: 'Unstake your fBEETS',
+                buttonText: 'Unstake FBEETS',
             });
         }
 
