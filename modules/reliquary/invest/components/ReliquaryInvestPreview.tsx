@@ -23,7 +23,7 @@ export function ReliquaryInvestPreview({ onInvestComplete, onClose }: Props) {
     return (
         <CurrentStepProvider>
             <VStack spacing="4" width="full">
-                <Box px="4" width="full">
+                <VStack px="4" width="full">
                     <ReliquaryInvestImage />
                     <ReliquaryInvestSummary mt="6" />
                     {!createRelic && selectedRelic && (
@@ -32,14 +32,14 @@ export function ReliquaryInvestPreview({ onInvestComplete, onClose }: Props) {
                             relicId={selectedRelic.relicId}
                         />
                     )}
-                    <BeetsBox>
-                        <VStack width="full" divider={<StackDivider borderColor="whiteAlpha.200" />} mt="4" p="2">
+                    <BeetsBox width="full">
+                        <VStack width="full" divider={<StackDivider borderColor="whiteAlpha.200" />} p="2">
                             {selectedInvestTokensWithAmounts.map((token, index) => {
                                 return <TokenRow key={token.address} address={token.address} amount={token.amount} />;
                             })}
                         </VStack>
                     </BeetsBox>
-                </Box>
+                </VStack>
                 <ReliquaryInvestActions onInvestComplete={onInvestComplete} onClose={onClose} />
             </VStack>
         </CurrentStepProvider>
