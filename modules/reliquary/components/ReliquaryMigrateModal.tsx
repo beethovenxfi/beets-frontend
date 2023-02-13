@@ -32,13 +32,10 @@ import useReliquary from '../lib/useReliquary';
 import { BeetsBox } from '~/components/box/BeetsBox';
 import { useToast } from '~/components/toast/BeetsToast';
 import { useBatchRelayerHasApprovedForAll } from '../lib/useBatchRelayerHasApprovedForAll';
-import BeetsTooltip from '~/components/tooltip/BeetsTooltip';
-import BeetsThinking from '~/assets/icons/beetx-thinking.svg';
-
-import Image from 'next/image';
 import { ReliquaryInvestDepositImpact } from '../invest/components/ReliquaryInvestDepositImpact';
 import { ReliquaryInvestImage } from '../invest/components/ReliquaryInvestImage';
 import { useCurrentStep } from '../lib/useReliquaryCurrentStep';
+import { ReliquaryInvestTitle } from '../invest/components/ReliquaryInvestTitle';
 
 export default function ReliquaryMigrateModal() {
     const { isOpen, onOpen, onClose } = useDisclosure();
@@ -199,6 +196,7 @@ export default function ReliquaryMigrateModal() {
                             <VStack spacing="4" width="full">
                                 <Heading fontSize="1.25rem">Migrate to a relic</Heading>
                                 <ReliquaryInvestImage />
+                                <ReliquaryInvestTitle investTypeText="Migrate to a relic" />
                                 {isComplete && (
                                     <Alert status="success">
                                         <AlertIcon />
@@ -206,27 +204,10 @@ export default function ReliquaryMigrateModal() {
                                         it out.
                                     </Alert>
                                 )}
-                                {!isComplete && (
-                                    <BeetsBox width="full">
-                                        <VStack
-                                            width="full"
-                                            divider={<StackDivider borderColor="whiteAlpha.200" />}
-                                            p="4"
-                                        >
-                                            {migratableBalance > 0 && (
-                                                <TokenRow
-                                                    address={networkConfig.fbeets.address}
-                                                    amount={legacyFbeetsBalance.toString()}
-                                                />
-                                            )}
-                                        </VStack>
-                                    </BeetsBox>
-                                )}
                                 {!isComplete &&
                                     relicPositionsForFarmId.length > 0 &&
                                     currentStep === 'reliquary-migrate' && (
                                         <VStack width="full" alignItems="flex-start">
-                                            <Text>Choose where to migrate your balance to:</Text>
                                             <Select
                                                 value={migrationTarget}
                                                 onChange={(e) =>
@@ -244,6 +225,22 @@ export default function ReliquaryMigrateModal() {
                                             </Select>
                                         </VStack>
                                     )}
+                                {!isComplete && (
+                                    <BeetsBox width="full">
+                                        <VStack
+                                            width="full"
+                                            divider={<StackDivider borderColor="whiteAlpha.200" />}
+                                            p="4"
+                                        >
+                                            {migratableBalance > 0 && (
+                                                <TokenRow
+                                                    address={networkConfig.fbeets.address}
+                                                    amount={legacyFbeetsBalance.toString()}
+                                                />
+                                            )}
+                                        </VStack>
+                                    </BeetsBox>
+                                )}
                                 {!isComplete && migrationTarget !== -1 && (
                                     <ReliquaryInvestDepositImpact
                                         bptIn={legacyFbeetsBalance.toString()}
