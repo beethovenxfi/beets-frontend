@@ -96,7 +96,7 @@ export function ReliquaryWithdrawPreview({ onWithdrawComplete, onClose }: Props)
                     );
                 })}
             </BeetsBox>
-            <ReliquaryWithdrawSummary mt="6" mb="8" />
+            <ReliquaryWithdrawSummary totalWithdrawValue={totalWithdrawValue} mt="6" mb="8" />
             <FadeInBox
                 isVisible={reliquaryZapQuery.isConfirmed || reliquaryZapQuery.isPending || reliquaryZapQuery.isFailed}
             >
