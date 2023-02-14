@@ -9,6 +9,7 @@ import {
     HStack,
     ListItem,
     Modal,
+    ModalCloseButton,
     ModalOverlay,
     Select,
     StackDivider,
@@ -284,6 +285,7 @@ export default function ReliquaryMigrateModal() {
                                 </Box>
                             </VStack>
                         </Box>
+                        <ModalCloseButton />
                     </AnimatePresence>
                 </BeetsModalContent>
             </Modal>
