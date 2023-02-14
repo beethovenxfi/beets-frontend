@@ -1,4 +1,14 @@
-import { Box, Button, Slider, SliderFilledTrack, SliderMark, SliderThumb, SliderTrack, Text } from '@chakra-ui/react';
+import {
+    Box,
+    Button,
+    Slider,
+    SliderFilledTrack,
+    SliderMark,
+    SliderThumb,
+    SliderTrack,
+    Text,
+    VStack,
+} from '@chakra-ui/react';
 import { BoxProps } from '@chakra-ui/layout';
 import { useReliquaryWithdrawState } from '~/modules/reliquary/withdraw/lib/useReliquaryWithdrawState';
 import { useReliquaryExitGetProportionalWithdrawEstimate } from '~/modules/reliquary/withdraw/lib/useReliquaryExitGetProportionalWithdrawEstimate';
@@ -7,6 +17,8 @@ import { ReliquaryWithdrawSummary } from '~/modules/reliquary/withdraw/component
 import { useEffectOnce } from '~/lib/util/custom-hooks';
 import { ReliquaryWithdrawSettings } from '~/modules/reliquary/withdraw/components/ReliquaryWithdrawSettings';
 import ReliquaryTokenBreakdown from '~/modules/reliquary/components/ReliquaryTokensBreakdown';
+import { sum } from 'lodash';
+import { useGetTokens } from '~/lib/global/useToken';
 
 interface Props extends BoxProps {
     onShowPreview: () => void;
@@ -15,6 +27,7 @@ interface Props extends BoxProps {
 export function ReliquaryWithdrawProportional({ onShowPreview, ...rest }: Props) {
     const { setProportionalPercent, proportionalPercent, setProportionalWithdraw, setProportionalAmounts } =
         useReliquaryWithdrawState();
+    const { priceForAmount } = useGetTokens();
 
     useEffectOnce(() => {
         setProportionalWithdraw();
@@ -23,9 +36,11 @@ export function ReliquaryWithdrawProportional({ onShowPreview, ...rest }: Props)
     const { data, isLoading } = useReliquaryExitGetProportionalWithdrawEstimate();
     const proportionalAmounts = data || [];
 
+    const totalWithdrawValue = sum(proportionalAmounts.map(priceForAmount));
+
     return (
-        <Box {...rest}>
-            <Box mt="4">
+        <VStack p="4" spacing="4" {...rest}>
+            <Box width="full">
                 <Text>Drag the slider to configure your withdraw amount.</Text>
                 <Slider mt="12" aria-label="slider-ex-1" value={proportionalPercent} onChange={setProportionalPercent}>
                     <SliderTrack>
@@ -48,12 +63,11 @@ export function ReliquaryWithdrawProportional({ onShowPreview, ...rest }: Props)
                     </SliderMark>
                 </Slider>
             </Box>
-            <BeetsBox mt="4" p="2">
+            <BeetsBox p="2" width="full">
                 <ReliquaryTokenBreakdown />
             </BeetsBox>
-
-            <ReliquaryWithdrawSummary mt="6" />
-            <ReliquaryWithdrawSettings mt="6" />
+            <ReliquaryWithdrawSummary totalWithdrawValue={totalWithdrawValue} width="full" />
+            <ReliquaryWithdrawSettings width="full" />
             <Button
                 variant="primary"
                 width="full"
@@ -65,6 +79,6 @@ export function ReliquaryWithdrawProportional({ onShowPreview, ...rest }: Props)
             >
                 Preview
             </Button>
-        </Box>
+        </VStack>
     );
 }

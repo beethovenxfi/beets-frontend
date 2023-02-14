@@ -27,7 +27,6 @@ import { usePoolUserTokenBalancesInWallet } from '~/modules/pool/lib/usePoolUser
 import { bnum } from '@balancer-labs/sor';
 import { GqlPoolToken } from '~/apollo/generated/graphql-codegen-generated';
 import { tokenInputTruncateDecimalPlaces } from '~/lib/util/input-util';
-import { ReliquaryInvestPriceImpact } from '~/modules/reliquary/invest/components/ReliquaryInvestPriceImpact';
 
 interface Props {
     onShowPreview(): void;
@@ -168,7 +167,6 @@ export function ReliquaryInvestProportional({ onShowPreview }: Props) {
                     Preview
                 </Button>
             </VStack>
-            <ReliquaryInvestPriceImpact />
         </Box>
     );
 }

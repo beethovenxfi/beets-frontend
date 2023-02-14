@@ -16,7 +16,7 @@ export function ReliquaryWithdrawTypeChoice({ onShowProportional, onShowSingleAs
     const { selectedRelicId } = useReliquary();
 
     return (
-        <Box>
+        <Box p="4">
             <Grid mt="4" mb="6" gap="8" templateColumns={{ base: '1fr', md: '1fr', lg: '1fr 1fr' }}>
                 <GridItem>
                     <BeetsBox p="2" mb="6">

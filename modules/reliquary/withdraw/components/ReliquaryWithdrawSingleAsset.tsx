@@ -9,6 +9,7 @@ import { ReliquaryWithdrawSettings } from '~/modules/reliquary/withdraw/componen
 import { BeetsTokenInputWithSlider } from '~/components/inputs/BeetsTokenInputWithSlider';
 import { usePool } from '~/modules/pool/lib/usePool';
 import { useHasBatchRelayerApproval } from '~/lib/util/useHasBatchRelayerApproval';
+import { useGetTokens } from '~/lib/global/useToken';
 
 interface Props extends BoxProps {
     onShowPreview: () => void;
@@ -21,6 +22,7 @@ export function ReliquaryWithdrawSingleAsset({ onShowPreview, ...rest }: Props) 
     const singleAssetWithdrawForBptIn = useReliquaryExitGetSingleAssetWithdrawForBptIn();
     const { hasHighPriceImpact, formattedPriceImpact } = useReliquaryExitGetBptInForSingleAssetWithdraw();
     const [acknowledgeHighPriceImpact, { toggle: toggleAcknowledgeHighPriceImpact }] = useBoolean(false);
+    const { priceForAmount } = useGetTokens();
 
     useEffect(() => {
         const defaultSingleAsset = pool.withdrawConfig.options[0]?.tokenOptions[0]?.address;
@@ -65,7 +67,7 @@ export function ReliquaryWithdrawSingleAsset({ onShowPreview, ...rest }: Props) 
                 value={singleAssetWithdraw.amount}
                 setSelectedTokenOption={setSingleAssetWithdraw}
             />
-            <ReliquaryWithdrawSummary mt="6" />
+            <ReliquaryWithdrawSummary totalWithdrawValue={priceForAmount(singleAssetWithdraw)} mt="6" />
             <ReliquaryWithdrawSettings mt="6" />
             <Collapse in={hasHighPriceImpact} animateOpacity>
                 <Alert status="error" borderRadius="md" mt="4">

@@ -72,7 +72,7 @@ export function ReliquaryWithdrawModal({
             <Modal
                 isOpen={isOpen}
                 onClose={onModalClose}
-                size={modalState === 'start' ? '3xl' : '2xl'}
+                size={modalState === 'start' ? '3xl' : 'lg'}
                 initialFocusRef={initialRef}
             >
                 <ModalOverlay />
@@ -130,7 +130,7 @@ export function ReliquaryWithdrawModal({
                             </Heading>
                         ) : null}
                     </ModalHeader>
-                    <ModalBody className="bg" pb="6">
+                    <ModalBody className="bg" p="0">
                         <FadeInBox isVisible={modalState === 'start'}>
                             <ReliquaryWithdrawTypeChoice
                                 onShowProportional={() => {

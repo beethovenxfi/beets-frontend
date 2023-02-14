@@ -21,6 +21,7 @@ import { ReliquaryInvestTypeChoice } from './components/ReliquaryInvestTypeChoic
 import { ReliquaryInvestCustom } from './components/ReliquaryInvestCustom';
 import { ReliquaryInvestProportional } from './components/ReliquaryInvestProportional';
 import { useReliquaryInvestState } from './lib/useReliquaryInvestState';
+import { FadeInBox } from '~/components/animation/FadeInBox';
 
 interface Props {
     createRelic?: boolean;
@@ -206,75 +207,52 @@ export function ReliquaryInvestModal({
                             ) : null}
                         </BeetsModalHeader>
                         <BeetsModalBody p="0">
-                            {modalState === 'start' ? (
-                                <motion.div
-                                    style={{ minHeight: '200px' }}
-                                    initial={{ opacity: 0 }}
-                                    animate={{ opacity: 1, transition: { delay: 0.25 } }}
-                                    exit={{ opacity: 0 }}
-                                >
-                                    {!createRelic && selectedRelic && (
-                                        <Box px="4">
-                                            <Alert status="warning" mb="4">
-                                                <AlertIcon />
-                                                Investing more funds into your relic will affect your level up progress.
-                                            </Alert>
-                                        </Box>
-                                    )}
-                                    <ReliquaryInvestTypeChoice
-                                        onShowProportional={() => {
-                                            setInvestType('proportional');
-                                            setModalState('proportional');
-                                            clearInvestState();
-                                        }}
-                                        onShowCustom={() => {
-                                            setInvestType('custom');
-                                            setModalState('custom');
-                                            clearInvestState();
-                                        }}
-                                    />
-                                </motion.div>
-                            ) : null}
-
-                            {modalState === 'proportional' ? (
-                                <motion.div
-                                    style={{ minHeight: '620px' }}
-                                    initial={{ opacity: 0 }}
-                                    animate={{ opacity: 1, transition: { delay: 0.25 } }}
-                                    exit={{ opacity: 0 }}
-                                >
-                                    <ReliquaryInvestProportional
-                                        onShowPreview={() => {
-                                            setInvestType('proportional');
-                                            setModalState('preview');
-                                        }}
-                                    />
-                                </motion.div>
-                            ) : null}
-                            {modalState === 'custom' ? (
-                                <motion.div
-                                    initial={{ opacity: 0 }}
-                                    animate={{ opacity: 1, transition: { delay: 0.25 } }}
-                                    exit={{ opacity: 0 }}
-                                >
-                                    <ReliquaryInvestCustom
-                                        onShowPreview={() => {
-                                            setInvestType('custom');
-                                            setModalState('preview');
-                                        }}
-                                    />
-                                </motion.div>
-                            ) : null}
-                            {modalState === 'preview' ? (
-                                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-                                    <ReliquaryInvestPreview
-                                        onInvestComplete={() => {
-                                            setInvestComplete(true);
-                                        }}
-                                        onClose={onModalClose}
-                                    />
-                                </motion.div>
-                            ) : null}
+                            <FadeInBox isVisible={modalState === 'start'}>
+                                {!createRelic && selectedRelic && (
+                                    <Box px="4">
+                                        <Alert status="warning" mb="4">
+                                            <AlertIcon />
+                                            Investing more funds into your relic will affect your level up progress.
+                                        </Alert>
+                                    </Box>
+                                )}
+                                <ReliquaryInvestTypeChoice
+                                    onShowProportional={() => {
+                                        setInvestType('proportional');
+                                        setModalState('proportional');
+                                        clearInvestState();
+                                    }}
+                                    onShowCustom={() => {
+                                        setInvestType('custom');
+                                        setModalState('custom');
+                                        clearInvestState();
+                                    }}
+                                />
+                            </FadeInBox>
+                            <FadeInBox isVisible={modalState === 'proportional'}>
+                                <ReliquaryInvestProportional
+                                    onShowPreview={() => {
+                                        setInvestType('proportional');
+                                        setModalState('preview');
+                                    }}
+                                />
+                            </FadeInBox>
+                            <FadeInBox isVisible={modalState === 'custom'}>
+                                <ReliquaryInvestCustom
+                                    onShowPreview={() => {
+                                        setInvestType('custom');
+                                        setModalState('preview');
+                                    }}
+                                />
+                            </FadeInBox>
+                            <FadeInBox isVisible={modalState === 'preview'}>
+                                <ReliquaryInvestPreview
+                                    onInvestComplete={() => {
+                                        setInvestComplete(true);
+                                    }}
+                                    onClose={onModalClose}
+                                />
+                            </FadeInBox>
                         </BeetsModalBody>
                     </BeetsModalContent>
                 </AnimatePresence>

@@ -1,6 +1,6 @@
 import { useReliquaryInvestState } from '~/modules/reliquary/invest/lib/useReliquaryInvestState';
 import { usePoolUserTokenBalancesInWallet } from '~/modules/pool/lib/usePoolUserTokenBalancesInWallet';
-import { Alert, Box, Button, Checkbox, Collapse, Text, useBoolean } from '@chakra-ui/react';
+import { Alert, Box, Button, Checkbox, Collapse, useBoolean } from '@chakra-ui/react';
 import { ReliquaryInvestSummary } from '~/modules/reliquary/invest/components/ReliquaryInvestSummary';
 import { ReliquaryInvestSettings } from '~/modules/reliquary/invest/components/ReliquaryInvestSettings';
 
@@ -10,8 +10,6 @@ import { usePoolJoinGetBptOutAndPriceImpactForTokensIn } from '~/modules/pool/in
 import { useHasBatchRelayerApproval } from '~/lib/util/useHasBatchRelayerApproval';
 import { usePool } from '~/modules/pool/lib/usePool';
 import React from 'react';
-import { BeetsBox } from '~/components/box/BeetsBox';
-import { ReliquaryInvestPriceImpact } from '~/modules/reliquary/invest/components/ReliquaryInvestPriceImpact';
 
 interface Props {
     onShowPreview(): void;
@@ -77,7 +75,6 @@ export function ReliquaryInvestCustom({ onShowPreview }: Props) {
                     Preview
                 </Button>
             </Box>
-            <ReliquaryInvestPriceImpact />
         </Box>
     );
 }
