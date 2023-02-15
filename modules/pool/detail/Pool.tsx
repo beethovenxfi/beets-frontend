@@ -1,68 +1,24 @@
-import { Box, Grid, GridItem, HStack, VStack, Text } from '@chakra-ui/react';
+import { Box, Grid, GridItem, HStack, VStack } from '@chakra-ui/react';
 import PoolHeader from '~/modules/pool/detail/components/PoolHeader';
 import { PoolComposition } from '~/modules/pool/detail/components/composition/PoolComposition';
 import PoolStats from './components/stats/PoolStats';
 import { PoolTransactions } from './components/transactions/PoolTransactions';
-import { PoolStakeInFarmWarning } from '~/modules/pool/detail/components/PoolStakeInFarmWarning';
 import { PoolDetailCharts } from '~/modules/pool/detail/components/PoolDetailCharts';
 import { PoolInvestModal } from '~/modules/pool/invest/PoolInvestModal';
 import { PoolWithdrawModal } from '~/modules/pool/withdraw/PoolWithdrawModal';
-import { PoolProvider, usePool } from '~/modules/pool/lib/usePool';
-import { usePoolUserBptBalance } from '~/modules/pool/lib/usePoolUserBptBalance';
-import { PoolFbeetsWarning } from '~/modules/pool/detail/components/PoolFbeetsWarning';
-import { PoolOvernightWarning } from '~/modules/pool/detail/components/PoolOvernightWarning';
-import { useEffect } from 'react';
-import { ToastType, useToast } from '~/components/toast/BeetsToast';
-import { useLegacyFBeetsBalance } from '~/modules/reliquary/lib/useLegacyFbeetsBalance';
-import ReliquaryMigrateModal from '~/modules/reliquary/components/ReliquaryMigrateModal';
-import { TokensProvider } from '~/lib/global/useToken';
+import { usePool } from '~/modules/pool/lib/usePool';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
-import { PoolDetailWarning } from '~/modules/pool/detail/components/PoolDetailWarning';
+import { PoolWarnings } from '~/modules/pool/detail/components/warning/PoolWarnings';
 
 export function Pool() {
-    const { pool, isFbeetsPool } = usePool();
-    const { hasBpt } = usePoolUserBptBalance();
-    const { total } = useLegacyFBeetsBalance();
-    const { showToast, removeToast } = useToast();
-    const { warnings, investDisabled } = useNetworkConfig();
-
-    useEffect(() => {
-        return () => {
-            removeToast('migrate-fbeets');
-        };
-    }, []);
-
-    useEffect(() => {
-        if (total > 0 && isFbeetsPool) {
-            showToast({
-                id: 'migrate-fbeets',
-                type: ToastType.Warn,
-                content: (
-                    <HStack>
-                        <Text>You can migrate your legacy fBEETS position to a relic</Text>
-                        <TokensProvider>
-                            <PoolProvider pool={pool}>
-                                <ReliquaryMigrateModal />
-                            </PoolProvider>
-                        </TokensProvider>
-                    </HStack>
-                ),
-            });
-        } else {
-            removeToast('migrate-fbeets');
-        }
-    }, [total]);
+    const { pool } = usePool();
+    const { investDisabled } = useNetworkConfig();
 
     return (
         <Box marginBottom="8">
             <PoolHeader />
             <VStack width="full" spacing="4">
-                {pool.id === '0xb1c9ac57594e9b1ec0f3787d9f6744ef4cb0a02400000000000000000000006e' && (
-                    <PoolOvernightWarning />
-                )}
-                {warnings.poolDetail[pool.id] && <PoolDetailWarning warning={warnings.poolDetail[pool.id]} />}
-                {pool.staking && !isFbeetsPool && <PoolStakeInFarmWarning />}
-                {isFbeetsPool && hasBpt && total === 0 && <PoolFbeetsWarning />}
+                <PoolWarnings />
                 <HStack width="full" justifyContent="flex-end">
                     {!investDisabled[pool.id] && <PoolInvestModal />}
                     <PoolWithdrawModal />
