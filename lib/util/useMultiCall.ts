@@ -1,5 +1,5 @@
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
-import { useQuery } from 'react-query';
+import { useQuery, UseQueryResult } from 'react-query';
 import { multicall } from '~/lib/services/util/multicaller.service';
 import { networkProvider } from '~/lib/global/network';
 
@@ -19,7 +19,7 @@ export function useMultiCall<T>({
     requireSuccess = false,
     enabled = true,
     cacheTimeMs,
-}: UseMultiCallInput) {
+}: UseMultiCallInput): UseQueryResult<(T | null)[]> {
     const networkConfig = useNetworkConfig();
 
     return useQuery<(T | null)[]>(
