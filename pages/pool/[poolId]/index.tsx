@@ -13,6 +13,8 @@ import { PoolUserPendingRewardsProvider } from '~/modules/pool/lib/usePoolUserPe
 import { PoolUserTokenBalancesInWalletProvider } from '~/modules/pool/lib/usePoolUserTokenBalancesInWallet';
 import { PoolComposableUserPoolTokenBalanceProvider } from '~/modules/pool/lib/usePoolComposableUserPoolTokenBalances';
 import { RelicDepositBalanceProvider } from '~/modules/reliquary/lib/useRelicDepositBalance';
+import { networkConfig } from '~/lib/config/network-config';
+import { ReliquaryPool } from '~/modules/reliquary/detail/ReliquaryPool';
 
 interface Props {
     pool: GqlPoolUnion;
@@ -23,6 +25,8 @@ const PoolPage = ({ pool }: Props) => {
     if (router.isFallback) {
         return <FallbackPlaceholder />;
     }
+
+    const isReliquaryPool = pool.id === networkConfig.reliquary.fbeets.poolId;
 
     return (
         <>
@@ -39,9 +43,13 @@ const PoolPage = ({ pool }: Props) => {
                             <PoolUserPendingRewardsProvider>
                                 <PoolUserTokenBalancesInWalletProvider>
                                     <PoolComposableUserPoolTokenBalanceProvider>
-                                        <RelicDepositBalanceProvider>
+                                        {isReliquaryPool ? (
+                                            <RelicDepositBalanceProvider>
+                                                <ReliquaryPool />
+                                            </RelicDepositBalanceProvider>
+                                        ) : (
                                             <Pool />
-                                        </RelicDepositBalanceProvider>
+                                        )}
                                     </PoolComposableUserPoolTokenBalanceProvider>
                                 </PoolUserTokenBalancesInWalletProvider>
                             </PoolUserPendingRewardsProvider>
