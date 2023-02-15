@@ -1,14 +1,5 @@
 import { Modal, ModalBody, ModalCloseButton, ModalContent } from '@chakra-ui/modal';
-import {
-    Button,
-    ButtonProps,
-    Heading,
-    IconButton,
-    ModalHeader,
-    ModalOverlay,
-    Text,
-    useDisclosure,
-} from '@chakra-ui/react';
+import { Button, ButtonProps, Heading, IconButton, ModalHeader, ModalOverlay, useDisclosure } from '@chakra-ui/react';
 import { ChevronLeft } from 'react-feather';
 import { useEffect, useRef, useState } from 'react';
 import { ReliquaryWithdrawTypeChoice } from '~/modules/reliquary/withdraw/components/ReliquaryWithdrawTypeChoice';
@@ -17,7 +8,7 @@ import { ReliquaryWithdrawSingleAsset } from '~/modules/reliquary/withdraw/compo
 import { ReliquaryWithdrawPreview } from '~/modules/reliquary/withdraw/components/ReliquaryWithdrawPreview';
 import { FadeInBox } from '~/components/animation/FadeInBox';
 import { useReliquaryWithdrawState } from '~/modules/reliquary/withdraw/lib/useReliquaryWithdrawState';
-import { usePool } from '~/modules/pool/lib/usePool';
+import useReliquary from '../lib/useReliquary';
 
 interface Props {
     activatorProps?: ButtonProps;
@@ -32,17 +23,17 @@ export function ReliquaryWithdrawModal({
     isVisible = false,
 }: Props) {
     const { isOpen, onOpen, onClose } = useDisclosure();
-    const { pool, formattedTypeName } = usePool();
     const [modalState, setModalState] = useState<'start' | 'proportional' | 'single-asset' | 'preview'>('start');
     const [type, setInvestType] = useState<'proportional' | 'single-asset' | null>(null);
     const initialRef = useRef(null);
     const [withdrawComplete, setWithdrawComplete] = useState(false);
     const { clearWithdrawState } = useReliquaryWithdrawState();
+    const { selectedRelicId } = useReliquary();
 
     useEffect(() => {
         setModalState('start');
         clearWithdrawState();
-    }, [pool.id]);
+    }, [selectedRelicId]);
 
     function onModalClose() {
         if (withdrawComplete) {
