@@ -19,7 +19,6 @@ import {
     VStack,
 } from '@chakra-ui/react';
 import { AnimatePresence } from 'framer-motion';
-import { BeetsTransactionStepsSubmit, TransactionStep } from '~/components/button/BeetsTransactionStepsSubmit';
 import { BeetsModalContent } from '~/components/modal/BeetsModal';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 import { useStakingWithdraw } from '~/lib/global/useStakingWithdraw';
@@ -37,6 +36,7 @@ import { ReliquaryInvestDepositImpact } from '../invest/components/ReliquaryInve
 import { ReliquaryInvestImage } from '../invest/components/ReliquaryInvestImage';
 import { useCurrentStep } from '../lib/useReliquaryCurrentStep';
 import { ReliquaryInvestTitle } from '../invest/components/ReliquaryInvestTitle';
+import { ReliquaryTransactionStepsSubmit, TransactionStep } from './ReliquaryTransactionStepsSubmit';
 
 export default function ReliquaryMigrateModal() {
     const { isOpen, onOpen, onClose } = useDisclosure();
@@ -253,7 +253,7 @@ export default function ReliquaryMigrateModal() {
                                     />
                                 )}
                                 <Box width="full">
-                                    <BeetsTransactionStepsSubmit
+                                    <ReliquaryTransactionStepsSubmit
                                         // TODO implement hide hide modal
                                         onCompleteButtonClick={handleOnClose}
                                         onComplete={handleCompleteMigrate}

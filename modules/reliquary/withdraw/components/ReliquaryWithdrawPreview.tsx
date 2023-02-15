@@ -4,7 +4,6 @@ import { BeetsBox } from '~/components/box/BeetsBox';
 import { useGetTokens } from '~/lib/global/useToken';
 import { useReliquaryWithdrawState } from '~/modules/reliquary/withdraw/lib/useReliquaryWithdrawState';
 import { ReliquaryWithdrawSummary } from '~/modules/reliquary/withdraw/components/ReliquaryWithdrawSummary';
-import { BeetsTransactionStepsSubmit, TransactionStep } from '~/components/button/BeetsTransactionStepsSubmit';
 import { FadeInBox } from '~/components/animation/FadeInBox';
 import { sum } from 'lodash';
 import { usePool } from '~/modules/pool/lib/usePool';
@@ -17,6 +16,8 @@ import { useBatchRelayerHasApprovedForAll } from '../../lib/useBatchRelayerHasAp
 import { transactionMessageFromError } from '~/lib/util/transaction-util';
 import { SubTransactionSubmittedContent } from '~/components/transaction/SubTransactionSubmittedContent';
 import TokenRow from '~/components/token/TokenRow';
+import { CurrentStepProvider } from '../../lib/useReliquaryCurrentStep';
+import { ReliquaryTransactionStepsSubmit, TransactionStep } from '../../components/ReliquaryTransactionStepsSubmit';
 
 interface Props {
     onWithdrawComplete(): void;
@@ -75,73 +76,79 @@ export function ReliquaryWithdrawPreview({ onWithdrawComplete, onClose }: Props)
     }, [isLoading]);
 
     return (
-        <VStack spacing="4" width="full">
-            <Box px="4" width="full">
-                <BeetsBox width="full" mb="4">
-                    <VStack width="full" divider={<StackDivider borderColor="whiteAlpha.200" />} mt="4" p="2">
-                        {withdrawAmounts.map((token, index) => {
-                            return <TokenRow key={token.address} address={token.address} amount={token.amount} />;
-                        })}
-                    </VStack>
-                </BeetsBox>
-                <ReliquaryWithdrawSummary totalWithdrawValue={totalWithdrawValue} width="full" mb="4" />
-                <VStack width="full" spacing="4">
-                    {reliquaryZapQuery.error && (
-                        <Box width="full">
-                            <Alert width="full" status="error">
-                                <AlertIcon />
-                                {transactionMessageFromError(reliquaryZapQuery.error)}
-                            </Alert>
-                        </Box>
-                    )}
-                    {reliquaryZapQuery.isConfirmed && (
-                        <Box width="full">
-                            <FadeInBox isVisible={reliquaryZapQuery.isConfirmed}>
-                                <Alert status="success" borderRadius="md">
+        <CurrentStepProvider>
+            <VStack spacing="4" width="full">
+                <Box px="4" width="full">
+                    <BeetsBox width="full" mb="4">
+                        <VStack width="full" divider={<StackDivider borderColor="whiteAlpha.200" />} mt="4" p="2">
+                            {withdrawAmounts.map((token, index) => {
+                                return <TokenRow key={token.address} address={token.address} amount={token.amount} />;
+                            })}
+                        </VStack>
+                    </BeetsBox>
+                    <ReliquaryWithdrawSummary totalWithdrawValue={totalWithdrawValue} width="full" mb="4" />
+                    <VStack width="full" spacing="4">
+                        {reliquaryZapQuery.error && (
+                            <Box width="full">
+                                <Alert width="full" status="error">
                                     <AlertIcon />
-                                    {`You've successfully withdrawn ${numberFormatUSDValue(
-                                        totalWithdrawValue,
-                                    )} from the relic.`}
+                                    {transactionMessageFromError(reliquaryZapQuery.error)}
                                 </Alert>
-                            </FadeInBox>
+                            </Box>
+                        )}
+                        {reliquaryZapQuery.isConfirmed && (
+                            <Box width="full">
+                                <FadeInBox isVisible={reliquaryZapQuery.isConfirmed}>
+                                    <Alert status="success" borderRadius="md">
+                                        <AlertIcon />
+                                        {`You've successfully withdrawn ${numberFormatUSDValue(
+                                            totalWithdrawValue,
+                                        )} from the relic.`}
+                                    </Alert>
+                                </FadeInBox>
+                            </Box>
+                        )}
+                        <Box
+                            width="full"
+                            pb={
+                                reliquaryZapQuery.isConfirmed ||
+                                reliquaryZapQuery.isFailed ||
+                                reliquaryZapQuery.isPending
+                                    ? '0'
+                                    : '4'
+                            }
+                        >
+                            <ReliquaryTransactionStepsSubmit
+                                isLoading={isLoadingReliquaryContractCallData}
+                                loadingButtonText=""
+                                completeButtonText="Return to maBEETS"
+                                onCompleteButtonClick={onClose}
+                                onSubmit={() => {
+                                    if (reliquaryContractCalls) {
+                                        reliquaryZap(reliquaryContractCalls);
+                                    }
+                                }}
+                                onConfirmed={async (id) => {
+                                    if (id === 'exit') {
+                                        onWithdrawComplete();
+                                        refetchRelicPositions();
+                                    }
+                                }}
+                                steps={steps || []}
+                                queries={[{ ...reliquaryZapQuery, id: 'exit' }]}
+                            />
                         </Box>
-                    )}
-                    <Box
-                        width="full"
-                        pb={
-                            reliquaryZapQuery.isConfirmed || reliquaryZapQuery.isFailed || reliquaryZapQuery.isPending
-                                ? '0'
-                                : '4'
-                        }
-                    >
-                        <BeetsTransactionStepsSubmit
-                            isLoading={isLoadingReliquaryContractCallData}
-                            loadingButtonText=""
-                            completeButtonText="Return to maBEETS"
-                            onCompleteButtonClick={onClose}
-                            onSubmit={() => {
-                                if (reliquaryContractCalls) {
-                                    reliquaryZap(reliquaryContractCalls);
-                                }
-                            }}
-                            onConfirmed={async (id) => {
-                                if (id === 'exit') {
-                                    onWithdrawComplete();
-                                    refetchRelicPositions();
-                                }
-                            }}
-                            steps={steps || []}
-                            queries={[{ ...reliquaryZapQuery, id: 'exit' }]}
-                        />
-                    </Box>
-                </VStack>
-            </Box>
-            <FadeInBox
-                width="full"
-                isVisible={reliquaryZapQuery.isConfirmed || reliquaryZapQuery.isPending || reliquaryZapQuery.isFailed}
-            >
-                <SubTransactionSubmittedContent query={reliquaryZapQuery} />
-            </FadeInBox>
-        </VStack>
+                    </VStack>
+                </Box>
+                <FadeInBox
+                    width="full"
+                    isVisible={
+                        reliquaryZapQuery.isConfirmed || reliquaryZapQuery.isPending || reliquaryZapQuery.isFailed
+                    }
+                >
+                    <SubTransactionSubmittedContent query={reliquaryZapQuery} />
+                </FadeInBox>
+            </VStack>
+        </CurrentStepProvider>
     );
 }
