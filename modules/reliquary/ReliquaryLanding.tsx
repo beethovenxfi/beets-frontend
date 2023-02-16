@@ -17,6 +17,7 @@ import { PoolProvider, usePool } from '../pool/lib/usePool';
 import ReliquaryMigrateModal from './components/ReliquaryMigrateModal';
 import { useLegacyFBeetsBalance } from './lib/useLegacyFbeetsBalance';
 import { CurrentStepProvider } from './lib/useReliquaryCurrentStep';
+import Compose, { ProviderWithProps } from '~/components/providers/Compose';
 
 const infoButtonLabelProps = {
     lineHeight: '1rem',
@@ -46,8 +47,14 @@ const rqImages = [
 export default function ReliquaryLanding() {
     const { isConnected } = useUserAccount();
     const { total } = useLegacyFBeetsBalance();
-    const { showToast, removeToast } = useToast();
-    const { pool, isFbeetsPool } = usePool();
+    const { showToast } = useToast();
+    const { pool } = usePool();
+
+    const RelicLandingProviders: ProviderWithProps[] = [
+        [TokensProvider, {}],
+        [PoolProvider, { pool }],
+        [CurrentStepProvider, {}],
+    ];
 
     useEffect(() => {
         if (total > 0) {
@@ -57,18 +64,12 @@ export default function ReliquaryLanding() {
                 content: (
                     <HStack>
                         <Text>You have a legacy fBEETS balance that can be migrated to maBEETS</Text>
-                        <TokensProvider>
-                            <PoolProvider pool={pool}>
-                                <CurrentStepProvider>
-                                    <ReliquaryMigrateModal />
-                                </CurrentStepProvider>
-                            </PoolProvider>
-                        </TokensProvider>
+                        <Compose providers={RelicLandingProviders}>
+                            <ReliquaryMigrateModal />
+                        </Compose>
                     </HStack>
                 ),
             });
-        } else {
-            // removeToast('migrate-fbeets');
         }
     }, [total]);
 
