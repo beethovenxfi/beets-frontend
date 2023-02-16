@@ -47,6 +47,7 @@ import Compose from '~/components/providers/Compose';
 import { TokensProvider } from '~/lib/global/useToken';
 import { UserDataProvider } from '~/lib/user/useUserData';
 import BeetsToast from '~/components/toast/BeetsToast';
+import { appWithTranslation } from 'next-i18next';
 
 const queryClient = new QueryClient();
 
@@ -119,4 +120,4 @@ function BeetsApp(props: AppProps) {
     );
 }
 
-export default BeetsApp;
+export default appWithTranslation(BeetsApp);
