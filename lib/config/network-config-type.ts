@@ -101,4 +101,5 @@ export interface NetworkConfig {
     boostedByTypes: {
         [poolId: string]: BoostedByType;
     };
+    maBeetsEnabled: boolean;
 }

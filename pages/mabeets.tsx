@@ -1,6 +1,5 @@
 import { initializeApolloClient, loadApolloState } from '~/apollo/client';
 import Head from 'next/head';
-import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 import { UserTokenBalancesProvider } from '~/lib/user/useUserTokenBalances';
 import { GetPoolQuery, GetPoolQueryVariables, GqlPoolUnion } from '~/apollo/generated/graphql-codegen-generated';
 import { GetPool } from '~/apollo/generated/operations';
@@ -12,13 +11,12 @@ import React from 'react';
 import { RelicDepositBalanceProvider } from '~/modules/reliquary/lib/useRelicDepositBalance';
 import { PoolUserDepositBalanceProvider } from '~/modules/pool/lib/usePoolUserDepositBalance';
 import ReliquaryLanding from '~/modules/reliquary/ReliquaryLanding';
+import { Heading, VStack } from '@chakra-ui/react';
 
 interface Props {
-    pool: GqlPoolUnion;
+    pool: GqlPoolUnion | null;
 }
 function MaBEETS({ pool }: Props) {
-    const { chainId } = useNetworkConfig();
-
     const TITLE = 'Beethoven X | Reliquary';
     const DESCRIPTION = '';
 
@@ -34,38 +32,41 @@ function MaBEETS({ pool }: Props) {
                 <meta property="og:description" content={DESCRIPTION} />
                 <meta property="twitter:description" content={DESCRIPTION} />
             </Head>
-            <PoolProvider pool={pool}>
-                <PoolUserBptBalanceProvider>
-                    <PoolUserTokenBalancesInWalletProvider>
-                        <UserTokenBalancesProvider>
-                            <PoolUserDepositBalanceProvider>
-                                <RelicDepositBalanceProvider>
-                                    <ReliquaryLanding />
-                                </RelicDepositBalanceProvider>
-                            </PoolUserDepositBalanceProvider>
-                        </UserTokenBalancesProvider>
-                    </PoolUserTokenBalancesInWalletProvider>
-                </PoolUserBptBalanceProvider>
-            </PoolProvider>
+            {pool ? (
+                <PoolProvider pool={pool}>
+                    <PoolUserBptBalanceProvider>
+                        <PoolUserTokenBalancesInWalletProvider>
+                            <UserTokenBalancesProvider>
+                                <PoolUserDepositBalanceProvider>
+                                    <RelicDepositBalanceProvider>
+                                        <ReliquaryLanding />
+                                    </RelicDepositBalanceProvider>
+                                </PoolUserDepositBalanceProvider>
+                            </UserTokenBalancesProvider>
+                        </PoolUserTokenBalancesInWalletProvider>
+                    </PoolUserBptBalanceProvider>
+                </PoolProvider>
+            ) : (
+                <VStack minH="300px" justifyContent="center">
+                    <Heading>MaBEETS is not supported on this chain.</Heading>
+                </VStack>
+            )}
         </>
     );
 }
 
-export async function getStaticProps({ params }: { params: { poolId: string } }) {
+export async function getStaticProps() {
     const client = initializeApolloClient();
-    const { data } = await client.query<GetPoolQuery, GetPoolQueryVariables>({
-        query: GetPool,
-        variables: { id: networkConfig.reliquary.fbeets.poolId },
-    });
-
-    //pre-load the fbeets ratio for fidelio duetto
-    /*if (params.poolId === networkConfig.fbeets.poolId) {
-        await client.query({ query: GetFbeetsRatio });
-    }*/
+    const response = networkConfig.maBeetsEnabled
+        ? await client.query<GetPoolQuery, GetPoolQueryVariables>({
+              query: GetPool,
+              variables: { id: networkConfig.reliquary.fbeets.poolId },
+          })
+        : null;
 
     return loadApolloState({
         client,
-        props: { pool: data.pool },
+        props: { pool: response?.data.pool || null },
     });
 }
 
