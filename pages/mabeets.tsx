@@ -12,6 +12,7 @@ import { RelicDepositBalanceProvider } from '~/modules/reliquary/lib/useRelicDep
 import { PoolUserDepositBalanceProvider } from '~/modules/pool/lib/usePoolUserDepositBalance';
 import ReliquaryLanding from '~/modules/reliquary/ReliquaryLanding';
 import { Heading, VStack } from '@chakra-ui/react';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 interface Props {
     pool: GqlPoolUnion | null;
@@ -55,7 +56,7 @@ function MaBEETS({ pool }: Props) {
     );
 }
 
-export async function getStaticProps() {
+export async function getStaticProps({ locale }: { locale: string }) {
     const client = initializeApolloClient();
     const response = networkConfig.maBeetsEnabled
         ? await client.query<GetPoolQuery, GetPoolQueryVariables>({
@@ -66,7 +67,7 @@ export async function getStaticProps() {
 
     return loadApolloState({
         client,
-        props: { pool: response?.data.pool || null },
+        props: { pool: response?.data.pool || null, ...(await serverSideTranslations(locale, ['reliquary'])) },
     });
 }
 
