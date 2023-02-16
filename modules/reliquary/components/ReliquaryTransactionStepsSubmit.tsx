@@ -1,7 +1,7 @@
 import { TokenBaseWithAmount } from '~/lib/services/token/token-types';
 import { useEffect, useState } from 'react';
 import { HorizontalSteps, StepStatus } from '~/components/steps/HorizontalSteps';
-import { Alert, AlertIcon, Box, Button, Flex, Skeleton, Portal } from '@chakra-ui/react';
+import { Alert, AlertIcon, Box, Button, Flex, Skeleton, Portal, Checkbox, VStack, Link } from '@chakra-ui/react';
 import { BeetsSubmitTransactionButton } from '~/components/button/BeetsSubmitTransactionButton';
 import { BeetsTokenApprovalButton } from '~/components/button/BeetsTokenApprovalButton';
 import { SubmitTransactionQuery } from '~/lib/util/useSubmitTransaction';
@@ -11,6 +11,7 @@ import { useHasBatchRelayerApproval } from '~/lib/util/useHasBatchRelayerApprova
 import { ReliquaryBatchRelayerApprovalButton } from '~/modules/reliquary/components/ReliquaryBatchRelayerApprovalButton';
 import { useBatchRelayerHasApprovedForAll } from '~/modules/reliquary/lib/useBatchRelayerHasApprovedForAll';
 import { useCurrentStep } from '~/modules/reliquary/lib/useReliquaryCurrentStep';
+import { BeetsBox } from '~/components/box/BeetsBox';
 
 export type TransactionStep = TransactionTokenApprovalStep | TransactionOtherStep;
 
@@ -38,12 +39,11 @@ interface Props {
     onSubmit: (id: string) => void;
     onConfirmed: (id: string) => void;
     isDisabled?: boolean;
-
     steps: TransactionStep[];
     queries: (Omit<SubmitTransactionQuery, 'submit' | 'submitAsync'> & { id: string })[];
     buttonSize?: string;
-
     onComplete?: () => void;
+    showToS?: boolean;
 }
 
 export function ReliquaryTransactionStepsSubmit({
@@ -58,12 +58,14 @@ export function ReliquaryTransactionStepsSubmit({
     queries,
     isDisabled,
     buttonSize = 'lg',
+    showToS = false,
 }: Props) {
     const [currentStepIdx, setCurrentStepIdx] = useState<number>(0);
     const [stepStatuses, setStepStatuses] = useState<{ [id: string]: StepStatus }>({});
     const currentStep = steps ? steps[currentStepIdx] : null;
     const currentQuery = queries.find((query) => query.id === currentStep?.id);
     const [complete, setComplete] = useState(false);
+    const [checked, setChecked] = useState(false);
     const { refetch: refetchBatchRelayerApproval, data: hasBatchRelayerApproval } = useHasBatchRelayerApproval();
 
     // reliquary
@@ -113,7 +115,18 @@ export function ReliquaryTransactionStepsSubmit({
     }, [currentStepIdx, steps]);
 
     return (
-        <Box>
+        <VStack width="full" alignItems="stretch" spacing="4">
+            {showToS && (
+                <BeetsBox alignSelf="flex-start" width="full" p="2">
+                    <Checkbox isDisabled={complete} isChecked={checked} onChange={(e) => setChecked(e.target.checked)}>
+                        I agree to the terms of service as stated{' '}
+                        <Link href="link.to.docs" target="_blank">
+                            here
+                        </Link>
+                        .
+                    </Checkbox>
+                </BeetsBox>
+            )}
             {isLoading && !complete ? (
                 <Flex justifyContent="center" mb="6">
                     <Skeleton height="30px" width="180px" />
@@ -184,7 +197,10 @@ export function ReliquaryTransactionStepsSubmit({
                     onPending={() => setStepStatus(currentStep.id, 'pending')}
                     onCanceled={() => setStepStatus(currentStep.id, 'current')}
                     onConfirmed={internalOnConfirmed}
-                    isDisabled={isDisabled}
+                    isDisabled={
+                        isDisabled ||
+                        (showToS && ['reliquary-migrate', 'reliquary-invest'].includes(currentStep.id) && !checked)
+                    }
                     size={buttonSize}
                 >
                     {currentStep.buttonText}
@@ -220,6 +236,6 @@ export function ReliquaryTransactionStepsSubmit({
                     </Box>
                 </Portal>
             )}
-        </Box>
+        </VStack>
     );
 }

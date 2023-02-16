@@ -156,6 +156,7 @@ export function ReliquaryInvestActions({ onInvestComplete, onClose }: Props) {
                         }
                     }}
                     queries={[{ ...reliquaryJoinQuery, id: 'reliquary-invest' }]}
+                    showToS={createRelic}
                 />
             </Box>
             <FadeInBox

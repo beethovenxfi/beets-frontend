@@ -279,6 +279,7 @@ export default function ReliquaryMigrateModal() {
                                             { ...unstakeQuery, id: 'unstake' },
                                             { ...reliquaryMigrateQuery, id: 'reliquary-migrate' },
                                         ]}
+                                        showToS={migrationTarget === -1}
                                     />
                                 </Box>
                             </VStack>
