@@ -1,0 +1,30 @@
+{
+    "toastText": "You have a legacy fBEETS balance that can be migrated to maBEETS",
+    "headingText": "Maturity adjusted voting power and BEETS rewards.",
+    "listItemText": {
+        "first": "Participate in BEETS governance",
+        "second": "Unlock maturity adjusted rewards",
+        "third": "Access evolving Ludwig fNFTs"
+    },
+    "secondaryButtonText": "Learn more",
+    "headerImageText": {
+        "first": {
+            "alt": "fBEETS",
+            "info": "Invest BEETS / wFTM (80/20) into the Fresh BEETS pool to receive fBEETS."
+        },
+        "second": {
+            "alt": "Reliquary",
+            "info": "Allow the Reliquary to boost your fBEETS into a maturity adjusted position."
+        },
+        "third": {
+            "alt": "maBEETS",
+            "info": "Receive an evolving Relic that holds your maturity adjusted BEETS position (maBEETS)."
+        }
+    },
+    "sectionText": {
+        "title": {
+            "first": "My Relics",
+            "second": "All relics"
+        }
+    }
+}

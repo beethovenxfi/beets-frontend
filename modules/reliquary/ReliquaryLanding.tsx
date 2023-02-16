@@ -17,6 +17,7 @@ import { PoolProvider, usePool } from '../pool/lib/usePool';
 import ReliquaryMigrateModal from './components/ReliquaryMigrateModal';
 import { useLegacyFBeetsBalance } from './lib/useLegacyFbeetsBalance';
 import { CurrentStepProvider } from './lib/useReliquaryCurrentStep';
+import { useTranslation } from 'next-i18next';
 
 const infoButtonLabelProps = {
     lineHeight: '1rem',
@@ -25,29 +26,30 @@ const infoButtonLabelProps = {
     color: 'beets.base.50',
 };
 
-const rqImages = [
-    {
-        src: Rq1Image,
-        alt: 'fBEETS',
-        info: 'Invest BEETS/wFTM (80/20) into the Fresh BEETS pool to receive fBEETS.',
-    },
-    {
-        src: Rq2Image,
-        alt: 'Reliquary',
-        info: 'Deposit fBEETS into Reliquary to unlock your maturity adjusted position.',
-    },
-    {
-        src: Rq3Image,
-        alt: 'maBEETS',
-        info: 'Receive a transferable and composable Relic that holds your maturity adjusted BEETS (maBEETS) position.',
-    },
-];
-
 export default function ReliquaryLanding() {
     const { isConnected } = useUserAccount();
     const { total } = useLegacyFBeetsBalance();
-    const { showToast, removeToast } = useToast();
-    const { pool, isFbeetsPool } = usePool();
+    const { showToast } = useToast();
+    const { pool } = usePool();
+    const { t } = useTranslation('reliquary');
+
+    const rqImages = [
+        {
+            src: Rq1Image,
+            alt: t('headerImageText.first.alt'),
+            info: t('headerImageText.first.info'),
+        },
+        {
+            src: Rq2Image,
+            alt: t('headerImageText.second.alt'),
+            info: t('headerImageText.second.info'),
+        },
+        {
+            src: Rq3Image,
+            alt: t('headerImageText.third.alt'),
+            info: t('headerImageText.third.info'),
+        },
+    ];
 
     useEffect(() => {
         if (total > 0) {
@@ -56,7 +58,7 @@ export default function ReliquaryLanding() {
                 type: ToastType.Info,
                 content: (
                     <HStack>
-                        <Text>You have a legacy fBEETS balance that can be migrated to maBEETS</Text>
+                        <Text>{t('toastText')}</Text>
                         <TokensProvider>
                             <PoolProvider pool={pool}>
                                 <CurrentStepProvider>
@@ -85,18 +87,18 @@ export default function ReliquaryLanding() {
             >
                 <VStack width="full" alignItems="flex-start">
                     <Heading color="white" fontSize={{ base: 'lg', lg: '2rem' }}>
-                        Maturity adjusted voting power and BEETS rewards.
+                        {t('headingText')}
                     </Heading>
                     <UnorderedList pl="5">
-                        <ListItem>Participate in BEETS governance</ListItem>
-                        <ListItem>Unlock maturity adjusted rewards</ListItem>
-                        <ListItem>Access evolving Ludwig fNFTs</ListItem>
+                        <ListItem>{t('listItemText.first')}</ListItem>
+                        <ListItem>{t('listItemText.second')}</ListItem>
+                        <ListItem>{t('listItemText.third')}</ListItem>
                     </UnorderedList>
                     <Spacer />
                     <HStack w={{ base: 'full', xl: '90%' }}>
                         <ReliquaryInvestModal createRelic />
                         <Button variant="secondary" w="full" as="a" href="https://docs.beets.fi" target="_blank">
-                            Learn more
+                            {t('secondaryButtonText')}
                         </Button>
                     </HStack>
                 </VStack>
@@ -129,7 +131,7 @@ export default function ReliquaryLanding() {
                     {isConnected && (
                         <>
                             <VStack width="full" alignItems="flex-start">
-                                <Heading size="lg">My relics</Heading>
+                                <Heading size="lg">{t('sectionText.title.first')}</Heading>
                             </VStack>
                             <Box width="full">
                                 <RelicCarousel />
@@ -139,7 +141,7 @@ export default function ReliquaryLanding() {
                 </VStack>
                 <VStack width="full" py="4" spacing="8" mt={{ base: '32rem', lg: '16' }}>
                     <VStack width="full" alignItems="flex-start">
-                        <Heading size="lg">All relics</Heading>
+                        <Heading size="lg">{t('sectionText.title.second')}</Heading>
                     </VStack>
                     <ReliquaryGlobalStats />
                 </VStack>
