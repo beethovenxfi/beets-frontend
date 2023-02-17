@@ -16,7 +16,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 export function ReliquaryInvestImage() {
     const { currentStep } = useCurrentStep();
 
-    function getCurrentStepImage(currentStep: string) {
+    function getCurrentStepImage(currentStep: string | null) {
         switch (currentStep) {
             case 'wFTM':
                 return ApproveWftm;
@@ -37,12 +37,15 @@ export function ReliquaryInvestImage() {
         }
     }
 
+    console.log({ currentStep });
+
     return (
         <>
             <Box mt="4">
                 <div className={styles.container}>
                     <div className={styles.overlapGrid}>
                         <Image src={Background} alt="background" />
+
                         <AnimatePresence initial={false}>
                             <motion.div
                                 key={currentStep}
@@ -54,7 +57,7 @@ export function ReliquaryInvestImage() {
                                     opacity: { duration: 0.25 },
                                 }}
                             >
-                                <Image src={getCurrentStepImage(currentStep)} alt="reliquary" />
+                                {currentStep && <Image src={getCurrentStepImage(currentStep)} alt="reliquary" />}
                             </motion.div>
                         </AnimatePresence>
                     </div>

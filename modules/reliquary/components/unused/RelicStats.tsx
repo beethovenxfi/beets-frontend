@@ -18,7 +18,7 @@ import TokenAvatar from '~/components/token/TokenAvatar';
 import { networkConfig } from '~/lib/config/network-config';
 import { useRelicDepositBalance } from '~/modules/reliquary/lib/useRelicDepositBalance';
 import RelicAchievements from './RelicAchievements';
-import RelicMaturity from './charts/RelicMaturity';
+import RelicMaturity from '../charts/RelicMaturity';
 import { useRelicPendingRewards } from '~/modules/reliquary/lib/useRelicPendingRewards';
 import { useGetTokens } from '~/lib/global/useToken';
 import { sum, sumBy } from 'lodash';
@@ -26,8 +26,8 @@ import { tokenFormatAmount } from '~/lib/services/token/token-util';
 import { useRelicHarvestRewards } from '~/modules/reliquary/lib/useRelicHarvestRewards';
 import { BeetsSubmitTransactionButton } from '~/components/button/BeetsSubmitTransactionButton';
 import { useReliquaryGlobalStats } from '~/modules/reliquary/lib/useReliquaryGlobalStats';
-import { ReliquaryBatchRelayerApprovalButton } from './ReliquaryBatchRelayerApprovalButton';
-import { useBatchRelayerHasApprovedForAll } from '../lib/useBatchRelayerHasApprovedForAll';
+import { ReliquaryBatchRelayerApprovalButton } from '../ReliquaryBatchRelayerApprovalButton';
+import { useBatchRelayerHasApprovedForAll } from '../../lib/useBatchRelayerHasApprovedForAll';
 
 export function RelicStats() {
     const { data: relicTokenBalances, relicBalanceUSD } = useRelicDepositBalance();
