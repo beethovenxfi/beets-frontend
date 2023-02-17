@@ -1,8 +1,8 @@
 import { Box, HStack, Text } from '@chakra-ui/react';
 import React, { useEffect } from 'react';
-import { RelicNFT } from '~/modules/reliquary/components/RelicNFT';
-import { RelicStats } from '~/modules/reliquary/components/RelicStats';
-import { RelicHeader } from '~/modules/reliquary/components/RelicHeader';
+import { RelicNFT } from '~/modules/reliquary/components/unused/RelicNFT';
+import { RelicStats } from '~/modules/reliquary/components/unused/RelicStats';
+import { RelicHeader } from '~/modules/reliquary/components/unused/RelicHeader';
 import { motion } from 'framer-motion';
 import useReliquary from '../../lib/useReliquary';
 import { relicGetMaturityProgress } from '../../lib/reliquary-helpers';
