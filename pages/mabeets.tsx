@@ -67,7 +67,10 @@ export async function getStaticProps({ locale }: { locale: string }) {
 
     return loadApolloState({
         client,
-        props: { pool: response?.data.pool || null, ...(await serverSideTranslations(locale, ['reliquary'])) },
+        props: {
+            pool: response?.data.pool || null,
+            ...(await serverSideTranslations(locale, ['reliquary', 'common'])),
+        },
     });
 }
 

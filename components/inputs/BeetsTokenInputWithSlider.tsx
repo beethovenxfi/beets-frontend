@@ -25,6 +25,7 @@ import { oldBnumScale, oldBnumToHumanReadable } from '~/lib/services/pool/lib/ol
 import { BeetsBox } from '~/components/box/BeetsBox';
 import { TokenSelectInline } from '~/components/token-select-inline/TokenSelectInline';
 import React from 'react';
+import { useTranslation } from 'next-i18next';
 
 interface Props extends BoxProps {
     tokenOptions: GqlPoolToken[];
@@ -54,6 +55,7 @@ export function BeetsTokenInputWithSlider({
         parseUnits(value, selectedTokenOption.decimals).lte(parseUnits(balance, selectedTokenOption.decimals));
     const [changing, setIsChanging] = useBoolean(false);
     const sliderValue = Math.round(hasBalance ? (parseFloat(value || '0') / parseFloat(balance)) * 100 : 0);
+    const { t } = useTranslation('common');
 
     return (
         <BeetsBox borderRadius="md" width="full" px="2" pt="2" pb="1" {...rest}>
@@ -167,10 +169,10 @@ export function BeetsTokenInputWithSlider({
                             _hover={{ textDecoration: 'none' }}
                             cursor={hasBalance ? 'pointer' : 'default'}
                         >
-                            You have {tokenFormatAmount(balance)}
+                            {t('common.youHave', { balance: tokenFormatAmount(balance) })}
                             {hasBalance ? (
                                 <Text color="beets.highlight" ml="1">
-                                    Max
+                                    {t('common.max')}
                                 </Text>
                             ) : null}
                         </Link>

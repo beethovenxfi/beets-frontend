@@ -1,1 +1,6 @@
-{}
+{
+    "common": {
+        "youHave": "You have {{balance}}",
+        "max": "Max"
+    }
+}
