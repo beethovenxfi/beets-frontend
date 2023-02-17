@@ -2,7 +2,7 @@ import { HStack, Text, VStack, Badge } from '@chakra-ui/react';
 import React from 'react';
 import numeral from 'numeral';
 import AprTooltip from '~/components/apr-tooltip/AprTooltip';
-import useReliquary from '../lib/useReliquary';
+import useReliquary from '../../lib/useReliquary';
 import { usePool } from '~/modules/pool/lib/usePool';
 import Card from '~/components/card/Card';
 
