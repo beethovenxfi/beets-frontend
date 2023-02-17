@@ -4,7 +4,7 @@ import { useUserAccount } from '~/lib/user/useUserAccount';
 import ReliquaryConnectWallet from './components/ReliquaryConnectWallet';
 import ReliquaryInvest from './components/ReliquaryInvest';
 import useReliquary from './lib/useReliquary';
-import { Relic } from '~/modules/reliquary/components/Relic';
+import { Relic } from '~/modules/reliquary/components/unused/Relic';
 import ReliquaryMigrateModal from './components/ReliquaryMigrateModal';
 import { RelicCarousel } from '~/modules/reliquary/components/RelicCarousel';
 

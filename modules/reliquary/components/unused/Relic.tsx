@@ -4,17 +4,17 @@ import { RelicNFT } from '~/modules/reliquary/components/RelicNFT';
 import { RelicStats } from '~/modules/reliquary/components/RelicStats';
 import { RelicHeader } from '~/modules/reliquary/components/RelicHeader';
 import { motion } from 'framer-motion';
-import useReliquary from '../lib/useReliquary';
-import { relicGetMaturityProgress } from '../lib/reliquary-helpers';
+import useReliquary from '../../lib/useReliquary';
+import { relicGetMaturityProgress } from '../../lib/reliquary-helpers';
 import { useToast } from '~/components/toast/BeetsToast';
 import { PoolProvider, usePool } from '~/modules/pool/lib/usePool';
-import RelicLevelUpButton from './RelicLevelUpButton';
+import RelicLevelUpButton from '../RelicLevelUpButton';
 
 export function Relic() {
     const { selectedRelic, maturityThresholds } = useReliquary();
     const { pool } = usePool();
     const { canUpgrade, canUpgradeTo } = relicGetMaturityProgress(selectedRelic, maturityThresholds);
-    
+
     const { showToast, removeToast } = useToast();
 
     useEffect(() => {
