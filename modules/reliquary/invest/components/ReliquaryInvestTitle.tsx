@@ -30,16 +30,16 @@ export function ReliquaryInvestTitle({ investTypeText }: Props) {
         if (!currentStep) {
             return;
         }
-        const [titleRaw] = titles.filter((title) => title.id === currentStep);
+        const [filteredTitle] = titles.filter((title) => title.id === currentStep);
 
         return {
             title:
                 currentStep === 'reliquary-invest'
                     ? createRelic
-                        ? titleRaw.titleTrue
-                        : titleRaw.titleFalse
-                    : titleRaw.title,
-            ...(titleRaw.subtitle && { subtitle: titleRaw.subtitle }),
+                        ? filteredTitle.titleTrue
+                        : filteredTitle.titleFalse
+                    : filteredTitle.title,
+            ...(filteredTitle.subtitle && { subtitle: filteredTitle.subtitle }),
         };
     }
 
