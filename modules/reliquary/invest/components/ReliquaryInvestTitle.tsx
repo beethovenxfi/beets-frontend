@@ -1,4 +1,5 @@
 import { Text, Heading, VStack } from '@chakra-ui/react';
+import { useTranslation } from 'next-i18next';
 import React from 'react';
 import useReliquary from '../../lib/useReliquary';
 import { useCurrentStep } from '../../lib/useReliquaryCurrentStep';
@@ -8,56 +9,38 @@ interface Props {
 }
 
 interface TitleProps {
-    title: string;
+    title: string | undefined;
     subtitle?: string;
+}
+
+interface ExtendedTitleProps extends TitleProps {
+    id: string;
+    titleTrue?: string;
+    titleFalse?: string;
 }
 
 export function ReliquaryInvestTitle({ investTypeText }: Props) {
     const { currentStep } = useCurrentStep();
     const { createRelic } = useReliquary();
 
-    function getCurrentStepTitle(currentStep: string): TitleProps {
-        switch (currentStep) {
-            case 'wFTM':
-                return {
-                    title: 'wFTM',
-                    subtitle: 'Approve deposit of wFTM',
-                };
-            case 'BEETS':
-                return {
-                    title: 'BEETS',
-                    subtitle: 'Approve deposit of BEETS',
-                };
-            case 'unstake':
-                return {
-                    title: 'Unstake fBEETS',
-                    subtitle: 'From the Beethoven X farm',
-                };
-            case 'batch-relayer-reliquary':
-                return {
-                    title: 'Transactions',
-                    subtitle: 'Approve deposit, withdraw and claim rewards',
-                };
-            case 'batch-relayer':
-                return {
-                    title: 'Relic Creation',
-                    subtitle: 'Approve creation of new relics',
-                };
-            case 'approve-vault':
-                return {
-                    title: 'Vault',
-                    subtitle: 'Approve vault to spend your fBEETS',
-                };
-            case 'reliquary-migrate':
-                return {
-                    title: 'Destination relic',
-                };
-            case 'reliquary-invest':
-            default:
-                return {
-                    title: `${createRelic ? 'Create & d' : 'D'}eposit into a relic`,
-                };
+    const { t } = useTranslation('reliquary');
+    const titles = t<string, ExtendedTitleProps[]>('reliquary.invest.titles', { returnObjects: true });
+
+    function getCurrentStepTitle(currentStep: string | null): TitleProps | undefined {
+        if (!currentStep) {
+            return;
         }
+        const [titleRaw] = titles.filter((title) => title.id === currentStep);
+
+        return {
+            title:
+                currentStep === 'reliquary-invest'
+                    ? createRelic
+                        ? titleRaw.titleTrue
+                        : titleRaw.titleFalse
+                    : titleRaw.title,
+            ...(titleRaw.subtitle && { subtitle: titleRaw.subtitle }),
+        };
     }
 
     function getTitles() {

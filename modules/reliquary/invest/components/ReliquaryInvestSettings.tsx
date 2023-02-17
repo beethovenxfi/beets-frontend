@@ -4,10 +4,12 @@ import { BeetsBox } from '~/components/box/BeetsBox';
 import { SlippageTextLinkMenu } from '~/components/slippage/SlippageTextLinkMenu';
 import React from 'react';
 import { usePoolJoinGetBptOutAndPriceImpactForTokensIn } from '~/modules/pool/invest/lib/usePoolJoinGetBptOutAndPriceImpactForTokensIn';
+import { useTranslation } from 'next-i18next';
 
 export function ReliquaryInvestSettings({ ...rest }: BoxProps) {
     const { formattedPriceImpact, hasHighPriceImpact, hasMediumPriceImpact, isLoading } =
         usePoolJoinGetBptOutAndPriceImpactForTokensIn();
+    const { t } = useTranslation('reliquary');
 
     return (
         <Box {...rest} width="full">
@@ -29,8 +31,8 @@ export function ReliquaryInvestSettings({ ...rest }: BoxProps) {
                         }
                     >
                         <InfoButton
-                            label="Price impact"
-                            infoText="This is the difference between the current market price and the price you will pay due to your investment influencing the balance and internal price of tokens within the pool."
+                            label={t('reliquary.invest.settings.priceImpact.label') || ''}
+                            infoText={t('reliquary.invest.settings.priceImpact.info')}
                         />
                         {isLoading ? (
                             <Skeleton h="3" w="12" />
@@ -43,8 +45,8 @@ export function ReliquaryInvestSettings({ ...rest }: BoxProps) {
                     <HStack justifyContent="space-between" width="full">
                         <Box flex="1">
                             <InfoButton
-                                label="Max slippage"
-                                infoText="The maximum amount of slippage that you're willing to accept for this transaction."
+                                label={t('reliquary.invest.settings.slippage.label') || ''}
+                                infoText={t('reliquary.invest.settings.slippage.info')}
                             />
                         </Box>
                         <SlippageTextLinkMenu />

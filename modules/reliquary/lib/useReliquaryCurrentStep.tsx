@@ -8,7 +8,7 @@ export interface CurrentStepContextType {
 export const CurrentStepContext = React.createContext<CurrentStepContextType | null>(null);
 
 export function _useCurrentStep() {
-    const [currentStep, setCurrentStep] = React.useState<string>('');
+    const [currentStep, setCurrentStep] = React.useState<string | null>(null);
 
     const updateCurrentStep = (id: string) => {
         setCurrentStep(id);

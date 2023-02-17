@@ -3,26 +3,25 @@ import { usePoolUserTokenBalancesInWallet } from '~/modules/pool/lib/usePoolUser
 import { Alert, Box, Button, Checkbox, Collapse, useBoolean } from '@chakra-ui/react';
 import { ReliquaryInvestSummary } from '~/modules/reliquary/invest/components/ReliquaryInvestSummary';
 import { ReliquaryInvestSettings } from '~/modules/reliquary/invest/components/ReliquaryInvestSettings';
-
 import { useReliquaryInvest } from '~/modules/reliquary/invest/lib/useReliquaryInvest';
 import { BeetsTokenInputWithSlider } from '~/components/inputs/BeetsTokenInputWithSlider';
 import { usePoolJoinGetBptOutAndPriceImpactForTokensIn } from '~/modules/pool/invest/lib/usePoolJoinGetBptOutAndPriceImpactForTokensIn';
-import { useHasBatchRelayerApproval } from '~/lib/util/useHasBatchRelayerApproval';
 import { usePool } from '~/modules/pool/lib/usePool';
 import React from 'react';
+import { useTranslation } from 'next-i18next';
 
 interface Props {
     onShowPreview(): void;
 }
 
 export function ReliquaryInvestCustom({ onShowPreview }: Props) {
-    const { pool, requiresBatchRelayerOnJoin } = usePool();
+    const { pool } = usePool();
     const { inputAmounts, setInputAmount, setSelectedOption } = useReliquaryInvestState();
     const { selectedInvestTokens, hasValidUserInput } = useReliquaryInvest();
     const { userPoolTokenBalances } = usePoolUserTokenBalancesInWallet();
     const { hasHighPriceImpact, formattedPriceImpact } = usePoolJoinGetBptOutAndPriceImpactForTokensIn();
     const [acknowledgeHighPriceImpact, { toggle: toggleAcknowledgeHighPriceImpact }] = useBoolean(false);
-    const { data: hasBatchRelayerApproval } = useHasBatchRelayerApproval();
+    const { t } = useTranslation('reliquary');
 
     return (
         <Box>
@@ -60,8 +59,7 @@ export function ReliquaryInvestCustom({ onShowPreview }: Props) {
                             mr="2"
                         />
                         <Box>
-                            I confirm that my custom investment will result in a {formattedPriceImpact} price impact,
-                            subjecting me to fees and possible impermanent loss.
+                            {t('reliquary.invest.custom.highPriceImpact', { highPriceImpact: formattedPriceImpact })}
                         </Box>
                     </Alert>
                 </Collapse>
@@ -72,7 +70,7 @@ export function ReliquaryInvestCustom({ onShowPreview }: Props) {
                     onClick={onShowPreview}
                     isDisabled={!hasValidUserInput || (hasHighPriceImpact && !acknowledgeHighPriceImpact)}
                 >
-                    Preview
+                    {t('reliquary.invest.common.preview')}
                 </Button>
             </Box>
         </Box>

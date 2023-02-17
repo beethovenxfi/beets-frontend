@@ -1,5 +1,6 @@
 import { Alert, AlertIcon, Box, SkeletonText } from '@chakra-ui/react';
 import { formatDistanceToNowStrict } from 'date-fns';
+import { useTranslation } from 'next-i18next';
 import React, { useEffect } from 'react';
 import { numberFormatUSDValue } from '~/lib/util/number-formats';
 import { useReliquaryDepositImpact } from '../../lib/useReliquaryDepositImpact';
@@ -20,6 +21,8 @@ export function ReliquaryInvestDepositImpact({ bptIn, totalInvestValue = 0, reli
         refetch,
     } = useReliquaryDepositImpact(parseFloat(bptIn || bptOutAndPriceImpact?.minBptReceived || ''), relicId);
 
+    const { t } = useTranslation('reliquary');
+
     useEffect(() => {
         if (relicId) {
             refetch();
@@ -31,11 +34,10 @@ export function ReliquaryInvestDepositImpact({ bptIn, totalInvestValue = 0, reli
             <Alert status="warning" mb="4">
                 <AlertIcon alignSelf="center" />
                 {!isFetching && depositImpact !== undefined ? (
-                    `Investing ${numberFormatUSDValue(
-                        totalInvestValue,
-                    )} into this relic will affect its maturity. It will take an additional ${formatDistanceToNowStrict(
-                        depositImpact.diffDate,
-                    )} to reach maximum maturity.`
+                    t('reliquary.invest.depositImpact.alert', {
+                        totalInvestValue: numberFormatUSDValue(totalInvestValue),
+                        diffDate: formatDistanceToNowStrict(depositImpact.diffDate),
+                    })
                 ) : (
                     <Box w="full">
                         <SkeletonText

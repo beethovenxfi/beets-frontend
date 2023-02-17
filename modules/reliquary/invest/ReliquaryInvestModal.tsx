@@ -22,6 +22,7 @@ import { ReliquaryInvestCustom } from './components/ReliquaryInvestCustom';
 import { ReliquaryInvestProportional } from './components/ReliquaryInvestProportional';
 import { useReliquaryInvestState } from './lib/useReliquaryInvestState';
 import { FadeInBox } from '~/components/animation/FadeInBox';
+import { useTranslation } from 'next-i18next';
 
 interface Props {
     createRelic?: boolean;
@@ -59,6 +60,7 @@ export function ReliquaryInvestModal({
     const modalContainerRef = useRef<HTMLDivElement | null>(null);
     const lastModalBounds = useRef<DOMRect | null>(null);
     const { clearInvestState } = useReliquaryInvestState();
+    const { t } = useTranslation('reliquary');
 
     function onModalOpen() {
         if (createRelic) {
@@ -136,7 +138,7 @@ export function ReliquaryInvestModal({
         <Box width="full">
             {!noActivator && (
                 <Button variant="primary" onClick={onModalOpen} width="full" {...activatorProps}>
-                    Get maBEETS
+                    {t('reliquary.invest.modal.getMaBeets')}
                 </Button>
             )}
             <Modal motionPreset="none" isOpen={isOpen} onClose={onModalClose} size="lg" initialFocusRef={initialRef}>
@@ -192,17 +194,18 @@ export function ReliquaryInvestModal({
                             {modalState === 'start' ? (
                                 <>
                                     <Heading size="md" noOfLines={1}>
-                                        Invest into {createRelic ? 'a new  ' : 'an existing '}relic
+                                        {createRelic
+                                            ? t('reliquary.invest.modal.investNewRelic')
+                                            : t('reliquary.invest.modal.investExistingRelic')}
                                     </Heading>
                                     <Text fontSize="1rem" fontWeight="normal">
-                                        Placeholder for a short (2 lines?) explainer. Can be different for create new
-                                        relic and deposit into existing relic
+                                        {t('reliquary.invest.modal.investExplainer')}
                                     </Text>
                                 </>
                             ) : null}
-                            {modalState === 'proportional' ? (
+                            {modalState === 'proportional' || modalState === 'custom' ? (
                                 <Heading size="md" marginLeft="8" textAlign="left">
-                                    Proportional investment
+                                    {t(`reliquary.invest.common.${modalState}Investment` as const)}
                                 </Heading>
                             ) : null}
                         </BeetsModalHeader>
@@ -212,7 +215,7 @@ export function ReliquaryInvestModal({
                                     <Box px="4">
                                         <Alert status="warning" mb="4">
                                             <AlertIcon />
-                                            Investing more funds into your relic will affect your level up progress.
+                                            {t('reliquary.invest.modal.moreFundsAffectLevel')}
                                         </Alert>
                                     </Box>
                                 )}

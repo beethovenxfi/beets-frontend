@@ -27,6 +27,7 @@ import { usePoolUserTokenBalancesInWallet } from '~/modules/pool/lib/usePoolUser
 import { bnum } from '@balancer-labs/sor';
 import { GqlPoolToken } from '~/apollo/generated/graphql-codegen-generated';
 import { tokenInputTruncateDecimalPlaces } from '~/lib/util/input-util';
+import { useTranslation } from 'next-i18next';
 
 interface Props {
     onShowPreview(): void;
@@ -40,6 +41,8 @@ export function ReliquaryInvestProportional({ onShowPreview }: Props) {
     const { selectedInvestTokens, userInvestTokenBalances, isInvestingWithEth } = useReliquaryInvest();
 
     const { userPoolTokenBalances } = usePoolUserTokenBalancesInWallet();
+
+    const { t } = useTranslation('reliquary');
 
     async function onTokenAmountChange(token: GqlPoolToken, amount: string) {
         if (!amount) {
@@ -125,10 +128,7 @@ export function ReliquaryInvestProportional({ onShowPreview }: Props) {
                             {proportionalPercent}%
                         </SliderMark>
                     </Slider>
-                    <Text>
-                        Drag the slider to configure your investment amount or you can customize the amount for a single
-                        token below.
-                    </Text>
+                    <Text>{t('reliquary.invest.proportional.slider')}</Text>
                 </BeetsBox>
                 <BeetsBox mt="4" p="2" width="full">
                     <VStack width="full" divider={<StackDivider borderColor="whiteAlpha.200" />}>
@@ -164,7 +164,7 @@ export function ReliquaryInvestProportional({ onShowPreview }: Props) {
                     onClick={onShowPreview}
                     isDisabled={exceedsTokenBalances || proportionalPercent === 0}
                 >
-                    Preview
+                    {t('reliquary.invest.common.preview')}
                 </Button>
             </VStack>
         </Box>

@@ -17,7 +17,7 @@ export function ReliquaryPool() {
                 <HStack width="full" justifyContent="flex-end">
                     <NextLink href="/mabeets" chakraProps={{ _hover: { textDecoration: 'none' } }}>
                         <Button variant="primary" width={{ base: '130px', lg: '160px' }}>
-                            {t('reliquary.detail.goToReliquary')}
+                            {t('reliquary.detail.goToMaBeets')}
                         </Button>
                     </NextLink>
                 </HStack>

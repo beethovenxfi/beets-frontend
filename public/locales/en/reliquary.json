@@ -2,7 +2,7 @@
     "reliquary": {
         "common": {},
         "landing": {
-            "migrateToReliquaryToast": "You have a legacy fBEETS balance that can be migrated to maBEETS",
+            "migrateToMaBeetsToast": "You have a legacy fBEETS balance that can be migrated to maBEETS",
             "hero": {
                 "title": "Maturity adjusted voting power and BEETS rewards.",
                 "bulletPoints": [
@@ -27,14 +27,125 @@
                 "learnMoreButton": "Learn more"
             },
             "section": {
-                "title": {
-                    "myRelics": "My Relics",
-                    "allRelics": "All Relics"
-                }
+                "myRelics": "My Relics",
+                "allRelics": "All Relics"
             }
         },
         "detail": {
-            "goToReliquary": "Go to maBEETS"
+            "goToMaBeets": "Go to maBEETS"
+        },
+        "invest": {
+            "actions": {
+                "invest": {
+                    "buttonTrue": "CREATE and DEPOSIT",
+                    "buttonFalse": "DEPOSIT",
+                    "toolTip": "Create and/or deposit into your relic"
+                },
+                "tokenApproval": {
+                    "button": "Approve {{token}}",
+                    "toolTip": "Approve {{token}} for depositing"
+                },
+                "batchRelayerApprovedForAll": {
+                    "button": "Approve TRANSACTIONS",
+                    "toolTip": "Transacting with all (future) relics requires you to approve the batch relayer."
+                },
+                "batchRelayerApproval": {
+                    "button": "Approve RELIC",
+                    "toolTip": "Creating a relic requires you to approve the batch relayer."
+                },
+                "confirmed": "You've successfully invested {{totalInvestValue}} into a relic.",
+                "loading": "Loading...",
+                "complete": "Return to maBEETS"
+            },
+            "common": {
+                "preview": "Preview",
+                "proportionalInvestment": "Proportional investment",
+                "customInvestment": "Custom investment"
+            },
+            "custom": {
+                "highPriceImpact": "I confirm that my custom investment will result in a {{highPriceImpact}} price impact, subjecting me to fees and possible impermanent loss."
+            },
+            "depositImpact": {
+                "alert": "Investing {{totalInvestValue}} into this relic will affect its maturity. It will take an additional {{diffDate}} to reach maximum maturity."
+            },
+            "proportional": {
+                "slider": "Drag the slider to configure your investment amount or you can customize the amount for a single token below."
+            },
+            "settings": {
+                "priceImpact": {
+                    "label": "Price impact",
+                    "info": "This is the difference between the current market price and the price you will pay due to your investment influencing the balance and internal price of tokens within the pool."
+                },
+                "slippage": {
+                    "label": "Max slippage",
+                    "info": "The maximum amount of slippage that you're willing to accept for this transaction."
+                }
+            },
+            "summary": {
+                "investmentTotal": "Your investment total is",
+                "weeklyYield": "Potential weekly yield"
+            },
+            "titles": [
+                {
+                    "id": "wFTM",
+                    "title": "wFTM",
+                    "subTitle": "Approve deposit of wFTM"
+                },
+                {
+                    "id": "BEETS",
+                    "title": "BEETS",
+                    "subtitle": "Approve deposit of BEETS"
+                },
+                {
+                    "id": "stake",
+                    "title": "Unstake fBEETS",
+                    "subtitle": "From the Beethoven X farm"
+                },
+                {
+                    "id": "batch-relayer-reliquary",
+                    "title": "Transactions",
+                    "subtitle": "Approve deposit, withdraw and claim rewards"
+                },
+                {
+                    "id": "batch-relayer",
+                    "title": "Relic Creation",
+                    "subtitle": "Approve creation of new relics"
+                },
+                {
+                    "id": "approve-vault",
+                    "title": "Vault",
+                    "subtitle": "Approve vault to spend your fBEETS"
+                },
+                {
+                    "id": "reliquary-migrate",
+                    "title": "Destination relic"
+                },
+                {
+                    "id": "reliquary-invest",
+                    "titleTrue": "Create & deposit into a relic",
+                    "titleFalse": "Deposit into a relic"
+                }
+            ],
+            "typeChoice": {
+                "chooseType": "Choose your investment type",
+                "maxAmount": "The max amount you can invest is shown for each option.",
+                "difference": {
+                    "toolTip": "When investing proportionally, you enter the Liquidity Pool in the specific ratios set by the pool. This helps to ensure you aren’t subject to the fees associated with price impact. Alternatively, customising your investment allows you to invest with your desired proportions. However, this action may shift the pool out of balance and subject you to price impact.",
+                    "what": "What's the difference"
+                },
+                "proportional": {
+                    "toolTip": "You don't have the appropriate funds for a proportional investment. Refer below to the tokens you need to make a proportional investment.",
+                    "recommended": "Recommended"
+                },
+                "tokensInWallet": "Pool tokens in your wallet"
+            },
+            "modal": {
+                "getMaBeets": "Get maBEETS",
+                "investNewRelic": "Invest into a new relic",
+                "investExistingRelic": "Invest into an existing relic",
+                "investExplainer": "Deposit into the fresh BEETS farm to get maBEETS.",
+                "moreFundsAffectLevel": "Investing more funds into your relic will affect your level up progress."
+            }
         }
     }
 }

@@ -44,7 +44,7 @@ export default function ReliquaryLanding() {
                 type: ToastType.Info,
                 content: (
                     <HStack>
-                        <Text>{t('reliquary.landing.migrateToReliquaryToast')}</Text>
+                        <Text>{t('reliquary.landing.migrateToMaBeetsToast')}</Text>
                         <TokensProvider>
                             <PoolProvider pool={pool}>
                                 <CurrentStepProvider>
@@ -121,7 +121,7 @@ export default function ReliquaryLanding() {
                     {isConnected && (
                         <>
                             <VStack width="full" alignItems="flex-start">
-                                <Heading size="lg">{t('reliquary.landing.section.title.myRelics')}</Heading>
+                                <Heading size="lg">{t('reliquary.landing.section.myRelics')}</Heading>
                             </VStack>
                             <Box width="full">
                                 <RelicCarousel />
@@ -131,7 +131,7 @@ export default function ReliquaryLanding() {
                 </VStack>
                 <VStack width="full" py="4" spacing="8" mt={{ base: '32rem', lg: '16' }}>
                     <VStack width="full" alignItems="flex-start">
-                        <Heading size="lg">{t('reliquary.landing.section.title.allRelics')}</Heading>
+                        <Heading size="lg">{t('reliquary.landing.section.allRelics')}</Heading>
                     </VStack>
                     <ReliquaryGlobalStats />
                 </VStack>

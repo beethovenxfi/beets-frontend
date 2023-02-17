@@ -4,12 +4,15 @@ import { numberFormatUSDValue } from '~/lib/util/number-formats';
 import { useReliquaryInvest } from '~/modules/reliquary/invest/lib/useReliquaryInvest';
 import { usePool } from '~/modules/pool/lib/usePool';
 import React from 'react';
+import { useTranslation } from 'next-i18next';
 
 interface Props extends BoxProps {}
 
 export function ReliquaryInvestSummary({ ...rest }: Props) {
     const { pool } = usePool();
     const { totalInvestValue } = useReliquaryInvest();
+    const { t } = useTranslation('reliquary');
+
     const weeklyYield = (totalInvestValue * parseFloat(pool.dynamicData.apr.total)) / 52;
 
     return (
@@ -17,7 +20,7 @@ export function ReliquaryInvestSummary({ ...rest }: Props) {
             <HStack spacing="8">
                 <Box>
                     <Heading size="sm" textAlign="center">
-                        Your investment total is
+                        {t('reliquary.invest.summary.investmentTotal')}
                     </Heading>
                     <Heading color="beets.green" textAlign="center">
                         {numberFormatUSDValue(totalInvestValue)}
@@ -25,7 +28,7 @@ export function ReliquaryInvestSummary({ ...rest }: Props) {
                 </Box>
                 <Box>
                     <Heading size="sm" textAlign="center">
-                        Potential weekly yield
+                        {t('reliquary.invest.summary.weeklyYield')}
                     </Heading>
                     <HStack justifyContent="center">
                         <Heading color="beets.highlight" textAlign="center">

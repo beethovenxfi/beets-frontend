@@ -14,6 +14,7 @@ import { useReliquaryZap } from '~/modules/reliquary/lib/useReliquaryZap';
 import useReliquary from '~/modules/reliquary/lib/useReliquary';
 import { useBatchRelayerHasApprovedForAll } from '~/modules/reliquary/lib/useBatchRelayerHasApprovedForAll';
 import { ReliquaryTransactionStepsSubmit, TransactionStep } from '../../components/ReliquaryTransactionStepsSubmit';
+import { useTranslation } from 'next-i18next';
 
 interface Props {
     onInvestComplete(): void;
@@ -48,6 +49,7 @@ export function ReliquaryInvestActions({ onInvestComplete, onClose }: Props) {
         investTokensWithAmounts: selectedInvestTokensWithAmounts,
         enabled: batchRelayerHasApprovedForAll,
     });
+    const { t } = useTranslation('reliquary');
 
     const isLoading =
         isLoadingUserAllowances || isLoadingBatchRelayerApproval || isLoadingBatchRelayerHasApprovedForAll;
@@ -68,16 +70,20 @@ export function ReliquaryInvestActions({ onInvestComplete, onClose }: Props) {
             const investStep: TransactionStep = {
                 id: 'reliquary-invest',
                 type: 'other',
-                buttonText: `${createRelic ? 'CREATE and ' : ''}DEPOSIT`,
-                tooltipText: 'Create and/or deposit into your relic',
+                buttonText: `${
+                    createRelic
+                        ? t('reliquary.invest.actions.invest.buttonTrue')
+                        : t('reliquary.invest.actions.invest.buttonFalse')
+                }`,
+                tooltipText: t('reliquary.invest.actions.invest.toolTip'),
             };
 
             const steps: TransactionStep[] = [
                 ...tokensRequiringApproval.map((token) => ({
                     id: token.symbol,
                     type: 'tokenApproval' as const,
-                    buttonText: `Approve ${token.symbol}`,
-                    tooltipText: `Approve ${token.symbol} for depositing`,
+                    buttonText: t('reliquary.invest.actions.tokenApproval.button', { token: token.symbol }),
+                    tooltipText: t('reliquary.invest.actions.tokenApproval.toolTip', { token: token.symbol }),
                     token,
                 })),
                 investStep,
@@ -87,8 +93,8 @@ export function ReliquaryInvestActions({ onInvestComplete, onClose }: Props) {
                 steps.unshift({
                     id: 'batch-relayer-reliquary',
                     type: 'other',
-                    buttonText: 'Approve TRANSACTIONS',
-                    tooltipText: 'Transacting with all (future) relics requires you to approve the batch relayer.',
+                    buttonText: t('reliquary.invest.actions.batchRelayerApprovedForAll.button'),
+                    tooltipText: t('reliquary.invest.actions.batchRelayerApprovedForAll.toolTip'),
                 });
             }
 
@@ -96,8 +102,8 @@ export function ReliquaryInvestActions({ onInvestComplete, onClose }: Props) {
                 steps.unshift({
                     id: 'batch-relayer',
                     type: 'other',
-                    buttonText: 'Approve RELIC',
-                    tooltipText: 'Creating a relic requires you to approve the batch relayer.',
+                    buttonText: t('reliquary.invest.actions.batchRelayerApproval.button'),
+                    tooltipText: t('reliquary.invest.actions.batchRelayerApproval.toolTip'),
                 });
             }
 
@@ -120,7 +126,9 @@ export function ReliquaryInvestActions({ onInvestComplete, onClose }: Props) {
                     <FadeInBox isVisible={reliquaryJoinQuery.isConfirmed}>
                         <Alert status="success" borderRadius="md">
                             <AlertIcon />
-                            {`You've successfully invested ${numberFormatUSDValue(totalInvestValue)} into a relic.`}
+                            {t('reliquary.invest.actions.confirmed', {
+                                totalInvestValue: numberFormatUSDValue(totalInvestValue),
+                            })}
                         </Alert>
                     </FadeInBox>
                 </Box>
@@ -138,8 +146,8 @@ export function ReliquaryInvestActions({ onInvestComplete, onClose }: Props) {
                     isLoading={
                         steps === null || isLoadingBatchRelayerApproval || isLoadingBatchRelayerHasApprovedForAll
                     }
-                    loadingButtonText="Invest"
-                    completeButtonText="Return to maBEETS"
+                    loadingButtonText={t('reliquary.invest.actions.loading')}
+                    completeButtonText={t('reliquary.invest.actions.complete')}
                     onCompleteButtonClick={onClose}
                     steps={steps || []}
                     onSubmit={(id) => {
