@@ -15,6 +15,7 @@ import { PoolComposableUserPoolTokenBalanceProvider } from '~/modules/pool/lib/u
 import { RelicDepositBalanceProvider } from '~/modules/reliquary/lib/useRelicDepositBalance';
 import { networkConfig } from '~/lib/config/network-config';
 import { ReliquaryPool } from '~/modules/reliquary/detail/ReliquaryPool';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 interface Props {
     pool: GqlPoolUnion;
@@ -68,7 +69,12 @@ export async function getStaticPaths() {
     };
 }
 
-export async function getStaticProps({ params }: { params: { poolId: string } }) {
+interface StaticProps {
+    params: { poolId: string };
+    locale: string;
+}
+
+export async function getStaticProps({ params, locale }: StaticProps) {
     const client = initializeApolloClient();
     const { data } = await client.query<GetPoolQuery, GetPoolQueryVariables>({
         query: GetPool,
@@ -82,7 +88,7 @@ export async function getStaticProps({ params }: { params: { poolId: string } })
 
     return loadApolloState({
         client,
-        props: { pool: data.pool },
+        props: { pool: data.pool, ...(await serverSideTranslations(locale, ['reliquary'])) },
     });
 }
 

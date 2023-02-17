@@ -32,6 +32,9 @@
                     "allRelics": "All Relics"
                 }
             }
+        },
+        "detail": {
+            "goToReliquary": "Go to maBEETS"
         }
     }
 }

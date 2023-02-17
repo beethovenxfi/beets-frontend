@@ -5,8 +5,11 @@ import PoolStats from '~/modules/pool/detail/components/stats/PoolStats';
 import { PoolTransactions } from '~/modules/pool/detail/components/transactions/PoolTransactions';
 import { PoolDetailCharts } from '~/modules/pool/detail/components/PoolDetailCharts';
 import { NextLink } from '~/components/link/NextLink';
+import { useTranslation } from 'next-i18next';
 
 export function ReliquaryPool() {
+    const { t } = useTranslation('reliquary');
+
     return (
         <Box marginBottom="8">
             <PoolHeader />
@@ -14,7 +17,7 @@ export function ReliquaryPool() {
                 <HStack width="full" justifyContent="flex-end">
                     <NextLink href="/mabeets" chakraProps={{ _hover: { textDecoration: 'none' } }}>
                         <Button variant="primary" width={{ base: '130px', lg: '160px' }}>
-                            Go to maBEETS
+                            {t('reliquary.detail.goToReliquary')}
                         </Button>
                     </NextLink>
                 </HStack>
