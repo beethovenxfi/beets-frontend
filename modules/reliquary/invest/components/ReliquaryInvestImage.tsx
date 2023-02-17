@@ -37,8 +37,6 @@ export function ReliquaryInvestImage() {
         }
     }
 
-    console.log({ currentStep });
-
     return (
         <>
             <Box mt="4">
