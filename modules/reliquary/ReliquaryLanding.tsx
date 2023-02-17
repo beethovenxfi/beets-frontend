@@ -33,23 +33,9 @@ export default function ReliquaryLanding() {
     const { pool } = usePool();
     const { t } = useTranslation('reliquary');
 
-    const rqImages = [
-        {
-            src: Rq1Image,
-            alt: t('headerImageText.first.alt'),
-            info: t('headerImageText.first.info'),
-        },
-        {
-            src: Rq2Image,
-            alt: t('headerImageText.second.alt'),
-            info: t('headerImageText.second.info'),
-        },
-        {
-            src: Rq3Image,
-            alt: t('headerImageText.third.alt'),
-            info: t('headerImageText.third.info'),
-        },
-    ];
+    const rqImages = [Rq1Image, Rq2Image, Rq3Image];
+
+    const bulletPoints = t<string, string[]>('reliquary.landing.hero.bulletPoints', { returnObjects: true });
 
     useEffect(() => {
         if (total > 0) {
@@ -58,7 +44,7 @@ export default function ReliquaryLanding() {
                 type: ToastType.Info,
                 content: (
                     <HStack>
-                        <Text>{t('toastText')}</Text>
+                        <Text>{t('reliquary.landing.migrateToReliquaryToast')}</Text>
                         <TokensProvider>
                             <PoolProvider pool={pool}>
                                 <CurrentStepProvider>
@@ -87,18 +73,18 @@ export default function ReliquaryLanding() {
             >
                 <VStack width="full" alignItems="flex-start">
                     <Heading color="white" fontSize={{ base: 'lg', lg: '2rem' }}>
-                        {t('headingText')}
+                        {t('reliquary.landing.hero.title')}
                     </Heading>
                     <UnorderedList pl="5">
-                        <ListItem>{t('listItemText.first')}</ListItem>
-                        <ListItem>{t('listItemText.second')}</ListItem>
-                        <ListItem>{t('listItemText.third')}</ListItem>
+                        {bulletPoints.map((bulletPointText, index) => (
+                            <ListItem key={index}>{bulletPointText}</ListItem>
+                        ))}
                     </UnorderedList>
                     <Spacer />
                     <HStack w={{ base: 'full', xl: '90%' }}>
                         <ReliquaryInvestModal createRelic />
                         <Button variant="secondary" w="full" as="a" href="https://docs.beets.fi" target="_blank">
-                            {t('secondaryButtonText')}
+                            {t('reliquary.landing.hero.learnMoreButton')}
                         </Button>
                     </HStack>
                 </VStack>
@@ -110,13 +96,17 @@ export default function ReliquaryLanding() {
                                 whileHover={{ scale: 1.2, transition: { type: 'spring', stiffness: 400, damping: 10 } }}
                             >
                                 <Image
-                                    src={image.src}
-                                    alt={image.alt}
+                                    src={image}
+                                    alt={t(`reliquary.landing.hero.images.${index}.alt` as const) || ''}
                                     placeholder="blur"
                                     style={{ borderRadius: '8px' }}
                                 />
                             </Box>
-                            <InfoButton labelProps={infoButtonLabelProps} label={image.alt} infoText={image.info} />
+                            <InfoButton
+                                labelProps={infoButtonLabelProps}
+                                label={t(`reliquary.landing.hero.images.${index}.alt` as const) || ''}
+                                infoText={t(`reliquary.landing.hero.images.${index}.info` as const)}
+                            />
                         </VStack>
                     ))}
                 </Stack>
@@ -131,7 +121,7 @@ export default function ReliquaryLanding() {
                     {isConnected && (
                         <>
                             <VStack width="full" alignItems="flex-start">
-                                <Heading size="lg">{t('sectionText.title.first')}</Heading>
+                                <Heading size="lg">{t('reliquary.landing.section.title.myRelics')}</Heading>
                             </VStack>
                             <Box width="full">
                                 <RelicCarousel />
@@ -141,7 +131,7 @@ export default function ReliquaryLanding() {
                 </VStack>
                 <VStack width="full" py="4" spacing="8" mt={{ base: '32rem', lg: '16' }}>
                     <VStack width="full" alignItems="flex-start">
-                        <Heading size="lg">{t('sectionText.title.second')}</Heading>
+                        <Heading size="lg">{t('reliquary.landing.section.title.allRelics')}</Heading>
                     </VStack>
                     <ReliquaryGlobalStats />
                 </VStack>
