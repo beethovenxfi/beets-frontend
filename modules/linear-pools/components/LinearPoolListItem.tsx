@@ -1,14 +1,13 @@
 import { BoxProps } from '@chakra-ui/layout';
 import { GqlPoolLinearFragment } from '~/apollo/generated/graphql-codegen-generated';
-import { Box, Grid, GridItem, GridItemProps, Text, Link, Button } from '@chakra-ui/react';
+import { Box, Button, Grid, GridItem, GridItemProps, Text } from '@chakra-ui/react';
 import numeral from 'numeral';
 import { memo } from 'react';
 import { TokenAvatarSetInList, TokenAvatarSetInListTokenData } from '~/components/token/TokenAvatarSetInList';
 import AprTooltip from '~/components/apr-tooltip/AprTooltip';
 import { networkConfig } from '~/lib/config/network-config';
-import { oldBnum, oldBnumScale } from '~/lib/services/pool/lib/old-big-number';
+import { oldBnumScale } from '~/lib/services/pool/lib/old-big-number';
 import { tokenFormatAmount } from '~/lib/services/token/token-util';
-import { useGetTokens } from '~/lib/global/useToken';
 
 interface Props extends BoxProps {
     pool: GqlPoolLinearFragment;
@@ -20,17 +19,18 @@ const MemoizedTokenAvatarSetInList = memo(TokenAvatarSetInList);
 const MemoizedAprTooltip = memo(AprTooltip);
 
 export function LinearPoolListItem({ pool, tokens, onClick, ...rest }: Props) {
-    const { priceForAmount } = useGetTokens();
     const apr = parseFloat(pool.dynamicData.apr.total) < 0.0000001 ? '0' : pool.dynamicData.apr.total;
     const mainToken = pool.tokens.find((token) => token.index === pool.mainIndex)!;
     const wrappedToken = pool.tokens.find((token) => token.index === pool.wrappedIndex)!;
     const isReaperPool = networkConfig.balancer.linearFactories.reaper.includes(pool.factory || '');
     const smallWrappedBalanceIn18Decimals = isReaperPool && mainToken.decimals < 18;
-    const wrappedTokenBalance = smallWrappedBalanceIn18Decimals
+    const wrappedTokenBalance = !wrappedToken
+        ? '0'
+        : smallWrappedBalanceIn18Decimals
         ? oldBnumScale(wrappedToken.balance, 18 - mainToken.decimals).toString()
         : wrappedToken.balance;
 
-    const amountWrapped = parseFloat(wrappedToken.balance) * parseFloat(wrappedToken.priceRate);
+    const amountWrapped = parseFloat(wrappedToken?.balance || '0') * parseFloat(wrappedToken?.priceRate || '1');
     const amountUnwrapped = parseFloat(mainToken.balance);
     const boost = amountWrapped / (amountUnwrapped + amountWrapped);
     const upperTarget = parseFloat(pool.upperTarget);
