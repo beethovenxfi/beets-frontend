@@ -54,7 +54,7 @@ export function ReliquaryInvestImage() {
                                     opacity: { duration: 0.25 },
                                 }}
                             >
-                                <Image src={getCurrentStepImage(currentStep)} alt="reliquary" />
+                                {currentStep && <Image src={getCurrentStepImage(currentStep)} alt="reliquary" />}
                             </motion.div>
                         </AnimatePresence>
                     </div>
