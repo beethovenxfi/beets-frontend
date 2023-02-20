@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Box, Button, HStack, Link, Text } from '@chakra-ui/react';
+import { Box, Button, Link, Stack, Text } from '@chakra-ui/react';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 import { ToastType, useToast } from '~/components/toast/BeetsToast';
 
@@ -13,21 +13,30 @@ export function PoolFbeetsWarning() {
             id: 'fbeets-stake-alert',
             type: ToastType.Warn,
             content: (
-                <HStack spacing="4" alignItems="center">
+                <Stack
+                    direction={['column', 'row']}
+                    spacing="4"
+                    alignItems="center"
+                    justifyContent={{ base: 'stretch', xl: undefined }}
+                >
                     <Box>
-                        <Text>You can utilise your fBEETS position further by staking it in a relic.</Text>
+                        <Text>
+                            To earn BEETS rewards and voting power, withdraw your wFTM & BEETS and deposit into a
+                            maBEETS position.
+                        </Text>
                     </Box>
                     <Button
+                        w={{ base: 'full', xl: 'inherit' }}
                         colorScheme="orange"
                         variant="solid"
                         backgroundColor="orange.300"
                         as={Link}
-                        href={networkConfig.stakeUrl}
+                        href="/mabeets"
                         _hover={{ textDecoration: 'none', backgroundColor: 'orange.400' }}
                     >
-                        Go to Reliquary
+                        Go to maBEETS
                     </Button>
-                </HStack>
+                </Stack>
             ),
         });
     }, []);
