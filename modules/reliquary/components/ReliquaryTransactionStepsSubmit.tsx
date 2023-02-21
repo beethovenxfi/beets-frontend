@@ -118,7 +118,14 @@ export function ReliquaryTransactionStepsSubmit({
         <VStack width="full" alignItems="stretch" spacing="4">
             {showToS && (
                 <BeetsBox alignSelf="flex-start" width="full" p="2">
-                    <Checkbox isDisabled={complete} isChecked={checked} onChange={(e) => setChecked(e.target.checked)}>
+                    <Checkbox
+                        isDisabled={
+                            complete ||
+                            (currentStep?.id !== 'reliquary-invest' && currentStep?.id !== 'reliquary-migrate')
+                        }
+                        isChecked={checked}
+                        onChange={(e) => setChecked(e.target.checked)}
+                    >
                         I agree to the terms of service as stated{' '}
                         <Link href="link.to.docs" target="_blank">
                             here
