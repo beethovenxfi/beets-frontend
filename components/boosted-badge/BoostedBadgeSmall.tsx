@@ -2,7 +2,7 @@ import ReaperAaveBoosted from './assets/reaper-aave-boosted-small.png';
 import ReaperAaveGranaryBoosted from './assets/reaper-aave-granary-boosted-small.png';
 import ReaperSonneBoosted from './assets/reaper-sonne-boosted.png';
 import OvernightBoosted from './assets/overnight-boosted-small.png';
-import Image from 'next/image';
+import Image from 'next/legacy/image';
 import { BoostedByType } from '~/lib/config/network-config-type';
 import BeetsTooltip from '~/components/tooltip/BeetsTooltip';
 import { Box } from '@chakra-ui/react';
@@ -17,18 +17,16 @@ export function BoostedBadgeSmall({ boostedBy }: Props) {
 
     switch (boostedBy) {
         case 'reaper-aave':
-            image = <Image src={ReaperAaveBoosted} alt="Reaper, AAVE boosted" height="28px" width="96px" />;
+            image = <Image src={ReaperAaveBoosted} alt="Reaper, AAVE boosted" height={28} width={96} />;
             break;
         case 'reaper-aave-granary':
-            image = (
-                <Image src={ReaperAaveGranaryBoosted} alt="Reaper, AAVE, Granary boosted" height="28px" width="96px" />
-            );
+            image = <Image src={ReaperAaveGranaryBoosted} alt="Reaper, AAVE, Granary boosted" height={28} width={96} />;
             break;
         case 'overnight':
-            image = <Image src={OvernightBoosted} alt="Overnight boosted" height="28px" width="96px" />;
+            image = <Image src={OvernightBoosted} alt="Overnight boosted" height={28} width={96} />;
             break;
         case 'reaper-sonne':
-            image = <Image src={ReaperSonneBoosted} alt="Reaper, Sonne boosted" height="28px" width="96px" />;
+            image = <Image src={ReaperSonneBoosted} alt="Reaper, Sonne boosted" height={28} width={96} />;
             break;
         case 'yearn':
             return null;

@@ -2,7 +2,7 @@ import { initializeApolloClient, loadApolloState } from '~/apollo/client';
 import Head from 'next/head';
 import { TradeContainer } from '~/modules/trade/TradeContainer';
 import { PageMasthead } from '~/components/masthead/PageMasthead';
-import NextImage from 'next/image';
+import NextImage from 'next/legacy/image';
 import SwapMastheadImage from '~/assets/images/swap-masthead-image.png';
 import SwapMastheadOpImage from '~/assets/images/swap-masthead-image-OP.png';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
@@ -32,8 +32,8 @@ function Swap() {
                     image={
                         <NextImage
                             src={chainId === '10' ? SwapMastheadOpImage : SwapMastheadImage}
-                            width="213.71px"
-                            height="68px"
+                            width={213.71}
+                            height={68}
                         />
                     }
                 />

@@ -1,4 +1,4 @@
-import Image from 'next/image';
+import Image from 'next/legacy/image';
 import BeetsSmart from '~/assets/icons/beetx-smarts.svg';
 import { useEarlyLudwigNft } from '~/lib/global/useEarlyLudwigNft';
 import { Image as ChakraImage } from '@chakra-ui/react';
@@ -10,5 +10,5 @@ export function WalletUserAvatar() {
         return <ChakraImage src={data} height="74px" width="74px" />;
     }
 
-    return <Image src={BeetsSmart} width="74px" alt="your-profile" />;
+    return <Image src={BeetsSmart} width={74} alt="your-profile" />;
 }

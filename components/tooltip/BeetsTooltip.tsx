@@ -2,7 +2,7 @@ import React, { ReactNode } from 'react';
 import { Box, HStack, Text } from '@chakra-ui/layout';
 import { Tooltip } from '@chakra-ui/tooltip';
 import BeetsThinking from '~/assets/icons/beetx-thinking.svg';
-import Image from 'next/image';
+import Image from 'next/legacy/image';
 
 interface Props {
     children: ReactNode | ReactNode[];

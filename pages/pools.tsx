@@ -5,7 +5,7 @@ import { GetPoolsQuery, GetPoolsQueryVariables } from '~/apollo/generated/graphq
 import { DEFAULT_POOL_LIST_QUERY_VARS, PoolListProvider } from '~/modules/pools/usePoolList';
 import Head from 'next/head';
 import { PageMasthead } from '~/components/masthead/PageMasthead';
-import NextImage from 'next/image';
+import NextImage from 'next/legacy/image';
 import InvestMastheadImage from '~/assets/images/invest-masthead-image.png';
 import InvestMastheadOpImage from '~/assets/images/invest-masthead-image-OP.png';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
@@ -37,8 +37,8 @@ function Pools() {
                         image={
                             <NextImage
                                 src={chainId === '10' ? InvestMastheadOpImage : InvestMastheadImage}
-                                width="208.62px"
-                                height="68px"
+                                width={208.62}
+                                height={68}
                             />
                         }
                     />

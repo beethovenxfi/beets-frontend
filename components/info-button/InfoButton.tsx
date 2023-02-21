@@ -1,6 +1,6 @@
 import { Box, HStack, Link, Popover, PopoverContent, PopoverTrigger, Text, TextProps } from '@chakra-ui/react';
 import { Info } from 'react-feather';
-import Image from 'next/image';
+import Image from 'next/legacy/image';
 import BeetsThinking from '~/assets/icons/beetx-thinking.svg';
 
 interface Props {
@@ -36,8 +36,8 @@ export function InfoButton({ iconSize, infoText, moreInfoUrl, moreInfoLinkText, 
                 borderRadius="md"
                 p="2"
             >
-                <HStack spacing='2'>
-                    <Image width='120px' height='120px' src={BeetsThinking} alt="thinking-emoji" />
+                <HStack spacing="2">
+                    <Image width={120} height={120} src={BeetsThinking} alt="thinking-emoji" />
                     <Box>
                         {infoText}
                         {moreInfoUrl ? ' ' : ''}
