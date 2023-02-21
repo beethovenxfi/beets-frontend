@@ -38,3 +38,9 @@ yarn-error.log*
 
 .env
 .idea
+
+# Sentry
+.sentryclirc
+
+# Sentry
+next.config.original.js
