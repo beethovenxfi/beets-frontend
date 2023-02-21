@@ -1,10 +1,10 @@
 /** @type {import('next').NextConfig} */
 const path = require('path');
-const transpiled = require('next-transpile-modules')(['echarts', 'zrender']);
 
 const nextConfig = {
     reactStrictMode: true,
     productionBrowserSourceMaps: true,
+    transpilePackages: ['echarts', 'zrender'],
 
     webpack(config) {
         config.resolve.alias['~'] = path.join(__dirname, 'src');
@@ -12,4 +12,4 @@ const nextConfig = {
     },
 };
 
-module.exports = transpiled(nextConfig);
+module.exports = nextConfig;
