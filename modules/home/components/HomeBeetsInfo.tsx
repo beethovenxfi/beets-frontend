@@ -1,6 +1,6 @@
 import { Box, BoxProps, Button, Flex, Text } from '@chakra-ui/react';
 import { BeetsHeadline } from '~/components/typography/BeetsHeadline';
-import NextImage from 'next/image';
+import NextImage from 'next/legacy/image';
 import BeetsTokenInfoImage from '~/assets/images/beets-token-info.png';
 import BeetsTokenInfoOpImage from '~/assets/images/beets-token-info-OP.png';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
@@ -14,8 +14,8 @@ export function HomeBeetsInfo(props: BoxProps) {
             <Box display="flex" justifyContent="center" mb="8" alignItems="center">
                 <NextImage
                     src={chainId === '10' ? BeetsTokenInfoOpImage : BeetsTokenInfoImage}
-                    width="466px"
-                    height="253px"
+                    width={466}
+                    height={253}
                 />
             </Box>
             <Box mb="10">

@@ -36,13 +36,13 @@ import TwitterIcon from '~/assets/icons/twitter.svg';
 import MediumIcon from '~/assets/icons/medium.svg';
 import GithubIcon from '~/assets/icons/github.svg';
 import { IconButton } from '@chakra-ui/react';
-import NextImage from 'next/image';
+import NextImage from 'next/legacy/image';
 import { etherscanGetAddressUrl, etherscanGetTokenUrl } from '~/lib/util/etherscan';
 import { addressShortDisplayName } from '~/lib/util/address';
 import { PercentChangeBadge } from '~/components/badge/PercentChangeBadge';
 import CoingeckoLogo from '~/assets/images/coingecko.svg';
 import { Divider } from '@chakra-ui/layout';
-import Image from 'next/image';
+import Image from 'next/legacy/image';
 
 interface Props extends BoxProps {
     token: TokenBase;
@@ -106,7 +106,7 @@ export function PoolDetailTokenInfoCard({ token, price, data, dynamicData, ...re
             {hasLinks && (
                 <Flex>
                     <Link mr="3" href={`https://www.coingecko.com/en/coins/${token.address}`} target="_blank">
-                        <NextImage src={CoingeckoLogo} width="24" height="24" />
+                        <NextImage src={CoingeckoLogo} width={24} height={24} />
                     </Link>
                     {data?.websiteUrl && (
                         <Box mr="3">
@@ -123,13 +123,13 @@ export function PoolDetailTokenInfoCard({ token, price, data, dynamicData, ...re
                     {data?.twitterUsername && (
                         <Box mr="3">
                             <Link href={`https://twitter.com/${data.twitterUsername}`} target="_blank">
-                                <NextImage src={TwitterIcon} width="24" height="24" color="white" />
+                                <NextImage src={TwitterIcon} width={24} height={24} color="white" />
                             </Link>
                         </Box>
                     )}
                     {data?.discordUrl && (
                         <Link href={data.discordUrl} target="_blank">
-                            <NextImage src={DiscordIcon} width="25" height="25" />
+                            <NextImage src={DiscordIcon} width={25} height={25} />
                         </Link>
                     )}
                 </Flex>

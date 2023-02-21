@@ -32,7 +32,7 @@ import { usePool } from '~/modules/pool/lib/usePool';
 import Scales from '~/assets/icons/scales.svg';
 import BeetsThinking from '~/assets/icons/beetx-thinking.svg';
 import BeetSmart from '~/assets/icons/beetx-smarts.svg';
-import Image from 'next/image';
+import Image from 'next/legacy/image';
 import { etherscanGetTokenUrl } from '~/lib/util/etherscan';
 import BeetsTooltip from '~/components/tooltip/BeetsTooltip';
 interface Props {
@@ -78,7 +78,7 @@ export function PoolInvestTypeChoice({ onShowProportional, onShowCustom }: Props
                                         What&apos;s the difference
                                     </Text>
                                     <Box _hover={{ transform: 'scale(1.2)' }}>
-                                        <Image src={BeetsThinking} width="24" height="24" alt="beets-balanced" />
+                                        <Image src={BeetsThinking} width={24} height={24} alt="beets-balanced" />
                                     </Box>
                                 </HStack>
                             </BeetsTooltip>
@@ -99,8 +99,7 @@ export function PoolInvestTypeChoice({ onShowProportional, onShowCustom }: Props
                                 onClick={onShowProportional}
                             >
                                 <VStack spacing="1">
-                                    <Image src={Scales} height="48" alt="beets-balanced" />
-
+                                    <Image src={Scales} height={48} alt="beets-balanced" />
                                     <Text fontSize="lg">{numberFormatUSDValue(data?.maxAmount || 0)}</Text>
                                     <Text fontSize="sm">Proportional investment</Text>
                                     <Text fontSize="xs" color="beets.green">
@@ -119,7 +118,7 @@ export function PoolInvestTypeChoice({ onShowProportional, onShowCustom }: Props
                         onClick={onShowCustom}
                     >
                         <VStack spacing="1">
-                            <Image src={BeetSmart} height="48" alt="beets-smart" />
+                            <Image src={BeetSmart} height={48} alt="beets-smart" />
                             <Text fontSize="lg">{numberFormatUSDValue(investableAmount)}</Text>
                             <Text fontSize="sm">Custom investment</Text>
                             <Text fontSize="xs" color="beets.green">

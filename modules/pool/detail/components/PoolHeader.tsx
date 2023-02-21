@@ -14,7 +14,7 @@ import {
 import numeral from 'numeral';
 import { PoolTokenPill } from '~/components/token/PoolTokenPill';
 import PoolOwnerImage from '~/assets/images/pool-owner.png';
-import Image from 'next/image';
+import Image from 'next/legacy/image';
 import { HelpCircle } from 'react-feather';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 import { AddressZero } from '@ethersproject/constants';
@@ -69,7 +69,7 @@ function PoolHeader() {
                         {!hasZeroOwner && (
                             <Flex alignItems="center">
                                 {hasBeetsOwner ? (
-                                    <Image src={PoolOwnerImage} width="24" height="24" alt="Pool Owner Image" />
+                                    <Image src={PoolOwnerImage} width={24} height={24} alt="Pool Owner Image" />
                                 ) : (
                                     <HelpCircle size="24" />
                                 )}

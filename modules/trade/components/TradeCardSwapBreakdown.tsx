@@ -6,7 +6,7 @@ import { AnimatePresence } from 'framer-motion';
 import numeral from 'numeral';
 import { useGetTokens } from '~/lib/global/useToken';
 import CoingeckoLogo from '~/assets/images/coingecko.svg';
-import Image from 'next/image';
+import Image from 'next/legacy/image';
 import { useMemo } from 'react';
 
 interface Props {}
@@ -68,7 +68,7 @@ export function TradeCardSwapBreakdown({}: Props) {
                             Compared to
                         </Text>
                         <Flex alignItems="center" height="full">
-                            <Image src={CoingeckoLogo} alt="Coingecko Logo" width="16" height="16" />
+                            <Image src={CoingeckoLogo} alt="Coingecko Logo" width={16} height={16} />
                         </Flex>
                     </HStack>
                     <Text

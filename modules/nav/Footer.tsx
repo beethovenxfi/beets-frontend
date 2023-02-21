@@ -1,5 +1,5 @@
 import { Box, Flex, Grid, GridItem, HStack, Link, Text } from '@chakra-ui/react';
-import NextImage from 'next/image';
+import NextImage from 'next/legacy/image';
 import DegenBand from '~/assets/images/degen-band.png';
 import FooterImageOp from '~/assets/images/footer-OP.png';
 import DiscordIcon from '~/assets/icons/discord.svg';
@@ -94,7 +94,7 @@ export function Footer() {
                     </HStack>
                 </Box>
                 <Box flex="1" justifyContent="flex-end" display={{ base: 'none', lg: 'flex' }} ml="12">
-                    <NextImage src={chainId === '10' ? FooterImageOp : DegenBand} width="472px" height="394.8px" />
+                    <NextImage src={chainId === '10' ? FooterImageOp : DegenBand} width={472} height={394.8} />
                 </Box>
             </Flex>
         </Box>

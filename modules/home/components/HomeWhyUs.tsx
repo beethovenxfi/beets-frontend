@@ -1,5 +1,5 @@
 import { Box, BoxProps, Grid, GridItem } from '@chakra-ui/react';
-import NextImage from 'next/image';
+import NextImage from 'next/legacy/image';
 import WhyUsImage from '~/assets/images/why-us.png';
 import WhyUsOpImage from '~/assets/images/why-us-OP.png';
 import { BeetsHeadline } from '~/components/typography/BeetsHeadline';
@@ -17,7 +17,7 @@ export function HomeWhyUs(props: BoxProps) {
                 the future of finance.
             </Box>
             <Box my="6" display="flex" justifyContent="center">
-                <NextImage src={chainId === '10' ? WhyUsOpImage : WhyUsImage} width="657px" height="250px" />
+                <NextImage src={chainId === '10' ? WhyUsOpImage : WhyUsImage} width={657} height={250} />
             </Box>
             <Grid templateColumns={{ base: 'repeat(1, 1fr)', md: 'repeat(3, 1fr)' }} gap="8">
                 <GridItem>

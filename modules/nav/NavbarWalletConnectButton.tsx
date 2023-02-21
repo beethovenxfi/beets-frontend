@@ -1,6 +1,6 @@
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { Box, Button, HStack, Skeleton, Spinner, Text, Tooltip } from '@chakra-ui/react';
-import Image from 'next/image';
+import Image from 'next/legacy/image';
 import BeetsSmart from '~/assets/icons/beetx-smarts.svg';
 import { useReactiveVar } from '@apollo/client';
 import { txPendingVar } from '~/lib/util/useSubmitTransaction';
@@ -118,7 +118,7 @@ export default function NavbarWalletConnectButton() {
                                                         rounded="xl"
                                                     />
                                                 ) : (
-                                                    <Image src={BeetsSmart} width="24" alt="your-profile" />
+                                                    <Image src={BeetsSmart} width={24} alt="your-profile" />
                                                 )}
                                                 <Text
                                                     display={{ base: 'none', sm: 'inline' }}
