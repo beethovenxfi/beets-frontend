@@ -8,7 +8,7 @@ export function NextLink({
     ...rest
 }: React.PropsWithChildren<LinkProps> & { chakraProps?: ChakraLinkProps }) {
     return (
-        <Link {...rest} passHref>
+        <Link {...rest} passHref legacyBehavior>
             <ChakraLink {...chakraProps}>{children}</ChakraLink>
         </Link>
     );
@@ -20,7 +20,7 @@ export function NextLinkOverlay({
     ...rest
 }: React.PropsWithChildren<LinkProps> & { chakraProps?: LinkOverlayProps }) {
     return (
-        <Link {...rest} passHref>
+        <Link {...rest} passHref legacyBehavior>
             <LinkOverlay {...chakraProps}>{children}</LinkOverlay>
         </Link>
     );

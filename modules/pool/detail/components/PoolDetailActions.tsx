@@ -14,12 +14,12 @@ export function PoolDetailActions({ ...rest }: Props) {
         <BeetsBox {...rest} p={4}>
             {totalApr > 0.05 ? <PoolDetailPossibleYieldText /> : null}
             <Flex pt={totalApr > 0.05 ? 10 : 4}>
-                <NextLink href={`/pool/${pool.id}/invest`} passHref>
+                <NextLink href={`/pool/${pool.id}/invest`} passHref legacyBehavior>
                     <Button variant="primary" flex={1} mr={2}>
                         Invest
                     </Button>
                 </NextLink>
-                <NextLink href={`/pool/${pool.id}/withdraw`} passHref>
+                <NextLink href={`/pool/${pool.id}/withdraw`} passHref legacyBehavior>
                     <Button flex={1} bg="blue.400" _active={{ backgroundColor: 'blue.600' }} color="white" ml={2}>
                         Withdraw
                     </Button>

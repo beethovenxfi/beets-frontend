@@ -10,7 +10,7 @@ interface Props extends Omit<BoxProps, 'children'> {
 export function NavbarLink({ href, selected, text, ...rest }: Props) {
     return (
         <Box {...rest}>
-            <Link href={href}>
+            <Link href={href} legacyBehavior>
                 <Text
                     fontSize="md"
                     color={selected ? 'beets.highlight' : 'gray.100'}
