@@ -12,6 +12,7 @@ import { HStack, Text } from '@chakra-ui/react';
 import { Contract } from 'ethers';
 import { BigNumberish } from '@ethersproject/bignumber';
 import { SendTransactionResult } from 'wagmi/actions';
+import * as Sentry from '@sentry/nextjs';
 
 interface UseContractWriteMutationArgs {
     args: unknown[];
@@ -103,6 +104,9 @@ export function useSubmitTransaction({ config, transactionType }: Props): Submit
             if (config?.onSuccess) {
                 return config.onSuccess(data);
             }
+        },
+        onError(error) {
+            Sentry.captureException(error);
         },
     });
 
