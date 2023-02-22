@@ -18,7 +18,7 @@ const nextConfig = {
     },
 
     sentry: {
-        hideSourceMaps: true,
+        //hideSourceMaps: true,
         autoInstrumentServerFunctions: true,
     },
 };
