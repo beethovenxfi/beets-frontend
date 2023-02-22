@@ -16,12 +16,10 @@ const nextConfig = {
         config.resolve.alias['~'] = path.join(__dirname, 'src');
         return config;
     },
+
+    sentry: { hideSourcemaps: true, autoInstrumentServerFunctions: false },
 };
 
-module.exports = transpiled(nextConfig);
+const sentryWebpackPluginOptions = { silent: true };
 
-module.exports = withSentryConfig(
-  module.exports,
-  { silent: true },
-  { hideSourcemaps: true },
-);
+module.exports = withSentryConfig(transpiled(nextConfig), sentryWebpackPluginOptions);
