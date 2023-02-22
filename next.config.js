@@ -11,6 +11,7 @@ const nextConfig = {
     reactStrictMode: true,
     productionBrowserSourceMaps: true,
     transpilePackages: ['echarts', 'zrender'],
+    swcMinify: false,
 
     webpack(config) {
         config.resolve.alias['~'] = path.join(__dirname, 'src');
