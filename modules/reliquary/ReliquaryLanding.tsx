@@ -11,7 +11,7 @@ import {
     Spacer,
     useDisclosure,
 } from '@chakra-ui/react';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { InfoButton } from '~/components/info-button/InfoButton';
 import { RelicCarousel } from './components/RelicCarousel';
 import Rq1Image from '~/assets/images/rq-1.png';
@@ -56,11 +56,18 @@ const rqImages = [
 ];
 
 export default function ReliquaryLanding() {
-    const { isConnected } = useUserAccount();
+    const { isConnected, isConnecting } = useUserAccount();
     const { total } = useLegacyFBeetsBalance();
     const { showToast, removeToast } = useToast();
     const { pool, isFbeetsPool } = usePool();
     const { isOpen, onOpen, onClose } = useDisclosure();
+    const [buttonEnabled, setButtonEnabled] = useState(true);
+
+    useEffect(() => {
+        if (!isConnecting) {
+            setButtonEnabled(isConnected);
+        }
+    }, [isConnected]);
 
     useEffect(() => {
         if (total > 0) {
@@ -109,7 +116,7 @@ export default function ReliquaryLanding() {
                         </UnorderedList>
                         <Spacer />
                         <HStack w={{ base: 'full', xl: '90%' }}>
-                            <ReliquaryInvestModal createRelic isConnected={isConnected} />
+                            <ReliquaryInvestModal createRelic isConnected={buttonEnabled} />
                             <Button variant="secondary" w="full" as="a" href="https://docs.beets.fi" target="_blank">
                                 Learn more
                             </Button>
