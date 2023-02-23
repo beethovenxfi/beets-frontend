@@ -70,7 +70,7 @@ export default function ReliquaryLanding() {
     }, [isConnected]);
 
     useEffect(() => {
-        if (total > 0) {
+        if (total > 0 && !isOpen) {
             showToast({
                 id: 'migrate-fbeets',
                 type: ToastType.Info,
@@ -91,7 +91,7 @@ export default function ReliquaryLanding() {
         } else {
             // removeToast('migrate-fbeets');
         }
-    }, [total]);
+    }, [total, isOpen]);
 
     return (
         <>
