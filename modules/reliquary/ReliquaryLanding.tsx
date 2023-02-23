@@ -109,7 +109,7 @@ export default function ReliquaryLanding() {
                         </UnorderedList>
                         <Spacer />
                         <HStack w={{ base: 'full', xl: '90%' }}>
-                            <ReliquaryInvestModal createRelic />
+                            <ReliquaryInvestModal createRelic isConnected={isConnected} />
                             <Button variant="secondary" w="full" as="a" href="https://docs.beets.fi" target="_blank">
                                 Learn more
                             </Button>
@@ -140,7 +140,7 @@ export default function ReliquaryLanding() {
                 <Box width="full">
                     <VStack width="full" py="4" spacing="8">
                         {!isConnected && (
-                            <VStack minH="300px" justifyContent="center" alignItems="center">
+                            <VStack minH="200px" justifyContent="center" alignItems="center">
                                 <ReliquaryConnectWallet />
                             </VStack>
                         )}
