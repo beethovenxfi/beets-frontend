@@ -42,7 +42,7 @@ export function ReliquaryInvestImage() {
             <Box mt="4">
                 <div className={styles.container}>
                     <div className={styles.overlapGrid}>
-                        <Image src={Background} alt="background" />
+                        <Image src={Background} alt="background" priority />
                         <AnimatePresence initial={false}>
                             <motion.div
                                 key={currentStep}
