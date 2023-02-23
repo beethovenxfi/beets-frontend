@@ -127,7 +127,7 @@ export function ReliquaryTransactionStepsSubmit({
                         onChange={(e) => setChecked(e.target.checked)}
                     >
                         I agree to the terms of service as stated{' '}
-                        <Link href="link.to.docs" target="_blank">
+                        <Link href="https://docs.beets.fi/tos" target="_blank">
                             here
                         </Link>
                         .

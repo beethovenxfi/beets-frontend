@@ -117,7 +117,13 @@ export default function ReliquaryLanding() {
                         <Spacer />
                         <HStack w={{ base: 'full', xl: '90%' }}>
                             <ReliquaryInvestModal createRelic isConnected={buttonEnabled} />
-                            <Button variant="secondary" w="full" as="a" href="https://docs.beets.fi" target="_blank">
+                            <Button
+                                variant="secondary"
+                                w="full"
+                                as="a"
+                                href="https://docs.beets.fi/mabeets"
+                                target="_blank"
+                            >
                                 Learn more
                             </Button>
                         </HStack>
