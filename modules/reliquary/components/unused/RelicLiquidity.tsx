@@ -2,7 +2,7 @@ import { Box, Button, HStack, Spacer, Text, VStack } from '@chakra-ui/react';
 import React from 'react';
 import Card from '~/components/card/Card';
 import { numberFormatUSDValue } from '~/lib/util/number-formats';
-import { useRelicDepositBalance } from '../lib/useRelicDepositBalance';
+import { useRelicDepositBalance } from '../../lib/useRelicDepositBalance';
 import TokenAvatar from '~/components/token/TokenAvatar';
 import { useGetTokens } from '~/lib/global/useToken';
 import { tokenFormatAmount } from '~/lib/services/token/token-util';
