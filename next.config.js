@@ -20,6 +20,6 @@ const nextConfig = {
     sentry: { hideSourcemaps: true, autoInstrumentServerFunctions: false },
 };
 
-const sentryWebpackPluginOptions = { silent: true };
+const sentryWebpackPluginOptions = { silent: false };
 
 module.exports = withSentryConfig(transpiled(nextConfig), sentryWebpackPluginOptions);
