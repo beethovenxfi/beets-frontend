@@ -48,6 +48,9 @@ export function Footer() {
                             <FooterLink href="https://info.beets.fi">Analytics</FooterLink>
                             <FooterLink href="https://docs.beets.fi">Docs & Help</FooterLink>
                             <FooterLink href={networkConfig.createPoolUrl}>Compose a pool</FooterLink>
+                            <FooterLink href="/terms-of-service" linkType="internal">
+                                Terms of Service
+                            </FooterLink>
                         </GridItem>
                         <GridItem>
                             <FooterLink href="https://pro.olympusdao.finance/#/bond">Olympus Bonds</FooterLink>
@@ -57,7 +60,6 @@ export function Footer() {
                             </FooterLink>
                         </GridItem>
                     </Grid>
-
                     <HStack spacing="6" mt="24">
                         <Box>
                             <Link href="https://discord.gg/jedS4zGk28" target="_blank" _active={{ boxShadow: 'none' }}>
