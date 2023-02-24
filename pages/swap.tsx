@@ -43,7 +43,7 @@ function Swap() {
     );
 }
 
-export async function wrapGetStaticPropsWithSentry() {
+export async function getStaticProps() {
     const client = initializeApolloClient();
 
     return loadApolloState({ client });
