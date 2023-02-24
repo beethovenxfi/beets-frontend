@@ -15,6 +15,7 @@ import { PoolComposableUserPoolTokenBalanceProvider } from '~/modules/pool/lib/u
 import { RelicDepositBalanceProvider } from '~/modules/reliquary/lib/useRelicDepositBalance';
 import { networkConfig } from '~/lib/config/network-config';
 import { ReliquaryPool } from '~/modules/reliquary/detail/ReliquaryPool';
+import Compose, { ProviderWithProps } from '~/components/providers/Compose';
 
 interface Props {
     pool: GqlPoolUnion;
@@ -28,6 +29,16 @@ const PoolPage = ({ pool }: Props) => {
 
     const isReliquaryPool = pool.id === networkConfig.reliquary.fbeets.poolId;
 
+    const PoolProviders: ProviderWithProps[] = [
+        [PoolProvider, { pool }],
+        [PoolUserBptBalanceProvider, {}],
+        [PoolUserDepositBalanceProvider, {}],
+        [PoolUserInvestedTokenBalanceProvider, {}],
+        [PoolUserPendingRewardsProvider, {}],
+        [PoolUserTokenBalancesInWalletProvider, {}],
+        [PoolComposableUserPoolTokenBalanceProvider, {}],
+    ];
+
     return (
         <>
             <Head>
@@ -36,27 +47,15 @@ const PoolPage = ({ pool }: Props) => {
                 <meta property="og:title" content={`Beethoven X | ${pool.name}`} />
                 <meta property="twitter:title" content={`Beethoven X | ${pool.name}`} />
             </Head>
-            <PoolProvider pool={pool}>
-                <PoolUserBptBalanceProvider>
-                    <PoolUserDepositBalanceProvider>
-                        <PoolUserInvestedTokenBalanceProvider>
-                            <PoolUserPendingRewardsProvider>
-                                <PoolUserTokenBalancesInWalletProvider>
-                                    <PoolComposableUserPoolTokenBalanceProvider>
-                                        {isReliquaryPool ? (
-                                            <RelicDepositBalanceProvider>
-                                                <ReliquaryPool />
-                                            </RelicDepositBalanceProvider>
-                                        ) : (
-                                            <Pool />
-                                        )}
-                                    </PoolComposableUserPoolTokenBalanceProvider>
-                                </PoolUserTokenBalancesInWalletProvider>
-                            </PoolUserPendingRewardsProvider>
-                        </PoolUserInvestedTokenBalanceProvider>
-                    </PoolUserDepositBalanceProvider>
-                </PoolUserBptBalanceProvider>
-            </PoolProvider>
+            <Compose providers={PoolProviders}>
+                {isReliquaryPool ? (
+                    <RelicDepositBalanceProvider>
+                        <ReliquaryPool />
+                    </RelicDepositBalanceProvider>
+                ) : (
+                    <Pool />
+                )}
+            </Compose>
         </>
     );
 };

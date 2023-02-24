@@ -29,6 +29,7 @@ import { PoolProvider, usePool } from '../pool/lib/usePool';
 import ReliquaryMigrateModal from './components/ReliquaryMigrateModal';
 import { useLegacyFBeetsBalance } from './lib/useLegacyFbeetsBalance';
 import { CurrentStepProvider } from './lib/useReliquaryCurrentStep';
+import Compose, { ProviderWithProps } from '~/components/providers/Compose';
 
 const infoButtonLabelProps = {
     lineHeight: '1rem',
@@ -58,8 +59,8 @@ const rqImages = [
 export default function ReliquaryLanding() {
     const { isConnected, isConnecting } = useUserAccount();
     const { total } = useLegacyFBeetsBalance();
-    const { showToast, removeToast } = useToast();
-    const { pool, isFbeetsPool } = usePool();
+    const { showToast } = useToast();
+    const { pool } = usePool();
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [buttonEnabled, setButtonEnabled] = useState(true);
 
@@ -88,8 +89,6 @@ export default function ReliquaryLanding() {
                     </Stack>
                 ),
             });
-        } else {
-            // removeToast('migrate-fbeets');
         }
     }, [total, isOpen]);
 

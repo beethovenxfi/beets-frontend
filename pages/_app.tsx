@@ -43,7 +43,7 @@ import { BeetsFonts } from '~/components/fonts/BeetsFonts';
 import { AppContent } from '~/pages/_app-content';
 import dynamic from 'next/dynamic';
 import { WalletUserAvatar } from '~/components/avatar/WalletUserAvatar';
-import Compose from '~/components/providers/Compose';
+import Compose, { ProviderWithProps } from '~/components/providers/Compose';
 import { TokensProvider } from '~/lib/global/useToken';
 import { UserDataProvider } from '~/lib/user/useUserData';
 import BeetsToast from '~/components/toast/BeetsToast';
@@ -89,7 +89,10 @@ const TopProgressBar = dynamic(
 function BeetsApp(props: AppProps) {
     const client = useApollo(props.pageProps);
 
-    const dataProviders = [TokensProvider, UserDataProvider];
+    const AppProviders: ProviderWithProps[] = [
+        [TokensProvider, {}],
+        [UserDataProvider, {}],
+    ];
 
     return (
         <ChakraProvider theme={chakraTheme}>
@@ -105,7 +108,7 @@ function BeetsApp(props: AppProps) {
                     >
                         <ApolloProvider client={client}>
                             <BeetsToast>
-                                <Compose providers={dataProviders}>
+                                <Compose providers={AppProviders}>
                                     <BeetsFonts />
                                     <TopProgressBar />
                                     <AppContent {...props} />

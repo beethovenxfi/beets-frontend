@@ -11,6 +11,7 @@ import React from 'react';
 import { RelicDepositBalanceProvider } from '~/modules/reliquary/lib/useRelicDepositBalance';
 import { PoolUserDepositBalanceProvider } from '~/modules/pool/lib/usePoolUserDepositBalance';
 import ReliquaryLanding from '~/modules/reliquary/ReliquaryLanding';
+import Compose, { ProviderWithProps } from '~/components/providers/Compose';
 import { Heading, VStack } from '@chakra-ui/react';
 
 interface Props {
@@ -19,6 +20,15 @@ interface Props {
 function MaBEETS({ pool }: Props) {
     const TITLE = 'Beethoven X | Reliquary';
     const DESCRIPTION = '';
+
+    const MaBeetsProviders: ProviderWithProps[] = [
+        [PoolProvider, { pool }],
+        [PoolUserBptBalanceProvider, {}],
+        [PoolUserTokenBalancesInWalletProvider, {}],
+        [UserTokenBalancesProvider, {}],
+        [PoolUserDepositBalanceProvider, {}],
+        [RelicDepositBalanceProvider, {}],
+    ];
 
     return (
         <>
@@ -33,19 +43,9 @@ function MaBEETS({ pool }: Props) {
                 <meta property="twitter:description" content={DESCRIPTION} />
             </Head>
             {pool ? (
-                <PoolProvider pool={pool}>
-                    <PoolUserBptBalanceProvider>
-                        <PoolUserTokenBalancesInWalletProvider>
-                            <UserTokenBalancesProvider>
-                                <PoolUserDepositBalanceProvider>
-                                    <RelicDepositBalanceProvider>
-                                        <ReliquaryLanding />
-                                    </RelicDepositBalanceProvider>
-                                </PoolUserDepositBalanceProvider>
-                            </UserTokenBalancesProvider>
-                        </PoolUserTokenBalancesInWalletProvider>
-                    </PoolUserBptBalanceProvider>
-                </PoolProvider>
+                <Compose providers={MaBeetsProviders}>
+                    <ReliquaryLanding />
+                </Compose>
             ) : (
                 <VStack minH="300px" justifyContent="center">
                     <Heading>MaBEETS is not supported on this chain.</Heading>
