@@ -143,4 +143,5 @@ export const fantomNetworkConfig: NetworkConfig = {
     investDisabled: {
         '0xa10285f445bcb521f1d623300dc4998b02f11c8f00000000000000000000043b': true,
     },
+    maBeetsEnabled: true,
 };

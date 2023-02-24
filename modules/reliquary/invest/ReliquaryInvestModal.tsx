@@ -30,6 +30,7 @@ interface Props {
     noActivator?: boolean;
     isVisible?: boolean;
     onClose?: () => void;
+    isConnected?: boolean;
 }
 
 function getInvertedTransform(startBounds: DOMRect, endBounds: DOMRect) {
@@ -48,6 +49,7 @@ export function ReliquaryInvestModal({
     noActivator,
     onClose: _onClose,
     isVisible = false,
+    isConnected = true,
 }: Props) {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [modalState, setModalState] = useState<'start' | 'proportional' | 'custom' | 'preview'>('start');
@@ -135,7 +137,13 @@ export function ReliquaryInvestModal({
     return (
         <Box width="full">
             {!noActivator && (
-                <Button variant="primary" onClick={onModalOpen} width="full" {...activatorProps}>
+                <Button
+                    variant="primary"
+                    onClick={onModalOpen}
+                    width="full"
+                    disabled={!isConnected}
+                    {...activatorProps}
+                >
                     Get maBEETS
                 </Button>
             )}

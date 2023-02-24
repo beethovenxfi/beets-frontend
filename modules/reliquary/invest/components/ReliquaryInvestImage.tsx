@@ -11,12 +11,13 @@ import ApproveRelic from '~/assets/images/reliquary/approve-relic.png';
 import MigrateLegacy from '~/assets/images/reliquary/migrate-legacy.png';
 import ApproveBeets from '~/assets/images/reliquary/approve-beets.png';
 import ApproveWftm from '~/assets/images/reliquary/approve-wftm.png';
+import Empty from '~/assets/images/reliquary/1x1-transparent.png';
 import { AnimatePresence, motion } from 'framer-motion';
 
 export function ReliquaryInvestImage() {
     const { currentStep } = useCurrentStep();
 
-    function getCurrentStepImage(currentStep: string) {
+    function getCurrentStepImage(currentStep: string | null) {
         switch (currentStep) {
             case 'wFTM':
                 return ApproveWftm;
@@ -32,8 +33,9 @@ export function ReliquaryInvestImage() {
                 return ApproveVault;
             case 'reliquary-migrate':
             case 'reliquary-invest':
-            default:
                 return ReliquaryInvest;
+            default:
+                return Empty;
         }
     }
 
@@ -42,7 +44,7 @@ export function ReliquaryInvestImage() {
             <Box mt="4">
                 <div className={styles.container}>
                     <div className={styles.overlapGrid}>
-                        <Image src={Background} alt="background" />
+                        <Image src={Background} alt="background" priority />
                         <AnimatePresence initial={false}>
                             <motion.div
                                 key={currentStep}

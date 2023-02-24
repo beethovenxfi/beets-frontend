@@ -16,7 +16,7 @@ export function ReliquaryInvestTitle({ investTypeText }: Props) {
     const { currentStep } = useCurrentStep();
     const { createRelic } = useReliquary();
 
-    function getCurrentStepTitle(currentStep: string): TitleProps {
+    function getCurrentStepTitle(currentStep: string | null): TitleProps {
         switch (currentStep) {
             case 'wFTM':
                 return {

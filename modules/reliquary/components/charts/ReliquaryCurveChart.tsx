@@ -13,10 +13,13 @@ export function ReliquaryCurveChart() {
     const { pool } = usePool();
     const { colors } = useTheme();
 
-    const data = pool.staking?.reliquary?.levels?.map((level) => ({
-        level: level.level + 1,
-        allocationPoints: level.allocationPoints,
-    }));
+    const data = pool.staking?.reliquary?.levels
+        ?.map((level) => ({
+            level: level.level + 1,
+            allocationPoints: level.allocationPoints,
+        }))
+        // sometimes the levels from the pool data loop around which gives a weird chart, so just always slice out the correct data
+        .slice(0, 11);
 
     const option: EChartsOption = {
         tooltip: {
@@ -96,7 +99,7 @@ export function ReliquaryCurveChart() {
                     label="BEETronix"
                     infoText="This curve shows the maturity boost per level."
                 />
-                <Link href="link.to.docs" target="_blank">
+                <Link href="https://docs.beets.fi/mabeets" target="_blank">
                     <ExternalLink size="16" />
                 </Link>
             </HStack>

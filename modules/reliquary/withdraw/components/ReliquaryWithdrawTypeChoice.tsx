@@ -4,7 +4,7 @@ import { numberFormatUSDValue } from '~/lib/util/number-formats';
 import { useRelicDepositBalance } from '~/modules/reliquary/lib/useRelicDepositBalance';
 import ReliquaryTokenBreakdown from '~/modules/reliquary/components/ReliquaryTokensBreakdown';
 import useReliquary from '~/modules/reliquary/lib/useReliquary';
-import { ReliquaryWithdrawDescription } from '~/modules/reliquary/components/ReliquaryWithdrawDescription';
+import { ReliquaryWithdrawDescription } from '~/modules/reliquary/withdraw/components/ReliquaryWithdrawDescription';
 
 interface Props {
     onShowProportional(): void;

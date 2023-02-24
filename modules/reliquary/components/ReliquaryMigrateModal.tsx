@@ -4,18 +4,12 @@ import {
     Alert,
     AlertIcon,
     Box,
-    Button,
     Heading,
-    HStack,
-    ListItem,
     Modal,
     ModalCloseButton,
     ModalOverlay,
     Select,
     StackDivider,
-    Text,
-    UnorderedList,
-    useDisclosure,
     VStack,
 } from '@chakra-ui/react';
 import { AnimatePresence } from 'framer-motion';
@@ -38,8 +32,12 @@ import { useCurrentStep } from '../lib/useReliquaryCurrentStep';
 import { ReliquaryInvestTitle } from '../invest/components/ReliquaryInvestTitle';
 import { ReliquaryTransactionStepsSubmit, TransactionStep } from './ReliquaryTransactionStepsSubmit';
 
-export default function ReliquaryMigrateModal() {
-    const { isOpen, onOpen, onClose } = useDisclosure();
+interface Props {
+    isOpen: boolean;
+    onClose: () => void;
+}
+
+export default function ReliquaryMigrateModal({ isOpen, onClose }: Props) {
     const [migrationTarget, setMigrationTarget] = useState<number>(-1);
     const [migrateCompleted, setMigrateCompleted] = useState(false);
     const [migratableBalance, setMigratableBalance] = useState(0);
@@ -86,6 +84,12 @@ export default function ReliquaryMigrateModal() {
             setMigratableBalance(legacyFbeetsBalance);
         }
     }, [legacyFbeetsBalance]);
+
+    useEffect(() => {
+        if (isOpen) {
+            removeToast('migrate-fbeets');
+        }
+    }, [isOpen]);
 
     useEffect(() => {
         const _steps: TransactionStep[] = [
@@ -171,24 +175,8 @@ export default function ReliquaryMigrateModal() {
         setMigrateCompleted(true);
     };
 
-    const tooltipLabel = (
-        <VStack spacing="1" width="full" alignItems="flex-start">
-            <Text>To migrate your fBEETS the following steps are needed:</Text>
-            <UnorderedList pl="4">
-                <ListItem>(Optional) Unstake your fBEETS from the Beethoven X farm </ListItem>
-                <ListItem>Approve the vault to spend your fBEETS</ListItem>
-                <ListItem>Approve the batch relayer to create a new relic</ListItem>
-                <ListItem>Approve the batch relayer to deposit, withdraw & claim rewards for all relics</ListItem>
-                <ListItem>Migrate your fBEETS to a new or existing relic</ListItem>
-            </UnorderedList>
-        </VStack>
-    );
-
     return (
         <Box width={{ base: 'full', md: 'fit-content' }}>
-            <Button variant="primary" onClick={onOpen} width={{ base: 'full', md: 'fit-content' }}>
-                Migrate
-            </Button>
             <Modal isOpen={isOpen} onClose={onClose} size="lg" initialFocusRef={initialRef}>
                 <ModalOverlay bg="blackAlpha.900" />
                 <BeetsModalContent width="full">
@@ -279,6 +267,7 @@ export default function ReliquaryMigrateModal() {
                                             { ...unstakeQuery, id: 'unstake' },
                                             { ...reliquaryMigrateQuery, id: 'reliquary-migrate' },
                                         ]}
+                                        showToS={migrationTarget === -1}
                                     />
                                 </Box>
                             </VStack>

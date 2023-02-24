@@ -6,9 +6,9 @@ import { numberFormatUSDValue } from '~/lib/util/number-formats';
 import { tokenFormatAmount } from '~/lib/services/token/token-util';
 import { sumBy } from 'lodash';
 import { useGetTokens } from '~/lib/global/useToken';
-import { useRelicPendingRewards } from '../lib/useRelicPendingRewards';
+import { useRelicPendingRewards } from '../../lib/useRelicPendingRewards';
 import { BeetsSubmitTransactionButton } from '~/components/button/BeetsSubmitTransactionButton';
-import { useRelicHarvestRewards } from '../lib/useRelicHarvestRewards';
+import { useRelicHarvestRewards } from '../../lib/useRelicHarvestRewards';
 
 export default function RelicRewards() {
     const { priceForAmount } = useGetTokens();
