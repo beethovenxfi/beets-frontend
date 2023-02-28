@@ -10,6 +10,7 @@ import { useRef } from 'react';
 import { TokenBase } from '~/lib/services/token/token-types';
 import { useUserBalances } from '~/lib/user/useUserBalances';
 import { useLegacyFBeetsBalance } from './useLegacyFbeetsBalance';
+import { position } from '@chakra-ui/react';
 
 const selectedRelicId = makeVar<string | undefined>(undefined);
 const createRelic = makeVar<boolean>(false);
@@ -85,6 +86,7 @@ export default function useReliquary() {
     const reliquaryLevels = pool.staking?.reliquary?.levels || [];
     const selectedRelicLevel = reliquaryLevels.find((level) => level.level === selectedRelic?.level);
     const weightedTotalBalance = sumBy(reliquaryLevels, (level) => parseFloat(level.balance) * level.allocationPoints);
+    const totalMaBeets = sumBy(relicPositions, (position) => parseFloat(position.amount));
 
     function setCreateRelic(value: boolean) {
         createRelic(value);
@@ -114,6 +116,7 @@ export default function useReliquary() {
         relicPositionsForFarmId: relicPositions.filter(
             (position) => position.farmId.toString() === networkConfig.reliquary.fbeets.farmId.toString(),
         ),
+        totalMaBeets,
 
         setCreateRelic,
         setSelectedRelicId,

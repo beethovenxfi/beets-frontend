@@ -10,6 +10,8 @@ import {
     Box,
     Spacer,
     useDisclosure,
+    Flex,
+    Badge,
 } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react';
 import { InfoButton } from '~/components/info-button/InfoButton';
@@ -30,6 +32,8 @@ import ReliquaryMigrateModal from './components/ReliquaryMigrateModal';
 import { useLegacyFBeetsBalance } from './lib/useLegacyFbeetsBalance';
 import { CurrentStepProvider } from './lib/useReliquaryCurrentStep';
 import Compose, { ProviderWithProps } from '~/components/providers/Compose';
+import useReliquary from './lib/useReliquary';
+import BeetsTooltip from '~/components/tooltip/BeetsTooltip';
 
 const infoButtonLabelProps = {
     lineHeight: '1rem',
@@ -63,6 +67,7 @@ export default function ReliquaryLanding() {
     const { pool } = usePool();
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [buttonEnabled, setButtonEnabled] = useState(true);
+    const { totalMaBeets } = useReliquary();
 
     useEffect(() => {
         if (!isConnecting) {
@@ -158,9 +163,20 @@ export default function ReliquaryLanding() {
                         )}
                         {isConnected && (
                             <>
-                                <VStack width="full" alignItems="flex-start">
+                                <HStack spacing="4" width="full" position="relative">
                                     <Heading size="lg">My relics</Heading>
-                                </VStack>
+                                    <BeetsTooltip noImage label="Your total maBEETS across all of your relics.">
+                                        <VStack pt="1" height="full">
+                                            <Box height="full">
+                                                <Badge rounded="md" colorScheme="orange" p="2">
+                                                    <Heading textTransform="initial" textAlign="center" size="sm">
+                                                        {totalMaBeets.toFixed(4)} maBEETS
+                                                    </Heading>
+                                                </Badge>
+                                            </Box>
+                                        </VStack>
+                                    </BeetsTooltip>
+                                </HStack>
                                 <Box width="full">
                                     <RelicCarousel />
                                 </Box>
