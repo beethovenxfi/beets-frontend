@@ -21,7 +21,7 @@ export class VaultService {
         const poolTokens: PoolTokens = await vaultContract.getPoolTokens(poolId);
         const poolTokensArray = [poolTokens.tokens, poolTokens.balances];
 
-        return poolTokensArray[0].map((_: any, colIndex: number) => poolTokensArray.map((row) => row[colIndex]));
+        return poolTokensArray[0].map((_, colIndex) => poolTokensArray.map((row) => row[colIndex]));
     }
 }
 
