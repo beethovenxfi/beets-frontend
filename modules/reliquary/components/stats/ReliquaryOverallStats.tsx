@@ -24,8 +24,15 @@ export default function ReliquaryOverallStats() {
 
     const data = pool.dynamicData;
 
-    const [{ apr: minApr }] = data.apr.items.filter((item) => item.title.includes('Min'));
-    const [{ apr: maxApr }] = data.apr.items.filter((item) => item.title.includes('Max'));
+    const aprItems = data.apr.items;
+    const hasMin = !!aprItems.find((item) => item.title.includes('Min'));
+    const hasMax = !!aprItems.find((item) => item.title.includes('Max'));
+
+    let minApr, maxApr;
+    minApr = aprItems.filter((item) => item.title.includes('Min'));
+    maxApr = aprItems.filter((item) => item.title.includes('Max'));
+
+    const [{ apr: swapApr }] = aprItems.filter((item) => item.title.includes('Swap'));
 
     const beetsPerDay = parseFloat(pool.staking?.reliquary?.beetsPerSecond || '0') * 86400;
     const incentivesDailyValue = beetsPerDay * priceFor(networkConfig.beets.address);
@@ -74,7 +81,9 @@ export default function ReliquaryOverallStats() {
                     </Text>
                     <HStack>
                         <div className="apr-stripes">
-                            {numeral(minApr).format('0.00%')} - {numeral(maxApr).format('0.00%')}
+                            {hasMin && hasMax
+                                ? `${numeral(minApr).format('0.00%')} - ${numeral(maxApr).format('0.00%')}`
+                                : numeral(swapApr).format('0.00%')}
                         </div>
                         <AprTooltip onlySparkles data={data.apr} />
                     </HStack>
