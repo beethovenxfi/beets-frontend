@@ -25,12 +25,8 @@ export default function ReliquaryOverallStats() {
     const data = pool.dynamicData;
 
     const aprItems = data.apr.items;
-    const hasMin = !!aprItems.find((item) => item.title.includes('Min'));
-    const hasMax = !!aprItems.find((item) => item.title.includes('Max'));
-
-    let minApr, maxApr;
-    minApr = aprItems.filter((item) => item.title.includes('Min'));
-    maxApr = aprItems.filter((item) => item.title.includes('Max'));
+    const minAprArray = aprItems.filter((item) => item.title.includes('Min'));
+    const maxAprArray = aprItems.filter((item) => item.title.includes('Max'));
 
     const [{ apr: swapApr }] = aprItems.filter((item) => item.title.includes('Swap'));
 
@@ -81,8 +77,10 @@ export default function ReliquaryOverallStats() {
                     </Text>
                     <HStack>
                         <div className="apr-stripes">
-                            {hasMin && hasMax
-                                ? `${numeral(minApr).format('0.00%')} - ${numeral(maxApr).format('0.00%')}`
+                            {minAprArray.length > 0 && maxAprArray.length > 0
+                                ? `${numeral(minAprArray[0]?.apr).format('0.00%')} - ${numeral(
+                                      maxAprArray[0]?.apr,
+                                  ).format('0.00%')}`
                                 : numeral(swapApr).format('0.00%')}
                         </div>
                         <AprTooltip onlySparkles data={data.apr} />
