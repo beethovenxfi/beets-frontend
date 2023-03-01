@@ -1,6 +1,6 @@
 import { useQuery } from 'react-query';
 import { useProvider } from 'wagmi';
-import { vaultService } from '~/lib/services/staking/vault.service';
+import { vaultService } from '~/lib/services/vault.service';
 import { useGetTokens } from './useToken';
 import { formatFixed } from '@ethersproject/bignumber';
 import { BigNumber } from 'ethers';
