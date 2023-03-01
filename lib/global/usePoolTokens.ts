@@ -4,6 +4,7 @@ import { vaultService } from '~/lib/services/vault.service';
 import { useGetTokens } from './useToken';
 import { formatFixed } from '@ethersproject/bignumber';
 import { BigNumber } from 'ethers';
+import { TokenAmountHumanReadable } from '~/lib/services/token/token-types';
 
 export function usePoolTokens(poolId: string) {
     const provider = useProvider();
@@ -16,7 +17,7 @@ export function usePoolTokens(poolId: string) {
         });
     });
 
-    const poolTokens = query?.data?.map((item: [string, BigNumber]) => {
+    const poolTokens: TokenAmountHumanReadable[] = query?.data?.map((item: [string, BigNumber]) => {
         const token = getToken(item[0] || '');
         const decimals = token ? token.decimals : 18;
 
