@@ -6,7 +6,6 @@ import {
     Flex,
     Grid,
     GridItem,
-    Heading,
     HStack,
     Skeleton,
     Text,
@@ -37,7 +36,7 @@ export function PoolWithdrawTypeChoice({ onShowProportional, onShowSingleAsset }
     const unstakeDisclosure = useDisclosure();
     const { pool, isFbeetsPool } = usePool();
     const { priceForAmount } = useGetTokens();
-    const { userPoolBalanceUSD, data, isLoading } = usePoolUserDepositBalance();
+    const { userPoolBalanceUSD, data, isLoading: isPoolUserDepositBalanceLoading } = usePoolUserDepositBalance();
     const { userTotalBptBalance, userWalletBptBalance, userStakedBptBalance, hasBptInWallet, hasBptStaked } =
         usePoolUserBptBalance();
     const valueStaked = (parseFloat(userStakedBptBalance) / parseFloat(userTotalBptBalance)) * userPoolBalanceUSD;
@@ -55,28 +54,28 @@ export function PoolWithdrawTypeChoice({ onShowProportional, onShowSingleAsset }
                             <Text fontSize="lg" fontWeight="semibold" flex="1">
                                 My balance
                             </Text>
-                            <Skeleton isLoaded={!isLoading}>
+                            <Skeleton isLoaded={!isPoolUserDepositBalanceLoading}>
                                 <Text fontSize="lg" fontWeight="semibold">
                                     {numberFormatUSDValue(userPoolBalanceUSD)}
                                 </Text>
                             </Skeleton>
                         </Flex>
-                        {pool.staking ? (
+                        {pool.staking && (
                             <>
                                 <CardRow>
                                     <Text flex="1">Wallet balance</Text>
-                                    <Skeleton isLoaded={!isLoading}>
+                                    <Skeleton isLoaded={!isPoolUserDepositBalanceLoading}>
                                         <Text>{numberFormatUSDValue(valueInWallet)}</Text>
                                     </Skeleton>
                                 </CardRow>
                                 <CardRow mb="0">
                                     <Text flex="1">Staked balance</Text>
-                                    <Skeleton isLoaded={!isLoading}>
+                                    <Skeleton isLoaded={!isPoolUserDepositBalanceLoading}>
                                         <Text>{numberFormatUSDValue(valueStaked)}</Text>
                                     </Skeleton>
                                 </CardRow>
                             </>
-                        ) : null}
+                        )}
                     </BeetsBox>
 
                     <BeetsBox p="2">
@@ -120,11 +119,13 @@ export function PoolWithdrawTypeChoice({ onShowProportional, onShowSingleAsset }
 
                                     <Box>
                                         <Box textAlign="right" fontSize="lg">
-                                            <Skeleton isLoaded={!isLoading}>{tokenFormatAmount(balance)}</Skeleton>
+                                            <Skeleton isLoaded={!isPoolUserDepositBalanceLoading}>
+                                                {tokenFormatAmount(balance)}
+                                            </Skeleton>
                                         </Box>
 
                                         <Box textAlign="right" fontSize="sm" color="gray.200">
-                                            <Skeleton isLoaded={!isLoading}>
+                                            <Skeleton isLoaded={!isPoolUserDepositBalanceLoading}>
                                                 {numberFormatUSDValue(
                                                     priceForAmount({
                                                         address: token.address,
@@ -157,10 +158,10 @@ export function PoolWithdrawTypeChoice({ onShowProportional, onShowSingleAsset }
                     </Button>
                 </Alert>
             )}
-            <Button variant="primary" width="full" mb="2" isDisabled={!hasBptInWallet} onClick={onShowProportional}>
+            <Button variant="primary" width="full" isDisabled={!hasBptInWallet} onClick={onShowProportional}>
                 Withdraw proportionally
             </Button>
-            <Button variant="secondary" width="full" isDisabled={!hasBptInWallet} onClick={onShowSingleAsset}>
+            <Button variant="secondary" width="full" mt="2" isDisabled={!hasBptInWallet} onClick={onShowSingleAsset}>
                 Single asset withdraw
             </Button>
 

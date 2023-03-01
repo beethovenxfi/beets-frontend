@@ -39,7 +39,7 @@ export function PoolCardUser({ pool, balance, balanceUSD, ...rest }: Props) {
                 <Box fontSize="3xl" lineHeight="38px" color="white">
                     {numberFormatUSDValue(balanceUSD)}
                 </Box>
-                <Box color="gray.200">{tokenFormatAmount(balance)} BPT</Box>
+                <Box color="gray.200">{balance !== '0' ? `${tokenFormatAmount(balance)} BPT` : ''}&nbsp;</Box>
                 <Divider mt="4" mb="4" />
                 <Box>
                     <AprTooltip

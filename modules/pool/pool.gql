@@ -104,6 +104,16 @@ query GetPool($id: String!) {
                     tokenAddress
                 }
             }
+            reliquary {
+                levels {
+                    level
+                    balance
+                    apr
+                    allocationPoints
+                }
+                beetsPerSecond
+                totalBalance
+            }
         }
         investConfig {
             singleAssetEnabled

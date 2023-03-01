@@ -9,6 +9,8 @@ import { networkConfig } from '~/lib/config/network-config';
 import {
     EncodeBatchSwapInput,
     EncodeExitPoolInput,
+    EncodeFBeetsBarEnterInput,
+    EncodeFBeetsBarLeaveInput,
     EncodeGaugeDepositInput,
     EncodeJoinPoolInput,
     EncodeMasterChefDepositInput,
@@ -18,7 +20,7 @@ import {
     EncodeReliquaryCreateRelicAndDepositInput,
     EncodeReliquaryDepositInput,
     EncodeReliquaryHarvestAllInput,
-    EncodeReliquaryWithdrawInput,
+    EncodeReliquaryWithdrawAndHarvestInput,
     EncodeUnwrapErc4626Input,
     EncodeWrapErc4626Input,
     ExitPoolData,
@@ -34,9 +36,15 @@ import { ReaperWrappingService } from '~/lib/services/batch-relayer/extensions/r
 import { Erc4626WrappingService } from '~/lib/services/batch-relayer/extensions/erc4626-wrapping.service';
 import { GaugeActionsService } from '~/lib/services/batch-relayer/extensions/gauge-actions.service';
 import { ReliquaryStakingService } from './extensions/reliquary-staking.service';
+import BatchRelayerLibraryAbi from '~/lib/abi/BatchRelayerLibrary.json';
+import { Interface } from '@ethersproject/abi';
+import { Contract } from '@ethersproject/contracts';
+import BatchRelayerViewAbi from '~/lib/abi/BatchRelayerView.json';
+import { BaseProvider } from '@ethersproject/providers';
 
 export class BatchRelayerService {
-    private readonly CHAINED_REFERENCE_PREFIX = 'ba10';
+    private readonly CHAINED_REFERENCE_PREFIX = 'ba11';
+    private readonly TEMP_CHAINED_REFERENCE_PREFIX = 'ba10';
 
     constructor(
         public readonly batchRelayerAddress: string,
@@ -56,10 +64,38 @@ export class BatchRelayerService {
 
     public toChainedReference(key: BigNumberish): BigNumber {
         // The full padded prefix is 66 characters long, with 64 hex characters and the 0x prefix.
+        const paddedPrefix = `0x${this.TEMP_CHAINED_REFERENCE_PREFIX}${'0'.repeat(
+            64 - this.TEMP_CHAINED_REFERENCE_PREFIX.length,
+        )}`;
+        return BigNumber.from(paddedPrefix).add(key);
+    }
+
+    public toPersistentChainedReference(key: BigNumberish): BigNumber {
+        // The full padded prefix is 66 characters long, with 64 hex characters and the 0x prefix.
         const paddedPrefix = `0x${this.CHAINED_REFERENCE_PREFIX}${'0'.repeat(
             64 - this.CHAINED_REFERENCE_PREFIX.length,
         )}`;
         return BigNumber.from(paddedPrefix).add(key);
+    }
+
+    public async simulateMulticall({
+        provider,
+        userAddress,
+        calls,
+    }: {
+        userAddress: string;
+        provider: BaseProvider;
+        calls: string[];
+    }) {
+        const batchRelayer = new Contract(this.batchRelayerAddress, BatchRelayerViewAbi, provider);
+
+        return batchRelayer.connect(userAddress).multicall(calls);
+    }
+
+    public encodePeekChainedReferenceValue(reference: BigNumberish): string {
+        const relayerLibrary = new Interface(BatchRelayerLibraryAbi);
+
+        return relayerLibrary.encodeFunctionData('peekChainedReferenceValue', [reference]);
     }
 
     public vaultEncodeBatchSwap(params: EncodeBatchSwapInput): string {
@@ -94,8 +130,8 @@ export class BatchRelayerService {
         return this.reliquaryStakingService.encodeDeposit(params);
     }
 
-    public reliquaryEncodeWithdraw(params: EncodeReliquaryWithdrawInput) {
-        return this.reliquaryStakingService.encodeWithdraw(params);
+    public reliquaryEncodeWithdrawAndHarvest(params: EncodeReliquaryWithdrawAndHarvestInput) {
+        return this.reliquaryStakingService.encodeWithdrawAndHarvest(params);
     }
 
     public reliquaryEncodeHarvestAll(params: EncodeReliquaryHarvestAllInput) {
@@ -120,6 +156,14 @@ export class BatchRelayerService {
 
     public erc4626EncodeUnwrap(params: EncodeUnwrapErc4626Input): string {
         return this.erc4626WrappingService.encodeUnwrap(params);
+    }
+
+    public fbeetsBarEncodeEnter(params: EncodeFBeetsBarEnterInput) {
+        return this.fBeetsBarStakingService.encodeEnter(params);
+    }
+
+    public fbeetsBarEncodeLeave(params: EncodeFBeetsBarLeaveInput) {
+        return this.fBeetsBarStakingService.encodeLeave(params);
     }
 
     public encodeJoinPoolAndStakeInMasterChefFarm({

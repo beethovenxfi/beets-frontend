@@ -1,5 +1,6 @@
+export type ProviderWithProps = [React.JSXElementConstructor<React.PropsWithChildren<any>>, any];
 interface Props {
-    providers: Array<React.JSXElementConstructor<React.PropsWithChildren<any>>>;
+    providers: Array<ProviderWithProps>;
     children: React.ReactNode;
 }
 
@@ -8,8 +9,9 @@ export default function Compose(props: Props) {
 
     return (
         <>
-            {providers.reduceRight((acc, Provider) => {
-                return <Provider>{acc}</Provider>;
+            {providers.reduceRight((acc, prov) => {
+                const Provider = prov[0];
+                return <Provider {...(prov[1] || {})}>{acc}</Provider>;
             }, children)}
         </>
     );

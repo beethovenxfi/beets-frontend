@@ -2,8 +2,8 @@ import { Modal, ModalBody, ModalCloseButton, ModalContent } from '@chakra-ui/mod
 import {
     Alert,
     AlertIcon,
-    Box,
     Button,
+    ButtonProps,
     Heading,
     IconButton,
     ModalHeader,
@@ -22,7 +22,13 @@ import { useWithdrawState } from '~/modules/pool/withdraw/lib/useWithdrawState';
 import { usePool } from '~/modules/pool/lib/usePool';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 
-export function PoolWithdrawModal() {
+interface Props {
+    activatorProps?: ButtonProps;
+    noActivator?: boolean;
+    isVisible?: boolean;
+    onClose?: () => void;
+}
+export function PoolWithdrawModal({ activatorProps = {}, noActivator = false, onClose: _onClose, isVisible = false }: Props) {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const { pool, formattedTypeName } = usePool();
     const [modalState, setModalState] = useState<'start' | 'proportional' | 'single-asset' | 'preview'>('start');
@@ -44,13 +50,24 @@ export function PoolWithdrawModal() {
         }
 
         onClose();
+        _onClose && _onClose();
     }
+
+    useEffect(() => {
+        if (isVisible) {
+            onOpen();
+        } else {
+            onModalClose();
+        }
+    }, [isVisible]);
 
     return (
         <>
-            <Button onClick={onOpen} variant="secondary" width={{ base: 'full', md: '140px' }}>
-                Withdraw
-            </Button>
+            {!noActivator && (
+                <Button onClick={onOpen} variant="secondary" width={{ base: 'full', md: '140px' }} {...activatorProps}>
+                    Withdraw
+                </Button>
+            )}
             <Modal
                 isOpen={isOpen}
                 onClose={onModalClose}

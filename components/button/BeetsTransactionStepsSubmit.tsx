@@ -2,7 +2,6 @@ import { TokenBaseWithAmount } from '~/lib/services/token/token-types';
 import { useEffect, useState } from 'react';
 import { HorizontalSteps, StepStatus } from '~/components/steps/HorizontalSteps';
 import { Alert, AlertIcon, Box, Button, Flex, Skeleton, Portal } from '@chakra-ui/react';
-
 import { BeetsSubmitTransactionButton } from '~/components/button/BeetsSubmitTransactionButton';
 import { BeetsTokenApprovalButton } from '~/components/button/BeetsTokenApprovalButton';
 import { SubmitTransactionQuery } from '~/lib/util/useSubmitTransaction';
@@ -40,6 +39,8 @@ interface Props {
     steps: TransactionStep[];
     queries: (Omit<SubmitTransactionQuery, 'submit' | 'submitAsync'> & { id: string })[];
     buttonSize?: string;
+
+    onComplete?: () => void;
 }
 
 export function BeetsTransactionStepsSubmit({
@@ -50,6 +51,7 @@ export function BeetsTransactionStepsSubmit({
     steps,
     onSubmit,
     onConfirmed,
+    onComplete,
     queries,
     isDisabled,
     buttonSize = 'lg',
@@ -90,7 +92,13 @@ export function BeetsTransactionStepsSubmit({
             setCurrentStepIdx(currentStepIdx + 1);
         }
     }
-    
+
+    useEffect(() => {
+        if (complete) {
+            onComplete && onComplete();
+        }
+    }, [complete]);
+
     return (
         <Box>
             {isLoading && !complete ? (
@@ -119,10 +127,14 @@ export function BeetsTransactionStepsSubmit({
             ) : null}
             {steps && currentStep && currentStep.id === 'batch-relayer' && !complete ? (
                 <BeetsBatchRelayerApprovalButton
+                    onSubmitting={() => setStepStatus(currentStep.id, 'submitting')}
+                    onPending={() => setStepStatus(currentStep.id, 'pending')}
+                    onCanceled={() => setStepStatus(currentStep.id, 'current')}
                     onConfirmed={() => {
                         refetchBatchRelayerApproval();
                         internalOnConfirmed();
                     }}
+                    buttonText={currentStep.buttonText}
                 />
             ) : null}
             {steps && currentStep && currentStep.type === 'tokenApproval' && !complete ? (
