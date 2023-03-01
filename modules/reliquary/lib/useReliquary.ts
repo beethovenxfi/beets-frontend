@@ -86,7 +86,11 @@ export default function useReliquary() {
     const reliquaryLevels = pool.staking?.reliquary?.levels || [];
     const selectedRelicLevel = reliquaryLevels.find((level) => level.level === selectedRelic?.level);
     const weightedTotalBalance = sumBy(reliquaryLevels, (level) => parseFloat(level.balance) * level.allocationPoints);
-    const totalMaBeets = sumBy(relicPositions, (position) => parseFloat(position.amount));
+
+    const relicPositionsForFarmId = relicPositions.filter(
+        (position) => position.farmId.toString() === networkConfig.reliquary.fbeets.farmId.toString(),
+    );
+    const totalMaBeets = sumBy(relicPositionsForFarmId, (position) => parseFloat(position.amount));
 
     function setCreateRelic(value: boolean) {
         createRelic(value);
@@ -113,9 +117,7 @@ export default function useReliquary() {
         relicIds,
         legacyBptBalance,
         legacyFbeetsBalance,
-        relicPositionsForFarmId: relicPositions.filter(
-            (position) => position.farmId.toString() === networkConfig.reliquary.fbeets.farmId.toString(),
-        ),
+        relicPositionsForFarmId,
         totalMaBeets,
 
         setCreateRelic,
