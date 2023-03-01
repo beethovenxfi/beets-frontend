@@ -21,6 +21,7 @@ export class VaultService {
         const poolTokens: PoolTokens = await vaultContract.getPoolTokens(poolId);
         const poolTokensArray = [poolTokens.tokens, poolTokens.balances];
 
+        // transpose 2d array: [['A', 'B', 'C'], [1, 2, 3]] => [['A', 1], ['B', 2], ['C', 3]]
         return poolTokensArray[0].map((_, colIndex) => poolTokensArray.map((row) => row[colIndex]));
     }
 }
