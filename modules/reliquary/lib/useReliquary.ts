@@ -10,7 +10,6 @@ import { useRef } from 'react';
 import { TokenBase } from '~/lib/services/token/token-types';
 import { useUserBalances } from '~/lib/user/useUserBalances';
 import { useLegacyFBeetsBalance } from './useLegacyFbeetsBalance';
-import { position } from '@chakra-ui/react';
 
 const selectedRelicId = makeVar<string | undefined>(undefined);
 const createRelic = makeVar<boolean>(false);
