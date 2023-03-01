@@ -45,7 +45,6 @@ import {
     poolIsComposablePool,
 } from '~/lib/services/pool/pool-util';
 import { oldBnumScale } from '~/lib/services/pool/lib/old-big-number';
-import { usePoolTokens } from '~/lib/global/usePoolTokens';
 
 interface PoolCompositionTableProps {
     columns: Column<TableDataTemplate>[];
@@ -228,7 +227,6 @@ export function PoolComposition() {
     const hasNestedTokens = pool.tokens.some((token) =>
         ['GqlPoolTokenLinear', 'GqlPoolTokenPhantomStable'].includes(token.__typename),
     );
-    const { poolTokens, refetch, isLoading } = usePoolTokens(pool.id);
 
     const columns: Column<TableDataTemplate>[] = React.useMemo(
         () => [
@@ -269,11 +267,8 @@ export function PoolComposition() {
         containingPool: GqlPoolUnion | GqlPoolLinearNested | GqlPoolPhantomStableNested,
     ): TableData[] {
         return tokens.map((token) => {
-            const poolToken = poolTokens?.filter((poolToken) => poolToken.address === token.address);
-            const balance = poolToken?.length === 1 ? poolToken[0].amount : token.balance;
-
             const tokenPrice = priceFor(token.address);
-            const totalTokenValue = parseFloat(balance) * tokenPrice;
+            const totalTokenValue = parseFloat(token.balance) * tokenPrice;
             const calculatedWeight = totalTokenValue / parseFloat(pool.dynamicData.totalLiquidity);
             const userBalance = isComposablePool
                 ? getUserPoolTokenBalance(token.address)
@@ -298,7 +293,7 @@ export function PoolComposition() {
                     linearPoolMainToken &&
                     token.address !== linearPoolMainToken.address
                         ? `${tokenFormatAmount(oldBnumScale(token.balance, decimalDiff).toString())}e-${decimalDiff}`
-                        : tokenFormatAmount(balance),
+                        : tokenFormatAmount(token.balance),
                 value: numeral(totalTokenValue).format('$0,0.00a'),
                 ...(hasNestedTokens && 'pool' in token && { subRows: getTokenData(token.pool.tokens, token.pool) }),
             };
@@ -307,12 +302,7 @@ export function PoolComposition() {
 
     const data = React.useMemo(
         (): TableDataTemplate[] => getTokenData(pool.tokens, pool),
-        [
-            JSON.stringify(pool.tokens),
-            JSON.stringify(userInvestedBalances),
-            JSON.stringify(prices),
-            JSON.stringify(poolTokens),
-        ],
+        [JSON.stringify(pool.tokens), JSON.stringify(userInvestedBalances), JSON.stringify(prices)],
     );
 
     return (
