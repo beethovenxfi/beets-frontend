@@ -203,8 +203,7 @@ export function ReliquaryInvestModal({
                                         Invest into {createRelic ? 'a new  ' : 'an existing '}relic
                                     </Heading>
                                     <Text fontSize="1rem" fontWeight="normal">
-                                        Placeholder for a short (2 lines?) explainer. Can be different for create new
-                                        relic and deposit into existing relic
+                                        Deposit into the fresh BEETS farm to get maBEETS.
                                     </Text>
                                 </>
                             ) : null}
