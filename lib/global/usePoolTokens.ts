@@ -3,7 +3,6 @@ import { useProvider } from 'wagmi';
 import { vaultService } from '~/lib/services/vault.service';
 import { useGetTokens } from './useToken';
 import { formatFixed } from '@ethersproject/bignumber';
-import { BigNumber } from 'ethers';
 import { TokenAmountHumanReadable } from '~/lib/services/token/token-types';
 
 export function usePoolTokens(poolId: string) {
@@ -17,13 +16,13 @@ export function usePoolTokens(poolId: string) {
         });
     });
 
-    const poolTokens: TokenAmountHumanReadable[] = query?.data?.map((item: [string, BigNumber]) => {
-        const token = getToken(item[0] || '');
+    const poolTokens: TokenAmountHumanReadable[] = (query?.data || []).map((item) => {
+        const token = getToken(item.address || '');
         const decimals = token ? token.decimals : 18;
 
         return {
-            address: token?.address,
-            amount: formatFixed(item[1], decimals),
+            address: token?.address || '',
+            amount: formatFixed(item.balanceScaled, decimals),
         };
     });
 
