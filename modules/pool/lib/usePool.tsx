@@ -13,6 +13,7 @@ import { TokenBase } from '~/lib/services/token/token-types';
 import { uniqBy } from 'lodash';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 import { isSameAddress } from '@balancer-labs/sdk';
+import { usePoolTokens } from '~/lib/global/usePoolTokens';
 
 export interface PoolContextType {
     pool: GqlPoolUnion;
@@ -42,6 +43,9 @@ export function PoolProvider({ pool: poolFromProps, children }: { pool: GqlPoolU
 
     const pool = (data?.pool || poolFromProps) as GqlPoolUnion;
     const poolService = poolGetServiceForPool(pool);
+
+    const { poolTokens } = usePoolTokens(pool.id);
+    //TODO: inject the balances into the pool at the source, then the amounts will be correct everywhere by default.
 
     const bpt: TokenBase = {
         address: pool.address,
