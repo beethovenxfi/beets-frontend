@@ -125,7 +125,7 @@ export default function ReliquaryLanding() {
                                 variant="secondary"
                                 w="full"
                                 as="a"
-                                href="https://docs.beets.fi/mabeets"
+                                href="https://docs.beets.fi/beets/mabeets"
                                 target="_blank"
                             >
                                 Learn more
