@@ -46,7 +46,6 @@ import {
 } from '~/lib/services/pool/pool-util';
 import { oldBnumScale } from '~/lib/services/pool/lib/old-big-number';
 import { usePoolTokens } from '~/lib/global/usePoolTokens';
-import { TokenAmountHumanReadable } from '~/lib/services/token/token-types';
 
 interface PoolCompositionTableProps {
     columns: Column<TableDataTemplate>[];
@@ -267,7 +266,6 @@ export function PoolComposition() {
 
     function getTokenData(
         tokens: GqlPoolTokenUnion[],
-        poolTokens: TokenAmountHumanReadable[],
         containingPool: GqlPoolUnion | GqlPoolLinearNested | GqlPoolPhantomStableNested,
     ): TableData[] {
         return tokens.map((token) => {
@@ -302,14 +300,13 @@ export function PoolComposition() {
                         ? `${tokenFormatAmount(oldBnumScale(token.balance, decimalDiff).toString())}e-${decimalDiff}`
                         : tokenFormatAmount(balance),
                 value: numeral(totalTokenValue).format('$0,0.00a'),
-                ...(hasNestedTokens &&
-                    'pool' in token && { subRows: getTokenData(token.pool.tokens, poolTokens, token.pool) }),
+                ...(hasNestedTokens && 'pool' in token && { subRows: getTokenData(token.pool.tokens, token.pool) }),
             };
         });
     }
 
     const data = React.useMemo(
-        (): TableDataTemplate[] => getTokenData(pool.tokens, poolTokens, pool),
+        (): TableDataTemplate[] => getTokenData(pool.tokens, pool),
         [
             JSON.stringify(pool.tokens),
             JSON.stringify(userInvestedBalances),
