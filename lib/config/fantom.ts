@@ -43,6 +43,7 @@ export const fantomNetworkConfig: NetworkConfig = {
             reaper: ['0xd448c4156b8de31e56fdfc071c8d96459bb28119'],
         },
         linearRebalancers: {},
+        sorQueries: '0x290C793b7779BcDC14cE0F8909739FdE12b8B149',
     },
     beetsPoolOwnerAddress: '0xcd983793adb846dce4830c22f30c7ef0c864a776',
     masterChefContractAddress: '0x8166994d9ebBe5829EC86Bd81258149B87faCfd3',

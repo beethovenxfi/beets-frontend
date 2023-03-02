@@ -54,6 +54,7 @@ export interface NetworkConfig {
         };
         linearRebalancers: { [poolAddress: string]: string };
         reaperManualRebalancer?: string;
+        sorQueries?: string;
     };
     beetsPoolOwnerAddress: string;
     masterChefContractAddress: string;
