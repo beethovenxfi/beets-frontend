@@ -79,8 +79,8 @@ export interface GqlLatestSyncedBlocks {
     userWalletSyncBlock: Scalars['BigInt'];
 }
 
-export interface GqlLge {
-    __typename: 'GqlLge';
+export interface GqlLbp {
+    __typename: 'GqlLbp';
     address: Scalars['String'];
     adminAddress: Scalars['String'];
     adminIsMultisig: Scalars['Boolean'];
@@ -98,6 +98,7 @@ export interface GqlLge {
     startDate: Scalars['String'];
     swapFeePercentage: Scalars['String'];
     telegramUrl: Scalars['String'];
+    token: GqlLbpToken;
     tokenAmount: Scalars['String'];
     tokenContractAddress: Scalars['String'];
     tokenEndWeight: Scalars['Int'];
@@ -107,7 +108,7 @@ export interface GqlLge {
     websiteUrl: Scalars['String'];
 }
 
-export interface GqlLgeCreateInput {
+export interface GqlLbpCreateInput {
     address: Scalars['String'];
     bannerImageUrl: Scalars['String'];
     collateralAmount: Scalars['String'];
@@ -132,7 +133,26 @@ export interface GqlLgeCreateInput {
     websiteUrl: Scalars['String'];
 }
 
-export interface GqlLgeUpdateInput {
+export interface GqlLbpPriceData {
+    __typename: 'GqlLbpPriceData';
+    id: Scalars['String'];
+    price: Scalars['Float'];
+    timestamp: Scalars['Int'];
+    type: GqlLbpPriceType;
+}
+
+export type GqlLbpPriceType = 'PREDICTED' | 'REAL';
+
+export interface GqlLbpToken {
+    __typename: 'GqlLbpToken';
+    address: Scalars['String'];
+    decimals: Scalars['Int'];
+    id: Scalars['String'];
+    name: Scalars['String'];
+    symbol: Scalars['String'];
+}
+
+export interface GqlLbpUpdateInput {
     description: Scalars['String'];
     discordUrl: Scalars['String'];
     id: Scalars['ID'];
@@ -1092,7 +1112,6 @@ export interface Mutation {
     __typename: 'Mutation';
     beetsSyncFbeetsRatio: Scalars['String'];
     cacheAverageBlockTime: Scalars['String'];
-    lgeCreate: GqlLge;
     poolInitializeSnapshotsForPool: Scalars['String'];
     poolLoadOnChainDataForAllPools: Scalars['String'];
     poolLoadOnChainDataForPoolsWithActiveUpdates: Scalars['String'];
@@ -1115,6 +1134,7 @@ export interface Mutation {
     poolUpdateAprs: Scalars['String'];
     poolUpdateLifetimeValuesForAllPools: Scalars['String'];
     poolUpdateLiquidity24hAgoForAllPools: Scalars['String'];
+    poolUpdateLiquidityValuesForAllEmptyPools: Scalars['String'];
     poolUpdateLiquidityValuesForAllPools: Scalars['String'];
     poolUpdateVolumeAndFeeValuesForAllPools: Scalars['String'];
     protocolCacheMetrics: Scalars['String'];
@@ -1132,11 +1152,6 @@ export interface Mutation {
     userSyncBalanceAllPools: Scalars['String'];
     userSyncChangedStakedBalances: Scalars['String'];
     userSyncChangedWalletBalancesForAllPools: Scalars['String'];
-}
-
-export interface MutationLgeCreateArgs {
-    lge: GqlLgeCreateInput;
-    signature: Scalars['String'];
 }
 
 export interface MutationPoolInitializeSnapshotsForPoolArgs {
@@ -1161,6 +1176,10 @@ export interface MutationPoolSyncLatestSnapshotsForAllPoolsArgs {
 
 export interface MutationPoolSyncPoolArgs {
     poolId: Scalars['String'];
+}
+
+export interface MutationPoolUpdateLiquidityValuesForAllEmptyPoolsArgs {
+    maxShares: Scalars['String'];
 }
 
 export interface MutationTokenDeletePriceArgs {
@@ -1199,8 +1218,9 @@ export interface Query {
     blocksGetBlocksPerYear: Scalars['Float'];
     contentGetNewsItems: Array<GqlContentNewsItem>;
     latestSyncedBlocks: GqlLatestSyncedBlocks;
-    lge: GqlLge;
-    lges: Array<GqlLge>;
+    lbpGetChartData: Array<Maybe<GqlLbpPriceData>>;
+    lbpGetLbp: GqlLbp;
+    lbpGetLbps: Array<GqlLbp>;
     poolGetAllPoolsSnapshots: Array<GqlPoolSnapshot>;
     poolGetBatchSwaps: Array<GqlPoolBatchSwap>;
     poolGetFeaturedPoolGroups: Array<GqlPoolFeaturedPoolGroup>;
@@ -1237,7 +1257,11 @@ export interface Query {
     userGetSwaps: Array<GqlPoolSwap>;
 }
 
-export interface QueryLgeArgs {
+export interface QueryLbpGetChartDataArgs {
+    id: Scalars['ID'];
+}
+
+export interface QueryLbpGetLbpArgs {
     id: Scalars['ID'];
 }
 
@@ -1965,6 +1989,83 @@ export type GqlPoolCardDataFragment = {
             symbol: string;
         }> | null;
     }>;
+};
+
+export type GetLbpsQueryVariables = Exact<{ [key: string]: never }>;
+
+export type GetLbpsQuery = {
+    __typename: 'Query';
+    lbps: Array<{
+        __typename: 'GqlLbp';
+        id: string;
+        address: string;
+        name: string;
+        description: string;
+        tokenContractAddress: string;
+        collateralTokenAddress: string;
+        tokenAmount: string;
+        collateralAmount: string;
+        tokenStartWeight: number;
+        collateralStartWeight: number;
+        tokenEndWeight: number;
+        collateralEndWeight: number;
+        swapFeePercentage: string;
+        websiteUrl: string;
+        tokenIconUrl: string;
+        twitterUrl: string;
+        mediumUrl: string;
+        discordUrl: string;
+        telegramUrl: string;
+        startDate: string;
+        endDate: string;
+        bannerImageUrl: string;
+        adminAddress: string;
+        adminIsMultisig: boolean;
+        token: { __typename: 'GqlLbpToken'; symbol: string; address: string; name: string; id: string };
+    }>;
+};
+
+export type GetLbpQueryVariables = Exact<{
+    id: Scalars['ID'];
+}>;
+
+export type GetLbpQuery = {
+    __typename: 'Query';
+    lbp: {
+        __typename: 'GqlLbp';
+        id: string;
+        address: string;
+        name: string;
+        description: string;
+        tokenContractAddress: string;
+        collateralTokenAddress: string;
+        tokenAmount: string;
+        collateralAmount: string;
+        tokenStartWeight: number;
+        collateralStartWeight: number;
+        tokenEndWeight: number;
+        collateralEndWeight: number;
+        swapFeePercentage: string;
+        websiteUrl: string;
+        tokenIconUrl: string;
+        twitterUrl: string;
+        mediumUrl: string;
+        discordUrl: string;
+        telegramUrl: string;
+        startDate: string;
+        endDate: string;
+        bannerImageUrl: string;
+        adminAddress: string;
+        adminIsMultisig: boolean;
+        token: { __typename: 'GqlLbpToken'; symbol: string; address: string; name: string; id: string };
+    };
+    lbpGetChartData: Array<{
+        __typename: 'GqlLbpPriceData';
+        id: string;
+        timestamp: number;
+        price: number;
+        type: GqlLbpPriceType;
+    } | null>;
 };
 
 export type GetLinearPoolsQueryVariables = Exact<{ [key: string]: never }>;
@@ -5782,6 +5883,139 @@ export function useGetHomeNewsItemsLazyQuery(
 export type GetHomeNewsItemsQueryHookResult = ReturnType<typeof useGetHomeNewsItemsQuery>;
 export type GetHomeNewsItemsLazyQueryHookResult = ReturnType<typeof useGetHomeNewsItemsLazyQuery>;
 export type GetHomeNewsItemsQueryResult = Apollo.QueryResult<GetHomeNewsItemsQuery, GetHomeNewsItemsQueryVariables>;
+export const GetLbpsDocument = gql`
+    query GetLbps {
+        lbps: lbpGetLbps {
+            id
+            address
+            name
+            description
+            tokenContractAddress
+            collateralTokenAddress
+            tokenAmount
+            collateralAmount
+            tokenStartWeight
+            collateralStartWeight
+            tokenEndWeight
+            collateralEndWeight
+            swapFeePercentage
+            websiteUrl
+            tokenIconUrl
+            twitterUrl
+            mediumUrl
+            discordUrl
+            telegramUrl
+            startDate
+            endDate
+            bannerImageUrl
+            adminAddress
+            adminIsMultisig
+            token {
+                symbol
+                address
+                name
+                id
+            }
+        }
+    }
+`;
+
+/**
+ * __useGetLbpsQuery__
+ *
+ * To run a query within a React component, call `useGetLbpsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetLbpsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetLbpsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetLbpsQuery(baseOptions?: Apollo.QueryHookOptions<GetLbpsQuery, GetLbpsQueryVariables>) {
+    const options = { ...defaultOptions, ...baseOptions };
+    return Apollo.useQuery<GetLbpsQuery, GetLbpsQueryVariables>(GetLbpsDocument, options);
+}
+export function useGetLbpsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetLbpsQuery, GetLbpsQueryVariables>) {
+    const options = { ...defaultOptions, ...baseOptions };
+    return Apollo.useLazyQuery<GetLbpsQuery, GetLbpsQueryVariables>(GetLbpsDocument, options);
+}
+export type GetLbpsQueryHookResult = ReturnType<typeof useGetLbpsQuery>;
+export type GetLbpsLazyQueryHookResult = ReturnType<typeof useGetLbpsLazyQuery>;
+export type GetLbpsQueryResult = Apollo.QueryResult<GetLbpsQuery, GetLbpsQueryVariables>;
+export const GetLbpDocument = gql`
+    query GetLbp($id: ID!) {
+        lbp: lbpGetLbp(id: $id) {
+            id
+            address
+            name
+            description
+            tokenContractAddress
+            collateralTokenAddress
+            tokenAmount
+            collateralAmount
+            tokenStartWeight
+            collateralStartWeight
+            tokenEndWeight
+            collateralEndWeight
+            swapFeePercentage
+            websiteUrl
+            tokenIconUrl
+            twitterUrl
+            mediumUrl
+            discordUrl
+            telegramUrl
+            startDate
+            endDate
+            bannerImageUrl
+            adminAddress
+            adminIsMultisig
+            token {
+                symbol
+                address
+                name
+                id
+            }
+        }
+        lbpGetChartData(id: $id) {
+            id
+            timestamp
+            price
+            type
+        }
+    }
+`;
+
+/**
+ * __useGetLbpQuery__
+ *
+ * To run a query within a React component, call `useGetLbpQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetLbpQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetLbpQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGetLbpQuery(baseOptions: Apollo.QueryHookOptions<GetLbpQuery, GetLbpQueryVariables>) {
+    const options = { ...defaultOptions, ...baseOptions };
+    return Apollo.useQuery<GetLbpQuery, GetLbpQueryVariables>(GetLbpDocument, options);
+}
+export function useGetLbpLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetLbpQuery, GetLbpQueryVariables>) {
+    const options = { ...defaultOptions, ...baseOptions };
+    return Apollo.useLazyQuery<GetLbpQuery, GetLbpQueryVariables>(GetLbpDocument, options);
+}
+export type GetLbpQueryHookResult = ReturnType<typeof useGetLbpQuery>;
+export type GetLbpLazyQueryHookResult = ReturnType<typeof useGetLbpLazyQuery>;
+export type GetLbpQueryResult = Apollo.QueryResult<GetLbpQuery, GetLbpQueryVariables>;
 export const GetLinearPoolsDocument = gql`
     query GetLinearPools {
         pools: poolGetLinearPools {

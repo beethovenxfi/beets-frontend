@@ -616,6 +616,84 @@ export const GetHomeNewsItems = gql`
         }
     }
 `;
+export const GetLbps = gql`
+    query GetLbps {
+        lbps: lbpGetLbps {
+            id
+            address
+            name
+            description
+            tokenContractAddress
+            collateralTokenAddress
+            tokenAmount
+            collateralAmount
+            tokenStartWeight
+            collateralStartWeight
+            tokenEndWeight
+            collateralEndWeight
+            swapFeePercentage
+            websiteUrl
+            tokenIconUrl
+            twitterUrl
+            mediumUrl
+            discordUrl
+            telegramUrl
+            startDate
+            endDate
+            bannerImageUrl
+            adminAddress
+            adminIsMultisig
+            token {
+                symbol
+                address
+                name
+                id
+            }
+        }
+    }
+`;
+export const GetLbp = gql`
+    query GetLbp($id: ID!) {
+        lbp: lbpGetLbp(id: $id) {
+            id
+            address
+            name
+            description
+            tokenContractAddress
+            collateralTokenAddress
+            tokenAmount
+            collateralAmount
+            tokenStartWeight
+            collateralStartWeight
+            tokenEndWeight
+            collateralEndWeight
+            swapFeePercentage
+            websiteUrl
+            tokenIconUrl
+            twitterUrl
+            mediumUrl
+            discordUrl
+            telegramUrl
+            startDate
+            endDate
+            bannerImageUrl
+            adminAddress
+            adminIsMultisig
+            token {
+                symbol
+                address
+                name
+                id
+            }
+        }
+        lbpGetChartData(id: $id) {
+            id
+            timestamp
+            price
+            type
+        }
+    }
+`;
 export const GetLinearPools = gql`
     query GetLinearPools {
         pools: poolGetLinearPools {
