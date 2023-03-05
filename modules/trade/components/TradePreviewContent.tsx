@@ -28,10 +28,9 @@ interface Props {
 
 export function TradePreviewContent({ query, onTransactionSubmitted }: Props) {
     const { batchSwap, ...batchSwapQuery } = query;
-    const { reactiveTradeState, hasNoticeablePriceImpact, hasHighPriceImpact, priceImpact } = useTrade();
+    const { swapInfo, hasNoticeablePriceImpact, hasHighPriceImpact, priceImpact } = useTrade();
     const { getToken, formattedPrice, priceForAmount, priceFor } = useGetTokens();
     const { slippage } = useSlippage();
-    const swapInfo = reactiveTradeState.sorResponse;
     const tokenIn = getToken(swapInfo?.tokenIn || '');
     const tokenOut = getToken(swapInfo?.tokenOut || '');
     const [highPiAccepted, setHighPiAccepted] = useState(false);
@@ -56,8 +55,6 @@ export function TradePreviewContent({ query, onTransactionSubmitted }: Props) {
             .toString(),
     );
 
-    const exchangeRate = parseFloat(swapInfo.tokenOutAmount) / parseFloat(swapInfo.tokenInAmount);
-    const reverseExchangeRate = parseFloat(swapInfo.tokenInAmount) / parseFloat(swapInfo.tokenOutAmount);
     const valueIn = priceForAmount({ address: swapInfo.tokenIn, amount: swapInfo.tokenInAmount });
     const tokenOutSwapPrice = valueIn / parseFloat(swapInfo.tokenOutAmount);
     const diff = priceFor(swapInfo.tokenOut) / tokenOutSwapPrice - 1;
@@ -162,6 +159,7 @@ export function TradePreviewContent({ query, onTransactionSubmitted }: Props) {
                             {transactionMessageFromError(batchSwapQuery.submitError)}
                         </Alert>
                     ) : null}
+
                     <BeetsSubmitTransactionButton
                         {...batchSwapQuery}
                         isDisabled={hasHighPriceImpact && !highPiAccepted}
