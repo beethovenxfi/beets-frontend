@@ -1,4 +1,4 @@
-import { makeVar, useReactiveVar } from '@apollo/client';
+import { makeVar, NetworkStatus, useReactiveVar } from '@apollo/client';
 import {
     GqlSorGetSwapsResponseFragment,
     GqlSorSwapType,
@@ -40,6 +40,7 @@ export function useTrade() {
         error: onChainError,
         refetch: refetchOnChainData,
         isLoading: loadingOnChainData,
+        isFetching: fetchingOnChainData,
     } = useOnChainSwapInfoQuery(reactiveTradeState.swapInfo);
 
     const swapInfo = onChainSwapInfo || reactiveTradeState.swapInfo;
@@ -92,6 +93,10 @@ export function useTrade() {
         });
     }
 
+    if (loadingOnChainData) {
+        console.log('loading on chain data');
+    }
+
     return {
         loadSwaps,
         reactiveTradeState: {
@@ -100,6 +105,7 @@ export function useTrade() {
         },
         swapInfo,
         loadingSwaps: loading || loadingOnChainData,
+        refetchingSwaps: networkStatus === NetworkStatus.refetch || fetchingOnChainData,
         error: error || onChainError,
         networkStatus,
         getLatestTradeState,
