@@ -84,7 +84,7 @@ export function NavbarPendingRewards() {
                     <Skeleton />
                 </Button>
             </PopoverTrigger>
-            <PopoverContent bgColor="beets.base.900" _focus={{ boxShadow: 'none' }} w="full">
+            <PopoverContent bgColor="beets.base.900" _focus={{ boxShadow: 'none' }} w="full" minW="320px">
                 <PopoverArrow color="beets.base.900" />
                 <PopoverCloseButton />
                 <PopoverHeader borderBottomWidth="0">Liquidity incentives</PopoverHeader>
