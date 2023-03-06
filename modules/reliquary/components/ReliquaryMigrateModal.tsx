@@ -96,7 +96,7 @@ export default function ReliquaryMigrateModal({ isOpen, onClose }: Props) {
             {
                 id: 'reliquary-migrate',
                 type: 'other',
-                buttonText: 'Complete MIGRATION',
+                buttonText: 'Migrate',
                 tooltipText: 'Migrate your fBEETS to a new or existing relic',
             },
         ];
@@ -106,7 +106,7 @@ export default function ReliquaryMigrateModal({ isOpen, onClose }: Props) {
             _steps.unshift({
                 id: 'batch-relayer-reliquary',
                 type: 'other',
-                buttonText: 'Approve TRANSACTIONS',
+                buttonText: 'Approve',
                 tooltipText: 'Approve the batch relayer to deposit, withdraw & claim rewards for all relics',
             });
         }
@@ -114,7 +114,7 @@ export default function ReliquaryMigrateModal({ isOpen, onClose }: Props) {
             _steps.unshift({
                 id: 'batch-relayer',
                 type: 'other',
-                buttonText: 'Approve RELIC',
+                buttonText: 'Approve',
                 tooltipText: 'Approve the batch relayer to create a new relic',
             });
         }
@@ -125,7 +125,7 @@ export default function ReliquaryMigrateModal({ isOpen, onClose }: Props) {
                 id: 'approve-vault',
                 tooltipText: 'Approve the vault to spend your fBEETS',
                 type: 'tokenApproval',
-                buttonText: 'Approve VAULT',
+                buttonText: 'Approve the vault',
                 token: {
                     ...(legacyfBeets || {}),
                     amount: unstaked,
