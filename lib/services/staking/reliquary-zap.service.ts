@@ -208,7 +208,7 @@ export class ReliquaryZapService {
         const bptAmountScaled = parseFixed(bptAmount, 18);
 
         const withdrawBptFromRelic = this.batchRelayerService.reliquaryEncodeWithdrawAndHarvest({
-            recipient: networkConfig.balancer.batchRelayer,
+            recipient: userAddress,
             relicId,
             amount: bptAmountScaled,
             outputReference: this.batchRelayerService.toChainedReference('0'),
@@ -342,7 +342,7 @@ export class ReliquaryZapService {
         return this.batchRelayerService.vaultEncodeExitPool({
             poolId: networkConfig.reliquary.fbeets.poolId,
             poolKind: 0,
-            sender: networkConfig.balancer.batchRelayer,
+            sender: userAddress,
             recipient: userAddress,
             exitPoolRequest: {
                 assets: [networkConfig.wethAddress, networkConfig.beets.address],
