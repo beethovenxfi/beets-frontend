@@ -29,8 +29,8 @@ export function RelicCarousel({ loading, ...rest }: Props) {
     return (
         <Box position="relative" minH="600px">
             {hasNoRelics && !_isLoadingRelicPositions && (
-                <Flex justifyContent="center" zIndex={2} width="full" position="absolute" left="0" right="0" top="10%">
-                    <VStack spacing="4" alignItems="center">
+                <Flex justifyContent="center" zIndex={2} width="full" alignItems="center" height="600px">
+                    <VStack spacing="4" alignItems="center" height="full" justifyContent="center">
                         <Heading size="md">Get started by minting your own relic</Heading>
                         <Box>
                             <ReliquaryInvestModal
