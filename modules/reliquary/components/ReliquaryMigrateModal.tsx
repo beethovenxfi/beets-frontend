@@ -106,7 +106,7 @@ export default function ReliquaryMigrateModal({ isOpen, onClose }: Props) {
             _steps.unshift({
                 id: 'batch-relayer-reliquary',
                 type: 'other',
-                buttonText: 'Approve',
+                buttonText: 'Approve relayer for transacting',
                 tooltipText: 'Approve the batch relayer to deposit, withdraw & claim rewards for all relics',
             });
         }
@@ -114,7 +114,7 @@ export default function ReliquaryMigrateModal({ isOpen, onClose }: Props) {
             _steps.unshift({
                 id: 'batch-relayer',
                 type: 'other',
-                buttonText: 'Approve',
+                buttonText: 'Approve relayer for creating',
                 tooltipText: 'Approve the batch relayer to create a new relic',
             });
         }

@@ -87,7 +87,7 @@ export function ReliquaryInvestActions({ onInvestComplete, onClose }: Props) {
                 steps.unshift({
                     id: 'batch-relayer-reliquary',
                     type: 'other',
-                    buttonText: 'Approve TRANSACTIONS',
+                    buttonText: 'Approve relayer for transacting',
                     tooltipText: 'Transacting with all (future) relics requires you to approve the batch relayer.',
                 });
             }
@@ -96,7 +96,7 @@ export function ReliquaryInvestActions({ onInvestComplete, onClose }: Props) {
                 steps.unshift({
                     id: 'batch-relayer',
                     type: 'other',
-                    buttonText: 'Approve RELIC',
+                    buttonText: 'Approve relayer for creating',
                     tooltipText: 'Creating a relic requires you to approve the batch relayer.',
                 });
             }
