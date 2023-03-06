@@ -27,9 +27,9 @@ export function RelicCarousel({ loading, ...rest }: Props) {
         setIsLoadingRelicPositions(isLoadingRelicPositions);
     }, [isLoadingRelicPositions]);
     return (
-        <Box position="relative" minH="600px">
+        <Box position="relative" minH="300px">
             {hasNoRelics && !_isLoadingRelicPositions && (
-                <Flex justifyContent="center" zIndex={2} width="full" alignItems="center" height="600px">
+                <Flex justifyContent="center" zIndex={2} width="full" alignItems="center" height="300px">
                     <VStack spacing="4" alignItems="center" height="full" justifyContent="center">
                         <Heading size="md">Get started by minting your own relic</Heading>
                         <Box>
