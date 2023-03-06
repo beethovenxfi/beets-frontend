@@ -63,6 +63,7 @@ export default function RelicSlideApr() {
                 left={{ base: '0', lg: '-42.5%' }}
                 rounded="md"
                 position={{ base: 'relative', lg: 'absolute' }}
+                height="full"
                 //spacing="4"
                 width={{ base: '100%', lg: '60%' }}
                 top="0"

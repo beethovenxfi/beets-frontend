@@ -207,7 +207,7 @@ export default function RelicSlide({ relic, openInvestModal, openWithdrawModal }
                     </Box>
                 </Flex>
 
-                <Stack direction={{ base: 'column', lg: 'row' }} position="relative" height="310px" width="full">
+                <Stack direction={{ base: 'column', lg: 'row' }} position="relative" height="340px" width="full">
                     {isActive && !isRelicAmountZero && (
                         <>
                             <RelicSlideMainInfo

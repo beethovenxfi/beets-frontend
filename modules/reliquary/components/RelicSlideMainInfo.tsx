@@ -12,6 +12,7 @@ import { numberFormatUSDValue } from '~/lib/util/number-formats';
 import { relicGetMaturityProgress } from '../lib/reliquary-helpers';
 import { useRelicDepositBalance } from '../lib/useRelicDepositBalance';
 import useReliquary from '../lib/useReliquary';
+import RelicLevelUpProgress from './RelicLevelUpProgress';
 
 interface Props {
     isLoading?: boolean;
@@ -87,12 +88,7 @@ export default function RelicSlideMainInfo({ isLoading, openInvestModal, openWit
                                                 </Box>
                                             </BeetsTooltip>
                                         )}
-                                        <AnimatedProgress
-                                            rounded="5"
-                                            color="black"
-                                            w="full"
-                                            value={progressToNextLevel}
-                                        />
+                                        <RelicLevelUpProgress rounded="5" color="black" w="full" />
                                     </VStack>
                                 </VStack>
 
