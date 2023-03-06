@@ -95,9 +95,8 @@ export function NavbarPendingRewards() {
                         templateAreas={{
                             base: `"pool"
                                     "reliquary"`,
-                            lg: `"reliquary pool"`,
+                            lg: `"pool reliquary"`,
                         }}
-                        width="full"
                     >
                         {networkConfig.maBeetsEnabled && (
                             <GridItem area="reliquary">
