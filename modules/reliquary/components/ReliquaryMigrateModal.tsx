@@ -139,7 +139,7 @@ export default function ReliquaryMigrateModal({ isOpen, onClose }: Props) {
                 id: 'unstake',
                 tooltipText: 'Unstake your fBEETS from the farm',
                 type: 'other',
-                buttonText: 'Unstake FBEETS',
+                buttonText: 'Unstake fBEETS',
             });
         }
 
