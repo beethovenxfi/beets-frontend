@@ -996,7 +996,7 @@ export const GetPoolFilters = gql`
 `;
 export const GetReliquaryFarmSnapshots = gql`
     query GetReliquaryFarmSnapshots($id: String!, $range: GqlPoolSnapshotDataRange!) {
-        snapshots: poolGetReliquaryFarmSnapshots(id: $id, range: $range) {
+        snapshots: beetsPoolGetReliquaryFarmSnapshots(id: $id, range: $range) {
             id
             farmId
             timestamp

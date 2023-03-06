@@ -17,6 +17,7 @@ const userMiddleware = new ApolloLink((operation, forward) => {
             headers: {
                 ...headers,
                 AccountAddress: userAddressVar(),
+                ChainId: process.env.NEXT_PUBLIC_CHAIN_ID,
             },
         };
     });

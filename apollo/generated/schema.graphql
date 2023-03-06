@@ -23,6 +23,14 @@ type GqlBalancePoolAprSubItem {
 
 scalar GqlBigNumber
 
+enum GqlChain {
+    ARBITRUM
+    FANTOM
+    MAINNET
+    OPTIMISM
+    POLYGON
+}
+
 type GqlContentNewsItem {
     discussionUrl: String
     id: ID!
@@ -151,6 +159,7 @@ type GqlPoolAprSubItem {
 interface GqlPoolBase {
     address: Bytes!
     allTokens: [GqlPoolTokenExpanded!]!
+    chain: GqlChain!
     createTime: Int!
     decimals: Int!
     displayTokens: [GqlPoolTokenDisplay!]!
@@ -237,6 +246,7 @@ type GqlPoolElement implements GqlPoolBase {
     address: Bytes!
     allTokens: [GqlPoolTokenExpanded!]!
     baseToken: Bytes!
+    chain: GqlChain!
     createTime: Int!
     decimals: Int!
     displayTokens: [GqlPoolTokenDisplay!]!
@@ -266,6 +276,8 @@ union GqlPoolFeaturedPoolGroupItem = GqlFeaturePoolGroupItemExternalLink | GqlPo
 input GqlPoolFilter {
     categoryIn: [GqlPoolFilterCategory!]
     categoryNotIn: [GqlPoolFilterCategory!]
+    chainIn: [GqlChain!]
+    chainNotIn: [GqlChain!]
     filterIn: [String!]
     filterNotIn: [String!]
     idIn: [String!]
@@ -339,6 +351,7 @@ type GqlPoolLinear implements GqlPoolBase {
     address: Bytes!
     allTokens: [GqlPoolTokenExpanded!]!
     bptPriceRate: BigDecimal!
+    chain: GqlChain!
     createTime: Int!
     decimals: Int!
     displayTokens: [GqlPoolTokenDisplay!]!
@@ -414,6 +427,7 @@ type GqlPoolLinearPoolWrappedToken {
 type GqlPoolLiquidityBootstrapping implements GqlPoolBase {
     address: Bytes!
     allTokens: [GqlPoolTokenExpanded!]!
+    chain: GqlChain!
     createTime: Int!
     decimals: Int!
     displayTokens: [GqlPoolTokenDisplay!]!
@@ -434,6 +448,7 @@ type GqlPoolMetaStable implements GqlPoolBase {
     address: Bytes!
     allTokens: [GqlPoolTokenExpanded!]!
     amp: BigInt!
+    chain: GqlChain!
     createTime: Int!
     decimals: Int!
     displayTokens: [GqlPoolTokenDisplay!]!
@@ -452,6 +467,7 @@ type GqlPoolMetaStable implements GqlPoolBase {
 type GqlPoolMinimal {
     address: Bytes!
     allTokens: [GqlPoolTokenExpanded!]!
+    chain: GqlChain!
     createTime: Int!
     decimals: Int!
     displayTokens: [GqlPoolTokenDisplay!]!
@@ -503,6 +519,7 @@ type GqlPoolPhantomStable implements GqlPoolBase {
     allTokens: [GqlPoolTokenExpanded!]!
     amp: BigInt!
     bptPriceRate: BigDecimal!
+    chain: GqlChain!
     createTime: Int!
     decimals: Int!
     displayTokens: [GqlPoolTokenDisplay!]!
@@ -564,6 +581,7 @@ type GqlPoolStable implements GqlPoolBase {
     address: Bytes!
     allTokens: [GqlPoolTokenExpanded!]!
     amp: BigInt!
+    chain: GqlChain!
     createTime: Int!
     decimals: Int!
     displayTokens: [GqlPoolTokenDisplay!]!
@@ -622,21 +640,21 @@ type GqlPoolStakingMasterChefFarm {
     rewarders: [GqlPoolStakingFarmRewarder!]
 }
 
-type GqlPoolStakingReliquarFarmLevel {
+type GqlPoolStakingReliquaryFarm {
+    beetsPerSecond: String!
+    id: ID!
+    levels: [GqlPoolStakingReliquaryFarmLevel!]
+    totalBalance: String!
+    totalWeightedBalance: String!
+}
+
+type GqlPoolStakingReliquaryFarmLevel {
     allocationPoints: Int!
     apr: BigDecimal!
     balance: BigDecimal!
     id: ID!
     level: Int!
     requiredMaturity: Int!
-}
-
-type GqlPoolStakingReliquaryFarm {
-    beetsPerSecond: String!
-    id: ID!
-    levels: [GqlPoolStakingReliquarFarmLevel!]
-    totalBalance: String!
-    totalWeightedBalance: String!
 }
 
 enum GqlPoolStakingType {
@@ -764,6 +782,7 @@ type GqlPoolUserSwapVolume {
 type GqlPoolWeighted implements GqlPoolBase {
     address: Bytes!
     allTokens: [GqlPoolTokenExpanded!]!
+    chain: GqlChain!
     createTime: Int!
     decimals: Int!
     displayTokens: [GqlPoolTokenDisplay!]!
@@ -1050,13 +1069,13 @@ The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://
 scalar JSON
 
 type Mutation {
+    beetsPoolLoadReliquarySnapshotsForAllFarms: String!
     beetsSyncFbeetsRatio: String!
     cacheAverageBlockTime: String!
     lgeCreate(lge: GqlLgeCreateInput!, signature: String!): GqlLge!
     poolInitializeSnapshotsForPool(poolId: String!): String!
     poolLoadOnChainDataForAllPools: String!
     poolLoadOnChainDataForPoolsWithActiveUpdates: String!
-    poolLoadReliquarySnapshotsForAllFarms: String!
     poolLoadSnapshotsForAllPools: String!
     poolLoadSnapshotsForPools(poolIds: [String!]!): String!
     poolReloadAllPoolAprs: String!
@@ -1097,6 +1116,7 @@ type Mutation {
 type Query {
     beetsGetBeetsPrice: String!
     beetsGetFbeetsRatio: String!
+    beetsPoolGetReliquaryFarmSnapshots(id: String!, range: GqlPoolSnapshotDataRange!): [GqlReliquaryFarmSnapshot!]!
     blocksGetAverageBlockTime: Float!
     blocksGetBlocksPerDay: Float!
     blocksGetBlocksPerSecond: Float!
@@ -1128,7 +1148,6 @@ type Query {
         textSearch: String
         where: GqlPoolFilter
     ): Int!
-    poolGetReliquaryFarmSnapshots(id: String!, range: GqlPoolSnapshotDataRange!): [GqlReliquaryFarmSnapshot!]!
     poolGetSnapshots(id: String!, range: GqlPoolSnapshotDataRange!): [GqlPoolSnapshot!]!
     poolGetSwaps(first: Int, skip: Int, where: GqlPoolSwapFilter): [GqlPoolSwap!]!
     poolGetUserSwapVolume(first: Int, skip: Int, where: GqlUserSwapVolumeFilter): [GqlPoolUserSwapVolume!]!
