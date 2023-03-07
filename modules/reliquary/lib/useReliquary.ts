@@ -89,7 +89,11 @@ export default function useReliquary() {
     const relicPositionsForFarmId = relicPositions.filter(
         (position) => position.farmId.toString() === networkConfig.reliquary.fbeets.farmId.toString(),
     );
-    const totalMaBeets = sumBy(relicPositionsForFarmId, (position) => parseFloat(position.amount));
+    const totalMaBeets = sumBy(relicPositionsForFarmId, (position) => {
+        const numFBeets = parseFloat(position.amount);
+        const boost = reliquaryLevels.find((level) => level.level === position.level);
+        return (boost?.allocationPoints || 0) * numFBeets;
+    });
 
     function setCreateRelic(value: boolean) {
         createRelic(value);
