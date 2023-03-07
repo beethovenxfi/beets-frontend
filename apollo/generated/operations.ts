@@ -569,6 +569,7 @@ export const GetUserData = gql`
                     rewardPerSecond
                     tokenAddress
                 }
+                status
             }
         }
     }
@@ -730,6 +731,7 @@ export const GetPool = gql`
                         rewardPerSecond
                         tokenAddress
                     }
+                    status
                 }
                 reliquary {
                     levels {

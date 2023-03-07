@@ -17,9 +17,11 @@ import { sumBy } from 'lodash';
 import { InfoButton } from '~/components/info-button/InfoButton';
 import { BoostedBadgeSmall } from '~/components/boosted-badge/BoostedBadgeSmall';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
+import { getPoolStaking } from '~/lib/services/pool/lib/util';
 
 export default function PoolOverallStats() {
     const { pool } = usePool();
+    const poolStaking = getPoolStaking(pool);
     const { boostedByTypes } = useNetworkConfig();
     const { priceFor } = useGetTokens();
     const { data: blocksData } = useGetBlocksPerDayQuery({ fetchPolicy: 'cache-first' });
@@ -35,12 +37,12 @@ export default function PoolOverallStats() {
     const sharePrice24hAgo =
         totalShares24hAgo > 0 ? parseFloat(pool.dynamicData.totalLiquidity24hAgo) / totalShares24hAgo : 0;
     const sharePricePercentChange = (sharePrice - sharePrice24hAgo) / sharePrice24hAgo;
-    const beetsPerDay = parseFloat(pool.staking?.farm?.beetsPerBlock || '0') * (blocksData?.blocksPerDay || 0);
+    const beetsPerDay = parseFloat(poolStaking?.farm?.beetsPerBlock || '0') * (blocksData?.blocksPerDay || 0);
 
     const incentivesDailyValue =
         beetsPerDay * priceFor(networkConfig.beets.address) +
         sumBy(
-            pool.staking?.farm?.rewarders || [],
+            poolStaking?.farm?.rewarders || [],
             (rewarder) => priceFor(rewarder.tokenAddress) * parseFloat(rewarder.rewardPerSecond) * 86400,
         );
 
@@ -92,7 +94,7 @@ export default function PoolOverallStats() {
                     {numeral(data.fees24h).format('$0,0.00a')}
                 </Text>
             </VStack>
-            {pool.staking?.farm && (
+            {poolStaking?.farm && (
                 <VStack spacing="0" alignItems="flex-start">
                     <InfoButton
                         labelProps={{
@@ -124,7 +126,7 @@ export default function PoolOverallStats() {
                                 </Tooltip>
                             </HStack>
                         )}
-                        {pool.staking.farm.rewarders?.map((rewarder) => (
+                        {poolStaking?.farm.rewarders?.map((rewarder) => (
                             <HStack spacing="1" mb="0.5" key={rewarder.id}>
                                 <TokenAvatar height="20px" width="20px" address={rewarder.tokenAddress} />
                                 <Text fontSize="1rem" lineHeight="1rem">

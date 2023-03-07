@@ -103,6 +103,7 @@ query GetPool($id: String!) {
                     rewardPerSecond
                     tokenAddress
                 }
+                status
             }
             reliquary {
                 levels {

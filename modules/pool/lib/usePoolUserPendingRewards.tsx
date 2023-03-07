@@ -6,17 +6,19 @@ import { usePoolUserBptBalance } from '~/modules/pool/lib/usePoolUserBptBalance'
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 import { usePool } from '~/modules/pool/lib/usePool';
 import { createContext, ReactNode, useContext } from 'react';
+import { getPoolStaking } from '~/lib/services/pool/lib/util';
 
 export function _usePoolUserPendingRewards() {
     const networkConfig = useNetworkConfig();
     const { pool } = usePool();
+    const poolStaking = getPoolStaking(pool);
     const { hasBpt, isLoading: balancesLoading } = usePoolUserBptBalance();
     const { priceForAmount } = useGetTokens();
-    const farm = pool.staking?.farm;
-    const gauge = pool.staking?.gauge;
+    const farm = poolStaking?.farm;
+    const gauge = poolStaking?.gauge;
 
     const { data, isLoading, ...rest } = useStakingPendingRewards(
-        pool.staking && hasBpt ? [pool.staking] : [],
+        poolStaking && hasBpt ? [poolStaking] : [],
         'usePoolUserPendingRewards',
     );
 

@@ -15,6 +15,7 @@ import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 import { usePool } from '~/modules/pool/lib/usePool';
 import { createContext, ReactNode, useContext } from 'react';
 import { BigNumber } from 'ethers';
+import { getPoolStaking } from '~/lib/services/pool/lib/util';
 
 const DUST_THRESHOLD = BigNumber.from('1000000000000');
 
@@ -80,35 +81,36 @@ function usePoolUserBptWalletBalance() {
 
 export function usePoolUserStakedBalance() {
     const { pool } = usePool();
+    const poolStaking = getPoolStaking(pool);
     const { userAddress } = useUserAccount();
     const provider = useProvider();
     const { data: fBeets } = useGetFbeetsRatioQuery();
 
     return useQuery(
-        ['poolUserStakedBalance', pool.id, pool.staking?.id || '', userAddress || ''],
+        ['poolUserStakedBalance', pool.id, poolStaking?.id || '', userAddress || ''],
         async (): Promise<AmountHumanReadable> => {
-            if (!userAddress || !pool.staking) {
+            if (!userAddress || !poolStaking) {
                 return '0';
             }
 
-            switch (pool.staking.type) {
+            switch (poolStaking.type) {
                 case 'MASTER_CHEF':
                     return masterChefService.getUserStakedBalance({
                         userAddress,
-                        farmId: pool.staking.id,
+                        farmId: poolStaking.id,
                         provider,
                     });
                 case 'FRESH_BEETS':
                     return freshBeetsService.getUserStakedBalance({
                         userAddress,
-                        farmId: pool.staking.id,
+                        farmId: poolStaking.id,
                         provider,
                         fBeetsRatio: fBeets?.ratio || '0',
                     });
                 case 'GAUGE':
                     return gaugeStakingService.getUserStakedBalance({
                         userAddress,
-                        gaugeAddress: pool.staking.gauge?.gaugeAddress || '',
+                        gaugeAddress: poolStaking.gauge?.gaugeAddress || '',
                         provider,
                     });
                 case 'RELIQUARY':
