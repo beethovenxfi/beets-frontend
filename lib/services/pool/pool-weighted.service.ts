@@ -9,6 +9,7 @@ import {
 } from '~/lib/services/pool/lib/old-big-number';
 import { AmountHumanReadable, TokenAmountHumanReadable } from '~/lib/services/token/token-types';
 import {
+    getPoolStaking,
     oldBnumPoolScaleTokenAmounts,
     poolGetProportionalExitAmountsForBptIn,
     poolGetProportionalJoinAmountsForFixedAmount,
@@ -81,7 +82,9 @@ export class PoolWeightedService implements PoolService {
         const maxAmountsIn = poolScaleTokenAmounts(data.maxAmountsIn, this.pool.tokens);
         const userData = this.encodeJoinPool(data);
 
-        if (data.zapIntoMasterchefFarm && this.pool.staking?.type === 'MASTER_CHEF' && this.pool.staking.farm) {
+        const poolStaking = getPoolStaking(this.pool);
+
+        if (data.zapIntoMasterchefFarm && poolStaking?.type === 'MASTER_CHEF' && poolStaking.farm) {
             return this.batchRelayerService.encodeJoinPoolAndStakeInMasterChefFarm({
                 userData,
                 pool: this.pool,

@@ -13,6 +13,7 @@ import { TokenBase } from '~/lib/services/token/token-types';
 import { uniqBy } from 'lodash';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 import { isSameAddress } from '@balancer-labs/sdk';
+import { getPoolStaking } from '~/lib/services/pool/lib/util';
 
 export interface PoolContextType {
     pool: GqlPoolUnion;
@@ -70,6 +71,7 @@ export function PoolProvider({ pool: poolFromProps, children }: { pool: GqlPoolU
     }, [pool.address]);
 
     const poolService = poolGetServiceForPool(pool);
+    const poolStaking = getPoolStaking(pool);
 
     const bpt: TokenBase = {
         address: pool.address,
@@ -84,14 +86,14 @@ export function PoolProvider({ pool: poolFromProps, children }: { pool: GqlPoolU
     const requiresBatchRelayerOnExit = poolRequiresBatchRelayerOnExit(pool);
     const supportsZapIntoMasterchefFarm =
         (pool.__typename === 'GqlPoolWeighted' || pool.__typename === 'GqlPoolStable') &&
-        pool.staking?.type === 'MASTER_CHEF' &&
-        !!pool.staking.farm;
+        poolStaking?.type === 'MASTER_CHEF' &&
+        !!poolStaking.farm;
     const supportsZapIntoGauge =
         ((pool.__typename === 'GqlPoolWeighted' &&
             isSameAddress(pool.factory || '', networkConfig.balancer.weightedPoolV2Factory)) ||
             pool.__typename === 'GqlPoolPhantomStable') &&
-        pool.staking?.type === 'GAUGE' &&
-        !!pool.staking.gauge;
+        poolStaking?.type === 'GAUGE' &&
+        !!poolStaking.gauge;
     const supportsZap = supportsZapIntoMasterchefFarm || supportsZapIntoGauge;
 
     const allTokens = useMemo(

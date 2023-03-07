@@ -8,14 +8,16 @@ import useReliquary from '../../lib/useReliquary';
 import { InfoButton } from '~/components/info-button/InfoButton';
 import numeral from 'numeral';
 import { usePool } from '~/modules/pool/lib/usePool';
+import { getPoolStaking } from '~/lib/services/pool/lib/util';
 
 interface Props {}
 
 export default function RelicMaturity({}: Props) {
     const { maturityThresholds, isLoading, selectedRelic } = useReliquary();
     const { pool } = usePool();
+    const poolStaking = getPoolStaking(pool);
 
-    const levels = pool.staking?.reliquary?.levels;
+    const levels = poolStaking?.reliquary?.levels;
     const poolDataBefore = levels?.map((level, index) =>
         selectedRelic && index > selectedRelic.level ? '' : level.allocationPoints,
     );

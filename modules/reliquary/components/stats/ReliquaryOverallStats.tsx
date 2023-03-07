@@ -13,9 +13,11 @@ import { useReliquaryGlobalStats } from '../../lib/useReliquaryGlobalStats';
 import { numberFormatUSDValue } from '~/lib/util/number-formats';
 import startOfWeek from 'date-fns/startOfWeek';
 import { useGetReliquaryFarmSnapshotsQuery } from '~/apollo/generated/graphql-codegen-generated';
+import { getPoolStaking } from '~/lib/services/pool/lib/util';
 
 export default function ReliquaryOverallStats() {
     const { pool } = usePool();
+    const poolStaking = getPoolStaking(pool);
     const { priceFor, getToken } = useGetTokens();
     const { data: globalStats } = useReliquaryGlobalStats();
     const { data: snapshotData } = useGetReliquaryFarmSnapshotsQuery({
@@ -28,9 +30,7 @@ export default function ReliquaryOverallStats() {
     const minAprArray = aprItems.filter((item) => item.title.includes('Min'));
     const maxAprArray = aprItems.filter((item) => item.title.includes('Max'));
 
-    const [{ apr: swapApr }] = aprItems.filter((item) => item.title.includes('Swap'));
-
-    const beetsPerDay = parseFloat(pool.staking?.reliquary?.beetsPerSecond || '0') * 86400;
+    const beetsPerDay = parseFloat(poolStaking?.reliquary?.beetsPerSecond || '0') * 86400;
     const incentivesDailyValue = beetsPerDay * priceFor(networkConfig.beets.address);
 
     const relicTokenBalancesWithSymbol = pool.tokens.map((token) => ({
@@ -81,7 +81,7 @@ export default function ReliquaryOverallStats() {
                                 ? `${numeral(minAprArray[0]?.apr).format('0.00%')} - ${numeral(
                                       maxAprArray[0]?.apr,
                                   ).format('0.00%')}`
-                                : numeral(swapApr).format('0.00%')}
+                                : numeral(data.apr.swapApr).format('0.00%')}
                         </div>
                         <AprTooltip onlySparkles data={data.apr} />
                     </HStack>
@@ -113,7 +113,7 @@ export default function ReliquaryOverallStats() {
                             </VStack>
                         </VStack>
                     </VStack>
-                    {pool.staking?.reliquary && (
+                    {poolStaking?.reliquary && (
                         <VStack spacing="0" alignItems="flex-start">
                             <InfoButton
                                 labelProps={{

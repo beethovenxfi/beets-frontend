@@ -8,12 +8,14 @@ import { InfoButton } from '~/components/info-button/InfoButton';
 import { Box, HStack, Link, useTheme } from '@chakra-ui/react';
 import { ExternalLink } from 'react-feather';
 import numeral from 'numeral';
+import { getPoolStaking } from '~/lib/services/pool/lib/util';
 
 export function ReliquaryCurveChart() {
     const { pool } = usePool();
+    const poolStaking = getPoolStaking(pool);
     const { colors } = useTheme();
 
-    const data = pool.staking?.reliquary?.levels
+    const data = poolStaking?.reliquary?.levels
         ?.map((level) => ({
             level: level.level + 1,
             allocationPoints: level.allocationPoints,

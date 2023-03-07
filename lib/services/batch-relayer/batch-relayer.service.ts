@@ -31,7 +31,7 @@ import { PoolJoinBatchRelayerContractCallData } from '~/lib/services/pool/pool-t
 import { GqlPoolStable, GqlPoolWeighted } from '~/apollo/generated/graphql-codegen-generated';
 import { isSameAddress, Swaps, SwapType, SwapV2 } from '@balancer-labs/sdk';
 import { AmountScaledString, TokenAmountHumanReadable } from '~/lib/services/token/token-types';
-import { poolScaleSlippage } from '~/lib/services/pool/lib/util';
+import { getPoolStaking, poolScaleSlippage } from '~/lib/services/pool/lib/util';
 import { ReaperWrappingService } from '~/lib/services/batch-relayer/extensions/reaper-wrapping.service';
 import { Erc4626WrappingService } from '~/lib/services/batch-relayer/extensions/erc4626-wrapping.service';
 import { GaugeActionsService } from '~/lib/services/batch-relayer/extensions/gauge-actions.service';
@@ -197,11 +197,13 @@ export class BatchRelayerService {
             outputReference: this.toChainedReference(0),
         });
 
+        const poolStaking = getPoolStaking(pool);
+
         const masterChefDeposit = this.masterChefEncodeDeposit({
             sender: this.batchRelayerAddress,
             recipient: userAddress,
             token: pool.address,
-            pid: parseInt(pool.staking!.id),
+            pid: parseInt(poolStaking!.id),
             amount: this.toChainedReference(0),
             outputReference: Zero,
         });
