@@ -6,8 +6,9 @@ import {
     GqlPoolTokenBase,
     GqlPoolTokenLinear,
     GqlPoolTokenPhantomStable,
-    GqlPoolTokenUnion,
+    GqlPoolUnion,
     GqlPoolWeighted,
+    GqlPoolStaking,
 } from '~/apollo/generated/graphql-codegen-generated';
 import { AmountHumanReadable, AmountScaledString, TokenAmountHumanReadable } from '~/lib/services/token/token-types';
 import {
@@ -569,4 +570,18 @@ export function poolGetNestedTokenEstimateForPoolTokenAmounts({
 
 export function tokenAmountsAllZero(tokenAmounts: TokenAmountHumanReadable[]) {
     return tokenAmounts.filter((amount) => parseFloat(amount.amount) === 0).length === tokenAmounts.length;
+}
+
+export function getPoolStaking(pool: GqlPoolUnion): GqlPoolStaking | null {
+    if (pool.staking.length === 0) {
+        return null;
+    }
+    // currently assuming there is only one staking type ever so we can grab it from the first item in the array
+    const stakingType = pool.staking[0].type;
+
+    if (stakingType === 'GAUGE') {
+        return pool.staking.filter((stake) => stake.gauge?.status === 'PREFERRED')[0];
+    } else {
+        return pool.staking[0];
+    }
 }
