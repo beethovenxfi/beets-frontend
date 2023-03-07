@@ -58,6 +58,7 @@ export const optimismNetworkConfig: NetworkConfig = {
             '0xedcfaf390906a8f91fb35b7bac23f3111dbaee1c': '0xe61b872d223362facb9fcbce359a56764bccfa36', //soUSDC
         },
         reaperManualRebalancer: '0xf070996cf89cd3d2582705fc269f2c800e9a6a21',
+        sorQueries: '0x290C793b7779BcDC14cE0F8909739FdE12b8B149', // TODO: update with correct address
     },
     beetsPoolOwnerAddress: '0xd9e2889ac8c6fff8e94c7c1beeade1352df1a513',
     masterChefContractAddress: '',
