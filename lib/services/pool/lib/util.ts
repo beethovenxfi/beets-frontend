@@ -572,13 +572,7 @@ export function tokenAmountsAllZero(tokenAmounts: TokenAmountHumanReadable[]) {
     return tokenAmounts.filter((amount) => parseFloat(amount.amount) === 0).length === tokenAmounts.length;
 }
 
-export async function poolGetPoolData({
-    provider,
-    poolIds,
-}: {
-    provider: BaseProvider;
-    poolIds: string[];
-}): Promise<string[]> {
+export async function poolGetPoolData({ provider, poolIds }: { provider: BaseProvider; poolIds: string[] }) {
     const sorQueriesContract = new Contract(networkConfig.balancer.sorQueries, BalancerSorQueriesAbi, provider);
     const defaultPoolDataQueryConfig = {
         loadTokenBalanceUpdatesAfterBlock: false,
@@ -597,7 +591,15 @@ export async function poolGetPoolData({
         ampPoolIdxs: [],
     };
 
-    const response = await sorQueriesContract.getPoolData(poolIds, {
+    const response: {
+        balances: BigNumber[][];
+        totalSupplies: BigNumber[];
+        swapFees: BigNumber[];
+        linearWrappedTokenRates: BigNumber[];
+        weights: BigNumber[][];
+        scalingFactors: BigNumber[][];
+        amps: BigNumber[];
+    }[] = await sorQueriesContract.getPoolData(poolIds, {
         ...defaultPoolDataQueryConfig,
         loadTokenBalanceUpdatesAfterBlock: true,
     });
