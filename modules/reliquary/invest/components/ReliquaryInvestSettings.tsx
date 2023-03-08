@@ -3,11 +3,11 @@ import { Box, BoxProps, HStack, Skeleton, VStack, Text } from '@chakra-ui/react'
 import { BeetsBox } from '~/components/box/BeetsBox';
 import { SlippageTextLinkMenu } from '~/components/slippage/SlippageTextLinkMenu';
 import React from 'react';
-import { usePoolJoinGetBptOutAndPriceImpactForTokensIn } from '~/modules/pool/invest/lib/usePoolJoinGetBptOutAndPriceImpactForTokensIn';
+import { useReliquaryJoinGetBptOutAndPriceImpactForTokensIn } from '../lib/useReliquaryJoinGetBptOutAndPriceImpactForTokensIn';
 
 export function ReliquaryInvestSettings({ ...rest }: BoxProps) {
     const { formattedPriceImpact, hasHighPriceImpact, hasMediumPriceImpact, isLoading } =
-        usePoolJoinGetBptOutAndPriceImpactForTokensIn();
+        useReliquaryJoinGetBptOutAndPriceImpactForTokensIn();
 
     return (
         <Box {...rest} width="full">
