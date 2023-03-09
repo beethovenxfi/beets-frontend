@@ -6,7 +6,6 @@ import {
     GqlPoolTokenBase,
     GqlPoolTokenLinear,
     GqlPoolTokenPhantomStable,
-    GqlPoolTokenUnion,
     GqlPoolWeighted,
 } from '~/apollo/generated/graphql-codegen-generated';
 import { AmountHumanReadable, AmountScaledString, TokenAmountHumanReadable } from '~/lib/services/token/token-types';
@@ -37,7 +36,6 @@ import { Contract } from '@ethersproject/contracts';
 import { networkConfig } from '~/lib/config/network-config';
 import VaultAbi from '~/lib/abi/VaultAbi.json';
 import { formatFixed } from '@ethersproject/bignumber';
-import BalancerSorQueriesAbi from '~/lib/abi/BalancerSorQueries.json';
 
 export function poolScaleAmp(amp: string): BigNumber {
     // amp is stored with 3 decimals of precision
@@ -570,39 +568,4 @@ export function poolGetNestedTokenEstimateForPoolTokenAmounts({
 
 export function tokenAmountsAllZero(tokenAmounts: TokenAmountHumanReadable[]) {
     return tokenAmounts.filter((amount) => parseFloat(amount.amount) === 0).length === tokenAmounts.length;
-}
-
-export async function poolGetPoolData({ provider, poolIds }: { provider: BaseProvider; poolIds: string[] }) {
-    const sorQueriesContract = new Contract(networkConfig.balancer.sorQueries, BalancerSorQueriesAbi, provider);
-    const defaultPoolDataQueryConfig = {
-        loadTokenBalanceUpdatesAfterBlock: false,
-        loadTotalSupply: false,
-        loadSwapFees: false,
-        loadLinearWrappedTokenRates: false,
-        loadNormalizedWeights: false,
-        loadScalingFactors: false,
-        loadAmps: false,
-        blockNumber: 0,
-        totalSupplyTypes: [],
-        swapFeeTypes: [],
-        linearPoolIdxs: [],
-        weightedPoolIdxs: [],
-        scalingFactorPoolIdxs: [],
-        ampPoolIdxs: [],
-    };
-
-    const response: {
-        balances: BigNumber[][];
-        totalSupplies: BigNumber[];
-        swapFees: BigNumber[];
-        linearWrappedTokenRates: BigNumber[];
-        weights: BigNumber[][];
-        scalingFactors: BigNumber[][];
-        amps: BigNumber[];
-    }[] = await sorQueriesContract.getPoolData(poolIds, {
-        ...defaultPoolDataQueryConfig,
-        loadTokenBalanceUpdatesAfterBlock: true,
-    });
-
-    return response;
 }

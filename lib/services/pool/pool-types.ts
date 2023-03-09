@@ -1,5 +1,5 @@
 import { AmountHumanReadable, AmountScaledString, TokenAmountHumanReadable } from '~/lib/services/token/token-types';
-import { BigNumberish } from 'ethers';
+import { BigNumber, BigNumberish } from 'ethers';
 import { SwapKind, BatchSwapStep, FundManagement } from '@balancer-labs/balancer-js';
 import {
     GqlPoolLinear,
@@ -254,4 +254,14 @@ export interface ComposablePoolSingleAssetExit {
         swaps: SwapV2[];
         assets: string[];
     };
+}
+
+export interface AdditionalPoolData {
+    balances: BigNumber[][];
+    totalSupplies: BigNumber[];
+    swapFees: BigNumber[];
+    linearWrappedTokenRates: BigNumber[];
+    weights: BigNumber[][];
+    scalingFactors: BigNumber[][];
+    amps: BigNumber[];
 }

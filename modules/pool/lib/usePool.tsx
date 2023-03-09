@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useMemo } from 'react';
 import { GqlPoolUnion, useGetPoolQuery } from '~/apollo/generated/graphql-codegen-generated';
 import {
+    getPoolIds,
     poolGetServiceForPool,
     poolGetTypeName,
     poolIsComposablePool,
@@ -45,8 +46,8 @@ export function PoolProvider({ pool: poolFromProps, children }: { pool: GqlPoolU
     const poolService = poolGetServiceForPool(pool);
 
     //TODO: inject the balances into the pool at the source, then the amounts will be correct everywhere by default.
-    const { data: poolData } = usePoolGetPoolData([pool.id]);
-    console.log({ poolData });
+    const poolIds = getPoolIds(pool);
+    const { data: poolData } = usePoolGetPoolData(poolIds);
 
     const bpt: TokenBase = {
         address: pool.address,
@@ -98,6 +99,10 @@ export function PoolProvider({ pool: poolFromProps, children }: { pool: GqlPoolU
     useEffect(() => {
         poolService.updatePool(pool);
     }, [networkStatus]);
+
+    useEffect(() => {
+        //updateBalances(pool, poolData);
+    }, [poolData]);
 
     return (
         <PoolContext.Provider

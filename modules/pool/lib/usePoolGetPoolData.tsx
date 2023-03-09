@@ -1,6 +1,7 @@
+import { BigNumber } from 'ethers';
 import { useQuery } from 'react-query';
 import { useProvider } from 'wagmi';
-import { poolGetPoolData } from '~/lib/services/pool/lib/util';
+import { poolGetPoolData } from '~/lib/services/pool/pool-util';
 
 export function usePoolGetPoolData(poolIds: string[]) {
     const provider = useProvider();
@@ -12,5 +13,15 @@ export function usePoolGetPoolData(poolIds: string[]) {
         });
     });
 
-    return query;
+    const balances = query.data?.balances.map((balances) =>
+        balances.map((balance) => BigNumber.from(balance).abs().toString()),
+    );
+
+    return {
+        ...query,
+        data: {
+            ...query.data,
+            balances,
+        },
+    };
 }

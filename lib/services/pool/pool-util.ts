@@ -5,7 +5,7 @@ import {
     GqlPoolTokenUnion,
     GqlPoolUnion,
 } from '~/apollo/generated/graphql-codegen-generated';
-import { PoolService } from '~/lib/services/pool/pool-types';
+import { AdditionalPoolData, PoolService } from '~/lib/services/pool/pool-types';
 import { PoolStableService } from '~/lib/services/pool/pool-stable.service';
 import { PoolPhantomStableService } from '~/lib/services/pool/pool-phantom-stable.service';
 import { PoolWeightedService } from '~/lib/services/pool/pool-weighted.service';
@@ -17,6 +17,9 @@ import { PoolMetaStableService } from '~/lib/services/pool/pool-meta-stable.serv
 import { isSameAddress } from '@balancer-labs/sdk';
 import { PoolComposableStableService } from '~/lib/services/pool/pool-composable-stable.service';
 import { PoolWeightedV2Service } from '~/lib/services/pool/pool-weighted-v2.service';
+import BalancerSorQueriesAbi from '~/lib/abi/BalancerSorQueries.json';
+import { BaseProvider } from '@ethersproject/providers';
+import { Contract } from '@ethersproject/contracts';
 
 export function poolGetTokensWithoutPhantomBpt(pool: GqlPoolUnion | GqlPoolPhantomStableNested | GqlPoolLinearNested) {
     return pool.tokens.filter((token) => token.address !== pool.address);
@@ -134,4 +137,81 @@ export function getLinearPoolMainToken(pool: GqlPoolUnion | GqlPoolPhantomStable
     }
 
     return null;
+}
+
+export async function poolGetPoolData({
+    provider,
+    poolIds,
+}: {
+    provider: BaseProvider;
+    poolIds: string[];
+}): Promise<AdditionalPoolData> {
+    const sorQueriesContract = new Contract(networkConfig.balancer.sorQueries, BalancerSorQueriesAbi, provider);
+    const defaultPoolDataQueryConfig = {
+        loadTokenBalanceUpdatesAfterBlock: false,
+        loadTotalSupply: false,
+        loadSwapFees: false,
+        loadLinearWrappedTokenRates: false,
+        loadNormalizedWeights: false,
+        loadScalingFactors: false,
+        loadAmps: false,
+        blockNumber: 0,
+        totalSupplyTypes: [],
+        swapFeeTypes: [],
+        linearPoolIdxs: [],
+        weightedPoolIdxs: [],
+        scalingFactorPoolIdxs: [],
+        ampPoolIdxs: [],
+    };
+
+    const response = await sorQueriesContract.getPoolData(poolIds, {
+        ...defaultPoolDataQueryConfig,
+        loadTokenBalanceUpdatesAfterBlock: true,
+    });
+
+    return {
+        balances: response[0],
+        totalSupplies: response[1],
+        swapFees: response[2],
+        linearWrappedTokenRates: response[3],
+        weights: response[4],
+        scalingFactors: response[5],
+        amps: response[6],
+    };
+}
+
+export function getPoolIds(pool: GqlPoolUnion | GqlPoolPhantomStableNested | GqlPoolLinearNested): string[] {
+    let poolIds: string[] = [];
+
+    let traverse = (pool: GqlPoolUnion | GqlPoolPhantomStableNested | GqlPoolLinearNested) => {
+        poolIds.push(pool.id);
+        for (let token of pool.tokens) {
+            if ('pool' in token) traverse(token.pool);
+        }
+    };
+
+    traverse(pool);
+    return poolIds;
+}
+
+export function updateBalances(
+    pool: GqlPoolUnion | GqlPoolPhantomStableNested | GqlPoolLinearNested,
+    poolData: AdditionalPoolData,
+) {
+    if (!poolData) {
+        return;
+    }
+
+    // TODO: add logic for update
+
+    let clonedPool = { ...pool };
+
+    let traverse = (pool: GqlPoolUnion | GqlPoolPhantomStableNested | GqlPoolLinearNested) => {
+        for (let token of pool.tokens) {
+            if ('pool' in token) traverse(token.pool);
+        }
+    };
+
+    traverse(pool);
+    return clonedPool;
 }
