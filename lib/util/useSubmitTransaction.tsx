@@ -106,7 +106,11 @@ export function useSubmitTransaction({ config, transactionType }: Props): Submit
             }
         },
         onError(error) {
-            Sentry.captureException(error);
+            Sentry.captureException({
+                message: error.message,
+                name: 'TransactionError',
+                ...(error.stack && { stack: error.stack }),
+            });
         },
     });
 
