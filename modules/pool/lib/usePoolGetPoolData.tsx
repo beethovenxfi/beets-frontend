@@ -17,11 +17,14 @@ export function usePoolGetPoolData(poolIds: string[]) {
         balances.map((balance) => BigNumber.from(balance).abs().toString()),
     );
 
+    const totalSupplies = query.data?.totalSupplies.map((totalSupply) => BigNumber.from(totalSupply).abs().toString());
+
     return {
         ...query,
         data: {
             ...query.data,
             balances,
+            totalSupplies,
         },
     };
 }
