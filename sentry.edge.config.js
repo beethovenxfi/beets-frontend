@@ -14,4 +14,14 @@ Sentry.init({
     // Note: if you want to override the automatic release value, do not set a
     // `release` value here - use the environment variable `SENTRY_RELEASE`, so
     // that it will also get attached to your source maps
+    beforeSend(event, hint) {
+        const error = hint.originalException;
+        if (
+            error.name.toString().includes('TransactionError') &&
+            !error.message.toString().includes('User rejected request')
+        ) {
+            return event;
+        }
+        return null;
+    },
 });
