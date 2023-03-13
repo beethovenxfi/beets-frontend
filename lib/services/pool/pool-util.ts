@@ -1,11 +1,10 @@
 import {
-    GqlPoolLinear,
     GqlPoolLinearNested,
     GqlPoolPhantomStableNested,
     GqlPoolTokenUnion,
     GqlPoolUnion,
 } from '~/apollo/generated/graphql-codegen-generated';
-import { AdditionalPoolData, PoolService } from '~/lib/services/pool/pool-types';
+import { AdditionalPoolData, PoolService, TotalSupplyType } from '~/lib/services/pool/pool-types';
 import { PoolStableService } from '~/lib/services/pool/pool-stable.service';
 import { PoolPhantomStableService } from '~/lib/services/pool/pool-phantom-stable.service';
 import { PoolWeightedService } from '~/lib/services/pool/pool-weighted.service';
@@ -20,6 +19,9 @@ import { PoolWeightedV2Service } from '~/lib/services/pool/pool-weighted-v2.serv
 import BalancerSorQueriesAbi from '~/lib/abi/BalancerSorQueries.json';
 import { BaseProvider } from '@ethersproject/providers';
 import { Contract } from '@ethersproject/contracts';
+import { formatFixed } from '@ethersproject/bignumber';
+import { BigNumber } from 'ethers';
+import u from 'updeep';
 
 export function poolGetTokensWithoutPhantomBpt(pool: GqlPoolUnion | GqlPoolPhantomStableNested | GqlPoolLinearNested) {
     return pool.tokens.filter((token) => token.address !== pool.address);
@@ -139,13 +141,38 @@ export function getLinearPoolMainToken(pool: GqlPoolUnion | GqlPoolPhantomStable
     return null;
 }
 
+function getTotalSupplyType(pool: GqlPoolUnion | GqlPoolPhantomStableNested | GqlPoolLinearNested): TotalSupplyType {
+    const isPhantomStable = ['GqlPoolPhantomStable', 'GqlPoolPhantomStableNested'].includes(pool.__typename);
+    const hasComposableStableFactory = isSameAddress(
+        pool.factory || '',
+        networkConfig.balancer.composableStableFactory,
+    );
+
+    if (
+        (pool.__typename === 'GqlPoolWeighted' &&
+            isSameAddress(pool.factory || '', networkConfig.balancer.weightedPoolV2Factory)) ||
+        (isPhantomStable && hasComposableStableFactory)
+    ) {
+        return TotalSupplyType.ACTUAL_SUPPLY;
+    } else if (
+        (isPhantomStable && !hasComposableStableFactory) ||
+        ['GqlPoolLinear', 'GqlPoolLinearNested'].includes(pool.__typename)
+    ) {
+        return TotalSupplyType.VIRTUAL_SUPPLY;
+    } else {
+        return TotalSupplyType.TOTAL_SUPPLY;
+    }
+}
+
 export async function poolGetPoolData({
     provider,
     poolIds,
+    totalSupplyTypes,
 }: {
     provider: BaseProvider;
     poolIds: string[];
-}): Promise<AdditionalPoolData> {
+    totalSupplyTypes: TotalSupplyType[];
+}): Promise<AdditionalPoolData<BigNumber[]>> {
     const sorQueriesContract = new Contract(networkConfig.balancer.sorQueries, BalancerSorQueriesAbi, provider);
     const defaultPoolDataQueryConfig = {
         loadTokenBalanceUpdatesAfterBlock: false,
@@ -167,6 +194,8 @@ export async function poolGetPoolData({
     const response = await sorQueriesContract.getPoolData(poolIds, {
         ...defaultPoolDataQueryConfig,
         loadTokenBalanceUpdatesAfterBlock: true,
+        loadTotalSupply: true,
+        totalSupplyTypes,
     });
 
     return {
@@ -180,38 +209,104 @@ export async function poolGetPoolData({
     };
 }
 
-export function getPoolIds(pool: GqlPoolUnion | GqlPoolPhantomStableNested | GqlPoolLinearNested): string[] {
+export function getPoolIdsAndTotalSupplyTypes(pool: GqlPoolUnion | GqlPoolPhantomStableNested | GqlPoolLinearNested): {
+    poolIds: string[];
+    totalSupplyTypes: TotalSupplyType[];
+} {
     let poolIds: string[] = [];
+    let totalSupplyTypes: TotalSupplyType[] = [];
 
     let traverse = (pool: GqlPoolUnion | GqlPoolPhantomStableNested | GqlPoolLinearNested) => {
         poolIds.push(pool.id);
+        totalSupplyTypes.push(getTotalSupplyType(pool));
         for (let token of pool.tokens) {
             if ('pool' in token) traverse(token.pool);
         }
     };
 
     traverse(pool);
-    return poolIds;
+    return { poolIds, totalSupplyTypes };
 }
 
 export function updateBalances(
+    poolIds: string[],
     pool: GqlPoolUnion | GqlPoolPhantomStableNested | GqlPoolLinearNested,
-    poolData: AdditionalPoolData,
+    poolData: AdditionalPoolData<string[]> | undefined,
 ) {
-    if (!poolData) {
+    if (!poolData || !poolIds) {
         return;
     }
 
-    // TODO: add logic for update
+    let updates: any[] = [];
+    const { balances, totalSupplies } = poolData;
 
-    let clonedPool = { ...pool };
+    let depth = 1;
+    let lastDepth = 1;
+    let updatePath: string[] = [];
+    let totalSharesValue: string;
 
     let traverse = (pool: GqlPoolUnion | GqlPoolPhantomStableNested | GqlPoolLinearNested) => {
-        for (let token of pool.tokens) {
-            if ('pool' in token) traverse(token.pool);
+        const poolIdIdx = poolIds.findIndex((id) => id === pool.id);
+
+        if ('totalShares' in pool) {
+            const totalSharesPath = [...updatePath, 'pool', 'totalShares'].join('.');
+            totalSharesValue = formatFixed(totalSupplies[poolIdIdx], 18);
+            updates.push({ path: totalSharesPath, value: totalSharesValue });
         }
+
+        // TODO: calculate new balance from updated totalShares
+
+        pool.tokens.forEach((token, tokenIdx) => {
+            if (depth === 1) {
+                if (updatePath.length) {
+                    updatePath = [];
+                }
+                updatePath.push('tokens', tokenIdx.toString());
+            } else if (lastDepth > depth) {
+                updatePath.splice(-4);
+                updatePath.push(tokenIdx.toString());
+            } else if (updatePath[updatePath.length - 1] === tokenIdx.toString()) {
+                updatePath.push('pool', 'tokens', tokenIdx.toString());
+            } else if (
+                depth > lastDepth &&
+                updatePath[updatePath.length - 1] !== tokenIdx.toString() &&
+                updatePath.length < depth * 3 - 1
+            ) {
+                updatePath.push('pool', 'tokens', tokenIdx.toString());
+            } else {
+                updatePath.splice(-1);
+                updatePath.push(tokenIdx.toString());
+            }
+
+            const totalBalancePath = [...updatePath, 'totalBalance'].join('.');
+            const balancePath = [...updatePath, 'balance'].join('.');
+            const balanceObj = balances[poolIdIdx].map((balance, balanceIdx) => {
+                if (token.index === balanceIdx) {
+                    const balanceValue = formatFixed(balance, token.decimals);
+
+                    return [
+                        { path: totalBalancePath, value: formatFixed(balance, token.decimals) },
+                        { path: balancePath, value: balanceValue },
+                    ];
+                } else {
+                    return [];
+                }
+            });
+
+            updates.push(balanceObj);
+            if ('pool' in token) {
+                lastDepth = depth++;
+                traverse(token.pool);
+                lastDepth = depth--;
+            }
+        });
     };
 
     traverse(pool);
-    return clonedPool;
+    updates = updates.flat(2);
+
+    let updatedPool = pool;
+    updates.forEach((update) => (updatedPool = u.updateIn(update.path, update.value, updatedPool)));
+
+    return updatedPool as GqlPoolUnion;
 }

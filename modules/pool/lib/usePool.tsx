@@ -1,12 +1,13 @@
-import { createContext, useContext, useEffect, useMemo } from 'react';
+import { createContext, useContext, useEffect, useMemo, useRef } from 'react';
 import { GqlPoolUnion, useGetPoolQuery } from '~/apollo/generated/graphql-codegen-generated';
 import {
-    getPoolIds,
+    getPoolIdsAndTotalSupplyTypes,
     poolGetServiceForPool,
     poolGetTypeName,
     poolIsComposablePool,
     poolRequiresBatchRelayerOnExit,
     poolRequiresBatchRelayerOnJoin,
+    updateBalances,
 } from '~/lib/services/pool/pool-util';
 import { useEffectOnce } from '~/lib/util/custom-hooks';
 import { PoolService } from '~/lib/services/pool/pool-types';
@@ -41,13 +42,14 @@ export function PoolProvider({ pool: poolFromProps, children }: { pool: GqlPoolU
         variables: { id: poolFromProps.id },
         notifyOnNetworkStatusChange: true,
     });
+    const updatedPoolRef = useRef<GqlPoolUnion | undefined>(undefined);
 
     const pool = (data?.pool || poolFromProps) as GqlPoolUnion;
     const poolService = poolGetServiceForPool(pool);
 
     //TODO: inject the balances into the pool at the source, then the amounts will be correct everywhere by default.
-    const poolIds = getPoolIds(pool);
-    const { data: poolData } = usePoolGetPoolData(poolIds);
+    const { poolIds, totalSupplyTypes } = getPoolIdsAndTotalSupplyTypes(pool);
+    const { data: poolData } = usePoolGetPoolData(poolIds, totalSupplyTypes);
 
     const bpt: TokenBase = {
         address: pool.address,
@@ -101,13 +103,13 @@ export function PoolProvider({ pool: poolFromProps, children }: { pool: GqlPoolU
     }, [networkStatus]);
 
     useEffect(() => {
-        //updateBalances(pool, poolData);
-    }, [poolData]);
+        updatedPoolRef.current = updateBalances(poolIds, pool, poolData);
+    }, [JSON.stringify(poolData)]);
 
     return (
         <PoolContext.Provider
             value={{
-                pool,
+                pool: updatedPoolRef.current ?? pool,
                 poolService,
                 bpt,
                 allTokens,
