@@ -8,7 +8,6 @@ import {
     GqlPoolPhantomStableNested,
     GqlPoolUnion,
 } from '~/apollo/generated/graphql-codegen-generated';
-import { getTotalSupplyType } from '~/lib/services/pool/pool-util';
 import { isSameAddress } from '@balancer-labs/sdk';
 
 export enum SorQueriesTotalSupplyType {

@@ -1,13 +1,11 @@
-import { createContext, useContext, useEffect, useMemo, useRef } from 'react';
+import { createContext, useContext, useEffect, useMemo } from 'react';
 import { GqlPoolUnion, useGetPoolQuery } from '~/apollo/generated/graphql-codegen-generated';
 import {
-    getPoolIdsAndTotalSupplyTypes,
     poolGetServiceForPool,
     poolGetTypeName,
     poolIsComposablePool,
     poolRequiresBatchRelayerOnExit,
     poolRequiresBatchRelayerOnJoin,
-    updateBalances,
 } from '~/lib/services/pool/pool-util';
 import { useEffectOnce } from '~/lib/util/custom-hooks';
 import { PoolService } from '~/lib/services/pool/pool-types';
@@ -15,7 +13,7 @@ import { TokenBase } from '~/lib/services/token/token-types';
 import { uniqBy } from 'lodash';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 import { isSameAddress } from '@balancer-labs/sdk';
-import { usePoolGetPoolData, usePoolWithOnChainData } from './usePoolWithOnChainData';
+import { usePoolWithOnChainData } from './usePoolWithOnChainData';
 
 export interface PoolContextType {
     pool: GqlPoolUnion;
@@ -42,7 +40,6 @@ export function PoolProvider({ pool: poolFromProps, children }: { pool: GqlPoolU
         variables: { id: poolFromProps.id },
         notifyOnNetworkStatusChange: true,
     });
-    const updatedPoolRef = useRef<GqlPoolUnion | undefined>(undefined);
 
     let pool = (data?.pool || poolFromProps) as GqlPoolUnion;
     const poolService = poolGetServiceForPool(pool);
@@ -102,14 +99,10 @@ export function PoolProvider({ pool: poolFromProps, children }: { pool: GqlPoolU
         poolService.updatePool(pool);
     }, [networkStatus]);
 
-    useEffect(() => {
-        updatedPoolRef.current = updateBalances(poolIds, pool, poolData);
-    }, [JSON.stringify(poolData)]);
-
     return (
         <PoolContext.Provider
             value={{
-                pool: updatedPoolRef.current ?? pool,
+                pool,
                 poolService,
                 bpt,
                 allTokens,
