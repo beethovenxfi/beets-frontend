@@ -265,9 +265,3 @@ export interface AdditionalPoolData<T> {
     scalingFactors: BigNumber[][];
     amps: BigNumber[];
 }
-
-export enum TotalSupplyType {
-    TOTAL_SUPPLY = 0,
-    VIRTUAL_SUPPLY,
-    ACTUAL_SUPPLY,
-}

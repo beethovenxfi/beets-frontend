@@ -15,7 +15,7 @@ import { TokenBase } from '~/lib/services/token/token-types';
 import { uniqBy } from 'lodash';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 import { isSameAddress } from '@balancer-labs/sdk';
-import { usePoolGetPoolData } from './usePoolGetPoolData';
+import { usePoolGetPoolData, usePoolWithOnChainData } from './usePoolWithOnChainData';
 
 export interface PoolContextType {
     pool: GqlPoolUnion;
@@ -44,12 +44,12 @@ export function PoolProvider({ pool: poolFromProps, children }: { pool: GqlPoolU
     });
     const updatedPoolRef = useRef<GqlPoolUnion | undefined>(undefined);
 
-    const pool = (data?.pool || poolFromProps) as GqlPoolUnion;
+    let pool = (data?.pool || poolFromProps) as GqlPoolUnion;
     const poolService = poolGetServiceForPool(pool);
 
     //TODO: inject the balances into the pool at the source, then the amounts will be correct everywhere by default.
-    const { poolIds, totalSupplyTypes } = getPoolIdsAndTotalSupplyTypes(pool);
-    const { data: poolData } = usePoolGetPoolData(poolIds, totalSupplyTypes);
+    const { data: poolWithOnChainData } = usePoolWithOnChainData(pool);
+    pool = poolWithOnChainData || pool;
 
     const bpt: TokenBase = {
         address: pool.address,

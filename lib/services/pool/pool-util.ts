@@ -4,7 +4,7 @@ import {
     GqlPoolTokenUnion,
     GqlPoolUnion,
 } from '~/apollo/generated/graphql-codegen-generated';
-import { AdditionalPoolData, PoolService, TotalSupplyType } from '~/lib/services/pool/pool-types';
+import { AdditionalPoolData, PoolService, SorQueriesTotalSupplyType } from '~/lib/services/pool/pool-types';
 import { PoolStableService } from '~/lib/services/pool/pool-stable.service';
 import { PoolPhantomStableService } from '~/lib/services/pool/pool-phantom-stable.service';
 import { PoolWeightedService } from '~/lib/services/pool/pool-weighted.service';
@@ -140,8 +140,10 @@ export function getLinearPoolMainToken(pool: GqlPoolUnion | GqlPoolPhantomStable
 
     return null;
 }
-
-function getTotalSupplyType(pool: GqlPoolUnion | GqlPoolPhantomStableNested | GqlPoolLinearNested): TotalSupplyType {
+/*
+export function getTotalSupplyType(
+    pool: GqlPoolUnion | GqlPoolPhantomStableNested | GqlPoolLinearNested,
+): SorQueriesTotalSupplyType {
     const isPhantomStable = ['GqlPoolPhantomStable', 'GqlPoolPhantomStableNested'].includes(pool.__typename);
     const hasComposableStableFactory = isSameAddress(
         pool.factory || '',
@@ -153,14 +155,14 @@ function getTotalSupplyType(pool: GqlPoolUnion | GqlPoolPhantomStableNested | Gq
             isSameAddress(pool.factory || '', networkConfig.balancer.weightedPoolV2Factory)) ||
         (isPhantomStable && hasComposableStableFactory)
     ) {
-        return TotalSupplyType.ACTUAL_SUPPLY;
+        return SorQueriesTotalSupplyType.ACTUAL_SUPPLY;
     } else if (
         (isPhantomStable && !hasComposableStableFactory) ||
         ['GqlPoolLinear', 'GqlPoolLinearNested'].includes(pool.__typename)
     ) {
-        return TotalSupplyType.VIRTUAL_SUPPLY;
+        return SorQueriesTotalSupplyType.VIRTUAL_SUPPLY;
     } else {
-        return TotalSupplyType.TOTAL_SUPPLY;
+        return SorQueriesTotalSupplyType.TOTAL_SUPPLY;
     }
 }
 
@@ -171,7 +173,7 @@ export async function poolGetPoolData({
 }: {
     provider: BaseProvider;
     poolIds: string[];
-    totalSupplyTypes: TotalSupplyType[];
+    totalSupplyTypes: SorQueriesTotalSupplyType[];
 }): Promise<AdditionalPoolData<BigNumber[]>> {
     const sorQueriesContract = new Contract(networkConfig.balancer.sorQueries, BalancerSorQueriesAbi, provider);
     const defaultPoolDataQueryConfig = {
@@ -211,12 +213,12 @@ export async function poolGetPoolData({
 
 export function getPoolIdsAndTotalSupplyTypes(pool: GqlPoolUnion | GqlPoolPhantomStableNested | GqlPoolLinearNested): {
     poolIds: string[];
-    totalSupplyTypes: TotalSupplyType[];
+    totalSupplyTypes: SorQueriesTotalSupplyType[];
 } {
-    let poolIds: string[] = [];
-    let totalSupplyTypes: TotalSupplyType[] = [];
+    const poolIds: string[] = [];
+    const totalSupplyTypes: SorQueriesTotalSupplyType[] = [];
 
-    let traverse = (pool: GqlPoolUnion | GqlPoolPhantomStableNested | GqlPoolLinearNested) => {
+    const traverse = (pool: GqlPoolUnion | GqlPoolPhantomStableNested | GqlPoolLinearNested) => {
         poolIds.push(pool.id);
         totalSupplyTypes.push(getTotalSupplyType(pool));
         for (let token of pool.tokens) {
@@ -226,7 +228,7 @@ export function getPoolIdsAndTotalSupplyTypes(pool: GqlPoolUnion | GqlPoolPhanto
 
     traverse(pool);
     return { poolIds, totalSupplyTypes };
-}
+}*/
 
 export function updateBalances(
     poolIds: string[],
