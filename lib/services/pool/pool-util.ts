@@ -258,6 +258,7 @@ export function updateBalances(
             const totalSharesPath = [...updatePath, 'pool', 'totalShares'].join('.');
             totalSharesValue = formatFixed(totalSupplies[poolIdIdx], 18);
             updates.push({ path: totalSharesPath, value: totalSharesValue });
+
             // remember the value for later use
             totalSharesValues.push(totalSharesValue);
         }
@@ -316,14 +317,18 @@ export function updateBalances(
             });
 
             updates.push(balanceObj);
+
+            // check for nested pools and traverse them
             if ('pool' in token) {
                 lastDepth = depth++;
+
                 // remember the value for later use
                 parentTokenBalances.push(token.balance);
 
                 traverse(token.pool);
 
                 lastDepth = depth--;
+
                 // done with the level so dump the last values
                 parentTokenBalances.pop();
                 totalSharesValues.pop();
