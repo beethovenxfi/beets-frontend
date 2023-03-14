@@ -242,13 +242,13 @@ export function updateBalances(
     // keep track of where we are and push the complete path to updates
     let depth = 1;
     let lastDepth = 1;
-    let updatePath: string[] = [];
+    const updatePath: string[] = [];
     let updates: any[] = []; // TODO: type this
 
     // keep track of some values for nested pool balances
-    let parentTokenBalances: string[] = [];
+    const parentTokenBalances: string[] = [];
     let totalSharesValue: string;
-    let totalSharesValues: string[] = [];
+    const totalSharesValues: string[] = [];
 
     let traverse = (pool: GqlPoolUnion | GqlPoolPhantomStableNested | GqlPoolLinearNested) => {
         const poolIdIdx = poolIds.findIndex((id) => id === pool.id);
@@ -266,7 +266,7 @@ export function updateBalances(
             // at the top level just push 'tokens.<tokenIdx>' or drop everything when coming back to it
             if (depth === 1) {
                 if (updatePath.length) {
-                    updatePath = [];
+                    updatePath.length = 0;
                 }
                 updatePath.push('tokens', tokenIdx.toString());
 
