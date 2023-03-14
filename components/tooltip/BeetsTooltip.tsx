@@ -6,14 +6,14 @@ import Image from 'next/image';
 
 interface Props {
     children: ReactNode | ReactNode[];
-    label: ReactNode | ReactNode[];
+    label: ReactNode | ReactNode[] | null;
     noImage?: boolean;
     hasArrow?: boolean;
 }
 
 function BeetsTooltipLabel({ label, noImage }: { label: ReactNode | ReactNode[]; noImage: boolean }) {
     return (
-        <HStack>
+        <HStack alignItems='flex-start'>
             {!noImage && (
                 <Box>
                     <Image src={BeetsThinking} alt="thinking-emoji" />

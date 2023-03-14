@@ -22,15 +22,16 @@ export function useStakingWithdraw(staking?: GqlPoolStaking | null) {
     function withdraw(amount: AmountHumanReadable) {
         if (staking) {
             switch (staking.type) {
-                case 'FRESH_BEETS':
-                case 'MASTER_CHEF':
-                    return submit({
-                        args: [staking.farm?.id, parseUnits(amount, 18), userAddress],
-                        toastText: 'Withdraw and claim rewards',
-                    });
                 case 'GAUGE':
                     return submit({
                         args: [parseUnits(amount, 18), true],
+                        toastText: 'Withdraw and claim rewards',
+                    });
+                case 'FRESH_BEETS':
+                case 'MASTER_CHEF':
+                default:
+                    return submit({
+                        args: [staking.farm?.id, parseUnits(amount, 18), userAddress],
                         toastText: 'Withdraw and claim rewards',
                     });
             }

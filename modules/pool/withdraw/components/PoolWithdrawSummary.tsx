@@ -17,13 +17,14 @@ export function PoolWithdrawSummary({ ...rest }: Props) {
     const { selectedWithdrawType, singleAssetWithdraw } = useWithdrawState();
     const { data, isLoading } = usePoolExitGetProportionalWithdrawEstimate();
     const { priceForAmount, formattedPrice } = useGetTokens();
-    const totalValue = sum((data || []).map(priceForAmount));
     const {
         hasHighPriceImpact,
         hasMediumPriceImpact,
         formattedPriceImpact,
         isLoading: isLoadingSingleAsset,
     } = usePoolExitGetBptInForSingleAssetWithdraw();
+
+    const totalValue = sum((data || []).map(priceForAmount));
 
     return (
         <BeetsBox p="2" {...rest}>

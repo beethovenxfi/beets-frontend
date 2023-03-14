@@ -2,18 +2,103 @@
     {
         "inputs": [
             {
-                "internalType": "contract IERC20",
+                "internalType": "address",
                 "name": "_rewardToken",
                 "type": "address"
             },
             {
-                "internalType": "contract IEmissionCurve",
+                "internalType": "address",
                 "name": "_emissionCurve",
                 "type": "address"
             }
         ],
         "stateMutability": "nonpayable",
         "type": "constructor"
+    },
+    {
+        "inputs": [],
+        "name": "ArrayLengthMismatch",
+        "type": "error"
+    },
+    {
+        "inputs": [],
+        "name": "BurningPrincipal",
+        "type": "error"
+    },
+    {
+        "inputs": [],
+        "name": "BurningRewards",
+        "type": "error"
+    },
+    {
+        "inputs": [],
+        "name": "DuplicateRelicIds",
+        "type": "error"
+    },
+    {
+        "inputs": [],
+        "name": "EmptyArray",
+        "type": "error"
+    },
+    {
+        "inputs": [],
+        "name": "MaxEmissionRateExceeded",
+        "type": "error"
+    },
+    {
+        "inputs": [],
+        "name": "MergingEmptyRelics",
+        "type": "error"
+    },
+    {
+        "inputs": [],
+        "name": "NonExistentPool",
+        "type": "error"
+    },
+    {
+        "inputs": [],
+        "name": "NonExistentRelic",
+        "type": "error"
+    },
+    {
+        "inputs": [],
+        "name": "NonZeroFirstMaturity",
+        "type": "error"
+    },
+    {
+        "inputs": [],
+        "name": "NotApprovedOrOwner",
+        "type": "error"
+    },
+    {
+        "inputs": [],
+        "name": "NotOwner",
+        "type": "error"
+    },
+    {
+        "inputs": [],
+        "name": "RelicsNotOfSamePool",
+        "type": "error"
+    },
+    {
+        "inputs": [],
+        "name": "RewardTokenAsPoolToken",
+        "type": "error"
+    },
+    {
+        "inputs": [],
+        "name": "UnsortedMaturityLevels",
+        "type": "error"
+    },
+    {
+        "inputs": [],
+        "name": "ZeroAmount",
+        "type": "error"
+    },
+    {
+        "inputs": [],
+        "name": "ZeroTotalAllocPoint",
+        "type": "error"
     },
     {
         "anonymous": false,
@@ -63,311 +148,6 @@
             }
         ],
         "name": "ApprovalForAll",
-        "type": "event"
-    },
-    {
-        "anonymous": false,
-        "inputs": [
-            {
-                "indexed": true,
-                "internalType": "uint256",
-                "name": "pid",
-                "type": "uint256"
-            },
-            {
-                "indexed": true,
-                "internalType": "address",
-                "name": "to",
-                "type": "address"
-            },
-            {
-                "indexed": true,
-                "internalType": "uint256",
-                "name": "relicId",
-                "type": "uint256"
-            }
-        ],
-        "name": "CreateRelic",
-        "type": "event"
-    },
-    {
-        "anonymous": false,
-        "inputs": [
-            {
-                "indexed": true,
-                "internalType": "uint256",
-                "name": "pid",
-                "type": "uint256"
-            },
-            {
-                "indexed": false,
-                "internalType": "uint256",
-                "name": "amount",
-                "type": "uint256"
-            },
-            {
-                "indexed": true,
-                "internalType": "address",
-                "name": "to",
-                "type": "address"
-            },
-            {
-                "indexed": true,
-                "internalType": "uint256",
-                "name": "relicId",
-                "type": "uint256"
-            }
-        ],
-        "name": "Deposit",
-        "type": "event"
-    },
-    {
-        "anonymous": false,
-        "inputs": [
-            {
-                "indexed": true,
-                "internalType": "uint256",
-                "name": "pid",
-                "type": "uint256"
-            },
-            {
-                "indexed": false,
-                "internalType": "uint256",
-                "name": "amount",
-                "type": "uint256"
-            },
-            {
-                "indexed": true,
-                "internalType": "address",
-                "name": "to",
-                "type": "address"
-            },
-            {
-                "indexed": true,
-                "internalType": "uint256",
-                "name": "relicId",
-                "type": "uint256"
-            }
-        ],
-        "name": "EmergencyWithdraw",
-        "type": "event"
-    },
-    {
-        "anonymous": false,
-        "inputs": [
-            {
-                "indexed": true,
-                "internalType": "uint256",
-                "name": "pid",
-                "type": "uint256"
-            },
-            {
-                "indexed": false,
-                "internalType": "uint256",
-                "name": "amount",
-                "type": "uint256"
-            },
-            {
-                "indexed": true,
-                "internalType": "address",
-                "name": "to",
-                "type": "address"
-            },
-            {
-                "indexed": true,
-                "internalType": "uint256",
-                "name": "relicId",
-                "type": "uint256"
-            }
-        ],
-        "name": "Harvest",
-        "type": "event"
-    },
-    {
-        "anonymous": false,
-        "inputs": [
-            {
-                "indexed": true,
-                "internalType": "uint256",
-                "name": "relicId",
-                "type": "uint256"
-            },
-            {
-                "indexed": false,
-                "internalType": "uint256",
-                "name": "newLevel",
-                "type": "uint256"
-            }
-        ],
-        "name": "LevelChanged",
-        "type": "event"
-    },
-    {
-        "anonymous": false,
-        "inputs": [
-            {
-                "indexed": true,
-                "internalType": "uint256",
-                "name": "pid",
-                "type": "uint256"
-            },
-            {
-                "indexed": false,
-                "internalType": "uint256",
-                "name": "allocPoint",
-                "type": "uint256"
-            },
-            {
-                "indexed": true,
-                "internalType": "contract IERC20",
-                "name": "poolToken",
-                "type": "address"
-            },
-            {
-                "indexed": true,
-                "internalType": "contract IRewarder",
-                "name": "rewarder",
-                "type": "address"
-            },
-            {
-                "indexed": false,
-                "internalType": "contract INFTDescriptor",
-                "name": "nftDescriptor",
-                "type": "address"
-            }
-        ],
-        "name": "LogPoolAddition",
-        "type": "event"
-    },
-    {
-        "anonymous": false,
-        "inputs": [
-            {
-                "indexed": true,
-                "internalType": "uint256",
-                "name": "pid",
-                "type": "uint256"
-            },
-            {
-                "indexed": false,
-                "internalType": "uint256",
-                "name": "allocPoint",
-                "type": "uint256"
-            },
-            {
-                "indexed": true,
-                "internalType": "contract IRewarder",
-                "name": "rewarder",
-                "type": "address"
-            },
-            {
-                "indexed": false,
-                "internalType": "contract INFTDescriptor",
-                "name": "nftDescriptor",
-                "type": "address"
-            }
-        ],
-        "name": "LogPoolModified",
-        "type": "event"
-    },
-    {
-        "anonymous": false,
-        "inputs": [
-            {
-                "indexed": true,
-                "internalType": "contract IEmissionCurve",
-                "name": "emissionCurveAddress",
-                "type": "address"
-            }
-        ],
-        "name": "LogSetEmissionCurve",
-        "type": "event"
-    },
-    {
-        "anonymous": false,
-        "inputs": [
-            {
-                "indexed": true,
-                "internalType": "uint256",
-                "name": "pid",
-                "type": "uint256"
-            },
-            {
-                "indexed": false,
-                "internalType": "uint256",
-                "name": "lastRewardTime",
-                "type": "uint256"
-            },
-            {
-                "indexed": false,
-                "internalType": "uint256",
-                "name": "lpSupply",
-                "type": "uint256"
-            },
-            {
-                "indexed": false,
-                "internalType": "uint256",
-                "name": "accRewardPerShare",
-                "type": "uint256"
-            }
-        ],
-        "name": "LogUpdatePool",
-        "type": "event"
-    },
-    {
-        "anonymous": false,
-        "inputs": [
-            {
-                "indexed": true,
-                "internalType": "uint256",
-                "name": "pid",
-                "type": "uint256"
-            },
-            {
-                "indexed": true,
-                "internalType": "address",
-                "name": "to",
-                "type": "address"
-            },
-            {
-                "indexed": true,
-                "internalType": "uint256",
-                "name": "relicId",
-                "type": "uint256"
-            },
-            {
-                "indexed": false,
-                "internalType": "uint256",
-                "name": "bonus",
-                "type": "uint256"
-            }
-        ],
-        "name": "MaturityBonus",
-        "type": "event"
-    },
-    {
-        "anonymous": false,
-        "inputs": [
-            {
-                "indexed": true,
-                "internalType": "uint256",
-                "name": "fromId",
-                "type": "uint256"
-            },
-            {
-                "indexed": true,
-                "internalType": "uint256",
-                "name": "toId",
-                "type": "uint256"
-            },
-            {
-                "indexed": false,
-                "internalType": "uint256",
-                "name": "amount",
-                "type": "uint256"
-            }
-        ],
-        "name": "Merge",
         "type": "event"
     },
     {
@@ -450,56 +230,6 @@
         "inputs": [
             {
                 "indexed": true,
-                "internalType": "uint256",
-                "name": "fromId",
-                "type": "uint256"
-            },
-            {
-                "indexed": true,
-                "internalType": "uint256",
-                "name": "toId",
-                "type": "uint256"
-            },
-            {
-                "indexed": false,
-                "internalType": "uint256",
-                "name": "amount",
-                "type": "uint256"
-            }
-        ],
-        "name": "Shift",
-        "type": "event"
-    },
-    {
-        "anonymous": false,
-        "inputs": [
-            {
-                "indexed": true,
-                "internalType": "uint256",
-                "name": "fromId",
-                "type": "uint256"
-            },
-            {
-                "indexed": true,
-                "internalType": "uint256",
-                "name": "toId",
-                "type": "uint256"
-            },
-            {
-                "indexed": false,
-                "internalType": "uint256",
-                "name": "amount",
-                "type": "uint256"
-            }
-        ],
-        "name": "Split",
-        "type": "event"
-    },
-    {
-        "anonymous": false,
-        "inputs": [
-            {
-                "indexed": true,
                 "internalType": "address",
                 "name": "from",
                 "type": "address"
@@ -518,37 +248,6 @@
             }
         ],
         "name": "Transfer",
-        "type": "event"
-    },
-    {
-        "anonymous": false,
-        "inputs": [
-            {
-                "indexed": true,
-                "internalType": "uint256",
-                "name": "pid",
-                "type": "uint256"
-            },
-            {
-                "indexed": false,
-                "internalType": "uint256",
-                "name": "amount",
-                "type": "uint256"
-            },
-            {
-                "indexed": true,
-                "internalType": "address",
-                "name": "to",
-                "type": "address"
-            },
-            {
-                "indexed": true,
-                "internalType": "uint256",
-                "name": "relicId",
-                "type": "uint256"
-            }
-        ],
-        "name": "Withdraw",
         "type": "event"
     },
     {
@@ -572,23 +271,23 @@
                 "type": "uint256"
             },
             {
-                "internalType": "contract IERC20",
+                "internalType": "address",
                 "name": "_poolToken",
                 "type": "address"
             },
             {
-                "internalType": "contract IRewarder",
+                "internalType": "address",
                 "name": "_rewarder",
                 "type": "address"
             },
             {
                 "internalType": "uint256[]",
-                "name": "requiredMaturity",
+                "name": "requiredMaturities",
                 "type": "uint256[]"
             },
             {
                 "internalType": "uint256[]",
-                "name": "allocPoints",
+                "name": "levelMultipliers",
                 "type": "uint256[]"
             },
             {
@@ -597,7 +296,7 @@
                 "type": "string"
             },
             {
-                "internalType": "contract INFTDescriptor",
+                "internalType": "address",
                 "name": "_nftDescriptor",
                 "type": "address"
             }
@@ -722,7 +421,7 @@
         "name": "emissionCurve",
         "outputs": [
             {
-                "internalType": "contract IEmissionCurve",
+                "internalType": "address",
                 "name": "",
                 "type": "address"
             }
@@ -763,12 +462,12 @@
                 "components": [
                     {
                         "internalType": "uint256[]",
-                        "name": "requiredMaturity",
+                        "name": "requiredMaturities",
                         "type": "uint256[]"
                     },
                     {
                         "internalType": "uint256[]",
-                        "name": "allocPoint",
+                        "name": "multipliers",
                         "type": "uint256[]"
                     },
                     {
@@ -866,16 +565,6 @@
                     {
                         "internalType": "uint256",
                         "name": "level",
-                        "type": "uint256"
-                    },
-                    {
-                        "internalType": "uint256",
-                        "name": "genesis",
-                        "type": "uint256"
-                    },
-                    {
-                        "internalType": "uint256",
-                        "name": "lastMaturityBonus",
                         "type": "uint256"
                     }
                 ],
@@ -1111,30 +800,6 @@
         "inputs": [
             {
                 "internalType": "uint256",
-                "name": "relicId",
-                "type": "uint256"
-            },
-            {
-                "internalType": "uint256",
-                "name": "points",
-                "type": "uint256"
-            }
-        ],
-        "name": "modifyMaturity",
-        "outputs": [
-            {
-                "internalType": "uint256",
-                "name": "receivedBonus",
-                "type": "uint256"
-            }
-        ],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "uint256",
                 "name": "pid",
                 "type": "uint256"
             },
@@ -1144,7 +809,7 @@
                 "type": "uint256"
             },
             {
-                "internalType": "contract IRewarder",
+                "internalType": "address",
                 "name": "_rewarder",
                 "type": "address"
             },
@@ -1154,7 +819,7 @@
                 "type": "string"
             },
             {
-                "internalType": "contract INFTDescriptor",
+                "internalType": "address",
                 "name": "_nftDescriptor",
                 "type": "address"
             },
@@ -1212,7 +877,7 @@
         "name": "nftDescriptor",
         "outputs": [
             {
-                "internalType": "contract INFTDescriptor",
+                "internalType": "address",
                 "name": "",
                 "type": "address"
             }
@@ -1318,7 +983,7 @@
         "name": "poolToken",
         "outputs": [
             {
-                "internalType": "contract IERC20",
+                "internalType": "address",
                 "name": "",
                 "type": "address"
             }
@@ -1372,16 +1037,6 @@
                         "internalType": "uint256",
                         "name": "level",
                         "type": "uint256"
-                    },
-                    {
-                        "internalType": "uint256",
-                        "name": "genesis",
-                        "type": "uint256"
-                    },
-                    {
-                        "internalType": "uint256",
-                        "name": "lastMaturityBonus",
-                        "type": "uint256"
                     }
                 ],
                 "internalType": "struct PositionInfo[]",
@@ -1433,7 +1088,7 @@
         "name": "rewardToken",
         "outputs": [
             {
-                "internalType": "contract IERC20",
+                "internalType": "address",
                 "name": "",
                 "type": "address"
             }
@@ -1452,7 +1107,7 @@
         "name": "rewarder",
         "outputs": [
             {
-                "internalType": "contract IRewarder",
+                "internalType": "address",
                 "name": "",
                 "type": "address"
             }
@@ -1532,7 +1187,7 @@
     {
         "inputs": [
             {
-                "internalType": "contract IEmissionCurve",
+                "internalType": "address",
                 "name": "_emissionCurve",
                 "type": "address"
             }
@@ -1733,19 +1388,6 @@
             }
         ],
         "name": "transferFrom",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "uint256",
-                "name": "relicId",
-                "type": "uint256"
-            }
-        ],
-        "name": "updateLastMaturityBonus",
         "outputs": [],
         "stateMutability": "nonpayable",
         "type": "function"

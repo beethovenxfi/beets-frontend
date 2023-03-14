@@ -10,7 +10,12 @@ import { BigNumber } from 'ethers';
 //TODO: ideally we refetch anytime an allowance changes, so this could theoretically be very long living
 const ALLOWANCES_CACHE_TIME_MS = 30_000;
 
-export function useAllowances(account: string | null, tokens: TokenBase[], contract = networkConfig.balancer.vault) {
+export function useAllowances(
+    account: string | null,
+    _tokens: (TokenBase | null)[],
+    contract = networkConfig.balancer.vault,
+) {
+    const tokens = _tokens.filter((token) => token !== null) as TokenBase[];
     const containsEth = tokens.filter((token) => token.address === networkConfig.eth.address.toLowerCase()).length > 0;
     const filteredTokens = tokens.filter((token) => token.address !== networkConfig.eth.address.toLowerCase());
 

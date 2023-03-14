@@ -9,9 +9,10 @@ interface Props {
     onCanceled?: () => void;
     isDisabled?: boolean;
     size?: string;
+    buttonText?: string;
 }
 
-export function BeetsBatchRelayerApprovalButton({ ...rest }: Props) {
+export function BeetsBatchRelayerApprovalButton({ buttonText, ...rest }: Props) {
     const { approve, ...query } = useApproveBatchRelayer();
 
     return (
@@ -27,7 +28,7 @@ export function BeetsBatchRelayerApprovalButton({ ...rest }: Props) {
             submittingText="Confirm..."
             pendingText="Waiting..."
         >
-            Approve Batch Relayer
+            {buttonText ? buttonText : 'Approve Batch Relayer'}
         </BeetsSubmitTransactionButton>
     );
 }

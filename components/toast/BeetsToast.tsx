@@ -1,10 +1,9 @@
 import { Box } from '@chakra-ui/layout';
 import { Portal } from '@chakra-ui/portal';
 import { CloseButton, HStack, Spinner, useBreakpointValue } from '@chakra-ui/react';
-import { animate, AnimatePresence, animateVisualElement, motion, useAnimation } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import { sum } from 'lodash';
-import React, { ReactNode, useCallback, useContext, useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { Check } from 'react-feather';
+import React, { ReactNode, useContext, useRef, useState } from 'react';
 
 interface Props {
     children: ReactNode | ReactNode[];
@@ -58,7 +57,7 @@ export default function BeetsToast({ children }: Props) {
         setContainerHeight(height);
 
         setToastList([
-            ...toastList,
+            ...toastListRef.current,
             {
                 ...toast,
                 type: toast.type || ToastType.Info,
@@ -84,7 +83,6 @@ export default function BeetsToast({ children }: Props) {
 
     function removeToast(id: string) {
         if (!toastListRef.current.length) return;
-
         let indexOfEl = toastList.findIndex((toast) => toast.id === id);
         let heightOfEl = toastContainerRef.current[indexOfEl]?.offsetHeight || 0;
 
@@ -113,7 +111,7 @@ export default function BeetsToast({ children }: Props) {
             case ToastType.Info:
                 return 'beets.base.300';
             case ToastType.Error:
-                return 'beets.red';
+                return 'red.400';
             case ToastType.Success:
                 return 'green.400';
             case ToastType.Warn:
@@ -184,7 +182,6 @@ export default function BeetsToast({ children }: Props) {
                                 </Box>
                                 <Box>{toast.content}</Box>
                                 {toast.type === ToastType.Loading && <Spinner size="sm" />}
-                                {toast.type === ToastType.Success && <Check size={24} />}
                             </HStack>
                         </Box>
                     ))}

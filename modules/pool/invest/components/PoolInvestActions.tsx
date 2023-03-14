@@ -5,7 +5,7 @@ import { usePoolJoinGetBptOutAndPriceImpactForTokensIn } from '~/modules/pool/in
 import { usePoolJoinGetContractCallData } from '~/modules/pool/invest/lib/usePoolJoinGetContractCallData';
 import { useJoinPool } from '~/modules/pool/invest/lib/useJoinPool';
 import { BeetsTransactionStepsSubmit, TransactionStep } from '~/components/button/BeetsTransactionStepsSubmit';
-import { Alert, AlertIcon, Box, Text, VStack } from '@chakra-ui/react';
+import { Alert, AlertIcon, Box, VStack } from '@chakra-ui/react';
 import { FadeInBox } from '~/components/animation/FadeInBox';
 import { numberFormatUSDValue } from '~/lib/util/number-formats';
 import { usePoolUserTokenBalancesInWallet } from '~/modules/pool/lib/usePoolUserTokenBalancesInWallet';
@@ -32,24 +32,26 @@ export function PoolInvestActions({ onInvestComplete, onClose }: Props) {
         hasApprovalForAmount,
         isLoading: isLoadingUserAllowances,
         refetch: refetchUserAllowances,
-        error: userAllowancesError,
     } = useUserAllowances(allInvestTokens, networkConfig.balancer.vault);
     const [steps, setSteps] = useState<TransactionStep[] | null>(null);
-    const { bptOutAndPriceImpact } = usePoolJoinGetBptOutAndPriceImpactForTokensIn();
-    const { data: contractCallData, isLoading: isLoadingContractCallData } = usePoolJoinGetContractCallData(
-        bptOutAndPriceImpact?.minBptReceived || null,
-        zapEnabled,
-    );
     const {
         data: hasBatchRelayerApproval,
         isLoading: isLoadingBatchRelayerApproval,
         refetch: refetchBatchRelayerApproval,
     } = useHasBatchRelayerApproval();
+
+    const { bptOutAndPriceImpact } = usePoolJoinGetBptOutAndPriceImpactForTokensIn();
+    const { data: contractCallData, isLoading: isLoadingContractCallData } = usePoolJoinGetContractCallData(
+        bptOutAndPriceImpact?.minBptReceived || null,
+        zapEnabled,
+    );
+
     const { refetch: refetchUserTokenBalances } = usePoolUserTokenBalancesInWallet();
     const { refetch: refetchUserBptBalance } = usePoolUserBptBalance();
     const [userSyncBalance] = useUserSyncBalanceMutation();
 
     const isLoading = isLoadingUserAllowances || isLoadingContractCallData || isLoadingBatchRelayerApproval;
+    const isBatchRelayerApprovalRequired = requiresBatchRelayerOnJoin || zapEnabled;
 
     useEffect(() => {
         refetchBatchRelayerApproval({});
@@ -63,6 +65,13 @@ export function PoolInvestActions({ onInvestComplete, onClose }: Props) {
                     !hasApprovalForAmount(tokenWithAmount.address, tokenWithAmount.amount),
             );
 
+            const investStep: TransactionStep = {
+                id: 'invest',
+                type: 'other',
+                buttonText: 'Invest',
+                tooltipText: 'Invest into this pool',
+            };
+
             const steps: TransactionStep[] = [
                 ...tokensRequiringApproval.map((token) => ({
                     id: token.symbol,
@@ -71,15 +80,10 @@ export function PoolInvestActions({ onInvestComplete, onClose }: Props) {
                     tooltipText: `Approve ${token.symbol} for investing`,
                     token,
                 })),
-                {
-                    id: 'invest',
-                    type: 'other',
-                    buttonText: 'Invest',
-                    tooltipText: 'Invest into this pool',
-                },
+                investStep,
             ];
 
-            if ((requiresBatchRelayerOnJoin || zapEnabled) && !hasBatchRelayerApproval) {
+            if (isBatchRelayerApprovalRequired && !hasBatchRelayerApproval) {
                 steps.unshift({
                     id: 'batch-relayer',
                     type: 'other',
@@ -90,7 +94,7 @@ export function PoolInvestActions({ onInvestComplete, onClose }: Props) {
 
             setSteps(steps);
         }
-    }, [isLoading, isLoadingBatchRelayerApproval]);
+    }, [isLoading]);
 
     return (
         <VStack width="full" spacing="4">
@@ -143,7 +147,6 @@ export function PoolInvestActions({ onInvestComplete, onClose }: Props) {
                     queries={[{ ...joinQuery, id: 'invest' }]}
                 />
             </Box>
-            )
             <FadeInBox width="full" isVisible={joinQuery.isConfirmed || joinQuery.isPending || joinQuery.isFailed}>
                 <SubTransactionSubmittedContent query={joinQuery} />
             </FadeInBox>

@@ -731,6 +731,16 @@ export const GetPool = gql`
                         tokenAddress
                     }
                 }
+                reliquary {
+                    levels {
+                        level
+                        balance
+                        apr
+                        allocationPoints
+                    }
+                    beetsPerSecond
+                    totalBalance
+                }
             }
             investConfig {
                 singleAssetEnabled
@@ -981,6 +991,31 @@ export const GetPoolFilters = gql`
         filters: poolGetPoolFilters {
             id
             title
+        }
+    }
+`;
+export const GetReliquaryFarmSnapshots = gql`
+    query GetReliquaryFarmSnapshots($id: String!, $range: GqlPoolSnapshotDataRange!) {
+        snapshots: poolGetReliquaryFarmSnapshots(id: $id, range: $range) {
+            id
+            farmId
+            timestamp
+            totalBalance
+            totalLiquidity
+            levelBalances {
+                id
+                level
+                balance
+            }
+            relicCount
+            totalBalance
+            userCount
+            tokenBalances {
+                id
+                address
+                balance
+                symbol
+            }
         }
     }
 `;

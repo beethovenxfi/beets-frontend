@@ -1,0 +1,33 @@
+.overlapGrid {
+    display: grid;
+    height: 200px;
+    width: 400px;
+    grid-template-areas: 'overlay';
+}
+
+.overlapGrid > div > div:nth-child(1),
+.overlapGrid > div > span:nth-child(1) {
+    height: 200px !important;
+    width: 200px !important;
+    left: 100px;
+}
+
+.overlapGrid > div:nth-child(1),
+.overlapGrid > span:nth-child(1) {
+    height: 200px !important;
+    width: 450px !important;
+    left: -25px;
+}
+
+@media only screen and (max-width: 400px) {
+    .overlapGrid > div:nth-child(1),
+    .overlapGrid > span:nth-child(1) {
+        width: 90% !important;
+        left: 15px;
+    }
+}
+
+.overlapGrid > span,
+.overlapGrid > div {
+    grid-area: overlay;
+}

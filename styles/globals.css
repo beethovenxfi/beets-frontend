@@ -350,3 +350,57 @@ a {
     background-color: #3d3fa9;
     border-radius: 24px;
 }
+
+.beets-glow {
+    position: relative;
+    z-index: 999;
+}
+
+.beets-glow::after {
+    position: absolute;
+    background-color: rgba(0,248,156, 0.6);
+    content: '';
+    filter: blur(15px);
+    width: 100%;
+    height: 100%;
+    animation: spin 2.5s linear infinite;
+    animation-direction: alternate-reverse;
+    z-index: -1;
+}
+
+.relic-glow {
+    position: relative;
+    z-index: 999;
+}
+
+.relic-glow::after {
+    position: absolute;
+    background-color: rgba(0,248,156, 0.6);
+    content: '';
+    filter: blur(50px);
+    width: 100%;
+    height: 100%;
+    top: 0;
+    animation: spin 20s linear infinite;
+    z-index: -1;
+    opacity: 0.35;
+    border-radius: 10rem;
+}
+
+@keyframes spin {
+    0% {
+      rotate: 0deg;
+      opacity: 0.55;
+    }
+    50% {
+        opacity: 0.35;
+        rotate: 180deg;
+
+    }
+    100% {
+        rotate: 360deg;
+        opacity: 0.55;
+
+    }
+  }
+  
