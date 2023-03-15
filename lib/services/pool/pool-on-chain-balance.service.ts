@@ -1,11 +1,6 @@
 import { BaseProvider } from '@ethersproject/providers';
-import {
-    GqlPoolLinearNested,
-    GqlPoolPhantomStableNested,
-    GqlPoolUnion,
-} from '~/apollo/generated/graphql-codegen-generated';
+import { GqlPoolUnion } from '~/apollo/generated/graphql-codegen-generated';
 import { SorQueriesTotalSupplyType, sorQueryService, SorQueryService } from '~/lib/services/pool/sor-query.service';
-import { AdditionalPoolData } from '~/lib/services/pool/pool-types';
 import { formatFixed } from '@ethersproject/bignumber';
 import { BigNumber } from 'ethers';
 import { cloneDeep, keyBy } from 'lodash';
@@ -26,7 +21,6 @@ export class PoolOnChainBalanceService {
 
         clone.dynamicData.totalShares = formatFixed(dataMap[pool.id].totalSupply, 18);
 
-        //TODO: finish building this out
         for (const token of clone.tokens) {
             if (token.__typename === 'GqlPoolTokenLinear' || token.__typename === 'GqlPoolTokenPhantomStable') {
                 token.pool.totalShares = formatFixed(dataMap[token.pool.id].totalSupply, 18);

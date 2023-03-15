@@ -72,7 +72,6 @@ export function PoolProvider({ pool: poolFromProps, children }: { pool: GqlPoolU
 
     const poolService = poolGetServiceForPool(pool);
 
-    //TODO: inject the balances into the pool at the source, then the amounts will be correct everywhere by default.
     const { data: poolWithOnChainData } = usePoolWithOnChainData(pool);
     pool = poolWithOnChainData || pool;
 

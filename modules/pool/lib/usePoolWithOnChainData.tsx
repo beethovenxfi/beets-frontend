@@ -6,11 +6,7 @@ import { poolOnChainBalanceService } from '~/lib/services/pool/pool-on-chain-bal
 export function usePoolWithOnChainData(pool: GqlPoolUnion) {
     const provider = useProvider();
 
-    return useQuery(
-        ['usePoolWithOnChainData', pool.id],
-        async () => {
-            return poolOnChainBalanceService.updatePoolWithOnChainBalanceData({ pool, provider });
-        },
-        { enabled: true, refetchInterval: 7500, cacheTime: 0 },
-    );
+    return useQuery(['usePoolWithOnChainData', pool.id], async () => {
+        return poolOnChainBalanceService.updatePoolWithOnChainBalanceData({ pool, provider });
+    });
 }

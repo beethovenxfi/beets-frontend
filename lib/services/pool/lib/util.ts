@@ -1,4 +1,5 @@
 import {
+    GqlPoolLinear,
     GqlPoolLinearNested,
     GqlPoolPhantomStable,
     GqlPoolPhantomStableNested,

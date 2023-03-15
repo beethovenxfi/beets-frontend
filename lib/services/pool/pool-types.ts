@@ -255,13 +255,3 @@ export interface ComposablePoolSingleAssetExit {
         assets: string[];
     };
 }
-
-export interface AdditionalPoolData<T> {
-    balances: T[];
-    totalSupplies: T;
-    swapFees: BigNumber[];
-    linearWrappedTokenRates: BigNumber[];
-    weights: BigNumber[][];
-    scalingFactors: BigNumber[][];
-    amps: BigNumber[];
-}
