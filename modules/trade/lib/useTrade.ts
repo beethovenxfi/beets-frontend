@@ -44,7 +44,6 @@ export function useTrade() {
     } = useOnChainSwapInfoQuery(reactiveTradeState.swapInfo);
 
     const swapInfo = onChainSwapInfo || reactiveTradeState.swapInfo;
-
     const priceImpact = parseFloat(swapInfo?.priceImpact || '0');
     const hasNoticeablePriceImpact = priceImpact >= networkConfig.priceImpact.trade.noticeable;
     const hasHighPriceImpact = priceImpact >= networkConfig.priceImpact.trade.high;
@@ -91,10 +90,6 @@ export function useTrade() {
             ...tradeStateVar(),
             ...input,
         });
-    }
-
-    if (loadingOnChainData) {
-        console.log('loading on chain data');
     }
 
     return {

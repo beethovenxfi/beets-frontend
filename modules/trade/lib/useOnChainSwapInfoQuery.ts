@@ -54,9 +54,6 @@ export function useOnChainSwapInfoQuery(swapInfo: GqlSorGetSwapsResponseFragment
                 return null;
             }
 
-            console.log('on chain different', swapInfo.tokenOutAmount, tokenOutAmount);
-
-            //TODO: for some reason the return amount is sometimes near 0 here:  0.000000000000000107
             return {
                 ...swapInfo,
                 tokenInAmount,
@@ -66,7 +63,7 @@ export function useOnChainSwapInfoQuery(swapInfo: GqlSorGetSwapsResponseFragment
                 returnAmountScaled: swapInfo.swapType === 'EXACT_IN' ? tokenInValueScaled : tokenOutValueScaled,
             };
         },
-        { enabled: !!swapInfo, refetchInterval: 7500, cacheTime: 0 },
+        { enabled: !!swapInfo && swapInfo.swaps.length > 0, refetchInterval: 7500, cacheTime: 0 },
     );
 
     const isValid =
