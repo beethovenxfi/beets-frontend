@@ -42,6 +42,15 @@ export interface NetworkConfig {
         address: string;
         farmId: string;
         poolId: string;
+        poolAddress: string;
+    };
+    reliquary: {
+        address: string;
+        fbeets: {
+            poolAddress: string;
+            poolId: string;
+            farmId: number;
+        };
     };
     balancer: {
         vault: string;
@@ -55,6 +64,7 @@ export interface NetworkConfig {
         linearRebalancers: { [poolAddress: string]: string };
         reaperManualRebalancer?: string;
         sorQueries: string;
+        balancerQueries: string;
     };
     beetsPoolOwnerAddress: string;
     masterChefContractAddress: string;
@@ -92,4 +102,5 @@ export interface NetworkConfig {
     boostedByTypes: {
         [poolId: string]: BoostedByType;
     };
+    maBeetsEnabled: boolean;
 }

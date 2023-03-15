@@ -238,21 +238,24 @@ export interface EncodeReliquaryCreateRelicAndDepositInput {
 export interface EncodeReliquaryDepositInput {
     sender: string;
     token: string;
-    relicid: number;
+    relicId: number;
     amount: BigNumberish;
     outputReference: BigNumberish;
 }
 
-export interface EncodeReliquaryWithdrawInput {
+export interface EncodeReliquaryWithdrawAndHarvestInput {
     recipient: string;
-    relicId: string;
+    relicId: number;
     amount: BigNumberish;
     outputReference: BigNumberish;
 }
 export interface EncodeReliquaryHarvestAllInput {
-    relicIds: string[];
+    relicIds: number[];
     recipient: string;
-    outputReference: BigNumberish;
+}
+
+export interface EncodeReliquaryUpdatePositionInput {
+    relicId: number;
 }
 
 export type BalancerLinearPoolType = 'aave' | 'yearn' | 'boo' | 'reaper' | 'tarot';

@@ -2,9 +2,14 @@ import { BaseProvider } from '@ethersproject/providers';
 import { formatFixed } from '@ethersproject/bignumber';
 import { BigNumber, Contract } from 'ethers';
 import ReliquaryAbi from '~/lib/abi/Reliquary.json';
-import { ReliquaryStakingPendingRewardAmount } from '~/lib/services/staking/staking-types';
-import { AmountHumanReadable, TokenBase } from '../token/token-types';
+import { ReliquaryStakingPendingRewardAmount, StakingPendingRewardAmount } from '~/lib/services/staking/staking-types';
+import { AmountHumanReadable, TokenAmountHumanReadable, TokenBase } from '../token/token-types';
 import { Multicaller } from '../util/multicaller.service';
+import { EncodeReliquaryUpdatePositionInput } from '../batch-relayer/relayer-types';
+import { Interface } from '@ethersproject/abi';
+import * as net from 'net';
+import { networkConfig } from '~/lib/config/network-config';
+import { sumBy } from 'lodash';
 
 export type ReliquaryFarmPosition = {
     farmId: string;
@@ -21,6 +26,7 @@ export type ReliquaryDepositImpact = {
     newLevel: number;
     oldLevelProgress: string;
     newLevelProgress: string;
+    diffDate: Date;
 };
 
 export class ReliquaryService {
@@ -44,6 +50,12 @@ export class ReliquaryService {
             .filter((position) => position.farmId === farmId)
             .reduce((total, position) => total + parseFloat(position.amount), 0)
             .toString();
+    }
+
+    public async getRelicNFT({ tokenId, provider }: { tokenId: string; provider: BaseProvider }) {
+        const reliquary = new Contract(this.reliquaryContractAddress, ReliquaryAbi, provider);
+        const tokenURI = await reliquary.tokenURI(tokenId);
+        return tokenURI;
     }
 
     public async getAllPendingRewards({
@@ -75,29 +87,75 @@ export class ReliquaryService {
     }: {
         farmIds: string[];
         userAddress: string;
-        tokens: TokenBase[];
+        // tokens: TokenBase[];
         provider: BaseProvider;
-    }): Promise<ReliquaryStakingPendingRewardAmount[]> {
+    }): Promise<{
+        rewards: { address: string; amount: string }[];
+        relicIds: number[];
+        numberOfRelics: number;
+        fBEETSTotalBalance: string;
+    }> {
         const multicaller = new Multicaller(this.chainId, provider, ReliquaryAbi);
 
         const allPositions = await this.getAllPositions({ userAddress, provider });
         for (let i = 0; i < allPositions.length; i++) {
             if (farmIds.includes(allPositions[i].farmId)) {
-                multicaller.call(i.toString(), this.reliquaryContractAddress, 'pendingReward');
+                multicaller.call(i.toString(), this.reliquaryContractAddress, 'pendingReward', [
+                    allPositions[i].relicId,
+                ]);
             }
         }
 
         const rewardsByRelicId: { [index: string]: BigNumber } = await multicaller.execute();
 
-        return Object.entries(rewardsByRelicId).map(([index, pendingReward]) => {
+        const pendingRewards = Object.entries(rewardsByRelicId).map(([index, pendingReward]) => {
             const position: ReliquaryFarmPosition = allPositions[parseInt(index)];
             return {
                 id: position.farmId,
                 relicId: position.relicId,
                 address: this.beetsAddress,
                 amount: formatFixed(pendingReward, 18),
+                fBEETSBalance: position.amount,
             };
         });
+
+        const relicIds = pendingRewards.map((reward) => parseInt(reward.relicId || ''));
+
+        const rewardTokens = Object.values(pendingRewards.map((reward) => reward.address)).filter(
+            (v, i, a) => a.indexOf(v) === i,
+        );
+        const rewards = rewardTokens.map((address) => {
+            const amount = sumBy(
+                pendingRewards
+                    .filter((reward) => reward.address === address)
+                    .map((reward) => parseFloat(reward.amount)),
+            ).toString();
+            return {
+                address,
+                amount,
+            };
+        });
+
+        return {
+            rewards,
+            relicIds,
+            numberOfRelics: relicIds.length,
+            fBEETSTotalBalance: sumBy(pendingRewards, (reward) => parseFloat(reward.fBEETSBalance)).toString(),
+        };
+    }
+
+    public async getPendingRewardsForRelic({
+        relicId,
+        provider,
+    }: {
+        relicId: string;
+        provider: BaseProvider;
+    }): Promise<TokenAmountHumanReadable[]> {
+        const reliquary = new Contract(this.reliquaryContractAddress, ReliquaryAbi, provider);
+        const pendingReward = await reliquary.pendingReward(relicId);
+
+        //TODO: will need to expand this for multi token rewarders
+        return [{ address: this.beetsAddress, amount: formatFixed(pendingReward, 18) }];
     }
 
     public async getAllPositions({
@@ -154,12 +212,20 @@ export class ReliquaryService {
         return levelOnUpdate.toNumber();
     }
 
+    public async getMaturityThresholds({ pid, provider }: { pid: string; provider: BaseProvider }) {
+        const reliquary = new Contract(this.reliquaryContractAddress, ReliquaryAbi, provider);
+        const poolLevelInfo = await reliquary.getLevelInfo(pid);
+
+        const maturityThresholds = poolLevelInfo.requiredMaturities.map((maturity: BigNumber) => maturity.toString());
+        return maturityThresholds;
+    }
+
     public async getDepositImpact({
         amount,
         relicId,
         provider,
     }: {
-        amount: BigNumber;
+        amount: number;
         relicId: string;
         provider: BaseProvider;
     }): Promise<ReliquaryDepositImpact> {
@@ -179,12 +245,11 @@ export class ReliquaryService {
         const levelOnUpdate = await this.getLevelOnUpdate({ relicId, provider });
 
         const poolLevelInfo = await reliquary.getLevelInfo(position.farmId);
-        const maturityLevels: BigNumber[] = poolLevelInfo.requiredMaturity;
+        const maturityLevels: BigNumber[] = poolLevelInfo.requiredMaturities;
 
-        const weight =
-            parseFloat(formatFixed(amount, 18)) / (parseFloat(formatFixed(amount, 18)) + parseFloat(position.amount));
+        const weight = amount / (amount + parseFloat(position.amount));
 
-        const nowTimestamp = Math.floor(new Date('2012.08.10').getTime() / 1000);
+        const nowTimestamp = Math.floor(Date.now() / 1000);
 
         const maturity = nowTimestamp - position.entry;
         const entryTimestampAfterDeposit = Math.round(position.entry + maturity * weight);
@@ -205,6 +270,13 @@ export class ReliquaryService {
         const newLevelProgress =
             newLevel > maturityLevels.length ? 'max level reached' : `${newMaturity}/${maturityLevels[newLevel + 1]}`;
 
+        const newLevelProgressDiff = parseInt(maturityLevels[newLevel + 1].toString()) - newMaturity;
+        const oldLevelProgressDiff = parseInt(maturityLevels[levelOnUpdate + 1].toString()) - maturity;
+        const progressDiff = newLevelProgressDiff - oldLevelProgressDiff;
+        const levelDiff = levelOnUpdate - newLevel;
+        const diff = progressDiff + levelDiff * 604800;
+        const diffDate = new Date((nowTimestamp + diff) * 1000);
+
         return {
             oldMaturity: maturity,
             newMaturity,
@@ -212,6 +284,13 @@ export class ReliquaryService {
             newLevel,
             oldLevelProgress,
             newLevelProgress,
+            diffDate,
         };
     }
 }
+
+export const reliquaryService = new ReliquaryService(
+    networkConfig.reliquary.address,
+    networkConfig.chainId,
+    networkConfig.beets.address,
+);

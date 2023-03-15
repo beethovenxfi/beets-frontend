@@ -864,6 +864,7 @@ export interface GqlReliquaryFarmSnapshot {
     timestamp: Scalars['Int'];
     tokenBalances: Array<GqlReliquaryTokenBalanceSnapshot>;
     totalBalance: Scalars['String'];
+    totalLiquidity: Scalars['String'];
     userCount: Scalars['String'];
 }
 
@@ -2238,6 +2239,18 @@ export type GetPoolQuery = {
                           tokenAddress: string;
                       }>;
                   } | null;
+                  reliquary?: {
+                      __typename: 'GqlPoolStakingReliquaryFarm';
+                      beetsPerSecond: string;
+                      totalBalance: string;
+                      levels?: Array<{
+                          __typename: 'GqlPoolStakingReliquarFarmLevel';
+                          level: number;
+                          balance: string;
+                          apr: string;
+                          allocationPoints: number;
+                      }> | null;
+                  } | null;
               } | null;
               investConfig: {
                   __typename: 'GqlPoolInvestConfig';
@@ -2420,6 +2433,18 @@ export type GetPoolQuery = {
                           rewardPerSecond: string;
                           tokenAddress: string;
                       }>;
+                  } | null;
+                  reliquary?: {
+                      __typename: 'GqlPoolStakingReliquaryFarm';
+                      beetsPerSecond: string;
+                      totalBalance: string;
+                      levels?: Array<{
+                          __typename: 'GqlPoolStakingReliquarFarmLevel';
+                          level: number;
+                          balance: string;
+                          apr: string;
+                          allocationPoints: number;
+                      }> | null;
                   } | null;
               } | null;
               investConfig: {
@@ -2738,6 +2763,18 @@ export type GetPoolQuery = {
                           tokenAddress: string;
                       }>;
                   } | null;
+                  reliquary?: {
+                      __typename: 'GqlPoolStakingReliquaryFarm';
+                      beetsPerSecond: string;
+                      totalBalance: string;
+                      levels?: Array<{
+                          __typename: 'GqlPoolStakingReliquarFarmLevel';
+                          level: number;
+                          balance: string;
+                          apr: string;
+                          allocationPoints: number;
+                      }> | null;
+                  } | null;
               } | null;
               investConfig: {
                   __typename: 'GqlPoolInvestConfig';
@@ -2917,6 +2954,18 @@ export type GetPoolQuery = {
                           rewardPerSecond: string;
                           tokenAddress: string;
                       }>;
+                  } | null;
+                  reliquary?: {
+                      __typename: 'GqlPoolStakingReliquaryFarm';
+                      beetsPerSecond: string;
+                      totalBalance: string;
+                      levels?: Array<{
+                          __typename: 'GqlPoolStakingReliquarFarmLevel';
+                          level: number;
+                          balance: string;
+                          apr: string;
+                          allocationPoints: number;
+                      }> | null;
                   } | null;
               } | null;
               investConfig: {
@@ -3236,6 +3285,18 @@ export type GetPoolQuery = {
                           tokenAddress: string;
                       }>;
                   } | null;
+                  reliquary?: {
+                      __typename: 'GqlPoolStakingReliquaryFarm';
+                      beetsPerSecond: string;
+                      totalBalance: string;
+                      levels?: Array<{
+                          __typename: 'GqlPoolStakingReliquarFarmLevel';
+                          level: number;
+                          balance: string;
+                          apr: string;
+                          allocationPoints: number;
+                      }> | null;
+                  } | null;
               } | null;
               investConfig: {
                   __typename: 'GqlPoolInvestConfig';
@@ -3415,6 +3476,18 @@ export type GetPoolQuery = {
                           rewardPerSecond: string;
                           tokenAddress: string;
                       }>;
+                  } | null;
+                  reliquary?: {
+                      __typename: 'GqlPoolStakingReliquaryFarm';
+                      beetsPerSecond: string;
+                      totalBalance: string;
+                      levels?: Array<{
+                          __typename: 'GqlPoolStakingReliquarFarmLevel';
+                          level: number;
+                          balance: string;
+                          apr: string;
+                          allocationPoints: number;
+                      }> | null;
                   } | null;
               } | null;
               investConfig: {
@@ -3732,6 +3805,18 @@ export type GetPoolQuery = {
                           rewardPerSecond: string;
                           tokenAddress: string;
                       }>;
+                  } | null;
+                  reliquary?: {
+                      __typename: 'GqlPoolStakingReliquaryFarm';
+                      beetsPerSecond: string;
+                      totalBalance: string;
+                      levels?: Array<{
+                          __typename: 'GqlPoolStakingReliquarFarmLevel';
+                          level: number;
+                          balance: string;
+                          apr: string;
+                          allocationPoints: number;
+                      }> | null;
                   } | null;
               } | null;
               investConfig: {
@@ -4260,6 +4345,38 @@ export type GqlPoolMinimalFragment = {
             }> | null;
         } | null;
     } | null;
+};
+
+export type GetReliquaryFarmSnapshotsQueryVariables = Exact<{
+    id: Scalars['String'];
+    range: GqlPoolSnapshotDataRange;
+}>;
+
+export type GetReliquaryFarmSnapshotsQuery = {
+    __typename: 'Query';
+    snapshots: Array<{
+        __typename: 'GqlReliquaryFarmSnapshot';
+        id: string;
+        farmId: string;
+        timestamp: number;
+        totalBalance: string;
+        totalLiquidity: string;
+        relicCount: string;
+        userCount: string;
+        levelBalances: Array<{
+            __typename: 'GqlReliquaryFarmLevelSnapshot';
+            id: string;
+            level: string;
+            balance: string;
+        }>;
+        tokenBalances: Array<{
+            __typename: 'GqlReliquaryTokenBalanceSnapshot';
+            id: string;
+            address: string;
+            balance: string;
+            symbol: string;
+        }>;
+    }>;
 };
 
 export type GetTokenRelativePriceChartDataQueryVariables = Exact<{
@@ -5811,6 +5928,16 @@ export const GetPoolDocument = gql`
                         tokenAddress
                     }
                 }
+                reliquary {
+                    levels {
+                        level
+                        balance
+                        apr
+                        allocationPoints
+                    }
+                    beetsPerSecond
+                    totalBalance
+                }
             }
             investConfig {
                 singleAssetEnabled
@@ -6423,6 +6550,73 @@ export function useGetPoolFiltersLazyQuery(
 export type GetPoolFiltersQueryHookResult = ReturnType<typeof useGetPoolFiltersQuery>;
 export type GetPoolFiltersLazyQueryHookResult = ReturnType<typeof useGetPoolFiltersLazyQuery>;
 export type GetPoolFiltersQueryResult = Apollo.QueryResult<GetPoolFiltersQuery, GetPoolFiltersQueryVariables>;
+export const GetReliquaryFarmSnapshotsDocument = gql`
+    query GetReliquaryFarmSnapshots($id: String!, $range: GqlPoolSnapshotDataRange!) {
+        snapshots: poolGetReliquaryFarmSnapshots(id: $id, range: $range) {
+            id
+            farmId
+            timestamp
+            totalBalance
+            totalLiquidity
+            levelBalances {
+                id
+                level
+                balance
+            }
+            relicCount
+            totalBalance
+            userCount
+            tokenBalances {
+                id
+                address
+                balance
+                symbol
+            }
+        }
+    }
+`;
+
+/**
+ * __useGetReliquaryFarmSnapshotsQuery__
+ *
+ * To run a query within a React component, call `useGetReliquaryFarmSnapshotsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetReliquaryFarmSnapshotsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetReliquaryFarmSnapshotsQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *      range: // value for 'range'
+ *   },
+ * });
+ */
+export function useGetReliquaryFarmSnapshotsQuery(
+    baseOptions: Apollo.QueryHookOptions<GetReliquaryFarmSnapshotsQuery, GetReliquaryFarmSnapshotsQueryVariables>,
+) {
+    const options = { ...defaultOptions, ...baseOptions };
+    return Apollo.useQuery<GetReliquaryFarmSnapshotsQuery, GetReliquaryFarmSnapshotsQueryVariables>(
+        GetReliquaryFarmSnapshotsDocument,
+        options,
+    );
+}
+export function useGetReliquaryFarmSnapshotsLazyQuery(
+    baseOptions?: Apollo.LazyQueryHookOptions<GetReliquaryFarmSnapshotsQuery, GetReliquaryFarmSnapshotsQueryVariables>,
+) {
+    const options = { ...defaultOptions, ...baseOptions };
+    return Apollo.useLazyQuery<GetReliquaryFarmSnapshotsQuery, GetReliquaryFarmSnapshotsQueryVariables>(
+        GetReliquaryFarmSnapshotsDocument,
+        options,
+    );
+}
+export type GetReliquaryFarmSnapshotsQueryHookResult = ReturnType<typeof useGetReliquaryFarmSnapshotsQuery>;
+export type GetReliquaryFarmSnapshotsLazyQueryHookResult = ReturnType<typeof useGetReliquaryFarmSnapshotsLazyQuery>;
+export type GetReliquaryFarmSnapshotsQueryResult = Apollo.QueryResult<
+    GetReliquaryFarmSnapshotsQuery,
+    GetReliquaryFarmSnapshotsQueryVariables
+>;
 export const GetTokenRelativePriceChartDataDocument = gql`
     query GetTokenRelativePriceChartData($tokenIn: String!, $tokenOut: String!, $range: GqlTokenChartDataRange!) {
         prices: tokenGetRelativePriceChartData(tokenIn: $tokenIn, tokenOut: $tokenOut, range: $range) {

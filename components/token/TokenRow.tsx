@@ -1,4 +1,5 @@
 import { Box, HStack, Input, Text, VStack } from '@chakra-ui/react';
+import { motion } from 'framer-motion';
 import React from 'react';
 import { GqlPoolToken } from '~/apollo/generated/graphql-codegen-generated';
 import { useGetTokens } from '~/lib/global/useToken';
@@ -32,7 +33,7 @@ export default function TokenRow({
 }: Props) {
     const { getToken, priceForAmount } = useGetTokens();
 
-    const token = getToken(address);
+    const token = getToken(address.toLowerCase());
 
     const _onSelectedAlternateToken = (address: string) => {
         onSelectedAlternateToken && onSelectedAlternateToken(address);
@@ -42,8 +43,17 @@ export default function TokenRow({
         onAmountChange && onAmountChange(amount);
     };
 
+
     return (
-        <HStack width="full" justifyContent="space-between" key={address}>
+        <HStack
+            width="full"
+            justifyContent="space-between"
+            key={`tokenrow-${address}`}
+            as={motion.div}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+        >
             {alternateTokens.length > 1 ? (
                 <Box flex="1">
                     <TokenSelectInline
@@ -68,7 +78,7 @@ export default function TokenRow({
                     <Input
                         type="number"
                         min={0}
-                        placeholder="12.4.."
+                        placeholder="0.0"
                         textAlign="right"
                         value={amount || ''}
                         onChange={(e) => {

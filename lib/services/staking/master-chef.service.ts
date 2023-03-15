@@ -35,7 +35,6 @@ export class MasterChefService {
     }): Promise<AmountHumanReadable> {
         const contract = new Contract(this.masterChefContractAddress, BeethovenxMasterChefAbi, provider);
         const response: { amount: BigNumber } = await contract.userInfo(farmId, userAddress);
-
         return formatFixed(response.amount, 18);
     }
 

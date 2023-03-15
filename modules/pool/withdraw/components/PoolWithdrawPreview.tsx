@@ -5,7 +5,6 @@ import { numberFormatUSDValue } from '~/lib/util/number-formats';
 import { BeetsBox } from '~/components/box/BeetsBox';
 import { useGetTokens } from '~/lib/global/useToken';
 import { useWithdrawState } from '~/modules/pool/withdraw/lib/useWithdrawState';
-import { usePoolExitGetProportionalWithdrawEstimate } from '~/modules/pool/withdraw/lib/usePoolExitGetProportionalWithdrawEstimate';
 import { PoolWithdrawSummary } from '~/modules/pool/withdraw/components/PoolWithdrawSummary';
 import { useExitPool } from '~/modules/pool/withdraw/lib/useExitPool';
 import { usePoolExitGetContractCallData } from '~/modules/pool/withdraw/lib/usePoolExitGetContractCallData';
@@ -26,7 +25,7 @@ interface Props {
 export function PoolWithdrawPreview({ onWithdrawComplete, onClose }: Props) {
     const { pool } = usePool();
     const { getToken } = useGetTokens();
-    const { selectedWithdrawType, singleAssetWithdraw, proportionalAmounts } = useWithdrawState();
+    const { selectedWithdrawType, singleAssetWithdraw, proportionalAmounts, proportionalPercent } = useWithdrawState();
     const { priceForAmount } = useGetTokens();
     const { exitPool, ...exitPoolQuery } = useExitPool(pool);
     const { data: contractCallData, isLoading: isLoadingContractCallData } = usePoolExitGetContractCallData();
@@ -67,7 +66,7 @@ export function PoolWithdrawPreview({ onWithdrawComplete, onClose }: Props) {
                     Transaction details
                 </Text>
                 <TransactionSubmittedContent
-                    width='full'
+                    width="full"
                     query={exitPoolQuery}
                     confirmedMessage={`You've successfully withdrawn ${numberFormatUSDValue(totalWithdrawValue)} from ${
                         pool.name

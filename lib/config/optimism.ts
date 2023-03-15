@@ -30,6 +30,15 @@ export const optimismNetworkConfig: NetworkConfig = {
         address: '',
         farmId: '',
         poolId: '',
+        poolAddress: '',
+    },
+    reliquary: {
+        address: '',
+        fbeets: {
+            poolId: '',
+            poolAddress: '',
+            farmId: 0,
+        },
     },
     balancer: {
         vault: '0xba12222222228d8ba445958a75a0704d566bf2c8',
@@ -59,6 +68,7 @@ export const optimismNetworkConfig: NetworkConfig = {
         },
         reaperManualRebalancer: '0xf070996cf89cd3d2582705fc269f2c800e9a6a21',
         sorQueries: '0x290C793b7779BcDC14cE0F8909739FdE12b8B149', // TODO: update with correct address
+        balancerQueries: '0xe39b5e3b6d74016b2f6a9673d7d7493b6df549d5',
     },
     beetsPoolOwnerAddress: '0xd9e2889ac8c6fff8e94c7c1beeade1352df1a513',
     masterChefContractAddress: '',
@@ -181,4 +191,5 @@ export const optimismNetworkConfig: NetworkConfig = {
         '0x1f131ec1175f023ee1534b16fa8ab237c00e238100000000000000000000004a': true,
         '0x479a7d1fcdd71ce0c2ed3184bfbe9d23b92e8337000000000000000000000049': true,
     },
+    maBeetsEnabled: false,
 };
