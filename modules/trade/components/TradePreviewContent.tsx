@@ -1,4 +1,16 @@
-import { Alert, AlertIcon, Box, Checkbox, Flex, HStack, Link, StackDivider, Text, VStack } from '@chakra-ui/react';
+import {
+    Alert,
+    AlertIcon,
+    Box,
+    Checkbox,
+    Flex,
+    HStack,
+    Link,
+    Spinner,
+    StackDivider,
+    Text,
+    VStack,
+} from '@chakra-ui/react';
 import React, { useState } from 'react';
 import { BeetsSubmitTransactionButton } from '~/components/button/BeetsSubmitTransactionButton';
 import { useTrade } from '~/modules/trade/lib/useTrade';
@@ -28,10 +40,9 @@ interface Props {
 
 export function TradePreviewContent({ query, onTransactionSubmitted }: Props) {
     const { batchSwap, ...batchSwapQuery } = query;
-    const { reactiveTradeState, hasNoticeablePriceImpact, hasHighPriceImpact, priceImpact } = useTrade();
+    const { swapInfo, hasNoticeablePriceImpact, hasHighPriceImpact, priceImpact, refetchingSwaps } = useTrade();
     const { getToken, formattedPrice, priceForAmount, priceFor } = useGetTokens();
     const { slippage } = useSlippage();
-    const swapInfo = reactiveTradeState.sorResponse;
     const tokenIn = getToken(swapInfo?.tokenIn || '');
     const tokenOut = getToken(swapInfo?.tokenOut || '');
     const [highPiAccepted, setHighPiAccepted] = useState(false);
@@ -56,8 +67,6 @@ export function TradePreviewContent({ query, onTransactionSubmitted }: Props) {
             .toString(),
     );
 
-    const exchangeRate = parseFloat(swapInfo.tokenOutAmount) / parseFloat(swapInfo.tokenInAmount);
-    const reverseExchangeRate = parseFloat(swapInfo.tokenInAmount) / parseFloat(swapInfo.tokenOutAmount);
     const valueIn = priceForAmount({ address: swapInfo.tokenIn, amount: swapInfo.tokenInAmount });
     const tokenOutSwapPrice = valueIn / parseFloat(swapInfo.tokenOutAmount);
     const diff = priceFor(swapInfo.tokenOut) / tokenOutSwapPrice - 1;
@@ -85,7 +94,10 @@ export function TradePreviewContent({ query, onTransactionSubmitted }: Props) {
                                 </Box>
                             </HStack>
                             <VStack alignItems="flex-end" spacing="0">
-                                <Text>{tokenFormatAmountPrecise(swapInfo.tokenInAmount, tokenInPrecision)}</Text>
+                                <HStack>
+                                    {!exactIn && refetchingSwaps && <Spinner size="xs" />}
+                                    <Text>{tokenFormatAmountPrecise(swapInfo.tokenInAmount, tokenInPrecision)}</Text>
+                                </HStack>
                                 <Text fontSize="sm" color="beets.base.100">
                                     ~
                                     {formattedPrice({
@@ -109,7 +121,10 @@ export function TradePreviewContent({ query, onTransactionSubmitted }: Props) {
                                 </Box>
                             </HStack>
                             <VStack alignItems="flex-end" spacing="0">
-                                <Text>{tokenFormatAmountPrecise(swapInfo.tokenOutAmount, tokenOutPrecision)}</Text>
+                                <HStack>
+                                    {exactIn && refetchingSwaps && <Spinner size="xs" />}
+                                    <Text>{tokenFormatAmountPrecise(swapInfo.tokenOutAmount, tokenOutPrecision)}</Text>
+                                </HStack>
                                 <Text fontSize="sm" color="beets.base.100">
                                     ~
                                     {formattedPrice({
@@ -162,6 +177,7 @@ export function TradePreviewContent({ query, onTransactionSubmitted }: Props) {
                             {transactionMessageFromError(batchSwapQuery.submitError)}
                         </Alert>
                     ) : null}
+
                     <BeetsSubmitTransactionButton
                         {...batchSwapQuery}
                         isDisabled={hasHighPriceImpact && !highPiAccepted}

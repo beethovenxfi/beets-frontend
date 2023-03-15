@@ -67,6 +67,10 @@ export function _useGetTokens() {
         return numberFormatUSDValue(price);
     }
 
+    function getTokenDecimals(address: string): number {
+        return getToken(address)?.decimals || 18;
+    }
+
     return {
         tokens: tokens.filter((token) => token.tradable),
         allTokens: tokens,
@@ -77,6 +81,7 @@ export function _useGetTokens() {
         getRequiredToken,
         formattedPrice,
         priceForAmount,
+        getTokenDecimals,
     };
 }
 
