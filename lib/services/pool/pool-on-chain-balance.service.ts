@@ -3,7 +3,7 @@ import { GqlPoolUnion } from '~/apollo/generated/graphql-codegen-generated';
 import { SorQueriesTotalSupplyType, sorQueryService, SorQueryService } from '~/lib/services/pool/sor-query.service';
 import { formatFixed } from '@ethersproject/bignumber';
 import { BigNumber } from 'ethers';
-import { cloneDeep, keyBy } from 'lodash';
+import { cloneDeep, keyBy, sumBy } from 'lodash';
 
 export class PoolOnChainBalanceService {
     constructor(private readonly sorQueryService: SorQueryService) {}
@@ -11,12 +11,15 @@ export class PoolOnChainBalanceService {
     public async updatePoolWithOnChainBalanceData({
         pool,
         provider,
+        tokenPrices,
     }: {
         pool: GqlPoolUnion;
         provider: BaseProvider;
+        tokenPrices: { address: string; price: number }[];
     }): Promise<GqlPoolUnion> {
         const balanceData = await this.getBalanceDataForPool({ pool, provider });
         const dataMap = keyBy(balanceData, 'poolId');
+        const pricesMap = keyBy(tokenPrices, 'address');
         const clone = cloneDeep(pool);
 
         clone.dynamicData.totalShares = formatFixed(dataMap[pool.id].totalSupply, 18);
@@ -63,6 +66,10 @@ export class PoolOnChainBalanceService {
                 }
             }
         }
+
+        clone.dynamicData.totalLiquidity = sumBy(
+            clone.tokens.map((token) => pricesMap[token.address].price * parseFloat(token.balance)),
+        ).toString();
 
         return clone;
     }
