@@ -391,10 +391,13 @@ export default function BeetsToast({ children }: Props) {
                         >
                             <Box position="relative">
                                 {toast.type === ToastType.Success && <Sparkles />}
-                                {/* <Box>
-                                    <CloseButton _hover={{ background: 'green.500' }} onClick={() => removeToast(toast.id)} />
-                                </Box> */}
                                 <HStack>
+                                    <Box>
+                                        <CloseButton
+                                            _hover={{ background: 'green.500' }}
+                                            onClick={() => removeToast(toast.id)}
+                                        />
+                                    </Box>
                                     {toast.badge && (
                                         <Badge
                                             py="1"
