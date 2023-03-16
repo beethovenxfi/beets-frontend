@@ -90,7 +90,7 @@ function Sparkles() {
         <>
             <Box
                 as={motion.div}
-                animate={{ transform: 'scale(1)', transition: { delay: 0.25 } }}
+                animate={{ transform: 'scale(1)' }}
                 initial={{ transform: 'scale(0)' }}
                 exit={{ transform: 'scale(0)' }}
                 top="-10"
@@ -113,7 +113,7 @@ function Sparkles() {
             </Box>
             <Box
                 as={motion.div}
-                animate={{ transform: 'scale(1)', transition: { delay: 0.25 } }}
+                animate={{ transform: 'scale(1)' }}
                 initial={{ transform: 'scale(0)' }}
                 exit={{ transform: 'scale(0)' }}
                 top="-10"
@@ -136,7 +136,7 @@ function Sparkles() {
             </Box>
             <Box
                 as={motion.div}
-                animate={{ transform: 'scale(1)', transition: { delay: 0.25 } }}
+                animate={{ transform: 'scale(1)' }}
                 initial={{ transform: 'scale(0)' }}
                 exit={{ transform: 'scale(0)' }}
                 top="-5"
@@ -159,7 +159,7 @@ function Sparkles() {
             </Box>
             <Box
                 as={motion.div}
-                animate={{ transform: 'scale(1)', transition: { delay: 0.25 } }}
+                animate={{ transform: 'scale(1)' }}
                 initial={{ transform: 'scale(0)' }}
                 exit={{ transform: 'scale(0)' }}
                 top="-10"
@@ -182,7 +182,7 @@ function Sparkles() {
             </Box>
             <Box
                 as={motion.div}
-                animate={{ transform: 'scale(1)', transition: { delay: 0.25 } }}
+                animate={{ transform: 'scale(1)' }}
                 initial={{ transform: 'scale(0)' }}
                 exit={{ transform: 'scale(0)' }}
                 top="-5"
@@ -205,7 +205,7 @@ function Sparkles() {
             </Box>
             <Box
                 as={motion.div}
-                animate={{ transform: 'scale(1)', transition: { delay: 0.25 } }}
+                animate={{ transform: 'scale(1)' }}
                 initial={{ transform: 'scale(0)' }}
                 exit={{ transform: 'scale(0)' }}
                 top="-5"
@@ -228,7 +228,7 @@ function Sparkles() {
             </Box>
             <Box
                 as={motion.div}
-                animate={{ transform: 'scale(1)', transition: { delay: 0.25 } }}
+                animate={{ transform: 'scale(1)' }}
                 initial={{ transform: 'scale(0)' }}
                 exit={{ transform: 'scale(0)' }}
                 top="5"
@@ -251,7 +251,7 @@ function Sparkles() {
             </Box>
             <Box
                 as={motion.div}
-                animate={{ transform: 'scale(1)', transition: { delay: 0.25 } }}
+                animate={{ transform: 'scale(1)' }}
                 initial={{ transform: 'scale(0)' }}
                 exit={{ transform: 'scale(0)' }}
                 top="5"
