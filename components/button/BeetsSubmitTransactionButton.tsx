@@ -1,6 +1,6 @@
 import { ButtonOptions, ButtonProps } from '@chakra-ui/button';
 import React, { ReactNode, useEffect, useRef, useState } from 'react';
-import { Button, LinkProps, VStack, Text } from '@chakra-ui/react';
+import { Button, LinkProps, VStack, Text, Box } from '@chakra-ui/react';
 import { SubmitTransactionQuery } from '~/lib/util/useSubmitTransaction';
 import { motion, useAnimation } from 'framer-motion';
 
@@ -108,9 +108,11 @@ export function BeetsSubmitTransactionButton({
     return (
         <VStack width={fullWidth ? 'full' : undefined}>
             {isProcessing && !inline && (
-                <Text fontWeight="semibold" fontSize="1rem">
-                    {isSubmitting ? submittingText : isPending ? pendingText : loadingText}
-                </Text>
+                <Box textAlign='center' width="full" pt="4">
+                    <Text fontWeight="semibold" fontSize="1rem">
+                        {isSubmitting ? submittingText : isPending ? pendingText : loadingText}
+                    </Text>
+                </Box>
             )}
             <Button
                 ref={buttonRef}

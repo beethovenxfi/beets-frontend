@@ -1,6 +1,6 @@
 import { Box } from '@chakra-ui/layout';
 import { Portal } from '@chakra-ui/portal';
-import { CloseButton, HStack, Spinner, useBreakpointValue } from '@chakra-ui/react';
+import { Badge, CloseButton, HStack, Spinner, useBreakpointValue } from '@chakra-ui/react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { sum } from 'lodash';
 import React, { ReactNode, useContext, useRef, useState } from 'react';
@@ -12,7 +12,7 @@ interface Props {
 interface BeetsToastContextType {
     showToast: (toast: Toast) => void;
     removeToast: (id: string) => void;
-    updateToast: (id: string, toast: Partial<Pick<Toast, 'content' | 'type' | 'auto'>>) => void;
+    updateToast: (id: string, toast: Partial<Pick<Toast, 'content' | 'type' | 'auto' | 'badge'>>) => void;
     toastList: Toast[];
 }
 
@@ -29,11 +29,252 @@ interface Toast {
     content: ReactNode | ReactNode[];
     auto?: boolean;
     type?: ToastType;
+    badge?: ReactNode | ReactNode[];
 }
 
 export const BeetsToastContext = React.createContext({} as BeetsToastContextType);
 
 export const useToast = () => useContext(BeetsToastContext);
+
+const getBgColor = (toastType: ToastType) => {
+    switch (toastType) {
+        case ToastType.Info:
+            return 'beets.base.300';
+        case ToastType.Error:
+            return 'red.400';
+        case ToastType.Success:
+            return 'green.400';
+        case ToastType.Warn:
+            return 'orange.200';
+        default:
+            return 'beets.base.300';
+    }
+};
+
+const getTextColor = (toastType: ToastType) => {
+    switch (toastType) {
+        case ToastType.Info:
+            return 'white';
+        case ToastType.Error:
+            return 'beets.base.900';
+        case ToastType.Success:
+            return 'beets.base.900';
+        case ToastType.Warn:
+            return 'orange.900';
+        case ToastType.Loading:
+            return 'white';
+        default:
+            return 'beets.base.900';
+    }
+};
+
+const getBadgeTheme = (toastType: ToastType) => {
+    switch (toastType) {
+        case ToastType.Info:
+            return ['beets.base.500', 'beets.base.50'];
+        case ToastType.Error:
+            return ['red.700', 'red.50'];
+        case ToastType.Success:
+            return ['green.800', 'green.200'];
+        case ToastType.Warn:
+            return ['orange.900', 'orange.50'];
+        case ToastType.Loading:
+            return ['beets.base.500', 'beets.base.50'];
+        default:
+            return ['beets.base.500', 'beets.base.50'];
+    }
+};
+
+function Sparkles() {
+    return (
+        <>
+            <Box
+                as={motion.div}
+                animate={{ transform: 'scale(1)', transition: { delay: 0.25 } }}
+                initial={{ transform: 'scale(0)' }}
+                exit={{ transform: 'scale(0)' }}
+                top="-10"
+                right="2"
+                position="absolute"
+            >
+                <Box
+                    as={motion.div}
+                    animate={{
+                        transform: 'rotate(360deg)  translateY(-3px)',
+                        transition: {
+                            default: { ease: 'easeOut', duration: 10, repeat: Infinity, repeatType: 'mirror' },
+                        },
+                    }}
+                    rounded="1px"
+                    height="12px"
+                    width="12px"
+                    bg="green.400"
+                />
+            </Box>
+            <Box
+                as={motion.div}
+                animate={{ transform: 'scale(1)', transition: { delay: 0.25 } }}
+                initial={{ transform: 'scale(0)' }}
+                exit={{ transform: 'scale(0)' }}
+                top="-10"
+                left="2"
+                position="absolute"
+            >
+                <Box
+                    as={motion.div}
+                    rounded="1px"
+                    animate={{
+                        transform: 'rotate(360deg)  translateY(-3px)',
+                        transition: {
+                            default: { ease: 'easeOut', duration: 10, repeat: Infinity, repeatType: 'mirror' },
+                        },
+                    }}
+                    height="6px"
+                    width="6px"
+                    bg="green.400"
+                />
+            </Box>
+            <Box
+                as={motion.div}
+                animate={{ transform: 'scale(1)', transition: { delay: 0.25 } }}
+                initial={{ transform: 'scale(0)' }}
+                exit={{ transform: 'scale(0)' }}
+                top="-5"
+                left="8"
+                position="absolute"
+            >
+                <Box
+                    as={motion.div}
+                    rounded="1px"
+                    animate={{
+                        transform: 'rotate(360deg)  translateY(-3px)',
+                        transition: {
+                            default: { ease: 'easeOut', duration: 10, repeat: Infinity, repeatType: 'mirror' },
+                        },
+                    }}
+                    height="5px"
+                    width="5px"
+                    bg="green.400"
+                />
+            </Box>
+            <Box
+                as={motion.div}
+                animate={{ transform: 'scale(1)', transition: { delay: 0.25 } }}
+                initial={{ transform: 'scale(0)' }}
+                exit={{ transform: 'scale(0)' }}
+                top="-10"
+                right="10"
+                position="absolute"
+            >
+                <Box
+                    as={motion.div}
+                    rounded="1px"
+                    animate={{
+                        transform: 'rotate(360deg)  translateY(-3px)',
+                        transition: {
+                            default: { ease: 'easeOut', duration: 10, repeat: Infinity, repeatType: 'mirror' },
+                        },
+                    }}
+                    height="5px"
+                    width="5px"
+                    bg="green.400"
+                />
+            </Box>
+            <Box
+                as={motion.div}
+                animate={{ transform: 'scale(1)', transition: { delay: 0.25 } }}
+                initial={{ transform: 'scale(0)' }}
+                exit={{ transform: 'scale(0)' }}
+                top="-5"
+                right="-7"
+                position="absolute"
+            >
+                <Box
+                    as={motion.div}
+                    rounded="1px"
+                    animate={{
+                        transform: 'rotate(360deg)  translateY(-3px)',
+                        transition: {
+                            default: { ease: 'easeOut', duration: 10, repeat: Infinity, repeatType: 'mirror' },
+                        },
+                    }}
+                    height="10px"
+                    width="10px"
+                    bg="green.400"
+                />
+            </Box>
+            <Box
+                as={motion.div}
+                animate={{ transform: 'scale(1)', transition: { delay: 0.25 } }}
+                initial={{ transform: 'scale(0)' }}
+                exit={{ transform: 'scale(0)' }}
+                top="-5"
+                left="-8"
+                position="absolute"
+            >
+                <Box
+                    as={motion.div}
+                    rounded="1px"
+                    animate={{
+                        transform: 'rotate(360deg)  translateY(-3px)',
+                        transition: {
+                            default: { ease: 'easeOut', duration: 10, repeat: Infinity, repeatType: 'mirror' },
+                        },
+                    }}
+                    height="10px"
+                    width="10px"
+                    bg="green.400"
+                />
+            </Box>
+            <Box
+                as={motion.div}
+                animate={{ transform: 'scale(1)', transition: { delay: 0.25 } }}
+                initial={{ transform: 'scale(0)' }}
+                exit={{ transform: 'scale(0)' }}
+                top="5"
+                left="-6"
+                position="absolute"
+            >
+                <Box
+                    as={motion.div}
+                    rounded="1px"
+                    animate={{
+                        transform: 'rotate(360deg)  translateY(-3px)',
+                        transition: {
+                            default: { ease: 'easeOut', duration: 10, repeat: Infinity, repeatType: 'mirror' },
+                        },
+                    }}
+                    height="3px"
+                    width="3px"
+                    bg="green.400"
+                />
+            </Box>
+            <Box
+                as={motion.div}
+                animate={{ transform: 'scale(1)', transition: { delay: 0.25 } }}
+                initial={{ transform: 'scale(0)' }}
+                exit={{ transform: 'scale(0)' }}
+                top="5"
+                right="-4"
+                position="absolute"
+            >
+                <Box
+                    as={motion.div}
+                    rounded="1px"
+                    animate={{
+                        transform: 'rotate(360deg)  translateY(-3px)',
+                        transition: {
+                            default: { ease: 'easeOut', duration: 10, repeat: Infinity, repeatType: 'mirror' },
+                        },
+                    }}
+                    height="3px"
+                    width="3px"
+                    bg="green.400"
+                />
+            </Box>
+        </>
+    );
+}
 
 export default function BeetsToast({ children }: Props) {
     const [toastList, setToastList] = useState<Toast[]>([]);
@@ -56,16 +297,18 @@ export default function BeetsToast({ children }: Props) {
         const height = sum(toastContainerRef.current.map((el) => el?.offsetHeight || 0));
         setContainerHeight(height);
 
-        setToastList([
-            ...toastListRef.current,
-            {
-                ...toast,
-                type: toast.type || ToastType.Info,
-            },
-        ]);
+        setTimeout(() => {
+            setToastList([
+                ...toastListRef.current,
+                {
+                    ...toast,
+                    type: toast.type || ToastType.Info,
+                },
+            ]);
 
-        yPositions[toastList.length] = 16;
-        setYPositions(yPositions);
+            yPositions[toastList.length] = 16;
+            setYPositions(yPositions);
+        }, 0);
 
         if (toast.auto) {
             setTimeout(() => {
@@ -106,38 +349,6 @@ export default function BeetsToast({ children }: Props) {
         }
     };
 
-    const getBgColor = (toastType: ToastType) => {
-        switch (toastType) {
-            case ToastType.Info:
-                return 'beets.base.300';
-            case ToastType.Error:
-                return 'red.400';
-            case ToastType.Success:
-                return 'green.400';
-            case ToastType.Warn:
-                return 'orange.200';
-            default:
-                return 'beets.base.300';
-        }
-    };
-
-    const getTextColor = (toastType: ToastType) => {
-        switch (toastType) {
-            case ToastType.Info:
-                return 'white';
-            case ToastType.Error:
-                return 'beets.base.900';
-            case ToastType.Success:
-                return 'beets.base.900';
-            case ToastType.Warn:
-                return 'orange.900';
-            case ToastType.Loading:
-                return 'white';
-            default:
-                return 'beets.base.900';
-        }
-    };
-
     const context = { showToast, removeToast, updateToast, toastList };
 
     return (
@@ -151,7 +362,9 @@ export default function BeetsToast({ children }: Props) {
                             ref={(el) => addRef(i, el)}
                             backgroundColor={getBgColor(toast.type || ToastType.Info)}
                             color={getTextColor(toast.type || ToastType.Info)}
-                            px="4"
+                            // pl="3"
+                            // pr="4"
+                            px="3"
                             py="3"
                             fontWeight="semibold"
                             marginX="auto"
@@ -176,13 +389,28 @@ export default function BeetsToast({ children }: Props) {
                                 transition: { damping: 20, mass: 0.8, stiffness: 200, type: 'spring' },
                             }}
                         >
-                            <HStack>
-                                <Box>
-                                    <CloseButton onClick={() => removeToast(toast.id)} />
-                                </Box>
-                                <Box>{toast.content}</Box>
-                                {toast.type === ToastType.Loading && <Spinner size="sm" />}
-                            </HStack>
+                            <Box position="relative">
+                                {toast.type === ToastType.Success && <Sparkles />}
+                                {/* <Box>
+                                    <CloseButton _hover={{ background: 'green.500' }} onClick={() => removeToast(toast.id)} />
+                                </Box> */}
+                                <HStack>
+                                    {toast.badge && (
+                                        <Badge
+                                            py="1"
+                                            px="2"
+                                            bg={getBadgeTheme(toast.type || ToastType.Info)[0]}
+                                            color={getBadgeTheme(toast.type || ToastType.Info)[1]}
+                                        >
+                                            {toast.badge}
+                                        </Badge>
+                                    )}
+                                    <HStack spacing="2">
+                                        <Box>{toast.content}</Box>
+                                        {toast.type === ToastType.Loading && <Spinner size="sm" />}
+                                    </HStack>
+                                </HStack>
+                            </Box>
                         </Box>
                     ))}
                 </AnimatePresence>
