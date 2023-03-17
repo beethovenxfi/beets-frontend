@@ -93,8 +93,8 @@ export interface NetworkConfig {
     stakeUrl?: string;
     warnings: {
         poolDetail: { [poolId: string]: PoolDetailWarning };
-        poolInvest: { [poolId: string]: string };
-        poolWithdraw: { [poolId: string]: string };
+        poolInvest: { [poolId: string]: string }[];
+        poolWithdraw: { [poolId: string]: string }[];
         poolList: { [poolId: string]: string };
     };
     investDisabled: { [poolId: string]: boolean };

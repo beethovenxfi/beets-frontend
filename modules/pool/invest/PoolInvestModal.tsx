@@ -57,6 +57,8 @@ export function PoolInvestModal({
     const modalContainerRef = useRef<HTMLDivElement | null>(null);
     const lastModalBounds = useRef<DOMRect | null>(null);
 
+    const warning = warnings.poolInvest.filter((warning) => Object.keys(warning)[0] === pool.id);
+
     function onModalClose() {
         if (investComplete) {
             setModalState('start');
@@ -200,11 +202,11 @@ export function PoolInvestModal({
                                     animate={{ opacity: 1, transition: { delay: 0.25 } }}
                                     exit={{ opacity: 0 }}
                                 >
-                                    {warnings.poolInvest[pool.id] && (
+                                    {warning.length === 1 && (
                                         <Box px="4">
                                             <Alert status="warning" mb="4">
                                                 <AlertIcon />
-                                                {warnings.poolInvest[pool.id]}
+                                                {warning[0][pool.id]}
                                             </Alert>
                                         </Box>
                                     )}

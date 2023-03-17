@@ -28,7 +28,12 @@ interface Props {
     isVisible?: boolean;
     onClose?: () => void;
 }
-export function PoolWithdrawModal({ activatorProps = {}, noActivator = false, onClose: _onClose, isVisible = false }: Props) {
+export function PoolWithdrawModal({
+    activatorProps = {},
+    noActivator = false,
+    onClose: _onClose,
+    isVisible = false,
+}: Props) {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const { pool, formattedTypeName } = usePool();
     const [modalState, setModalState] = useState<'start' | 'proportional' | 'single-asset' | 'preview'>('start');
@@ -37,6 +42,8 @@ export function PoolWithdrawModal({ activatorProps = {}, noActivator = false, on
     const [withdrawComplete, setWithdrawComplete] = useState(false);
     const { clearWithdrawState } = useWithdrawState();
     const { warnings } = useNetworkConfig();
+
+    const warning = warnings.poolWithdraw.filter((warning) => Object.keys(warning)[0] === pool.id);
 
     useEffect(() => {
         setModalState('start');
@@ -134,10 +141,10 @@ export function PoolWithdrawModal({ activatorProps = {}, noActivator = false, on
                     </ModalHeader>
                     <ModalBody className="bg" pb="6">
                         <FadeInBox isVisible={modalState === 'start'}>
-                            {warnings.poolWithdraw[pool.id] && (
+                            {warning.length === 1 && (
                                 <Alert status="warning" mb="4">
                                     <AlertIcon />
-                                    {warnings.poolWithdraw[pool.id]}
+                                    {warning[0][pool.id]}
                                 </Alert>
                             )}
                             <PoolWithdrawTypeChoice
