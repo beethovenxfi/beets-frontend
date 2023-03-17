@@ -43,8 +43,6 @@ export function PoolWithdrawModal({
     const { clearWithdrawState } = useWithdrawState();
     const { warnings } = useNetworkConfig();
 
-    const warning = warnings.poolWithdraw.filter((warning) => Object.keys(warning)[0] === pool.id);
-
     useEffect(() => {
         setModalState('start');
         clearWithdrawState();
@@ -141,10 +139,10 @@ export function PoolWithdrawModal({
                     </ModalHeader>
                     <ModalBody className="bg" pb="6">
                         <FadeInBox isVisible={modalState === 'start'}>
-                            {warning.length === 1 && (
+                            {warnings.poolWithdraw[pool.id] && (
                                 <Alert status="warning" mb="4">
                                     <AlertIcon />
-                                    {warning[0][pool.id]}
+                                    {warnings.poolWithdraw[pool.id]}
                                 </Alert>
                             )}
                             <PoolWithdrawTypeChoice
