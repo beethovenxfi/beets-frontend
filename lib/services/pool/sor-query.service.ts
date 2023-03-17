@@ -97,9 +97,8 @@ export class SorQueryService {
         pool: GqlPoolUnion | GqlPoolPhantomStableNested | GqlPoolLinearNested,
     ): SorQueriesTotalSupplyType {
         const isPhantomStable = ['GqlPoolPhantomStable', 'GqlPoolPhantomStableNested'].includes(pool.__typename);
-        const hasComposableStableFactory = isSameAddress(
+        const hasComposableStableFactory = networkConfig.balancer.composableStableFactories.includes(
             pool.factory || '',
-            networkConfig.balancer.composableStableFactory,
         );
 
         if (
