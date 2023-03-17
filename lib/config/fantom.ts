@@ -136,8 +136,8 @@ export const fantomNetworkConfig: NetworkConfig = {
                 type: 'warning',
             },
         },
-        poolInvest: [{}],
-        poolWithdraw: [{}],
+        poolInvest: {},
+        poolWithdraw: {},
     },
     boostedByTypes: {},
     investDisabled: {
