@@ -706,6 +706,15 @@ export class PoolComposableExitService {
                 ? sortBy(pool.tokens, 'index')
                 : sortBy([...pool.tokens, { address: pool.address, decimals: 18, __typename: 'pool' }], 'address');
 
+        const isComposableV1 = pool.factory === networkConfig.balancer.composableStableV1Factory;
+
+        const minAmountsOut = exitAmounts.map((exitAmount) => {
+            const token = this.pool.tokens.find((token) => token.address === exitAmount.address);
+            const amountScaled = oldBnumScaleAmount(exitAmount.amount, token?.decimals);
+
+            return amountScaled.minus(amountScaled.times(slippage)).toFixed(0);
+        });
+
         //TODO: this approach is not entirely ideal, as it will leave the user with dust in their wallet when they fully exit,
         //TODO: but a more complete solution will be much more involved, need to circle back to it
         const amountsOutScaled = sortBy(pool.tokens, 'index').map((poolToken) => {
@@ -716,13 +725,13 @@ export class PoolComposableExitService {
 
         return {
             assets: tokensWithPhantomBpt.map((token) => token.address),
-            //minAmountsOut is not relevant for BPTInForExactTokensOut
-            minAmountsOut: tokensWithPhantomBpt.map(() => '0'),
-            userData:
-                pool.__typename === 'GqlPoolWeighted'
-                    ? WeightedPoolEncoder.exitBPTInForExactTokensOut(amountsOutScaled, maxBptIn)
-                    : //TODO: move this to the composable stable encoder once its merged in
-                      defaultAbiCoder.encode(['uint256', 'uint256[]', 'uint256'], [1, amountsOutScaled, maxBptIn]),
+            minAmountsOut: isComposableV1 ? tokensWithPhantomBpt.map(() => '0') : ['0', ...minAmountsOut],
+            userData: isComposableV1
+                ? defaultAbiCoder.encode(['uint256', 'uint256[]', 'uint256'], [1, amountsOutScaled, maxBptIn])
+                : pool.__typename === 'GqlPoolWeighted'
+                ? WeightedPoolEncoder.exitExactBPTInForTokensOut(maxBptIn)
+                : //TODO: move this to the composable stable encoder once its merged in
+                  defaultAbiCoder.encode(['uint256', 'uint256'], [2, maxBptIn]),
             toInternalBalance,
         };
     }
