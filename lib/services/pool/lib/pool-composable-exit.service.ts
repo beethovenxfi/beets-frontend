@@ -708,13 +708,6 @@ export class PoolComposableExitService {
 
         const isComposableV1 = pool.factory === networkConfig.balancer.composableStableV1Factory;
 
-        const minAmountsOut = exitAmounts.map((exitAmount) => {
-            const token = this.pool.tokens.find((token) => token.address === exitAmount.address);
-            const amountScaled = oldBnumScaleAmount(exitAmount.amount, token?.decimals);
-
-            return amountScaled.minus(amountScaled.times(slippage)).toFixed(0);
-        });
-
         //TODO: this approach is not entirely ideal, as it will leave the user with dust in their wallet when they fully exit,
         //TODO: but a more complete solution will be much more involved, need to circle back to it
         const amountsOutScaled = sortBy(pool.tokens, 'index').map((poolToken) => {
@@ -725,7 +718,7 @@ export class PoolComposableExitService {
 
         return {
             assets: tokensWithPhantomBpt.map((token) => token.address),
-            minAmountsOut: isComposableV1 ? tokensWithPhantomBpt.map(() => '0') : ['0', ...minAmountsOut],
+            minAmountsOut: isComposableV1 ? tokensWithPhantomBpt.map(() => '0') : ['0', ...amountsOutScaled],
             userData: isComposableV1
                 ? defaultAbiCoder.encode(['uint256', 'uint256[]', 'uint256'], [1, amountsOutScaled, maxBptIn])
                 : pool.__typename === 'GqlPoolWeighted'
