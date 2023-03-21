@@ -1,13 +1,11 @@
 import { AmountHumanReadable, AmountScaledString, TokenAmountHumanReadable } from '~/lib/services/token/token-types';
 import { BigNumberish } from 'ethers';
-import { SwapKind, BatchSwapStep, FundManagement } from '@balancer-labs/balancer-js';
+import { BatchSwapStep, SwapKind } from '@balancer-labs/balancer-js';
 import {
-    GqlPoolLinear,
     GqlPoolLinearNested,
     GqlPoolPhantomStable,
     GqlPoolPhantomStableNested,
     GqlPoolToken,
-    GqlPoolTokenBase,
     GqlPoolTokenExpanded,
     GqlPoolTokenLinear,
     GqlPoolTokenUnion,

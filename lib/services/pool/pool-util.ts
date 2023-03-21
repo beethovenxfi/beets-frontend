@@ -1,5 +1,4 @@
 import {
-    GqlPoolLinear,
     GqlPoolLinearNested,
     GqlPoolPhantomStableNested,
     GqlPoolTokenUnion,
