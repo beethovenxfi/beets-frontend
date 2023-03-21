@@ -4,6 +4,7 @@ import { SorQueriesTotalSupplyType, sorQueryService, SorQueryService } from '~/l
 import { formatFixed } from '@ethersproject/bignumber';
 import { BigNumber } from 'ethers';
 import { cloneDeep, keyBy, sumBy } from 'lodash';
+import { oldBnumFromBnum } from './lib/old-big-number';
 
 export class PoolOnChainBalanceService {
     constructor(private readonly sorQueryService: SorQueryService) {}
@@ -36,31 +37,45 @@ export class PoolOnChainBalanceService {
             if (token.__typename === 'GqlPoolTokenPhantomStable') {
                 const percentOfNestedSupply =
                     parseFloat(tokenBalance) / parseFloat(formatFixed(dataMap[token.pool.id].totalSupply, 18));
+
                 for (const nestedToken of token.pool.tokens) {
                     const nestedTokenBalance = formatFixed(
                         dataMap[token.pool.id].balances[nestedToken.index],
                         nestedToken.decimals,
                     );
-                    nestedToken.balance = (percentOfNestedSupply * parseFloat(nestedTokenBalance)).toString();
+
+                    nestedToken.balance = formatFixed(
+                        oldBnumFromBnum(dataMap[token.pool.id].balances[nestedToken.index])
+                            .times(percentOfNestedSupply)
+                            .toFixed(0)
+                            .toString(),
+                        nestedToken.decimals,
+                    );
+
                     nestedToken.totalBalance = nestedTokenBalance;
 
                     if (nestedToken.__typename === 'GqlPoolTokenLinear') {
                         const totalShares = formatFixed(dataMap[nestedToken.pool.id].totalSupply, 18);
                         nestedToken.pool.totalShares = totalShares;
+
                         const percentOfLinearSupplyNested = parseFloat(nestedTokenBalance) / parseFloat(totalShares);
 
                         for (const nestedLinearToken of nestedToken.pool.tokens) {
-                            const nestedLinearTokenbalance = formatFixed(
-                                dataMap[nestedToken.pool.id].balances[nestedLinearToken.index],
+                            const nestedLinearTokenbalance =
+                                dataMap[nestedToken.pool.id].balances[nestedLinearToken.index];
+
+                            nestedLinearToken.balance = formatFixed(
+                                oldBnumFromBnum(nestedLinearTokenbalance)
+                                    .times(percentOfNestedSupply)
+                                    .times(percentOfLinearSupplyNested)
+                                    .toFixed(0)
+                                    .toString(),
                                 nestedLinearToken.decimals,
                             );
-
-                            nestedLinearToken.balance = (
-                                percentOfNestedSupply *
-                                percentOfLinearSupplyNested *
-                                parseFloat(nestedLinearTokenbalance)
-                            ).toString();
-                            nestedLinearToken.totalBalance = nestedLinearTokenbalance;
+                            nestedLinearToken.totalBalance = formatFixed(
+                                nestedLinearTokenbalance,
+                                nestedLinearToken.decimals,
+                            );
                         }
                     }
                 }
