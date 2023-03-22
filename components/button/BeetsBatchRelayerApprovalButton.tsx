@@ -1,3 +1,4 @@
+import { useSigner } from 'wagmi';
 import { BeetsSubmitTransactionButton } from '~/components/button/BeetsSubmitTransactionButton';
 import { useApproveBatchRelayer } from '~/lib/util/useApproveBatchRelayer';
 
@@ -13,14 +14,15 @@ interface Props {
 }
 
 export function BeetsBatchRelayerApprovalButton({ buttonText, ...rest }: Props) {
-    const { approve, ...query } = useApproveBatchRelayer();
+    const { approve, signRelayerApproval, ...query } = useApproveBatchRelayer();
+    const { data: signer } = useSigner();
 
     return (
         <BeetsSubmitTransactionButton
             {...query}
             width="full"
             onClick={() => {
-                approve();
+                signRelayerApproval(signer);
             }}
             {...rest}
             borderColor="beets.green"

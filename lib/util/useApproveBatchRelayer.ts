@@ -1,6 +1,8 @@
 import { useSubmitTransaction, vaultContractConfig } from '~/lib/util/useSubmitTransaction';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 import { useUserAccount } from '~/lib/user/useUserAccount';
+import { signRelayerApprovalFn } from './sign-relayer-approval';
+import { Vault__factory } from '@balancer-labs/typechain';
 
 export function useApproveBatchRelayer() {
     const networkConfig = useNetworkConfig();
@@ -20,8 +22,21 @@ export function useApproveBatchRelayer() {
         });
     }
 
+    async function signRelayerApproval(signer: any): Promise<void> {
+        const relayerAddress = networkConfig.balancer.batchRelayer;
+        const signerAddress = await signer.getAddress();
+        const signature = await signRelayerApprovalFn(
+            relayerAddress,
+            signerAddress,
+            signer,
+            Vault__factory.connect(networkConfig.balancer.vault, signer),
+        );
+        console.log({ signature });
+    }
+
     return {
         approve,
+        signRelayerApproval,
         ...rest,
     };
 }
