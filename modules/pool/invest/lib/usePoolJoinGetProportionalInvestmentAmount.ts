@@ -1,15 +1,18 @@
 import { useQuery } from 'react-query';
 import { useInvest } from '~/modules/pool/invest/lib/useInvest';
-import { sortBy } from 'lodash';
+import { sortBy, sumBy } from 'lodash';
 import { isEth, isWeth, replaceEthWithWeth, replaceWethWithEth } from '~/lib/services/token/token-util';
 import { useUserAccount } from '~/lib/user/useUserAccount';
 import { usePool } from '~/modules/pool/lib/usePool';
+import { useGetTokens } from '~/lib/global/useToken';
 
 export function usePoolJoinGetProportionalInvestmentAmount() {
     const { poolService, pool } = usePool();
     const { userInvestTokenBalances, selectedInvestTokens } = useInvest();
     const { userAddress } = useUserAccount();
+    const { priceForAmount } = useGetTokens();
 
+    const totalUserInvestTokenBalancesValue = sumBy(userInvestTokenBalances, priceForAmount);
     const tokenWithSmallestValue = sortBy(
         userInvestTokenBalances.map((balance) => {
             const investOption = pool.investConfig.options.find((option) => {
@@ -29,7 +32,9 @@ export function usePoolJoinGetProportionalInvestmentAmount() {
                 ...balance,
                 //this has precision errors, but its only used for sorting, not any operations
                 normalizedAmount: poolToken?.weight
-                    ? (scaledBalance / parseFloat(poolToken.balance)) * (1 / parseFloat(poolToken.weight))
+                    ? //? scaledBalance / parseFloat(poolToken.balance) / parseFloat(poolToken.weight)
+                      priceForAmount({ address: balance.address, amount: scaledBalance.toString() }) -
+                      parseFloat(poolToken.weight) * totalUserInvestTokenBalancesValue
                     : scaledBalance,
             };
         }),
@@ -60,6 +65,8 @@ export function usePoolJoinGetProportionalInvestmentAmount() {
                 fixedAmount,
                 selectedInvestTokens.map((token) => replaceEthWithWeth(token.address)),
             );
+
+            console.log({ result });
 
             return Object.fromEntries(
                 result.map((item) => [hasEth ? replaceWethWithEth(item.address) : item.address, item.amount]),
