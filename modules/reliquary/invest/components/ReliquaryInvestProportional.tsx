@@ -17,7 +17,6 @@ import { ReliquaryInvestSettings } from '~/modules/reliquary/invest/components/R
 import { BeetsBox } from '~/components/box/BeetsBox';
 import { ReliquaryInvestSummary } from '~/modules/reliquary/invest/components/ReliquaryInvestSummary';
 import React from 'react';
-import { usePoolJoinGetProportionalInvestmentAmount } from '~/modules/pool/invest/lib/usePoolJoinGetProportionalInvestmentAmount';
 import { keyBy, mapValues } from 'lodash';
 import { oldBnumScale, oldBnumToHumanReadable } from '~/lib/services/pool/lib/old-big-number';
 import { useReliquaryInvest } from '~/modules/reliquary/invest/lib/useReliquaryInvest';
@@ -27,6 +26,7 @@ import { usePoolUserTokenBalancesInWallet } from '~/modules/pool/lib/usePoolUser
 import { bnum } from '@balancer-labs/sor';
 import { GqlPoolToken } from '~/apollo/generated/graphql-codegen-generated';
 import { tokenInputTruncateDecimalPlaces } from '~/lib/util/input-util';
+import { useReliquaryJoinGetProportionalInvestmentAmount } from '../lib/useReliquaryJoinGetProportionalInvestmentAmount';
 
 interface Props {
     onShowPreview(): void;
@@ -36,7 +36,7 @@ export function ReliquaryInvestProportional({ onShowPreview }: Props) {
     const { pool, poolService } = usePool();
     const investOptions = pool.investConfig.options;
     const { setSelectedOption, selectedOptions, setInputAmounts, inputAmounts } = useReliquaryInvestState();
-    const { data } = usePoolJoinGetProportionalInvestmentAmount();
+    const { data } = useReliquaryJoinGetProportionalInvestmentAmount();
     const { selectedInvestTokens, userInvestTokenBalances, isInvestingWithEth } = useReliquaryInvest();
 
     const { userPoolTokenBalances } = usePoolUserTokenBalancesInWallet();
