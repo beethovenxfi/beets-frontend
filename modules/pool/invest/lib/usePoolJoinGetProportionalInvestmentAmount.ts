@@ -28,13 +28,15 @@ export function usePoolJoinGetProportionalInvestmentAmount() {
             //TODO: as the invest token is often time nested deeper in linear pool of phantom stable
             const scaledBalance = parseFloat(balance.amount) / parseFloat(poolToken?.priceRate || '1');
 
+            const tokenValue = priceForAmount({ address: balance.address, amount: scaledBalance.toString() });
+            const weightedValue = parseFloat(poolToken?.weight || '1') * totalUserInvestTokenBalancesValue;
+
             return {
                 ...balance,
                 //this has precision errors, but its only used for sorting, not any operations
                 normalizedAmount: poolToken?.weight
                     ? //? scaledBalance / parseFloat(poolToken.balance) / parseFloat(poolToken.weight)
-                      priceForAmount({ address: balance.address, amount: scaledBalance.toString() }) -
-                      parseFloat(poolToken.weight) * totalUserInvestTokenBalancesValue
+                      (tokenValue - weightedValue) / weightedValue
                     : scaledBalance,
             };
         }),
