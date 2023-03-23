@@ -68,8 +68,6 @@ export function usePoolJoinGetProportionalInvestmentAmount() {
                 selectedInvestTokens.map((token) => replaceEthWithWeth(token.address)),
             );
 
-            console.log({ result });
-
             return Object.fromEntries(
                 result.map((item) => [hasEth ? replaceWethWithEth(item.address) : item.address, item.amount]),
             );
