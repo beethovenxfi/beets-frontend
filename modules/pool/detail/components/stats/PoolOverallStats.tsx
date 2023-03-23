@@ -7,11 +7,7 @@ import { usePool } from '~/modules/pool/lib/usePool';
 import TokenAvatar from '~/components/token/TokenAvatar';
 import { Tooltip } from '@chakra-ui/react';
 import { networkConfig } from '~/lib/config/network-config';
-import {
-    GqlPoolStakingFarmRewarder,
-    GqlPoolStakingGaugeReward,
-    useGetBlocksPerDayQuery,
-} from '~/apollo/generated/graphql-codegen-generated';
+import { useGetBlocksPerDayQuery } from '~/apollo/generated/graphql-codegen-generated';
 import { useGetTokens } from '~/lib/global/useToken';
 import { sumBy } from 'lodash';
 import { InfoButton } from '~/components/info-button/InfoButton';
@@ -49,20 +45,6 @@ export default function PoolOverallStats() {
         );
 
     const rewards = pool.staking?.farm?.rewarders || pool.staking?.gauge?.rewards;
-
-    function Rewards({ reward }: { reward: GqlPoolStakingFarmRewarder | GqlPoolStakingGaugeReward }) {
-        if (!reward || reward.rewardPerSecond === '0') {
-            return null;
-        }
-        return (
-            <HStack spacing="1" mb="0.5">
-                <TokenAvatar height="20px" width="20px" address={reward.tokenAddress} />
-                <Text fontSize="1rem" lineHeight="1rem">
-                    {numeral(parseFloat(reward.rewardPerSecond) * 86400).format('0,0')} / day
-                </Text>
-            </HStack>
-        );
-    }
 
     return (
         <VStack spacing="4" width="full" alignItems="flex-start" px="2">
@@ -144,7 +126,20 @@ export default function PoolOverallStats() {
                                 </Tooltip>
                             </HStack>
                         )}
-                        {rewards && rewards.map((reward) => <Rewards reward={reward} key={reward.id} />)}
+                        {rewards &&
+                            rewards.map((reward) => {
+                                if (!reward || reward.rewardPerSecond === '0') {
+                                    return null;
+                                }
+                                return (
+                                    <HStack spacing="1" mb="0.5" key={reward.id}>
+                                        <TokenAvatar height="20px" width="20px" address={reward.tokenAddress} />
+                                        <Text fontSize="1rem" lineHeight="1rem">
+                                            {numeral(parseFloat(reward.rewardPerSecond) * 86400).format('0,0')} / day
+                                        </Text>
+                                    </HStack>
+                                );
+                            })}
                     </Box>
                 </VStack>
             )}
