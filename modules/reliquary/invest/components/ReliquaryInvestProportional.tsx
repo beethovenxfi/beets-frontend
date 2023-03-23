@@ -10,7 +10,6 @@ import {
     Text,
     VStack,
 } from '@chakra-ui/react';
-
 import { useReliquaryInvestState } from '~/modules/reliquary/invest/lib/useReliquaryInvestState';
 import { replaceEthWithWeth, replaceWethWithEth, tokenGetAmountForAddress } from '~/lib/services/token/token-util';
 import { ReliquaryInvestSettings } from '~/modules/reliquary/invest/components/ReliquaryInvestSettings';
@@ -23,7 +22,6 @@ import { useReliquaryInvest } from '~/modules/reliquary/invest/lib/useReliquaryI
 import { usePool } from '~/modules/pool/lib/usePool';
 import TokenRow from '~/components/token/TokenRow';
 import { usePoolUserTokenBalancesInWallet } from '~/modules/pool/lib/usePoolUserTokenBalancesInWallet';
-import { bnum } from '@balancer-labs/sor';
 import { GqlPoolToken } from '~/apollo/generated/graphql-codegen-generated';
 import { tokenInputTruncateDecimalPlaces } from '~/lib/util/input-util';
 import { useReliquaryJoinGetProportionalInvestmentAmount } from '../lib/useReliquaryJoinGetProportionalInvestmentAmount';
@@ -37,7 +35,7 @@ export function ReliquaryInvestProportional({ onShowPreview }: Props) {
     const investOptions = pool.investConfig.options;
     const { setSelectedOption, selectedOptions, setInputAmounts, inputAmounts } = useReliquaryInvestState();
     const { tokenProportionalAmounts } = useReliquaryJoinGetProportionalInvestmentAmount();
-    const { selectedInvestTokens, userInvestTokenBalances, isInvestingWithEth } = useReliquaryInvest();
+    const { selectedInvestTokens, isInvestingWithEth } = useReliquaryInvest();
 
     const { userPoolTokenBalances } = usePoolUserTokenBalancesInWallet();
 
@@ -67,17 +65,9 @@ export function ReliquaryInvestProportional({ onShowPreview }: Props) {
         }
     }
 
-    const exceedsTokenBalances = userInvestTokenBalances.some((tokenBalance) => {
-        if (!inputAmounts[tokenBalance.address] || !tokenBalance.amount) return false;
-        return bnum(inputAmounts[tokenBalance.address]).gt(tokenBalance.amount);
-    });
-
     const firstToken = selectedInvestTokens[0];
     const proportionalPercent =
-        !exceedsTokenBalances &&
-        tokenProportionalAmounts &&
-        tokenProportionalAmounts[firstToken.address] &&
-        inputAmounts[firstToken.address]
+        tokenProportionalAmounts && tokenProportionalAmounts[firstToken.address] && inputAmounts[firstToken.address]
             ? Math.round(
                   (parseFloat(inputAmounts[firstToken.address]) /
                       parseFloat(tokenProportionalAmounts[firstToken.address])) *
@@ -169,7 +159,7 @@ export function ReliquaryInvestProportional({ onShowPreview }: Props) {
                     width="full"
                     mt="8"
                     onClick={onShowPreview}
-                    isDisabled={exceedsTokenBalances || proportionalPercent === 0}
+                    isDisabled={proportionalPercent === 0}
                 >
                     Preview
                 </Button>
