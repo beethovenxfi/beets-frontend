@@ -1,16 +1,16 @@
-import { Badge, Box, Divider, HStack, Text, VStack } from '@chakra-ui/layout';
+import { Box, Divider, HStack, Text, VStack } from '@chakra-ui/layout';
 import numeral from 'numeral';
 import AprTooltip from '~/components/apr-tooltip/AprTooltip';
 import { PercentChangeBadge } from '~/components/badge/PercentChangeBadge';
 import { numberFormatUSDValue } from '~/lib/util/number-formats';
 import { usePool } from '~/modules/pool/lib/usePool';
 import TokenAvatar from '~/components/token/TokenAvatar';
-import { Skeleton, Tooltip } from '@chakra-ui/react';
-import { tokenFormatAmount } from '~/lib/services/token/token-util';
+import { Tooltip } from '@chakra-ui/react';
 import { networkConfig } from '~/lib/config/network-config';
 import {
+    GqlPoolStakingFarmRewarder,
+    GqlPoolStakingGaugeReward,
     useGetBlocksPerDayQuery,
-    useGetPoolBptPriceChartDataQuery,
 } from '~/apollo/generated/graphql-codegen-generated';
 import { useGetTokens } from '~/lib/global/useToken';
 import { sumBy } from 'lodash';
@@ -42,7 +42,27 @@ export default function PoolOverallStats() {
         sumBy(
             pool.staking?.farm?.rewarders || [],
             (rewarder) => priceFor(rewarder.tokenAddress) * parseFloat(rewarder.rewardPerSecond) * 86400,
+        ) +
+        sumBy(
+            pool.staking?.gauge?.rewards || [],
+            (reward) => priceFor(reward.tokenAddress) * parseFloat(reward.rewardPerSecond) * 86400,
         );
+
+    const rewards = pool.staking?.farm?.rewarders || pool.staking?.gauge?.rewards;
+
+    function Rewards({ reward }: { reward: GqlPoolStakingFarmRewarder | GqlPoolStakingGaugeReward }) {
+        if (!reward || reward.rewardPerSecond === '0') {
+            return null;
+        }
+        return (
+            <HStack spacing="1" mb="0.5">
+                <TokenAvatar height="20px" width="20px" address={reward.tokenAddress} />
+                <Text fontSize="1rem" lineHeight="1rem">
+                    {numeral(parseFloat(reward.rewardPerSecond) * 86400).format('0,0')} / day
+                </Text>
+            </HStack>
+        );
+    }
 
     return (
         <VStack spacing="4" width="full" alignItems="flex-start" px="2">
@@ -92,7 +112,7 @@ export default function PoolOverallStats() {
                     {numeral(data.fees24h).format('$0,0.00a')}
                 </Text>
             </VStack>
-            {pool.staking?.farm && (
+            {incentivesDailyValue > 0 && (
                 <VStack spacing="0" alignItems="flex-start">
                     <InfoButton
                         labelProps={{
@@ -124,14 +144,7 @@ export default function PoolOverallStats() {
                                 </Tooltip>
                             </HStack>
                         )}
-                        {pool.staking.farm.rewarders?.map((rewarder) => (
-                            <HStack spacing="1" mb="0.5" key={rewarder.id}>
-                                <TokenAvatar height="20px" width="20px" address={rewarder.tokenAddress} />
-                                <Text fontSize="1rem" lineHeight="1rem">
-                                    {numeral(parseFloat(rewarder.rewardPerSecond) * 86400).format('0,0')} / day
-                                </Text>
-                            </HStack>
-                        ))}
+                        {rewards && rewards.map((reward) => <Rewards reward={reward} key={reward.id} />)}
                     </Box>
                 </VStack>
             )}
