@@ -37,7 +37,7 @@ export function PoolInvestProportional({ onShowPreview }: Props) {
     const { pool, poolService } = usePool();
     const investOptions = pool.investConfig.options;
     const { setSelectedOption, selectedOptions, setInputAmounts, inputAmounts } = useInvestState();
-    const { data } = usePoolJoinGetProportionalInvestmentAmount();
+    const { tokenProportionalAmounts } = usePoolJoinGetProportionalInvestmentAmount();
     const { selectedInvestTokens, userInvestTokenBalances, isInvestingWithEth } = useInvest();
 
     const { userPoolTokenBalances } = usePoolUserTokenBalancesInWallet();
@@ -75,8 +75,15 @@ export function PoolInvestProportional({ onShowPreview }: Props) {
 
     const firstToken = selectedInvestTokens[0];
     const proportionalPercent =
-        !exceedsTokenBalances && data && data[firstToken.address] && inputAmounts[firstToken.address]
-            ? Math.round((parseFloat(inputAmounts[firstToken.address]) / parseFloat(data[firstToken.address])) * 100)
+        !exceedsTokenBalances &&
+        tokenProportionalAmounts &&
+        tokenProportionalAmounts[firstToken.address] &&
+        inputAmounts[firstToken.address]
+            ? Math.round(
+                  (parseFloat(inputAmounts[firstToken.address]) /
+                      parseFloat(tokenProportionalAmounts[firstToken.address])) *
+                      100,
+              )
             : 0;
 
     return (
@@ -90,11 +97,11 @@ export function PoolInvestProportional({ onShowPreview }: Props) {
                         value={proportionalPercent}
                         onChange={(value) => {
                             if (value === 100) {
-                                setInputAmounts(data || {});
+                                setInputAmounts(tokenProportionalAmounts || {});
                             } else if (value === 0) {
                                 setInputAmounts({});
                             } else {
-                                const inputAmounts = mapValues(data || {}, (maxAmount, address) => {
+                                const inputAmounts = mapValues(tokenProportionalAmounts || {}, (maxAmount, address) => {
                                     const tokenDecimals =
                                         selectedInvestTokens.find((token) => token.address === address)?.decimals || 18;
 
@@ -146,9 +153,10 @@ export function PoolInvestProportional({ onShowPreview }: Props) {
                                     selectedAlternateToken={
                                         selectedOptions[`${option.poolTokenIndex}`] || option.tokenOptions[0].address
                                     }
-                                    onSelectedAlternateToken={(address) =>
-                                        setSelectedOption(option.poolTokenIndex, address)
-                                    }
+                                    onSelectedAlternateToken={(address) => {
+                                        setSelectedOption(option.poolTokenIndex, address);
+                                        setInputAmounts({});
+                                    }}
                                     amount={amount}
                                     balance={tokenGetAmountForAddress(tokenOption.address, userPoolTokenBalances)}
                                 />

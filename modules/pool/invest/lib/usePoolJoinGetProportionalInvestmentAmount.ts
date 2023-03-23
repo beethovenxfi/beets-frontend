@@ -29,21 +29,22 @@ export function usePoolJoinGetProportionalInvestmentAmount() {
             const scaledBalance = parseFloat(balance.amount) / parseFloat(poolToken?.priceRate || '1');
 
             const tokenValue = priceForAmount({ address: balance.address, amount: scaledBalance.toString() });
-            const weightedValue = parseFloat(poolToken?.weight || '1') * totalUserInvestTokenBalancesValue;
+            const calculatedWeight =
+                priceForAmount({ address: balance.address, amount: poolToken?.balance || '' }) /
+                parseFloat(pool.dynamicData.totalLiquidity);
+            const weightedValue =
+                (poolToken?.weight ? parseFloat(poolToken.weight) : calculatedWeight) *
+                totalUserInvestTokenBalancesValue;
 
             return {
                 ...balance,
-                //this has precision errors, but its only used for sorting, not any operations
-                normalizedAmount: poolToken?.weight
-                    ? //? scaledBalance / parseFloat(poolToken.balance) / parseFloat(poolToken.weight)
-                      (tokenValue - weightedValue) / weightedValue
-                    : scaledBalance,
+                normalizedAmount: (tokenValue - weightedValue) / weightedValue,
             };
         }),
         'normalizedAmount',
     )[0];
 
-    return useQuery(
+    const query = useQuery(
         [
             {
                 key: 'joinGetProportionalInvestmentAmount',
@@ -68,10 +69,20 @@ export function usePoolJoinGetProportionalInvestmentAmount() {
                 selectedInvestTokens.map((token) => replaceEthWithWeth(token.address)),
             );
 
-            return Object.fromEntries(
-                result.map((item) => [hasEth ? replaceWethWithEth(item.address) : item.address, item.amount]),
-            );
+            return {
+                tokenProportionalAmounts: Object.fromEntries(
+                    result.map((item) => [hasEth ? replaceWethWithEth(item.address) : item.address, item.amount]),
+                ),
+                // this is still not ideal for when there are multiple invest options for a token
+                totalValueProportionalAmounts: sumBy(result, priceForAmount),
+            };
         },
         { enabled: true, staleTime: 0, cacheTime: 0 },
     );
+
+    return {
+        ...query,
+        tokenProportionalAmounts: query.data?.tokenProportionalAmounts,
+        totalValueProportionalAmounts: query.data?.totalValueProportionalAmounts,
+    };
 }
