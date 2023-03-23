@@ -36,7 +36,7 @@ export function ReliquaryInvestProportional({ onShowPreview }: Props) {
     const { pool, poolService } = usePool();
     const investOptions = pool.investConfig.options;
     const { setSelectedOption, selectedOptions, setInputAmounts, inputAmounts } = useReliquaryInvestState();
-    const { data } = useReliquaryJoinGetProportionalInvestmentAmount();
+    const { tokenProportionalAmounts } = useReliquaryJoinGetProportionalInvestmentAmount();
     const { selectedInvestTokens, userInvestTokenBalances, isInvestingWithEth } = useReliquaryInvest();
 
     const { userPoolTokenBalances } = usePoolUserTokenBalancesInWallet();
@@ -74,8 +74,15 @@ export function ReliquaryInvestProportional({ onShowPreview }: Props) {
 
     const firstToken = selectedInvestTokens[0];
     const proportionalPercent =
-        !exceedsTokenBalances && data && data[firstToken.address] && inputAmounts[firstToken.address]
-            ? Math.round((parseFloat(inputAmounts[firstToken.address]) / parseFloat(data[firstToken.address])) * 100)
+        !exceedsTokenBalances &&
+        tokenProportionalAmounts &&
+        tokenProportionalAmounts[firstToken.address] &&
+        inputAmounts[firstToken.address]
+            ? Math.round(
+                  (parseFloat(inputAmounts[firstToken.address]) /
+                      parseFloat(tokenProportionalAmounts[firstToken.address])) *
+                      100,
+              )
             : 0;
 
     return (
@@ -89,11 +96,11 @@ export function ReliquaryInvestProportional({ onShowPreview }: Props) {
                         value={proportionalPercent}
                         onChange={(value) => {
                             if (value === 100) {
-                                setInputAmounts(data || {});
+                                setInputAmounts(tokenProportionalAmounts || {});
                             } else if (value === 0) {
                                 setInputAmounts({});
                             } else {
-                                const inputAmounts = mapValues(data || {}, (maxAmount, address) => {
+                                const inputAmounts = mapValues(tokenProportionalAmounts || {}, (maxAmount, address) => {
                                     const tokenDecimals =
                                         selectedInvestTokens.find((token) => token.address === address)?.decimals || 18;
 
