@@ -28,18 +28,53 @@ export function usePoolJoinGetProportionalInvestmentAmount() {
             //TODO: as the invest token is often time nested deeper in linear pool of phantom stable
             const scaledBalance = parseFloat(balance.amount) / parseFloat(poolToken?.priceRate || '1');
 
-            const tokenValue = priceForAmount({ address: balance.address, amount: scaledBalance.toString() });
-            const calculatedWeight =
-                priceForAmount({ address: balance.address, amount: poolToken?.balance || '' }) /
-                parseFloat(pool.dynamicData.totalLiquidity);
-            const weightedValue =
-                (poolToken?.weight ? parseFloat(poolToken.weight) : calculatedWeight) *
-                totalUserInvestTokenBalancesValue;
+            if (
+                'nestingType' in pool &&
+                (pool.nestingType === 'HAS_ONLY_PHANTOM_BPT' || pool.nestingType === 'HAS_SOME_PHANTOM_BPT')
+            ) {
+                // TODO: the calculation below isn't quite there yet either
+                //
+                //     if (poolToken && 'pool' in poolToken && poolToken.__typename === 'GqlPoolTokenPhantomStable') {
+                //         const nestedWeight = poolToken.pool.tokens
+                //             .map((token) => {
+                //                 if (
+                //                     'pool' in token &&
+                //                     token.pool.tokens.filter((nestedToken) => nestedToken.address === balance.address)
+                //                         .length
+                //                 ) {
+                //                     return parseFloat(token.balance) / parseFloat(poolToken.balance);
+                //                 }
+                //             })
+                //             .filter(Boolean)[0];
 
-            return {
-                ...balance,
-                normalizedAmount: (tokenValue - weightedValue) / weightedValue,
-            };
+                //         return {
+                //             ...balance,
+                //             normalizedAmount:
+                //                 (scaledBalance / parseFloat(poolToken?.balance || '')) *
+                //                 (1 / (parseFloat(poolToken?.weight || '') * (nestedWeight ?? 1))),
+                //         };
+                //     }
+
+                return {
+                    ...balance,
+                    normalizedAmount:
+                        (scaledBalance / parseFloat(poolToken?.balance || '')) *
+                        (1 / parseFloat(poolToken?.weight || '')),
+                };
+            } else {
+                const tokenValue = priceForAmount({ address: balance.address, amount: scaledBalance.toString() });
+                const calculatedWeight =
+                    priceForAmount({ address: balance.address, amount: poolToken?.balance || '' }) /
+                    parseFloat(pool.dynamicData.totalLiquidity);
+                const weightedValue =
+                    (poolToken?.weight ? parseFloat(poolToken?.weight || '') : calculatedWeight) *
+                    totalUserInvestTokenBalancesValue;
+
+                return {
+                    ...balance,
+                    normalizedAmount: (tokenValue - weightedValue) / weightedValue,
+                };
+            }
         }),
         'normalizedAmount',
     )[0];
