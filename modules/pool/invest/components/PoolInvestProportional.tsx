@@ -86,9 +86,7 @@ export function PoolInvestProportional({ onShowPreview }: Props) {
                         focusThumbOnChange={false}
                         value={proportionalPercent}
                         onChange={(value) => {
-                            if (value === 100) {
-                                setInputAmounts(tokenProportionalAmounts || {});
-                            } else if (value === 0) {
+                            if (value === 0) {
                                 setInputAmounts({});
                             } else {
                                 const inputAmounts = mapValues(tokenProportionalAmounts || {}, (maxAmount, address) => {
