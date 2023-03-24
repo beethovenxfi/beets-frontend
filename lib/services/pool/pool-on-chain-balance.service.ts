@@ -34,7 +34,7 @@ export class PoolOnChainBalanceService {
             token.balance = tokenBalance;
             token.totalBalance = tokenBalance;
 
-            if (token.__typename === 'GqlPoolTokenPhantomStable') {
+            if (token.__typename === 'GqlPoolTokenLinear' || token.__typename === 'GqlPoolTokenPhantomStable') {
                 const percentOfNestedSupply =
                     parseFloat(tokenBalance) / parseFloat(formatFixed(dataMap[token.pool.id].totalSupply, 18));
 
