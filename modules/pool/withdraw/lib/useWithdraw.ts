@@ -1,10 +1,12 @@
 import { GqlPoolToken } from '~/apollo/generated/graphql-codegen-generated';
 import { useWithdrawState } from '~/modules/pool/withdraw/lib/useWithdrawState';
 import { usePool } from '~/modules/pool/lib/usePool';
+import { sumBy } from 'lodash';
+import { useGetTokens } from '~/lib/global/useToken';
 
 export function useWithdraw() {
     const { pool } = usePool();
-    const { selectedOptions } = useWithdrawState();
+    const { selectedOptions, proportionalAmounts } = useWithdrawState();
 
     const selectedWithdrawTokens: GqlPoolToken[] = pool.withdrawConfig.options.map((option) =>
         selectedOptions[`${option.poolTokenIndex}`]
@@ -15,16 +17,6 @@ export function useWithdraw() {
     );
 
     const selectedWithdrawTokenAddresses = selectedWithdrawTokens.map((token) => token.address);
-
-    /*const selectedInvestTokensWithAmounts = selectedWithdrawTokens.map((token) => ({
-        ...token,
-        amount: inputAmounts[token.address] || '0',
-    }));*/
-
-    /*const userInvestTokenBalances: TokenAmountHumanReadable[] = selectedInvestTokens.map((token) => ({
-        address: token.address,
-        amount: getUserBalanceForToken(token.address),
-    }));*/
 
     return {
         selectedWithdrawTokens,

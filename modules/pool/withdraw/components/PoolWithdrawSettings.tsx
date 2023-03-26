@@ -1,5 +1,5 @@
 import { InfoButton } from '~/components/info-button/InfoButton';
-import { Box, BoxProps, Text } from '@chakra-ui/react';
+import { Box, BoxProps, HStack, Text } from '@chakra-ui/react';
 import { BeetsBox } from '~/components/box/BeetsBox';
 import { ModalSectionHeadline } from '~/components/modal/ModalSectionHeadline';
 import { SlippageTextLinkMenu } from '~/components/slippage/SlippageTextLinkMenu';
@@ -20,10 +20,8 @@ export function PoolWithdrawSettings({ ...rest }: BoxProps) {
     );
 
     return (
-        <Box {...rest}>
-            <ModalSectionHeadline headline={`Settings`} />
-            <BeetsBox p="2">
-                {requiresBatchRelayerOnExit && (
+        <BeetsBox p="2" width='full'>
+            {/* {requiresBatchRelayerOnExit && (
                     <CardRow>
                         <Box flex="1">
                             {batchRelayerInfoButton}
@@ -43,17 +41,16 @@ export function PoolWithdrawSettings({ ...rest }: BoxProps) {
                             )}
                         </Box>
                     </CardRow>
-                )}
-                <CardRow mb="0">
-                    <Box flex="1">
-                        <InfoButton
-                            label="Max slippage"
-                            infoText="The maximum amount of slippage that you're willing to accept for this transaction."
-                        />
-                    </Box>
-                    <SlippageTextLinkMenu />
-                </CardRow>
-            </BeetsBox>
-        </Box>
+                )} */}
+            <HStack width="full" justifyContent="space-between">
+                <Box flex="1" width="full">
+                    <InfoButton
+                        label="Max slippage"
+                        infoText="The maximum amount of slippage that you're willing to accept for this transaction."
+                    />
+                </Box>
+                <SlippageTextLinkMenu />
+            </HStack>
+        </BeetsBox>
     );
 }
