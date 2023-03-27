@@ -80,14 +80,8 @@ export function useSubmitTransaction({ config, transactionType }: Props): Submit
         onSuccess(data) {
             showToast({
                 id: data.hash,
-                content: (
-                    <HStack>
-                        <Text>
-                            {toastGetTransactionStatusHeadline(transactionType, 'PENDING')}. &nbsp;
-                            {toastText.current}
-                        </Text>
-                    </HStack>
-                ),
+                badge: toastGetTransactionStatusHeadline(transactionType, 'PENDING'),
+                content: <Text>{toastText.current}</Text>,
                 type: ToastType.Loading,
             });
             try {
@@ -119,14 +113,8 @@ export function useSubmitTransaction({ config, transactionType }: Props): Submit
         onSettled() {
             updateToast(contractWrite.data?.hash || '', {
                 type: ToastType.Success,
-                content: (
-                    <HStack>
-                        <Text>
-                            {toastGetTransactionStatusHeadline(transactionType, 'CONFIRMED')}&nbsp;-&nbsp;
-                            {toastText.current}
-                        </Text>
-                    </HStack>
-                ),
+                badge: toastGetTransactionStatusHeadline(transactionType, 'CONFIRMED'),
+                content: <Text>{toastText.current}</Text>,
                 auto: true,
             });
             txPendingVar(false);
