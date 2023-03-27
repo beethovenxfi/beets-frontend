@@ -10,7 +10,7 @@ export function usePoolWithOnChainData(pool: GqlPoolUnion) {
 
     const tokenPrices = pool.tokens.map((token) => ({ address: token.address, price: priceFor(token.address) }));
 
-    return useQuery(['usePoolWithOnChainData', pool.id], async () => {
+    return useQuery(['usePoolWithOnChainData', pool.id, tokenPrices], async () => {
         return poolOnChainBalanceService.updatePoolWithOnChainBalanceData({ pool, provider, tokenPrices });
     });
 }
