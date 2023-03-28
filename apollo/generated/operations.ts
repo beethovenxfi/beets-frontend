@@ -457,7 +457,7 @@ export const GetAppGlobalPollingData = gql`
         }
         blocksGetBlocksPerDay
         blocksGetAverageBlockTime
-        beetsGetBeetsPrice
+        tokenGetProtocolTokenPrice
     }
 `;
 export const GetTokens = gql`
@@ -518,7 +518,7 @@ export const GetProtocolData = gql`
             swapFee24h
             swapVolume24h
         }
-        beetsPrice: beetsGetBeetsPrice
+        beetsPrice: tokenGetProtocolTokenPrice
     }
 `;
 export const GetBlocksPerDay = gql`
@@ -529,7 +529,7 @@ export const GetBlocksPerDay = gql`
 `;
 export const GetBeetsPrice = gql`
     query GetBeetsPrice {
-        beetsPrice: beetsGetBeetsPrice
+        beetsPrice: tokenGetProtocolTokenPrice
     }
 `;
 export const GetUserData = gql`

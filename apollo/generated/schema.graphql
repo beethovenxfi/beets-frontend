@@ -1088,7 +1088,9 @@ type Mutation {
     poolReloadAllPoolAprs: String!
     poolReloadAllTokenNestedPoolIds: String!
     poolReloadPoolNestedTokens(poolId: String!): String!
+    poolReloadPoolTokenIndexes(poolId: String!): String!
     poolReloadStakingForAllPools(stakingTypes: [GqlPoolStakingType!]!): String!
+    poolSetPoolsWithPreferredGaugesAsIncentivized: String!
     poolSyncAllPoolsFromSubgraph: [String!]!
     poolSyncLatestSnapshotsForAllPools(daysToSync: Int): String!
     poolSyncNewPoolsFromSubgraph: [String!]!
@@ -1121,7 +1123,6 @@ type Mutation {
 }
 
 type Query {
-    beetsGetBeetsPrice: String!
     beetsGetFbeetsRatio: String!
     beetsPoolGetReliquaryFarmSnapshots(id: String!, range: GqlPoolSnapshotDataRange!): [GqlReliquaryFarmSnapshot!]!
     blocksGetAverageBlockTime: Float!
@@ -1175,6 +1176,7 @@ type Query {
     tokenGetCurrentPrices: [GqlTokenPrice!]!
     tokenGetHistoricalPrices(addresses: [String!]!): [GqlHistoricalTokenPrice!]!
     tokenGetPriceChartData(address: String!, range: GqlTokenChartDataRange!): [GqlTokenPriceChartDataItem!]!
+    tokenGetProtocolTokenPrice: AmountHumanReadable!
     tokenGetRelativePriceChartData(
         range: GqlTokenChartDataRange!
         tokenIn: String!
