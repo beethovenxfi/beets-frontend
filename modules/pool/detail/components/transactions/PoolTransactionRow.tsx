@@ -70,9 +70,9 @@ function Pool(props: PoolTransaction) {
     const isSwapAction = props.type === PoolTransactionType.Swap;
 
     const isMobile = useBreakpointValue({ base: true, lg: false });
-
+    
     return (
-        <Stack spacing="2" alignItems={{ base: 'flex-start', lg: 'center' }} direction={{ base: 'column', lg: 'row' }}>
+        <Stack spacing='1' alignItems={{ base: 'flex-start', lg: 'center' }} direction={{ base: 'column', lg: 'row' }} flexWrap={{lg:'wrap'}} >
             {!props.isPhantomStable && (
                 <>
                     {isInvestAction &&
@@ -84,6 +84,8 @@ function Pool(props: PoolTransaction) {
                                     key={index}
                                     amount={tokenAmount.amount}
                                     address={tokenAmount.address}
+                                    my='1'
+                                    py='1'
                                 />
                             ))}
                     {!isInvestAction && (
@@ -140,11 +142,11 @@ export default function PoolTransactionItem({ transaction, ...rest }: Props) {
     const flexAlign = { base: 'flex-start', lg: 'center' };
     const gridItemMb = { base: '4', lg: '0' };
     const justifyContent = { base: 'flex-start', lg: 'flex-end' };
-
+    
     return (
         <Grid
-            px="4"
-            py={{ base: '4', lg: '2' }}
+            px="2"
+            py={{ base: '4', lg: '1' }}
             templateColumns={{
                 base: '1fr 1fr',
                 lg: '200px 1fr 200px 200px',
@@ -164,7 +166,7 @@ export default function PoolTransactionItem({ transaction, ...rest }: Props) {
                     <PoolTransactionAction {...transaction} />
                 </GridItem>
             </Flex>
-            <GridItem area="details" mb={gridItemMb}>
+            <GridItem area="details" mb={gridItemMb} gap={3}>
                 <MobileLabel text="Details" />
                 <Pool {...transaction} />
             </GridItem>
