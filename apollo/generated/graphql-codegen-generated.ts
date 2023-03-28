@@ -1118,7 +1118,9 @@ export interface Mutation {
     poolReloadAllPoolAprs: Scalars['String'];
     poolReloadAllTokenNestedPoolIds: Scalars['String'];
     poolReloadPoolNestedTokens: Scalars['String'];
+    poolReloadPoolTokenIndexes: Scalars['String'];
     poolReloadStakingForAllPools: Scalars['String'];
+    poolSetPoolsWithPreferredGaugesAsIncentivized: Scalars['String'];
     poolSyncAllPoolsFromSubgraph: Array<Scalars['String']>;
     poolSyncLatestSnapshotsForAllPools: Scalars['String'];
     poolSyncNewPoolsFromSubgraph: Array<Scalars['String']>;
@@ -1167,6 +1169,10 @@ export interface MutationPoolReloadPoolNestedTokensArgs {
     poolId: Scalars['String'];
 }
 
+export interface MutationPoolReloadPoolTokenIndexesArgs {
+    poolId: Scalars['String'];
+}
+
 export interface MutationPoolReloadStakingForAllPoolsArgs {
     stakingTypes: Array<GqlPoolStakingType>;
 }
@@ -1207,7 +1213,6 @@ export interface MutationUserSyncBalanceArgs {
 
 export interface Query {
     __typename: 'Query';
-    beetsGetBeetsPrice: Scalars['String'];
     beetsGetFbeetsRatio: Scalars['String'];
     beetsPoolGetReliquaryFarmSnapshots: Array<GqlReliquaryFarmSnapshot>;
     blocksGetAverageBlockTime: Scalars['Float'];
@@ -1237,6 +1242,7 @@ export interface Query {
     tokenGetCurrentPrices: Array<GqlTokenPrice>;
     tokenGetHistoricalPrices: Array<GqlHistoricalTokenPrice>;
     tokenGetPriceChartData: Array<GqlTokenPriceChartDataItem>;
+    tokenGetProtocolTokenPrice: Scalars['AmountHumanReadable'];
     tokenGetRelativePriceChartData: Array<GqlTokenPriceChartDataItem>;
     tokenGetTokenData?: Maybe<GqlTokenData>;
     tokenGetTokenDynamicData?: Maybe<GqlTokenDynamicData>;
@@ -1531,7 +1537,7 @@ export type GetAppGlobalPollingDataQuery = {
     __typename: 'Query';
     blocksGetBlocksPerDay: number;
     blocksGetAverageBlockTime: number;
-    beetsGetBeetsPrice: string;
+    tokenGetProtocolTokenPrice: string;
     tokenGetCurrentPrices: Array<{ __typename: 'GqlTokenPrice'; price: number; address: string }>;
     protocolMetrics: {
         __typename: 'GqlProtocolMetrics';
@@ -5209,7 +5215,7 @@ export const GetAppGlobalPollingDataDocument = gql`
         }
         blocksGetBlocksPerDay
         blocksGetAverageBlockTime
-        beetsGetBeetsPrice
+        tokenGetProtocolTokenPrice
     }
 `;
 
@@ -5442,7 +5448,7 @@ export const GetProtocolDataDocument = gql`
             swapFee24h
             swapVolume24h
         }
-        beetsPrice: beetsGetBeetsPrice
+        beetsPrice: tokenGetProtocolTokenPrice
     }
 `;
 
@@ -5515,7 +5521,7 @@ export type GetBlocksPerDayLazyQueryHookResult = ReturnType<typeof useGetBlocksP
 export type GetBlocksPerDayQueryResult = Apollo.QueryResult<GetBlocksPerDayQuery, GetBlocksPerDayQueryVariables>;
 export const GetBeetsPriceDocument = gql`
     query GetBeetsPrice {
-        beetsPrice: beetsGetBeetsPrice
+        beetsPrice: tokenGetProtocolTokenPrice
     }
 `;
 
