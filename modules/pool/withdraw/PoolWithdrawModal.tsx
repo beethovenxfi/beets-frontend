@@ -28,7 +28,12 @@ interface Props {
     isVisible?: boolean;
     onClose?: () => void;
 }
-export function PoolWithdrawModal({ activatorProps = {}, noActivator = false, onClose: _onClose, isVisible = false }: Props) {
+export function PoolWithdrawModal({
+    activatorProps = {},
+    noActivator = false,
+    onClose: _onClose,
+    isVisible = false,
+}: Props) {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const { pool, formattedTypeName } = usePool();
     const [modalState, setModalState] = useState<'start' | 'proportional' | 'single-asset' | 'preview'>('start');

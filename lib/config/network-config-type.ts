@@ -57,7 +57,7 @@ export interface NetworkConfig {
     balancer: {
         vault: string;
         batchRelayer: string;
-        composableStableFactory: string;
+        composableStableFactories: string[];
         weightedPoolV2Factory: string;
         linearFactories: {
             erc4626: string[];
@@ -65,6 +65,7 @@ export interface NetworkConfig {
         };
         linearRebalancers: { [poolAddress: string]: string };
         reaperManualRebalancer?: string;
+        sorQueries: string;
         balancerQueries: string;
     };
     beetsPoolOwnerAddress: string;

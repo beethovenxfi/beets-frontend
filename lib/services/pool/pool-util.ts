@@ -1,5 +1,4 @@
 import {
-    GqlPoolLinear,
     GqlPoolLinearNested,
     GqlPoolPhantomStableNested,
     GqlPoolTokenUnion,
@@ -34,7 +33,7 @@ export function poolRequiresBatchRelayerOnJoin(pool: GqlPoolUnion) {
     return (
         (pool.__typename === 'GqlPoolWeighted' &&
             (pool.nestingType === 'HAS_SOME_PHANTOM_BPT' || pool.nestingType === 'HAS_ONLY_PHANTOM_BPT')) ||
-        pool.factory === networkConfig.balancer.composableStableFactory
+        networkConfig.balancer.composableStableFactories.includes(pool.factory || '')
     );
 }
 
@@ -42,7 +41,7 @@ export function poolRequiresBatchRelayerOnExit(pool: GqlPoolUnion) {
     return (
         (pool.__typename === 'GqlPoolWeighted' &&
             (pool.nestingType === 'HAS_SOME_PHANTOM_BPT' || pool.nestingType === 'HAS_ONLY_PHANTOM_BPT')) ||
-        pool.factory === networkConfig.balancer.composableStableFactory ||
+        networkConfig.balancer.composableStableFactories.includes(pool.factory || '') ||
         pool.factory === networkConfig.balancer.weightedPoolV2Factory
     );
 }
@@ -52,7 +51,7 @@ export function poolIsComposablePool(pool: GqlPoolUnion) {
         (pool.__typename === 'GqlPoolWeighted' &&
             isSameAddress(pool.factory || '', networkConfig.balancer.weightedPoolV2Factory)) ||
         (pool.__typename === 'GqlPoolPhantomStable' &&
-            isSameAddress(pool.factory || '', networkConfig.balancer.composableStableFactory))
+            networkConfig.balancer.composableStableFactories.includes(pool.factory || ''))
     );
 }
 
@@ -75,7 +74,7 @@ export function poolGetServiceForPool(pool: GqlPoolUnion): PoolService {
         case 'GqlPoolStable':
             return new PoolStableService(pool, batchRelayerService, networkConfig.wethAddress);
         case 'GqlPoolPhantomStable': {
-            if (isSameAddress(pool.factory || '', networkConfig.balancer.composableStableFactory)) {
+            if (networkConfig.balancer.composableStableFactories.includes(pool.factory || '')) {
                 return new PoolComposableStableService(
                     pool,
                     batchRelayerService,

@@ -1,4 +1,4 @@
-import { tradeStateVar, useTrade } from '~/modules/trade/lib/useTrade';
+import { useTrade } from '~/modules/trade/lib/useTrade';
 import { useBoolean } from '@chakra-ui/hooks';
 import { AmountHumanReadable } from '~/lib/services/token/token-types';
 import { makeVar, NetworkStatus, useReactiveVar } from '@apollo/client';
@@ -22,19 +22,38 @@ export function useTradeCard() {
 
     const {
         reactiveTradeState,
-        loadSwaps: _loadSwaps,
+        loadSwaps,
         loadingSwaps,
-        clearSwaps,
-        setTradeConfig,
-        getLatestState,
-        setTokens,
+        getLatestTradeState,
         networkStatus,
         swapInfo,
         tradeStartPolling,
         tradeStopPolling,
         isNativeAssetWrap,
         isNativeAssetUnwrap,
+        setTradeState,
     } = useTrade();
+
+    useEffect(() => {
+        if (swapInfo) {
+            const resultAmount = swapInfo.returnAmount || '0';
+            const resultAmountFixed = resultAmount ? oldBnumToFixed(resultAmount, 6) : '';
+
+            if (parseFloat(resultAmountFixed) === 0) {
+                if (swapInfo.swapType === 'EXACT_IN') {
+                    setBuyAmount('');
+                } else {
+                    setSellAmount('');
+                }
+            } else {
+                if (swapInfo.swapType === 'EXACT_IN') {
+                    setBuyAmount(resultAmountFixed);
+                } else {
+                    setSellAmount(resultAmountFixed);
+                }
+            }
+        }
+    }, [JSON.stringify(swapInfo)]);
 
     // refetching the swapInfo may not always trigger the query loading state,
     // so we use a fallback flag to make sure that we always have some loading
@@ -59,12 +78,12 @@ export function useTradeCard() {
 
     useEffect(() => {
         if (initialTokenIn || initialTokenOut) {
-            const tradeState = tradeStateVar();
+            const tradeState = getLatestTradeState();
 
             //TODO: need to support importing of unknown tokens here
-            tradeStateVar({
+            setTradeState({
                 ...tradeState,
-                sorResponse: null,
+                cleared: true,
                 tokenIn:
                     typeof initialTokenIn === 'string' && isAddress(initialTokenIn)
                         ? initialTokenIn.toLowerCase()
@@ -77,11 +96,11 @@ export function useTradeCard() {
         }
 
         setIsFetching.on();
-        dFetchTrade('EXACT_IN', sellAmountVar());
+        debouncedFetchTrade('EXACT_IN', sellAmountVar());
     }, [initialTokenIn, initialTokenOut]);
 
-    const fetchTrade = async (type: GqlSorSwapType, amount: string) => {
-        setTradeConfig(type, amount);
+    async function fetchTrade(type: GqlSorSwapType, amount: string) {
+        setTradeState({ swapType: type, swapAmount: amount });
 
         if (isNativeAssetUnwrap || isNativeAssetWrap) {
             if (type === 'EXACT_IN') {
@@ -96,28 +115,15 @@ export function useTradeCard() {
             return;
         }
 
-        const trade = await _loadSwaps(type, amount);
-        const resultAmount = trade?.returnAmount || '0';
-        const resultAmountFixed = resultAmount ? oldBnumToFixed(resultAmount, 6) : '';
+        await loadSwaps();
 
-        if (parseFloat(resultAmountFixed) === 0) {
-            if (type === 'EXACT_IN') {
-                setBuyAmount('');
-            } else {
-                setSellAmount('');
-            }
-        } else {
-            if (type === 'EXACT_IN') {
-                setBuyAmount(resultAmountFixed);
-            } else {
-                setSellAmount(resultAmountFixed);
-            }
-        }
-
+        tradeStartPolling();
         setIsFetching.off();
-    };
+    }
 
-    const dFetchTrade = useDebouncedCallback((type: 'EXACT_IN' | 'EXACT_OUT', amount: string) => {
+    const debouncedFetchTrade = useDebouncedCallback((type: 'EXACT_IN' | 'EXACT_OUT', amount: string) => {
+        tradeStopPolling();
+
         fetchTrade(type, amount);
     }, 300);
 
@@ -125,14 +131,14 @@ export function useTradeCard() {
         const amount = event.currentTarget.value;
 
         if (amount === '' || parseFloat(amount) === 0) {
-            dFetchTrade.cancel();
+            debouncedFetchTrade.cancel();
             setSellAmount(amount);
             setBuyAmount('');
             setIsFetching.off();
-            clearSwaps();
+            setTradeState({ cleared: true });
         } else {
             setIsFetching.on();
-            dFetchTrade('EXACT_IN', amount);
+            debouncedFetchTrade('EXACT_IN', amount);
             setSellAmount(amount);
         }
     };
@@ -141,20 +147,20 @@ export function useTradeCard() {
         const amount = event.currentTarget.value;
 
         if (amount === '' || parseFloat(amount) === 0) {
-            dFetchTrade.cancel();
+            debouncedFetchTrade.cancel();
             setBuyAmount(amount);
             setSellAmount('');
             setIsFetching.off();
-            clearSwaps();
+            setTradeState({ cleared: true });
         } else {
             setIsFetching.on();
-            dFetchTrade('EXACT_OUT', amount);
+            debouncedFetchTrade('EXACT_OUT', amount);
             setBuyAmount(amount);
         }
     };
 
     function handleTokenSelected(address: string) {
-        const tradeState = tradeStateVar();
+        const tradeState = getLatestTradeState();
         const tokenSelectKey = tokenSelectedVar();
 
         const token = getToken(address || '');
@@ -166,31 +172,32 @@ export function useTradeCard() {
         const currentToken = isTokenIn ? tradeState.tokenIn : tradeState.tokenOut;
 
         if (otherToken === address) {
-            setTokens({ tokenIn: isTokenIn ? address : currentToken, tokenOut: !isTokenIn ? address : currentToken });
+            setTradeState({
+                tokenIn: isTokenIn ? address : currentToken,
+                tokenOut: !isTokenIn ? address : currentToken,
+            });
         } else {
-            setTokens({ [tokenSelectKey]: address });
+            setTradeState({ [tokenSelectKey]: address });
         }
 
         if (parseFloat(sellAmount || '0') > 0) {
             setIsFetching.on();
-            dFetchTrade('EXACT_IN', sellAmount);
+            debouncedFetchTrade('EXACT_IN', sellAmount);
         }
     }
 
     const handleTokensSwitched = () => {
-        const state = getLatestState();
+        const state = getLatestTradeState();
         const buyAmount = buyAmountVar();
 
-        tradeStateVar({ ...tradeStateVar(), sorResponse: null });
-
-        setTokens({ tokenIn: state.tokenOut, tokenOut: state.tokenIn });
+        setTradeState({ cleared: true, tokenIn: state.tokenOut, tokenOut: state.tokenIn });
         setSellAmount(buyAmount);
         setBuyAmount('');
-        dFetchTrade('EXACT_IN', buyAmount);
+        debouncedFetchTrade('EXACT_IN', buyAmount);
     };
 
     function refetchTrade() {
-        const state = getLatestState();
+        const state = getLatestTradeState();
 
         if (state.swapAmount) {
             setIsFetching.on();
@@ -201,7 +208,7 @@ export function useTradeCard() {
     return {
         tokenIn: reactiveTradeState.tokenIn,
         tokenOut: reactiveTradeState.tokenOut,
-        sorResponse: reactiveTradeState.sorResponse,
+        sorResponse: swapInfo,
         tokenSelectKey: useReactiveVar(tokenSelectedVar),
         sellAmount: useReactiveVar(sellAmountVar),
         buyAmount: useReactiveVar(buyAmountVar),

@@ -44,7 +44,10 @@ export const optimismNetworkConfig: NetworkConfig = {
     balancer: {
         vault: '0xba12222222228d8ba445958a75a0704d566bf2c8',
         batchRelayer: '0x1a58897ab366082028ced3740900ecbd765af738',
-        composableStableFactory: '0xf145cafb67081895ee80eb7c04a30cf87f07b745',
+        composableStableFactories: [
+            '0xf145cafb67081895ee80eb7c04a30cf87f07b745',
+            '0xe2e901ab09f37884ba31622df3ca7fc19aa443be',
+        ],
         weightedPoolV2Factory: '0xad901309d9e9dbc5df19c84f729f429f0189a633',
         linearFactories: {
             erc4626: ['0x4c4287b07d293e361281bceee8715c8cdeb64e34'],
@@ -68,6 +71,7 @@ export const optimismNetworkConfig: NetworkConfig = {
             '0xedcfaf390906a8f91fb35b7bac23f3111dbaee1c': '0xe61b872d223362facb9fcbce359a56764bccfa36', //soUSDC
         },
         reaperManualRebalancer: '0xf070996cf89cd3d2582705fc269f2c800e9a6a21',
+        sorQueries: '0x1814a3b3e4362caf4eb54cd85b82d39bd7b34e41',
         balancerQueries: '0xe39b5e3b6d74016b2f6a9673d7d7493b6df549d5',
     },
     beetsPoolOwnerAddress: '0xd9e2889ac8c6fff8e94c7c1beeade1352df1a513',
@@ -168,11 +172,18 @@ export const optimismNetworkConfig: NetworkConfig = {
         },
         poolInvest: {
             '0xb1c9ac57594e9b1ec0f3787d9f6744ef4cb0a02400000000000000000000006e':
-                'To account for the USD+ and DAI+ deposit/withdraw fee, this pool will charge a fee on both invest and withdraw of up to 0.06%.',
+                'To account for the USD+ and DAI+ deposit/withdraw fee, this pool will charge a fee on both invest and withdraw of up to 0.02%.',
+
+            '0x43da214fab3315aa6c02e0b8f2bfb7ef2e3c60a50000000000000000000000ae':
+                'To account for the USD+ and DAI+ deposit/withdraw fee, this pool will charge a fee on both invest and withdraw of up to 0.02%.',
         },
+
         poolWithdraw: {
             '0xb1c9ac57594e9b1ec0f3787d9f6744ef4cb0a02400000000000000000000006e':
-                'To account for the USD+ and DAI+ deposit/withdraw fee, this pool will charge a fee on both invest and withdraw of up to 0.06%.',
+                'To account for the USD+ and DAI+ deposit/withdraw fee, this pool will charge a fee on both invest and withdraw of up to 0.02%.',
+
+            '0x43da214fab3315aa6c02e0b8f2bfb7ef2e3c60a50000000000000000000000ae':
+                'To account for the USD+ and DAI+ deposit/withdraw fee, this pool will charge a fee on both invest and withdraw of up to 0.02%.',
         },
     },
     boostedByTypes: {
@@ -185,7 +196,9 @@ export const optimismNetworkConfig: NetworkConfig = {
         '0xb0de49429fbb80c635432bbad0b3965b2856017700010000000000000000004e': 'reaper-aave-granary',
         '0x359ea8618c405023fc4b98dab1b01f373792a12600010000000000000000004f': 'reaper-aave-granary',
         '0xb1c9ac57594e9b1ec0f3787d9f6744ef4cb0a02400000000000000000000006e': 'overnight',
+        '0x43da214fab3315aa6c02e0b8f2bfb7ef2e3c60a50000000000000000000000ae': 'overnight',
         '0x428e1cc3099cf461b87d124957a0d48273f334b100000000000000000000007f': 'reaper-sonne',
+        '0x23ca0306b21ea71552b148cf3c4db4fc85ae19290000000000000000000000ac': 'reaper-sonne',
     },
     investDisabled: {
         '0x1f131ec1175f023ee1534b16fa8ab237c00e238100000000000000000000004a': true,

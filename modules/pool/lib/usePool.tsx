@@ -14,6 +14,7 @@ import { uniqBy } from 'lodash';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 import { isSameAddress } from '@balancer-labs/sdk';
 import { getPoolStaking } from '~/lib/services/pool/lib/util';
+import { usePoolWithOnChainData } from './usePoolWithOnChainData';
 
 export interface PoolContextType {
     pool: GqlPoolUnion;
@@ -41,7 +42,7 @@ export function PoolProvider({ pool: poolFromProps, children }: { pool: GqlPoolU
         notifyOnNetworkStatusChange: true,
     });
 
-    const pool = (data?.pool || poolFromProps) as GqlPoolUnion;
+    let pool = (data?.pool || poolFromProps) as GqlPoolUnion;
 
     // drop FTM as an invest option from the FreshBeets pool for now
     const freshBeetsPool: GqlPoolUnion | null = useMemo(() => {
@@ -72,6 +73,9 @@ export function PoolProvider({ pool: poolFromProps, children }: { pool: GqlPoolU
 
     const poolService = poolGetServiceForPool(pool);
     const poolStaking = getPoolStaking(pool);
+
+    const { data: poolWithOnChainData } = usePoolWithOnChainData(pool);
+    pool = poolWithOnChainData || pool;
 
     const bpt: TokenBase = {
         address: pool.address,

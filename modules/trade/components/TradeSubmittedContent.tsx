@@ -11,7 +11,7 @@ interface Props {
 }
 
 export function TradeSubmittedContent({ query }: Props) {
-    const { reactiveTradeState } = useTrade();
+    const { swapInfo } = useTrade();
     const { refetch } = useUserTokenBalances();
 
     useEffect(() => {
@@ -22,9 +22,9 @@ export function TradeSubmittedContent({ query }: Props) {
 
     return (
         <Box pt="4">
-            {reactiveTradeState.sorResponse && (
+            {swapInfo && (
                 <Box px="4">
-                    <BatchSwapSorRoute swapInfo={reactiveTradeState.sorResponse} minimalWidth={true} />
+                    <BatchSwapSorRoute swapInfo={swapInfo} minimalWidth={true} />
                 </Box>
             )}
             <TransactionSubmittedContent
