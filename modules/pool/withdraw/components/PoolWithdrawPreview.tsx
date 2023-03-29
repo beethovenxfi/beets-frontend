@@ -1,15 +1,11 @@
 import { Box, HStack, Skeleton, StackDivider, Text, VStack } from '@chakra-ui/react';
-import TokenAvatar from '~/components/token/TokenAvatar';
-import { tokenFormatAmount } from '~/lib/services/token/token-util';
 import { numberFormatUSDValue } from '~/lib/util/number-formats';
 import { BeetsBox } from '~/components/box/BeetsBox';
 import { useGetTokens } from '~/lib/global/useToken';
 import { useWithdrawState } from '~/modules/pool/withdraw/lib/useWithdrawState';
-import { PoolWithdrawSummary } from '~/modules/pool/withdraw/components/PoolWithdrawSummary';
 import { useExitPool } from '~/modules/pool/withdraw/lib/useExitPool';
 import { usePoolExitGetContractCallData } from '~/modules/pool/withdraw/lib/usePoolExitGetContractCallData';
-import { BeetsTransactionStepsSubmit } from '~/components/button/BeetsTransactionStepsSubmit';
-import { CardRow } from '~/components/card/CardRow';
+import { BeetsTransactionStepsSubmit, TransactionStep } from '~/components/button/BeetsTransactionStepsSubmit';
 import { FadeInBox } from '~/components/animation/FadeInBox';
 import { TransactionSubmittedContent } from '~/components/transaction/TransactionSubmittedContent';
 import { sum } from 'lodash';
@@ -18,6 +14,8 @@ import { usePoolUserBptBalance } from '~/modules/pool/lib/usePoolUserBptBalance'
 import { useUserSyncBalanceMutation } from '~/apollo/generated/graphql-codegen-generated';
 import TokenRow from '~/components/token/TokenRow';
 import { usePoolExitGetBptInForSingleAssetWithdraw } from '../lib/usePoolExitGetBptInForSingleAssetWithdraw';
+import { useEffect, useState } from 'react';
+import { useHasBatchRelayerApproval } from '~/lib/util/useHasBatchRelayerApproval';
 
 interface Props {
     onWithdrawComplete(): void;
@@ -25,8 +23,8 @@ interface Props {
 }
 
 export function PoolWithdrawPreview({ onWithdrawComplete, onClose }: Props) {
-    const { pool } = usePool();
-    const { getToken } = useGetTokens();
+    const { pool, requiresBatchRelayerOnExit } = usePool();
+    const [steps, setSteps] = useState<TransactionStep[]>([]);
     const { selectedWithdrawType, singleAssetWithdraw, proportionalAmounts, proportionalPercent } = useWithdrawState();
     const { priceForAmount } = useGetTokens();
     const { exitPool, ...exitPoolQuery } = useExitPool(pool);
@@ -39,6 +37,22 @@ export function PoolWithdrawPreview({ onWithdrawComplete, onClose }: Props) {
         isLoading: isLoadingSingleAsset,
         hasMediumPriceImpact,
     } = usePoolExitGetBptInForSingleAssetWithdraw();
+    const { data: hasBatchRelayerApproval, isLoading: isLoadingRelayerApproval } = useHasBatchRelayerApproval();
+
+    useEffect(() => {
+        const steps: TransactionStep[] = [{ id: 'exit', tooltipText: '', type: 'other', buttonText: 'Withdraw' }];
+
+        if (requiresBatchRelayerOnExit && !hasBatchRelayerApproval) {
+            steps.unshift({
+                id: 'batch-relayer',
+                type: 'other',
+                buttonText: 'Approve Batch Relayer',
+                tooltipText: 'This pool requires you to approve the batch relayer to withdraw.',
+            });
+        }
+
+        setSteps(steps);
+    }, [isLoadingRelayerApproval]);
 
     const withdrawAmounts =
         selectedWithdrawType === 'SINGLE_ASSET' && singleAssetWithdraw
@@ -83,7 +97,7 @@ export function PoolWithdrawPreview({ onWithdrawComplete, onClose }: Props) {
                             userSyncBalance({ variables: { poolId: pool.id } });
                         }
                     }}
-                    steps={[{ id: 'exit', tooltipText: '', type: 'other', buttonText: 'Withdraw' }]}
+                    steps={steps}
                     queries={[{ ...exitPoolQuery, id: 'exit' }]}
                 />
             </Box>

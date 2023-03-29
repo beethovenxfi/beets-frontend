@@ -3,7 +3,6 @@ import {
     Button,
     Heading,
     HStack,
-    Skeleton,
     Slider,
     SliderFilledTrack,
     SliderMark,
@@ -13,25 +12,17 @@ import {
     Text,
     VStack,
 } from '@chakra-ui/react';
-import TokenAvatar from '~/components/token/TokenAvatar';
 import { BoxProps } from '@chakra-ui/layout';
 import { useWithdrawState } from '~/modules/pool/withdraw/lib/useWithdrawState';
 import { useGetTokens } from '~/lib/global/useToken';
 import { usePoolExitGetProportionalWithdrawEstimate } from '~/modules/pool/withdraw/lib/usePoolExitGetProportionalWithdrawEstimate';
-import { replaceEthWithWeth, tokenFormatAmount, tokenGetAmountForAddress } from '~/lib/services/token/token-util';
 import { BeetsBox } from '~/components/box/BeetsBox';
-import { TokenSelectInline } from '~/components/token-select-inline/TokenSelectInline';
-import { PoolWithdrawSummary } from '~/modules/pool/withdraw/components/PoolWithdrawSummary';
 import { useEffectOnce } from '~/lib/util/custom-hooks';
-import { CardRow } from '~/components/card/CardRow';
 import { PoolWithdrawSettings } from '~/modules/pool/withdraw/components/PoolWithdrawSettings';
 import { useWithdraw } from '~/modules/pool/withdraw/lib/useWithdraw';
 import { usePool } from '~/modules/pool/lib/usePool';
 import { numberFormatUSDValue } from '~/lib/util/number-formats';
 import TokenRow from '~/components/token/TokenRow';
-import { usePoolUserTokenBalancesInWallet } from '../../lib/usePoolUserTokenBalancesInWallet';
-import { GqlPoolToken } from '~/apollo/generated/graphql-codegen-generated';
-import { tokenInputTruncateDecimalPlaces } from '~/lib/util/input-util';
 import { sumBy } from 'lodash';
 
 interface Props extends BoxProps {
@@ -39,7 +30,7 @@ interface Props extends BoxProps {
 }
 
 export function PoolWithdrawProportional({ onShowPreview, ...rest }: Props) {
-    const { pool, poolService } = usePool();
+    const { pool } = usePool();
     const { priceForAmount } = useGetTokens();
     const {
         setProportionalPercent,
@@ -50,11 +41,7 @@ export function PoolWithdrawProportional({ onShowPreview, ...rest }: Props) {
         setProportionalAmounts,
     } = useWithdrawState();
     const { selectedWithdrawTokenAddresses } = useWithdraw();
-    const {} = useWithdrawState();
-    const { userPoolTokenBalances } = usePoolUserTokenBalancesInWallet();
-
-    const { formattedPrice } = useGetTokens();
-    const { data, isLoading } = usePoolExitGetProportionalWithdrawEstimate();
+    const { data } = usePoolExitGetProportionalWithdrawEstimate();
     const proportionalAmounts = data || [];
     const totalWithdrawValue = sumBy(data, priceForAmount);
 
@@ -62,37 +49,11 @@ export function PoolWithdrawProportional({ onShowPreview, ...rest }: Props) {
         setProportionalWithdraw();
     });
 
-    async function onTokenAmountChange(token: GqlPoolToken, amount: string) {
-        if (!amount) {
-            setProportionalAmounts([]);
-            return;
-        }
-
-        // if (poolService.joinGetProportionalSuggestionForFixedAmount) {
-        //     const scaledAmounts = await poolService.joinGetProportionalSuggestionForFixedAmount(
-        //         {
-        //             address: replaceEthWithWeth(token.address),
-        //             amount: tokenInputTruncateDecimalPlaces(amount, token.decimals),
-        //         },
-        //         [replaceEthWithWeth(token.address)],
-        //     );
-
-        //     setProportionalAmounts(
-        //         mapValues(
-        //             keyBy(scaledAmounts, (amount) =>
-        //                 isInvestingWithEth ? replaceWethWithEth(amount.address) : amount.address,
-        //             ),
-        //             (amount) => amount.amount,
-        //         ),
-        //     );
-        // }
-    }
-
     const withdrawOptions = pool.withdrawConfig.options;
 
     return (
         <Box {...rest}>
-            <Box p="4">
+            <Box px="4" pb="4">
                 <VStack spacing="4" width="full" p="4" rounded="md">
                     <HStack spacing="8">
                         <Box>
@@ -131,10 +92,7 @@ export function PoolWithdrawProportional({ onShowPreview, ...rest }: Props) {
                             {proportionalPercent}%
                         </SliderMark>
                     </Slider>
-                    <Text>
-                        Drag the slider to configure your withdrawal amount or you can customize the amount for a single
-                        token below.
-                    </Text>
+                    <Text>Drag the slider to configure your withdrawal amount.</Text>
                 </BeetsBox>
                 <BeetsBox mt="4" p="2" width="full">
                     <VStack width="full" divider={<StackDivider borderColor="whiteAlpha.200" />}>
@@ -148,9 +106,7 @@ export function PoolWithdrawProportional({ onShowPreview, ...rest }: Props) {
                                     ?.amount || '0';
                             return (
                                 <TokenRow
-                                    withInput
-                                    onAmountChange={(amount) => false}
-                                    // onAmountChange={(amount) => onTokenAmountChange(tokenOption, amount)}
+                                    onAmountChange={(_) => false}
                                     key={tokenOption.address}
                                     alternateTokens={option.tokenOptions}
                                     address={tokenOption.address}
@@ -161,7 +117,7 @@ export function PoolWithdrawProportional({ onShowPreview, ...rest }: Props) {
                                         setSelectedOption(option.poolTokenIndex, address)
                                     }
                                     amount={proportionalAmount}
-                                    balance={tokenGetAmountForAddress(tokenOption.address, userPoolTokenBalances)}
+                                    balance={null}
                                 />
                             );
                         })}

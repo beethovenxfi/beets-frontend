@@ -18,7 +18,7 @@ interface Props {
     onSelectedAlternateToken?: (address: string) => void;
     selectedAlternateToken?: string;
     onAmountChange?: (amount: string) => void;
-    balance?: string;
+    balance?: string | null;
 }
 
 export default function TokenRow({
