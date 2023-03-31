@@ -9,15 +9,17 @@ import { usePoolUserBptBalance } from '~/modules/pool/lib/usePoolUserBptBalance'
 import { useUserAccount } from '~/lib/user/useUserAccount';
 import { usePool } from '~/modules/pool/lib/usePool';
 import { usePoolExitGetSingleAssetWithdrawForBptIn } from '~/modules/pool/withdraw/lib/usePoolExitGetSingleAssetWithdrawForBptIn';
+import { useHasBatchRelayerApproval } from '~/lib/util/useHasBatchRelayerApproval';
 
 export function usePoolExitGetContractCallData() {
     const { userAddress } = useUserAccount();
     const { type, singleAsset, proportionalPercent } = useReactiveVar(withdrawStateVar);
-    const { poolService, pool } = usePool();
+    const { poolService, pool, requiresBatchRelayerOnExit } = usePool();
     const { userWalletBptBalance } = usePoolUserBptBalance();
     const { data: proportionalAmountsOut, error, isLoading } = usePoolExitGetProportionalWithdrawEstimate();
     const { data: singleAssetWithdrawEstimate } = usePoolExitGetBptInForSingleAssetWithdraw();
     const { data: singleAssetWithdrawForMaxBptIn } = usePoolExitGetSingleAssetWithdrawForBptIn();
+    const { data: hasBatchRelayerApproval } = useHasBatchRelayerApproval();
     const { slippage } = useSlippage();
 
     return useQuery(
@@ -64,6 +66,6 @@ export function usePoolExitGetContractCallData() {
 
             return null;
         },
-        {},
+        { enabled: !requiresBatchRelayerOnExit || hasBatchRelayerApproval },
     );
 }

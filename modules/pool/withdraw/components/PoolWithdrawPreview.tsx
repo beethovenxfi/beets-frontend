@@ -28,7 +28,11 @@ export function PoolWithdrawPreview({ onWithdrawComplete, onClose }: Props) {
     const { selectedWithdrawType, singleAssetWithdraw, proportionalAmounts, proportionalPercent } = useWithdrawState();
     const { priceForAmount } = useGetTokens();
     const { exitPool, ...exitPoolQuery } = useExitPool(pool);
-    const { data: contractCallData, isLoading: isLoadingContractCallData } = usePoolExitGetContractCallData();
+    const {
+        data: contractCallData,
+        isLoading: isLoadingContractCallData,
+        refetch: refetchContractCallData,
+    } = usePoolExitGetContractCallData();
     const { refetch } = usePoolUserBptBalance();
     const [userSyncBalance, { loading }] = useUserSyncBalanceMutation();
     const {
@@ -91,6 +95,9 @@ export function PoolWithdrawPreview({ onWithdrawComplete, onClose }: Props) {
                         }
                     }}
                     onConfirmed={async (id) => {
+                        if (id === 'batch-relayer') {
+                            refetchContractCallData();
+                        }
                         if (id === 'exit') {
                             onWithdrawComplete();
                             refetch();
