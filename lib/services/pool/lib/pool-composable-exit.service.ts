@@ -37,6 +37,7 @@ import {
     oldBnumFromBnum,
     oldBnumScaleAmount,
     oldBnumSubtractSlippage,
+    oldBnumToHumanReadable,
 } from '~/lib/services/pool/lib/old-big-number';
 import { parseUnits } from 'ethers/lib/utils';
 import {
@@ -420,8 +421,25 @@ export class PoolComposableExitService {
         }));
 
         if (nestedLinearPools.length > 0) {
+            // here we peek the amounts we get when exiting the pool
+            // TODO: check how this works with composable -> composable -> linear
+            const peekExits = references.map((ref) =>
+                this.batchRelayerService.encodePeekChainedReferenceValue(ref.key),
+            );
+
+            const [, ...peekedAmounts] = await this.batchRelayerService.simulateMulticall({
+                provider: this.provider,
+                userAddress,
+                calls: [calls[0], ...peekExits],
+            });
+
+            const peekedBptAmountsIn = references.map((ref, idx) => ({
+                address: this.pool.tokens.filter((token) => token.index === ref.index)[0].address,
+                amount: oldBnumToHumanReadable(oldBnum(peekedAmounts[idx]), 18),
+            }));
+
             const { swaps, assets, deltas, requiresUnwrap } = await this.getExitSwapsForNestedLinearPools(
-                bptAmounts,
+                this.nestedStablePoolTokens.length !== 0 ? bptAmounts : peekedBptAmountsIn,
                 nestedLinearPools,
             );
 
