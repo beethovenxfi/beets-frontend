@@ -44,7 +44,7 @@ export function TransactionSubmittedContent({ query, confirmedMessage, showSpinn
                         </Alert>
                     </Box>
                 ) : null}
-                <Box width="full">
+                {/* <Box width="full">
                     {confirmedMessage && (
                         <FadeInBox isVisible={query.isConfirmed}>
                             <Alert status="success" borderRadius="md">
@@ -53,10 +53,10 @@ export function TransactionSubmittedContent({ query, confirmedMessage, showSpinn
                             </Alert>
                         </FadeInBox>
                     )}
-                </Box>
+                </Box> */}
             </VStack>
 
-            <VStack width="full" py="4" backgroundColor="blackAlpha.500" px="5">
+            <VStack width="full">
                 {txResponse?.hash && (
                     <HStack width="full" justifyContent="space-between">
                         <Text color="gray.100" fontSize=".85rem">

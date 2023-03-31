@@ -21,6 +21,7 @@ import { FadeInBox } from '~/components/animation/FadeInBox';
 import { useWithdrawState } from '~/modules/pool/withdraw/lib/useWithdrawState';
 import { usePool } from '~/modules/pool/lib/usePool';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
+import { BeetsModalBody, BeetsModalContent, BeetsModalHeader } from '~/components/modal/BeetsModal';
 
 interface Props {
     activatorProps?: ButtonProps;
@@ -28,7 +29,12 @@ interface Props {
     isVisible?: boolean;
     onClose?: () => void;
 }
-export function PoolWithdrawModal({ activatorProps = {}, noActivator = false, onClose: _onClose, isVisible = false }: Props) {
+export function PoolWithdrawModal({
+    activatorProps = {},
+    noActivator = false,
+    onClose: _onClose,
+    isVisible = false,
+}: Props) {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const { pool, formattedTypeName } = usePool();
     const [modalState, setModalState] = useState<'start' | 'proportional' | 'single-asset' | 'preview'>('start');
@@ -68,14 +74,9 @@ export function PoolWithdrawModal({ activatorProps = {}, noActivator = false, on
                     Withdraw
                 </Button>
             )}
-            <Modal
-                isOpen={isOpen}
-                onClose={onModalClose}
-                size={modalState === 'start' ? '3xl' : '2xl'}
-                initialFocusRef={initialRef}
-            >
-                <ModalOverlay />
-                <ModalContent backgroundColor="black">
+            <Modal isOpen={isOpen} onClose={onModalClose} size="lg" initialFocusRef={initialRef}>
+                <ModalOverlay bg='blackAlpha.900' />
+                <BeetsModalContent>
                     <ModalCloseButton />
                     {modalState !== 'start' ? (
                         <IconButton
@@ -102,7 +103,7 @@ export function PoolWithdrawModal({ activatorProps = {}, noActivator = false, on
                             }}
                         />
                     ) : null}
-                    <ModalHeader className="bg">
+                    <BeetsModalHeader className="bg">
                         {modalState === 'start' ? (
                             <>
                                 <Heading size="md" noOfLines={1}>
@@ -131,8 +132,8 @@ export function PoolWithdrawModal({ activatorProps = {}, noActivator = false, on
                                 Withdraw preview
                             </Heading>
                         ) : null}
-                    </ModalHeader>
-                    <ModalBody className="bg" pb="6">
+                    </BeetsModalHeader>
+                    <BeetsModalBody className="bg" p='0'>
                         <FadeInBox isVisible={modalState === 'start'}>
                             {warnings.poolWithdraw[pool.id] && (
                                 <Alert status="warning" mb="4">
@@ -175,8 +176,8 @@ export function PoolWithdrawModal({ activatorProps = {}, noActivator = false, on
                                 onClose={onModalClose}
                             />
                         </FadeInBox>
-                    </ModalBody>
-                </ModalContent>
+                    </BeetsModalBody>
+                </BeetsModalContent>
             </Modal>
         </>
     );
