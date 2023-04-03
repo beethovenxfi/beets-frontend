@@ -333,13 +333,17 @@ export class PoolComposableExitService {
 
         //we apply the slippage on the bpt amount to allow a delta for the estimation
         const exitAmounts = poolGetProportionalExitAmountsForBptIn(
-            oldBnumSubtractSlippage(bptAmountIn, 18, data.slippage),
+            bptAmountIn,
             this.pool.tokens,
             poolGetTotalShares(this.pool),
             this.isStablePool,
         );
 
-        let bptAmounts = exitAmounts.filter((amountOut) => !tokensOut.includes(amountOut.address));
+        let bptAmounts = exitAmounts.filter(
+            (amountOut) =>
+                this.pool.tokens.find((token) => token.__typename === 'GqlPoolToken')?.address === amountOut.address ||
+                !tokensOut.includes(amountOut.address),
+        );
 
         let references = this.pool.tokens.map((token, index) => ({
             index: token.index,
@@ -421,25 +425,8 @@ export class PoolComposableExitService {
         }));
 
         if (nestedLinearPools.length > 0) {
-            // here we peek the amounts we get when exiting the pool
-            // TODO: check how this works with composable -> composable -> linear
-            const peekExits = references.map((ref) =>
-                this.batchRelayerService.encodePeekChainedReferenceValue(ref.key),
-            );
-
-            const [, ...peekedAmounts] = await this.batchRelayerService.simulateMulticall({
-                provider: this.provider,
-                userAddress,
-                calls: [calls[0], ...peekExits],
-            });
-
-            const peekedBptAmountsIn = references.map((ref, idx) => ({
-                address: this.pool.tokens.filter((token) => token.index === ref.index)[0].address,
-                amount: oldBnumToHumanReadable(oldBnum(peekedAmounts[idx]), 18),
-            }));
-
             const { swaps, assets, deltas, requiresUnwrap } = await this.getExitSwapsForNestedLinearPools(
-                this.nestedStablePoolTokens.length !== 0 ? bptAmounts : peekedBptAmountsIn,
+                bptAmounts,
                 nestedLinearPools,
             );
 
@@ -734,9 +721,16 @@ export class PoolComposableExitService {
             return parseUnits(exitAmount?.amount || '0', poolToken.decimals).toString();
         });
 
+        const minAmountsOut = exitAmounts.map((exitAmount) => {
+            const token = this.pool.tokens.find((token) => token.address === exitAmount.address);
+            const amountScaled = oldBnumScaleAmount(exitAmount.amount, token?.decimals);
+
+            return amountScaled.minus(amountScaled.times(slippage)).toFixed(0);
+        });
+
         return {
             assets: tokensWithPhantomBpt.map((token) => token.address),
-            minAmountsOut: isComposableV1 ? tokensWithPhantomBpt.map(() => '0') : ['0', ...amountsOutScaled],
+            minAmountsOut: isComposableV1 ? tokensWithPhantomBpt.map(() => '0') : ['0', ...minAmountsOut],
             userData: isComposableV1
                 ? defaultAbiCoder.encode(['uint256', 'uint256[]', 'uint256'], [1, amountsOutScaled, maxBptIn])
                 : pool.__typename === 'GqlPoolWeighted'
