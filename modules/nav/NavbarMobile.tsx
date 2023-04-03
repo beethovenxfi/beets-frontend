@@ -23,7 +23,7 @@ export function NavbarMobile() {
             <Flex alignItems="center">
                 <NavbarLink href={'/pools'} selected={router.asPath.startsWith('/pool')} text="Invest" mr="1" px="4" />
                 <NavbarLink href={'/swap'} selected={router.asPath === '/swap'} text="Swap" mr="1" px="4" />
-                {networkConfig.maBeetsEnabled && (
+                {networkConfig.featureFlags.maBeets && (
                     <NavbarLink
                         href={'/mabeets'}
                         selected={router.asPath === '/mabeets'}

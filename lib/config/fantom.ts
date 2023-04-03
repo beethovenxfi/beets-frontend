@@ -9,6 +9,7 @@ export const fantomNetworkConfig: NetworkConfig = {
     chainName: 'FANTOM',
     etherscanName: 'FTM Scan',
     etherscanUrl: 'https://ftmscan.com',
+    protocol: 'beets',
     testnet: false,
     eth: {
         name: 'Fantom',
@@ -26,6 +27,7 @@ export const fantomNetworkConfig: NetworkConfig = {
     rpcUrl: 'https://rpc.ftm.tools',
     //rpcUrl: 'https://rpc.ankr.com/fantom',
     multicall: '0x66335d7ad8011f6aa3f48aadcb523b62b38ed961',
+    protocolTokenAddress: '0xf24bcf4d1e507740041c9cfd2dddb29585adce1e',
     beets: {
         address: '0xf24bcf4d1e507740041c9cfd2dddb29585adce1e',
     },
@@ -144,5 +146,10 @@ export const fantomNetworkConfig: NetworkConfig = {
     investDisabled: {
         '0xa10285f445bcb521f1d623300dc4998b02f11c8f00000000000000000000043b': true,
     },
-    maBeetsEnabled: true,
+    featureFlags: {
+        maBeets: true,
+        swap: true,
+        incentivizedPools: true,
+        protocolTokenPrice: true,
+    },
 };

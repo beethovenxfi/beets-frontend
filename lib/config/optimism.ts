@@ -8,6 +8,7 @@ export const optimismNetworkConfig: NetworkConfig = {
     chainName: 'OPTIMISM',
     etherscanName: 'The Optimistic Explorer',
     etherscanUrl: 'https://optimistic.etherscan.io',
+    protocol: 'beets',
     testnet: false,
     eth: {
         name: 'Ether',
@@ -24,6 +25,7 @@ export const optimismNetworkConfig: NetworkConfig = {
     },
     rpcUrl: 'https://rpc.ankr.com/optimism',
     multicall: '0x2dc0e2aa608532da689e89e237df582b783e552c',
+    protocolTokenAddress: '0x97513e975a7fa9072c72c92d8000b0db90b163c5',
     beets: {
         address: '0x97513e975a7fa9072c72c92d8000b0db90b163c5',
     },
@@ -191,5 +193,10 @@ export const optimismNetworkConfig: NetworkConfig = {
         '0x1f131ec1175f023ee1534b16fa8ab237c00e238100000000000000000000004a': true,
         '0x479a7d1fcdd71ce0c2ed3184bfbe9d23b92e8337000000000000000000000049': true,
     },
-    maBeetsEnabled: false,
+    featureFlags: {
+        maBeets: false,
+        swap: true,
+        incentivizedPools: true,
+        protocolTokenPrice: true,
+    },
 };

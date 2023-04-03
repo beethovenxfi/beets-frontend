@@ -56,11 +56,13 @@ export function Navbar({ scrollY }: Props) {
                             <NavbarLink
                                 href={'/pools'}
                                 selected={router.asPath.startsWith('/pool')}
-                                text="Invest"
+                                text="Pool"
                                 mr="5"
                             />
-                            <NavbarLink href={'/swap'} selected={router.asPath === '/swap'} text="Swap" mr="5" />
-                            {networkConfig.maBeetsEnabled && (
+                            {networkConfig.featureFlags.swap && (
+                                <NavbarLink href={'/swap'} selected={router.asPath === '/swap'} text="Swap" mr="5" />
+                            )}
+                            {networkConfig.featureFlags.maBeets && (
                                 <NavbarLink
                                     href={'/mabeets'}
                                     selected={router.asPath === '/mabeets'}

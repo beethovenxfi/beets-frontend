@@ -315,16 +315,6 @@ export const GqlPoolMinimal = gql`
             id
             type
             address
-            farm {
-                id
-                beetsPerBlock
-                rewarders {
-                    id
-                    address
-                    tokenAddress
-                    rewardPerSecond
-                }
-            }
         }
     }
 `;
@@ -436,7 +426,6 @@ export const GetAppGlobalData = gql`
             priority
             tradable
         }
-        beetsGetFbeetsRatio
         blocksGetBlocksPerDay
         blocksGetAverageBlockTime
     }
@@ -457,7 +446,7 @@ export const GetAppGlobalPollingData = gql`
         }
         blocksGetBlocksPerDay
         blocksGetAverageBlockTime
-        beetsGetBeetsPrice
+        tokenGetProtocolTokenPrice
     }
 `;
 export const GetTokens = gql`
@@ -503,11 +492,6 @@ export const GetTokensDynamicData = gql`
         }
     }
 `;
-export const GetFbeetsRatio = gql`
-    query GetFbeetsRatio {
-        ratio: beetsGetFbeetsRatio
-    }
-`;
 export const GetProtocolData = gql`
     query GetProtocolData {
         protocolData: protocolMetrics {
@@ -518,18 +502,13 @@ export const GetProtocolData = gql`
             swapFee24h
             swapVolume24h
         }
-        beetsPrice: beetsGetBeetsPrice
+        protocolTokenPrice: tokenGetProtocolTokenPrice
     }
 `;
 export const GetBlocksPerDay = gql`
     query GetBlocksPerDay {
         blocksPerDay: blocksGetBlocksPerDay
         avgBlockTime: blocksGetAverageBlockTime
-    }
-`;
-export const GetBeetsPrice = gql`
-    query GetBeetsPrice {
-        beetsPrice: beetsGetBeetsPrice
     }
 `;
 export const GetUserData = gql`
@@ -542,25 +521,10 @@ export const GetUserData = gql`
             stakedBalance
             walletBalance
         }
-        fbeetsBalance: userGetFbeetsBalance {
-            totalBalance
-            stakedBalance
-            walletBalance
-        }
         staking: userGetStaking {
             id
             type
             address
-            farm {
-                id
-                beetsPerBlock
-                rewarders {
-                    id
-                    address
-                    tokenAddress
-                    rewardPerSecond
-                }
-            }
             gauge {
                 id
                 gaugeAddress
@@ -713,16 +677,6 @@ export const GetPool = gql`
                 id
                 type
                 address
-                farm {
-                    id
-                    beetsPerBlock
-                    rewarders {
-                        id
-                        address
-                        tokenAddress
-                        rewardPerSecond
-                    }
-                }
                 gauge {
                     id
                     gaugeAddress
@@ -732,16 +686,6 @@ export const GetPool = gql`
                         tokenAddress
                     }
                     status
-                }
-                reliquary {
-                    levels {
-                        level
-                        balance
-                        apr
-                        allocationPoints
-                    }
-                    beetsPerSecond
-                    totalBalance
                 }
             }
             investConfig {
@@ -993,31 +937,6 @@ export const GetPoolFilters = gql`
         filters: poolGetPoolFilters {
             id
             title
-        }
-    }
-`;
-export const GetReliquaryFarmSnapshots = gql`
-    query GetReliquaryFarmSnapshots($id: String!, $range: GqlPoolSnapshotDataRange!) {
-        snapshots: beetsPoolGetReliquaryFarmSnapshots(id: $id, range: $range) {
-            id
-            farmId
-            timestamp
-            totalBalance
-            totalLiquidity
-            levelBalances {
-                id
-                level
-                balance
-            }
-            relicCount
-            totalBalance
-            userCount
-            tokenBalances {
-                id
-                address
-                balance
-                symbol
-            }
         }
     }
 `;

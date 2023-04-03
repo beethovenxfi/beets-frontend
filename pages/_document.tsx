@@ -1,21 +1,25 @@
 import Document, { Head, Html, Main, NextScript } from 'next/document';
 import { ColorModeScript } from '@chakra-ui/react';
 import { chakraTheme } from '~/styles/chakraTheme';
+import { networkConfig } from '~/lib/config/network-config';
 
 class BeetsDocument extends Document {
     render() {
         return (
             <Html>
                 <Head>
-                    <meta name="title" content="Beethoven X" />
+                    <meta name="title" content={networkConfig.appName} />
                     <meta
                         name="description"
                         content="The future of DeFi re-imagineered. Your next generation Decentralised Exchange."
                     />
-
+                    <link
+                        rel="shortcut icon"
+                        href={networkConfig.protocol === 'balancer' ? '/balancer-favicon.ico' : '/beets-favicon.ico'}
+                    />
                     <meta property="og:type" content="website" />
                     <meta property="og:url" content={`${process.env.VERCEL_URL}`} />
-                    <meta property="og:title" content="Beethoven X" />
+                    <meta property="og:title" content={networkConfig.appName} />
                     <meta
                         property="og:description"
                         content="The future of DeFi re-imagineered. Your next generation Decentralised Exchange."
@@ -27,7 +31,7 @@ class BeetsDocument extends Document {
 
                     <meta property="twitter:card" content="summary_large_image" />
                     <meta property="twitter:url" content={`${process.env.VERCEL_URL}`} />
-                    <meta property="twitter:title" content="Beethoven X" />
+                    <meta property="twitter:title" content={networkConfig.appName} />
                     <meta
                         property="twitter:description"
                         content="The future of DeFi re-imagineered. Your next generation Decentralised Exchange."

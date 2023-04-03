@@ -12,9 +12,9 @@ import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 import { UserTokenBalancesProvider } from '~/lib/user/useUserTokenBalances';
 
 function Pools() {
-    const { chainId } = useNetworkConfig();
+    const { chainId, appName } = useNetworkConfig();
 
-    const TITLE = 'Beethoven X | Investment pools';
+    const TITLE = `${appName} | Investment pools`;
     const DESCRIPTION =
         'Competitive yield with unmatched flexibility. Invest in a pool of your choice or create your own.';
 

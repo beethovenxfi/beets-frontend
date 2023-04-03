@@ -13,7 +13,7 @@ const currentUserAddressVar = makeVar<string | null>(null);
 
 export function _useUserData() {
     const networkConfig = useNetworkConfig();
-    const { data: fbeetsRatioData } = useGetFbeetsRatioQuery();
+    //const { data: fbeetsRatioData } = useGetFbeetsRatioQuery();
     const { userAddress } = useUserAccount();
     const { data, loading, refetch, ...rest } = useGetUserDataQuery({
         notifyOnNetworkStatusChange: true,
@@ -22,7 +22,7 @@ export function _useUserData() {
     const { priceForAmount } = useGetTokens();
     const currentUserAddress = currentUserAddressVar();
     const userAddressChanged = userAddress !== currentUserAddress;
-    const fbeetsRatio = parseFloat(fbeetsRatioData?.ratio || '0');
+    const fbeetsRatio = parseFloat('0');
 
     useAsyncEffect(async () => {
         if (!refetchingVar()) {

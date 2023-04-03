@@ -15,6 +15,7 @@ export interface PoolDetailWarning {
 
 export interface NetworkConfig {
     appName: string;
+    protocol: 'balancer' | 'beets';
     chainId: string;
     networkName: string;
     chainName: GqlChain;
@@ -37,6 +38,7 @@ export interface NetworkConfig {
         platformId: string;
     };
     multicall: string;
+    protocolTokenAddress: string;
     beets: {
         address: string;
     };
@@ -103,5 +105,10 @@ export interface NetworkConfig {
     boostedByTypes: {
         [poolId: string]: BoostedByType;
     };
-    maBeetsEnabled: boolean;
+    featureFlags: {
+        maBeets: boolean;
+        swap: boolean;
+        incentivizedPools: boolean;
+        protocolTokenPrice: boolean;
+    };
 }

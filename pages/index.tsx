@@ -4,6 +4,7 @@ import { initializeApolloClient, loadApolloState } from '~/apollo/client';
 import { GetHomeData } from '~/apollo/generated/operations';
 import { useEffect, useRef } from 'react';
 import { useRouter } from 'next/router';
+import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 
 function useV1Redirect() {
     const { push } = useRouter();
@@ -30,11 +31,12 @@ function useV1Redirect() {
 
 function HomePage() {
     useV1Redirect();
+    const { appName } = useNetworkConfig();
 
     return (
         <>
             <Head>
-                <title>Beethoven X</title>
+                <title>{appName}</title>
             </Head>
             <Home />
         </>

@@ -55,7 +55,6 @@ function usePoolUserBptWalletBalance() {
     const networkConfig = useNetworkConfig();
     const { pool } = usePool();
     const isFbeetsPool = pool.id === networkConfig.fbeets.poolId;
-    const { data: fbeets } = useGetFbeetsRatioQuery();
 
     const { userBalances, ...userBalancesQuery } = useUserBalances(
         isFbeetsPool ? [pool.address, networkConfig.fbeets.address] : [pool.address],
@@ -66,9 +65,7 @@ function usePoolUserBptWalletBalance() {
 
     function getUserFbeetsPoolBptBalance() {
         const fBeetsBalance = tokenGetAmountForAddress(networkConfig.fbeets.address, userBalances);
-        const fbeetsBalanceInBpt = oldBnumScaleAmount(fBeetsBalance)
-            .times(fbeets?.ratio || '0')
-            .toFixed(0);
+        const fbeetsBalanceInBpt = oldBnumScaleAmount(fBeetsBalance).times('0').toFixed(0);
 
         return userWalletBptBalance.add(fbeetsBalanceInBpt);
     }
@@ -84,7 +81,6 @@ export function usePoolUserStakedBalance() {
     const poolStaking = getPoolStaking(pool);
     const { userAddress } = useUserAccount();
     const provider = useProvider();
-    const { data: fBeets } = useGetFbeetsRatioQuery();
 
     return useQuery(
         ['poolUserStakedBalance', pool.id, poolStaking?.id || '', userAddress || ''],
@@ -105,7 +101,7 @@ export function usePoolUserStakedBalance() {
                         userAddress,
                         farmId: poolStaking.id,
                         provider,
-                        fBeetsRatio: fBeets?.ratio || '0',
+                        fBeetsRatio: '0',
                     });
                 case 'GAUGE':
                     return gaugeStakingService.getUserStakedBalance({

@@ -16,17 +16,21 @@ import { RelicDepositBalanceProvider } from '~/modules/reliquary/lib/useRelicDep
 import { networkConfig } from '~/lib/config/network-config';
 import { ReliquaryPool } from '~/modules/reliquary/detail/ReliquaryPool';
 import Compose, { ProviderWithProps } from '~/components/providers/Compose';
+import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 
 interface Props {
     pool: GqlPoolUnion;
 }
 
 const PoolPage = ({ pool }: Props) => {
+    const { appName } = useNetworkConfig();
+
     const router = useRouter();
     if (router.isFallback) {
         return <FallbackPlaceholder />;
     }
 
+    const TITLE = `${appName} | ${pool.name}`;
     const isReliquaryPool = pool.id === networkConfig.reliquary.fbeets.poolId;
 
     const PoolProviders: ProviderWithProps[] = [
@@ -42,10 +46,10 @@ const PoolPage = ({ pool }: Props) => {
     return (
         <>
             <Head>
-                <title>Beethoven X | {pool.name}</title>
-                <meta name="title" content={`Beethoven X | ${pool.name}`} />
-                <meta property="og:title" content={`Beethoven X | ${pool.name}`} />
-                <meta property="twitter:title" content={`Beethoven X | ${pool.name}`} />
+                <title>{TITLE}</title>
+                <meta name="title" content={TITLE} />
+                <meta property="og:title" content={TITLE} />
+                <meta property="twitter:title" content={TITLE} />
             </Head>
             <Compose providers={PoolProviders}>
                 {isReliquaryPool ? (
@@ -73,11 +77,6 @@ export async function getStaticProps({ params }: { params: { poolId: string } })
         query: GetPool,
         variables: { id: params.poolId },
     });
-
-    //pre-load the fbeets ratio for fidelio duetto
-    /*if (params.poolId === networkConfig.fbeets.poolId) {
-        await client.query({ query: GetFbeetsRatio });
-    }*/
 
     return loadApolloState({
         client,

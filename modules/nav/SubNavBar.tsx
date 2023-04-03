@@ -12,7 +12,7 @@ export function SubNavBar() {
     const networkConfig = useNetworkConfig();
     const { data, loading } = useGetProtocolDataQuery({ fetchPolicy: 'cache-first' });
     const protocolData = data?.protocolData;
-    const beetsPrice = data?.beetsPrice;
+    const protocolTokenPrice = data?.protocolTokenPrice;
 
     return (
         <HStack px={{ base: '4', xl: '8' }}>
@@ -44,17 +44,23 @@ export function SubNavBar() {
                     value={protocolData?.swapFee24h || '0'}
                     label="Fees (24h)"
                     display={{ base: 'none', lg: 'flex' }}
+                    mr={networkConfig.featureFlags.protocolTokenPrice ? 5 : 0}
                 />
-                <HStack>
-                    <TokenAvatar address={networkConfig.beets.address} style={{ width: '20px', height: '20px' }} />
-                    {loading && !beetsPrice ? (
-                        <Skeleton height="16px" width="54px" />
-                    ) : (
-                        <Text fontWeight="semibold" fontSize={{ base: 'sm', lg: 'md' }}>
-                            {numeral(beetsPrice).format('$0.00[00]')}
-                        </Text>
-                    )}
-                </HStack>
+                {networkConfig.featureFlags.protocolTokenPrice && (
+                    <HStack>
+                        <TokenAvatar
+                            address={networkConfig.protocolTokenAddress}
+                            style={{ width: '20px', height: '20px' }}
+                        />
+                        {loading && !protocolTokenPrice ? (
+                            <Skeleton height="16px" width="54px" />
+                        ) : (
+                            <Text fontWeight="semibold" fontSize={{ base: 'sm', lg: 'md' }}>
+                                {numeral(protocolTokenPrice).format('$0.00[00]')}
+                            </Text>
+                        )}
+                    </HStack>
+                )}
             </BeetsBox>
         </HStack>
     );

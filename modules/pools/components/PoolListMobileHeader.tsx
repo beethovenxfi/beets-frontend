@@ -16,8 +16,10 @@ import { TextButtonPopupMenu } from '~/components/popup-menu/TextButtonPopupMenu
 import { PoolListTokenMultiSelect } from '~/modules/pools/components/PoolListTokenMultiSelect';
 import { PoolListFilterMultiSelect } from '~/modules/pools/components/PoolListFilterMultiSelect';
 import { PoolListSearch } from '~/modules/pools/components/PoolListSearch';
+import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 
 export function PoolListMobileHeader() {
+    const { featureFlags } = useNetworkConfig();
     const { isOpen, onOpen, onClose } = useDisclosure();
     const {
         state,
@@ -40,31 +42,37 @@ export function PoolListMobileHeader() {
                     buttonText={
                         showMyInvestments
                             ? 'My investments'
+                            : !featureFlags.incentivizedPools
+                            ? 'All'
                             : state.where?.categoryNotIn?.includes('INCENTIVIZED')
                             ? 'Community'
                             : 'Incentivized'
                     }
                     items={[
+                        ...(featureFlags.incentivizedPools
+                            ? [
+                                  {
+                                      label: 'Incentivized pools',
+                                      selected: !showMyInvestments && state.where?.categoryIn?.includes('INCENTIVIZED'),
+                                      onClick: () => {
+                                          setShowMyInvestments(false);
+                                          refreshPoolList({
+                                              ...state,
+                                              skip: 0,
+                                              first: 20,
+                                              where: {
+                                                  ...state.where,
+                                                  categoryIn: ['INCENTIVIZED'],
+                                                  categoryNotIn: null,
+                                                  idIn: undefined,
+                                              },
+                                          });
+                                      },
+                                  },
+                              ]
+                            : []),
                         {
-                            label: 'Incentivized pools',
-                            selected: !showMyInvestments && state.where?.categoryIn?.includes('INCENTIVIZED'),
-                            onClick: () => {
-                                setShowMyInvestments(false);
-                                refreshPoolList({
-                                    ...state,
-                                    skip: 0,
-                                    first: 20,
-                                    where: {
-                                        ...state.where,
-                                        categoryIn: ['INCENTIVIZED'],
-                                        categoryNotIn: null,
-                                        idIn: undefined,
-                                    },
-                                });
-                            },
-                        },
-                        {
-                            label: 'Community pools',
+                            label: featureFlags.incentivizedPools ? 'Community pools' : 'All',
                             selected: !showMyInvestments && state.where?.categoryNotIn?.includes('INCENTIVIZED'),
                             onClick: () => {
                                 setShowMyInvestments(false);

@@ -31,7 +31,7 @@ export function LinearPoolListItem({ pool, tokens, onClick, ...rest }: Props) {
         : wrappedToken.balance;
 
     const amountWrapped = parseFloat(wrappedToken?.balance || '0') * parseFloat(wrappedToken?.priceRate || '1');
-    const amountUnwrapped = parseFloat(mainToken.balance);
+    const amountUnwrapped = parseFloat(mainToken?.balance || '0');
     const boost = amountWrapped / (amountUnwrapped + amountWrapped);
     const upperTarget = parseFloat(pool.upperTarget);
     const lowerTarget = parseFloat(pool.lowerTarget);
@@ -41,6 +41,18 @@ export function LinearPoolListItem({ pool, tokens, onClick, ...rest }: Props) {
     const lowerRangeDiff = amountUnwrapped - lowerTarget;
     const nearRange = inRange && (upperRangeDiff / rangeSize < 0.05 || lowerRangeDiff / rangeSize < 0.05);
     const rangeDiff = amountUnwrapped < lowerTarget ? amountUnwrapped - lowerTarget : amountUnwrapped - upperTarget;
+
+    if (!mainToken) {
+        console.log('no main token', pool.symbol, pool.mainIndex, pool.tokens);
+    }
+    if (!wrappedToken) {
+        console.log('no wrapped token', pool.symbol, pool.mainIndex, pool.tokens);
+    }
+
+    if (!mainToken || !wrappedToken) {
+        console.log('pool id with missing', pool.id);
+        return null;
+    }
 
     return (
         <Box {...rest}>
@@ -73,7 +85,7 @@ export function LinearPoolListItem({ pool, tokens, onClick, ...rest }: Props) {
                         {numeral(rangeDiff).format('$0.00a')}
                     </GridItem>
                 )}
-                <StatGridItem>{tokenFormatAmount(mainToken.balance)}</StatGridItem>
+                <StatGridItem>{tokenFormatAmount(mainToken?.balance || '0')}</StatGridItem>
                 <StatGridItem>{tokenFormatAmount(wrappedTokenBalance)}</StatGridItem>
                 <StatGridItem>{numeral(boost < 0.00001 ? 0 : boost).format('0.00%')}</StatGridItem>
                 <StatGridItem>{numeral(pool.lowerTarget).format('0a')}</StatGridItem>

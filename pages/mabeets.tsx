@@ -13,12 +13,15 @@ import { PoolUserDepositBalanceProvider } from '~/modules/pool/lib/usePoolUserDe
 import ReliquaryLanding from '~/modules/reliquary/ReliquaryLanding';
 import Compose, { ProviderWithProps } from '~/components/providers/Compose';
 import { Heading, VStack } from '@chakra-ui/react';
+import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 
 interface Props {
     pool: GqlPoolUnion | null;
 }
 function MaBEETS({ pool }: Props) {
-    const TITLE = 'Beethoven X | Reliquary';
+    const { appName } = useNetworkConfig();
+
+    const TITLE = `${appName} | maBEETS`;
     const DESCRIPTION = '';
 
     const MaBeetsProviders: ProviderWithProps[] = [
@@ -57,7 +60,7 @@ function MaBEETS({ pool }: Props) {
 
 export async function getStaticProps() {
     const client = initializeApolloClient();
-    const response = networkConfig.maBeetsEnabled
+    const response = networkConfig.featureFlags.maBeets
         ? await client.query<GetPoolQuery, GetPoolQueryVariables>({
               query: GetPool,
               variables: { id: networkConfig.reliquary.fbeets.poolId },

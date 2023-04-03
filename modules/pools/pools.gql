@@ -90,15 +90,15 @@ fragment GqlPoolMinimal on GqlPoolMinimal {
         id
         type
         address
-        farm {
-            id
-            beetsPerBlock
-            rewarders {
-                id
-                address
-                tokenAddress
-                rewardPerSecond
-            }
-        }
+        #farm {
+        #    id
+        #    beetsPerBlock
+        #    rewarders {
+        #        id
+        #        address
+        #        tokenAddress
+        #        rewardPerSecond
+        #    }
+        #}
     }
 }

@@ -13,7 +13,7 @@ query GetAppGlobalData {
     #    price
     #    address
     #}
-    beetsGetFbeetsRatio
+    #beetsGetFbeetsRatio
     blocksGetBlocksPerDay
     blocksGetAverageBlockTime
 }
@@ -33,7 +33,7 @@ query GetAppGlobalPollingData {
     }
     blocksGetBlocksPerDay
     blocksGetAverageBlockTime
-    beetsGetBeetsPrice
+    tokenGetProtocolTokenPrice
 }
 
 query GetTokens {
@@ -76,9 +76,9 @@ query GetTokensDynamicData($addresses: [String!]!) {
     }
 }
 
-query GetFbeetsRatio {
-    ratio: beetsGetFbeetsRatio
-}
+#query GetFbeetsRatio {
+#    ratio: beetsGetFbeetsRatio
+#}
 
 query GetProtocolData {
     protocolData: protocolMetrics {
@@ -89,14 +89,10 @@ query GetProtocolData {
         swapFee24h
         swapVolume24h
     }
-    beetsPrice: beetsGetBeetsPrice
+    protocolTokenPrice: tokenGetProtocolTokenPrice
 }
 
 query GetBlocksPerDay {
     blocksPerDay: blocksGetBlocksPerDay
     avgBlockTime: blocksGetAverageBlockTime
-}
-
-query GetBeetsPrice {
-    beetsPrice: beetsGetBeetsPrice
 }

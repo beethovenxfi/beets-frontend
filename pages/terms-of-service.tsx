@@ -1,11 +1,13 @@
 import { Box, Heading, VStack, Text, Link } from '@chakra-ui/react';
 import Head from 'next/head';
+import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 
 function TermsOfService() {
+    const { chainId, appName } = useNetworkConfig();
     return (
         <>
             <Head>
-                <title>Beethoven X - Terms of Service</title>
+                <title>{appName} - Terms of Service</title>
             </Head>
             <VStack my={{ base: '8', xl: '32' }} w="full">
                 <VStack w={{ base: undefined, xl: '50%' }} alignItems="flex-start" spacing="6">

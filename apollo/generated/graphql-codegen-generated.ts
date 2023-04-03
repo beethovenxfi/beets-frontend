@@ -626,19 +626,9 @@ export interface GqlPoolStablePhantomPoolData {
 export interface GqlPoolStaking {
     __typename: 'GqlPoolStaking';
     address: Scalars['String'];
-    farm?: Maybe<GqlPoolStakingMasterChefFarm>;
     gauge?: Maybe<GqlPoolStakingGauge>;
     id: Scalars['ID'];
-    reliquary?: Maybe<GqlPoolStakingReliquaryFarm>;
     type: GqlPoolStakingType;
-}
-
-export interface GqlPoolStakingFarmRewarder {
-    __typename: 'GqlPoolStakingFarmRewarder';
-    address: Scalars['String'];
-    id: Scalars['ID'];
-    rewardPerSecond: Scalars['String'];
-    tokenAddress: Scalars['String'];
 }
 
 export interface GqlPoolStakingGauge {
@@ -658,33 +648,7 @@ export interface GqlPoolStakingGaugeReward {
 
 export type GqlPoolStakingGaugeStatus = 'ACTIVE' | 'KILLED' | 'PREFERRED';
 
-export interface GqlPoolStakingMasterChefFarm {
-    __typename: 'GqlPoolStakingMasterChefFarm';
-    beetsPerBlock: Scalars['String'];
-    id: Scalars['ID'];
-    rewarders?: Maybe<Array<GqlPoolStakingFarmRewarder>>;
-}
-
-export interface GqlPoolStakingReliquaryFarm {
-    __typename: 'GqlPoolStakingReliquaryFarm';
-    beetsPerSecond: Scalars['String'];
-    id: Scalars['ID'];
-    levels?: Maybe<Array<GqlPoolStakingReliquaryFarmLevel>>;
-    totalBalance: Scalars['String'];
-    totalWeightedBalance: Scalars['String'];
-}
-
-export interface GqlPoolStakingReliquaryFarmLevel {
-    __typename: 'GqlPoolStakingReliquaryFarmLevel';
-    allocationPoints: Scalars['Int'];
-    apr: Scalars['BigDecimal'];
-    balance: Scalars['BigDecimal'];
-    id: Scalars['ID'];
-    level: Scalars['Int'];
-    requiredMaturity: Scalars['Int'];
-}
-
-export type GqlPoolStakingType = 'FRESH_BEETS' | 'GAUGE' | 'MASTER_CHEF' | 'RELIQUARY';
+export type GqlPoolStakingType = 'GAUGE';
 
 export interface GqlPoolSwap {
     __typename: 'GqlPoolSwap';
@@ -853,47 +817,6 @@ export interface GqlProtocolMetrics {
     totalSwapVolume: Scalars['BigDecimal'];
 }
 
-export interface GqlRelicSnapshot {
-    __typename: 'GqlRelicSnapshot';
-    balance: Scalars['String'];
-    entryTimestamp: Scalars['Int'];
-    farmId: Scalars['String'];
-    level: Scalars['Int'];
-    relicId: Scalars['Int'];
-}
-
-export interface GqlReliquaryFarmLevelSnapshot {
-    __typename: 'GqlReliquaryFarmLevelSnapshot';
-    balance: Scalars['String'];
-    id: Scalars['ID'];
-    level: Scalars['String'];
-}
-
-export interface GqlReliquaryFarmSnapshot {
-    __typename: 'GqlReliquaryFarmSnapshot';
-    dailyDeposited: Scalars['String'];
-    dailyWithdrawn: Scalars['String'];
-    farmId: Scalars['String'];
-    id: Scalars['ID'];
-    levelBalances: Array<GqlReliquaryFarmLevelSnapshot>;
-    relicCount: Scalars['String'];
-    timestamp: Scalars['Int'];
-    tokenBalances: Array<GqlReliquaryTokenBalanceSnapshot>;
-    totalBalance: Scalars['String'];
-    totalLiquidity: Scalars['String'];
-    userCount: Scalars['String'];
-}
-
-export interface GqlReliquaryTokenBalanceSnapshot {
-    __typename: 'GqlReliquaryTokenBalanceSnapshot';
-    address: Scalars['String'];
-    balance: Scalars['String'];
-    decimals: Scalars['Int'];
-    id: Scalars['ID'];
-    name: Scalars['String'];
-    symbol: Scalars['String'];
-}
-
 export interface GqlSorGetBatchSwapForTokensInResponse {
     __typename: 'GqlSorGetBatchSwapForTokensInResponse';
     assets: Array<Scalars['String']>;
@@ -1040,14 +963,6 @@ export interface GqlTokenPriceChartDataItem {
 
 export type GqlTokenType = 'BPT' | 'LINEAR_WRAPPED_TOKEN' | 'PHANTOM_BPT' | 'WHITE_LISTED';
 
-export interface GqlUserFbeetsBalance {
-    __typename: 'GqlUserFbeetsBalance';
-    id: Scalars['String'];
-    stakedBalance: Scalars['AmountHumanReadable'];
-    totalBalance: Scalars['AmountHumanReadable'];
-    walletBalance: Scalars['AmountHumanReadable'];
-}
-
 export interface GqlUserPoolBalance {
     __typename: 'GqlUserPoolBalance';
     poolId: Scalars['String'];
@@ -1058,46 +973,6 @@ export interface GqlUserPoolBalance {
     walletBalance: Scalars['AmountHumanReadable'];
 }
 
-export interface GqlUserPoolSnapshot {
-    __typename: 'GqlUserPoolSnapshot';
-    farmBalance: Scalars['AmountHumanReadable'];
-    fees24h: Scalars['AmountHumanReadable'];
-    gaugeBalance: Scalars['AmountHumanReadable'];
-    percentShare: Scalars['Float'];
-    timestamp: Scalars['Int'];
-    totalBalance: Scalars['AmountHumanReadable'];
-    totalValueUSD: Scalars['AmountHumanReadable'];
-    walletBalance: Scalars['AmountHumanReadable'];
-}
-
-export interface GqlUserPortfolioSnapshot {
-    __typename: 'GqlUserPortfolioSnapshot';
-    farmBalance: Scalars['AmountHumanReadable'];
-    fees24h: Scalars['AmountHumanReadable'];
-    gaugeBalance: Scalars['AmountHumanReadable'];
-    pools: Array<GqlUserPoolSnapshot>;
-    timestamp: Scalars['Int'];
-    totalBalance: Scalars['AmountHumanReadable'];
-    totalFees: Scalars['AmountHumanReadable'];
-    totalValueUSD: Scalars['AmountHumanReadable'];
-    walletBalance: Scalars['AmountHumanReadable'];
-}
-
-export interface GqlUserRelicSnapshot {
-    __typename: 'GqlUserRelicSnapshot';
-    relicCount: Scalars['Int'];
-    relicSnapshots: Array<GqlRelicSnapshot>;
-    timestamp: Scalars['Int'];
-    totalBalance: Scalars['String'];
-}
-
-export type GqlUserSnapshotDataRange =
-    | 'ALL_TIME'
-    | 'NINETY_DAYS'
-    | 'ONE_HUNDRED_EIGHTY_DAYS'
-    | 'ONE_YEAR'
-    | 'THIRTY_DAYS';
-
 export interface GqlUserSwapVolumeFilter {
     poolIdIn?: InputMaybe<Array<Scalars['String']>>;
     tokenInIn?: InputMaybe<Array<Scalars['String']>>;
@@ -1106,8 +981,7 @@ export interface GqlUserSwapVolumeFilter {
 
 export interface Mutation {
     __typename: 'Mutation';
-    beetsPoolLoadReliquarySnapshotsForAllFarms: Scalars['String'];
-    beetsSyncFbeetsRatio: Scalars['String'];
+    balancerMutationTest: Scalars['String'];
     cacheAverageBlockTime: Scalars['String'];
     lgeCreate: GqlLge;
     poolInitializeSnapshotsForPool: Scalars['String'];
@@ -1118,6 +992,7 @@ export interface Mutation {
     poolReloadAllPoolAprs: Scalars['String'];
     poolReloadAllTokenNestedPoolIds: Scalars['String'];
     poolReloadPoolNestedTokens: Scalars['String'];
+    poolReloadPoolTokenIndexes: Scalars['String'];
     poolReloadStakingForAllPools: Scalars['String'];
     poolSyncAllPoolsFromSubgraph: Array<Scalars['String']>;
     poolSyncLatestSnapshotsForAllPools: Scalars['String'];
@@ -1143,7 +1018,6 @@ export interface Mutation {
     userInitStakedBalances: Scalars['String'];
     userInitWalletBalancesForAllPools: Scalars['String'];
     userInitWalletBalancesForPool: Scalars['String'];
-    userLoadAllRelicSnapshots: Scalars['String'];
     userSyncBalance: Scalars['String'];
     userSyncBalanceAllPools: Scalars['String'];
     userSyncChangedStakedBalances: Scalars['String'];
@@ -1164,6 +1038,10 @@ export interface MutationPoolLoadSnapshotsForPoolsArgs {
 }
 
 export interface MutationPoolReloadPoolNestedTokensArgs {
+    poolId: Scalars['String'];
+}
+
+export interface MutationPoolReloadPoolTokenIndexesArgs {
     poolId: Scalars['String'];
 }
 
@@ -1207,9 +1085,7 @@ export interface MutationUserSyncBalanceArgs {
 
 export interface Query {
     __typename: 'Query';
-    beetsGetBeetsPrice: Scalars['String'];
-    beetsGetFbeetsRatio: Scalars['String'];
-    beetsPoolGetReliquaryFarmSnapshots: Array<GqlReliquaryFarmSnapshot>;
+    balancerQueryTest: Scalars['String'];
     blocksGetAverageBlockTime: Scalars['Float'];
     blocksGetBlocksPerDay: Scalars['Float'];
     blocksGetBlocksPerSecond: Scalars['Float'];
@@ -1237,25 +1113,17 @@ export interface Query {
     tokenGetCurrentPrices: Array<GqlTokenPrice>;
     tokenGetHistoricalPrices: Array<GqlHistoricalTokenPrice>;
     tokenGetPriceChartData: Array<GqlTokenPriceChartDataItem>;
+    tokenGetProtocolTokenPrice: Scalars['AmountHumanReadable'];
     tokenGetRelativePriceChartData: Array<GqlTokenPriceChartDataItem>;
     tokenGetTokenData?: Maybe<GqlTokenData>;
     tokenGetTokenDynamicData?: Maybe<GqlTokenDynamicData>;
     tokenGetTokens: Array<GqlToken>;
     tokenGetTokensData: Array<GqlTokenData>;
     tokenGetTokensDynamicData: Array<GqlTokenDynamicData>;
-    userGetFbeetsBalance: GqlUserFbeetsBalance;
     userGetPoolBalances: Array<GqlUserPoolBalance>;
     userGetPoolJoinExits: Array<GqlPoolJoinExit>;
-    userGetPoolSnapshots: Array<GqlUserPoolSnapshot>;
-    userGetPortfolioSnapshots: Array<GqlUserPortfolioSnapshot>;
-    userGetRelicSnapshots: Array<GqlUserRelicSnapshot>;
     userGetStaking: Array<GqlPoolStaking>;
     userGetSwaps: Array<GqlPoolSwap>;
-}
-
-export interface QueryBeetsPoolGetReliquaryFarmSnapshotsArgs {
-    id: Scalars['String'];
-    range: GqlPoolSnapshotDataRange;
 }
 
 export interface QueryLgeArgs {
@@ -1371,20 +1239,6 @@ export interface QueryUserGetPoolJoinExitsArgs {
     first?: InputMaybe<Scalars['Int']>;
     poolId: Scalars['String'];
     skip?: InputMaybe<Scalars['Int']>;
-}
-
-export interface QueryUserGetPoolSnapshotsArgs {
-    poolId: Scalars['String'];
-    range: GqlUserSnapshotDataRange;
-}
-
-export interface QueryUserGetPortfolioSnapshotsArgs {
-    days: Scalars['Int'];
-}
-
-export interface QueryUserGetRelicSnapshotsArgs {
-    farmId: Scalars['String'];
-    range: GqlUserSnapshotDataRange;
 }
 
 export interface QueryUserGetSwapsArgs {
@@ -1509,7 +1363,6 @@ export type GetAppGlobalDataQueryVariables = Exact<{ [key: string]: never }>;
 
 export type GetAppGlobalDataQuery = {
     __typename: 'Query';
-    beetsGetFbeetsRatio: string;
     blocksGetBlocksPerDay: number;
     blocksGetAverageBlockTime: number;
     tokenGetTokens: Array<{
@@ -1531,7 +1384,7 @@ export type GetAppGlobalPollingDataQuery = {
     __typename: 'Query';
     blocksGetBlocksPerDay: number;
     blocksGetAverageBlockTime: number;
-    beetsGetBeetsPrice: string;
+    tokenGetProtocolTokenPrice: string;
     tokenGetCurrentPrices: Array<{ __typename: 'GqlTokenPrice'; price: number; address: string }>;
     protocolMetrics: {
         __typename: 'GqlProtocolMetrics';
@@ -1594,15 +1447,11 @@ export type GetTokensDynamicDataQuery = {
     }>;
 };
 
-export type GetFbeetsRatioQueryVariables = Exact<{ [key: string]: never }>;
-
-export type GetFbeetsRatioQuery = { __typename: 'Query'; ratio: string };
-
 export type GetProtocolDataQueryVariables = Exact<{ [key: string]: never }>;
 
 export type GetProtocolDataQuery = {
     __typename: 'Query';
-    beetsPrice: string;
+    protocolTokenPrice: string;
     protocolData: {
         __typename: 'GqlProtocolMetrics';
         totalLiquidity: string;
@@ -1618,10 +1467,6 @@ export type GetBlocksPerDayQueryVariables = Exact<{ [key: string]: never }>;
 
 export type GetBlocksPerDayQuery = { __typename: 'Query'; blocksPerDay: number; avgBlockTime: number };
 
-export type GetBeetsPriceQueryVariables = Exact<{ [key: string]: never }>;
-
-export type GetBeetsPriceQuery = { __typename: 'Query'; beetsPrice: string };
-
 export type GetUserDataQueryVariables = Exact<{ [key: string]: never }>;
 
 export type GetUserDataQuery = {
@@ -1635,29 +1480,11 @@ export type GetUserDataQuery = {
         stakedBalance: string;
         walletBalance: string;
     }>;
-    fbeetsBalance: {
-        __typename: 'GqlUserFbeetsBalance';
-        totalBalance: string;
-        stakedBalance: string;
-        walletBalance: string;
-    };
     staking: Array<{
         __typename: 'GqlPoolStaking';
         id: string;
         type: GqlPoolStakingType;
         address: string;
-        farm?: {
-            __typename: 'GqlPoolStakingMasterChefFarm';
-            id: string;
-            beetsPerBlock: string;
-            rewarders?: Array<{
-                __typename: 'GqlPoolStakingFarmRewarder';
-                id: string;
-                address: string;
-                tokenAddress: string;
-                rewardPerSecond: string;
-            }> | null;
-        } | null;
         gauge?: {
             __typename: 'GqlPoolStakingGauge';
             id: string;
@@ -2233,18 +2060,6 @@ export type GetPoolQuery = {
                   id: string;
                   type: GqlPoolStakingType;
                   address: string;
-                  farm?: {
-                      __typename: 'GqlPoolStakingMasterChefFarm';
-                      id: string;
-                      beetsPerBlock: string;
-                      rewarders?: Array<{
-                          __typename: 'GqlPoolStakingFarmRewarder';
-                          id: string;
-                          address: string;
-                          tokenAddress: string;
-                          rewardPerSecond: string;
-                      }> | null;
-                  } | null;
                   gauge?: {
                       __typename: 'GqlPoolStakingGauge';
                       id: string;
@@ -2256,18 +2071,6 @@ export type GetPoolQuery = {
                           rewardPerSecond: string;
                           tokenAddress: string;
                       }>;
-                  } | null;
-                  reliquary?: {
-                      __typename: 'GqlPoolStakingReliquaryFarm';
-                      beetsPerSecond: string;
-                      totalBalance: string;
-                      levels?: Array<{
-                          __typename: 'GqlPoolStakingReliquaryFarmLevel';
-                          level: number;
-                          balance: string;
-                          apr: string;
-                          allocationPoints: number;
-                      }> | null;
                   } | null;
               }>;
               investConfig: {
@@ -2429,18 +2232,6 @@ export type GetPoolQuery = {
                   id: string;
                   type: GqlPoolStakingType;
                   address: string;
-                  farm?: {
-                      __typename: 'GqlPoolStakingMasterChefFarm';
-                      id: string;
-                      beetsPerBlock: string;
-                      rewarders?: Array<{
-                          __typename: 'GqlPoolStakingFarmRewarder';
-                          id: string;
-                          address: string;
-                          tokenAddress: string;
-                          rewardPerSecond: string;
-                      }> | null;
-                  } | null;
                   gauge?: {
                       __typename: 'GqlPoolStakingGauge';
                       id: string;
@@ -2452,18 +2243,6 @@ export type GetPoolQuery = {
                           rewardPerSecond: string;
                           tokenAddress: string;
                       }>;
-                  } | null;
-                  reliquary?: {
-                      __typename: 'GqlPoolStakingReliquaryFarm';
-                      beetsPerSecond: string;
-                      totalBalance: string;
-                      levels?: Array<{
-                          __typename: 'GqlPoolStakingReliquaryFarmLevel';
-                          level: number;
-                          balance: string;
-                          apr: string;
-                          allocationPoints: number;
-                      }> | null;
                   } | null;
               }>;
               investConfig: {
@@ -2759,18 +2538,6 @@ export type GetPoolQuery = {
                   id: string;
                   type: GqlPoolStakingType;
                   address: string;
-                  farm?: {
-                      __typename: 'GqlPoolStakingMasterChefFarm';
-                      id: string;
-                      beetsPerBlock: string;
-                      rewarders?: Array<{
-                          __typename: 'GqlPoolStakingFarmRewarder';
-                          id: string;
-                          address: string;
-                          tokenAddress: string;
-                          rewardPerSecond: string;
-                      }> | null;
-                  } | null;
                   gauge?: {
                       __typename: 'GqlPoolStakingGauge';
                       id: string;
@@ -2782,18 +2549,6 @@ export type GetPoolQuery = {
                           rewardPerSecond: string;
                           tokenAddress: string;
                       }>;
-                  } | null;
-                  reliquary?: {
-                      __typename: 'GqlPoolStakingReliquaryFarm';
-                      beetsPerSecond: string;
-                      totalBalance: string;
-                      levels?: Array<{
-                          __typename: 'GqlPoolStakingReliquaryFarmLevel';
-                          level: number;
-                          balance: string;
-                          apr: string;
-                          allocationPoints: number;
-                      }> | null;
                   } | null;
               }>;
               investConfig: {
@@ -2952,18 +2707,6 @@ export type GetPoolQuery = {
                   id: string;
                   type: GqlPoolStakingType;
                   address: string;
-                  farm?: {
-                      __typename: 'GqlPoolStakingMasterChefFarm';
-                      id: string;
-                      beetsPerBlock: string;
-                      rewarders?: Array<{
-                          __typename: 'GqlPoolStakingFarmRewarder';
-                          id: string;
-                          address: string;
-                          tokenAddress: string;
-                          rewardPerSecond: string;
-                      }> | null;
-                  } | null;
                   gauge?: {
                       __typename: 'GqlPoolStakingGauge';
                       id: string;
@@ -2975,18 +2718,6 @@ export type GetPoolQuery = {
                           rewardPerSecond: string;
                           tokenAddress: string;
                       }>;
-                  } | null;
-                  reliquary?: {
-                      __typename: 'GqlPoolStakingReliquaryFarm';
-                      beetsPerSecond: string;
-                      totalBalance: string;
-                      levels?: Array<{
-                          __typename: 'GqlPoolStakingReliquaryFarmLevel';
-                          level: number;
-                          balance: string;
-                          apr: string;
-                          allocationPoints: number;
-                      }> | null;
                   } | null;
               }>;
               investConfig: {
@@ -3283,18 +3014,6 @@ export type GetPoolQuery = {
                   id: string;
                   type: GqlPoolStakingType;
                   address: string;
-                  farm?: {
-                      __typename: 'GqlPoolStakingMasterChefFarm';
-                      id: string;
-                      beetsPerBlock: string;
-                      rewarders?: Array<{
-                          __typename: 'GqlPoolStakingFarmRewarder';
-                          id: string;
-                          address: string;
-                          tokenAddress: string;
-                          rewardPerSecond: string;
-                      }> | null;
-                  } | null;
                   gauge?: {
                       __typename: 'GqlPoolStakingGauge';
                       id: string;
@@ -3306,18 +3025,6 @@ export type GetPoolQuery = {
                           rewardPerSecond: string;
                           tokenAddress: string;
                       }>;
-                  } | null;
-                  reliquary?: {
-                      __typename: 'GqlPoolStakingReliquaryFarm';
-                      beetsPerSecond: string;
-                      totalBalance: string;
-                      levels?: Array<{
-                          __typename: 'GqlPoolStakingReliquaryFarmLevel';
-                          level: number;
-                          balance: string;
-                          apr: string;
-                          allocationPoints: number;
-                      }> | null;
                   } | null;
               }>;
               investConfig: {
@@ -3476,18 +3183,6 @@ export type GetPoolQuery = {
                   id: string;
                   type: GqlPoolStakingType;
                   address: string;
-                  farm?: {
-                      __typename: 'GqlPoolStakingMasterChefFarm';
-                      id: string;
-                      beetsPerBlock: string;
-                      rewarders?: Array<{
-                          __typename: 'GqlPoolStakingFarmRewarder';
-                          id: string;
-                          address: string;
-                          tokenAddress: string;
-                          rewardPerSecond: string;
-                      }> | null;
-                  } | null;
                   gauge?: {
                       __typename: 'GqlPoolStakingGauge';
                       id: string;
@@ -3499,18 +3194,6 @@ export type GetPoolQuery = {
                           rewardPerSecond: string;
                           tokenAddress: string;
                       }>;
-                  } | null;
-                  reliquary?: {
-                      __typename: 'GqlPoolStakingReliquaryFarm';
-                      beetsPerSecond: string;
-                      totalBalance: string;
-                      levels?: Array<{
-                          __typename: 'GqlPoolStakingReliquaryFarmLevel';
-                          level: number;
-                          balance: string;
-                          apr: string;
-                          allocationPoints: number;
-                      }> | null;
                   } | null;
               }>;
               investConfig: {
@@ -3806,18 +3489,6 @@ export type GetPoolQuery = {
                   id: string;
                   type: GqlPoolStakingType;
                   address: string;
-                  farm?: {
-                      __typename: 'GqlPoolStakingMasterChefFarm';
-                      id: string;
-                      beetsPerBlock: string;
-                      rewarders?: Array<{
-                          __typename: 'GqlPoolStakingFarmRewarder';
-                          id: string;
-                          address: string;
-                          tokenAddress: string;
-                          rewardPerSecond: string;
-                      }> | null;
-                  } | null;
                   gauge?: {
                       __typename: 'GqlPoolStakingGauge';
                       id: string;
@@ -3829,18 +3500,6 @@ export type GetPoolQuery = {
                           rewardPerSecond: string;
                           tokenAddress: string;
                       }>;
-                  } | null;
-                  reliquary?: {
-                      __typename: 'GqlPoolStakingReliquaryFarm';
-                      beetsPerSecond: string;
-                      totalBalance: string;
-                      levels?: Array<{
-                          __typename: 'GqlPoolStakingReliquaryFarmLevel';
-                          level: number;
-                          balance: string;
-                          apr: string;
-                          allocationPoints: number;
-                      }> | null;
                   } | null;
               }>;
               investConfig: {
@@ -4263,24 +3922,7 @@ export type GetPoolsQuery = {
                 symbol: string;
             }> | null;
         }>;
-        staking: Array<{
-            __typename: 'GqlPoolStaking';
-            id: string;
-            type: GqlPoolStakingType;
-            address: string;
-            farm?: {
-                __typename: 'GqlPoolStakingMasterChefFarm';
-                id: string;
-                beetsPerBlock: string;
-                rewarders?: Array<{
-                    __typename: 'GqlPoolStakingFarmRewarder';
-                    id: string;
-                    address: string;
-                    tokenAddress: string;
-                    rewardPerSecond: string;
-                }> | null;
-            } | null;
-        }>;
+        staking: Array<{ __typename: 'GqlPoolStaking'; id: string; type: GqlPoolStakingType; address: string }>;
     }>;
 };
 
@@ -4351,56 +3993,7 @@ export type GqlPoolMinimalFragment = {
             symbol: string;
         }> | null;
     }>;
-    staking: Array<{
-        __typename: 'GqlPoolStaking';
-        id: string;
-        type: GqlPoolStakingType;
-        address: string;
-        farm?: {
-            __typename: 'GqlPoolStakingMasterChefFarm';
-            id: string;
-            beetsPerBlock: string;
-            rewarders?: Array<{
-                __typename: 'GqlPoolStakingFarmRewarder';
-                id: string;
-                address: string;
-                tokenAddress: string;
-                rewardPerSecond: string;
-            }> | null;
-        } | null;
-    }>;
-};
-
-export type GetReliquaryFarmSnapshotsQueryVariables = Exact<{
-    id: Scalars['String'];
-    range: GqlPoolSnapshotDataRange;
-}>;
-
-export type GetReliquaryFarmSnapshotsQuery = {
-    __typename: 'Query';
-    snapshots: Array<{
-        __typename: 'GqlReliquaryFarmSnapshot';
-        id: string;
-        farmId: string;
-        timestamp: number;
-        totalBalance: string;
-        totalLiquidity: string;
-        relicCount: string;
-        userCount: string;
-        levelBalances: Array<{
-            __typename: 'GqlReliquaryFarmLevelSnapshot';
-            id: string;
-            level: string;
-            balance: string;
-        }>;
-        tokenBalances: Array<{
-            __typename: 'GqlReliquaryTokenBalanceSnapshot';
-            id: string;
-            address: string;
-            balance: string;
-            symbol: string;
-        }>;
-    }>;
+    staking: Array<{ __typename: 'GqlPoolStaking'; id: string; type: GqlPoolStakingType; address: string }>;
 };
 
 export type GetTokenRelativePriceChartDataQueryVariables = Exact<{
@@ -4996,16 +4589,6 @@ export const GqlPoolMinimalFragmentDoc = gql`
             id
             type
             address
-            farm {
-                id
-                beetsPerBlock
-                rewarders {
-                    id
-                    address
-                    tokenAddress
-                    rewardPerSecond
-                }
-            }
         }
     }
 `;
@@ -5154,7 +4737,6 @@ export const GetAppGlobalDataDocument = gql`
             priority
             tradable
         }
-        beetsGetFbeetsRatio
         blocksGetBlocksPerDay
         blocksGetAverageBlockTime
     }
@@ -5209,7 +4791,7 @@ export const GetAppGlobalPollingDataDocument = gql`
         }
         blocksGetBlocksPerDay
         blocksGetAverageBlockTime
-        beetsGetBeetsPrice
+        tokenGetProtocolTokenPrice
     }
 `;
 
@@ -5396,42 +4978,6 @@ export type GetTokensDynamicDataQueryResult = Apollo.QueryResult<
     GetTokensDynamicDataQuery,
     GetTokensDynamicDataQueryVariables
 >;
-export const GetFbeetsRatioDocument = gql`
-    query GetFbeetsRatio {
-        ratio: beetsGetFbeetsRatio
-    }
-`;
-
-/**
- * __useGetFbeetsRatioQuery__
- *
- * To run a query within a React component, call `useGetFbeetsRatioQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetFbeetsRatioQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetFbeetsRatioQuery({
- *   variables: {
- *   },
- * });
- */
-export function useGetFbeetsRatioQuery(
-    baseOptions?: Apollo.QueryHookOptions<GetFbeetsRatioQuery, GetFbeetsRatioQueryVariables>,
-) {
-    const options = { ...defaultOptions, ...baseOptions };
-    return Apollo.useQuery<GetFbeetsRatioQuery, GetFbeetsRatioQueryVariables>(GetFbeetsRatioDocument, options);
-}
-export function useGetFbeetsRatioLazyQuery(
-    baseOptions?: Apollo.LazyQueryHookOptions<GetFbeetsRatioQuery, GetFbeetsRatioQueryVariables>,
-) {
-    const options = { ...defaultOptions, ...baseOptions };
-    return Apollo.useLazyQuery<GetFbeetsRatioQuery, GetFbeetsRatioQueryVariables>(GetFbeetsRatioDocument, options);
-}
-export type GetFbeetsRatioQueryHookResult = ReturnType<typeof useGetFbeetsRatioQuery>;
-export type GetFbeetsRatioLazyQueryHookResult = ReturnType<typeof useGetFbeetsRatioLazyQuery>;
-export type GetFbeetsRatioQueryResult = Apollo.QueryResult<GetFbeetsRatioQuery, GetFbeetsRatioQueryVariables>;
 export const GetProtocolDataDocument = gql`
     query GetProtocolData {
         protocolData: protocolMetrics {
@@ -5442,7 +4988,7 @@ export const GetProtocolDataDocument = gql`
             swapFee24h
             swapVolume24h
         }
-        beetsPrice: beetsGetBeetsPrice
+        protocolTokenPrice: tokenGetProtocolTokenPrice
     }
 `;
 
@@ -5513,42 +5059,6 @@ export function useGetBlocksPerDayLazyQuery(
 export type GetBlocksPerDayQueryHookResult = ReturnType<typeof useGetBlocksPerDayQuery>;
 export type GetBlocksPerDayLazyQueryHookResult = ReturnType<typeof useGetBlocksPerDayLazyQuery>;
 export type GetBlocksPerDayQueryResult = Apollo.QueryResult<GetBlocksPerDayQuery, GetBlocksPerDayQueryVariables>;
-export const GetBeetsPriceDocument = gql`
-    query GetBeetsPrice {
-        beetsPrice: beetsGetBeetsPrice
-    }
-`;
-
-/**
- * __useGetBeetsPriceQuery__
- *
- * To run a query within a React component, call `useGetBeetsPriceQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetBeetsPriceQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetBeetsPriceQuery({
- *   variables: {
- *   },
- * });
- */
-export function useGetBeetsPriceQuery(
-    baseOptions?: Apollo.QueryHookOptions<GetBeetsPriceQuery, GetBeetsPriceQueryVariables>,
-) {
-    const options = { ...defaultOptions, ...baseOptions };
-    return Apollo.useQuery<GetBeetsPriceQuery, GetBeetsPriceQueryVariables>(GetBeetsPriceDocument, options);
-}
-export function useGetBeetsPriceLazyQuery(
-    baseOptions?: Apollo.LazyQueryHookOptions<GetBeetsPriceQuery, GetBeetsPriceQueryVariables>,
-) {
-    const options = { ...defaultOptions, ...baseOptions };
-    return Apollo.useLazyQuery<GetBeetsPriceQuery, GetBeetsPriceQueryVariables>(GetBeetsPriceDocument, options);
-}
-export type GetBeetsPriceQueryHookResult = ReturnType<typeof useGetBeetsPriceQuery>;
-export type GetBeetsPriceLazyQueryHookResult = ReturnType<typeof useGetBeetsPriceLazyQuery>;
-export type GetBeetsPriceQueryResult = Apollo.QueryResult<GetBeetsPriceQuery, GetBeetsPriceQueryVariables>;
 export const GetUserDataDocument = gql`
     query GetUserData {
         balances: userGetPoolBalances {
@@ -5559,25 +5069,10 @@ export const GetUserDataDocument = gql`
             stakedBalance
             walletBalance
         }
-        fbeetsBalance: userGetFbeetsBalance {
-            totalBalance
-            stakedBalance
-            walletBalance
-        }
         staking: userGetStaking {
             id
             type
             address
-            farm {
-                id
-                beetsPerBlock
-                rewarders {
-                    id
-                    address
-                    tokenAddress
-                    rewardPerSecond
-                }
-            }
             gauge {
                 id
                 gaugeAddress
@@ -5934,16 +5429,6 @@ export const GetPoolDocument = gql`
                 id
                 type
                 address
-                farm {
-                    id
-                    beetsPerBlock
-                    rewarders {
-                        id
-                        address
-                        tokenAddress
-                        rewardPerSecond
-                    }
-                }
                 gauge {
                     id
                     gaugeAddress
@@ -5953,16 +5438,6 @@ export const GetPoolDocument = gql`
                         tokenAddress
                     }
                     status
-                }
-                reliquary {
-                    levels {
-                        level
-                        balance
-                        apr
-                        allocationPoints
-                    }
-                    beetsPerSecond
-                    totalBalance
                 }
             }
             investConfig {
@@ -6576,73 +6051,6 @@ export function useGetPoolFiltersLazyQuery(
 export type GetPoolFiltersQueryHookResult = ReturnType<typeof useGetPoolFiltersQuery>;
 export type GetPoolFiltersLazyQueryHookResult = ReturnType<typeof useGetPoolFiltersLazyQuery>;
 export type GetPoolFiltersQueryResult = Apollo.QueryResult<GetPoolFiltersQuery, GetPoolFiltersQueryVariables>;
-export const GetReliquaryFarmSnapshotsDocument = gql`
-    query GetReliquaryFarmSnapshots($id: String!, $range: GqlPoolSnapshotDataRange!) {
-        snapshots: beetsPoolGetReliquaryFarmSnapshots(id: $id, range: $range) {
-            id
-            farmId
-            timestamp
-            totalBalance
-            totalLiquidity
-            levelBalances {
-                id
-                level
-                balance
-            }
-            relicCount
-            totalBalance
-            userCount
-            tokenBalances {
-                id
-                address
-                balance
-                symbol
-            }
-        }
-    }
-`;
-
-/**
- * __useGetReliquaryFarmSnapshotsQuery__
- *
- * To run a query within a React component, call `useGetReliquaryFarmSnapshotsQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetReliquaryFarmSnapshotsQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetReliquaryFarmSnapshotsQuery({
- *   variables: {
- *      id: // value for 'id'
- *      range: // value for 'range'
- *   },
- * });
- */
-export function useGetReliquaryFarmSnapshotsQuery(
-    baseOptions: Apollo.QueryHookOptions<GetReliquaryFarmSnapshotsQuery, GetReliquaryFarmSnapshotsQueryVariables>,
-) {
-    const options = { ...defaultOptions, ...baseOptions };
-    return Apollo.useQuery<GetReliquaryFarmSnapshotsQuery, GetReliquaryFarmSnapshotsQueryVariables>(
-        GetReliquaryFarmSnapshotsDocument,
-        options,
-    );
-}
-export function useGetReliquaryFarmSnapshotsLazyQuery(
-    baseOptions?: Apollo.LazyQueryHookOptions<GetReliquaryFarmSnapshotsQuery, GetReliquaryFarmSnapshotsQueryVariables>,
-) {
-    const options = { ...defaultOptions, ...baseOptions };
-    return Apollo.useLazyQuery<GetReliquaryFarmSnapshotsQuery, GetReliquaryFarmSnapshotsQueryVariables>(
-        GetReliquaryFarmSnapshotsDocument,
-        options,
-    );
-}
-export type GetReliquaryFarmSnapshotsQueryHookResult = ReturnType<typeof useGetReliquaryFarmSnapshotsQuery>;
-export type GetReliquaryFarmSnapshotsLazyQueryHookResult = ReturnType<typeof useGetReliquaryFarmSnapshotsLazyQuery>;
-export type GetReliquaryFarmSnapshotsQueryResult = Apollo.QueryResult<
-    GetReliquaryFarmSnapshotsQuery,
-    GetReliquaryFarmSnapshotsQueryVariables
->;
 export const GetTokenRelativePriceChartDataDocument = gql`
     query GetTokenRelativePriceChartData($tokenIn: String!, $tokenOut: String!, $range: GqlTokenChartDataRange!) {
         prices: tokenGetRelativePriceChartData(tokenIn: $tokenIn, tokenOut: $tokenOut, range: $range) {

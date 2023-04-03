@@ -12,9 +12,9 @@ import { UserTokenBalancesProvider } from '~/lib/user/useUserTokenBalances';
 import { LinearPoolList } from '~/modules/linear-pools/LinearPoolList';
 
 function LinearPools() {
-    const { chainId } = useNetworkConfig();
+    const { chainId, appName } = useNetworkConfig();
 
-    const TITLE = 'Beethoven X | Linear pools';
+    const TITLE = `${appName} | Linear pools`;
 
     return (
         <>

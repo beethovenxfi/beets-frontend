@@ -22,7 +22,7 @@ export const DEFAULT_POOL_LIST_QUERY_VARS: PoolsQueryVariables = {
     orderBy: 'totalLiquidity',
     orderDirection: 'desc',
     where: {
-        categoryIn: ['INCENTIVIZED'],
+        categoryIn: networkConfig.featureFlags.incentivizedPools ? ['INCENTIVIZED'] : undefined,
         poolTypeIn: ['WEIGHTED', 'STABLE', 'PHANTOM_STABLE', 'META_STABLE'],
         chainIn: [networkConfig.chainName],
     },
