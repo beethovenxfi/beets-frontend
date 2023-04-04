@@ -331,9 +331,9 @@ export class PoolComposableExitService {
         const { amountsOut, userAddress, bptAmountIn, slippage } = data;
         const tokensOut = amountsOut.map((amountOut) => amountOut.address);
 
-        //we apply the slippage on the bpt amount to allow a delta for the estimation
+        // only for the Composable V1 do we apply slippage on the bpt amount to allow a delta for the estimation
         const exitAmounts = poolGetProportionalExitAmountsForBptIn(
-            bptAmountIn,
+            this.isComposableV1(this.pool) ? oldBnumSubtractSlippage(bptAmountIn, 18, slippage) : bptAmountIn,
             this.pool.tokens,
             poolGetTotalShares(this.pool),
             this.isStablePool,
@@ -376,9 +376,11 @@ export class PoolComposableExitService {
             //assuming a proportional exit, there should always be an amount for this
             const bptAmount = bptAmounts.find((amount) => amount.address === nestedStablePoolToken.address)!;
 
-            //we apply the slippage on the bpt amount to allow a delta for the estimation
+            // only for the Composable V1 do we apply slippage on the bpt amount to allow a delta for the estimation
             const nestedExitAmounts = poolGetProportionalExitAmountsForBptIn(
-                oldBnumSubtractSlippage(bptAmount.amount, 18, data.slippage),
+                this.isComposableV1(nestedStablePool)
+                    ? oldBnumSubtractSlippage(bptAmount.amount, 18, slippage)
+                    : bptAmountIn,
                 nestedStablePool.tokens,
                 poolGetTotalShares(nestedStablePool),
                 true,
@@ -675,6 +677,10 @@ export class PoolComposableExitService {
         return this.pool.__typename === 'GqlPoolWeighted';
     }
 
+    private isComposableV1(pool: GqlPoolWeighted | GqlPoolPhantomStable | GqlPoolPhantomStableNested): boolean {
+        return pool.factory === networkConfig.balancer.composableStableV1Factory;
+    }
+
     private getSingleAssetExitForTokenOut(tokenOutAddress: string): ComposablePoolSingleAssetExit {
         const singleAssetExit = this.singleAssetExits.find((exit) => exit.tokenOut.address === tokenOutAddress);
 
@@ -711,16 +717,14 @@ export class PoolComposableExitService {
                 ? sortBy(pool.tokens, 'index')
                 : sortBy([...pool.tokens, { address: pool.address, decimals: 18, __typename: 'pool' }], 'address');
 
-        const isComposableV1 = pool.factory === networkConfig.balancer.composableStableV1Factory;
-
-        //TODO: this approach is not entirely ideal, as it will leave the user with dust in their wallet when they fully exit,
-        //TODO: but a more complete solution will be much more involved, need to circle back to it
+        // only for Composable V1: this approach is not entirely ideal, as it will leave the user with dust in their wallet when they fully exit,
         const amountsOutScaled = sortBy(pool.tokens, 'index').map((poolToken) => {
             const exitAmount = exitAmounts.find((exitAmount) => poolToken.address === exitAmount.address);
 
             return parseUnits(exitAmount?.amount || '0', poolToken.decimals).toString();
         });
 
+        // this is for all other pool types: apply some slippage so we stay below the final
         const minAmountsOut = exitAmounts.map((exitAmount) => {
             const token = this.pool.tokens.find((token) => token.address === exitAmount.address);
             const amountScaled = oldBnumScaleAmount(exitAmount.amount, token?.decimals);
@@ -728,10 +732,14 @@ export class PoolComposableExitService {
             return amountScaled.minus(amountScaled.times(slippage)).toFixed(0);
         });
 
+        if (pool.__typename === 'GqlPoolPhantomStable') {
+            minAmountsOut.unshift('0');
+        }
+
         return {
             assets: tokensWithPhantomBpt.map((token) => token.address),
-            minAmountsOut: isComposableV1 ? tokensWithPhantomBpt.map(() => '0') : ['0', ...minAmountsOut],
-            userData: isComposableV1
+            minAmountsOut: this.isComposableV1(pool) ? tokensWithPhantomBpt.map(() => '0') : minAmountsOut,
+            userData: this.isComposableV1(pool)
                 ? defaultAbiCoder.encode(['uint256', 'uint256[]', 'uint256'], [1, amountsOutScaled, maxBptIn])
                 : pool.__typename === 'GqlPoolWeighted'
                 ? WeightedPoolEncoder.exitExactBPTInForTokensOut(maxBptIn)
