@@ -724,7 +724,7 @@ export class PoolComposableExitService {
             return parseUnits(exitAmount?.amount || '0', poolToken.decimals).toString();
         });
 
-        // this is for all other pool types: apply some slippage so we stay below the final
+        // this is for all other pool types: apply some slippage so we stay below the limits
         const minAmountsOut = exitAmounts.map((exitAmount) => {
             const token = this.pool.tokens.find((token) => token.address === exitAmount.address);
             const amountScaled = oldBnumScaleAmount(exitAmount.amount, token?.decimals);
