@@ -355,7 +355,7 @@ export class PoolComposableExitService {
         calls.push(
             this.batchRelayerService.vaultEncodeExitPool({
                 poolId: this.pool.id,
-                poolKind: 0,
+                poolKind: this.getPoolKind(this.pool),
                 sender: userAddress,
                 recipient: userAddress,
                 exitPoolRequest: this.getExitPoolRequest({
@@ -397,7 +397,7 @@ export class PoolComposableExitService {
             calls.push(
                 this.batchRelayerService.vaultEncodeExitPool({
                     poolId: nestedStablePool.id,
-                    poolKind: 0,
+                    poolKind: this.getPoolKind(nestedStablePool),
                     sender: userAddress,
                     recipient: userAddress,
                     exitPoolRequest: this.getExitPoolRequest({
@@ -677,10 +677,6 @@ export class PoolComposableExitService {
         return this.pool.__typename === 'GqlPoolWeighted';
     }
 
-    private isComposableV1(pool: GqlPoolWeighted | GqlPoolPhantomStable | GqlPoolPhantomStableNested): boolean {
-        return pool.factory === networkConfig.balancer.composableStableV1Factory;
-    }
-
     private getSingleAssetExitForTokenOut(tokenOutAddress: string): ComposablePoolSingleAssetExit {
         const singleAssetExit = this.singleAssetExits.find((exit) => exit.tokenOut.address === tokenOutAddress);
 
@@ -689,6 +685,20 @@ export class PoolComposableExitService {
         }
 
         return singleAssetExit;
+    }
+
+    private isComposableV1(pool: GqlPoolWeighted | GqlPoolPhantomStable | GqlPoolPhantomStableNested): boolean {
+        return pool.factory === networkConfig.balancer.composableStableV1Factory;
+    }
+
+    private getPoolKind(pool: GqlPoolWeighted | GqlPoolPhantomStable | GqlPoolPhantomStableNested) {
+        if (this.isComposableV1(pool)) {
+            return 2;
+        } else if (pool.__typename === 'GqlPoolPhantomStable') {
+            return 3;
+        } else {
+            return 0;
+        }
     }
 
     private getExitPoolRequest({
