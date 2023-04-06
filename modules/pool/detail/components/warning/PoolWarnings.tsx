@@ -19,7 +19,7 @@ export function PoolWarnings() {
             <PoolOvernightWarning />
             <PoolMigrateLegacyFbeetsWarning />
             {warnings.poolDetail[pool.id] && <PoolDetailWarning warning={warnings.poolDetail[pool.id]} />}
-            {pool.staking && !isFbeetsPool && <PoolStakeInFarmWarning />}
+            {pool.staking.length > 0 && !isFbeetsPool && <PoolStakeInFarmWarning />}
             {isFbeetsPool && hasBpt && total === 0 && <PoolFbeetsWarning />}
         </>
     );
