@@ -83,15 +83,6 @@ function PoolList() {
                     );
                 }}
             />
-
-            <Box mt="10">
-                <Text fontSize="xl" color="white" mb="4">
-                    Can&apos;t find what you&apos;re looking for?
-                </Text>
-                <Button variant="primary" size="lg" as={Link} href={networkConfig.createPoolUrl}>
-                    Compose a pool
-                </Button>
-            </Box>
         </Box>
     );
 }
