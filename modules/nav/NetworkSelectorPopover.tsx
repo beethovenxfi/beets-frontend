@@ -9,21 +9,31 @@ interface Props {
 }
 
 export function NetworkSelectorPopover({ children }: Props) {
-    const { chainId } = useNetworkConfig();
+    const { chainId, protocol } = useNetworkConfig();
 
     return (
         <Popover trigger="hover" placement="bottom-start">
             {/*
             // @ts-ignore */}
             <PopoverTrigger>{children}</PopoverTrigger>
-            <PopoverContent w="fit-content" bg="black">
-                <BeetsBox bg="beets.base.900">
-                    <Box px="4" py="2" fontWeight="bold" borderBottomWidth={1} borderBottomColor="gray.400">
+            <PopoverContent w="fit-content" bg={protocol === 'balancer' ? 'white' : "black"}>
+                <BeetsBox
+                    bg={protocol === 'balancer' ? 'white' : 'beets.base.900'}
+                    shadow={protocol === 'balancer' ? 'dark-lg' : 'none'}
+                >
+                    <Box
+                        px="4"
+                        py="2"
+                        fontWeight="bold"
+                        borderBottomWidth={1}
+                        bg={protocol === 'balancer' ? 'blackAlpha.200   ' : ''}
+                        borderBottomColor={protocol === 'balancer' ? 'white' : 'gray.400'}
+                    >
                         Select a network
                     </Box>
                     <Box>
                         {networkList.map((network) => (
-                            <Link key={network.chainId} href={network.url} color="white">
+                            <Link key={network.chainId} href={network.url} color={protocol === 'balancer' ? 'beets.gray' : "white"}>
                                 <HStack spacing="2" pl="4" pb="2" pt="4" pr="2">
                                     <Image src={network.iconUrl} width="20px" height="20px" />
                                     <Text flex="1" pr="2">

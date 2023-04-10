@@ -132,7 +132,25 @@ export const optimismTheme: Partial<ChakraTheme> = {
             },
         },
     },
+    semanticTokens: {
+        colors: {
+            headline: 'beets.base',
+        },
+    },
     components: {
+        TableRow: {
+            baseStyle: {
+                bg: 'box.500'
+            }
+        },
+        PoolCard: {
+            baseStyle: {
+                bgColor: 'blackAlpha.100',
+                _hover: {
+                    bgColor: 'blackAlpha.200'
+                }
+            }
+        },
         Select: {
             parts: ['field'],
             variants: {
@@ -251,6 +269,17 @@ export const optimismTheme: Partial<ChakraTheme> = {
                         _active: { bgColor: 'gray.400' },
                     },
                 },
+                tab: {
+                    fontSize: 'sm',
+                    rounded: 'full',
+                    color: 'white',
+                    bgColor: 'beets.lightAlpha.300',
+                    _hover: { bgColor: 'beets.light' },
+                    _focus: { outline: 'none !important' },
+                    height: 'fit-content',
+                    paddingY: '3',
+                    paddingX: '4',
+                },
             },
         },
         Skeleton: {
@@ -267,6 +296,9 @@ export const optimismTheme: Partial<ChakraTheme> = {
                 cardHeadline: {
                     fontWeight: 'semibold',
                     fontSize: 'xl',
+                    color: 'white',
+                },
+                hero: {
                     color: 'white',
                 },
             },

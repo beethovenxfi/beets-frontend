@@ -3,25 +3,15 @@ import { AnimatePresence } from 'framer-motion';
 import { forwardRef } from 'react';
 import { Eye } from 'react-feather';
 import { AnimatedBox } from '~/components/animation/chakra';
+import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 
 const BeetsTab = forwardRef((props: { children: any } & TabProps, ref: any) => {
     const tabProps = useTab({ ...props, ref });
     const isSelected = !!tabProps['aria-selected'];
+    const { protocol } = useNetworkConfig();
 
     return (
-        <Button
-            fontSize="sm"
-            rounded="full"
-            color={isSelected ? 'gray.100' : 'white'}
-            bgColor={isSelected ? 'beets.base.300' : 'beets.lightAlpha.300'}
-            _hover={{ bgColor: 'beets.light' }}
-            _focus={{ outline: 'none !important' }}
-            height="fit-content"
-            paddingY="3"
-            paddingX="4"
-            {...tabProps}
-            {...props}
-        >
+        <Button className={isSelected ? 'isSelected' : ''} variant="tab" {...tabProps} {...props}>
             <HStack>
                 <Box>{tabProps.children}</Box>
                 {isSelected && <Eye size={16} />}

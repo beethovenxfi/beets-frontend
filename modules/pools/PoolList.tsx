@@ -1,4 +1,4 @@
-import { Alert, AlertIcon, Box, Button, Link, Text, Highlight } from '@chakra-ui/react';
+import { Alert, AlertIcon, Box, Button, Link, Text, Highlight, useStyleConfig } from '@chakra-ui/react';
 import { NetworkStatus } from '@apollo/client';
 import { usePoolList } from './usePoolList';
 import { PoolListItem } from '~/modules/pools/components/PoolListItem';
@@ -21,6 +21,7 @@ function PoolList() {
         usePoolList();
     const { userPoolIds, usdBalanceForPool, hasBptInWalletForPool } = useUserData();
     const userPoolIdsStr = userPoolIds.join();
+    const styles = useStyleConfig('TableRow');
 
     useEffect(() => {
         if (showMyInvestments) {
@@ -63,11 +64,11 @@ function PoolList() {
                         <PoolListItem
                             key={index}
                             pool={item}
+                            __css={styles}
                             userBalance={`${usdBalanceForPool(item.id)}`}
                             showUserBalance={showMyInvestments}
                             borderBottomColor="beets.base.800"
                             borderBottomWidth={index === pools.length - 1 ? 0 : 1}
-                            bg="box.500"
                             tokens={item.displayTokens.map((token) => ({
                                 ...token,
                                 logoURI: getToken(token.address)?.logoURI || undefined,

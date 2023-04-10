@@ -27,8 +27,7 @@ export default function NavbarWalletConnectButton() {
                                     <Button
                                         variant="primary"
                                         _hover={{
-                                            backgroundColor: 'beets.green',
-                                            transform: 'scale(1.1)',
+                                            transform: 'scale(1.05)',
                                         }}
                                         _active={{
                                             backgroundColor: 'beets.green',
@@ -36,7 +35,7 @@ export default function NavbarWalletConnectButton() {
                                         onClick={openConnectModal}
                                         type="button"
                                     >
-                                        <IconWallet stroke="black" boxSize="20px" />
+                                        <IconWallet stroke="white" boxSize="16px" />
                                         <Box ml="2">Connect Wallet</Box>
                                     </Button>
                                 );

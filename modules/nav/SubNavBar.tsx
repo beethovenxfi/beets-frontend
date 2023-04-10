@@ -15,7 +15,7 @@ export function SubNavBar() {
     const protocolTokenPrice = data?.protocolTokenPrice;
 
     return (
-        <HStack px={{ base: '4', xl: '8' }}>
+        <HStack px={{ base: '4', xl: '8' }} justifyContent='center'>
             <BeetsBox px="4" py="2" rounded="lg" display="flex">
                 <NetworkSelectorPopover>
                     <HStack spacing="1.5" mr={6} cursor="pointer">

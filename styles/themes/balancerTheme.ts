@@ -1,20 +1,22 @@
 import { ChakraTheme } from '@chakra-ui/theme';
 
-export const fantomTheme: Partial<ChakraTheme> = {
+const _isSelected = '.isSelected &';
+export const balancerTheme: Partial<ChakraTheme> = {
     styles: {
         global: {
             html: {
                 background:
-                    'radial-gradient(ellipse at top, #030622a8, #000004), radial-gradient(ellipse at bottom, #000004, #000004) !important',
+                    'radial-gradient(ellipse at top, #030622a8, #FFFFFF), radial-gradient(ellipse at bottom, #FFFFFF, #FFFFFF) !important',
             },
             body: {
-                color: '#C1C1D1',
+                color: '#292524',
                 background:
-                    'radial-gradient(ellipse at top, #111111, #020202), radial-gradient(ellipse at bottom, #020202, #020202) !important',
+                    'radial-gradient(ellipse at top, #111111, #FFFFFF), radial-gradient(ellipse at bottom, #FFFFFF, #FFFFFF) !important',
             },
             '.bg': {
-                background: `radial-gradient(ellipse at top, rgba(18, 14, 68, 1) 10%, transparent 80%),
-                             radial-gradient(ellipse at bottom, rgba(18, 14, 68, 1) 10%, transparent 80%) !important`,
+                background: 'white',
+                // background: `radial-gradient(ellipse at top, rgba(0, 0, 0, 1) 10%, transparent 80%),
+                //  radial-gradient(ellipse at bottom, rgba(0, 0, 0, 1) 10%, transparent 80%) !important`,
             },
         },
     },
@@ -79,31 +81,45 @@ export const fantomTheme: Partial<ChakraTheme> = {
         },
         box: {
             '300': 'rgba(27,20,100,0.25)',
-            '500': 'rgba(255,255,255,0.05)',
+            '500': 'rgba(0,0,0,0.1)',
         },
+        navbar: 'beets.base.800',
         beets: {
             green: '#00F89C',
             red: '#FF0000',
             highlight: '#00FFFF',
+            gray: '#292524',
             base: {
-                '50': '#C3C5E9',
-                '100': '#8F93D6',
-                '200': '#585FC6',
-                '300': '#3D3FA9',
-                '400': '#292985',
-                '500': '#1B1464',
-                '600': '#1B1464',
-                '700': '#100A49',
-                '800': '#0B0737',
-                '900': '#030024',
+                50: '#53555e',
+                100: '#494b54',
+                200: '#3f414a',
+                300: '#353740',
+                400: '#2b2d36',
+                500: '#21232c',
+                600: '#171922',
+                700: '#0d0f18',
+                800: '#03050e',
+                900: '#000004',
+            },
+            secondary: {
+                50: '#6a7cff',
+                100: '#6072ff',
+                200: '#5668ff',
+                300: '#4c5eff',
+                400: '#4254ff',
+                500: '#384aff',
+                600: '#2e40f5',
+                700: '#2436eb',
+                800: '#1a2ce1',
+                900: '#1022d7',
             },
             light: 'rgba(46,49,146, 1.0)',
             lightAlpha: {
-                '50': 'rgba(46,49,146, 0.05)',
-                '100': 'rgba(46,49,146, 0.1)',
-                '200': 'rgba(46,49,146, 0.2)',
-                '300': 'rgba(46,49,146, 0.3)',
-                '500': 'rgba(46,49,146, 0.5)',
+                '50': 'rgba(56, 74, 255, 0.05)',
+                '100': 'rgba(56, 74, 255, 0.1)',
+                '200': 'rgba(56, 74, 255, 0.2)',
+                '300': 'rgba(56, 74, 255, 0.3)',
+                '500': 'rgba(56, 74, 255, 0.5)',
             },
             greenAlpha: {
                 '50': 'rgba(0,248,156, 0.05)',
@@ -139,16 +155,19 @@ export const fantomTheme: Partial<ChakraTheme> = {
     components: {
         TableRow: {
             baseStyle: {
-                bg: 'box.500'
-            }
+                bg: 'white',
+                _hover: {
+                    bg: 'beets.lightAlpha.100',
+                },
+            },
         },
         PoolCard: {
             baseStyle: {
                 bgColor: 'blackAlpha.100',
                 _hover: {
-                    bgColor: 'blackAlpha.200'
-                }
-            }
+                    bgColor: 'blackAlpha.200',
+                },
+            },
         },
         Select: {
             parts: ['field'],
@@ -225,17 +244,17 @@ export const fantomTheme: Partial<ChakraTheme> = {
         Button: {
             variants: {
                 primary: {
-                    background: 'beets.green',
-                    color: 'gray.500',
+                    background: '#000000',
+                    color: 'white',
                     _active: { bgColor: 'beets.green' },
                     _focus: { outline: 'none', boxShadow: 'none' },
                     rounded: 'xl',
+                    shadow: 'dark-lg',
                     _hover: {
-                        bgColor: 'beets.highlight',
                         transform: 'scale(1.01)',
+                        background: '#000000',
                         _disabled: {
                             transform: 'none',
-                            background: 'gray.400',
                         },
                     },
                     _disabled: {
@@ -247,14 +266,15 @@ export const fantomTheme: Partial<ChakraTheme> = {
                     },
                 },
                 secondary: {
-                    bgColor: 'beets.greenAlpha.300',
-                    color: 'white',
+                    bgColor: 'transparent',
+                    color: 'beets.gray',
                     _active: { bgColor: 'beets.greenAlpha.300' },
                     _focus: { outline: 'none', boxShadow: 'none' },
                     rounded: 'xl',
                     _hover: {
                         transform: 'scale(1.01)',
-                        bgColor: 'beets.highlightAlpha.200',
+                        bgColor: 'blackAlpha.300',
+                        // bgColor: 'beets.highlightAlpha.200',
                         _disabled: {
                             transform: 'none',
                             background: 'gray.400',
@@ -272,12 +292,16 @@ export const fantomTheme: Partial<ChakraTheme> = {
                     fontSize: 'sm',
                     rounded: 'full',
                     color: 'white',
-                    bgColor: 'beets.lightAlpha.300',
-                    _hover: { bgColor: 'beets.light' },
+                    bgColor: 'beets.secondary.50',
+                    _hover: { bgColor: 'beets.secondary.700' },
                     _focus: { outline: 'none !important' },
                     height: 'fit-content',
                     paddingY: '3',
-                    paddingX: '4'
+                    paddingX: '4',
+                    [_isSelected]: {
+                        color: 'gray.100 !important',
+                        bgColor: 'beets.base.300 !important',
+                    },
                 },
             },
         },
@@ -298,8 +322,8 @@ export const fantomTheme: Partial<ChakraTheme> = {
                     color: 'white',
                 },
                 hero: {
-                    color: 'white'
-                }
+                    color: 'beets.gray',
+                },
             },
         },
     },

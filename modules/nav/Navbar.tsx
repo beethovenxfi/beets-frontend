@@ -19,10 +19,12 @@ interface Props {
 }
 
 export function Navbar({ scrollY }: Props) {
-    const { chainId } = useNetworkConfig();
+    const { chainId, protocol } = useNetworkConfig();
     const router = useRouter();
     const opacity = useTransform(scrollY, [0, 32], [0, 1]);
     const { isConnected } = useUserAccount();
+
+    const navBag = protocol === 'balancer' ? 'white' : 'beets.base.800';
 
     return (
         <>
@@ -38,7 +40,7 @@ export function Navbar({ scrollY }: Props) {
             >
                 <Flex px={{ base: '4', xl: '8' }} py="0" alignItems="center">
                     <motion.div style={{ opacity, position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}>
-                        <Box width="full" height="full" bg="beets.base.800" shadow="lg" />
+                        <Box width="full" height="full" bg={navBag} shadow="lg" />
                     </motion.div>
                     <Flex alignItems="center" mr="6" zIndex="2" cursor="pointer">
                         <NextLink href="/" chakraProps={{ _focus: { boxShadow: 'none' } }}>

@@ -12,7 +12,7 @@ import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 import { UserTokenBalancesProvider } from '~/lib/user/useUserTokenBalances';
 
 function Pools() {
-    const { chainId, appName } = useNetworkConfig();
+    const { chainId, appName, protocol } = useNetworkConfig();
 
     const TITLE = `${appName} | Investment pools`;
     const DESCRIPTION =
@@ -35,11 +35,13 @@ function Pools() {
                     <PageMasthead
                         title="Invest & Farm"
                         image={
-                            <NextImage
-                                src={chainId === '10' ? InvestMastheadOpImage : InvestMastheadImage}
-                                width="208.62px"
-                                height="68px"
-                            />
+                            protocol === 'balancer' ? null : (
+                                <NextImage
+                                    src={chainId === '10' ? InvestMastheadOpImage : InvestMastheadImage}
+                                    width="208.62px"
+                                    height="68px"
+                                />
+                            )
                         }
                     />
                     <PoolList />

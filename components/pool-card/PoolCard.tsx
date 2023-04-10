@@ -1,4 +1,4 @@
-import { Box, BoxProps, Flex, LinkBox, LinkOverlay, Text } from '@chakra-ui/react';
+import { Box, BoxProps, Flex, LinkBox, LinkOverlay, Text, useStyleConfig } from '@chakra-ui/react';
 import AprTooltip from '~/components/apr-tooltip/AprTooltip';
 import TokenAvatarSet from '~/components/token/TokenAvatarSet';
 import { GqlPoolCardDataFragment } from '~/apollo/generated/graphql-codegen-generated';
@@ -12,9 +12,11 @@ interface Props extends BoxProps {
 export function PoolCard({ pool, ...rest }: Props) {
     const dailyApr = parseFloat(pool.dynamicData.apr.total) / 365;
 
+    const styles = useStyleConfig('PoolCard');
+
     return (
         <LinkBox as="article" flex="1" {...rest}>
-            <Flex bgColor="whiteAlpha.100" height="216px" borderRadius="md" p="4" flexDirection="column">
+            <Flex height="216px" borderRadius="md" p="4" flexDirection="column" __css={styles}>
                 <Box fontSize="lg" pb="6" flex="1">
                     <NextLinkOverlay href={`pool/${pool.id}`}>
                         <Text noOfLines={2}>{pool.name}</Text>

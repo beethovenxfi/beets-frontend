@@ -5,7 +5,23 @@ import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 
 export function HomeHero() {
     const theme = useTheme();
-    const { chainId } = useNetworkConfig();
+    const { chainId, protocol } = useNetworkConfig();
+
+    const bgImageStyle =
+        protocol === 'balancer'
+            ? {}
+            : {
+                  backgroundImage: {
+                      base:
+                          chainId === '10'
+                              ? "url('/images/hero-image-optimism-mobile.png')"
+                              : "url('/images/hero-image-fantom-mobile.png')",
+                      md:
+                          chainId === '10'
+                              ? "url('/images/hero-image-optimism.jpg')"
+                              : "url('/images/hero-image-fantom.jpg')",
+                  },
+              };
 
     return (
         <Flex
@@ -13,20 +29,11 @@ export function HomeHero() {
             mx={{ base: `-${theme.space['4']}`, xl: `-${theme.space['8']}` }}
             overflow="hidden"
             minHeight="400px"
-            backgroundImage={{
-                base:
-                    chainId === '10'
-                        ? "url('/images/hero-image-optimism-mobile.png')"
-                        : "url('/images/hero-image-fantom-mobile.png')",
-                md:
-                    chainId === '10'
-                        ? "url('/images/hero-image-optimism.jpg')"
-                        : "url('/images/hero-image-fantom.jpg')",
-            }}
             backgroundPosition="center"
             backgroundRepeat="no-repeat"
             backgroundSize="cover"
-            boxShadow="0px 0px 24px 0px rgba(0,0,0,0.25);"
+            boxShadow={protocol === 'balancer' ? 'none' : '0px 0px 24px 0px rgba(0,0,0,0.25)'}
+            {...bgImageStyle}
         >
             <Flex flex="1" mt="20" pl={{ base: '4', xl: '8' }} mb="12" alignItems="center">
                 <Flex flexDirection="column" width={{ base: 'auto', lg: '580px' }}>
@@ -34,15 +41,15 @@ export function HomeHero() {
                         as="h1"
                         textStyle={{ base: 'h2', lg: 'h1' }}
                         textTransform="uppercase"
-                        color="white"
+                        variant="hero"
                         fontWeight="semibold"
                     >
                         Welcome to
                         <br />
-                        Beethoven X
+                        {protocol === 'balancer' ? 'Balancer' : 'Beethoven X'}
                     </Text>
                     <Text
-                        color="white"
+                        variant="hero"
                         as="h5"
                         textStyle={{ base: undefined, lg: 'h5' }}
                         fontSize={{ base: 'lg', lg: undefined }}
