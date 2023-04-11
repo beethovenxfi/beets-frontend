@@ -16,14 +16,13 @@ export function usePoolJoinGetProportionalInvestmentAmount() {
     const { userAddress } = useUserAccount();
     const { priceForAmount } = useGetTokens();
 
+    // store all the available token addresses in an array for linear pool lookups
+    const userInvestTokenBalanceAddresses = userInvestTokenBalances.map((balance) => balance.address);
+
     const smallestBptOutAmount = sortBy(
         // loop through the pool tokens to find out which token (and amount) would give the smallest bptOut amount
         // so we can base the proportions for the other tokens on that
         pool.tokens.map((token) => {
-            // store all the available token addresses in an array for linear pool lookups
-            const userInvestTokenBalanceAddresses = userInvestTokenBalances.map((balance) => balance.address);
-            const balance = token.balance;
-
             if (token.__typename === 'GqlPoolTokenPhantomStable') {
                 // another loop to find the smallest bptOut amount for the nested stable pool
                 const nestedTokens = token.pool.tokens.map((poolToken) => {
@@ -36,28 +35,30 @@ export function usePoolJoinGetProportionalInvestmentAmount() {
                     const amountIn =
                         userInvestTokenBalances.find((balance) => balance.address === tokenAddress)?.amount || '';
 
-                    const bptOut = calculateBptOut(token.pool.totalShares, amountIn, poolToken.balance);
-                    const weight = parseFloat(poolToken.totalBalance) / parseFloat(token.pool.totalShares);
-
-                    return { address: tokenAddress, amount: amountIn, bptOut, weight };
+                    return {
+                        address: tokenAddress,
+                        amount: amountIn,
+                        bptOut: calculateBptOut(token.pool.totalShares, amountIn, poolToken.balance),
+                        weight: parseFloat(poolToken.totalBalance) / parseFloat(token.pool.totalShares),
+                    };
                 });
                 const smallestNestedBptOutAmountArray = sortBy(nestedTokens, 'bptOut');
-                const smallestNestedBptOutAmount = smallestNestedBptOutAmountArray[0];
 
                 // calculate the proportional amounts and sum them to get the 'amountIn' for the nested stable pool bptOut calculation
                 const amountIn = sum(
                     smallestNestedBptOutAmountArray.map(
                         (nestedToken) =>
-                            parseFloat(nestedToken.amount) * (nestedToken.weight / smallestNestedBptOutAmount.weight),
+                            parseFloat(nestedToken.amount) *
+                            (nestedToken.weight / smallestNestedBptOutAmountArray[0].weight),
                     ),
                 ).toString();
 
-                const bptOut = calculateBptOut(pool.dynamicData.totalShares, amountIn, balance);
+                const bptOut = calculateBptOut(pool.dynamicData.totalShares, amountIn, token.balance);
 
                 return {
                     bptOut,
-                    smallest: {
-                        ...smallestNestedBptOutAmount,
+                    token: {
+                        address: smallestNestedBptOutAmountArray[0].address,
                         amount: amountIn.toString(),
                     },
                 };
@@ -72,11 +73,9 @@ export function usePoolJoinGetProportionalInvestmentAmount() {
                 const amountIn =
                     userInvestTokenBalances.find((balance) => balance.address === tokenAddress)?.amount || '';
 
-                const bptOut = calculateBptOut(pool.dynamicData.totalShares, amountIn, balance);
-
                 return {
-                    bptOut,
-                    smallest: {
+                    bptOut: calculateBptOut(pool.dynamicData.totalShares, amountIn, token.balance),
+                    token: {
                         address: tokenAddress,
                         amount: amountIn,
                     },
@@ -87,8 +86,8 @@ export function usePoolJoinGetProportionalInvestmentAmount() {
     )[0];
 
     const tokenWithSmallestBptOutAmount = {
-        address: smallestBptOutAmount.smallest.address || '',
-        amount: smallestBptOutAmount.smallest.amount || '',
+        address: smallestBptOutAmount.token.address || '',
+        amount: smallestBptOutAmount.token.amount || '',
     };
 
     const query = useQuery(
