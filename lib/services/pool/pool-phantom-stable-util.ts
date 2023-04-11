@@ -207,3 +207,42 @@ export function poolFindPoolTokenFromOptions(
 
     throw new Error(`Token was not found in the provided options: ${tokenAddress}`);
 }
+
+export function getPoolTokenAmountForPossiblyNestedAmount(
+    poolToken: GqlPoolTokenUnion | GqlPoolTokenPhantomStableNestedUnion,
+    amount: TokenAmountHumanReadable,
+): AmountHumanReadable {
+    if (poolToken.__typename === 'GqlPoolTokenPhantomStable' && amount.address !== poolToken.address) {
+        const nestedPoolToken = poolToken.pool.tokens.find((token) => {
+            if (token.__typename === 'GqlPoolTokenLinear') {
+                return !!token.pool.tokens.find((linearToken) => linearToken.address === amount.address);
+            } else {
+                return token.address === amount.address;
+            }
+        });
+
+        if (nestedPoolToken) {
+            const nestedAmount = getPoolTokenAmountForPossiblyNestedAmount(nestedPoolToken, amount);
+
+            //TODO: use big number math
+            return `${
+                (parseFloat(nestedAmount) * parseFloat(nestedPoolToken.priceRate)) /
+                parseFloat(poolToken.pool.bptPriceRate)
+            }`;
+        } else {
+            //TODO: should we throw here?
+            return '0';
+        }
+    } else if (poolToken.__typename === 'GqlPoolTokenLinear') {
+        // this will still work if amount is the linear phantom bpt
+        const nestedToken = poolToken.pool.tokens.find((token) => token.address === amount.address);
+
+        //TODO: use big number math
+        return `${
+            (parseFloat(amount.amount) * parseFloat(nestedToken?.priceRate || '1.0')) /
+            parseFloat(poolToken.pool.bptPriceRate)
+        }`;
+    }
+
+    return amount.amount;
+}

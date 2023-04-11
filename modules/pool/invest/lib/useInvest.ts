@@ -1,4 +1,4 @@
-import { TokenAmountHumanReadable } from '~/lib/services/token/token-types';
+import { AmountHumanReadable, TokenAmountHumanReadable } from '~/lib/services/token/token-types';
 import { useInvestState } from '~/modules/pool/invest/lib/useInvestState';
 import { usePoolUserTokenBalancesInWallet } from '~/modules/pool/lib/usePoolUserTokenBalancesInWallet';
 import { isEth, tokenGetAmountForAddress } from '~/lib/services/token/token-util';
@@ -7,6 +7,7 @@ import { sumBy } from 'lodash';
 import { useGetTokens } from '~/lib/global/useToken';
 import { oldBnum } from '~/lib/services/pool/lib/old-big-number';
 import { usePool } from '~/modules/pool/lib/usePool';
+import { getPoolTokenAmountForPossiblyNestedAmount } from '~/lib/services/pool/pool-phantom-stable-util';
 
 export function useInvest() {
     const { pool } = usePool();
@@ -27,10 +28,23 @@ export function useInvest() {
         amount: inputAmounts[token.address] || '0',
     }));
 
-    const userInvestTokenBalances: TokenAmountHumanReadable[] = selectedInvestTokens.map((token) => ({
-        address: token.address,
-        amount: getUserBalanceForToken(token.address),
-    }));
+    const userInvestTokenBalances: (TokenAmountHumanReadable & {
+        poolTokenAddress: string;
+        poolTokenAmount: AmountHumanReadable;
+    })[] = selectedInvestTokens.map((token, index) => {
+        const poolToken = pool.tokens.find((token) => token.index === pool.investConfig.options[index].poolTokenIndex)!;
+        const userBalance = getUserBalanceForToken(token.address);
+
+        return {
+            address: token.address,
+            amount: userBalance,
+            poolTokenAddress: poolToken.address,
+            poolTokenAmount: getPoolTokenAmountForPossiblyNestedAmount(poolToken, {
+                address: token.address,
+                amount: userBalance,
+            }),
+        };
+    });
 
     const hasValidUserInput =
         !selectedInvestTokensWithAmounts.every((token) => parseFloat(token.amount) === 0) &&

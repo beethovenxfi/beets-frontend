@@ -16,6 +16,9 @@ import { PoolMetaStableService } from '~/lib/services/pool/pool-meta-stable.serv
 import { isSameAddress } from '@balancer-labs/sdk';
 import { PoolComposableStableService } from '~/lib/services/pool/pool-composable-stable.service';
 import { PoolWeightedV2Service } from '~/lib/services/pool/pool-weighted-v2.service';
+import { TokenAmountHumanReadable } from '~/lib/services/token/token-types';
+import { poolGetProportionalJoinAmountsForFixedAmount } from '~/lib/services/pool/lib/util';
+import { sortBy } from 'lodash';
 
 export function poolGetTokensWithoutPhantomBpt(pool: GqlPoolUnion | GqlPoolPhantomStableNested | GqlPoolLinearNested) {
     return pool.tokens.filter((token) => token.address !== pool.address);
@@ -133,4 +136,15 @@ export function getLinearPoolMainToken(pool: GqlPoolUnion | GqlPoolPhantomStable
     }
 
     return null;
+}
+
+export function getFixedAmountFromAvailableBalances(
+    pool: GqlPoolUnion,
+    poolTokenBalances: TokenAmountHumanReadable[],
+): TokenAmountHumanReadable {
+    const proportionalAmounts = poolTokenBalances.map((balance) => {
+        return poolGetProportionalJoinAmountsForFixedAmount(balance, pool.tokens);
+    });
+
+    return sortBy(poolTokenBalances, (balance, index) => parseFloat(proportionalAmounts[index][0].amount))[0];
 }
