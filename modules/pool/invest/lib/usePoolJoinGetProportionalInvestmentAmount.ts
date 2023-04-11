@@ -26,26 +26,25 @@ export function usePoolJoinGetProportionalInvestmentAmount() {
             if (token.__typename === 'GqlPoolTokenPhantomStable') {
                 // another loop to find the smallest bptOut amount for the nested stable pool
                 const nestedTokens = token.pool.tokens.map((poolToken) => {
-                    const tokenAddress =
+                    const address =
                         poolToken.__typename === 'GqlPoolTokenLinear' &&
                         poolToken.pool.tokens.find((nestedPoolToken) =>
                             userInvestTokenBalanceAddresses.includes(nestedPoolToken.address),
                         )?.address;
 
-                    const amountIn =
-                        userInvestTokenBalances.find((balance) => balance.address === tokenAddress)?.amount || '';
+                    const amount = userInvestTokenBalances.find((balance) => balance.address === address)?.amount || '';
 
                     return {
-                        address: tokenAddress,
-                        amount: amountIn,
-                        bptOut: calculateBptOut(token.pool.totalShares, amountIn, poolToken.balance),
+                        address,
+                        amount,
+                        bptOut: calculateBptOut(token.pool.totalShares, amount, poolToken.balance),
                         weight: parseFloat(poolToken.totalBalance) / parseFloat(token.pool.totalShares),
                     };
                 });
                 const smallestNestedBptOutAmountArray = sortBy(nestedTokens, 'bptOut');
 
                 // calculate the proportional amounts and sum them to get the 'amountIn' for the nested stable pool bptOut calculation
-                const amountIn = sum(
+                const amount = sum(
                     smallestNestedBptOutAmountArray.map(
                         (nestedToken) =>
                             parseFloat(nestedToken.amount) *
@@ -53,31 +52,30 @@ export function usePoolJoinGetProportionalInvestmentAmount() {
                     ),
                 ).toString();
 
-                const bptOut = calculateBptOut(pool.dynamicData.totalShares, amountIn, token.balance);
+                const bptOut = calculateBptOut(pool.dynamicData.totalShares, amount, token.balance);
 
                 return {
                     bptOut,
                     token: {
                         address: smallestNestedBptOutAmountArray[0].address,
-                        amount: amountIn.toString(),
+                        amount: amount.toString(),
                     },
                 };
             } else {
-                const tokenAddress =
+                const address =
                     token.__typename === 'GqlPoolTokenLinear'
                         ? token.pool.tokens.find((poolToken) =>
                               userInvestTokenBalanceAddresses.includes(poolToken.address),
                           )?.address
                         : token.address;
 
-                const amountIn =
-                    userInvestTokenBalances.find((balance) => balance.address === tokenAddress)?.amount || '';
+                const amount = userInvestTokenBalances.find((balance) => balance.address === address)?.amount || '';
 
                 return {
-                    bptOut: calculateBptOut(pool.dynamicData.totalShares, amountIn, token.balance),
+                    bptOut: calculateBptOut(pool.dynamicData.totalShares, amount, token.balance),
                     token: {
-                        address: tokenAddress,
-                        amount: amountIn,
+                        address,
+                        amount,
                     },
                 };
             }
