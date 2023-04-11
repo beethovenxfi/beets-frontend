@@ -135,21 +135,35 @@ export const optimismTheme: Partial<ChakraTheme> = {
     semanticTokens: {
         colors: {
             headline: 'beets.base',
+            loading: 'box.500'
         },
     },
     components: {
         TableRow: {
             baseStyle: {
-                bg: 'box.500'
-            }
+                bg: 'box.500',
+            },
         },
         PoolCard: {
             baseStyle: {
                 bgColor: 'blackAlpha.100',
                 _hover: {
-                    bgColor: 'blackAlpha.200'
-                }
-            }
+                    bgColor: 'blackAlpha.200',
+                },
+            },
+        },
+        PoolListTableHeader: {
+            baseStyle: {
+                bgColor: 'rgba(255,255,255,0.08)',
+                borderBottom: '2px',
+                borderColor: 'beets.base.500',
+            },
+        },
+        PageMasthead: {
+            baseStyle: {
+                borderBottomWidth: 5,
+                borderColor: 'beets.base.500',
+            },
         },
         Select: {
             parts: ['field'],
@@ -280,6 +294,23 @@ export const optimismTheme: Partial<ChakraTheme> = {
                     paddingY: '3',
                     paddingX: '4',
                 },
+                tableSort: {
+                    _hover: { backgroundColor: 'transparent', color: 'beets.highlight' },
+                    _focus: { outline: 'none' },
+                    _active: { backgroundColor: 'transparent' },
+                    padding: '0',
+                    height: 'fit-content',
+                    color: 'beets.base.100',
+                    userSelect: 'none',
+                    _selected: {
+                        color: 'beets.green',
+                    },
+                },
+                paginationNumber: {
+                    _selected: {
+                        color: 'beets.highlight'
+                    }
+                }
             },
         },
         Skeleton: {

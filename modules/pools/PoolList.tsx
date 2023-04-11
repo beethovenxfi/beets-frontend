@@ -67,8 +67,8 @@ function PoolList() {
                             __css={styles}
                             userBalance={`${usdBalanceForPool(item.id)}`}
                             showUserBalance={showMyInvestments}
-                            borderBottomColor="beets.base.800"
-                            borderBottomWidth={index === pools.length - 1 ? 0 : 1}
+                            // borderBottomColor="beets.base.800"
+                            // borderBottomWidth={index === pools.length - 1 ? 0 : 1}
                             tokens={item.displayTokens.map((token) => ({
                                 ...token,
                                 logoURI: getToken(token.address)?.logoURI || undefined,

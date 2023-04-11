@@ -1,4 +1,4 @@
-import { Flex, Grid, GridItem, Text } from '@chakra-ui/react';
+import { BoxProps, Flex, Grid, GridItem, GridProps, Text, useStyleConfig } from '@chakra-ui/react';
 import { usePoolList } from '../usePoolList';
 import PoolListSortLink from '~/modules/pools/components/PoolListSortLink';
 import { InfoButton } from '~/components/info-button/InfoButton';
@@ -6,17 +6,19 @@ import { InfoButton } from '~/components/info-button/InfoButton';
 export function PoolListTableHeader() {
     const { state, changeSort, showMyInvestments } = usePoolList();
 
+    const styles = useStyleConfig('PoolListTableHeader') as GridProps;
+
     return (
         <>
             <Grid
+                bgColor={styles.bgColor}
+                borderBottom={styles.borderBottom}
+                borderColor={styles.borderColor}
                 pl="4"
                 py="3"
                 borderTopLeftRadius="md"
                 borderTopRightRadius="md"
                 alignItems={'center'}
-                bgColor="rgba(255,255,255,0.08)"
-                borderBottom="2px"
-                borderColor="beets.base.500"
                 mb={{ base: '4', lg: '0' }}
                 templateColumns={
                     showMyInvestments

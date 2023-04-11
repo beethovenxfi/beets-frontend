@@ -11,7 +11,7 @@ const BeetsTab = forwardRef((props: { children: any } & TabProps, ref: any) => {
     const { protocol } = useNetworkConfig();
 
     return (
-        <Button className={isSelected ? 'isSelected' : ''} variant="tab" {...tabProps} {...props}>
+        <Button variant="tab" {...tabProps} {...props}>
             <HStack>
                 <Box>{tabProps.children}</Box>
                 {isSelected && <Eye size={16} />}

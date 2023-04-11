@@ -8,18 +8,13 @@ interface Props extends ButtonProps {
 }
 
 export default function PoolListSortLink({ title, orderDirection, ...rest }: Props) {
+    const selected = !!orderDirection ? { 'data-selected': true } : {};
     return (
         <Button
-            _hover={{ backgroundColor: 'transparent', color: 'beets.highlight' }}
-            _focus={{ outline: 'none' }}
-            _active={{ backgroundColor: 'transparent' }}
-            padding="0"
-            height="fit-content"
-            variant="ghost"
-            color={orderDirection ? 'beets.green' : 'beets.base.100'}
+            variant='tableSort'
+            {...selected}
             {...rest}
-            userSelect="none"
-        >
+            >
             <Flex justifyContent="flex-end" alignItems="center">
                 <Text mr={orderDirection ? 0.5 : 0} fontSize="md" fontWeight="semibold">
                     {title}

@@ -45,12 +45,12 @@ export function PaginatedTable({
             {renderTableHeader()}
             <Box mb={4} borderBottomLeftRadius="md" borderBottomRightRadius="md" overflow="hidden" shadow="lg">
                 {isLoadingRows && (
-                    <Flex justifyContent={'center'} py={32} bg="box.500">
+                    <Flex justifyContent={'center'} py={32} bg="loading">
                         <Spinner size="xl" />
                     </Flex>
                 )}
                 {!isLoadingRows && items.length === 0 && (
-                    <Box height="md" display="flex" alignItems="center" justifyContent="center" bg="box.500">
+                    <Box height="md" display="flex" alignItems="center" justifyContent="center" bg="loading">
                         No results found for your search criteria.
                     </Box>
                 )}
@@ -117,9 +117,9 @@ export function PaginatedTable({
                             }
 
                             const selected = pageNumber === currentPage;
-
+                            const selectedProps = selected ? { 'data-selected': true } : {};
                             return (
-                                <Button borderRadius={0} color={selected ? 'beets.highlight' : undefined}>
+                                <Button {...selectedProps} borderRadius={0} variant="paginationNumber">
                                     {element}
                                 </Button>
                             );

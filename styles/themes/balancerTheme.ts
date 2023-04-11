@@ -150,6 +150,7 @@ export const balancerTheme: Partial<ChakraTheme> = {
     semanticTokens: {
         colors: {
             headline: 'beets.base',
+            loading: 'white',
         },
     },
     components: {
@@ -157,7 +158,7 @@ export const balancerTheme: Partial<ChakraTheme> = {
             baseStyle: {
                 bg: 'white',
                 _hover: {
-                    bg: 'beets.lightAlpha.100',
+                    bg: 'blackAlpha.50',
                 },
             },
         },
@@ -167,6 +168,19 @@ export const balancerTheme: Partial<ChakraTheme> = {
                 _hover: {
                     bgColor: 'blackAlpha.200',
                 },
+            },
+        },
+        PoolListTableHeader: {
+            baseStyle: {
+                bgColor: 'blackAlpha.200',
+                borderBottom: '0',
+                borderColor: 'beets.base.500',
+            },
+        },
+        PageMasthead: {
+            baseStyle: {
+                borderBottomWidth: 0,
+                borderColor: 'beets.base.500',
             },
         },
         Select: {
@@ -298,9 +312,27 @@ export const balancerTheme: Partial<ChakraTheme> = {
                     height: 'fit-content',
                     paddingY: '3',
                     paddingX: '4',
-                    [_isSelected]: {
-                        color: 'gray.100 !important',
-                        bgColor: 'beets.base.300 !important',
+                    _selected: {
+                        bgColor: 'beets.secondary.500',
+                    },
+                },
+                tableSort: {
+                    _hover: { backgroundColor: 'transparent', color: 'beets.secondary.500' },
+                    _focus: { outline: 'none' },
+                    _active: { backgroundColor: 'transparent' },
+                    padding: '0',
+                    height: 'fit-content',
+                    color: 'beets.base.100',
+                    userSelect: 'none',
+                    _selected: {
+                        color: 'beets.secondary.500',
+                    },
+                },
+                paginationNumber: {
+                    rounded: 'md',
+                    _selected: {
+                        bgColor: 'beets.secondary.500',
+                        color: 'white',
                     },
                 },
             },
