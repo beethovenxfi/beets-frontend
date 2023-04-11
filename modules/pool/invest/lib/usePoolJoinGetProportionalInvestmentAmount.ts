@@ -5,7 +5,7 @@ import { isEth, replaceEthWithWeth, replaceWethWithEth } from '~/lib/services/to
 import { useUserAccount } from '~/lib/user/useUserAccount';
 import { usePool } from '~/modules/pool/lib/usePool';
 import { useGetTokens } from '~/lib/global/useToken';
-import { getFixedAmountFromAvailableBalances } from '~/lib/services/pool/pool-util';
+import { getFixedAmountFromAvailableAmounts } from '~/lib/services/pool/pool-util';
 
 export function usePoolJoinGetProportionalInvestmentAmount() {
     const { poolService, pool } = usePool();
@@ -23,7 +23,7 @@ export function usePoolJoinGetProportionalInvestmentAmount() {
         ],
         async ({ queryKey }) => {
             const hasEth = !!userInvestTokenBalances.find((token) => isEth(token.address));
-            const fixedAmount = getFixedAmountFromAvailableBalances(
+            const fixedAmount = getFixedAmountFromAvailableAmounts(
                 pool,
                 userInvestTokenBalances.map((balance) => ({
                     address: balance.poolTokenAddress,

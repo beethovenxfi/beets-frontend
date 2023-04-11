@@ -138,13 +138,13 @@ export function getLinearPoolMainToken(pool: GqlPoolUnion | GqlPoolPhantomStable
     return null;
 }
 
-export function getFixedAmountFromAvailableBalances(
+export function getFixedAmountFromAvailableAmounts(
     pool: GqlPoolUnion,
-    poolTokenBalances: TokenAmountHumanReadable[],
+    poolTokenAmounts: TokenAmountHumanReadable[],
 ): TokenAmountHumanReadable {
-    const proportionalAmounts = poolTokenBalances.map((balance) => {
+    const proportionalAmounts = poolTokenAmounts.map((balance) => {
         return poolGetProportionalJoinAmountsForFixedAmount(balance, pool.tokens);
     });
 
-    return sortBy(poolTokenBalances, (balance, index) => parseFloat(proportionalAmounts[index][0].amount))[0];
+    return sortBy(poolTokenAmounts, (balance, index) => parseFloat(proportionalAmounts[index][0].amount))[0];
 }
