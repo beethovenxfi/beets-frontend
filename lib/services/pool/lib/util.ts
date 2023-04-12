@@ -6,6 +6,7 @@ import {
     GqlPoolTokenBase,
     GqlPoolTokenLinear,
     GqlPoolTokenPhantomStable,
+    GqlPoolTokenPhantomStableNestedUnion,
     GqlPoolTokenUnion,
     GqlPoolWeighted,
 } from '~/apollo/generated/graphql-codegen-generated';
@@ -569,4 +570,44 @@ export function poolGetNestedTokenEstimateForPoolTokenAmounts({
 
 export function tokenAmountsAllZero(tokenAmounts: TokenAmountHumanReadable[]) {
     return tokenAmounts.filter((amount) => parseFloat(amount.amount) === 0).length === tokenAmounts.length;
+}
+
+export function calculateBptOut(bptTotalSupply: string, amountIn: string, balance: string) {
+    // for now this is only used for sorting
+    return parseFloat(bptTotalSupply) * (parseFloat(amountIn || '') / parseFloat(balance));
+}
+
+export function getInvestTokenForLinearPoolToken(
+    userInvestTokenBalances: TokenAmountHumanReadable[],
+    poolToken: GqlPoolTokenUnion | GqlPoolTokenPhantomStableNestedUnion,
+) {
+    return userInvestTokenBalances.find((balance) => {
+        if (poolToken.__typename === 'GqlPoolTokenLinear') {
+            return !!poolToken.pool.tokens.find((nestedPoolToken) => nestedPoolToken.address === balance.address);
+        }
+    })!;
+}
+
+export function getBptOutForToken(
+    userInvestTokenBalances: TokenAmountHumanReadable[],
+    poolToken: GqlPoolTokenUnion | GqlPoolTokenPhantomStableNestedUnion,
+    bptTotalSupply: string,
+) {
+    const investToken =
+        poolToken.__typename === 'GqlPoolTokenLinear'
+            ? getInvestTokenForLinearPoolToken(userInvestTokenBalances, poolToken)
+            : userInvestTokenBalances.find((balance) => balance.address === poolToken.address)!;
+
+    return {
+        bptOut: calculateBptOut(bptTotalSupply, investToken.amount, poolToken.balance),
+        token: {
+            ...investToken,
+        },
+        // weight: oldBnumFromBnum(parseUnits(poolToken.totalBalance, poolToken.decimals)).div(
+        //     oldBnumFromBnum(parseUnits(bptTotalSupply, 18)),
+        // ),
+        weight: parseFloat(poolToken.totalBalance) / parseFloat(bptTotalSupply),
+        decimals: poolToken.decimals,
+        priceRate: poolToken.priceRate,
+    };
 }

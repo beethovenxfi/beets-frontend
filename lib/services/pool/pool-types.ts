@@ -17,6 +17,9 @@ import { SwapV2 } from '@balancer-labs/sor';
 export interface PoolService {
     updatePool(pool: GqlPoolUnion): void;
 
+    joinGetProportionalSuggestion?(
+        userInvestTokenBalances: TokenAmountHumanReadable[],
+    ): Promise<TokenAmountHumanReadable[]>;
     joinGetProportionalSuggestionForFixedAmount?(
         fixedAmount: TokenAmountHumanReadable,
         tokensIn: string[],

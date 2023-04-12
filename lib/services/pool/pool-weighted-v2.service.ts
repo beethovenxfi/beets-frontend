@@ -17,9 +17,16 @@ import {
     poolGetPoolTokenForPossiblyNestedTokenOut,
     poolGetProportionalJoinAmountsForFixedAmount,
     poolGetNestedTokenEstimateForPoolTokenAmounts,
+    calculateBptOut,
+    getBptOutForToken,
 } from '~/lib/services/pool/lib/util';
 import { PoolComposableJoinService } from '~/lib/services/pool/lib/pool-composable-join.service';
 import { PoolComposableExitService } from '~/lib/services/pool/lib/pool-composable-exit.service';
+import { sortBy } from 'lodash';
+import { parseUnits } from 'ethers/lib/utils.js';
+import { oldBnum, oldBnumFromBnum } from '~/lib/services/pool/lib/old-big-number';
+import { formatFixed } from '@ethersproject/bignumber';
+import { replaceEthWithWeth } from '~/lib/services/token/token-util';
 
 export class PoolWeightedV2Service implements PoolService {
     private readonly composableJoinService: PoolComposableJoinService;
@@ -38,6 +45,66 @@ export class PoolWeightedV2Service implements PoolService {
     public updatePool(pool: GqlPoolWeighted) {
         this.pool = pool;
         this.composableJoinService.updatePool(pool);
+    }
+
+    public async joinGetProportionalSuggestion(userInvestTokenBalances: TokenAmountHumanReadable[]) {
+        // loop through the pool tokens to find out which token (and amount) would give the smallest bptOut amount
+        // so we can use that as the base to calculate the proportions of the other tokens
+        const smallestBptOutAmount = sortBy(
+            this.pool.tokens.map((token) => {
+                if (token.__typename === 'GqlPoolTokenPhantomStable') {
+                    // another loop to find the smallest bptOut amount for the nested stable pool
+                    const nestedTokens = token.pool.tokens.map((poolToken) =>
+                        getBptOutForToken(userInvestTokenBalances, poolToken, token.pool.totalShares),
+                    );
+
+                    const smallestNestedBptOutAmountArray = sortBy(nestedTokens, 'bptOut');
+
+                    console.log({ smallestNestedBptOutAmountArray });
+
+                    // calculate the proportional amounts => current token amount * current token priceRate * ( current token weight / smallest bpt token weight)
+                    // and sum them to get the 'amountIn' for the nested stable pool bptOut calculation
+                    const amount = formatFixed(
+                        smallestNestedBptOutAmountArray
+                            .map((nestedToken) =>
+                                oldBnumFromBnum(parseUnits(nestedToken.token.amount || '', nestedToken.decimals))
+                                    .times(nestedToken.priceRate)
+                                    .times(nestedToken.weight / smallestNestedBptOutAmountArray[0].weight)
+                                    .toFixed(0),
+                            )
+                            .reduce((total, token) => total.plus(token), oldBnum(0))
+                            .toString(),
+                        18,
+                    ).toString();
+
+                    console.log({ amount });
+
+                    return {
+                        bptOut: calculateBptOut(this.pool.dynamicData.totalShares, amount, token.balance),
+                        token: {
+                            address: smallestNestedBptOutAmountArray[0].token.address,
+                            amount,
+                        },
+                    };
+                } else {
+                    // the function will take care of either 'GqlPoolToken' or 'GqlPoolTokenLinear'
+                    return getBptOutForToken(userInvestTokenBalances, token, this.pool.dynamicData.totalShares);
+                }
+            }),
+            'bptOut',
+        )[0];
+
+        const fixedAmount = {
+            ...smallestBptOutAmount.token,
+            address: replaceEthWithWeth(smallestBptOutAmount.token.address || ''),
+        };
+
+        const result = await this.joinGetProportionalSuggestionForFixedAmount(
+            fixedAmount,
+            userInvestTokenBalances.map((token) => replaceEthWithWeth(token.address)),
+        );
+
+        return result;
     }
 
     public async joinGetProportionalSuggestionForFixedAmount(
