@@ -171,18 +171,18 @@ export const optimismNetworkConfig: NetworkConfig = {
         },
         poolInvest: {
             '0xb1c9ac57594e9b1ec0f3787d9f6744ef4cb0a02400000000000000000000006e':
-                'To account for the USD+ and DAI+ deposit/withdraw fee, this pool will charge a fee on both invest and withdraw of up to 0.02%.',
+                'To account for the USD+ and DAI+ deposit/withdraw fee, this pool will charge a fee on both invest and withdraw of up to 0.06%.',
 
             '0x43da214fab3315aa6c02e0b8f2bfb7ef2e3c60a50000000000000000000000ae':
-                'To account for the USD+ and DAI+ deposit/withdraw fee, this pool will charge a fee on both invest and withdraw of up to 0.02%.',
+                'To account for the USD+ and DAI+ deposit/withdraw fee, this pool will charge a fee on both invest and withdraw of up to 0.06%.',
         },
 
         poolWithdraw: {
             '0xb1c9ac57594e9b1ec0f3787d9f6744ef4cb0a02400000000000000000000006e':
-                'To account for the USD+ and DAI+ deposit/withdraw fee, this pool will charge a fee on both invest and withdraw of up to 0.02%.',
+                'To account for the USD+ and DAI+ deposit/withdraw fee, this pool will charge a fee on both invest and withdraw of up to 0.06%.',
 
             '0x43da214fab3315aa6c02e0b8f2bfb7ef2e3c60a50000000000000000000000ae':
-                'To account for the USD+ and DAI+ deposit/withdraw fee, this pool will charge a fee on both invest and withdraw of up to 0.02%.',
+                'To account for the USD+ and DAI+ deposit/withdraw fee, this pool will charge a fee on both invest and withdraw of up to 0.06%.',
         },
     },
     boostedByTypes: {
