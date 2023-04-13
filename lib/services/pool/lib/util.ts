@@ -573,8 +573,11 @@ export function tokenAmountsAllZero(tokenAmounts: TokenAmountHumanReadable[]) {
 }
 
 export function calculateBptOut(bptTotalSupply: string, amountIn: string, balance: string) {
-    // for now this is only used for sorting
     return parseFloat(bptTotalSupply) * (parseFloat(amountIn || '') / parseFloat(balance));
+}
+
+export function calculateAmountIn(bptTotalSupply: string, bptIn: string, balance: string) {
+    return parseFloat(balance) * (parseFloat(bptIn) / parseFloat(bptTotalSupply));
 }
 
 export function getInvestTokenForLinearPoolToken(
@@ -598,16 +601,18 @@ export function getBptOutForToken(
             ? getInvestTokenForLinearPoolToken(userInvestTokenBalances, poolToken)
             : userInvestTokenBalances.find((balance) => balance.address === poolToken.address)!;
 
+    const decimals =
+        poolToken.__typename === 'GqlPoolTokenLinear'
+            ? poolToken.pool.tokens.find((token) => token.address === investToken.address)?.decimals
+            : poolToken.decimals;
+
     return {
         bptOut: calculateBptOut(bptTotalSupply, investToken.amount, poolToken.balance),
         token: {
             ...investToken,
+            decimals,
+            balance: poolToken.balance,
         },
-        // weight: oldBnumFromBnum(parseUnits(poolToken.totalBalance, poolToken.decimals)).div(
-        //     oldBnumFromBnum(parseUnits(bptTotalSupply, 18)),
-        // ),
-        weight: parseFloat(poolToken.totalBalance) / parseFloat(bptTotalSupply),
-        decimals: poolToken.decimals,
-        priceRate: poolToken.priceRate,
+        priceRate: parseFloat(poolToken.priceRate),
     };
 }

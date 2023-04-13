@@ -19,10 +19,11 @@ import {
     poolGetNestedTokenEstimateForPoolTokenAmounts,
     calculateBptOut,
     getBptOutForToken,
+    calculateAmountIn,
 } from '~/lib/services/pool/lib/util';
 import { PoolComposableJoinService } from '~/lib/services/pool/lib/pool-composable-join.service';
 import { PoolComposableExitService } from '~/lib/services/pool/lib/pool-composable-exit.service';
-import { sortBy } from 'lodash';
+import { sortBy, sum } from 'lodash';
 import { parseUnits } from 'ethers/lib/utils.js';
 import { oldBnum, oldBnumFromBnum } from '~/lib/services/pool/lib/old-big-number';
 import { formatFixed } from '@ethersproject/bignumber';
@@ -60,24 +61,21 @@ export class PoolWeightedV2Service implements PoolService {
 
                     const smallestNestedBptOutAmountArray = sortBy(nestedTokens, 'bptOut');
 
-                    console.log({ smallestNestedBptOutAmountArray });
-
-                    // calculate the proportional amounts => current token amount * current token priceRate * ( current token weight / smallest bpt token weight)
+                    // calculate the proportional amounts based on the smallest bpt token amount, multiply result by ( 1 / current token priceRate )
                     // and sum them to get the 'amountIn' for the nested stable pool bptOut calculation
-                    const amount = formatFixed(
-                        smallestNestedBptOutAmountArray
-                            .map((nestedToken) =>
-                                oldBnumFromBnum(parseUnits(nestedToken.token.amount || '', nestedToken.decimals))
-                                    .times(nestedToken.priceRate)
-                                    .times(nestedToken.weight / smallestNestedBptOutAmountArray[0].weight)
-                                    .toFixed(0),
-                            )
-                            .reduce((total, token) => total.plus(token), oldBnum(0))
-                            .toString(),
-                        18,
-                    ).toString();
-
-                    console.log({ amount });
+                    const amount = sum(
+                        smallestNestedBptOutAmountArray.map(
+                            (nestedToken) =>
+                                calculateAmountIn(
+                                    token.pool.totalShares,
+                                    smallestNestedBptOutAmountArray[0].bptOut.toString(),
+                                    nestedToken.token.balance,
+                                ) *
+                                (1 / nestedToken.priceRate),
+                        ),
+                    )
+                        .toFixed(smallestNestedBptOutAmountArray[0].token.decimals)
+                        .toString();
 
                     return {
                         bptOut: calculateBptOut(this.pool.dynamicData.totalShares, amount, token.balance),
@@ -87,7 +85,7 @@ export class PoolWeightedV2Service implements PoolService {
                         },
                     };
                 } else {
-                    // the function will take care of either 'GqlPoolToken' or 'GqlPoolTokenLinear'
+                    // the function will take either 'GqlPoolToken' or 'GqlPoolTokenLinear'
                     return getBptOutForToken(userInvestTokenBalances, token, this.pool.dynamicData.totalShares);
                 }
             }),
