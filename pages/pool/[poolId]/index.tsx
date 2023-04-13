@@ -27,7 +27,8 @@ const PoolPage = ({ pool }: Props) => {
         return <FallbackPlaceholder />;
     }
 
-    const isReliquaryPool = pool.id === networkConfig.reliquary.fbeets.poolId;
+    const isReliquaryPool =
+        pool.id === networkConfig.reliquary.fbeets.poolId || pool.id === networkConfig.fbeets.poolId;
 
     const PoolProviders: ProviderWithProps[] = [
         [PoolProvider, { pool }],
