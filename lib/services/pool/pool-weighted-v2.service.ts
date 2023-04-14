@@ -73,9 +73,7 @@ export class PoolWeightedV2Service implements PoolService {
                                 ) *
                                 (1 / nestedToken.priceRate),
                         ),
-                    )
-                        .toFixed(smallestNestedBptOutAmountArray[0].token.decimals)
-                        .toString();
+                    ).toFixed(smallestNestedBptOutAmountArray[0].token.decimals);
 
                     return {
                         bptOut: calculateBptOut(this.pool.dynamicData.totalShares, amount, token.balance),
