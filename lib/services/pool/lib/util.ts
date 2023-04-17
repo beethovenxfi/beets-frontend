@@ -17,6 +17,7 @@ import {
     oldBnumScale,
     oldBnumScaleAmount,
     oldBnumToBnum,
+    oldBnumToHumanReadable,
     oldBnumZero,
 } from '~/lib/services/pool/lib/old-big-number';
 import OldBigNumber from 'bignumber.js';
@@ -572,12 +573,41 @@ export function tokenAmountsAllZero(tokenAmounts: TokenAmountHumanReadable[]) {
     return tokenAmounts.filter((amount) => parseFloat(amount.amount) === 0).length === tokenAmounts.length;
 }
 
-export function calculateBptOut(bptTotalSupply: string, amountIn: string, balance: string) {
-    return parseFloat(bptTotalSupply) * (parseFloat(amountIn || '') / parseFloat(balance));
+export function calculateBptOut(
+    bptTotalSupply: string,
+    amountIn: string,
+    balance: string,
+    decimals: number = 18,
+    priceRate: string = '1.0',
+) {
+    const balanceScaled = oldBnumScale(balance, decimals).times(priceRate);
+    const amountRatio = oldBnumScale(amountIn, decimals).div(balanceScaled);
+    const bptOut = oldBnumScale(bptTotalSupply, 18).times(amountRatio);
+
+    return bptOut;
 }
 
-export function calculateAmountIn(bptTotalSupply: string, bptIn: string, balance: string) {
-    return parseFloat(balance) * (parseFloat(bptIn) / parseFloat(bptTotalSupply));
+export function calculateAmountIn(
+    bptTotalSupply: string,
+    bptIn: OldBigNumber,
+    tokenData: {
+        token: {
+            balance: string;
+            decimals: number | undefined;
+        };
+        priceRate: string;
+    },
+) {
+    const {
+        token: { balance, decimals },
+        priceRate,
+    } = tokenData;
+    const bptRatio = bptIn.div(oldBnumScale(bptTotalSupply, decimals || 18));
+    const balanceScaled = oldBnumScale(balance, decimals || 18).times(priceRate);
+    const amountIn = balanceScaled.times(bptRatio);
+
+    // return human readable so we can sum 6 & 18 decimal big numbers (alternative?)
+    return oldBnumToHumanReadable(amountIn);
 }
 
 export function getInvestTokenForLinearPoolToken(
@@ -607,12 +637,18 @@ export function getBptOutForToken(
             : poolToken.decimals;
 
     return {
-        bptOut: calculateBptOut(bptTotalSupply, investToken.amount, poolToken.balance),
+        bptOut: calculateBptOut(
+            bptTotalSupply,
+            investToken.amount,
+            poolToken.balance,
+            poolToken.decimals,
+            poolToken.priceRate,
+        ),
         token: {
             ...investToken,
             decimals,
             balance: poolToken.balance,
         },
-        priceRate: parseFloat(poolToken.priceRate),
+        priceRate: poolToken.priceRate,
     };
 }

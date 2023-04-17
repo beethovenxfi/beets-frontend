@@ -17,21 +17,16 @@ import {
     poolGetPoolTokenForPossiblyNestedTokenOut,
     poolGetProportionalJoinAmountsForFixedAmount,
     poolGetNestedTokenEstimateForPoolTokenAmounts,
-    calculateBptOut,
-    getBptOutForToken,
-    calculateAmountIn,
 } from '~/lib/services/pool/lib/util';
 import { PoolComposableJoinService } from '~/lib/services/pool/lib/pool-composable-join.service';
 import { PoolComposableExitService } from '~/lib/services/pool/lib/pool-composable-exit.service';
-import { sortBy, sum } from 'lodash';
-import { parseUnits } from 'ethers/lib/utils.js';
-import { oldBnum, oldBnumFromBnum } from '~/lib/services/pool/lib/old-big-number';
-import { formatFixed } from '@ethersproject/bignumber';
 import { replaceEthWithWeth } from '~/lib/services/token/token-util';
+import { PoolProportionalInvestService } from './lib/pool-proportional-invest.service';
 
 export class PoolWeightedV2Service implements PoolService {
     private readonly composableJoinService: PoolComposableJoinService;
     private readonly composableExitService: PoolComposableExitService;
+    private readonly proportionalInvestService: PoolProportionalInvestService;
 
     constructor(
         private pool: GqlPoolWeighted,
@@ -41,6 +36,7 @@ export class PoolWeightedV2Service implements PoolService {
     ) {
         this.composableJoinService = new PoolComposableJoinService(pool, batchRelayerService, provider, wethAddress);
         this.composableExitService = new PoolComposableExitService(pool, batchRelayerService, provider, wethAddress);
+        this.proportionalInvestService = new PoolProportionalInvestService(pool);
     }
 
     public updatePool(pool: GqlPoolWeighted) {
@@ -49,51 +45,7 @@ export class PoolWeightedV2Service implements PoolService {
     }
 
     public async joinGetProportionalSuggestion(userInvestTokenBalances: TokenAmountHumanReadable[]) {
-        // loop through the pool tokens to find out which token (and amount) would give the smallest bptOut amount
-        // so we can use that as the base to calculate the proportions of the other tokens
-        const smallestBptOutAmount = sortBy(
-            this.pool.tokens.map((token) => {
-                if (token.__typename === 'GqlPoolTokenPhantomStable') {
-                    // another loop to find the smallest bptOut amount for the nested stable pool
-                    const nestedTokens = token.pool.tokens.map((poolToken) =>
-                        getBptOutForToken(userInvestTokenBalances, poolToken, token.pool.totalShares),
-                    );
-
-                    const smallestNestedBptOutAmountArray = sortBy(nestedTokens, 'bptOut');
-
-                    // calculate the proportional amounts based on the smallest bpt token amount, multiply result by ( 1 / current token priceRate )
-                    // and sum them to get the 'amountIn' for the nested stable pool bptOut calculation
-                    const amount = sum(
-                        smallestNestedBptOutAmountArray.map(
-                            (nestedToken) =>
-                                calculateAmountIn(
-                                    token.pool.totalShares,
-                                    smallestNestedBptOutAmountArray[0].bptOut.toString(),
-                                    nestedToken.token.balance,
-                                ) *
-                                (1 / nestedToken.priceRate),
-                        ),
-                    ).toFixed(smallestNestedBptOutAmountArray[0].token.decimals);
-
-                    return {
-                        bptOut: calculateBptOut(this.pool.dynamicData.totalShares, amount, token.balance),
-                        token: {
-                            address: smallestNestedBptOutAmountArray[0].token.address,
-                            amount,
-                        },
-                    };
-                } else {
-                    // the function will take either 'GqlPoolToken' or 'GqlPoolTokenLinear'
-                    return getBptOutForToken(userInvestTokenBalances, token, this.pool.dynamicData.totalShares);
-                }
-            }),
-            'bptOut',
-        )[0];
-
-        const fixedAmount = {
-            ...smallestBptOutAmount.token,
-            address: replaceEthWithWeth(smallestBptOutAmount.token.address || ''),
-        };
+        const fixedAmount = await this.proportionalInvestService.getProportionalSuggestion(userInvestTokenBalances);
 
         const result = await this.joinGetProportionalSuggestionForFixedAmount(
             fixedAmount,
