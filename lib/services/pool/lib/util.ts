@@ -39,6 +39,7 @@ import { Contract } from '@ethersproject/contracts';
 import { networkConfig } from '~/lib/config/network-config';
 import VaultAbi from '~/lib/abi/VaultAbi.json';
 import { formatFixed } from '@ethersproject/bignumber';
+import { replaceWethWithEth } from '../../token/token-util';
 
 export function poolScaleAmp(amp: string): BigNumber {
     // amp is stored with 3 decimals of precision
@@ -573,6 +574,10 @@ export function tokenAmountsAllZero(tokenAmounts: TokenAmountHumanReadable[]) {
     return tokenAmounts.filter((amount) => parseFloat(amount.amount) === 0).length === tokenAmounts.length;
 }
 
+export function calculateBptOutF(bptTotalSupply: string, amountIn: string, balance: string, priceRate: string) {
+    return parseFloat(bptTotalSupply) * (parseFloat(amountIn || '') / (parseFloat(balance) * parseFloat(priceRate)));
+}
+
 export function calculateBptOut(
     bptTotalSupply: string,
     amountIn: string,
@@ -587,24 +592,13 @@ export function calculateBptOut(
     return bptOut;
 }
 
-export function calculateAmountIn(
-    bptTotalSupply: string,
-    bptIn: OldBigNumber,
-    tokenData: {
-        token: {
-            balance: string;
-            decimals: number | undefined;
-        };
-        priceRate: string;
-    },
-) {
-    const {
-        token: { balance, decimals },
-        priceRate,
-    } = tokenData;
-    const bptRatio = bptIn.div(oldBnumScale(bptTotalSupply, decimals || 18));
-    const balanceScaled = oldBnumScale(balance, decimals || 18).times(priceRate);
-    const amountIn = balanceScaled.times(bptRatio);
+export function calculateAmountInF(bptTotalSupply: string, bptIn: string, balance: string) {
+    return parseFloat(balance) * (parseFloat(bptIn) / parseFloat(bptTotalSupply));
+}
+
+export function calculateAmountIn(bptTotalSupply: string, bptIn: OldBigNumber, balance: string) {
+    const bptRatio = bptIn.div(oldBnumScale(bptTotalSupply, 18));
+    const amountIn = oldBnumScale(balance, 18).times(bptRatio);
 
     // return human readable so we can sum 6 & 18 decimal big numbers (alternative?)
     return oldBnumToHumanReadable(amountIn);
@@ -629,7 +623,11 @@ export function getBptOutForToken(
     const investToken =
         poolToken.__typename === 'GqlPoolTokenLinear'
             ? getInvestTokenForLinearPoolToken(userInvestTokenBalances, poolToken)
-            : userInvestTokenBalances.find((balance) => balance.address === poolToken.address)!;
+            : userInvestTokenBalances.find(
+                  (balance) =>
+                      balance.address === poolToken.address ||
+                      balance.address === replaceWethWithEth(poolToken.address),
+              )!;
 
     const decimals =
         poolToken.__typename === 'GqlPoolTokenLinear'
@@ -637,6 +635,7 @@ export function getBptOutForToken(
             : poolToken.decimals;
 
     return {
+        //bptOut: calculateBptOutF(bptTotalSupply, investToken.amount, poolToken.balance, poolToken.priceRate),
         bptOut: calculateBptOut(
             bptTotalSupply,
             investToken.amount,
