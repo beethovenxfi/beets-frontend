@@ -1,4 +1,4 @@
-import { Box, HStack, Image, Skeleton, Text } from '@chakra-ui/react';
+import { Box, HStack, Image, Skeleton, Text, useStyleConfig } from '@chakra-ui/react';
 import { useGetProtocolDataQuery } from '~/apollo/generated/graphql-codegen-generated';
 import { ChevronDown } from 'react-feather';
 import { BeetsBox } from '~/components/box/BeetsBox';
@@ -14,9 +14,11 @@ export function SubNavBar() {
     const protocolData = data?.protocolData;
     const protocolTokenPrice = data?.protocolTokenPrice;
 
+    const styles = useStyleConfig('SubNavBar');
+
     return (
-        <HStack px={{ base: '4', xl: '8' }} justifyContent='center'>
-            <BeetsBox px="4" py="2" rounded="lg" display="flex">
+        <HStack px={{ base: '4', xl: '8' }} justifyContent="center">
+            <BeetsBox px="4" py="2" rounded="lg" display="flex" __css={{ shadow: styles.shadow, width: styles.width }}>
                 <NetworkSelectorPopover>
                     <HStack spacing="1.5" mr={6} cursor="pointer">
                         <Image src={networkConfig.eth.iconUrl} width="20px" height="20px" />

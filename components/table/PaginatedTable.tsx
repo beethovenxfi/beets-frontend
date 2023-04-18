@@ -119,7 +119,7 @@ export function PaginatedTable({
                             const selected = pageNumber === currentPage;
                             const selectedProps = selected ? { 'data-selected': true } : {};
                             return (
-                                <Button {...selectedProps} borderRadius={0} variant="paginationNumber">
+                                <Button {...selectedProps} borderRadius={0} mr='1' variant="paginationNumber">
                                     {element}
                                 </Button>
                             );

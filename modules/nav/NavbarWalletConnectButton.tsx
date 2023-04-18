@@ -10,6 +10,7 @@ import { useUserData } from '~/lib/user/useUserData';
 import { Image as ChakraImage } from '@chakra-ui/react';
 import { numberFormatLargeUsdValue } from '~/lib/util/number-formats';
 import { useEarlyLudwigNft } from '~/lib/global/useEarlyLudwigNft';
+import BeetsTooltip from '~/components/tooltip/BeetsTooltip';
 
 export default function NavbarWalletConnectButton() {
     const txPending = useReactiveVar(txPendingVar);
@@ -67,15 +68,19 @@ export default function NavbarWalletConnectButton() {
                                         roundedTopLeft="md"
                                         roundedBottomLeft="md"
                                         display={{ base: 'none', lg: 'flex' }}
+                                        color="walletConnectPortfolio"
                                     >
                                         <BarChart2 size={18} />
                                         {loading ? (
                                             <Skeleton height="10px" width="41px" />
                                         ) : (
                                             <Box fontSize="sm" fontWeight="semibold">
-                                                <Tooltip label="Your portfolio value is cached to improve app performance. If you just made a deposit in may take up to a minute for the value to be reflected here.">
+                                                <BeetsTooltip
+                                                    noImage
+                                                    label="Your portfolio value is cached to improve app performance. If you just made a deposit in may take up to a minute for the value to be reflected here."
+                                                >
                                                     {numberFormatLargeUsdValue(portfolioValueUSD)}
-                                                </Tooltip>
+                                                </BeetsTooltip>
                                             </Box>
                                         )}
                                     </HStack>

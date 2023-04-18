@@ -34,6 +34,7 @@ function Pools() {
                 <UserTokenBalancesProvider>
                     <PageMasthead
                         title="Invest & Farm"
+                        subtitle="Find a pool that best suits your style of investing"
                         image={
                             protocol === 'balancer' ? null : (
                                 <NextImage

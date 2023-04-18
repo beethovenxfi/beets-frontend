@@ -226,6 +226,12 @@ export const fantomTheme: Partial<ChakraTheme> = {
             baseStyle: {
                 color: 'white',
             },
+            variants: {
+                beets: {
+                    bg: 'beets.base.400',
+                    color: 'white',
+                },
+            },
         },
         Alert: {
             parts: ['container'],
@@ -310,6 +316,31 @@ export const fantomTheme: Partial<ChakraTheme> = {
                         color: 'beets.highlight',
                     },
                 },
+                filter: {
+                    color: 'white',
+                    bgColor: 'beets.lightAlpha.300',
+                    _hover: { bgColor: 'beets.light' },
+                    _selected: {
+                        color: 'gray.100',
+                        bgColor: 'beets.base.300',
+                    },
+                },
+                navbarIconTrigger: {
+                    bgColor: 'beets.lightAlpha.200',
+                    _hover: {
+                        transform: 'scale(1.1)',
+                    },
+                },
+            },
+        },
+        SubNavBar: {
+            baseStyle: {
+                shadow: 'none',
+            },
+        },
+        PopoverContent: {
+            baseStyle: {
+                bgColor: 'beets.base.800',
             },
         },
         Skeleton: {
@@ -330,6 +361,9 @@ export const fantomTheme: Partial<ChakraTheme> = {
                 },
                 hero: {
                     color: 'white',
+                },
+                apr: {
+                    color: 'gray.200',
                 },
             },
         },

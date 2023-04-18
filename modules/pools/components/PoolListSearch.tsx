@@ -12,7 +12,7 @@ export function PoolListSearch() {
     const submitSearch = debounce(async () => {
         await refetch({ ...state, textSearch: searchText, skip: 0 });
         off();
-    }, 250);
+    }, 800);
 
     useEffect(() => {
         submitSearch();
@@ -21,6 +21,7 @@ export function PoolListSearch() {
     return (
         <InputGroup size="md">
             <Input
+                variant='filled'
                 type="text"
                 placeholder="Search..."
                 value={searchText}

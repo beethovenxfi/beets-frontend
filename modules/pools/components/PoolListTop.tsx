@@ -1,4 +1,4 @@
-import { Box, Circle, Flex, Grid, GridItem, IconButton } from '@chakra-ui/react';
+import { Box, Circle, Flex, Grid, GridItem, HStack, IconButton } from '@chakra-ui/react';
 import { PoolListTabs } from '~/modules/pools/components/PoolListTabs';
 import { PoolListSearch } from '~/modules/pools/components/PoolListSearch';
 import { Filter } from 'react-feather';
@@ -6,31 +6,32 @@ import { PoolListTokenMultiSelect } from '~/modules/pools/components/PoolListTok
 import { PoolListFilterMultiSelect } from '~/modules/pools/components/PoolListFilterMultiSelect';
 import { usePoolList } from '~/modules/pools/usePoolList';
 import { FadeInOutBox } from '~/components/animation/FadeInOutBox';
+import { getSelectedProps } from '~/lib/util/component';
 
 export function PoolListTop() {
     const { showFilters, toggleFilterVisibility, state } = usePoolList();
     const hasFiltersSelected = (state.where?.filterIn || []).length > 0 || (state.where?.tokensIn || []).length > 0;
 
+    const selectedProps = getSelectedProps(showFilters);
+
     return (
         <Box display={{ base: 'none', lg: 'block' }}>
             <Flex pb={4}>
-                <Flex flex={1}>
+                <HStack flex={1}>
                     <PoolListTabs />
                     <Box position="relative">
                         <IconButton
                             aria-label="filter-button"
                             icon={<Filter />}
-                            ml={4}
                             onClick={toggleFilterVisibility}
-                            color={showFilters ? 'gray.100' : 'white'}
-                            bgColor={showFilters ? 'beets.base.300' : 'beets.lightAlpha.300'}
-                            _hover={{ bgColor: 'beets.light' }}
+                            variant='filter'
+                            {...selectedProps}
                         />
                         {hasFiltersSelected ? (
                             <Circle size="3" bg="red.500" opacity="0.85" position="absolute" top="-4px" right="-4px" />
                         ) : null}
                     </Box>
-                </Flex>
+                </HStack>
                 <Box>
                     <PoolListSearch />
                 </Box>

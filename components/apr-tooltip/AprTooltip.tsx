@@ -11,11 +11,13 @@ import {
     PopoverTrigger as OrigPopoverTrigger,
     Text,
     TextProps,
+    useStyleConfig,
 } from '@chakra-ui/react';
 import StarsIcon from '~/components/apr-tooltip/StarsIcon';
 import numeral from 'numeral';
 import { AprText } from '~/components/apr-tooltip/AprText';
 import { Info } from 'react-feather';
+import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 
 interface Props {
     data: GqlPoolApr;
@@ -27,6 +29,7 @@ interface Props {
 }
 
 function AprTooltip({ data, textProps, onlySparkles, placement, aprLabel, sparklesSize }: Props) {
+    const { protocol } = useNetworkConfig();
     // temp fix: https://github.com/chakra-ui/chakra-ui/issues/5896#issuecomment-1104085557
     const PopoverTrigger: React.FC<{ children: React.ReactNode }> = OrigPopoverTrigger;
     const formatApr = (apr: string) => {
@@ -36,6 +39,10 @@ function AprTooltip({ data, textProps, onlySparkles, placement, aprLabel, sparkl
 
         return numeral(apr).format('0.00%');
     };
+
+    const popoverContentStyles = useStyleConfig('PopoverContent');
+    const popoverbg = protocol === 'balancer' ? 'white' : 'beets.base.800';
+    const popoverHeaderBg = protocol === 'balancer' ? 'gray.100' : 'whiteAlpha.100';
 
     return (
         <Popover trigger="hover" placement={placement}>
@@ -68,8 +75,8 @@ function AprTooltip({ data, textProps, onlySparkles, placement, aprLabel, sparkl
                 </PopoverTrigger>
             </HStack>
 
-            <PopoverContent w="fit-content" bgColor="beets.base.800" shadow="2xl">
-                <PopoverHeader bgColor="whiteAlpha.100">
+            <PopoverContent w="fit-content" shadow="2xl" background={popoverbg}>
+                <PopoverHeader bgColor={popoverHeaderBg} roundedTop='md'>
                     <Text textAlign="left">
                         Total APR
                         <br />

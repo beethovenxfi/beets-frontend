@@ -59,7 +59,7 @@ export function NavbarPendingRewards() {
             //@ts-ignore */}
             <PopoverTrigger>
                 <Button
-                    bgColor="beets.lightAlpha.200"
+                    variant='navbarIconTrigger'
                     width="60px"
                     height="40px"
                     display="flex"
@@ -68,7 +68,6 @@ export function NavbarPendingRewards() {
                     flexDirection="column"
                     disabled={loading}
                     _disabled={{ opacity: 1.0, cursor: 'not-allowed' }}
-                    _hover={{ transform: 'scale(1.1)' }}
                 >
                     <StarsIcon width={15} height={16} />
 

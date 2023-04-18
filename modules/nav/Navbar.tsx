@@ -83,14 +83,13 @@ export function Navbar({ scrollY }: Props) {
                         <HStack spacing="3">
                             <NetworkSelectorPopover>
                                 <Button
-                                    bgColor="beets.lightAlpha.200"
+                                    variant='navbarIconTrigger'
                                     width="50px"
                                     height="40px"
                                     display="flex"
                                     alignItems="center"
                                     justifyContent="center"
                                     flexDirection="column"
-                                    _hover={{ transform: 'scale(1.1)' }}
                                     px="0"
                                 >
                                     <Image width="24px" height="24px" src={networkConfig.eth.iconUrl} />
