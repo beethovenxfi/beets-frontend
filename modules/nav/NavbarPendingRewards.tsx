@@ -131,16 +131,18 @@ export function NavbarPendingRewards() {
                                         in {staking.length} {isMasterChefOrFreshBeets ? 'farm(s)' : 'gauge(s)'}
                                     </Box>
                                 </BeetsBox>
-                                <Box mt="4" justifySelf="flex-end">
-                                    <BeetsSubmitTransactionButton
-                                        {...harvestQuery}
-                                        isDisabled={pendingRewardsTotalUSD < 0.01 || !isMasterChefOrFreshBeets}
-                                        onClick={() => harvestAll(farmIds)}
-                                        width="full"
-                                    >
-                                        Claim all pool rewards
-                                    </BeetsSubmitTransactionButton>
-                                </Box>
+                                {networkConfig.claimAllRewardsEnabled && (
+                                    <Box mt="4" justifySelf="flex-end">
+                                        <BeetsSubmitTransactionButton
+                                            {...harvestQuery}
+                                            isDisabled={pendingRewardsTotalUSD < 0.01 || !isMasterChefOrFreshBeets}
+                                            onClick={() => harvestAll(farmIds)}
+                                            width="full"
+                                        >
+                                            Claim all pool rewards
+                                        </BeetsSubmitTransactionButton>
+                                    </Box>
+                                )}
                             </VStack>
                         </GridItem>
                     </Grid>
