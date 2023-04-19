@@ -12,16 +12,13 @@ import {
     PopoverHeader,
     PopoverTrigger,
     Skeleton,
-    useBreakpointValue,
     VStack,
 } from '@chakra-ui/react';
 import { useUserPendingRewards } from '~/lib/user/useUserPendingRewards';
 import { numberFormatUSDValue } from '~/lib/util/number-formats';
 import { useGetTokens } from '~/lib/global/useToken';
-
 import { BeetsBox } from '~/components/box/BeetsBox';
 import { useUserData } from '~/lib/user/useUserData';
-
 import { useUserHarvestAllPendingRewards } from './lib/useUserHarvestAllPendingRewards';
 import { BeetsSubmitTransactionButton } from '~/components/button/BeetsSubmitTransactionButton';
 import { tokenFormatAmount } from '~/lib/services/token/token-util';
@@ -44,7 +41,6 @@ export function NavbarPendingRewards() {
     const { harvestAll, ...harvestQuery } = useUserHarvestAllPendingRewards();
     const farmIds = staking.map((stake) => stake?.farm?.id || '');
     const isMasterChefOrFreshBeets = stakingType === 'MASTER_CHEF' || stakingType === 'FRESH_BEETS';
-    const isMobile = useBreakpointValue({ base: true, lg: false });
     const networkConfig = useNetworkConfig();
 
     const { data: pendingReliquaryRewards } = useReliquaryPendingRewards();
