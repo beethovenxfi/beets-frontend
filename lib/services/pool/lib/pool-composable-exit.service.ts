@@ -380,7 +380,7 @@ export class PoolComposableExitService {
             const nestedExitAmounts = poolGetProportionalExitAmountsForBptIn(
                 this.isComposableV1(nestedStablePool)
                     ? oldBnumSubtractSlippage(bptAmount.amount, 18, slippage)
-                    : bptAmountIn,
+                    : bptAmount.amount,
                 nestedStablePool.tokens,
                 poolGetTotalShares(nestedStablePool),
                 true,
@@ -694,7 +694,7 @@ export class PoolComposableExitService {
     private getPoolKind(pool: GqlPoolWeighted | GqlPoolPhantomStable | GqlPoolPhantomStableNested) {
         if (this.isComposableV1(pool)) {
             return 2;
-        } else if (pool.__typename === 'GqlPoolPhantomStable') {
+        } else if (pool.__typename === 'GqlPoolPhantomStable' || pool.__typename === 'GqlPoolPhantomStableNested') {
             return 3;
         } else {
             return 0;
