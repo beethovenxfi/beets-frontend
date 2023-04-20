@@ -34,10 +34,13 @@ import { formatFixed } from '@ethersproject/bignumber';
 import { poolBatchSwaps, poolQueryBatchSwap, poolScaleTokenAmounts } from '~/lib/services/pool/lib/util';
 import { MaxUint256, Zero } from '@ethersproject/constants';
 import { poolIsTokenPhantomBpt } from '~/lib/services/pool/pool-util';
+import { PoolProportionalInvestService } from './lib/pool-proportional-invest.service';
+import { replaceEthWithWeth } from '../token/token-util';
 
 export class PoolWeightedBoostedService implements PoolService {
     private baseService: PoolBaseService;
     private weightedPoolService: PoolWeightedService;
+    private readonly proportionalInvestService: PoolProportionalInvestService;
 
     constructor(
         private pool: GqlPoolWeighted,
@@ -47,6 +50,7 @@ export class PoolWeightedBoostedService implements PoolService {
     ) {
         this.baseService = new PoolBaseService(pool, wethAddress);
         this.weightedPoolService = new PoolWeightedService(pool, batchRelayerService, wethAddress);
+        this.proportionalInvestService = new PoolProportionalInvestService(pool);
     }
 
     public updatePool(pool: GqlPoolWeighted) {
@@ -110,6 +114,17 @@ export class PoolWeightedBoostedService implements PoolService {
             calls,
             ethValue: ethAmount ? ethAmountScaled : undefined,
         };
+    }
+
+    public async joinGetProportionalSuggestion(userInvestTokenBalances: TokenAmountHumanReadable[]) {
+        const fixedAmount = await this.proportionalInvestService.getProportionalSuggestion(userInvestTokenBalances);
+
+        const result = await this.joinGetProportionalSuggestionForFixedAmount(
+            fixedAmount,
+            userInvestTokenBalances.map((token) => replaceEthWithWeth(token.address)),
+        );
+
+        return result;
     }
 
     public async joinGetProportionalSuggestionForFixedAmount(
