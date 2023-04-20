@@ -184,7 +184,7 @@ export function PoolWithdrawTypeChoice({ onShowProportional, onShowSingleAsset }
                             )}
                             {isStablePool && (
                                 <Text fontSize="xs" color="beets.green">
-                                    No price impact
+                                    Minimal price impact
                                 </Text>
                             )}
                         </VStack>
