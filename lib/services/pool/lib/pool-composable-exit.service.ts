@@ -742,8 +742,9 @@ export class PoolComposableExitService {
             return amountScaled.minus(amountScaled.times(slippage)).toFixed(0);
         });
 
-        if (pool.__typename === 'GqlPoolPhantomStable') {
-            minAmountsOut.unshift('0');
+        if (pool.__typename === 'GqlPoolPhantomStable' || pool.__typename === 'GqlPoolPhantomStableNested') {
+            const idx = tokensWithPhantomBpt.findIndex((token) => token.address === pool.address);
+            minAmountsOut.splice(idx, 0, '0');
         }
 
         return {
