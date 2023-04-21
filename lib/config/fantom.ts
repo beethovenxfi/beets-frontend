@@ -45,7 +45,10 @@ export const fantomNetworkConfig: NetworkConfig = {
     balancer: {
         vault: '0x20dd72Ed959b6147912C2e529F0a0C651c33c9ce',
         batchRelayer: '0x0faa25293a36241c214f3760c6ff443e1b731981',
-        composableStableFactories: ['0xf145cafb67081895ee80eb7c04a30cf87f07b745'],
+        composableStableFactories: [
+            '0xf145cafb67081895ee80eb7c04a30cf87f07b745',
+            '0x5c3094982cf3c97a06b7d62a6f7669f14a199b19',
+        ],
         composableStableV1Factory: '0xf145cafb67081895ee80eb7c04a30cf87f07b745',
         weightedPoolV2Factory: '0x8ea1c497c16726e097f62c8c9fbd944143f27090',
         linearFactories: {
