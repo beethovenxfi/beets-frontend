@@ -574,10 +574,6 @@ export function tokenAmountsAllZero(tokenAmounts: TokenAmountHumanReadable[]) {
     return tokenAmounts.filter((amount) => parseFloat(amount.amount) === 0).length === tokenAmounts.length;
 }
 
-export function calculateBptOutF(bptTotalSupply: string, amountIn: string, balance: string, priceRate: string) {
-    return parseFloat(bptTotalSupply) * (parseFloat(amountIn || '') / (parseFloat(balance) * parseFloat(priceRate)));
-}
-
 export function calculateBptOut(
     bptTotalSupply: string,
     amountIn: string,
@@ -590,10 +586,6 @@ export function calculateBptOut(
     const bptOut = oldBnumScale(bptTotalSupply, 18).times(amountRatio);
 
     return bptOut;
-}
-
-export function calculateAmountInF(bptTotalSupply: string, bptIn: string, balance: string) {
-    return parseFloat(balance) * (parseFloat(bptIn) / parseFloat(bptTotalSupply));
 }
 
 export function calculateAmountIn(bptTotalSupply: string, bptIn: OldBigNumber, balance: string) {
@@ -641,7 +633,6 @@ export function getBptOutForToken(
             : poolToken.decimals;
 
     return {
-        //bptOut: calculateBptOutF(bptTotalSupply, investToken.amount, poolToken.balance, poolToken.priceRate),
         bptOut: calculateBptOut(
             bptTotalSupply,
             investToken.amount,
@@ -654,6 +645,5 @@ export function getBptOutForToken(
             decimals,
             balance: poolToken.balance,
         },
-        priceRate: poolToken.priceRate,
     };
 }
