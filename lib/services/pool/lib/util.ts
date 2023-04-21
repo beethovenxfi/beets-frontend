@@ -592,7 +592,7 @@ export function calculateAmountIn(bptTotalSupply: string, bptIn: OldBigNumber, b
     const bptRatio = bptIn.div(oldBnumScale(bptTotalSupply, 18));
     const amountIn = oldBnumScale(balance, 18).times(bptRatio);
 
-    // return human readable so we can sum 6 & 18 decimal big numbers (alternative?)
+    // return human readable so we can convert a sum to the correct decimals again (alternative?)
     return oldBnumToHumanReadable(amountIn);
 }
 
