@@ -622,7 +622,7 @@ export function getBptOutForToken(
               )!;
 
     // for the old weighted boosted pools only the 'selected' token is in the userInvestBalances
-    // so we return null to filter it out in the invest service
+    // so we return null to filter out the other tokens in the invest service
     if (!investToken) {
         return null;
     }
