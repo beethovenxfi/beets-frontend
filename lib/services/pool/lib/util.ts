@@ -629,6 +629,12 @@ export function getBptOutForToken(
                       balance.address === replaceWethWithEth(poolToken.address),
               )!;
 
+    // for the old weighted boosted pools only the 'selected' token is in the userInvestBalances
+    // so we return null to filter it out in the invest service
+    if (!investToken) {
+        return null;
+    }
+
     const decimals =
         poolToken.__typename === 'GqlPoolTokenLinear'
             ? poolToken.pool.tokens.find((token) => token.address === investToken.address)?.decimals
