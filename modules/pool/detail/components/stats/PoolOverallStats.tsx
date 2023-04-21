@@ -35,7 +35,8 @@ export default function PoolOverallStats() {
 
     const rewards = pool.staking?.farm?.rewarders || pool.staking?.gauge?.rewards;
     const rewardsMapped = rewards?.map(({ tokenAddress, rewardPerSecond }) => ({ tokenAddress, rewardPerSecond }));
-    const hasNonZeroRewards = rewardsMapped?.filter((reward) => reward.rewardPerSecond !== '0').length !== 0;
+    const hasNonZeroRewards =
+        !!rewardsMapped && rewardsMapped?.filter((reward) => reward.rewardPerSecond !== '0').length !== 0;
 
     const incentivesDailyValue =
         beetsPerDay * priceFor(networkConfig.beets.address) +
