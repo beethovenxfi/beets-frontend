@@ -1,74 +1,38 @@
 import { useQuery } from 'react-query';
-import { sortBy, sumBy } from 'lodash';
-import { isEth, isWeth, replaceEthWithWeth, replaceWethWithEth } from '~/lib/services/token/token-util';
+import { sumBy } from 'lodash';
+import { isEth, replaceWethWithEth } from '~/lib/services/token/token-util';
 import { useUserAccount } from '~/lib/user/useUserAccount';
 import { usePool } from '~/modules/pool/lib/usePool';
 import { useGetTokens } from '~/lib/global/useToken';
 import { useReliquaryInvest } from './useReliquaryInvest';
 
 export function useReliquaryJoinGetProportionalInvestmentAmount() {
-    const { poolService, pool } = usePool();
-    const { userInvestTokenBalances, selectedInvestTokens } = useReliquaryInvest();
+    const { poolService } = usePool();
+    const { userInvestTokenBalances } = useReliquaryInvest();
     const { userAddress } = useUserAccount();
     const { priceForAmount } = useGetTokens();
-
-    const totalUserInvestTokenBalancesValue = sumBy(userInvestTokenBalances, priceForAmount);
-    const tokenWithSmallestValue = sortBy(
-        userInvestTokenBalances.map((balance) => {
-            const investOption = pool.investConfig.options.find((option) => {
-                const tokenOption = option.tokenOptions.find(
-                    (tokenOption) => tokenOption.address === replaceEthWithWeth(balance.address),
-                );
-
-                return !!tokenOption;
-            });
-
-            const poolToken = investOption ? pool.tokens[investOption.poolTokenIndex] : undefined;
-            //TODO: this is not exactly accurate as we assume here the invest token has a 1:priceRate ratio to the pool token, which is not the case
-            //TODO: as the invest token is often time nested deeper in linear pool of phantom stable
-            const scaledBalance = parseFloat(balance.amount) / parseFloat(poolToken?.priceRate || '1');
-
-            const tokenValue = priceForAmount({ address: balance.address, amount: scaledBalance.toString() });
-            const weightedValue = parseFloat(poolToken?.weight || '1') * totalUserInvestTokenBalancesValue;
-
-            return {
-                ...balance,
-                normalizedAmount: (tokenValue - weightedValue) / weightedValue,
-            };
-        }),
-        'normalizedAmount',
-    )[0];
 
     const query = useQuery(
         [
             {
                 key: 'joinGetProportionalInvestmentAmount',
                 userInvestTokenBalances,
-                tokenWithSmallestValue,
                 userAddress,
             },
         ],
         async ({ queryKey }) => {
             const hasEth = !!userInvestTokenBalances.find((token) => isEth(token.address));
-            const fixedAmount = {
-                ...tokenWithSmallestValue,
-                address: replaceEthWithWeth(tokenWithSmallestValue.address),
-            };
 
-            if (!poolService.joinGetProportionalSuggestionForFixedAmount) {
+            if (!poolService.joinGetProportionalSuggestion) {
                 return {};
             }
 
-            const result = await poolService.joinGetProportionalSuggestionForFixedAmount(
-                fixedAmount,
-                selectedInvestTokens.map((token) => replaceEthWithWeth(token.address)),
-            );
+            const result = await poolService.joinGetProportionalSuggestion(userInvestTokenBalances);
 
             return {
                 tokenProportionalAmounts: Object.fromEntries(
                     result.map((item) => [hasEth ? replaceWethWithEth(item.address) : item.address, item.amount]),
                 ),
-                // this is still not ideal for when there are multiple invest options for a token
                 totalValueProportionalAmounts: sumBy(result, priceForAmount),
             };
         },
