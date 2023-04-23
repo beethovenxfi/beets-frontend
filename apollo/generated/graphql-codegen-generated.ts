@@ -26,7 +26,7 @@ export interface Scalars {
 
 export interface GqlBalancePoolAprItem {
     __typename: 'GqlBalancePoolAprItem';
-    apr: Scalars['BigDecimal'];
+    apr: GqlPoolAprValue;
     id: Scalars['ID'];
     subItems?: Maybe<Array<GqlBalancePoolAprSubItem>>;
     title: Scalars['String'];
@@ -34,7 +34,7 @@ export interface GqlBalancePoolAprItem {
 
 export interface GqlBalancePoolAprSubItem {
     __typename: 'GqlBalancePoolAprSubItem';
-    apr: Scalars['BigDecimal'];
+    apr: GqlPoolAprValue;
     id: Scalars['ID'];
     title: Scalars['String'];
 }
@@ -148,28 +148,26 @@ export interface GqlLgeUpdateInput {
 
 export interface GqlPoolApr {
     __typename: 'GqlPoolApr';
+    apr: GqlPoolAprValue;
     hasRewardApr: Scalars['Boolean'];
     items: Array<GqlBalancePoolAprItem>;
-    max?: Maybe<Scalars['BigDecimal']>;
-    min?: Maybe<Scalars['BigDecimal']>;
-    nativeRewardApr: Scalars['BigDecimal'];
+    nativeRewardApr: GqlPoolAprValue;
     swapApr: Scalars['BigDecimal'];
-    thirdPartyApr: Scalars['BigDecimal'];
+    thirdPartyApr: GqlPoolAprValue;
+}
+
+export interface GqlPoolAprRange {
+    __typename: 'GqlPoolAprRange';
+    max: Scalars['BigDecimal'];
+    min: Scalars['BigDecimal'];
+}
+
+export interface GqlPoolAprTotal {
+    __typename: 'GqlPoolAprTotal';
     total: Scalars['BigDecimal'];
 }
 
-export interface GqlPoolAprItem {
-    __typename: 'GqlPoolAprItem';
-    apr: Scalars['BigDecimal'];
-    subItems?: Maybe<Array<GqlBalancePoolAprSubItem>>;
-    title: Scalars['String'];
-}
-
-export interface GqlPoolAprSubItem {
-    __typename: 'GqlPoolAprSubItem';
-    apr: Scalars['BigDecimal'];
-    title: Scalars['String'];
-}
+export type GqlPoolAprValue = GqlPoolAprRange | GqlPoolAprTotal;
 
 export interface GqlPoolBase {
     address: Scalars['Bytes'];
@@ -1714,20 +1712,30 @@ export type GetHomeDataQuery = {
                       apr: {
                           __typename: 'GqlPoolApr';
                           hasRewardApr: boolean;
-                          thirdPartyApr: string;
-                          nativeRewardApr: string;
                           swapApr: string;
-                          total: string;
+                          thirdPartyApr:
+                              | { __typename: 'GqlPoolAprRange'; min: string; max: string }
+                              | { __typename: 'GqlPoolAprTotal'; total: string };
+                          nativeRewardApr:
+                              | { __typename: 'GqlPoolAprRange'; min: string; max: string }
+                              | { __typename: 'GqlPoolAprTotal'; total: string };
+                          apr:
+                              | { __typename: 'GqlPoolAprRange'; min: string; max: string }
+                              | { __typename: 'GqlPoolAprTotal'; total: string };
                           items: Array<{
                               __typename: 'GqlBalancePoolAprItem';
                               id: string;
                               title: string;
-                              apr: string;
+                              apr:
+                                  | { __typename: 'GqlPoolAprRange'; min: string; max: string }
+                                  | { __typename: 'GqlPoolAprTotal'; total: string };
                               subItems?: Array<{
                                   __typename: 'GqlBalancePoolAprSubItem';
                                   id: string;
                                   title: string;
-                                  apr: string;
+                                  apr:
+                                      | { __typename: 'GqlPoolAprRange'; min: string; max: string }
+                                      | { __typename: 'GqlPoolAprTotal'; total: string };
                               }> | null;
                           }>;
                       };
@@ -1800,20 +1808,30 @@ export type GetHomeFeaturedPoolsQuery = {
                       apr: {
                           __typename: 'GqlPoolApr';
                           hasRewardApr: boolean;
-                          thirdPartyApr: string;
-                          nativeRewardApr: string;
                           swapApr: string;
-                          total: string;
+                          thirdPartyApr:
+                              | { __typename: 'GqlPoolAprRange'; min: string; max: string }
+                              | { __typename: 'GqlPoolAprTotal'; total: string };
+                          nativeRewardApr:
+                              | { __typename: 'GqlPoolAprRange'; min: string; max: string }
+                              | { __typename: 'GqlPoolAprTotal'; total: string };
+                          apr:
+                              | { __typename: 'GqlPoolAprRange'; min: string; max: string }
+                              | { __typename: 'GqlPoolAprTotal'; total: string };
                           items: Array<{
                               __typename: 'GqlBalancePoolAprItem';
                               id: string;
                               title: string;
-                              apr: string;
+                              apr:
+                                  | { __typename: 'GqlPoolAprRange'; min: string; max: string }
+                                  | { __typename: 'GqlPoolAprTotal'; total: string };
                               subItems?: Array<{
                                   __typename: 'GqlBalancePoolAprSubItem';
                                   id: string;
                                   title: string;
-                                  apr: string;
+                                  apr:
+                                      | { __typename: 'GqlPoolAprRange'; min: string; max: string }
+                                      | { __typename: 'GqlPoolAprTotal'; total: string };
                               }> | null;
                           }>;
                       };
@@ -1888,20 +1906,30 @@ export type GqlPoolFeaturedPoolGroupFragment = {
                   apr: {
                       __typename: 'GqlPoolApr';
                       hasRewardApr: boolean;
-                      thirdPartyApr: string;
-                      nativeRewardApr: string;
                       swapApr: string;
-                      total: string;
+                      thirdPartyApr:
+                          | { __typename: 'GqlPoolAprRange'; min: string; max: string }
+                          | { __typename: 'GqlPoolAprTotal'; total: string };
+                      nativeRewardApr:
+                          | { __typename: 'GqlPoolAprRange'; min: string; max: string }
+                          | { __typename: 'GqlPoolAprTotal'; total: string };
+                      apr:
+                          | { __typename: 'GqlPoolAprRange'; min: string; max: string }
+                          | { __typename: 'GqlPoolAprTotal'; total: string };
                       items: Array<{
                           __typename: 'GqlBalancePoolAprItem';
                           id: string;
                           title: string;
-                          apr: string;
+                          apr:
+                              | { __typename: 'GqlPoolAprRange'; min: string; max: string }
+                              | { __typename: 'GqlPoolAprTotal'; total: string };
                           subItems?: Array<{
                               __typename: 'GqlBalancePoolAprSubItem';
                               id: string;
                               title: string;
-                              apr: string;
+                              apr:
+                                  | { __typename: 'GqlPoolAprRange'; min: string; max: string }
+                                  | { __typename: 'GqlPoolAprTotal'; total: string };
                           }> | null;
                       }>;
                   };
@@ -1946,20 +1974,30 @@ export type GqlPoolCardDataFragment = {
         apr: {
             __typename: 'GqlPoolApr';
             hasRewardApr: boolean;
-            thirdPartyApr: string;
-            nativeRewardApr: string;
             swapApr: string;
-            total: string;
+            thirdPartyApr:
+                | { __typename: 'GqlPoolAprRange'; min: string; max: string }
+                | { __typename: 'GqlPoolAprTotal'; total: string };
+            nativeRewardApr:
+                | { __typename: 'GqlPoolAprRange'; min: string; max: string }
+                | { __typename: 'GqlPoolAprTotal'; total: string };
+            apr:
+                | { __typename: 'GqlPoolAprRange'; min: string; max: string }
+                | { __typename: 'GqlPoolAprTotal'; total: string };
             items: Array<{
                 __typename: 'GqlBalancePoolAprItem';
                 id: string;
                 title: string;
-                apr: string;
+                apr:
+                    | { __typename: 'GqlPoolAprRange'; min: string; max: string }
+                    | { __typename: 'GqlPoolAprTotal'; total: string };
                 subItems?: Array<{
                     __typename: 'GqlBalancePoolAprSubItem';
                     id: string;
                     title: string;
-                    apr: string;
+                    apr:
+                        | { __typename: 'GqlPoolAprRange'; min: string; max: string }
+                        | { __typename: 'GqlPoolAprTotal'; total: string };
                 }> | null;
             }>;
         };
@@ -2024,20 +2062,30 @@ export type GetLinearPoolsQuery = {
             apr: {
                 __typename: 'GqlPoolApr';
                 hasRewardApr: boolean;
-                thirdPartyApr: string;
-                nativeRewardApr: string;
                 swapApr: string;
-                total: string;
+                thirdPartyApr:
+                    | { __typename: 'GqlPoolAprRange'; min: string; max: string }
+                    | { __typename: 'GqlPoolAprTotal'; total: string };
+                nativeRewardApr:
+                    | { __typename: 'GqlPoolAprRange'; min: string; max: string }
+                    | { __typename: 'GqlPoolAprTotal'; total: string };
+                apr:
+                    | { __typename: 'GqlPoolAprRange'; min: string; max: string }
+                    | { __typename: 'GqlPoolAprTotal'; total: string };
                 items: Array<{
                     __typename: 'GqlBalancePoolAprItem';
                     id: string;
                     title: string;
-                    apr: string;
+                    apr:
+                        | { __typename: 'GqlPoolAprRange'; min: string; max: string }
+                        | { __typename: 'GqlPoolAprTotal'; total: string };
                     subItems?: Array<{
                         __typename: 'GqlBalancePoolAprSubItem';
                         id: string;
                         title: string;
-                        apr: string;
+                        apr:
+                            | { __typename: 'GqlPoolAprRange'; min: string; max: string }
+                            | { __typename: 'GqlPoolAprTotal'; total: string };
                     }> | null;
                 }>;
             };
@@ -2088,20 +2136,30 @@ export type GqlPoolLinearFragment = {
         apr: {
             __typename: 'GqlPoolApr';
             hasRewardApr: boolean;
-            thirdPartyApr: string;
-            nativeRewardApr: string;
             swapApr: string;
-            total: string;
+            thirdPartyApr:
+                | { __typename: 'GqlPoolAprRange'; min: string; max: string }
+                | { __typename: 'GqlPoolAprTotal'; total: string };
+            nativeRewardApr:
+                | { __typename: 'GqlPoolAprRange'; min: string; max: string }
+                | { __typename: 'GqlPoolAprTotal'; total: string };
+            apr:
+                | { __typename: 'GqlPoolAprRange'; min: string; max: string }
+                | { __typename: 'GqlPoolAprTotal'; total: string };
             items: Array<{
                 __typename: 'GqlBalancePoolAprItem';
                 id: string;
                 title: string;
-                apr: string;
+                apr:
+                    | { __typename: 'GqlPoolAprRange'; min: string; max: string }
+                    | { __typename: 'GqlPoolAprTotal'; total: string };
                 subItems?: Array<{
                     __typename: 'GqlBalancePoolAprSubItem';
                     id: string;
                     title: string;
-                    apr: string;
+                    apr:
+                        | { __typename: 'GqlPoolAprRange'; min: string; max: string }
+                        | { __typename: 'GqlPoolAprTotal'; total: string };
                 }> | null;
             }>;
         };
@@ -2190,20 +2248,30 @@ export type GetPoolQuery = {
                   apr: {
                       __typename: 'GqlPoolApr';
                       hasRewardApr: boolean;
-                      thirdPartyApr: string;
-                      nativeRewardApr: string;
                       swapApr: string;
-                      total: string;
+                      thirdPartyApr:
+                          | { __typename: 'GqlPoolAprRange'; min: string; max: string }
+                          | { __typename: 'GqlPoolAprTotal'; total: string };
+                      nativeRewardApr:
+                          | { __typename: 'GqlPoolAprRange'; min: string; max: string }
+                          | { __typename: 'GqlPoolAprTotal'; total: string };
+                      apr:
+                          | { __typename: 'GqlPoolAprRange'; min: string; max: string }
+                          | { __typename: 'GqlPoolAprTotal'; total: string };
                       items: Array<{
                           __typename: 'GqlBalancePoolAprItem';
                           id: string;
                           title: string;
-                          apr: string;
+                          apr:
+                              | { __typename: 'GqlPoolAprRange'; min: string; max: string }
+                              | { __typename: 'GqlPoolAprTotal'; total: string };
                           subItems?: Array<{
                               __typename: 'GqlBalancePoolAprSubItem';
                               id: string;
                               title: string;
-                              apr: string;
+                              apr:
+                                  | { __typename: 'GqlPoolAprRange'; min: string; max: string }
+                                  | { __typename: 'GqlPoolAprTotal'; total: string };
                           }> | null;
                       }>;
                   };
@@ -2386,20 +2454,30 @@ export type GetPoolQuery = {
                   apr: {
                       __typename: 'GqlPoolApr';
                       hasRewardApr: boolean;
-                      thirdPartyApr: string;
-                      nativeRewardApr: string;
                       swapApr: string;
-                      total: string;
+                      thirdPartyApr:
+                          | { __typename: 'GqlPoolAprRange'; min: string; max: string }
+                          | { __typename: 'GqlPoolAprTotal'; total: string };
+                      nativeRewardApr:
+                          | { __typename: 'GqlPoolAprRange'; min: string; max: string }
+                          | { __typename: 'GqlPoolAprTotal'; total: string };
+                      apr:
+                          | { __typename: 'GqlPoolAprRange'; min: string; max: string }
+                          | { __typename: 'GqlPoolAprTotal'; total: string };
                       items: Array<{
                           __typename: 'GqlBalancePoolAprItem';
                           id: string;
                           title: string;
-                          apr: string;
+                          apr:
+                              | { __typename: 'GqlPoolAprRange'; min: string; max: string }
+                              | { __typename: 'GqlPoolAprTotal'; total: string };
                           subItems?: Array<{
                               __typename: 'GqlBalancePoolAprSubItem';
                               id: string;
                               title: string;
-                              apr: string;
+                              apr:
+                                  | { __typename: 'GqlPoolAprRange'; min: string; max: string }
+                                  | { __typename: 'GqlPoolAprTotal'; total: string };
                           }> | null;
                       }>;
                   };
@@ -2716,20 +2794,30 @@ export type GetPoolQuery = {
                   apr: {
                       __typename: 'GqlPoolApr';
                       hasRewardApr: boolean;
-                      thirdPartyApr: string;
-                      nativeRewardApr: string;
                       swapApr: string;
-                      total: string;
+                      thirdPartyApr:
+                          | { __typename: 'GqlPoolAprRange'; min: string; max: string }
+                          | { __typename: 'GqlPoolAprTotal'; total: string };
+                      nativeRewardApr:
+                          | { __typename: 'GqlPoolAprRange'; min: string; max: string }
+                          | { __typename: 'GqlPoolAprTotal'; total: string };
+                      apr:
+                          | { __typename: 'GqlPoolAprRange'; min: string; max: string }
+                          | { __typename: 'GqlPoolAprTotal'; total: string };
                       items: Array<{
                           __typename: 'GqlBalancePoolAprItem';
                           id: string;
                           title: string;
-                          apr: string;
+                          apr:
+                              | { __typename: 'GqlPoolAprRange'; min: string; max: string }
+                              | { __typename: 'GqlPoolAprTotal'; total: string };
                           subItems?: Array<{
                               __typename: 'GqlBalancePoolAprSubItem';
                               id: string;
                               title: string;
-                              apr: string;
+                              apr:
+                                  | { __typename: 'GqlPoolAprRange'; min: string; max: string }
+                                  | { __typename: 'GqlPoolAprTotal'; total: string };
                           }> | null;
                       }>;
                   };
@@ -2909,20 +2997,30 @@ export type GetPoolQuery = {
                   apr: {
                       __typename: 'GqlPoolApr';
                       hasRewardApr: boolean;
-                      thirdPartyApr: string;
-                      nativeRewardApr: string;
                       swapApr: string;
-                      total: string;
+                      thirdPartyApr:
+                          | { __typename: 'GqlPoolAprRange'; min: string; max: string }
+                          | { __typename: 'GqlPoolAprTotal'; total: string };
+                      nativeRewardApr:
+                          | { __typename: 'GqlPoolAprRange'; min: string; max: string }
+                          | { __typename: 'GqlPoolAprTotal'; total: string };
+                      apr:
+                          | { __typename: 'GqlPoolAprRange'; min: string; max: string }
+                          | { __typename: 'GqlPoolAprTotal'; total: string };
                       items: Array<{
                           __typename: 'GqlBalancePoolAprItem';
                           id: string;
                           title: string;
-                          apr: string;
+                          apr:
+                              | { __typename: 'GqlPoolAprRange'; min: string; max: string }
+                              | { __typename: 'GqlPoolAprTotal'; total: string };
                           subItems?: Array<{
                               __typename: 'GqlBalancePoolAprSubItem';
                               id: string;
                               title: string;
-                              apr: string;
+                              apr:
+                                  | { __typename: 'GqlPoolAprRange'; min: string; max: string }
+                                  | { __typename: 'GqlPoolAprTotal'; total: string };
                           }> | null;
                       }>;
                   };
@@ -3240,20 +3338,30 @@ export type GetPoolQuery = {
                   apr: {
                       __typename: 'GqlPoolApr';
                       hasRewardApr: boolean;
-                      thirdPartyApr: string;
-                      nativeRewardApr: string;
                       swapApr: string;
-                      total: string;
+                      thirdPartyApr:
+                          | { __typename: 'GqlPoolAprRange'; min: string; max: string }
+                          | { __typename: 'GqlPoolAprTotal'; total: string };
+                      nativeRewardApr:
+                          | { __typename: 'GqlPoolAprRange'; min: string; max: string }
+                          | { __typename: 'GqlPoolAprTotal'; total: string };
+                      apr:
+                          | { __typename: 'GqlPoolAprRange'; min: string; max: string }
+                          | { __typename: 'GqlPoolAprTotal'; total: string };
                       items: Array<{
                           __typename: 'GqlBalancePoolAprItem';
                           id: string;
                           title: string;
-                          apr: string;
+                          apr:
+                              | { __typename: 'GqlPoolAprRange'; min: string; max: string }
+                              | { __typename: 'GqlPoolAprTotal'; total: string };
                           subItems?: Array<{
                               __typename: 'GqlBalancePoolAprSubItem';
                               id: string;
                               title: string;
-                              apr: string;
+                              apr:
+                                  | { __typename: 'GqlPoolAprRange'; min: string; max: string }
+                                  | { __typename: 'GqlPoolAprTotal'; total: string };
                           }> | null;
                       }>;
                   };
@@ -3433,20 +3541,30 @@ export type GetPoolQuery = {
                   apr: {
                       __typename: 'GqlPoolApr';
                       hasRewardApr: boolean;
-                      thirdPartyApr: string;
-                      nativeRewardApr: string;
                       swapApr: string;
-                      total: string;
+                      thirdPartyApr:
+                          | { __typename: 'GqlPoolAprRange'; min: string; max: string }
+                          | { __typename: 'GqlPoolAprTotal'; total: string };
+                      nativeRewardApr:
+                          | { __typename: 'GqlPoolAprRange'; min: string; max: string }
+                          | { __typename: 'GqlPoolAprTotal'; total: string };
+                      apr:
+                          | { __typename: 'GqlPoolAprRange'; min: string; max: string }
+                          | { __typename: 'GqlPoolAprTotal'; total: string };
                       items: Array<{
                           __typename: 'GqlBalancePoolAprItem';
                           id: string;
                           title: string;
-                          apr: string;
+                          apr:
+                              | { __typename: 'GqlPoolAprRange'; min: string; max: string }
+                              | { __typename: 'GqlPoolAprTotal'; total: string };
                           subItems?: Array<{
                               __typename: 'GqlBalancePoolAprSubItem';
                               id: string;
                               title: string;
-                              apr: string;
+                              apr:
+                                  | { __typename: 'GqlPoolAprRange'; min: string; max: string }
+                                  | { __typename: 'GqlPoolAprTotal'; total: string };
                           }> | null;
                       }>;
                   };
@@ -3763,20 +3881,30 @@ export type GetPoolQuery = {
                   apr: {
                       __typename: 'GqlPoolApr';
                       hasRewardApr: boolean;
-                      thirdPartyApr: string;
-                      nativeRewardApr: string;
                       swapApr: string;
-                      total: string;
+                      thirdPartyApr:
+                          | { __typename: 'GqlPoolAprRange'; min: string; max: string }
+                          | { __typename: 'GqlPoolAprTotal'; total: string };
+                      nativeRewardApr:
+                          | { __typename: 'GqlPoolAprRange'; min: string; max: string }
+                          | { __typename: 'GqlPoolAprTotal'; total: string };
+                      apr:
+                          | { __typename: 'GqlPoolAprRange'; min: string; max: string }
+                          | { __typename: 'GqlPoolAprTotal'; total: string };
                       items: Array<{
                           __typename: 'GqlBalancePoolAprItem';
                           id: string;
                           title: string;
-                          apr: string;
+                          apr:
+                              | { __typename: 'GqlPoolAprRange'; min: string; max: string }
+                              | { __typename: 'GqlPoolAprTotal'; total: string };
                           subItems?: Array<{
                               __typename: 'GqlBalancePoolAprSubItem';
                               id: string;
                               title: string;
-                              apr: string;
+                              apr:
+                                  | { __typename: 'GqlPoolAprRange'; min: string; max: string }
+                                  | { __typename: 'GqlPoolAprTotal'; total: string };
                           }> | null;
                       }>;
                   };
@@ -4226,20 +4354,30 @@ export type GetPoolsQuery = {
             apr: {
                 __typename: 'GqlPoolApr';
                 hasRewardApr: boolean;
-                thirdPartyApr: string;
-                nativeRewardApr: string;
                 swapApr: string;
-                total: string;
+                thirdPartyApr:
+                    | { __typename: 'GqlPoolAprRange'; min: string; max: string }
+                    | { __typename: 'GqlPoolAprTotal'; total: string };
+                nativeRewardApr:
+                    | { __typename: 'GqlPoolAprRange'; min: string; max: string }
+                    | { __typename: 'GqlPoolAprTotal'; total: string };
+                apr:
+                    | { __typename: 'GqlPoolAprRange'; min: string; max: string }
+                    | { __typename: 'GqlPoolAprTotal'; total: string };
                 items: Array<{
                     __typename: 'GqlBalancePoolAprItem';
                     id: string;
                     title: string;
-                    apr: string;
+                    apr:
+                        | { __typename: 'GqlPoolAprRange'; min: string; max: string }
+                        | { __typename: 'GqlPoolAprTotal'; total: string };
                     subItems?: Array<{
                         __typename: 'GqlBalancePoolAprSubItem';
                         id: string;
                         title: string;
-                        apr: string;
+                        apr:
+                            | { __typename: 'GqlPoolAprRange'; min: string; max: string }
+                            | { __typename: 'GqlPoolAprTotal'; total: string };
                     }> | null;
                 }>;
             };
@@ -4314,20 +4452,30 @@ export type GqlPoolMinimalFragment = {
         apr: {
             __typename: 'GqlPoolApr';
             hasRewardApr: boolean;
-            thirdPartyApr: string;
-            nativeRewardApr: string;
             swapApr: string;
-            total: string;
+            thirdPartyApr:
+                | { __typename: 'GqlPoolAprRange'; min: string; max: string }
+                | { __typename: 'GqlPoolAprTotal'; total: string };
+            nativeRewardApr:
+                | { __typename: 'GqlPoolAprRange'; min: string; max: string }
+                | { __typename: 'GqlPoolAprTotal'; total: string };
+            apr:
+                | { __typename: 'GqlPoolAprRange'; min: string; max: string }
+                | { __typename: 'GqlPoolAprTotal'; total: string };
             items: Array<{
                 __typename: 'GqlBalancePoolAprItem';
                 id: string;
                 title: string;
-                apr: string;
+                apr:
+                    | { __typename: 'GqlPoolAprRange'; min: string; max: string }
+                    | { __typename: 'GqlPoolAprTotal'; total: string };
                 subItems?: Array<{
                     __typename: 'GqlBalancePoolAprSubItem';
                     id: string;
                     title: string;
-                    apr: string;
+                    apr:
+                        | { __typename: 'GqlPoolAprRange'; min: string; max: string }
+                        | { __typename: 'GqlPoolAprTotal'; total: string };
                 }> | null;
             }>;
         };
@@ -4738,18 +4886,58 @@ export const GqlPoolCardDataFragmentDoc = gql`
             totalShares
             apr {
                 hasRewardApr
-                thirdPartyApr
-                nativeRewardApr
+                thirdPartyApr {
+                    ... on GqlPoolAprTotal {
+                        total
+                    }
+                    ... on GqlPoolAprRange {
+                        min
+                        max
+                    }
+                }
+                nativeRewardApr {
+                    ... on GqlPoolAprTotal {
+                        total
+                    }
+                    ... on GqlPoolAprRange {
+                        min
+                        max
+                    }
+                }
                 swapApr
-                total
+                apr {
+                    ... on GqlPoolAprTotal {
+                        total
+                    }
+                    ... on GqlPoolAprRange {
+                        min
+                        max
+                    }
+                }
                 items {
                     id
                     title
-                    apr
+                    apr {
+                        ... on GqlPoolAprTotal {
+                            total
+                        }
+                        ... on GqlPoolAprRange {
+                            min
+                            max
+                        }
+                    }
                     subItems {
                         id
                         title
-                        apr
+                        apr {
+                            ... on GqlPoolAprTotal {
+                                total
+                            }
+                            ... on GqlPoolAprRange {
+                                min
+                                max
+                            }
+                        }
                     }
                 }
             }
@@ -4820,18 +5008,58 @@ export const GqlPoolLinearFragmentDoc = gql`
             volume48h
             apr {
                 hasRewardApr
-                thirdPartyApr
-                nativeRewardApr
+                thirdPartyApr {
+                    ... on GqlPoolAprTotal {
+                        total
+                    }
+                    ... on GqlPoolAprRange {
+                        min
+                        max
+                    }
+                }
+                nativeRewardApr {
+                    ... on GqlPoolAprTotal {
+                        total
+                    }
+                    ... on GqlPoolAprRange {
+                        min
+                        max
+                    }
+                }
                 swapApr
-                total
+                apr {
+                    ... on GqlPoolAprTotal {
+                        total
+                    }
+                    ... on GqlPoolAprRange {
+                        min
+                        max
+                    }
+                }
                 items {
                     id
                     title
-                    apr
+                    apr {
+                        ... on GqlPoolAprTotal {
+                            total
+                        }
+                        ... on GqlPoolAprRange {
+                            min
+                            max
+                        }
+                    }
                     subItems {
                         id
                         title
-                        apr
+                        apr {
+                            ... on GqlPoolAprTotal {
+                                total
+                            }
+                            ... on GqlPoolAprRange {
+                                min
+                                max
+                            }
+                        }
                     }
                 }
             }
@@ -4960,18 +5188,58 @@ export const GqlPoolMinimalFragmentDoc = gql`
             volume24h
             apr {
                 hasRewardApr
-                thirdPartyApr
-                nativeRewardApr
+                thirdPartyApr {
+                    ... on GqlPoolAprTotal {
+                        total
+                    }
+                    ... on GqlPoolAprRange {
+                        min
+                        max
+                    }
+                }
+                nativeRewardApr {
+                    ... on GqlPoolAprTotal {
+                        total
+                    }
+                    ... on GqlPoolAprRange {
+                        min
+                        max
+                    }
+                }
                 swapApr
-                total
+                apr {
+                    ... on GqlPoolAprTotal {
+                        total
+                    }
+                    ... on GqlPoolAprRange {
+                        min
+                        max
+                    }
+                }
                 items {
                     id
                     title
-                    apr
+                    apr {
+                        ... on GqlPoolAprTotal {
+                            total
+                        }
+                        ... on GqlPoolAprRange {
+                            min
+                            max
+                        }
+                    }
                     subItems {
                         id
                         title
-                        apr
+                        apr {
+                            ... on GqlPoolAprTotal {
+                                total
+                            }
+                            ... on GqlPoolAprRange {
+                                min
+                                max
+                            }
+                        }
                     }
                 }
             }
@@ -5897,18 +6165,58 @@ export const GetPoolDocument = gql`
                 fees24hAtlTimestamp
                 apr {
                     hasRewardApr
-                    thirdPartyApr
-                    nativeRewardApr
+                    thirdPartyApr {
+                        ... on GqlPoolAprTotal {
+                            total
+                        }
+                        ... on GqlPoolAprRange {
+                            min
+                            max
+                        }
+                    }
+                    nativeRewardApr {
+                        ... on GqlPoolAprTotal {
+                            total
+                        }
+                        ... on GqlPoolAprRange {
+                            min
+                            max
+                        }
+                    }
                     swapApr
-                    total
+                    apr {
+                        ... on GqlPoolAprTotal {
+                            total
+                        }
+                        ... on GqlPoolAprRange {
+                            min
+                            max
+                        }
+                    }
                     items {
                         id
                         title
-                        apr
+                        apr {
+                            ... on GqlPoolAprTotal {
+                                total
+                            }
+                            ... on GqlPoolAprRange {
+                                min
+                                max
+                            }
+                        }
                         subItems {
                             id
                             title
-                            apr
+                            apr {
+                                ... on GqlPoolAprTotal {
+                                    total
+                                }
+                                ... on GqlPoolAprRange {
+                                    min
+                                    max
+                                }
+                            }
                         }
                     }
                 }

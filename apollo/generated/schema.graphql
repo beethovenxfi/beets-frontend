@@ -9,14 +9,14 @@ scalar Bytes
 scalar Date
 
 type GqlBalancePoolAprItem {
-    apr: BigDecimal!
+    apr: GqlPoolAprValue!
     id: ID!
     subItems: [GqlBalancePoolAprSubItem!]
     title: String!
 }
 
 type GqlBalancePoolAprSubItem {
-    apr: BigDecimal!
+    apr: GqlPoolAprValue!
     id: ID!
     title: String!
 }
@@ -135,26 +135,24 @@ input GqlLgeUpdateInput {
 }
 
 type GqlPoolApr {
+    apr: GqlPoolAprValue!
     hasRewardApr: Boolean!
     items: [GqlBalancePoolAprItem!]!
-    max: BigDecimal
-    min: BigDecimal
-    nativeRewardApr: BigDecimal!
+    nativeRewardApr: GqlPoolAprValue!
     swapApr: BigDecimal!
-    thirdPartyApr: BigDecimal!
+    thirdPartyApr: GqlPoolAprValue!
+}
+
+type GqlPoolAprRange {
+    max: BigDecimal!
+    min: BigDecimal!
+}
+
+type GqlPoolAprTotal {
     total: BigDecimal!
 }
 
-type GqlPoolAprItem {
-    apr: BigDecimal!
-    subItems: [GqlBalancePoolAprSubItem!]
-    title: String!
-}
-
-type GqlPoolAprSubItem {
-    apr: BigDecimal!
-    title: String!
-}
+union GqlPoolAprValue = GqlPoolAprRange | GqlPoolAprTotal
 
 interface GqlPoolBase {
     address: Bytes!
