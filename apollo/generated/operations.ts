@@ -51,18 +51,58 @@ export const GqlPoolCardData = gql`
             totalShares
             apr {
                 hasRewardApr
-                thirdPartyApr
-                nativeRewardApr
+                thirdPartyApr {
+                    ... on GqlPoolAprTotal {
+                        total
+                    }
+                    ... on GqlPoolAprRange {
+                        min
+                        max
+                    }
+                }
+                nativeRewardApr {
+                    ... on GqlPoolAprTotal {
+                        total
+                    }
+                    ... on GqlPoolAprRange {
+                        min
+                        max
+                    }
+                }
                 swapApr
-                total
+                apr {
+                    ... on GqlPoolAprTotal {
+                        total
+                    }
+                    ... on GqlPoolAprRange {
+                        min
+                        max
+                    }
+                }
                 items {
                     id
                     title
-                    apr
+                    apr {
+                        ... on GqlPoolAprTotal {
+                            total
+                        }
+                        ... on GqlPoolAprRange {
+                            min
+                            max
+                        }
+                    }
                     subItems {
                         id
                         title
-                        apr
+                        apr {
+                            ... on GqlPoolAprTotal {
+                                total
+                            }
+                            ... on GqlPoolAprRange {
+                                min
+                                max
+                            }
+                        }
                     }
                 }
             }
@@ -133,18 +173,58 @@ export const GqlPoolLinear = gql`
             volume48h
             apr {
                 hasRewardApr
-                thirdPartyApr
-                nativeRewardApr
+                thirdPartyApr {
+                    ... on GqlPoolAprTotal {
+                        total
+                    }
+                    ... on GqlPoolAprRange {
+                        min
+                        max
+                    }
+                }
+                nativeRewardApr {
+                    ... on GqlPoolAprTotal {
+                        total
+                    }
+                    ... on GqlPoolAprRange {
+                        min
+                        max
+                    }
+                }
                 swapApr
-                total
+                apr {
+                    ... on GqlPoolAprTotal {
+                        total
+                    }
+                    ... on GqlPoolAprRange {
+                        min
+                        max
+                    }
+                }
                 items {
                     id
                     title
-                    apr
+                    apr {
+                        ... on GqlPoolAprTotal {
+                            total
+                        }
+                        ... on GqlPoolAprRange {
+                            min
+                            max
+                        }
+                    }
                     subItems {
                         id
                         title
-                        apr
+                        apr {
+                            ... on GqlPoolAprTotal {
+                                total
+                            }
+                            ... on GqlPoolAprRange {
+                                min
+                                max
+                            }
+                        }
                     }
                 }
             }
@@ -273,18 +353,58 @@ export const GqlPoolMinimal = gql`
             volume24h
             apr {
                 hasRewardApr
-                thirdPartyApr
-                nativeRewardApr
+                thirdPartyApr {
+                    ... on GqlPoolAprTotal {
+                        total
+                    }
+                    ... on GqlPoolAprRange {
+                        min
+                        max
+                    }
+                }
+                nativeRewardApr {
+                    ... on GqlPoolAprTotal {
+                        total
+                    }
+                    ... on GqlPoolAprRange {
+                        min
+                        max
+                    }
+                }
                 swapApr
-                total
+                apr {
+                    ... on GqlPoolAprTotal {
+                        total
+                    }
+                    ... on GqlPoolAprRange {
+                        min
+                        max
+                    }
+                }
                 items {
                     id
                     title
-                    apr
+                    apr {
+                        ... on GqlPoolAprTotal {
+                            total
+                        }
+                        ... on GqlPoolAprRange {
+                            min
+                            max
+                        }
+                    }
                     subItems {
                         id
                         title
-                        apr
+                        apr {
+                            ... on GqlPoolAprTotal {
+                                total
+                            }
+                            ... on GqlPoolAprRange {
+                                min
+                                max
+                            }
+                        }
                     }
                 }
             }
@@ -634,18 +754,58 @@ export const GetPool = gql`
                 fees24hAtlTimestamp
                 apr {
                     hasRewardApr
-                    thirdPartyApr
-                    nativeRewardApr
+                    thirdPartyApr {
+                        ... on GqlPoolAprTotal {
+                            total
+                        }
+                        ... on GqlPoolAprRange {
+                            min
+                            max
+                        }
+                    }
+                    nativeRewardApr {
+                        ... on GqlPoolAprTotal {
+                            total
+                        }
+                        ... on GqlPoolAprRange {
+                            min
+                            max
+                        }
+                    }
                     swapApr
-                    total
+                    apr {
+                        ... on GqlPoolAprTotal {
+                            total
+                        }
+                        ... on GqlPoolAprRange {
+                            min
+                            max
+                        }
+                    }
                     items {
                         id
                         title
-                        apr
+                        apr {
+                            ... on GqlPoolAprTotal {
+                                total
+                            }
+                            ... on GqlPoolAprRange {
+                                min
+                                max
+                            }
+                        }
                         subItems {
                             id
                             title
-                            apr
+                            apr {
+                                ... on GqlPoolAprTotal {
+                                    total
+                                }
+                                ... on GqlPoolAprRange {
+                                    min
+                                    max
+                                }
+                            }
                         }
                     }
                 }
