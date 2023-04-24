@@ -103,4 +103,5 @@ export interface NetworkConfig {
         [poolId: string]: BoostedByType;
     };
     maBeetsEnabled: boolean;
+    claimAllRewardsEnabled: boolean;
 }
