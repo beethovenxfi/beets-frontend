@@ -1,7 +1,9 @@
 import { Text } from '@chakra-ui/layout';
-import { Grid, GridItem } from '@chakra-ui/react';
+import { Grid, GridItem, GridProps, useStyleConfig } from '@chakra-ui/react';
 
 export default function PoolTransactionHeader() {
+    const styles = useStyleConfig('PoolListTableHeader') as GridProps;
+
     return (
         <Grid
             px="4"
@@ -9,9 +11,9 @@ export default function PoolTransactionHeader() {
             borderTopLeftRadius="md"
             borderTopRightRadius="md"
             alignItems="center"
-            bgColor="rgba(255,255,255,0.08)"
-            borderBottom="2px"
-            borderColor="beets.base.500"
+            bgColor={styles.bgColor}
+            borderBottom={styles.borderBottom}
+            borderColor={styles.borderColor}
             mb={{ base: '4', lg: '0' }}
             templateColumns={'200px 1fr 200px 200px'}
             gap="0"

@@ -6,6 +6,7 @@ import { PoolDetailVolumeLiquidityChart } from '~/modules/pool/detail/components
 import { PoolDetailFeesChart } from '~/modules/pool/detail/components/charts/PoolDetailFeesChart';
 import { GqlPoolSnapshotDataRange, useGetPoolSnapshotsQuery } from '~/apollo/generated/graphql-codegen-generated';
 import { usePool } from '~/modules/pool/lib/usePool';
+import { BeetsBox } from '~/components/box/BeetsBox';
 
 type ChartType = 'BPT_PRICE' | 'VOLUME_TVL' | 'FEES' | 'TVL';
 
@@ -16,7 +17,7 @@ export function PoolDetailCharts() {
     const { data } = useGetPoolSnapshotsQuery({ variables: { poolId: pool.id, range } });
 
     return (
-        <Card height="full" minHeight="540px">
+        <BeetsBox variant='elevated' height="full" minHeight="540px">
             <HStack padding={{ base: '2', lg: '4' }} pb="0" justify={{ base: 'space-between', lg: 'flex-start' }}>
                 <Select
                     value={chartType}
@@ -53,6 +54,6 @@ export function PoolDetailCharts() {
             {chartType === 'VOLUME_TVL' && <PoolDetailVolumeLiquidityChart data={data?.snapshots || []} />}
             {chartType === 'TVL' && <PoolDetailVolumeLiquidityChart data={data?.snapshots || []} hideVolume />}
             {chartType === 'FEES' && <PoolDetailFeesChart data={data?.snapshots || []} />}
-        </Card>
+        </BeetsBox>
     );
 }

@@ -1,10 +1,14 @@
-import { Box, BoxProps } from '@chakra-ui/react';
+import { Box, BoxProps, useStyleConfig } from '@chakra-ui/react';
 
-interface Props extends BoxProps {}
+interface Props extends BoxProps {
+    variant?: 'normal' | 'elevated';
+}
 
-export function BeetsBox({ children, ...rest }: Props) {
+export function BeetsBox({ variant = 'normal', children, ...rest }: Props) {
+    const styles = useStyleConfig('BeetsBox', { variant });
+
     return (
-        <Box bgColor="box.500" rounded="md" {...rest}>
+        <Box {...rest} __css={styles}>
             {children}
         </Box>
     );

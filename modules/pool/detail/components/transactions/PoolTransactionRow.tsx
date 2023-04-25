@@ -1,5 +1,5 @@
 import { GqlPoolJoinExit, GqlPoolSwap } from '~/apollo/generated/graphql-codegen-generated';
-import { Box, Flex, Text, Link, Grid, GridItem, Stack, useBreakpointValue } from '@chakra-ui/react';
+import { Box, Flex, Text, Link, Grid, GridItem, Stack, useBreakpointValue, useStyleConfig } from '@chakra-ui/react';
 import numeral from 'numeral';
 import { BoxProps, HStack } from '@chakra-ui/layout';
 import { ArrowDown, ArrowRight, ExternalLink, Minus, Plus, Zap } from 'react-feather';
@@ -133,6 +133,7 @@ function Pool(props: PoolTransaction) {
 }
 
 export default function PoolTransactionItem({ transaction, ...rest }: Props) {
+    const styles: any = useStyleConfig('TableRow');
     const getFormattedValue = () => {
         return numeral(transaction.transaction.valueUSD).format('$0,0.000');
     };
@@ -155,8 +156,8 @@ export default function PoolTransactionItem({ transaction, ...rest }: Props) {
                              "details value"`,
                 lg: `"action details value time"`,
             }}
-            bgColor="rgba(255,255,255,0.05)"
-            _hover={{ bg: 'beets.base.800' }}
+            bgColor={styles.bg}
+            _hover={styles._hover}
         >
             <Flex align={flexAlign}>
                 <GridItem area="action">

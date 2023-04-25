@@ -56,7 +56,7 @@ export function PoolDetailTokenInfoCard({ token, price, data, dynamicData, ...re
     const hasLinks = data?.websiteUrl || data?.discordUrl || data?.telegramUrl || data?.twitterUsername;
 
     return (
-        <BeetsBox p="4" {...rest}>
+        <BeetsBox variant="elevated" p="4" {...rest}>
             <Flex>
                 <HStack flex="1">
                     <TokenAvatar address={token.address} size="sm" />
@@ -70,7 +70,7 @@ export function PoolDetailTokenInfoCard({ token, price, data, dynamicData, ...re
                             </Link>
                         </HStack>
 
-                        <Text lineHeight="1.1rem" color="gray.200">
+                        <Text lineHeight="1.1rem" color="subheading">
                             {token.name}
                         </Text>
                     </Box>

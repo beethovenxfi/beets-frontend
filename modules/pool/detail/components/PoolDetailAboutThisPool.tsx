@@ -33,7 +33,7 @@ export function PoolDetailAboutThisPool() {
     return (
         <Grid templateColumns={{ base: '1fr', lg: '2fr 1fr' }} gap="4" width="full">
             <GridItem>
-                <Text fontWeight="semibold" fontSize="xl" color="white" mb="4">
+                <Text fontWeight="semibold" fontSize="xl" mb="4" color="heading">
                     Pool tokens
                 </Text>
                 {tokensOfInterest.map((token, index) => {
@@ -61,7 +61,7 @@ export function PoolDetailAboutThisPool() {
                         </Box>
                         <VStack spacing="0" alignItems="flex-end">
                             <Box>{format(new Date(pool.createTime * 1000), 'MMM. d, yyyy')}</Box>
-                            <Box fontSize="sm" color="gray.200">
+                            <Box fontSize="sm" color="subheading">
                                 {formatDistanceToNow(new Date(pool.createTime * 1000))} old
                             </Box>
                         </VStack>

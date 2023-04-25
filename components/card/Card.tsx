@@ -14,6 +14,8 @@ import { ReactNode, useMemo } from 'react';
 import { X } from 'react-feather';
 import { AnimatedBox } from '../animation/chakra';
 import { FlexProps, Text } from '@chakra-ui/react';
+import { BeetsBox } from '../box/BeetsBox';
+import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 
 type Props = {
     title?: string;
@@ -34,6 +36,9 @@ export default function Card({
     titleProps,
     ...boxProps
 }: Props & BoxProps & MotionProps) {
+    const { protocol } = useNetworkConfig();
+    const cardVariant = protocol === 'balancer' ? 'elevated' : 'normal';
+
     const TitleSection = useMemo(
         () => (
             <Flex
@@ -70,20 +75,21 @@ export default function Card({
         [title, onClose, topRight],
     );
     return (
-        <AnimatedBox
+        <BeetsBox
             animate={animate}
             initial={initial}
             exit={exit}
+            variant={cardVariant}
             rounded="lg"
-            backgroundColor="box.500"
-            border="1px"
-            borderColor="blackAlpha.400"
+            // TODO BALANCER RESKIN
+            // border="1px"
+            // borderColor="blackAlpha.400"
             display="flex"
             flexDirection="column"
             {...(boxProps as any)}
         >
             {title && TitleSection}
             {children}
-        </AnimatedBox>
+        </BeetsBox>
     );
 }

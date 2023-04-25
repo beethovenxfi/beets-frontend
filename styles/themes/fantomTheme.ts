@@ -135,6 +135,13 @@ export const fantomTheme: Partial<ChakraTheme> = {
         colors: {
             headline: 'beets.base',
             loading: 'box.500',
+            statistic: 'white',
+            statisticHeader: 'beets.base.50',
+            heading: 'white',
+            subheading: 'gray.200',
+            secondaryTableRow: 'whiteAlpha.100',
+            progressBg: '',
+            popoverTrigger: 'gray.200'  
         },
     },
     components: {
@@ -162,6 +169,22 @@ export const fantomTheme: Partial<ChakraTheme> = {
             baseStyle: {
                 borderBottomWidth: 5,
                 borderColor: 'beets.base.500',
+            },
+        },
+        BeetsBox: {
+            baseStyle: {
+                rounded: 'md',
+            },
+            variants: {
+                normal: {
+                    bg: 'box.500',
+                },
+                elevated: {
+                    bg: 'white !important',
+                    borderWidth: 1,
+                    borderColor: 'gray.100',
+                    shadow: 'xl',
+                },
             },
         },
         Select: {

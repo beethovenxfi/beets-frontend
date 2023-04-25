@@ -17,7 +17,7 @@ export function SubNavBar() {
     const styles = useStyleConfig('SubNavBar');
 
     return (
-        <HStack px={{ base: '4', xl: '8' }} justifyContent="center">
+        <HStack px={{ base: '4', xl: '8' }}>
             <BeetsBox px="4" py="2" rounded="lg" display="flex" __css={{ shadow: styles.shadow, width: styles.width }}>
                 <NetworkSelectorPopover>
                     <HStack spacing="1.5" mr={6} cursor="pointer">

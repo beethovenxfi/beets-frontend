@@ -67,7 +67,7 @@ function AprTooltip({ data, textProps, onlySparkles, placement, aprLabel, sparkl
                                 height={sparklesSize === 'sm' ? 19 : 25}
                             />
                         ) : (
-                            <Box color="gray.200">
+                            <Box color="popoverTrigger">
                                 <Info size={sparklesSize === 'sm' ? 18 : 24} />
                             </Box>
                         )}
@@ -76,7 +76,7 @@ function AprTooltip({ data, textProps, onlySparkles, placement, aprLabel, sparkl
             </HStack>
 
             <PopoverContent w="fit-content" shadow="2xl" background={popoverbg}>
-                <PopoverHeader bgColor={popoverHeaderBg} roundedTop='md'>
+                <PopoverHeader bgColor={popoverHeaderBg} roundedTop="md">
                     <Text textAlign="left">
                         Total APR
                         <br />

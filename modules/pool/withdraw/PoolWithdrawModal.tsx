@@ -28,9 +28,15 @@ interface Props {
     isVisible?: boolean;
     onClose?: () => void;
 }
-export function PoolWithdrawModal({ activatorProps = {}, noActivator = false, onClose: _onClose, isVisible = false }: Props) {
+export function PoolWithdrawModal({
+    activatorProps = {},
+    noActivator = false,
+    onClose: _onClose,
+    isVisible = false,
+}: Props) {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const { pool, formattedTypeName } = usePool();
+    const { protocol } = useNetworkConfig();
     const [modalState, setModalState] = useState<'start' | 'proportional' | 'single-asset' | 'preview'>('start');
     const [type, setInvestType] = useState<'proportional' | 'single-asset' | null>(null);
     const initialRef = useRef(null);
@@ -61,11 +67,12 @@ export function PoolWithdrawModal({ activatorProps = {}, noActivator = false, on
         }
     }, [isVisible]);
 
+    const withdrawTextProps = protocol === 'balancer' ? { variant: 'highlight' } : {};
     return (
         <>
             {!noActivator && (
-                <Button onClick={onOpen} variant="secondary" width={{ base: 'full', md: '140px' }} {...activatorProps}>
-                    Withdraw
+                <Button onClick={onOpen} width={{ base: 'full', md: '140px' }} variant="secondary" {...activatorProps}>
+                    <Text {...withdrawTextProps}>Withdraw</Text>
                 </Button>
             )}
             <Modal

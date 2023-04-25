@@ -20,6 +20,7 @@ import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 import { AddressZero } from '@ethersproject/constants';
 import { usePool } from '~/modules/pool/lib/usePool';
 import { useToast } from '~/components/toast/BeetsToast';
+import BeetsTooltip from '~/components/tooltip/BeetsTooltip';
 
 function PoolHeader() {
     const networkConfig = useNetworkConfig();
@@ -53,40 +54,46 @@ function PoolHeader() {
                     </WrapItem>
                 ))}
             </Wrap>
-            <Popover trigger="hover" placement="right">
-                <PopoverTrigger>
-                    <HStack
-                        paddingX="3"
-                        paddingY="2"
-                        bg="whiteAlpha.200"
-                        spacing="2"
-                        fontSize="md"
-                        rounded="full"
-                        color="beets.base.50"
-                        justifyContent="center"
-                        fontWeight="semibold"
-                    >
-                        {!hasZeroOwner && (
-                            <Flex alignItems="center">
-                                {hasBeetsOwner ? (
-                                    <Image src={PoolOwnerImage} width="24" height="24" alt="Pool Owner Image" />
-                                ) : (
-                                    <HelpCircle size="24" />
-                                )}
-                            </Flex>
-                        )}
-                        <HStack spacing="1">
-                            <Text>{numeral(pool.dynamicData.swapFee).format('0.0[00]%')}</Text>
-                            <Text>{swapFeeType} Fee</Text>
-                        </HStack>
-                    </HStack>
-                </PopoverTrigger>
-                <PopoverContent w="200px" bgColor="beets.base.800" shadow="2xl">
-                    <Box p="2" fontSize="sm" bgColor="whiteAlpha.200">
+            <BeetsTooltip
+                label={
+                    <Box p="2" fontSize="sm">
                         {tooltipText1} {!hasZeroOwner && tooltipText2}
                     </Box>
-                </PopoverContent>
-            </Popover>
+                }
+            >
+                <HStack
+                    paddingX="3"
+                    paddingY="2"
+                    bg="gray.800"
+                    spacing="2"
+                    fontSize="md"
+                    rounded="full"
+                    color="white"
+                    justifyContent="center"
+                    fontWeight="semibold"
+                >
+                    {!hasZeroOwner && (
+                        <Flex alignItems="center">
+                            {hasBeetsOwner ? (
+                                <Image src={PoolOwnerImage} width="24" height="24" alt="Pool Owner Image" />
+                            ) : (
+                                <HelpCircle size="24" />
+                            )}
+                        </Flex>
+                    )}
+                    <HStack spacing="1">
+                        <Text>{numeral(pool.dynamicData.swapFee).format('0.0[00]%')}</Text>
+                        <Text>{swapFeeType} Fee</Text>
+                    </HStack>
+                </HStack>
+            </BeetsTooltip>
+            {/* </PopoverTrigger> */}
+            {/* // <PopoverContent w="200px" bgColor="beets.base.800" shadow="2xl">
+                //     <Box p="2" fontSize="sm" bgColor="whiteAlpha.200">
+                //         {tooltipText1} {!hasZeroOwner && tooltipText2}
+                //     </Box>
+                // </PopoverContent> */}
+            {/* </Popover> */}
         </VStack>
     );
 }

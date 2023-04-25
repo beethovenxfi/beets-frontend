@@ -45,6 +45,7 @@ import {
     poolIsComposablePool,
 } from '~/lib/services/pool/pool-util';
 import { oldBnumScale } from '~/lib/services/pool/lib/old-big-number';
+import { BeetsBox } from '~/components/box/BeetsBox';
 
 interface PoolCompositionTableProps {
     columns: Column<TableDataTemplate>[];
@@ -129,7 +130,9 @@ function PoolCompositionTable({ columns, data, hasNestedTokens }: PoolCompositio
         } else if (cell.column.id === Columns.Weight) {
             // only show the progress bar for the pool tokenWithAmount and not for any nested tokens
             if (cell.row.depth === 0) {
-                return <Progress width="80%" rounded="lg" value={parseFloat(cell.value || '0') * 100} />;
+                return (
+                    <Progress width="80%" rounded="lg" value={parseFloat(cell.value || '0') * 100} bg="progressBg" />
+                );
             } else {
                 return null;
             }
@@ -190,7 +193,7 @@ function PoolCompositionTable({ columns, data, hasNestedTokens }: PoolCompositio
                         {rows.map((row) => {
                             prepareRow(row);
                             return (
-                                <Tr {...row.getRowProps()} padding="2" width="full" background="whiteAlpha.100">
+                                <Tr {...row.getRowProps()} padding="2" width="full" background="secondaryTableRow">
                                     {row.cells.map((cell, i) => {
                                         return (
                                             <Td
@@ -306,8 +309,8 @@ export function PoolComposition() {
     );
 
     return (
-        <Card px="2" py="2" mt={4} width="full">
+        <BeetsBox variant="elevated" px="2" py="2" mt={4} width="full">
             <PoolCompositionTable columns={columns} data={data} hasNestedTokens={hasNestedTokens} />
-        </Card>
+        </BeetsBox>
     );
 }

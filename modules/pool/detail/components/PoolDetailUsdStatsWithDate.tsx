@@ -33,7 +33,7 @@ export function PoolDetailUsdStatsWithDate({ title, stats }: Props) {
                                             ml="1.5"
                                         />
                                     </Flex>
-                                    <Box fontSize="sm" color="gray.200">
+                                    <Box fontSize="sm" color="subheading">
                                         {format(date, 'MMM. d, yy')} ({formatDistanceToNow(date, { addSuffix: true })})
                                     </Box>
                                 </VStack>

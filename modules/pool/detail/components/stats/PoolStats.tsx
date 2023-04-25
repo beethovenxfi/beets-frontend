@@ -6,16 +6,21 @@ import { TabList, Tabs } from '@chakra-ui/tabs';
 import BeetsTab from '~/components/tabs/BeetsTab';
 import { useState } from 'react';
 import { usePoolUserBptBalance } from '~/modules/pool/lib/usePoolUserBptBalance';
+import { BeetsBox } from '~/components/box/BeetsBox';
+import { useStyleConfig } from '@chakra-ui/react';
 
 export default function PoolStats() {
     const { hasBpt } = usePoolUserBptBalance();
     const [activeTab, setActiveTab] = useState(0);
 
+    const styles = useStyleConfig('ElevatedCard');
+
     const handleTabChanged = (tabIndex: number) => {
         setActiveTab(tabIndex);
     };
+
     return (
-        <Card px="2" py="4" height="full">
+        <BeetsBox variant='elevated' px="2" py="4" height="full">
             <VStack height="full" spacing="4">
                 {hasBpt && (
                     <Tabs width="full" variant="soft-rounded" display="flex" onChange={handleTabChanged} px="2">
@@ -34,6 +39,6 @@ export default function PoolStats() {
                 {hasBpt && activeTab === 0 && <PoolUserStats />}
                 {(!hasBpt || activeTab === 1) && <PoolOverallStats />}
             </VStack>
-        </Card>
+        </BeetsBox>
     );
 }

@@ -22,7 +22,7 @@ import { getPoolStaking } from '~/lib/services/pool/lib/util';
 export default function PoolOverallStats() {
     const { pool } = usePool();
     const poolStaking = getPoolStaking(pool);
-    const { boostedByTypes } = useNetworkConfig();
+    const { boostedByTypes, protocol } = useNetworkConfig();
     const { priceFor } = useGetTokens();
     const { data: blocksData } = useGetBlocksPerDayQuery({ fetchPolicy: 'cache-first' });
     const data = pool.dynamicData;
@@ -46,51 +46,54 @@ export default function PoolOverallStats() {
             (rewarder) => priceFor(rewarder.tokenAddress) * parseFloat(rewarder.rewardPerSecond) * 86400,
         );
 
+    const aprTextProps = protocol === 'balancer' ? { variant: 'highlight' } : { className: 'apr-stripes' };
     return (
         <VStack spacing="4" width="full" alignItems="flex-start" px="2">
             <VStack spacing="0" alignItems="flex-start">
-                <Text lineHeight="1rem" fontWeight="semibold" fontSize="sm" color="beets.base.50">
+                <Text lineHeight="1rem" fontWeight="semibold" fontSize="sm" color="statisticHeader">
                     Pool APR
                 </Text>
                 <HStack>
-                    <div className="apr-stripes">{numeral(data.apr.total).format('0.00%')}</div>
+                    <Text fontSize="2.5rem" fontWeight="900" {...aprTextProps}>
+                        {numeral(data.apr.total).format('0.00%')}
+                    </Text>
                     <AprTooltip onlySparkles data={data.apr} />
                 </HStack>
                 {boostedByTypes[pool.id] && <BoostedBadgeSmall boostedBy={boostedByTypes[pool.id]} />}
             </VStack>
-            <Divider />
+            <Divider bgColor="statsDivider" />
             <VStack spacing="0" alignItems="flex-start">
-                <Text lineHeight="1rem" fontWeight="semibold" fontSize="sm" color="beets.base.50">
+                <Text lineHeight="1rem" fontWeight="semibold" fontSize="sm" color="statisticHeader">
                     BPT price
                 </Text>
-                <Text color="white" fontSize="1.75rem">
+                <Text color="statistic" fontSize="1.75rem">
                     {numberFormatUSDValue(sharePrice)}
                 </Text>
                 <PercentChangeBadge percentChange={sharePricePercentChange} />
             </VStack>
             <VStack spacing="0" alignItems="flex-start">
-                <Text lineHeight="1rem" fontWeight="semibold" fontSize="sm" color="beets.base.50">
+                <Text lineHeight="1rem" fontWeight="semibold" fontSize="sm" color="statisticHeader">
                     TVL
                 </Text>
-                <Text color="white" fontSize="1.75rem">
+                <Text color="statistic" fontSize="1.75rem">
                     {numeral(data.totalLiquidity).format('$0,0.00a')}
                 </Text>
                 <PercentChangeBadge percentChange={tvlPercentChange} />
             </VStack>
             <VStack spacing="0" alignItems="flex-start">
-                <Text lineHeight="1rem" fontWeight="semibold" fontSize="sm" color="beets.base.50">
+                <Text lineHeight="1rem" fontWeight="semibold" fontSize="sm" color="statisticHeader">
                     24h Volume
                 </Text>
-                <Text color="white" fontSize="1.75rem">
+                <Text color="statistic" fontSize="1.75rem">
                     {numeral(data.volume24h).format('$0,0.00a')}
                 </Text>
                 <PercentChangeBadge percentChange={volumePercentChange} />
             </VStack>
             <VStack spacing="0" alignItems="flex-start">
-                <Text lineHeight="1rem" fontWeight="semibold" fontSize="sm" color="beets.base.50">
+                <Text lineHeight="1rem" fontWeight="semibold" fontSize="sm" color="statisticHeader">
                     24h Fees
                 </Text>
-                <Text color="white" fontSize="1.75rem">
+                <Text color="statistic" fontSize="1.75rem">
                     {numeral(data.fees24h).format('$0,0.00a')}
                 </Text>
             </VStack>

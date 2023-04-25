@@ -82,9 +82,33 @@ export const balancerTheme: Partial<ChakraTheme> = {
             850: '#162031',
             900: '#0F172A',
         },
+        blue: {
+            50: '#eff6ff',
+            100: '#dbeafe',
+            200: '#bfdbfe',
+            300: '#93c5fd',
+            400: '#60a5fa',
+            500: '#3b82f6',
+            600: '#2563eb',
+            700: '#1d4ed8',
+            800: '#1e40af',
+            900: '#1e3a8a',
+        },
+        pink: {
+            50: '#ff4dff',
+            100: '#ff43ff',
+            200: '#ff39ff',
+            300: '#ff2fff',
+            400: '#fc25ff',
+            500: '#f21bf6',
+            600: '#e811ec',
+            700: '#de07e2',
+            800: '#d400d8',
+            900: '#ca00ce',
+        },
         box: {
             '300': 'rgba(27,20,100,0.25)',
-            '500': '#E2E8F0',
+            '500': '#EAF0F6',
         },
         navbar: 'beets.base.800',
         beets: {
@@ -153,8 +177,17 @@ export const balancerTheme: Partial<ChakraTheme> = {
     semanticTokens: {
         colors: {
             headline: 'beets.base',
+            heading: 'gray.800',
+            subheading: 'gray.600',
             loading: 'white',
             walletConnectPortfolio: 'white',
+            statistic: 'gray.800',
+            statisticHeader: 'gray.600',
+            statsDivider: 'gray.300',
+            aprStripe: 'beets.secondary.400',
+            secondaryTableRow: 'gray.50',
+            progressBg: 'gray.200',
+            popoverTrigger: 'pink.800',
         },
     },
     components: {
@@ -187,20 +220,36 @@ export const balancerTheme: Partial<ChakraTheme> = {
                 borderColor: 'orange',
             },
         },
+        BeetsBox: {
+            baseStyle: {
+                rounded: 'md',
+            },
+            variants: {
+                normal: {
+                    bg: 'box.500',
+                },
+                elevated: {
+                    bg: 'white !important',
+                    borderWidth: 1,
+                    borderColor: 'gray.200',
+                    shadow: 'sm',
+                },
+            },
+        },
         Select: {
             parts: ['field'],
             variants: {
                 filled: {
                     field: {
-                        color: 'white',
-                        bgColor: 'beets.lightAlpha.500',
+                        color: 'gray.700',
+                        bgColor: 'gray.100',
                         borderColor: 'transparent',
                         _hover: {
                             borderColor: 'beets.base.200',
-                            bgColor: 'beets.lightAlpha.500',
+                            bgColor: 'gray.200',
                         },
                         _focus: {
-                            bgColor: 'beets.lightAlpha.500',
+                            bgColor: 'gray.200',
                         },
                     },
                 },
@@ -242,7 +291,7 @@ export const balancerTheme: Partial<ChakraTheme> = {
         },
         Link: {
             baseStyle: {
-                color: 'beets.highlight',
+                color: 'beets.secondary.500',
             },
         },
         Tooltip: {
@@ -251,8 +300,8 @@ export const balancerTheme: Partial<ChakraTheme> = {
             },
             variants: {
                 beets: {
-                    bg: 'white',
-                    color: 'beets.gray.800',
+                    bg: 'gray.800',
+                    color: 'white',
                 },
             },
         },
@@ -268,15 +317,15 @@ export const balancerTheme: Partial<ChakraTheme> = {
         Button: {
             variants: {
                 primary: {
-                    background: '#000000',
+                    bgGradient: 'linear(to-tr, blue.700, pink.700)',
                     color: 'white',
                     _active: { bgColor: 'beets.green' },
                     _focus: { outline: 'none', boxShadow: 'none' },
-                    rounded: 'xl',
-                    shadow: 'dark-lg',
+                    rounded: 'lg',
+                    shadow: 'lg',
                     _hover: {
                         transform: 'scale(1.01)',
-                        background: '#000000',
+                        bgGradient: 'linear(to-tr, blue.600, pink.600)',
                         _disabled: {
                             transform: 'none',
                         },
@@ -291,14 +340,12 @@ export const balancerTheme: Partial<ChakraTheme> = {
                 },
                 secondary: {
                     bgColor: 'transparent',
-                    color: 'beets.gray',
                     _active: { bgColor: 'beets.greenAlpha.300' },
                     _focus: { outline: 'none', boxShadow: 'none' },
-                    rounded: 'xl',
+                    rounded: 'lg',
                     _hover: {
                         transform: 'scale(1.01)',
-                        bgColor: 'blackAlpha.300',
-                        // bgColor: 'beets.highlightAlpha.200',
+                        bgColor: 'gray.100',
                         _disabled: {
                             transform: 'none',
                             background: 'gray.400',
@@ -400,6 +447,10 @@ export const balancerTheme: Partial<ChakraTheme> = {
                 },
                 apr: {
                     color: 'gray.500',
+                },
+                highlight: {
+                    bgGradient: 'linear(to-tr, blue.700, pink.700)',
+                    bgClip: 'text',
                 },
             },
         },
