@@ -1,5 +1,3 @@
-import { ToastType } from '~/components/toast/BeetsToast';
-
 export type BoostedByType = 'reaper-aave' | 'reaper-aave-granary' | 'yearn' | 'reaper-sonne' | 'overnight';
 
 export interface PoolDetailWarning {
