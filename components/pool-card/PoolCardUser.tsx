@@ -14,7 +14,10 @@ interface Props extends BoxProps {
 }
 
 export function PoolCardUser({ pool, balance, balanceUSD, ...rest }: Props) {
-    const dailyApr = parseFloat(pool.dynamicData.apr.total) / 365;
+    const dailyApr =
+        parseFloat(
+            'total' in pool.dynamicData.apr.apr ? pool.dynamicData.apr.apr.total : pool.dynamicData.apr.apr.max,
+        ) / 365;
 
     return (
         <LinkBox as="article" flex="1" {...rest}>

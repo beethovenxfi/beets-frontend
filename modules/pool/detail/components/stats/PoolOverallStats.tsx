@@ -55,7 +55,7 @@ export default function PoolOverallStats() {
                 </Text>
                 <HStack>
                     <Text fontSize="2.5rem" fontWeight="900" {...aprTextProps}>
-                        {numeral(data.apr.total).format('0.00%')}
+                        {numeral('total' in data.apr.apr ? data.apr.apr.total : data.apr.apr.max).format('0.00%')}
                     </Text>
                     <AprTooltip onlySparkles data={data.apr} />
                 </HStack>

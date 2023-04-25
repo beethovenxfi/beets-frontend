@@ -137,7 +137,9 @@ export function PoolProvider({ pool: poolFromProps, children }: { pool: GqlPoolU
                 bptPrice,
                 supportsZap,
                 formattedTypeName: poolGetTypeName(pool),
-                totalApr: parseFloat(pool.dynamicData.apr.total),
+                totalApr: parseFloat(
+                    'total' in pool.dynamicData.apr.apr ? pool.dynamicData.apr.apr.total : pool.dynamicData.apr.apr.max,
+                ),
                 isFbeetsPool: pool.id === networkConfig.fbeets.poolId,
                 isStablePool,
                 isComposablePool,

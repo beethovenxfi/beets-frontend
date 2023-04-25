@@ -10,7 +10,10 @@ interface Props extends BoxProps {
 }
 
 export function PoolCard({ pool, ...rest }: Props) {
-    const dailyApr = parseFloat(pool.dynamicData.apr.total) / 365;
+    const dailyApr =
+        parseFloat(
+            'total' in pool.dynamicData.apr.apr ? pool.dynamicData.apr.apr.total : pool.dynamicData.apr.apr.max,
+        ) / 365;
 
     const styles = useStyleConfig('PoolCard');
 

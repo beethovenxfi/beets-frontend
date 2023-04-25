@@ -10,7 +10,8 @@ interface Props extends BoxProps {}
 export function PoolInvestSummary({ ...rest }: Props) {
     const { pool } = usePool();
     const { totalInvestValue } = useInvest();
-    const weeklyYield = (totalInvestValue * parseFloat(pool.dynamicData.apr.total)) / 52;
+    const apr = pool.dynamicData.apr.apr;
+    const weeklyYield = (totalInvestValue * parseFloat('total' in apr ? apr.total : apr.max)) / 52;
 
     return (
         <VStack spacing="4" width="full" p="4" rounded="md">

@@ -1100,6 +1100,31 @@ export const GetPoolFilters = gql`
         }
     }
 `;
+export const GetReliquaryFarmSnapshots = gql`
+    query GetReliquaryFarmSnapshots($id: String!, $range: GqlPoolSnapshotDataRange!) {
+        snapshots: beetsPoolGetReliquaryFarmSnapshots(id: $id, range: $range) {
+            id
+            farmId
+            timestamp
+            totalBalance
+            totalLiquidity
+            levelBalances {
+                id
+                level
+                balance
+            }
+            relicCount
+            totalBalance
+            userCount
+            tokenBalances {
+                id
+                address
+                balance
+                symbol
+            }
+        }
+    }
+`;
 export const GetTokenRelativePriceChartData = gql`
     query GetTokenRelativePriceChartData($tokenIn: String!, $tokenOut: String!, $range: GqlTokenChartDataRange!) {
         prices: tokenGetRelativePriceChartData(tokenIn: $tokenIn, tokenOut: $tokenOut, range: $range) {

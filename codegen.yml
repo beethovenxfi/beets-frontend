@@ -1,4 +1,4 @@
-schema: ${NEXT_PUBLIC_BACKEND_URL}
+schema: https://backend-v3.beets-ftm-node.com/graphql
 documents:
   - 'pages/**/*.gql'
   - 'components/**/*.gql'
