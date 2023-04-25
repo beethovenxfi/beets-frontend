@@ -7,7 +7,7 @@ export const BoostedByTooltips: { [type: string]: string } = {
         "This pool deposits a significant portion of its assets into Overnight's USD+ and DAI+ to generate boosted yield. Both USD+ and DAI+ utilize a multistrat architecture, assets are distributed across many protocols to generate the highest risk-adjusted yield.",
     'reaper-sonne':
         'This pool deposits a portion of its assets into Reaper.Farm vault(s) to generate boosted yield. The vault(s) are configured to deposit assets to Sonne.finance in supply-only mode.',
-    reaper: 'This pool deposits a portion of its assets into Reaper.Farm vault(s) to generate boosted yield. Respectively USDC, DAI, fUSDT, WFTM, WETH & WBTC utilize a multistrat architecture, assets are distributed across many protocols to generate the highest risk-adjusted yield.',
+    reaper: 'This pool deposits a portion of its assets into the Reaper.Farm Multi-Strategy vault(s) to generate boosted yield. Assets are distributed across many protocols to generate the highest risk-adjusted yield.',
     'beefy-exactly':
         'This pool deposits a portion of its assets into Beefy vault(s) to generate boosted yield. The vault(s) are configured to deposit assets to Exactly in supply-only mode.',
 };
