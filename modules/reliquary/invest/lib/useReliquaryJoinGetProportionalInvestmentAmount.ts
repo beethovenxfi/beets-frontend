@@ -1,14 +1,14 @@
 import { useQuery } from 'react-query';
-import { useInvest } from '~/modules/pool/invest/lib/useInvest';
 import { sumBy } from 'lodash';
 import { isEth, replaceWethWithEth } from '~/lib/services/token/token-util';
 import { useUserAccount } from '~/lib/user/useUserAccount';
 import { usePool } from '~/modules/pool/lib/usePool';
 import { useGetTokens } from '~/lib/global/useToken';
+import { useReliquaryInvest } from './useReliquaryInvest';
 
-export function usePoolJoinGetProportionalInvestmentAmount() {
+export function useReliquaryJoinGetProportionalInvestmentAmount() {
     const { poolService } = usePool();
-    const { userInvestTokenBalances } = useInvest();
+    const { userInvestTokenBalances } = useReliquaryInvest();
     const { userAddress } = useUserAccount();
     const { priceForAmount } = useGetTokens();
 
