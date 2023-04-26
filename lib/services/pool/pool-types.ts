@@ -253,3 +253,10 @@ export interface ComposablePoolSingleAssetExit {
         assets: string[];
     };
 }
+
+export enum BatchRelayerPoolKind {
+    WEIGHTED,
+    LEGACY_STABLE,
+    COMPOSABLE_STABLE,
+    COMPOSABLE_STABLE_V2,
+}

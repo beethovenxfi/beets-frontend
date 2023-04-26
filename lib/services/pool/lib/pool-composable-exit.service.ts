@@ -1,4 +1,5 @@
 import {
+    BatchRelayerPoolKind,
     ComposablePoolExitNestedLinearPool,
     ComposablePoolSingleAssetExit,
     PoolExitBptInSingleAssetWithdrawOutput,
@@ -693,11 +694,11 @@ export class PoolComposableExitService {
 
     private getPoolKind(pool: GqlPoolWeighted | GqlPoolPhantomStable | GqlPoolPhantomStableNested) {
         if (this.isComposableV1(pool)) {
-            return 2;
+            return BatchRelayerPoolKind.COMPOSABLE_STABLE;
         } else if (pool.__typename === 'GqlPoolPhantomStable' || pool.__typename === 'GqlPoolPhantomStableNested') {
-            return 3;
+            return BatchRelayerPoolKind.COMPOSABLE_STABLE_V2;
         } else {
-            return 0;
+            return BatchRelayerPoolKind.WEIGHTED;
         }
     }
 
