@@ -34,7 +34,7 @@ export function TransactionSubmittedContent({ query, confirmedMessage, showSpinn
     };
 
     return (
-        <VStack {...rest} width="full" spacing="2" px="4" pb="4">
+        <VStack {...rest} width="full" spacing="2">
             <VStack width="full">
                 {error ? (
                     <Box width="full">
