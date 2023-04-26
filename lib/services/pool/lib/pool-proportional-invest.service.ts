@@ -9,80 +9,6 @@ import { replaceEthWithWeth, replaceWethWithEth } from '../../token/token-util';
 import { oldBnum, oldBnumScale, oldBnumSum, oldBnumToHumanReadable } from './old-big-number';
 import OldBigNumber from 'bignumber.js';
 
-function calculateBptOut(
-    bptTotalSupply: string,
-    amountIn: string,
-    balance: string,
-    decimals: number = 18,
-    priceRate: string = '1.0',
-) {
-    const balanceScaled = oldBnumScale(balance, decimals).times(priceRate);
-    const amountRatio = oldBnumScale(amountIn, decimals).div(balanceScaled);
-    const bptOut = oldBnumScale(bptTotalSupply, 18).times(amountRatio);
-
-    return bptOut;
-}
-
-function calculateAmountIn(bptTotalSupply: string, bptIn: OldBigNumber, balance: string) {
-    const bptRatio = bptIn.div(oldBnumScale(bptTotalSupply, 18));
-    const amountIn = oldBnumScale(balance, 18).times(bptRatio);
-
-    // return human readable so we can convert a sum to the correct decimals again (alternative?)
-    return oldBnumToHumanReadable(amountIn);
-}
-
-function getInvestTokenForLinearPoolToken(
-    userInvestTokenBalances: TokenAmountHumanReadable[],
-    poolToken: GqlPoolTokenUnion | GqlPoolTokenPhantomStableNestedUnion,
-) {
-    return userInvestTokenBalances.find((balance) => {
-        if (poolToken.__typename === 'GqlPoolTokenLinear') {
-            return !!poolToken.pool.tokens.find((nestedPoolToken) => nestedPoolToken.address === balance.address);
-        }
-    })!;
-}
-
-export function getBptOutForToken(
-    userInvestTokenBalances: TokenAmountHumanReadable[],
-    poolToken: GqlPoolTokenUnion | GqlPoolTokenPhantomStableNestedUnion,
-    bptTotalSupply: string,
-) {
-    const investToken =
-        poolToken.__typename === 'GqlPoolTokenLinear'
-            ? getInvestTokenForLinearPoolToken(userInvestTokenBalances, poolToken)
-            : userInvestTokenBalances.find(
-                  (balance) =>
-                      balance.address === poolToken.address ||
-                      balance.address === replaceWethWithEth(poolToken.address),
-              )!;
-
-    // for the old weighted boosted pools only the 'selected' token is in the userInvestBalances
-    // so we return null to filter out the other tokens in the invest service
-    if (!investToken) {
-        return null;
-    }
-
-    const decimals =
-        poolToken.__typename === 'GqlPoolTokenLinear'
-            ? poolToken.pool.tokens.find((token) => token.address === investToken.address)?.decimals
-            : poolToken.decimals;
-
-    return {
-        bptOut: calculateBptOut(
-            bptTotalSupply,
-            investToken.amount,
-            poolToken.balance,
-            poolToken.decimals,
-            poolToken.priceRate,
-        ),
-        token: {
-            ...investToken,
-            decimals,
-            balance: poolToken.balance,
-        },
-    };
-}
-
 export class PoolProportionalInvestService {
     constructor(private pool: GqlPoolWeighted) {}
 
@@ -94,7 +20,11 @@ export class PoolProportionalInvestService {
                 if (token.__typename === 'GqlPoolTokenPhantomStable') {
                     // another loop to find the smallest bptOut amount for the nested stable pool
                     const nestedTokens = token.pool.tokens.map((poolToken) => {
-                        const bptOut = getBptOutForToken(userInvestTokenBalances, poolToken, token.pool.totalShares);
+                        const bptOut = this.getBptOutForToken(
+                            userInvestTokenBalances,
+                            poolToken,
+                            token.pool.totalShares,
+                        );
                         return {
                             ...bptOut,
                             // need to sort on bptOutFloat
@@ -109,7 +39,7 @@ export class PoolProportionalInvestService {
                     // and sum them to get the 'amountIn' for the nested stable pool bptOut calculation
                     const amount = oldBnumSum(
                         smallestNestedBptOutAmountArray.map((nestedToken) =>
-                            calculateAmountIn(
+                            this.calculateAmountIn(
                                 token.pool.totalShares,
                                 smallestNestedBptOutAmountArray[0].bptOut || oldBnum(0),
                                 nestedToken.token?.balance || '0',
@@ -121,7 +51,7 @@ export class PoolProportionalInvestService {
                         // need to sort on bptOut
                         bptOut: parseFloat(
                             oldBnumToHumanReadable(
-                                calculateBptOut(this.pool.dynamicData.totalShares, amount, token.balance),
+                                this.calculateBptOut(this.pool.dynamicData.totalShares, amount, token.balance),
                             ),
                         ),
                         token: {
@@ -131,7 +61,11 @@ export class PoolProportionalInvestService {
                     };
                 } else {
                     // the function will take either 'GqlPoolToken' or 'GqlPoolTokenLinear'
-                    const bptOut = getBptOutForToken(userInvestTokenBalances, token, this.pool.dynamicData.totalShares);
+                    const bptOut = this.getBptOutForToken(
+                        userInvestTokenBalances,
+                        token,
+                        this.pool.dynamicData.totalShares,
+                    );
 
                     return {
                         ...bptOut,
@@ -149,5 +83,79 @@ export class PoolProportionalInvestService {
         };
 
         return fixedAmount;
+    }
+
+    private getBptOutForToken(
+        userInvestTokenBalances: TokenAmountHumanReadable[],
+        poolToken: GqlPoolTokenUnion | GqlPoolTokenPhantomStableNestedUnion,
+        bptTotalSupply: string,
+    ) {
+        const investToken =
+            poolToken.__typename === 'GqlPoolTokenLinear'
+                ? this.getInvestTokenForLinearPoolToken(userInvestTokenBalances, poolToken)
+                : userInvestTokenBalances.find(
+                      (balance) =>
+                          balance.address === poolToken.address ||
+                          balance.address === replaceWethWithEth(poolToken.address),
+                  )!;
+
+        // for the old weighted boosted pools only the 'selected' token is in the userInvestBalances
+        // so we return null to filter out the other tokens in the invest service
+        if (!investToken) {
+            return null;
+        }
+
+        const decimals =
+            poolToken.__typename === 'GqlPoolTokenLinear'
+                ? poolToken.pool.tokens.find((token) => token.address === investToken.address)?.decimals
+                : poolToken.decimals;
+
+        return {
+            bptOut: this.calculateBptOut(
+                bptTotalSupply,
+                investToken.amount,
+                poolToken.balance,
+                poolToken.decimals,
+                poolToken.priceRate,
+            ),
+            token: {
+                ...investToken,
+                decimals,
+                balance: poolToken.balance,
+            },
+        };
+    }
+
+    private calculateBptOut(
+        bptTotalSupply: string,
+        amountIn: string,
+        balance: string,
+        decimals: number = 18,
+        priceRate: string = '1.0',
+    ) {
+        const balanceScaled = oldBnumScale(balance, decimals).times(priceRate);
+        const amountRatio = oldBnumScale(amountIn, decimals).div(balanceScaled);
+        const bptOut = oldBnumScale(bptTotalSupply, 18).times(amountRatio);
+
+        return bptOut;
+    }
+
+    private calculateAmountIn(bptTotalSupply: string, bptIn: OldBigNumber, balance: string) {
+        const bptRatio = bptIn.div(oldBnumScale(bptTotalSupply, 18));
+        const amountIn = oldBnumScale(balance, 18).times(bptRatio);
+
+        // return human readable so we can convert a sum to the correct decimals again (alternative?)
+        return oldBnumToHumanReadable(amountIn);
+    }
+
+    private getInvestTokenForLinearPoolToken(
+        userInvestTokenBalances: TokenAmountHumanReadable[],
+        poolToken: GqlPoolTokenUnion | GqlPoolTokenPhantomStableNestedUnion,
+    ) {
+        return userInvestTokenBalances.find((balance) => {
+            if (poolToken.__typename === 'GqlPoolTokenLinear') {
+                return !!poolToken.pool.tokens.find((nestedPoolToken) => nestedPoolToken.address === balance.address);
+            }
+        })!;
     }
 }
