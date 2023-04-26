@@ -13,7 +13,10 @@ export function LinearPoolList() {
     const [selectedPool, setSelectedPool] = useState<GqlPoolLinearFragment | null>(null);
     const { data, loading } = useGetLinearPoolsQuery({ pollInterval: 30000 });
     const { getToken } = useGetTokens();
-    const linearPools = orderBy(data?.pools || [], (pool) => parseFloat(pool.dynamicData.totalLiquidity), 'desc');
+    const linearPoolsFiltered = (data?.pools || []).filter((pool) =>
+        pool.tokens.find((token) => token.index === pool.mainIndex),
+    );
+    const linearPools = orderBy(linearPoolsFiltered, (pool) => parseFloat(pool.dynamicData.totalLiquidity), 'desc');
 
     return (
         <Box>

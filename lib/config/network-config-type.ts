@@ -1,6 +1,11 @@
-import { ToastType } from '~/components/toast/BeetsToast';
-
-export type BoostedByType = 'reaper-aave' | 'reaper-aave-granary' | 'yearn' | 'reaper-sonne' | 'overnight';
+export type BoostedByType =
+    | 'reaper-aave'
+    | 'reaper-aave-granary'
+    | 'yearn'
+    | 'reaper-sonne'
+    | 'overnight'
+    | 'reaper'
+    | 'beefy-exactly';
 
 export interface PoolDetailWarning {
     id: string;
@@ -104,4 +109,5 @@ export interface NetworkConfig {
         [poolId: string]: BoostedByType;
     };
     maBeetsEnabled: boolean;
+    claimAllRewardsEnabled: boolean;
 }

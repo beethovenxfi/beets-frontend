@@ -199,10 +199,12 @@ export const optimismNetworkConfig: NetworkConfig = {
         '0x43da214fab3315aa6c02e0b8f2bfb7ef2e3c60a50000000000000000000000ae': 'overnight',
         '0x428e1cc3099cf461b87d124957a0d48273f334b100000000000000000000007f': 'reaper-sonne',
         '0x23ca0306b21ea71552b148cf3c4db4fc85ae19290000000000000000000000ac': 'reaper-sonne',
+        '0x3c74c4ed512050eb843d89fb9dcd5ebb4668eb6d0002000000000000000000cc': 'beefy-exactly',
     },
     investDisabled: {
         '0x1f131ec1175f023ee1534b16fa8ab237c00e238100000000000000000000004a': true,
         '0x479a7d1fcdd71ce0c2ed3184bfbe9d23b92e8337000000000000000000000049': true,
     },
     maBeetsEnabled: false,
+    claimAllRewardsEnabled: false,
 };
