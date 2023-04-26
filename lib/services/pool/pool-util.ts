@@ -42,14 +42,14 @@ export function poolRequiresBatchRelayerOnExit(pool: GqlPoolUnion) {
         (pool.__typename === 'GqlPoolWeighted' &&
             (pool.nestingType === 'HAS_SOME_PHANTOM_BPT' || pool.nestingType === 'HAS_ONLY_PHANTOM_BPT')) ||
         networkConfig.balancer.composableStableFactories.includes(pool.factory || '') ||
-        networkConfig.balancer.weightedPoolFactories.includes(pool.factory || '')
+        networkConfig.balancer.weightedPoolV2PlusFactories.includes(pool.factory || '')
     );
 }
 
 export function poolIsComposablePool(pool: GqlPoolUnion) {
     return (
         (pool.__typename === 'GqlPoolWeighted' &&
-            networkConfig.balancer.weightedPoolFactories.includes(pool.factory || '')) ||
+            networkConfig.balancer.weightedPoolV2PlusFactories.includes(pool.factory || '')) ||
         (pool.__typename === 'GqlPoolPhantomStable' &&
             networkConfig.balancer.composableStableFactories.includes(pool.factory || ''))
     );
@@ -58,7 +58,7 @@ export function poolIsComposablePool(pool: GqlPoolUnion) {
 export function poolGetServiceForPool(pool: GqlPoolUnion): PoolService {
     switch (pool.__typename) {
         case 'GqlPoolWeighted': {
-            if (networkConfig.balancer.weightedPoolFactories.includes(pool.factory || '')) {
+            if (networkConfig.balancer.weightedPoolV2PlusFactories.includes(pool.factory || '')) {
                 return new PoolWeightedV2Service(pool, batchRelayerService, networkConfig.wethAddress, networkProvider);
             } else if (pool.nestingType === 'HAS_SOME_PHANTOM_BPT' || pool.nestingType === 'HAS_ONLY_PHANTOM_BPT') {
                 return new PoolWeightedBoostedService(

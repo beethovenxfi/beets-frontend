@@ -103,7 +103,7 @@ export class SorQueryService {
 
         if (
             (pool.__typename === 'GqlPoolWeighted' &&
-                networkConfig.balancer.weightedPoolFactories.includes(pool.factory || '')) ||
+                networkConfig.balancer.weightedPoolV2PlusFactories.includes(pool.factory || '')) ||
             (isPhantomStable && hasComposableStableFactory)
         ) {
             return SorQueriesTotalSupplyType.ACTUAL_SUPPLY;
