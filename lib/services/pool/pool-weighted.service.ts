@@ -60,7 +60,7 @@ export class PoolWeightedService implements PoolService {
         return poolGetProportionalJoinAmountsForFixedAmount(fixedAmount, this.pool.tokens);
     }
 
-    public async joinGetProportionalSuggestion(userInvestTokenBalances: TokenAmountHumanReadable[]) {
+    public async joinGetMaxProportionalForUserBalances(userInvestTokenBalances: TokenAmountHumanReadable[]) {
         const fixedAmount = await this.proportionalInvestService.getProportionalSuggestion(userInvestTokenBalances);
 
         const result = await this.joinGetProportionalSuggestionForFixedAmount(

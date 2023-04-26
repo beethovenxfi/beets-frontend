@@ -23,11 +23,11 @@ export function useReliquaryJoinGetProportionalInvestmentAmount() {
         async ({ queryKey }) => {
             const hasEth = !!userInvestTokenBalances.find((token) => isEth(token.address));
 
-            if (!poolService.joinGetProportionalSuggestion) {
+            if (!poolService.joinGetMaxProportionalForUserBalances) {
                 return {};
             }
 
-            const result = await poolService.joinGetProportionalSuggestion(userInvestTokenBalances);
+            const result = await poolService.joinGetMaxProportionalForUserBalances(userInvestTokenBalances);
 
             return {
                 tokenProportionalAmounts: Object.fromEntries(
