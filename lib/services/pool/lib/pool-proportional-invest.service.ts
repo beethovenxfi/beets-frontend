@@ -135,9 +135,8 @@ export class PoolProportionalInvestService {
     ) {
         const balanceScaled = oldBnumScale(balance, decimals).times(priceRate);
         const amountRatio = oldBnumScale(amountIn, decimals).div(balanceScaled);
-        const bptOut = oldBnumScale(bptTotalSupply, 18).times(amountRatio);
 
-        return bptOut;
+        return oldBnumScale(bptTotalSupply, 18).times(amountRatio);
     }
 
     private calculateAmountIn(bptTotalSupply: string, bptIn: OldBigNumber, balance: string) {
