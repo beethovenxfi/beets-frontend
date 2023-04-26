@@ -97,8 +97,7 @@ export function PoolWithdrawPreview({ onWithdrawComplete, onClose }: Props) {
                     onConfirmed={async (id) => {
                         if (id === 'batch-relayer') {
                             refetchContractCallData();
-                        }
-                        if (id === 'exit') {
+                        } else if (id === 'exit') {
                             onWithdrawComplete();
                             refetch();
                             userSyncBalance({ variables: { poolId: pool.id } });
