@@ -39,7 +39,7 @@ export interface GqlBalancePoolAprSubItem {
     title: Scalars['String'];
 }
 
-export type GqlChain = 'ARBITRUM' | 'FANTOM' | 'MAINNET' | 'OPTIMISM' | 'POLYGON';
+export type GqlChain = 'ARBITRUM' | 'FANTOM' | 'GNOSIS' | 'MAINNET' | 'OPTIMISM' | 'POLYGON';
 
 export interface GqlContentNewsItem {
     __typename: 'GqlContentNewsItem';
@@ -843,8 +843,24 @@ export interface GqlPoolWithdrawOption {
     tokenOptions: Array<GqlPoolToken>;
 }
 
-export interface GqlProtocolMetrics {
-    __typename: 'GqlProtocolMetrics';
+export interface GqlProtocolMetricsAggregated {
+    __typename: 'GqlProtocolMetricsAggregated';
+    chains: Array<GqlProtocolMetricsChain>;
+    numLiquidityProviders: Scalars['BigInt'];
+    poolCount: Scalars['BigInt'];
+    swapFee7d: Scalars['BigDecimal'];
+    swapFee24h: Scalars['BigDecimal'];
+    swapVolume7d: Scalars['BigDecimal'];
+    swapVolume24h: Scalars['BigDecimal'];
+    totalLiquidity: Scalars['BigDecimal'];
+    totalSwapFee: Scalars['BigDecimal'];
+    totalSwapVolume: Scalars['BigDecimal'];
+    yieldCapture24h: Scalars['BigDecimal'];
+}
+
+export interface GqlProtocolMetricsChain {
+    __typename: 'GqlProtocolMetricsChain';
+    chainId: Scalars['String'];
     numLiquidityProviders: Scalars['BigInt'];
     poolCount: Scalars['BigInt'];
     swapFee7d: Scalars['BigDecimal'];
@@ -1233,7 +1249,6 @@ export interface Query {
     blocksGetBlocksPerDay: Scalars['Float'];
     blocksGetBlocksPerSecond: Scalars['Float'];
     blocksGetBlocksPerYear: Scalars['Float'];
-    chainMetrics: GqlProtocolMetrics;
     contentGetNewsItems: Array<GqlContentNewsItem>;
     latestSyncedBlocks: GqlLatestSyncedBlocks;
     lge: GqlLge;
@@ -1250,7 +1265,8 @@ export interface Query {
     poolGetSnapshots: Array<GqlPoolSnapshot>;
     poolGetSwaps: Array<GqlPoolSwap>;
     poolGetUserSwapVolume: Array<GqlPoolUserSwapVolume>;
-    protocolMetrics: GqlProtocolMetrics;
+    protocolMetricsAggregated: GqlProtocolMetricsAggregated;
+    protocolMetricsChain: GqlProtocolMetricsChain;
     sorGetBatchSwapForTokensIn: GqlSorGetBatchSwapForTokensInResponse;
     sorGetSwaps: GqlSorGetSwapsResponse;
     tokenGetCandlestickChartData: Array<GqlTokenCandlestickChartDataItem>;
@@ -1336,6 +1352,10 @@ export interface QueryPoolGetUserSwapVolumeArgs {
     first?: InputMaybe<Scalars['Int']>;
     skip?: InputMaybe<Scalars['Int']>;
     where?: InputMaybe<GqlUserSwapVolumeFilter>;
+}
+
+export interface QueryProtocolMetricsAggregatedArgs {
+    chainIds: Array<Scalars['String']>;
 }
 
 export interface QuerySorGetBatchSwapForTokensInArgs {
@@ -1553,8 +1573,8 @@ export type GetAppGlobalPollingDataQuery = {
     blocksGetAverageBlockTime: number;
     tokenGetProtocolTokenPrice: string;
     tokenGetCurrentPrices: Array<{ __typename: 'GqlTokenPrice'; price: number; address: string }>;
-    protocolMetrics: {
-        __typename: 'GqlProtocolMetrics';
+    protocolMetricsChain: {
+        __typename: 'GqlProtocolMetricsChain';
         totalLiquidity: string;
         totalSwapVolume: string;
         totalSwapFee: string;
@@ -1620,7 +1640,7 @@ export type GetProtocolDataQuery = {
     __typename: 'Query';
     protocolTokenPrice: string;
     protocolData: {
-        __typename: 'GqlProtocolMetrics';
+        __typename: 'GqlProtocolMetricsChain';
         totalLiquidity: string;
         totalSwapVolume: string;
         totalSwapFee: string;
@@ -5250,7 +5270,7 @@ export const GetAppGlobalPollingDataDocument = gql`
             price
             address
         }
-        protocolMetrics {
+        protocolMetricsChain {
             totalLiquidity
             totalSwapVolume
             totalSwapFee
@@ -5449,7 +5469,7 @@ export type GetTokensDynamicDataQueryResult = Apollo.QueryResult<
 >;
 export const GetProtocolDataDocument = gql`
     query GetProtocolData {
-        protocolData: protocolMetrics {
+        protocolData: protocolMetricsChain {
             totalLiquidity
             totalSwapVolume
             totalSwapFee

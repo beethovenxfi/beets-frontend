@@ -26,6 +26,7 @@ scalar GqlBigNumber
 enum GqlChain {
     ARBITRUM
     FANTOM
+    GNOSIS
     MAINNET
     OPTIMISM
     POLYGON
@@ -818,7 +819,22 @@ type GqlPoolWithdrawOption {
     tokenOptions: [GqlPoolToken!]!
 }
 
-type GqlProtocolMetrics {
+type GqlProtocolMetricsAggregated {
+    chains: [GqlProtocolMetricsChain!]!
+    numLiquidityProviders: BigInt!
+    poolCount: BigInt!
+    swapFee7d: BigDecimal!
+    swapFee24h: BigDecimal!
+    swapVolume7d: BigDecimal!
+    swapVolume24h: BigDecimal!
+    totalLiquidity: BigDecimal!
+    totalSwapFee: BigDecimal!
+    totalSwapVolume: BigDecimal!
+    yieldCapture24h: BigDecimal!
+}
+
+type GqlProtocolMetricsChain {
+    chainId: String!
     numLiquidityProviders: BigInt!
     poolCount: BigInt!
     swapFee7d: BigDecimal!
@@ -1135,7 +1151,6 @@ type Query {
     blocksGetBlocksPerDay: Float!
     blocksGetBlocksPerSecond: Float!
     blocksGetBlocksPerYear: Float!
-    chainMetrics: GqlProtocolMetrics!
     contentGetNewsItems: [GqlContentNewsItem!]!
     latestSyncedBlocks: GqlLatestSyncedBlocks!
     lge(id: ID!): GqlLge!
@@ -1166,7 +1181,8 @@ type Query {
     poolGetSnapshots(id: String!, range: GqlPoolSnapshotDataRange!): [GqlPoolSnapshot!]!
     poolGetSwaps(first: Int, skip: Int, where: GqlPoolSwapFilter): [GqlPoolSwap!]!
     poolGetUserSwapVolume(first: Int, skip: Int, where: GqlUserSwapVolumeFilter): [GqlPoolUserSwapVolume!]!
-    protocolMetrics: GqlProtocolMetrics!
+    protocolMetricsAggregated(chainIds: [String!]!): GqlProtocolMetricsAggregated!
+    protocolMetricsChain: GqlProtocolMetricsChain!
     sorGetBatchSwapForTokensIn(
         swapOptions: GqlSorSwapOptionsInput!
         tokenOut: String!
