@@ -203,6 +203,7 @@ export const optimismNetworkConfig: NetworkConfig = {
         '0x428e1cc3099cf461b87d124957a0d48273f334b100000000000000000000007f': 'reaper-sonne',
         '0x23ca0306b21ea71552b148cf3c4db4fc85ae19290000000000000000000000ac': 'reaper-sonne',
         '0x3c74c4ed512050eb843d89fb9dcd5ebb4668eb6d0002000000000000000000cc': 'beefy-exactly',
+        '0x8b6d3aa69c1cf47677281691b1abf3831ba1329d0001000000000000000000d0': 'reaper-sonne',
     },
     investDisabled: {
         '0x1f131ec1175f023ee1534b16fa8ab237c00e238100000000000000000000004a': true,
