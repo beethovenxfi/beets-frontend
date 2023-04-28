@@ -48,7 +48,10 @@ export const optimismNetworkConfig: NetworkConfig = {
             '0xe2e901ab09f37884ba31622df3ca7fc19aa443be',
         ],
         composableStableV1Factory: '0xf145cafb67081895ee80eb7c04a30cf87f07b745',
-        weightedPoolV2PlusFactories: ['0xad901309d9e9dbc5df19c84f729f429f0189a633'],
+        weightedPoolV2PlusFactories: [
+            '0xad901309d9e9dbc5df19c84f729f429f0189a633',
+            '0x230a59f4d9adc147480f03b0d3fffecd56c3289a',
+        ],
         linearFactories: {
             erc4626: ['0x4c4287b07d293e361281bceee8715c8cdeb64e34'],
             reaper: [
