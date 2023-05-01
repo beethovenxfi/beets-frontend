@@ -8,9 +8,9 @@ import React from 'react';
 interface Props extends BoxProps {}
 
 export function PoolInvestSummary({ ...rest }: Props) {
-    const { pool } = usePool();
+    const { pool, totalApr } = usePool();
     const { totalInvestValue } = useInvest();
-    const weeklyYield = (totalInvestValue * parseFloat(pool.dynamicData.apr.total)) / 52;
+    const weeklyYield = (totalInvestValue * totalApr) / 52;
 
     return (
         <VStack spacing="4" width="full" p="4" rounded="md">
