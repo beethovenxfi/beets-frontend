@@ -26,6 +26,7 @@ scalar GqlBigNumber
 enum GqlChain {
     ARBITRUM
     FANTOM
+    GNOSIS
     MAINNET
     OPTIMISM
     POLYGON
@@ -238,6 +239,8 @@ type GqlPoolDynamicData {
     volume24hAtl: BigDecimal!
     volume24hAtlTimestamp: Int!
     volume48h: BigDecimal!
+    yieldCapture24h: BigDecimal!
+    yieldCapture48h: BigDecimal!
 }
 
 type GqlPoolElement implements GqlPoolBase {
@@ -816,13 +819,32 @@ type GqlPoolWithdrawOption {
     tokenOptions: [GqlPoolToken!]!
 }
 
-type GqlProtocolMetrics {
+type GqlProtocolMetricsAggregated {
+    chains: [GqlProtocolMetricsChain!]!
+    numLiquidityProviders: BigInt!
     poolCount: BigInt!
+    swapFee7d: BigDecimal!
     swapFee24h: BigDecimal!
+    swapVolume7d: BigDecimal!
     swapVolume24h: BigDecimal!
     totalLiquidity: BigDecimal!
     totalSwapFee: BigDecimal!
     totalSwapVolume: BigDecimal!
+    yieldCapture24h: BigDecimal!
+}
+
+type GqlProtocolMetricsChain {
+    chainId: String!
+    numLiquidityProviders: BigInt!
+    poolCount: BigInt!
+    swapFee7d: BigDecimal!
+    swapFee24h: BigDecimal!
+    swapVolume7d: BigDecimal!
+    swapVolume24h: BigDecimal!
+    totalLiquidity: BigDecimal!
+    totalSwapFee: BigDecimal!
+    totalSwapVolume: BigDecimal!
+    yieldCapture24h: BigDecimal!
 }
 
 type GqlRelicSnapshot {
@@ -1078,11 +1100,13 @@ type Mutation {
     beetsSyncFbeetsRatio: String!
     cacheAverageBlockTime: String!
     lgeCreate(lge: GqlLgeCreateInput!, signature: String!): GqlLge!
+    poolBlackListAddPool(poolId: String!): String!
+    poolBlackListRemovePool(poolId: String!): String!
     poolInitializeSnapshotsForPool(poolId: String!): String!
     poolLoadOnChainDataForAllPools: String!
     poolLoadOnChainDataForPoolsWithActiveUpdates: String!
     poolLoadSnapshotsForAllPools: String!
-    poolLoadSnapshotsForPools(poolIds: [String!]!): String!
+    poolLoadSnapshotsForPools(poolIds: [String!]!, reload: Boolean): String!
     poolReloadAllPoolAprs: String!
     poolReloadAllTokenNestedPoolIds: String!
     poolReloadPoolNestedTokens(poolId: String!): String!
@@ -1157,7 +1181,8 @@ type Query {
     poolGetSnapshots(id: String!, range: GqlPoolSnapshotDataRange!): [GqlPoolSnapshot!]!
     poolGetSwaps(first: Int, skip: Int, where: GqlPoolSwapFilter): [GqlPoolSwap!]!
     poolGetUserSwapVolume(first: Int, skip: Int, where: GqlUserSwapVolumeFilter): [GqlPoolUserSwapVolume!]!
-    protocolMetrics: GqlProtocolMetrics!
+    protocolMetricsAggregated(chainIds: [String!]!): GqlProtocolMetricsAggregated!
+    protocolMetricsChain: GqlProtocolMetricsChain!
     sorGetBatchSwapForTokensIn(
         swapOptions: GqlSorSwapOptionsInput!
         tokenOut: String!
