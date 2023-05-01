@@ -115,6 +115,11 @@ export function PoolProvider({ pool: poolFromProps, children }: { pool: GqlPoolU
         pool.__typename === 'GqlPoolPhantomStable' ||
         pool.__typename === 'GqlPoolMetaStable';
 
+    const totalApr =
+        pool.dynamicData.apr.apr.__typename === 'GqlPoolAprRange'
+            ? parseFloat(pool.dynamicData.apr.apr.max)
+            : parseFloat(pool.dynamicData.apr.apr.total);
+
     useEffectOnce(() => {
         refetch();
         startPolling(30_000);
@@ -137,7 +142,7 @@ export function PoolProvider({ pool: poolFromProps, children }: { pool: GqlPoolU
                 bptPrice,
                 supportsZap,
                 formattedTypeName: poolGetTypeName(pool),
-                totalApr: parseFloat(pool.dynamicData.apr.total),
+                totalApr,
                 isFbeetsPool: pool.id === networkConfig.fbeets.poolId,
                 isStablePool,
                 isComposablePool,
