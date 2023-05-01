@@ -7,7 +7,6 @@ import { useEffect } from 'react';
 import { PoolWithdrawSettings } from '~/modules/pool/withdraw/components/PoolWithdrawSettings';
 import { BeetsTokenInputWithSlider } from '~/components/inputs/BeetsTokenInputWithSlider';
 import { usePool } from '~/modules/pool/lib/usePool';
-import { useHasBatchRelayerApproval } from '~/lib/util/useHasBatchRelayerApproval';
 import { numberFormatUSDValue } from '~/lib/util/number-formats';
 import { usePoolExitGetProportionalWithdrawEstimate } from '../lib/usePoolExitGetProportionalWithdrawEstimate';
 import { useGetTokens } from '~/lib/global/useToken';
@@ -18,9 +17,8 @@ interface Props extends BoxProps {
 }
 
 export function PoolWithdrawSingleAsset({ onShowPreview, ...rest }: Props) {
-    const { allTokens, pool, requiresBatchRelayerOnExit } = usePool();
+    const { allTokens, pool } = usePool();
     const { formattedPrice, priceForAmount } = useGetTokens();
-    const { data: hasBatchRelayerApproval } = useHasBatchRelayerApproval();
     const { singleAssetWithdraw, setSingleAssetWithdrawAmount, setSingleAssetWithdraw, selectedWithdrawType } =
         useWithdrawState();
     const singleAssetWithdrawForBptIn = usePoolExitGetSingleAssetWithdrawForBptIn();
@@ -57,8 +55,7 @@ export function PoolWithdrawSingleAsset({ onShowPreview, ...rest }: Props) {
     const isValid =
         parseFloat(singleAssetWithdraw.amount) > 0 &&
         parseFloat(singleAssetWithdraw.amount) <= parseFloat(maxAmount) &&
-        (!hasHighPriceImpact || acknowledgeHighPriceImpact) &&
-        (!requiresBatchRelayerOnExit || hasBatchRelayerApproval);
+        (!hasHighPriceImpact || acknowledgeHighPriceImpact);
 
     const proportionalWithdrawValue = sum((proportionalEstimate || []).map(priceForAmount));
 
