@@ -20,7 +20,7 @@ import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 import { getPoolStaking } from '~/lib/services/pool/lib/util';
 
 export default function PoolOverallStats() {
-    const { pool } = usePool();
+    const { pool, totalApr } = usePool();
     const poolStaking = getPoolStaking(pool);
     const { boostedByTypes } = useNetworkConfig();
     const { priceFor } = useGetTokens();
@@ -53,7 +53,7 @@ export default function PoolOverallStats() {
                     Pool APR
                 </Text>
                 <HStack>
-                    <div className="apr-stripes">{numeral(data.apr.total).format('0.00%')}</div>
+                    <div className="apr-stripes">{numeral(totalApr).format('0.00%')}</div>
                     <AprTooltip onlySparkles data={data.apr} />
                 </HStack>
                 {boostedByTypes[pool.id] && <BoostedBadgeSmall boostedBy={boostedByTypes[pool.id]} />}
