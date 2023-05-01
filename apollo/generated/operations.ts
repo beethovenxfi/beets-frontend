@@ -567,7 +567,7 @@ export const GetAppGlobalPollingData = gql`
             price
             address
         }
-        protocolMetrics {
+        protocolMetricsChain {
             totalLiquidity
             totalSwapVolume
             totalSwapFee
@@ -630,7 +630,7 @@ export const GetFbeetsRatio = gql`
 `;
 export const GetProtocolData = gql`
     query GetProtocolData {
-        protocolData: protocolMetrics {
+        protocolData: protocolMetricsChain {
             totalLiquidity
             totalSwapVolume
             totalSwapFee

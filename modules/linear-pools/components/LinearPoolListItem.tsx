@@ -19,7 +19,9 @@ const MemoizedTokenAvatarSetInList = memo(TokenAvatarSetInList);
 const MemoizedAprTooltip = memo(AprTooltip);
 
 export function LinearPoolListItem({ pool, tokens, onClick, ...rest }: Props) {
-    const apr = parseFloat(pool.dynamicData.apr.total) < 0.0000001 ? '0' : pool.dynamicData.apr.total;
+    const dynamicDataApr = pool.dynamicData.apr.apr;
+    const totalApr = dynamicDataApr.__typename === 'GqlPoolAprRange' ? dynamicDataApr.max : dynamicDataApr.total;
+    const apr = parseFloat(totalApr) < 0.0000001 ? '0' : totalApr;
     const mainToken = pool.tokens.find((token) => token.index === pool.mainIndex)!;
     const wrappedToken = pool.tokens.find((token) => token.index === pool.wrappedIndex)!;
     const isReaperPool = networkConfig.balancer.linearFactories.reaper.includes(pool.factory || '');
