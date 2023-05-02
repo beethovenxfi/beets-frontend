@@ -89,12 +89,16 @@ export function PoolProvider({ pool: poolFromProps, children }: { pool: GqlPoolU
     const requiresBatchRelayerOnJoin = poolRequiresBatchRelayerOnJoin(pool);
     const requiresBatchRelayerOnExit = poolRequiresBatchRelayerOnExit(pool);
     const supportsZapIntoMasterchefFarm =
-        (pool.__typename === 'GqlPoolWeighted' || pool.__typename === 'GqlPoolStable') &&
+        (pool.__typename === 'GqlPoolWeighted' ||
+            pool.__typename === 'GqlPoolStable' ||
+            (pool.__typename === 'GqlPoolPhantomStable' &&
+                pool.factory &&
+                networkConfig.balancer.composableStableFactories.includes(pool.factory))) &&
         poolStaking?.type === 'MASTER_CHEF' &&
         !!poolStaking.farm;
     const supportsZapIntoGauge =
         ((pool.__typename === 'GqlPoolWeighted' &&
-            isSameAddress(pool.factory || '', networkConfig.balancer.weightedPoolV2Factory)) ||
+            networkConfig.balancer.weightedPoolV2PlusFactories.includes(pool.factory || '')) ||
             pool.__typename === 'GqlPoolPhantomStable') &&
         poolStaking?.type === 'GAUGE' &&
         !!poolStaking.gauge;

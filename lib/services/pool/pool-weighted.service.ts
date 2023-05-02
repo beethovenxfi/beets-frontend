@@ -33,15 +33,20 @@ import { WeightedPoolEncoder } from '@balancer-labs/balancer-js';
 import { PoolBaseService } from '~/lib/services/pool/lib/pool-base.service';
 import OldBigNumber from 'bignumber.js';
 import { BatchRelayerService } from '~/lib/services/batch-relayer/batch-relayer.service';
+import { PoolProportionalInvestService } from './lib/pool-proportional-invest.service';
+import { replaceEthWithWeth } from '../token/token-util';
 
 export class PoolWeightedService implements PoolService {
     private baseService: PoolBaseService;
+    private readonly proportionalInvestService: PoolProportionalInvestService;
+
     constructor(
         private pool: GqlPoolWeighted,
         private batchRelayerService: BatchRelayerService,
         private readonly wethAddress: string,
     ) {
         this.baseService = new PoolBaseService(pool, wethAddress);
+        this.proportionalInvestService = new PoolProportionalInvestService(pool);
     }
 
     public updatePool(pool: GqlPoolWeighted) {
@@ -54,6 +59,17 @@ export class PoolWeightedService implements PoolService {
         tokensIn: string[],
     ): Promise<TokenAmountHumanReadable[]> {
         return poolGetProportionalJoinAmountsForFixedAmount(fixedAmount, this.pool.tokens);
+    }
+
+    public async joinGetMaxProportionalForUserBalances(userInvestTokenBalances: TokenAmountHumanReadable[]) {
+        const fixedAmount = await this.proportionalInvestService.getProportionalSuggestion(userInvestTokenBalances);
+
+        const result = await this.joinGetProportionalSuggestionForFixedAmount(
+            fixedAmount,
+            userInvestTokenBalances.map((token) => replaceEthWithWeth(token.address)),
+        );
+
+        return result;
     }
 
     public async joinGetBptOutAndPriceImpactForTokensIn(

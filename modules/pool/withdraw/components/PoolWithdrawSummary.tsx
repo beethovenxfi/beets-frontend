@@ -9,7 +9,6 @@ import { useGetTokens } from '~/lib/global/useToken';
 import { usePoolExitGetBptInForSingleAssetWithdraw } from '~/modules/pool/withdraw/lib/usePoolExitGetBptInForSingleAssetWithdraw';
 import { useWithdrawState } from '~/modules/pool/withdraw/lib/useWithdrawState';
 import { CardRow } from '~/components/card/CardRow';
-import { SlippageTextLinkMenu } from '~/components/slippage/SlippageTextLinkMenu';
 
 interface Props extends BoxProps {}
 

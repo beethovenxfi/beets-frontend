@@ -2,6 +2,8 @@ import ReaperAaveBoosted from './assets/reaper-aave-boosted-small.png';
 import ReaperAaveGranaryBoosted from './assets/reaper-aave-granary-boosted-small.png';
 import ReaperSonneBoosted from './assets/reaper-sonne-boosted.png';
 import OvernightBoosted from './assets/overnight-boosted-small.png';
+import ReaperBoosted from './assets/reaper-boosted.png';
+import BeefyExactlyBoosted from './assets/boosted-by-beefy-exactly.png';
 import Image from 'next/image';
 import { BoostedByType } from '~/lib/config/network-config-type';
 import BeetsTooltip from '~/components/tooltip/BeetsTooltip';
@@ -32,6 +34,12 @@ export function BoostedBadgeSmall({ boostedBy }: Props) {
             break;
         case 'yearn':
             return null;
+        case 'reaper':
+            image = <Image src={ReaperBoosted} alt="Reaper boosted" height="28px" width="96px" />;
+            break;
+        case 'beefy-exactly':
+            image = <Image src={BeefyExactlyBoosted} alt="Beefy, Exactly boosted" height="28px" width="96px" />;
+            break;
     }
 
     if (image === null) {

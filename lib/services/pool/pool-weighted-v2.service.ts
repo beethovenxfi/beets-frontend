@@ -20,10 +20,13 @@ import {
 } from '~/lib/services/pool/lib/util';
 import { PoolComposableJoinService } from '~/lib/services/pool/lib/pool-composable-join.service';
 import { PoolComposableExitService } from '~/lib/services/pool/lib/pool-composable-exit.service';
+import { replaceEthWithWeth } from '~/lib/services/token/token-util';
+import { PoolProportionalInvestService } from './lib/pool-proportional-invest.service';
 
 export class PoolWeightedV2Service implements PoolService {
     private readonly composableJoinService: PoolComposableJoinService;
     private readonly composableExitService: PoolComposableExitService;
+    private readonly proportionalInvestService: PoolProportionalInvestService;
 
     constructor(
         private pool: GqlPoolWeighted,
@@ -33,11 +36,23 @@ export class PoolWeightedV2Service implements PoolService {
     ) {
         this.composableJoinService = new PoolComposableJoinService(pool, batchRelayerService, provider, wethAddress);
         this.composableExitService = new PoolComposableExitService(pool, batchRelayerService, provider, wethAddress);
+        this.proportionalInvestService = new PoolProportionalInvestService(pool);
     }
 
     public updatePool(pool: GqlPoolWeighted) {
         this.pool = pool;
         this.composableJoinService.updatePool(pool);
+    }
+
+    public async joinGetMaxProportionalForUserBalances(userInvestTokenBalances: TokenAmountHumanReadable[]) {
+        const fixedAmount = await this.proportionalInvestService.getProportionalSuggestion(userInvestTokenBalances);
+
+        const result = await this.joinGetProportionalSuggestionForFixedAmount(
+            fixedAmount,
+            userInvestTokenBalances.map((token) => replaceEthWithWeth(token.address)),
+        );
+
+        return result;
     }
 
     public async joinGetProportionalSuggestionForFixedAmount(

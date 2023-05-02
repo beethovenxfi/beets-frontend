@@ -47,7 +47,6 @@ export function Footer() {
                             <FooterLink href="https://snapshot.org/#/beets.eth">Vote</FooterLink>
                             <FooterLink href="https://info.beets.fi">Analytics</FooterLink>
                             <FooterLink href="https://docs.beets.fi">Docs & Help</FooterLink>
-                            <FooterLink href={networkConfig.createPoolUrl}>Compose a pool</FooterLink>
                             <FooterLink href="/terms-of-service" linkType="internal">
                                 Terms of Service
                             </FooterLink>
