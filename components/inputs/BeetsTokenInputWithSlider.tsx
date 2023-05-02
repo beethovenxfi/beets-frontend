@@ -25,6 +25,7 @@ import { oldBnumScale, oldBnumToHumanReadable } from '~/lib/services/pool/lib/ol
 import { BeetsBox } from '~/components/box/BeetsBox';
 import { TokenSelectInline } from '~/components/token-select-inline/TokenSelectInline';
 import React from 'react';
+import { protocolThemeProp } from '~/styles/theme-util';
 
 interface Props extends BoxProps {
     tokenOptions: GqlPoolToken[];
@@ -97,10 +98,10 @@ export function BeetsTokenInputWithSlider({
                         _hover={{ borderColor: 'gray.200' }}
                         _focus={{ outline: 'none' }}
                         _placeholder={{ color: 'gray.400' }}
-                        color="gray.100"
+                        color="inline"
                         borderColor="transparent"
                         border="2px"
-                        bgColor="blackAlpha.400"
+                        bgColor={protocolThemeProp({ balancer: 'white', beets: 'blackAlpha.400' })}
                         fontWeight="semibold"
                         onKeyDown={tokenInputBlockInvalidCharacters}
                         width="full"
@@ -131,15 +132,14 @@ export function BeetsTokenInputWithSlider({
                     }}
                 >
                     <SliderTrack bg="gray.400">
-                        <SliderFilledTrack />
+                        <SliderFilledTrack bg={protocolThemeProp({ balancer: 'beets.secondary.100', beets: '' })} />
                     </SliderTrack>
                     <SliderThumb boxSize={3} boxShadow="xl" />
                     {changing ? (
                         <SliderMark
                             value={sliderValue}
                             textAlign="center"
-                            //bg="beets.base.500"
-                            color="white"
+                            color={protocolThemeProp({ balancer: 'gray.700', beets: 'white' })}
                             mt="3"
                             ml="-20px"
                             w="12"
@@ -156,7 +156,7 @@ export function BeetsTokenInputWithSlider({
                 <Box flex="1" height="18px">
                     {!changing && (
                         <Link
-                            color="gray.200"
+                            color="subheading"
                             fontSize="sm"
                             display="flex"
                             onClick={() => {

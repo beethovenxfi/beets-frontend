@@ -47,6 +47,7 @@ export function PoolInvestModal({
     isVisible = false,
 }: Props) {
     const { isOpen, onOpen, onClose } = useDisclosure();
+    const { protocol } = useNetworkConfig();
     const { pool, formattedTypeName } = usePool();
     const [modalState, setModalState] = useState<'start' | 'proportional' | 'custom' | 'preview'>('start');
     const [type, setInvestType] = useState<'proportional' | 'custom' | null>(null);
@@ -145,7 +146,7 @@ export function PoolInvestModal({
                             background="gray.700"
                         >
                             <Box transformOrigin="top" width="full" height="full" background="blackAlpha.400">
-                                <Box width="full" height="full" className="bg" />
+                                <Box width="full" height="full" className="bg" rounded="lg" />
                             </Box>
                         </Box>
                         <ModalCloseButton />
@@ -153,7 +154,7 @@ export function PoolInvestModal({
                             <IconButton
                                 aria-label={'back-button'}
                                 icon={<ChevronLeft />}
-                                variant="ghost"
+                                variant={protocol === 'balancer' ? '' : 'ghost'}
                                 p="0"
                                 width="32px"
                                 height="32px"
@@ -180,7 +181,7 @@ export function PoolInvestModal({
                                     <Heading size="md" noOfLines={1}>
                                         Invest into {pool.name}
                                     </Heading>
-                                    <Text color="gray.200" fontSize="md">
+                                    <Text color='subheading' fontSize="md">
                                         {formattedTypeName}
                                     </Text>
                                 </>

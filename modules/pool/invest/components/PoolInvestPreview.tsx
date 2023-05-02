@@ -19,7 +19,7 @@ export function PoolInvestPreview({ onInvestComplete, onClose }: Props) {
             <Box px="4" width="full">
                 <PoolInvestSummary mt="6" />
                 <BeetsBox>
-                    <VStack width="full" divider={<StackDivider borderColor="whiteAlpha.200" />} mt="4" p="2">
+                    <VStack width="full" divider={<StackDivider borderColor="divider" />} mt="4" p="2">
                         {selectedInvestTokensWithAmounts.map((token) => {
                             return <TokenRow key={token.address} address={token.address} amount={token.amount} />;
                         })}

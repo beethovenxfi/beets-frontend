@@ -139,9 +139,14 @@ export const fantomTheme: Partial<ChakraTheme> = {
             statisticHeader: 'beets.base.50',
             heading: 'white',
             subheading: 'gray.200',
+            inline: 'gray.100',
             secondaryTableRow: 'whiteAlpha.100',
             progressBg: '',
-            popoverTrigger: 'gray.200'  
+            popoverTrigger: 'gray.200',
+            tokenStackDivider: 'whiteAlpha.200',
+            buttonHighlight: 'beets.green',
+            modalSubsection: 'blackAlpha.500',
+            divider: 'whiteAlpha.200'
         },
     },
     components: {
@@ -184,6 +189,12 @@ export const fantomTheme: Partial<ChakraTheme> = {
                     borderWidth: 1,
                     borderColor: 'gray.100',
                     shadow: 'xl',
+                },
+                subsection: {
+                    width: 'full',
+                    p: '4',
+                    backgroundColor: 'blackAlpha.500',
+                    alignItems: 'flex-start',
                 },
             },
         },
@@ -353,6 +364,13 @@ export const fantomTheme: Partial<ChakraTheme> = {
                     _hover: {
                         transform: 'scale(1.1)',
                     },
+                },
+                image: {
+                    _hover: { borderColor: 'beets.green' },
+                    borderWidth: 1,
+                    borderColor: 'beets.transparent',
+                    height: '140px',
+                    width: 'full',
                 },
             },
         },

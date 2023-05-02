@@ -1,7 +1,7 @@
 import { Box, BoxProps, useStyleConfig } from '@chakra-ui/react';
 
 interface Props extends BoxProps {
-    variant?: 'normal' | 'elevated';
+    variant?: 'normal' | 'elevated' | 'subsection';
 }
 
 export function BeetsBox({ variant = 'normal', children, ...rest }: Props) {

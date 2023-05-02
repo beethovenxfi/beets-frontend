@@ -10,12 +10,16 @@ import {
     Flex,
     VStack,
     Box,
+    useStyleConfig,
+    BoxProps,
 } from '@chakra-ui/react';
 import React from 'react';
 import { Check, ChevronDown } from 'react-feather';
 import { GqlPoolToken } from '~/apollo/generated/graphql-codegen-generated';
 import TokenAvatar from '~/components/token/TokenAvatar';
 import BeetsTooltip from '../tooltip/BeetsTooltip';
+import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
+import { protocolThemeProp } from '~/styles/theme-util';
 
 interface Props {
     tokenOptions: GqlPoolToken[];
@@ -26,7 +30,11 @@ interface Props {
 
 export function TokenSelectInline({ tokenOptions, selectedAddress, onOptionSelect, minimal }: Props) {
     const theme = useTheme();
+    const { protocol } = useNetworkConfig();
     const selectedToken = tokenOptions.find((option) => option.address === selectedAddress);
+
+    const menuListStyles = useStyleConfig('MenuList', { variant: protocol }) as BoxProps;
+    const menuItemStyles = useStyleConfig('MenuListItem', { variant: protocol }) as BoxProps;
 
     return (
         <Menu>
@@ -47,7 +55,7 @@ export function TokenSelectInline({ tokenOptions, selectedAddress, onOptionSelec
                                     <ChevronDown color={theme.colors.beets.green} />
                                 </Flex>
                             }
-                            variant="ghost"
+                            variant={protocol === 'balancer' ? '' : 'ghost'}
                             px="1.5"
                             minHeight="50px"
                         >
@@ -70,25 +78,38 @@ export function TokenSelectInline({ tokenOptions, selectedAddress, onOptionSelec
                             )}
                         </MenuButton>
                     </BeetsTooltip>
-                    <MenuList backgroundColor='transparent' p="0">
-                        <Box py="1" px="1" backgroundColor="blackAlpha.400">
+                    <MenuList {...menuListStyles} p="0">
+                        <Box
+                            py="1"
+                            px="1"
+                            backgroundColor={protocolThemeProp({
+                                balancer: 'white',
+                                beets: 'blackAlpha.400',
+                            })}
+                        >
                             <Box backgroundColor="bg">
-                                <Box backgroundColor='blackAlpha.800'>
-                                {tokenOptions.map((option) => (
-                                    <MenuItem
-                                        key={option.address}
-                                        display="flex"
-                                        onClick={() => onOptionSelect(option.address)}
-                                    >
-                                        <HStack spacing="1.5" flex="1">
-                                            <TokenAvatar width="20px" height="20px" address={option.address} />
-                                            <Text color="gray.100" fontWeight="normal">
-                                                {option.symbol}
-                                            </Text>
-                                        </HStack>
-                                        {option.address === selectedAddress ? <Check /> : null}
-                                    </MenuItem>
-                                ))}
+                                <Box
+                                    backgroundColor={protocolThemeProp({
+                                        balancer: 'white',
+                                        beets: 'blackAlpha.800',
+                                    })}
+                                >
+                                    {tokenOptions.map((option) => (
+                                        <MenuItem
+                                            {...menuItemStyles}
+                                            key={option.address}
+                                            display="flex"
+                                            onClick={() => onOptionSelect(option.address)}
+                                        >
+                                            <HStack spacing="1.5" flex="1">
+                                                <TokenAvatar width="20px" height="20px" address={option.address} />
+                                                <Text color="inline" fontWeight="normal">
+                                                    {option.symbol}
+                                                </Text>
+                                            </HStack>
+                                            {option.address === selectedAddress ? <Check /> : null}
+                                        </MenuItem>
+                                    ))}
                                 </Box>
                             </Box>
                         </Box>

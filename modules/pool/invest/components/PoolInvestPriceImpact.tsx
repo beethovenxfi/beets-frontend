@@ -7,9 +7,9 @@ export function PoolInvestPriceImpact() {
         usePoolJoinGetBptOutAndPriceImpactForTokensIn();
 
     return (
-        <VStack width="full" py="4" backgroundColor="blackAlpha.500" px="5">
+        <VStack width="full" py="4" backgroundColor="modalSubsection" px="5" roundedBottom='lg'>
             <HStack width="full" justifyContent="space-between">
-                <Text color="gray.100" fontSize=".85rem">
+                <Text color="inline" fontSize=".85rem">
                     Price impact
                 </Text>
                 {isLoading ? (
@@ -17,7 +17,7 @@ export function PoolInvestPriceImpact() {
                 ) : (
                     <Text
                         fontSize=".85rem"
-                        color={hasHighPriceImpact ? 'beets.red' : hasMediumPriceImpact ? 'orange' : 'white'}
+                        color={hasHighPriceImpact ? 'beets.red' : hasMediumPriceImpact ? 'orange' : 'inline'}
                     >
                         {formattedPriceImpact}
                     </Text>

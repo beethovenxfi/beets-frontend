@@ -112,9 +112,9 @@ export const balancerTheme: Partial<ChakraTheme> = {
         },
         navbar: 'beets.base.800',
         beets: {
-            green: '#00F89C',
+            green: '#4254ff',
+            highlight: '#4254ff',
             red: '#FF0000',
-            highlight: '#00FFFF',
             gray: '#292524',
             base: {
                 50: '#53555e',
@@ -178,16 +178,20 @@ export const balancerTheme: Partial<ChakraTheme> = {
         colors: {
             headline: 'beets.base',
             heading: 'gray.800',
-            subheading: 'gray.600',
+            subheading: 'gray.500',
+            inline: 'gray.800',
             loading: 'white',
             walletConnectPortfolio: 'white',
             statistic: 'gray.800',
             statisticHeader: 'gray.600',
-            statsDivider: 'gray.300',
+            divider: 'gray.50',
+            tokenStackDivider: 'white',
             aprStripe: 'beets.secondary.400',
             secondaryTableRow: 'gray.50',
             progressBg: 'gray.200',
             popoverTrigger: 'pink.800',
+            buttonHighlight: 'pink.700',
+            modalSubsection: 'gray.100',
         },
     },
     components: {
@@ -233,6 +237,30 @@ export const balancerTheme: Partial<ChakraTheme> = {
                     borderWidth: 1,
                     borderColor: 'gray.200',
                     shadow: 'sm',
+                },
+                subsection: {
+                    roundedTop: 'none',
+                    width: 'full',
+                    p: '4',
+                    backgroundColor: 'white',
+                    alignItems: 'flex-start',
+                },
+            },
+        },
+        MenuList: {
+            variants: {
+                balancer: {
+                    bg: 'white',
+                },
+            },
+        },
+        MenuListItem: {
+            variants: {
+                balancer: {
+                    bg: 'white',
+                    _hover: {
+                        bg: 'gray.100',
+                    },
                 },
             },
         },
@@ -411,6 +439,14 @@ export const balancerTheme: Partial<ChakraTheme> = {
                         bgColor: 'gray.200',
                         transform: 'scale(1.1)',
                     },
+                },
+                image: {
+                    _hover: { borderColor: 'beets.secondary.600', bgColor: 'beets.secondary.600', color: 'white' },
+                    borderWidth: 1,
+                    borderColor: 'beets.secondary.500',
+                    height: '140px',
+                    width: 'full',
+                    color: 'beets.secondary.500',
                 },
             },
         },

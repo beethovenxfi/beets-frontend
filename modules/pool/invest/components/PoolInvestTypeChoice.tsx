@@ -16,6 +16,7 @@ import {
     StackDivider,
     Link,
     useBreakpointValue,
+    Divider,
 } from '@chakra-ui/react';
 import { ExternalLink, Grid as GridIcon } from 'react-feather';
 import { BeetsBox } from '~/components/box/BeetsBox';
@@ -36,6 +37,7 @@ import BeetSmart from '~/assets/icons/beetx-smarts.svg';
 import Image from 'next/image';
 import { etherscanGetTokenUrl } from '~/lib/util/etherscan';
 import BeetsTooltip from '~/components/tooltip/BeetsTooltip';
+import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 interface Props {
     onShowProportional(): void;
     onShowCustom(): void;
@@ -44,6 +46,7 @@ interface Props {
 export function PoolInvestTypeChoice({ onShowProportional, onShowCustom }: Props) {
     const { pool, poolService, isStablePool } = usePool();
     const { priceForAmount, formattedPrice } = useGetTokens();
+    const { protocol } = useNetworkConfig();
     const { userPoolTokenBalances, investableAmount } = usePoolUserTokenBalancesInWallet();
     const { canInvestProportionally } = useInvest();
     const isMobile = useBreakpointValue({ base: true, md: false });
@@ -65,6 +68,9 @@ export function PoolInvestTypeChoice({ onShowProportional, onShowCustom }: Props
 
     const ChoiceOrientation = isMobile ? VStack : HStack;
 
+    const differenceTooltipProps =
+        protocol === 'balancer' ? { variant: 'highlight', fontWeight: 'bold' } : { color: 'beets.highlight' };
+
     return (
         <VStack width="full">
             <VStack alignItems="flex-start" px="4" pb="4" width="full">
@@ -78,12 +84,14 @@ export function PoolInvestTypeChoice({ onShowProportional, onShowCustom }: Props
                                 label="When investing proportionally, you enter the Liquidity Pool in the specific ratios set by the pool. This helps to ensure you aren’t subject to the fees associated with price impact. Alternatively, customising your investment allows you to invest with your desired proportions. However, this action may shift the pool out of balance and subject you to price impact."
                             >
                                 <HStack spacing="1" alignItems="center">
-                                    <Text color="beets.highlight" fontSize="sm">
-                                        What&apos;s the difference
+                                    <Text fontSize="sm" {...differenceTooltipProps}>
+                                        What&apos;s the difference?
                                     </Text>
-                                    <Box _hover={{ transform: 'scale(1.2)' }}>
-                                        <Image src={BeetsThinking} width="24" height="24" alt="beets-balanced" />
-                                    </Box>
+                                    {protocol !== 'balancer' && (
+                                        <Box _hover={{ transform: 'scale(1.2)' }}>
+                                            <Image src={BeetsThinking} width="24" height="24" alt="beets-balanced" />
+                                        </Box>
+                                    )}
                                 </HStack>
                             </BeetsTooltip>
                         )}
@@ -94,12 +102,8 @@ export function PoolInvestTypeChoice({ onShowProportional, onShowCustom }: Props
                     <BeetsTooltip noImage label={_canInvestProportionally ? '' : disabledProportionalInvestmentTooltip}>
                         <Box width="full">
                             <Button
-                                _hover={{ borderColor: 'beets.green' }}
-                                borderWidth={1}
-                                borderColor="beets.transparent"
+                                variant='image'
                                 disabled={!_canInvestProportionally || !proportionalSupported}
-                                height="140px"
-                                width="full"
                                 onClick={onShowProportional}
                             >
                                 <VStack spacing="1">
@@ -107,106 +111,104 @@ export function PoolInvestTypeChoice({ onShowProportional, onShowCustom }: Props
 
                                     <Text fontSize="lg">{numberFormatUSDValue(data?.maxAmount || 0)}</Text>
                                     <Text fontSize="sm">Proportional investment</Text>
-                                    <Text fontSize="xs" color="beets.green">
+                                    <Text fontSize="xs" color="buttonHighlight">
                                         Recommended
                                     </Text>
                                 </VStack>
                             </Button>
                         </Box>
                     </BeetsTooltip>
-                    <Button
-                        _hover={{ borderColor: 'beets.green' }}
-                        borderWidth={1}
-                        borderColor="beets.transparent"
-                        height="140px"
-                        width="full"
-                        onClick={onShowCustom}
-                    >
+                    <Button variant="image" onClick={onShowCustom}>
                         <VStack spacing="1">
                             <Image src={BeetSmart} height="48" alt="beets-smart" />
                             <Text fontSize="lg">{numberFormatUSDValue(investableAmount)}</Text>
                             <Text fontSize="sm">Custom investment</Text>
-                            <Text fontSize="xs" color="beets.green">
+                            <Text fontSize="xs" color="buttonHighlight">
                                 &nbsp;
                             </Text>
                         </VStack>
                     </Button>
                 </ChoiceOrientation>
             </VStack>
-            <VStack width="full" p="4" backgroundColor="blackAlpha.500" alignItems="flex-start">
-                <Text fontSize="md" fontWeight="semibold">
-                    Pool tokens in your wallet
-                </Text>
-                <BeetsBox width="full" p="4">
-                    <VStack
-                        divider={<StackDivider borderColor="whiteAlpha.200" />}
-                        spacing="4"
-                        width="full"
-                        alignItems="flex-start"
-                    >
-                        {pool.investConfig.options.map((option, index) => {
-                            return (
-                                <VStack
-                                    divider={<StackDivider borderColor="whiteAlpha.200" />}
-                                    spacing="4"
-                                    width="full"
-                                    key={`option-${index}`}
-                                    alignItems="flex-start"
-                                >
-                                    {option.tokenOptions.map((tokenOption, tokenIndex) => {
-                                        const userBalance = tokenGetAmountForAddress(
-                                            tokenOption.address,
-                                            userPoolTokenBalances,
-                                        );
-                                        const tokenPrecision = Math.min(tokenOption?.decimals || 18, 12);
+            {protocol === 'balancer' && <Divider bgColor="divider" />}
+            <BeetsBox variant="subsection">
+                <VStack alignItems="flex-start">
+                    <Text fontSize="md" fontWeight="semibold">
+                        Pool tokens in your wallet
+                    </Text>
+                    <BeetsBox width="full" p="4">
+                        <VStack
+                            divider={<StackDivider borderColor="tokenStackDivider" />}
+                            spacing="4"
+                            width="full"
+                            alignItems="flex-start"
+                        >
+                            {pool.investConfig.options.map((option, index) => {
+                                return (
+                                    <VStack
+                                        divider={<StackDivider borderColor="tokenStackDivider" />}
+                                        spacing="4"
+                                        width="full"
+                                        key={`option-${index}`}
+                                        alignItems="flex-start"
+                                    >
+                                        {option.tokenOptions.map((tokenOption, tokenIndex) => {
+                                            const userBalance = tokenGetAmountForAddress(
+                                                tokenOption.address,
+                                                userPoolTokenBalances,
+                                            );
+                                            const tokenPrecision = Math.min(tokenOption?.decimals || 18, 12);
 
-                                        return (
-                                            <HStack
-                                                key={`${index}-${tokenIndex}`}
-                                                justifyContent="space-between"
-                                                width="full"
-                                            >
-                                                <HStack>
-                                                    <TokenAvatar
-                                                        width="40px"
-                                                        height="40px"
-                                                        maxWidth="40px"
-                                                        maxHeight="40px"
-                                                        address={tokenOption.address}
-                                                    />
-                                                    <Box>
-                                                        {tokenOption.name}
-                                                        <HStack spacing="1">
-                                                            <Text fontWeight="bold">{tokenOption?.symbol}</Text>
-                                                            <Link
-                                                                href={etherscanGetTokenUrl(tokenOption.address)}
-                                                                target="_blank"
-                                                                ml="1.5"
-                                                            >
-                                                                <ExternalLink size={14} />
-                                                            </Link>
-                                                        </HStack>
-                                                    </Box>
+                                            return (
+                                                <HStack
+                                                    key={`${index}-${tokenIndex}`}
+                                                    justifyContent="space-between"
+                                                    width="full"
+                                                >
+                                                    <HStack>
+                                                        <TokenAvatar
+                                                            width="40px"
+                                                            height="40px"
+                                                            maxWidth="40px"
+                                                            maxHeight="40px"
+                                                            address={tokenOption.address}
+                                                        />
+                                                        <Box>
+                                                            {tokenOption.name}
+                                                            <HStack spacing="1">
+                                                                <Text fontWeight="bold">{tokenOption?.symbol}</Text>
+                                                                <Link
+                                                                    href={etherscanGetTokenUrl(tokenOption.address)}
+                                                                    target="_blank"
+                                                                    ml="1.5"
+                                                                >
+                                                                    <ExternalLink size={14} />
+                                                                </Link>
+                                                            </HStack>
+                                                        </Box>
+                                                    </HStack>
+                                                    <VStack alignItems="flex-end" spacing="0">
+                                                        <Text>
+                                                            {tokenFormatAmountPrecise(userBalance, tokenPrecision)}
+                                                        </Text>
+                                                        <Text fontSize="sm" color="beets.base.100">
+                                                            ~
+                                                            {formattedPrice({
+                                                                address: tokenOption.address,
+                                                                amount: userBalance,
+                                                            })}
+                                                        </Text>
+                                                    </VStack>
                                                 </HStack>
-                                                <VStack alignItems="flex-end" spacing="0">
-                                                    <Text>{tokenFormatAmountPrecise(userBalance, tokenPrecision)}</Text>
-                                                    <Text fontSize="sm" color="beets.base.100">
-                                                        ~
-                                                        {formattedPrice({
-                                                            address: tokenOption.address,
-                                                            amount: userBalance,
-                                                        })}
-                                                    </Text>
-                                                </VStack>
-                                            </HStack>
-                                        );
-                                    })}
-                                </VStack>
-                            );
-                        })}
-                    </VStack>
-                </BeetsBox>
-            </VStack>
+                                            );
+                                        })}
+                                    </VStack>
+                                );
+                            })}
+                        </VStack>
+                    </BeetsBox>
+                </VStack>
+            </BeetsBox>
         </VStack>
     );
 }

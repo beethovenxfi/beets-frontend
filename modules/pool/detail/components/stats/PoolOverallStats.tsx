@@ -61,7 +61,7 @@ export default function PoolOverallStats() {
                 </HStack>
                 {boostedByTypes[pool.id] && <BoostedBadgeSmall boostedBy={boostedByTypes[pool.id]} />}
             </VStack>
-            <Divider bgColor="statsDivider" />
+            <Divider bgColor="divider" />
             <VStack spacing="0" alignItems="flex-start">
                 <Text lineHeight="1rem" fontWeight="semibold" fontSize="sm" color="statisticHeader">
                     BPT price

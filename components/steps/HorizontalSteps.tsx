@@ -2,6 +2,7 @@ import { Box, Center, Circle, Flex, FlexProps, HStack, Spinner, Tooltip, useThem
 import { IconWallet } from '~/components/icons/IconWallet';
 import { Check } from 'react-feather';
 import { Fragment } from 'react';
+import { protocolThemeProp } from '~/styles/theme-util';
 
 export type StepStatus = 'current' | 'idle' | 'submitting' | 'pending' | 'complete';
 
@@ -55,7 +56,11 @@ export function HorizontalSteps({ steps, ...rest }: Props) {
                                             ? 'beets.green'
                                             : 'beets.highlight'
                                     }
-                                    color={status === 'idle' ? 'gray.100' : 'beets.highlight'}
+                                    color={
+                                        status === 'idle'
+                                            ? protocolThemeProp({ balancer: 'gray.500', beets: 'gray.100' })
+                                            : 'beets.highlight'
+                                    }
                                     fontWeight={status === 'idle' ? 'normal' : 'bold'}
                                     cursor="default"
                                     userSelect="none"
