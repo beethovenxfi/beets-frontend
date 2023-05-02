@@ -77,14 +77,14 @@ export function PoolWithdrawModal({
                 </Button>
             )}
             <Modal isOpen={isOpen} onClose={onModalClose} size="lg" initialFocusRef={initialRef}>
-                <ModalOverlay bg='blackAlpha.900' />
+                <ModalOverlay bg="blackAlpha.900" />
                 <BeetsModalContent>
                     <ModalCloseButton />
                     {modalState !== 'start' ? (
                         <IconButton
                             aria-label={'back-button'}
                             icon={<ChevronLeft />}
-                            variant="ghost"
+                            variant={protocol === 'balancer' ? '' : 'ghost'}
                             p="0"
                             width="32px"
                             height="32px"
@@ -105,13 +105,13 @@ export function PoolWithdrawModal({
                             }}
                         />
                     ) : null}
-                    <BeetsModalHeader className="bg">
+                    <BeetsModalHeader className="bg" roundedTop="lg">
                         {modalState === 'start' ? (
                             <>
                                 <Heading size="md" noOfLines={1}>
                                     Withdraw from {pool.name}
                                 </Heading>
-                                <Text color="gray.200" fontSize="md">
+                                <Text color="subheading" fontSize="md">
                                     {formattedTypeName}
                                 </Text>
                             </>
@@ -135,7 +135,7 @@ export function PoolWithdrawModal({
                             </Heading>
                         ) : null}
                     </BeetsModalHeader>
-                    <BeetsModalBody className="bg" p='0'>
+                    <BeetsModalBody className="bg" p="0">
                         <FadeInBox isVisible={modalState === 'start'}>
                             {warnings.poolWithdraw[pool.id] && (
                                 <Alert status="warning" mb="4">

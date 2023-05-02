@@ -3,6 +3,7 @@ import {
     AlertIcon,
     Box,
     Button,
+    Divider,
     Flex,
     Grid,
     GridItem,
@@ -39,6 +40,7 @@ import Scales from '~/assets/icons/scales.svg';
 import Image from 'next/image';
 import BeetSmart from '~/assets/icons/beetx-smarts.svg';
 import BeetsThinking from '~/assets/icons/beetx-thinking.svg';
+import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 
 interface Props {
     onShowProportional(): void;
@@ -48,6 +50,7 @@ interface Props {
 export function PoolWithdrawTypeChoice({ onShowProportional, onShowSingleAsset }: Props) {
     const unstakeDisclosure = useDisclosure();
     const { pool, isFbeetsPool } = usePool();
+    const { protocol } = useNetworkConfig();
     const isMobile = useBreakpointValue({ base: true, md: false });
     const { priceForAmount, formattedPrice } = useGetTokens();
     const { userPoolBalanceUSD, data, isLoading: isPoolUserDepositBalanceLoading } = usePoolUserDepositBalance();
@@ -130,15 +133,7 @@ export function PoolWithdrawTypeChoice({ onShowProportional, onShowSingleAsset }
 
             <ChoiceOrientation width="full" px="4">
                 <Box width="full">
-                    <Button
-                        _hover={{ borderColor: 'beets.green' }}
-                        borderWidth={1}
-                        borderColor="beets.transparent"
-                        height="140px"
-                        width="full"
-                        onClick={onShowProportional}
-                        disabled={valueInWallet === 0}
-                    >
+                    <Button variant="image" onClick={onShowProportional} disabled={valueInWallet === 0}>
                         <VStack spacing="1">
                             <Image src={Scales} height="48" alt="beets-balanced" />
 
@@ -164,15 +159,7 @@ export function PoolWithdrawTypeChoice({ onShowProportional, onShowSingleAsset }
                             : ''
                     }
                 >
-                    <Button
-                        _hover={{ borderColor: 'beets.green' }}
-                        borderWidth={1}
-                        borderColor="beets.transparent"
-                        height="140px"
-                        width="full"
-                        onClick={onShowSingleAsset}
-                        disabled={valueInWallet === 0}
-                    >
+                    <Button variant="image" onClick={onShowSingleAsset} disabled={valueInWallet === 0}>
                         <VStack spacing="1">
                             <Image src={BeetSmart} height="48" alt="beets-smart" />
                             {/* <Text fontSize="lg">{numberFormatUSDValue(investableAmount)}</Text> */}
@@ -218,83 +205,87 @@ export function PoolWithdrawTypeChoice({ onShowProportional, onShowSingleAsset }
 
                 
             </Box> */}
-            <VStack width="full" p="4" backgroundColor="blackAlpha.500" alignItems="flex-start">
-                <Text fontSize="md" fontWeight="semibold">
-                    Deposited token breakdown
-                </Text>
-                <BeetsBox width="full" p="4">
-                    <VStack
-                        divider={<StackDivider borderColor="whiteAlpha.200" />}
-                        spacing="4"
-                        width="full"
-                        alignItems="flex-start"
-                    >
-                        {pool.withdrawConfig.options.map((option, index) => {
-                            return (
-                                <VStack
-                                    divider={<StackDivider borderColor="whiteAlpha.200" />}
-                                    spacing="4"
-                                    width="full"
-                                    key={`option-${index}`}
-                                    alignItems="flex-start"
-                                >
-                                    {option.tokenOptions.map((tokenOption, tokenIndex) => {
-                                        const hasOptions = option.tokenOptions.length > 1;
-                                        const token =
-                                            option.tokenOptions.find((tokenOption) =>
-                                                selectedWithdrawTokenAddresses.includes(tokenOption.address),
-                                            ) || option.tokenOptions[0];
-                                        const balance =
-                                            data?.find((item) => item.address === token.address)?.amount || '0';
-                                        const tokenPrecision = Math.min(tokenOption?.decimals || 18, 12);
+            <BeetsBox variant="subsection">
+                {protocol === 'balancer' && <Divider bgColor="divider" />}
 
-                                        return (
-                                            <HStack
-                                                key={`${index}-${tokenIndex}`}
-                                                justifyContent="space-between"
-                                                width="full"
-                                            >
-                                                <HStack>
-                                                    <TokenAvatar
-                                                        width="40px"
-                                                        height="40px"
-                                                        maxWidth="40px"
-                                                        maxHeight="40px"
-                                                        address={tokenOption.address}
-                                                    />
-                                                    <Box>
-                                                        {tokenOption.name}
-                                                        <HStack spacing="1">
-                                                            <Text fontWeight="bold">{tokenOption?.symbol}</Text>
-                                                            <Link
-                                                                href={etherscanGetTokenUrl(tokenOption.address)}
-                                                                target="_blank"
-                                                                ml="1.5"
-                                                            >
-                                                                <ExternalLink size={14} />
-                                                            </Link>
-                                                        </HStack>
-                                                    </Box>
+                <VStack width="full" alignItems="flex-start">
+                    <Text fontSize="md" fontWeight="semibold">
+                        Deposited token breakdown
+                    </Text>
+                    <BeetsBox width="full" p="4">
+                        <VStack
+                            divider={<StackDivider borderColor="tokenStackDivider" />}
+                            spacing="4"
+                            width="full"
+                            alignItems="flex-start"
+                        >
+                            {pool.withdrawConfig.options.map((option, index) => {
+                                return (
+                                    <VStack
+                                        divider={<StackDivider borderColor="whiteAlpha.200" />}
+                                        spacing="4"
+                                        width="full"
+                                        key={`option-${index}`}
+                                        alignItems="flex-start"
+                                    >
+                                        {option.tokenOptions.map((tokenOption, tokenIndex) => {
+                                            const hasOptions = option.tokenOptions.length > 1;
+                                            const token =
+                                                option.tokenOptions.find((tokenOption) =>
+                                                    selectedWithdrawTokenAddresses.includes(tokenOption.address),
+                                                ) || option.tokenOptions[0];
+                                            const balance =
+                                                data?.find((item) => item.address === token.address)?.amount || '0';
+                                            const tokenPrecision = Math.min(tokenOption?.decimals || 18, 12);
+
+                                            return (
+                                                <HStack
+                                                    key={`${index}-${tokenIndex}`}
+                                                    justifyContent="space-between"
+                                                    width="full"
+                                                >
+                                                    <HStack>
+                                                        <TokenAvatar
+                                                            width="40px"
+                                                            height="40px"
+                                                            maxWidth="40px"
+                                                            maxHeight="40px"
+                                                            address={tokenOption.address}
+                                                        />
+                                                        <Box>
+                                                            {tokenOption.name}
+                                                            <HStack spacing="1">
+                                                                <Text fontWeight="bold">{tokenOption?.symbol}</Text>
+                                                                <Link
+                                                                    href={etherscanGetTokenUrl(tokenOption.address)}
+                                                                    target="_blank"
+                                                                    ml="1.5"
+                                                                >
+                                                                    <ExternalLink size={14} />
+                                                                </Link>
+                                                            </HStack>
+                                                        </Box>
+                                                    </HStack>
+                                                    <VStack alignItems="flex-end" spacing="0">
+                                                        <Text>{tokenFormatAmountPrecise(balance, tokenPrecision)}</Text>
+                                                        <Text fontSize="sm" color="beets.base.100">
+                                                            ~
+                                                            {formattedPrice({
+                                                                address: tokenOption.address,
+                                                                amount: balance,
+                                                            })}
+                                                        </Text>
+                                                    </VStack>
                                                 </HStack>
-                                                <VStack alignItems="flex-end" spacing="0">
-                                                    <Text>{tokenFormatAmountPrecise(balance, tokenPrecision)}</Text>
-                                                    <Text fontSize="sm" color="beets.base.100">
-                                                        ~
-                                                        {formattedPrice({
-                                                            address: tokenOption.address,
-                                                            amount: balance,
-                                                        })}
-                                                    </Text>
-                                                </VStack>
-                                            </HStack>
-                                        );
-                                    })}
-                                </VStack>
-                            );
-                        })}
-                    </VStack>
-                </BeetsBox>
-            </VStack>
+                                            );
+                                        })}
+                                    </VStack>
+                                );
+                            })}
+                        </VStack>
+                    </BeetsBox>
+                </VStack>
+            </BeetsBox>
         </VStack>
     );
 }

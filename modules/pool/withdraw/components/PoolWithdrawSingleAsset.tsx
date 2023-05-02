@@ -11,6 +11,7 @@ import { numberFormatUSDValue } from '~/lib/util/number-formats';
 import { usePoolExitGetProportionalWithdrawEstimate } from '../lib/usePoolExitGetProportionalWithdrawEstimate';
 import { useGetTokens } from '~/lib/global/useToken';
 import { sum } from 'lodash';
+import { BeetsBox } from '~/components/box/BeetsBox';
 
 interface Props extends BoxProps {
     onShowPreview: () => void;
@@ -99,35 +100,37 @@ export function PoolWithdrawSingleAsset({ onShowPreview, ...rest }: Props) {
                     Preview
                 </Button>
             </VStack>
-            <VStack width="full" py="4" backgroundColor="blackAlpha.500" px="5">
-                <HStack width="full" justifyContent="space-between" fontSize=".85rem">
-                    <Text color="gray.100">Withdraw total</Text>
-                    <Text>
-                        {selectedWithdrawType === 'SINGLE_ASSET' && singleAssetWithdraw
-                            ? formattedPrice(singleAssetWithdraw)
-                            : null}
+            <BeetsBox roundedTop="none" width="full">
+                <VStack width="full" py="4" px="5">
+                    <HStack width="full" justifyContent="space-between" fontSize=".85rem">
+                        <Text color="inline">Withdraw total</Text>
+                        <Text>
+                            {selectedWithdrawType === 'SINGLE_ASSET' && singleAssetWithdraw
+                                ? formattedPrice(singleAssetWithdraw)
+                                : null}
+                            {selectedWithdrawType === 'PROPORTIONAL' ? (
+                                <>
+                                    {isLoadingProportionalEstimate ? (
+                                        <Skeleton height="20px" width="64px" marginBottom="4px" />
+                                    ) : (
+                                        numberFormatUSDValue(proportionalWithdrawValue)
+                                    )}
+                                </>
+                            ) : null}
+                        </Text>
+                    </HStack>
+                    <HStack width="full" justifyContent="space-between" fontSize=".85rem">
+                        <Text color="inline">Price impact</Text>
                         {selectedWithdrawType === 'PROPORTIONAL' ? (
-                            <>
-                                {isLoadingProportionalEstimate ? (
-                                    <Skeleton height="20px" width="64px" marginBottom="4px" />
-                                ) : (
-                                    numberFormatUSDValue(proportionalWithdrawValue)
-                                )}
-                            </>
-                        ) : null}
-                    </Text>
-                </HStack>
-                <HStack width="full" justifyContent="space-between" fontSize=".85rem">
-                    <Text color="gray.100">Price impact</Text>
-                    {selectedWithdrawType === 'PROPORTIONAL' ? (
-                        <Box>0.00%</Box>
-                    ) : isLoadingSingleAsset ? (
-                        <Skeleton height="20px" width="64px" mb="4px" />
-                    ) : (
-                        <Box color={hasMediumPriceImpact ? 'orange' : 'current'}>{formattedPriceImpact}</Box>
-                    )}
-                </HStack>
-            </VStack>
+                            <Box>0.00%</Box>
+                        ) : isLoadingSingleAsset ? (
+                            <Skeleton height="20px" width="64px" mb="4px" />
+                        ) : (
+                            <Box color={hasMediumPriceImpact ? 'orange' : 'current'}>{formattedPriceImpact}</Box>
+                        )}
+                    </HStack>
+                </VStack>
+            </BeetsBox>
         </VStack>
     );
 }

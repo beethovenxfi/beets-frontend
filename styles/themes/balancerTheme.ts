@@ -356,14 +356,17 @@ export const balancerTheme: Partial<ChakraTheme> = {
                         bgGradient: 'linear(to-tr, blue.600, pink.600)',
                         _disabled: {
                             transform: 'none',
+                            bgColor: 'gray.300',
+                            bgGradient: 'none',
                         },
                     },
                     _disabled: {
-                        bgColor: 'gray.400',
+                        bgColor: 'gray.300',
+                        bgGradient: 'none',
                         opacity: 1,
-                        color: 'whiteAlpha.700',
+                        color: 'gray.600',
                         cursor: 'not-allowed',
-                        _active: { bgColor: 'gray.400' },
+                        _active: { bgColor: 'gray.300' },
                     },
                 },
                 secondary: {
@@ -441,9 +444,10 @@ export const balancerTheme: Partial<ChakraTheme> = {
                     },
                 },
                 image: {
-                    _hover: { borderColor: 'beets.secondary.600', bgColor: 'beets.secondary.600', color: 'white' },
+                    _hover: { borderColor: 'beets.secondary.600' },
                     borderWidth: 1,
-                    borderColor: 'beets.secondary.500',
+                    bg: 'gray.50',
+                    borderColor: 'gray.300',
                     height: '140px',
                     width: 'full',
                     color: 'beets.secondary.500',

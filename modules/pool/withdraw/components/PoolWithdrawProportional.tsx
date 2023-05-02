@@ -138,12 +138,14 @@ export function PoolWithdrawProportional({ onShowPreview, ...rest }: Props) {
                     Preview
                 </Button>
             </VStack>
-            <VStack width="full" py="4" backgroundColor="blackAlpha.500" px="5">
-                <HStack width="full" justifyContent="space-between" fontSize=".85rem">
-                    <Text color="gray.100">Price impact</Text>
-                    <Box>0.00%</Box>
-                </HStack>
-            </VStack>
+            <BeetsBox>
+                <VStack width="full" py="4" px="5">
+                    <HStack width="full" justifyContent="space-between" fontSize=".85rem">
+                        <Text color="inline">Price impact</Text>
+                        <Box>0.00%</Box>
+                    </HStack>
+                </VStack>
+            </BeetsBox>
         </Box>
     );
 }

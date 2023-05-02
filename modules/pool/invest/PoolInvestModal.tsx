@@ -141,7 +141,7 @@ export function PoolInvestModal({
                             zIndex={-1}
                             animate={containerControls}
                             ref={modalContainerRef}
-                            rounded="md"
+                            rounded="lg"
                             transformOrigin="top"
                             background="gray.700"
                         >

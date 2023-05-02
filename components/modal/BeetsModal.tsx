@@ -11,7 +11,7 @@ export const BeetsModalContent = forwardRef(
         let modalBg = props.isTransparent ? 'none' : 'gray.700';
         return (
             <ModalContent ref={ref} {...props} background={modalBg}>
-                <Box bg={containerBg}>
+                <Box bg={containerBg} rounded='lg' overflow='hidden'>
                     <Box className={innerBg}>{props.children}</Box>
                 </Box>
             </ModalContent>
