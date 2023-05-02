@@ -76,6 +76,9 @@ export const optimismNetworkConfig: NetworkConfig = {
         reaperManualRebalancer: '0xf070996cf89cd3d2582705fc269f2c800e9a6a21',
         sorQueries: '0x1814a3b3e4362caf4eb54cd85b82d39bd7b34e41',
         balancerQueries: '0xe39b5e3b6d74016b2f6a9673d7d7493b6df549d5',
+        unwrapExceptions: {
+            reaper: [],
+        },
     },
     beetsPoolOwnerAddress: '0xd9e2889ac8c6fff8e94c7c1beeade1352df1a513',
     masterChefContractAddress: '',

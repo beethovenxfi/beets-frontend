@@ -52,12 +52,22 @@ export const fantomNetworkConfig: NetworkConfig = {
             '0xb841df73861e65e6d61a80f503f095a91ce75e15',
         ],
         linearFactories: {
-            erc4626: [],
+            erc4626: ['0x89857161e0ad36f8c5a537733c1fcf7145220aae'],
             reaper: ['0xd448c4156b8de31e56fdfc071c8d96459bb28119'],
         },
         linearRebalancers: {},
         sorQueries: '0x290c793b7779bcdc14ce0f8909739fde12b8b149',
         balancerQueries: '0x1b0a42663df1edea171cd8732d288a81efff6d23',
+        unwrapExceptions: {
+            reaper: [
+                '0x92502cd8e00f5b8e737b2ba203fdd7cd27b23c8f',
+                '0xc385e76e575b2d71eb877c27dcc1608f77fada99',
+                '0x685056d3a4e574b163d0fa05a78f1b0b3aa04a80',
+                '0xa0051ab2c3eb7f17758428b02a07cf72eb0ef1a3',
+                '0x3c1420df122ac809b9d1ba77906f833764d64501',
+                '0x442988091cdc18acb8912cd3fe062cda9233f9dc',
+            ],
+        },
     },
     beetsPoolOwnerAddress: '0xcd983793adb846dce4830c22f30c7ef0c864a776',
     masterChefContractAddress: '0x8166994d9ebBe5829EC86Bd81258149B87faCfd3',

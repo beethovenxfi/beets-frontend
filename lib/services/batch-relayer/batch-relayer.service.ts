@@ -272,6 +272,7 @@ export class BatchRelayerService {
     }
 
     public getUnwrapCallForLinearPoolWithFactory({
+        poolAddress,
         factory,
         wrappedToken,
         sender,
@@ -279,6 +280,7 @@ export class BatchRelayerService {
         amount,
         outputReference,
     }: {
+        poolAddress: string;
         factory: string;
         wrappedToken: string;
         sender: string;
@@ -286,7 +288,10 @@ export class BatchRelayerService {
         amount: BigNumberish;
         outputReference: BigNumberish;
     }) {
-        if (networkConfig.balancer.linearFactories.erc4626.includes(factory)) {
+        if (
+            networkConfig.balancer.linearFactories.erc4626.includes(factory) &&
+            !networkConfig.balancer.unwrapExceptions.reaper.includes(poolAddress)
+        ) {
             return this.erc4626EncodeUnwrap({
                 wrappedToken,
                 sender,
@@ -294,7 +299,11 @@ export class BatchRelayerService {
                 amount,
                 outputReference,
             });
-        } else if (networkConfig.balancer.linearFactories.reaper.includes(factory)) {
+        } else if (
+            networkConfig.balancer.linearFactories.reaper.includes(factory) ||
+            (networkConfig.balancer.linearFactories.erc4626.includes(factory) &&
+                networkConfig.balancer.unwrapExceptions.reaper.includes(poolAddress))
+        ) {
             return this.reaperEncodeUnwrap({
                 vaultToken: wrappedToken,
                 sender,
