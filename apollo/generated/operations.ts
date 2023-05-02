@@ -556,7 +556,7 @@ export const GetAppGlobalPollingData = gql`
             price
             address
         }
-        protocolMetrics {
+        protocolMetricsChain {
             totalLiquidity
             totalSwapVolume
             totalSwapFee
@@ -614,7 +614,7 @@ export const GetTokensDynamicData = gql`
 `;
 export const GetProtocolData = gql`
     query GetProtocolData {
-        protocolData: protocolMetrics {
+        protocolData: protocolMetricsChain {
             totalLiquidity
             totalSwapVolume
             totalSwapFee
@@ -1097,6 +1097,31 @@ export const GetPoolFilters = gql`
         filters: poolGetPoolFilters {
             id
             title
+        }
+    }
+`;
+export const GetReliquaryFarmSnapshots = gql`
+    query GetReliquaryFarmSnapshots($id: String!, $range: GqlPoolSnapshotDataRange!) {
+        snapshots: beetsPoolGetReliquaryFarmSnapshots(id: $id, range: $range) {
+            id
+            farmId
+            timestamp
+            totalBalance
+            totalLiquidity
+            levelBalances {
+                id
+                level
+                balance
+            }
+            relicCount
+            totalBalance
+            userCount
+            tokenBalances {
+                id
+                address
+                balance
+                symbol
+            }
         }
     }
 `;

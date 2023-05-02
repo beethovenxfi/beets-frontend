@@ -1,5 +1,4 @@
 import { AmountHumanReadable } from '~/lib/services/token/token-types';
-import { useGetFbeetsRatioQuery } from '~/apollo/generated/graphql-codegen-generated';
 import { useUserBalances } from '~/lib/user/useUserBalances';
 import { parseUnits } from 'ethers/lib/utils';
 import { tokenGetAmountForAddress } from '~/lib/services/token/token-util';

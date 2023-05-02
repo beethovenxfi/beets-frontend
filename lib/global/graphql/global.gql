@@ -23,7 +23,7 @@ query GetAppGlobalPollingData {
         price
         address
     }
-    protocolMetrics {
+    protocolMetricsChain {
         totalLiquidity
         totalSwapVolume
         totalSwapFee
@@ -81,7 +81,7 @@ query GetTokensDynamicData($addresses: [String!]!) {
 #}
 
 query GetProtocolData {
-    protocolData: protocolMetrics {
+    protocolData: protocolMetricsChain {
         totalLiquidity
         totalSwapVolume
         totalSwapFee

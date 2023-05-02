@@ -41,7 +41,7 @@ export function NavbarPendingRewards() {
     const { priceForAmount, getToken } = useGetTokens();
     const loading = pendingRewardsLoading || userDataLoading;
     const { harvestAll, ...harvestQuery } = useUserHarvestAllPendingRewards();
-    const farmIds = staking.map((stake) => stake?.farm?.id || '');
+    //const farmIds = staking.map((stake) => stake?.farm?.id || '');
     const isMasterChefOrFreshBeets = stakingType === 'MASTER_CHEF' || stakingType === 'FRESH_BEETS';
     const isMobile = useBreakpointValue({ base: true, lg: false });
 
@@ -59,7 +59,7 @@ export function NavbarPendingRewards() {
             //@ts-ignore */}
             <PopoverTrigger>
                 <Button
-                    variant='navbarIconTrigger'
+                    variant="navbarIconTrigger"
                     width="60px"
                     height="40px"
                     display="flex"
@@ -124,7 +124,7 @@ export function NavbarPendingRewards() {
                                 <BeetsSubmitTransactionButton
                                     {...harvestQuery}
                                     isDisabled={pendingRewardsTotalUSD < 0.01 || !isMasterChefOrFreshBeets}
-                                    onClick={() => harvestAll(farmIds)}
+                                    onClick={() => harvestAll([])}
                                     width="full"
                                 >
                                     Claim all pool rewards

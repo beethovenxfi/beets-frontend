@@ -1,4 +1,4 @@
-import { useGetFbeetsRatioQuery, useGetUserDataQuery } from '~/apollo/generated/graphql-codegen-generated';
+import { useGetUserDataQuery } from '~/apollo/generated/graphql-codegen-generated';
 import { useGetTokens } from '~/lib/global/useToken';
 import { sum } from 'lodash';
 import { AmountHumanReadable } from '~/lib/services/token/token-types';
@@ -34,7 +34,8 @@ export function _useUserData() {
     }, [userAddress]);
 
     // TODO: need to check this?
-    const fbeetsBalance = data?.fbeetsBalance || { totalBalance: '0', stakedBalance: '0', walletBalance: '0' };
+    //const fbeetsBalance = data?.fbeetsBalance || { totalBalance: '0', stakedBalance: '0', walletBalance: '0' };
+    const fbeetsBalance = { totalBalance: '0', stakedBalance: '0', walletBalance: '0' };
     // filter out the reliquary fbeets pool
     const poolBalances = data?.balances.filter((pool) => pool.poolId !== networkConfig.reliquary.fbeets.poolId) || [];
     // and here...

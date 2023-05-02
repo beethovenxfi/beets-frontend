@@ -49,7 +49,7 @@ function AprTooltip({ data, textProps, onlySparkles, placement, aprLabel, sparkl
             <HStack align="center">
                 {!onlySparkles && (
                     <Text fontSize="1rem" fontWeight="semibold" mr="1" {...textProps}>
-                        {formatApr(data.total)}
+                        {formatApr('total' in data.apr ? data.apr.total : data.apr.max)}
                         {aprLabel ? ' APR' : ''}
                     </Text>
                 )}
@@ -80,7 +80,9 @@ function AprTooltip({ data, textProps, onlySparkles, placement, aprLabel, sparkl
                     <Text textAlign="left">
                         Total APR
                         <br />
-                        <span style={{ fontSize: '1.5rem' }}>{formatApr(data.total)}</span>
+                        <span style={{ fontSize: '1.5rem' }}>
+                            {formatApr('total' in data.apr ? data.apr.total : data.apr.max)}
+                        </span>
                     </Text>
                 </PopoverHeader>
                 <Box p="2" fontSize="sm" bgColor="whiteAlpha.200">
@@ -88,7 +90,8 @@ function AprTooltip({ data, textProps, onlySparkles, placement, aprLabel, sparkl
                         return (
                             <Box key={index}>
                                 <Flex>
-                                    {formatApr(item.apr)} <AprText>{item.title}</AprText>
+                                    {formatApr('total' in item.apr ? item.apr.total : item.apr.max)}{' '}
+                                    <AprText>{item.title}</AprText>
                                 </Flex>
                                 {item.subItems?.map((subItem, subItemIndex) => {
                                     const isSubItemsLengthOne = item.subItems?.length === 1;
@@ -116,7 +119,10 @@ function AprTooltip({ data, textProps, onlySparkles, placement, aprLabel, sparkl
                                             />
                                             <Box h="1px" w="0.75rem" mr="0.25rem" ml="-0.25rem" bgColor="gray.100" />
                                             <Flex>
-                                                {formatApr(subItem.apr)} <AprText>{subItem.title}</AprText>
+                                                {formatApr(
+                                                    'total' in subItem.apr ? subItem.apr.total : subItem.apr.max,
+                                                )}{' '}
+                                                <AprText>{subItem.title}</AprText>
                                             </Flex>
                                         </Flex>
                                     );

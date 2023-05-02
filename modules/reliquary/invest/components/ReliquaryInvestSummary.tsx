@@ -10,7 +10,12 @@ interface Props extends BoxProps {}
 export function ReliquaryInvestSummary({ ...rest }: Props) {
     const { pool } = usePool();
     const { totalInvestValue } = useReliquaryInvest();
-    const weeklyYield = (totalInvestValue * parseFloat(pool.dynamicData.apr.total)) / 52;
+    const weeklyYield =
+        (totalInvestValue *
+            parseFloat(
+                'total' in pool.dynamicData.apr.apr ? pool.dynamicData.apr.apr.total : pool.dynamicData.apr.apr.max,
+            )) /
+        52;
 
     return (
         <VStack spacing="4" width="full" p="4" rounded="md">
