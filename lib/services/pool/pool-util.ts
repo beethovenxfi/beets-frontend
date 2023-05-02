@@ -56,6 +56,7 @@ export function poolIsComposablePool(pool: GqlPoolUnion) {
 }
 
 export function poolGetServiceForPool(pool: GqlPoolUnion): PoolService {
+    console.log('pools', networkConfig.balancer.weightedPoolV2PlusFactories);
     switch (pool.__typename) {
         case 'GqlPoolWeighted': {
             if (networkConfig.balancer.weightedPoolV2PlusFactories.includes(pool.factory || '')) {
