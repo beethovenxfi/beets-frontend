@@ -1,35 +1,24 @@
 import React, { useMemo } from 'react';
 import {
-    Alert,
     Box,
     Button,
-    Flex,
-    Grid,
-    GridItem,
     HStack,
-    Skeleton,
     Text,
-    AlertIcon,
     VStack,
     Heading,
-    Tooltip,
     StackDivider,
     Link,
     useBreakpointValue,
     Divider,
 } from '@chakra-ui/react';
-import { ExternalLink, Grid as GridIcon } from 'react-feather';
+import { ExternalLink } from 'react-feather';
 import { BeetsBox } from '~/components/box/BeetsBox';
 import { numberFormatUSDValue } from '~/lib/util/number-formats';
-import { tokenFormatAmount, tokenFormatAmountPrecise, tokenGetAmountForAddress } from '~/lib/services/token/token-util';
+import { tokenFormatAmountPrecise, tokenGetAmountForAddress } from '~/lib/services/token/token-util';
 import TokenAvatar from '~/components/token/TokenAvatar';
 import { useGetTokens } from '~/lib/global/useToken';
 import { usePoolUserTokenBalancesInWallet } from '~/modules/pool/lib/usePoolUserTokenBalancesInWallet';
 import { useInvest } from '~/modules/pool/invest/lib/useInvest';
-import { usePoolGetMaxProportionalInvestmentAmount } from '~/modules/pool/invest/lib/usePoolGetMaxProportionalInvestmentAmount';
-import { CardRow } from '~/components/card/CardRow';
-import { PoolInvestStablePoolDescription } from '~/modules/pool/invest/components/PoolInvestStablePoolDescription';
-import { PoolInvestWeightedPoolDescription } from '~/modules/pool/invest/components/PoolInvestWeightedPoolDescription';
 import { usePool } from '~/modules/pool/lib/usePool';
 import Scales from '~/assets/icons/scales.svg';
 import BeetsThinking from '~/assets/icons/beetx-thinking.svg';
@@ -38,29 +27,31 @@ import Image from 'next/image';
 import { etherscanGetTokenUrl } from '~/lib/util/etherscan';
 import BeetsTooltip from '~/components/tooltip/BeetsTooltip';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
+import { usePoolJoinGetProportionalInvestmentAmount } from '../lib/usePoolJoinGetProportionalInvestmentAmount';
 interface Props {
     onShowProportional(): void;
     onShowCustom(): void;
 }
 
 export function PoolInvestTypeChoice({ onShowProportional, onShowCustom }: Props) {
-    const { pool, poolService, isStablePool } = usePool();
-    const { priceForAmount, formattedPrice } = useGetTokens();
     const { protocol } = useNetworkConfig();
+    const { pool, poolService } = usePool();
+    const { formattedPrice } = useGetTokens();
     const { userPoolTokenBalances, investableAmount } = usePoolUserTokenBalancesInWallet();
     const { canInvestProportionally } = useInvest();
     const isMobile = useBreakpointValue({ base: true, md: false });
-    const { data, isLoading } = usePoolGetMaxProportionalInvestmentAmount();
+    const { totalValueProportionalAmounts } = usePoolJoinGetProportionalInvestmentAmount();
     const proportionalSupported =
         poolService.joinGetProportionalSuggestionForFixedAmount && pool.investConfig.proportionalEnabled;
 
-    const _canInvestProportionally = (data?.maxAmount || 0) > 0 && canInvestProportionally && proportionalSupported;
+    const _canInvestProportionally =
+        (totalValueProportionalAmounts || 0) > 0 && canInvestProportionally && proportionalSupported;
 
     const disabledProportionalInvestmentTooltip = useMemo(() => {
         if (!proportionalSupported) {
             return 'This pool does not support proportional investment.';
         }
-        if ((data?.maxAmount || 0) <= 0) {
+        if ((totalValueProportionalAmounts || 0) <= 0) {
             return "You don't have the appropriate funds for a proportional investment. Refer below to the tokens you need to make a proportional investment.";
         }
         return 'This pool does not support proportional investment.';
@@ -102,14 +93,16 @@ export function PoolInvestTypeChoice({ onShowProportional, onShowCustom }: Props
                     <BeetsTooltip noImage label={_canInvestProportionally ? '' : disabledProportionalInvestmentTooltip}>
                         <Box width="full">
                             <Button
-                                variant='image'
+                                variant="image"
                                 disabled={!_canInvestProportionally || !proportionalSupported}
                                 onClick={onShowProportional}
                             >
                                 <VStack spacing="1">
                                     <Image src={Scales} height="48" alt="beets-balanced" />
 
-                                    <Text fontSize="lg">{numberFormatUSDValue(data?.maxAmount || 0)}</Text>
+                                    <Text fontSize="lg">
+                                        {numberFormatUSDValue(totalValueProportionalAmounts || 0)}
+                                    </Text>
                                     <Text fontSize="sm">Proportional investment</Text>
                                     <Text fontSize="xs" color="buttonHighlight">
                                         Recommended

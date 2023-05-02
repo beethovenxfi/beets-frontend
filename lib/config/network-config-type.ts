@@ -1,7 +1,13 @@
-import { ToastType } from '~/components/toast/BeetsToast';
-import { GqlChain } from '~/apollo/generated/graphql-codegen-generated';
+import { GqlChain } from "~/apollo/generated/graphql-codegen-generated";
 
-export type BoostedByType = 'reaper-aave' | 'reaper-aave-granary' | 'yearn' | 'reaper-sonne' | 'overnight';
+export type BoostedByType =
+    | 'reaper-aave'
+    | 'reaper-aave-granary'
+    | 'yearn'
+    | 'reaper-sonne'
+    | 'overnight'
+    | 'reaper'
+    | 'beefy-exactly';
 
 export interface PoolDetailWarning {
     id: string;
@@ -59,14 +65,16 @@ export interface NetworkConfig {
     balancer: {
         vault: string;
         batchRelayer: string;
-        composableStableFactory: string;
-        weightedPoolV2Factory: string;
+        composableStableFactories: string[];
+        composableStableV1Factory: string;
+        weightedPoolV2PlusFactories: string[];
         linearFactories: {
             erc4626: string[];
             reaper: string[];
         };
         linearRebalancers: { [poolAddress: string]: string };
         reaperManualRebalancer?: string;
+        sorQueries: string;
         balancerQueries: string;
     };
     beetsPoolOwnerAddress: string;
@@ -105,10 +113,6 @@ export interface NetworkConfig {
     boostedByTypes: {
         [poolId: string]: BoostedByType;
     };
-    featureFlags: {
-        maBeets: boolean;
-        swap: boolean;
-        incentivizedPools: boolean;
-        protocolTokenPrice: boolean;
-    };
+    maBeetsEnabled: boolean;
+    claimAllRewardsEnabled: boolean;
 }

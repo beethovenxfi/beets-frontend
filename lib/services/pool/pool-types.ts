@@ -1,13 +1,11 @@
 import { AmountHumanReadable, AmountScaledString, TokenAmountHumanReadable } from '~/lib/services/token/token-types';
 import { BigNumberish } from 'ethers';
-import { SwapKind, BatchSwapStep, FundManagement } from '@balancer-labs/balancer-js';
+import { BatchSwapStep, SwapKind } from '@balancer-labs/balancer-js';
 import {
-    GqlPoolLinear,
     GqlPoolLinearNested,
     GqlPoolPhantomStable,
     GqlPoolPhantomStableNested,
     GqlPoolToken,
-    GqlPoolTokenBase,
     GqlPoolTokenExpanded,
     GqlPoolTokenLinear,
     GqlPoolTokenUnion,
@@ -19,6 +17,9 @@ import { SwapV2 } from '@balancer-labs/sor';
 export interface PoolService {
     updatePool(pool: GqlPoolUnion): void;
 
+    joinGetMaxProportionalForUserBalances?(
+        userInvestTokenBalances: TokenAmountHumanReadable[],
+    ): Promise<TokenAmountHumanReadable[]>;
     joinGetProportionalSuggestionForFixedAmount?(
         fixedAmount: TokenAmountHumanReadable,
         tokensIn: string[],
@@ -254,4 +255,11 @@ export interface ComposablePoolSingleAssetExit {
         swaps: SwapV2[];
         assets: string[];
     };
+}
+
+export enum BatchRelayerPoolKind {
+    WEIGHTED,
+    LEGACY_STABLE,
+    COMPOSABLE_STABLE,
+    COMPOSABLE_STABLE_V2,
 }

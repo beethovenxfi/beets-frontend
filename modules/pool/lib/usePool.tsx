@@ -12,8 +12,8 @@ import { PoolService } from '~/lib/services/pool/pool-types';
 import { TokenBase } from '~/lib/services/token/token-types';
 import { uniqBy } from 'lodash';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
-import { isSameAddress } from '@balancer-labs/sdk';
 import { getPoolStaking } from '~/lib/services/pool/lib/util';
+import { usePoolWithOnChainData } from './usePoolWithOnChainData';
 
 export interface PoolContextType {
     pool: GqlPoolUnion;
@@ -41,7 +41,7 @@ export function PoolProvider({ pool: poolFromProps, children }: { pool: GqlPoolU
         notifyOnNetworkStatusChange: true,
     });
 
-    const pool = (data?.pool || poolFromProps) as GqlPoolUnion;
+    let pool = (data?.pool || poolFromProps) as GqlPoolUnion;
 
     // drop FTM as an invest option from the FreshBeets pool for now
     const freshBeetsPool: GqlPoolUnion | null = useMemo(() => {
@@ -73,6 +73,9 @@ export function PoolProvider({ pool: poolFromProps, children }: { pool: GqlPoolU
     const poolService = poolGetServiceForPool(pool);
     const poolStaking = getPoolStaking(pool);
 
+    const { data: poolWithOnChainData } = usePoolWithOnChainData(pool);
+    pool = poolWithOnChainData || pool;
+
     const bpt: TokenBase = {
         address: pool.address,
         symbol: pool.symbol,
@@ -85,12 +88,16 @@ export function PoolProvider({ pool: poolFromProps, children }: { pool: GqlPoolU
     const requiresBatchRelayerOnJoin = poolRequiresBatchRelayerOnJoin(pool);
     const requiresBatchRelayerOnExit = poolRequiresBatchRelayerOnExit(pool);
     const supportsZapIntoMasterchefFarm =
-        (pool.__typename === 'GqlPoolWeighted' || pool.__typename === 'GqlPoolStable') &&
-        poolStaking?.type === 'MASTER_CHEF' &&
-        !!poolStaking.farm;
+        (pool.__typename === 'GqlPoolWeighted' ||
+            pool.__typename === 'GqlPoolStable' ||
+            (pool.__typename === 'GqlPoolPhantomStable' &&
+                pool.factory &&
+                networkConfig.balancer.composableStableFactories.includes(pool.factory))) &&
+        pool.staking?.type === 'MASTER_CHEF' &&
+        !!pool.staking.farm;
     const supportsZapIntoGauge =
         ((pool.__typename === 'GqlPoolWeighted' &&
-            isSameAddress(pool.factory || '', networkConfig.balancer.weightedPoolV2Factory)) ||
+            networkConfig.balancer.weightedPoolV2PlusFactories.includes(pool.factory || '')) ||
             pool.__typename === 'GqlPoolPhantomStable') &&
         poolStaking?.type === 'GAUGE' &&
         !!poolStaking.gauge;

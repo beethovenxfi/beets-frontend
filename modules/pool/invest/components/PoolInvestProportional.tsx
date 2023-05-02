@@ -10,7 +10,6 @@ import {
     Text,
     VStack,
 } from '@chakra-ui/react';
-
 import { useInvestState } from '~/modules/pool/invest/lib/useInvestState';
 import { replaceEthWithWeth, replaceWethWithEth, tokenGetAmountForAddress } from '~/lib/services/token/token-util';
 import { PoolInvestSettings } from '~/modules/pool/invest/components/PoolInvestSettings';
@@ -24,7 +23,6 @@ import { useInvest } from '~/modules/pool/invest/lib/useInvest';
 import { usePool } from '~/modules/pool/lib/usePool';
 import TokenRow from '~/components/token/TokenRow';
 import { usePoolUserTokenBalancesInWallet } from '../../lib/usePoolUserTokenBalancesInWallet';
-import { bnum } from '@balancer-labs/sor';
 import { GqlPoolToken } from '~/apollo/generated/graphql-codegen-generated';
 import { tokenInputTruncateDecimalPlaces } from '~/lib/util/input-util';
 import { PoolInvestPriceImpact } from '~/modules/pool/invest/components/PoolInvestPriceImpact';
@@ -37,8 +35,8 @@ export function PoolInvestProportional({ onShowPreview }: Props) {
     const { pool, poolService } = usePool();
     const investOptions = pool.investConfig.options;
     const { setSelectedOption, selectedOptions, setInputAmounts, inputAmounts } = useInvestState();
-    const { data } = usePoolJoinGetProportionalInvestmentAmount();
-    const { selectedInvestTokens, userInvestTokenBalances, isInvestingWithEth } = useInvest();
+    const { tokenProportionalAmounts } = usePoolJoinGetProportionalInvestmentAmount();
+    const { selectedInvestTokens, isInvestingWithEth } = useInvest();
 
     const { userPoolTokenBalances } = usePoolUserTokenBalancesInWallet();
 
@@ -68,15 +66,14 @@ export function PoolInvestProportional({ onShowPreview }: Props) {
         }
     }
 
-    const exceedsTokenBalances = userInvestTokenBalances.some((tokenBalance) => {
-        if (!inputAmounts[tokenBalance.address] || !tokenBalance.amount) return false;
-        return bnum(inputAmounts[tokenBalance.address]).gt(tokenBalance.amount);
-    });
-
     const firstToken = selectedInvestTokens[0];
     const proportionalPercent =
-        !exceedsTokenBalances && data && data[firstToken.address] && inputAmounts[firstToken.address]
-            ? Math.round((parseFloat(inputAmounts[firstToken.address]) / parseFloat(data[firstToken.address])) * 100)
+        tokenProportionalAmounts && tokenProportionalAmounts[firstToken.address] && inputAmounts[firstToken.address]
+            ? Math.round(
+                  (parseFloat(inputAmounts[firstToken.address]) /
+                      parseFloat(tokenProportionalAmounts[firstToken.address])) *
+                      100,
+              )
             : 0;
 
     return (
@@ -89,12 +86,10 @@ export function PoolInvestProportional({ onShowPreview }: Props) {
                         focusThumbOnChange={false}
                         value={proportionalPercent}
                         onChange={(value) => {
-                            if (value === 100) {
-                                setInputAmounts(data || {});
-                            } else if (value === 0) {
+                            if (value === 0) {
                                 setInputAmounts({});
                             } else {
-                                const inputAmounts = mapValues(data || {}, (maxAmount, address) => {
+                                const inputAmounts = mapValues(tokenProportionalAmounts || {}, (maxAmount, address) => {
                                     const tokenDecimals =
                                         selectedInvestTokens.find((token) => token.address === address)?.decimals || 18;
 
@@ -146,9 +141,10 @@ export function PoolInvestProportional({ onShowPreview }: Props) {
                                     selectedAlternateToken={
                                         selectedOptions[`${option.poolTokenIndex}`] || option.tokenOptions[0].address
                                     }
-                                    onSelectedAlternateToken={(address) =>
-                                        setSelectedOption(option.poolTokenIndex, address)
-                                    }
+                                    onSelectedAlternateToken={(address) => {
+                                        setSelectedOption(option.poolTokenIndex, address);
+                                        setInputAmounts({});
+                                    }}
                                     amount={amount}
                                     balance={tokenGetAmountForAddress(tokenOption.address, userPoolTokenBalances)}
                                 />
@@ -163,7 +159,7 @@ export function PoolInvestProportional({ onShowPreview }: Props) {
                     width="full"
                     mt="8"
                     onClick={onShowPreview}
-                    isDisabled={exceedsTokenBalances || proportionalPercent === 0}
+                    isDisabled={proportionalPercent === 0}
                 >
                     Preview
                 </Button>

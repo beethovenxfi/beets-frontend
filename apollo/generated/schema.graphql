@@ -1106,7 +1106,7 @@ type Mutation {
     poolLoadOnChainDataForAllPools: String!
     poolLoadOnChainDataForPoolsWithActiveUpdates: String!
     poolLoadSnapshotsForAllPools: String!
-    poolLoadSnapshotsForPools(poolIds: [String!]!): String!
+    poolLoadSnapshotsForPools(poolIds: [String!]!, reload: Boolean): String!
     poolReloadAllPoolAprs: String!
     poolReloadAllTokenNestedPoolIds: String!
     poolReloadPoolNestedTokens(poolId: String!): String!

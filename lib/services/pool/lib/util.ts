@@ -6,9 +6,9 @@ import {
     GqlPoolTokenBase,
     GqlPoolTokenLinear,
     GqlPoolTokenPhantomStable,
-    GqlPoolUnion,
     GqlPoolWeighted,
     GqlPoolStaking,
+    GqlPoolUnion,
 } from '~/apollo/generated/graphql-codegen-generated';
 import { AmountHumanReadable, AmountScaledString, TokenAmountHumanReadable } from '~/lib/services/token/token-types';
 import {

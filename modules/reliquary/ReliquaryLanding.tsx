@@ -34,6 +34,7 @@ import { CurrentStepProvider } from './lib/useReliquaryCurrentStep';
 import Compose, { ProviderWithProps } from '~/components/providers/Compose';
 import useReliquary from './lib/useReliquary';
 import BeetsTooltip from '~/components/tooltip/BeetsTooltip';
+import numeral from 'numeral';
 
 const infoButtonLabelProps = {
     lineHeight: '1rem',
@@ -67,7 +68,7 @@ export default function ReliquaryLanding() {
     const { pool } = usePool();
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [buttonEnabled, setButtonEnabled] = useState(true);
-    const { totalMaBeets } = useReliquary();
+    const { totalMaBeetsVP, isLoading } = useReliquary();
 
     useEffect(() => {
         if (!isConnecting) {
@@ -165,14 +166,19 @@ export default function ReliquaryLanding() {
                             <>
                                 <HStack spacing="4" width="full" position="relative">
                                     <Heading size="lg">My relics</Heading>
-                                    <BeetsTooltip noImage label="Your total maBEETS across all of your relics.">
+                                    <BeetsTooltip
+                                        noImage
+                                        label="This is your current maBEETS Voting Power. Depending on when you level up or invest/withdraw, it might be different to what is shown on the latest vote on Snapshot."
+                                    >
                                         <VStack pt="1" height="full">
                                             <Box height="full">
-                                                <Badge rounded="md" colorScheme="orange" p="2">
-                                                    <Heading textTransform="initial" textAlign="center" size="sm">
-                                                        {totalMaBeets.toFixed(4)} maBEETS
-                                                    </Heading>
-                                                </Badge>
+                                                {!isLoading && (
+                                                    <Badge rounded="md" colorScheme="orange" p="2">
+                                                        <Heading textTransform="initial" textAlign="center" size="sm">
+                                                            {numeral(totalMaBeetsVP).format('0.000a')} maBEETS VP
+                                                        </Heading>
+                                                    </Badge>
+                                                )}
                                             </Box>
                                         </VStack>
                                     </BeetsTooltip>

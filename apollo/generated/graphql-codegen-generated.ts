@@ -1193,6 +1193,7 @@ export interface MutationPoolInitializeSnapshotsForPoolArgs {
 
 export interface MutationPoolLoadSnapshotsForPoolsArgs {
     poolIds: Array<Scalars['String']>;
+    reload?: InputMaybe<Scalars['Boolean']>;
 }
 
 export interface MutationPoolReloadPoolNestedTokensArgs {
