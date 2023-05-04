@@ -63,6 +63,7 @@ export const fantomNetworkConfig: NetworkConfig = {
             '0x3c1420df122ac809b9d1ba77906f833764d64501': '0xb7880303215e8cbcfad05a43ffde1a1396795df1', // wbtc
             '0x442988091cdc18acb8912cd3fe062cda9233f9dc': '0x4e568a948fe772e36b696ac5b11b174e9807dfaa', // fusdt
         },
+        reaperManualRebalancer: '0xb4dda8543c1b8991ab81ca40b1e732b2993ebb9f',
         sorQueries: '0x290c793b7779bcdc14ce0f8909739fde12b8b149',
         balancerQueries: '0x1b0a42663df1edea171cd8732d288a81efff6d23',
         unwrapExceptions: {
