@@ -289,23 +289,19 @@ export class BatchRelayerService {
         outputReference: BigNumberish;
     }) {
         if (
-            networkConfig.balancer.linearFactories.erc4626.includes(factory) &&
-            !networkConfig.balancer.unwrapExceptions.reaper.includes(poolAddress)
+            networkConfig.balancer.unwrapExceptions.reaper.includes(poolAddress) ||
+            networkConfig.balancer.linearFactories.reaper.includes(factory)
         ) {
-            return this.erc4626EncodeUnwrap({
-                wrappedToken,
+            return this.reaperEncodeUnwrap({
+                vaultToken: wrappedToken,
                 sender,
                 recipient,
                 amount,
                 outputReference,
             });
-        } else if (
-            networkConfig.balancer.linearFactories.reaper.includes(factory) ||
-            (networkConfig.balancer.linearFactories.erc4626.includes(factory) &&
-                networkConfig.balancer.unwrapExceptions.reaper.includes(poolAddress))
-        ) {
-            return this.reaperEncodeUnwrap({
-                vaultToken: wrappedToken,
+        } else if (networkConfig.balancer.linearFactories.erc4626.includes(factory)) {
+            return this.erc4626EncodeUnwrap({
+                wrappedToken,
                 sender,
                 recipient,
                 amount,
