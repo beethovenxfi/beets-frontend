@@ -85,15 +85,18 @@ export function NavbarPendingRewards() {
                 <PopoverHeader borderBottomWidth="0">Liquidity incentives</PopoverHeader>
                 <PopoverBody>
                     <Grid
-                        gap={networkConfig.maBeetsEnabled ? '4' : '0'}
-                        templateColumns={{ base: '1fr', lg: `${networkConfig.maBeetsEnabled ? '1fr 1fr' : '1fr'}` }}
+                        gap={networkConfig.featureFlags.maBeets ? '4' : '0'}
+                        templateColumns={{
+                            base: '1fr',
+                            lg: `${networkConfig.featureFlags.maBeets ? '1fr 1fr' : '1fr'}`,
+                        }}
                         templateAreas={{
                             base: `"pool"
                                     "reliquary"`,
                             lg: `"pool reliquary"`,
                         }}
                     >
-                        {networkConfig.maBeetsEnabled && (
+                        {networkConfig.featureFlags.maBeets && (
                             <GridItem area="reliquary">
                                 <NavbarPendingRewardsReliquary />
                             </GridItem>
@@ -130,7 +133,7 @@ export function NavbarPendingRewards() {
                                         in {staking.length} {isMasterChefOrFreshBeets ? 'farm(s)' : 'gauge(s)'}
                                     </Box>
                                 </BeetsBox>
-                                {networkConfig.claimAllRewardsEnabled && (
+                                {networkConfig.featureFlags.claimAllRewards && (
                                     <Box mt="4" justifySelf="flex-end">
                                         <BeetsSubmitTransactionButton
                                             {...harvestQuery}
