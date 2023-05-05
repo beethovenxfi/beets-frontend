@@ -32,7 +32,9 @@ export function LinearPoolActionsModal({ isOpen, onClose, pool }: Props) {
     const [amountToLoopWith, setAmountToLoopWith] = useState('');
     const rebalancer = balancer.linearRebalancers[pool?.address || ''];
     const reaperManualRebalancer = balancer.reaperManualRebalancer || AddressZero;
-    const isReaperPool = balancer.linearFactories.reaper.includes(pool?.factory || '');
+    const isReaperPool =
+        balancer.linearFactories.reaper.includes(pool?.factory || '') ||
+        balancer.unwrapExceptions.reaper.includes(pool?.address || '');
     const mainToken = pool?.tokens.find((token) => token.index === pool.mainIndex);
     const { rebalance, ...rebalanceQuery } = useLinearPoolRebalance(pool);
     const { rebalanceWithExtraMain, ...rebalanceWithExtraMainQuery } = useLinearPoolRebalanceWithExtraMain(pool);

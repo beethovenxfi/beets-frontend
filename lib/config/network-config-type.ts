@@ -71,6 +71,9 @@ export interface NetworkConfig {
         reaperManualRebalancer?: string;
         sorQueries: string;
         balancerQueries: string;
+        unwrapExceptions: {
+            reaper: string[];
+        };
     };
     beetsPoolOwnerAddress: string;
     masterChefContractAddress: string;
