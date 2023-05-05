@@ -21,7 +21,7 @@ export function ReliquaryPool({ isLegacyFbeetsPool }: Props) {
                         <BeetsTooltip
                             label={
                                 isLegacyFbeetsPool
-                                    ? 'This pool is no longer receiving incentives. You can migrate your liquidity from the maBEETS page to start receiving incentives again.'
+                                    ? 'This pool is no longer receiving incentives. You can migrate your fBEETS from the maBEETS page to start receiving incentives again.'
                                     : 'Please go to the maBEETS page to invest or manage your liquidity for this pool.'
                             }
                         >
