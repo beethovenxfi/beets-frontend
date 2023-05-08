@@ -11,7 +11,12 @@ import {
     VStack,
 } from '@chakra-ui/react';
 import { useInvestState } from '~/modules/pool/invest/lib/useInvestState';
-import { replaceEthWithWeth, replaceWethWithEth, tokenGetAmountForAddress } from '~/lib/services/token/token-util';
+import {
+    replaceEthWithWeth,
+    replaceWethWithEth,
+    tokenFormatAmount,
+    tokenGetAmountForAddress,
+} from '~/lib/services/token/token-util';
 import { PoolInvestSettings } from '~/modules/pool/invest/components/PoolInvestSettings';
 import { BeetsBox } from '~/components/box/BeetsBox';
 import { PoolInvestSummary } from '~/modules/pool/invest/components/PoolInvestSummary';
@@ -40,7 +45,7 @@ export function PoolInvestProportional({ onShowPreview }: Props) {
 
     const { userPoolTokenBalances } = usePoolUserTokenBalancesInWallet();
 
-    async function onTokenAmountChange(token: GqlPoolToken, amount: string) {
+    function onTokenAmountChange(token: GqlPoolToken, amount: string) {
         if (!amount || !tokenProportionalAmounts) {
             setInputAmounts({});
             return;
@@ -151,6 +156,8 @@ export function PoolInvestProportional({ onShowPreview }: Props) {
                         {investOptions.map((option, index) => {
                             const tokenOption = selectedInvestTokens[index];
                             const amount = inputAmounts[tokenOption.address];
+                            const maxInvest =
+                                (tokenProportionalAmounts && tokenProportionalAmounts[tokenOption.address]) || '';
                             return (
                                 <TokenRow
                                     withInput
@@ -167,6 +174,8 @@ export function PoolInvestProportional({ onShowPreview }: Props) {
                                     }}
                                     amount={amount}
                                     balance={tokenGetAmountForAddress(tokenOption.address, userPoolTokenBalances)}
+                                    isProportionalInvest
+                                    maxInvest={tokenFormatAmount(maxInvest)}
                                 />
                             );
                         })}

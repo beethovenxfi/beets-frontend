@@ -19,6 +19,8 @@ interface Props {
     selectedAlternateToken?: string;
     onAmountChange?: (amount: string) => void;
     balance?: string | null;
+    isProportionalInvest?: boolean;
+    maxInvest?: string;
 }
 
 export default function TokenRow({
@@ -30,6 +32,8 @@ export default function TokenRow({
     onSelectedAlternateToken,
     onAmountChange,
     balance,
+    isProportionalInvest = false,
+    maxInvest,
 }: Props) {
     const { getToken, priceForAmount } = useGetTokens();
 
@@ -110,7 +114,9 @@ export default function TokenRow({
                 </Text>
                 {balance && (
                     <Text fontSize="sm" color="gray.100">
-                        You have {tokenFormatAmount(balance || '0')}
+                        {isProportionalInvest
+                            ? `Max for proportional invest: ${maxInvest}`
+                            : `You have ${tokenFormatAmount(balance || '0')}`}
                     </Text>
                 )}
             </VStack>
