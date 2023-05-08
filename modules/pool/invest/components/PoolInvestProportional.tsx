@@ -41,29 +41,49 @@ export function PoolInvestProportional({ onShowPreview }: Props) {
     const { userPoolTokenBalances } = usePoolUserTokenBalancesInWallet();
 
     async function onTokenAmountChange(token: GqlPoolToken, amount: string) {
-        if (!amount) {
+        if (!amount || !tokenProportionalAmounts) {
             setInputAmounts({});
             return;
         }
 
-        if (poolService.joinGetProportionalSuggestionForFixedAmount) {
-            const scaledAmounts = await poolService.joinGetProportionalSuggestionForFixedAmount(
-                {
-                    address: replaceEthWithWeth(token.address),
-                    amount: tokenInputTruncateDecimalPlaces(amount, token.decimals),
-                },
-                [replaceEthWithWeth(token.address)],
-            );
+        // if (poolService.joinGetProportionalSuggestionForFixedAmount) {
+        //     const scaledAmounts = await poolService.joinGetProportionalSuggestionForFixedAmount(
+        //         {
+        //             address: replaceEthWithWeth(token.address),
+        //             amount: tokenInputTruncateDecimalPlaces(amount, token.decimals),
+        //         },
+        //         [replaceEthWithWeth(token.address)],
+        //     );
 
-            setInputAmounts(
-                mapValues(
-                    keyBy(scaledAmounts, (amount) =>
-                        isInvestingWithEth ? replaceWethWithEth(amount.address) : amount.address,
-                    ),
-                    (amount) => amount.amount,
-                ),
-            );
+        //     setInputAmounts(
+        //         mapValues(
+        //             keyBy(scaledAmounts, (amount) =>
+        //                 isInvestingWithEth ? replaceWethWithEth(amount.address) : amount.address,
+        //             ),
+        //             (amount) => amount.amount,
+        //         ),
+        //     );
+        // }
+
+        let amountFloat = parseFloat(amount);
+        const proportionalAmountFloat = parseFloat(tokenProportionalAmounts[token.address]);
+
+        if (amountFloat > proportionalAmountFloat) {
+            amountFloat = proportionalAmountFloat;
         }
+
+        const proportionalPercentageInput = amountFloat / proportionalAmountFloat;
+
+        const inputAmounts = mapValues(tokenProportionalAmounts || {}, (maxAmount, address) => {
+            const tokenDecimals = selectedInvestTokens.find((token) => token.address === address)?.decimals || 18;
+
+            return oldBnumToHumanReadable(
+                oldBnumScale(maxAmount, tokenDecimals).times(proportionalPercentageInput),
+                tokenDecimals,
+            );
+        });
+
+        setInputAmounts(inputAmounts);
     }
 
     const firstToken = selectedInvestTokens[0];
