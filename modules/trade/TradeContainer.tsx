@@ -2,7 +2,6 @@ import { Box, Grid, GridItem, Text } from '@chakra-ui/react';
 import { TradeInterfaceContainer } from '~/modules/trade/components/TradeInterfaceContainer';
 import { TradePageHeader } from '~/modules/trade/components/TradePageHeader';
 import { TradeChart } from '~/modules/trade/components/TradeChart';
-import { useGetTokens } from '~/lib/global/useToken';
 import { useTradeData } from '~/modules/trade/lib/useTradeData';
 import { useTrade } from '~/modules/trade/lib/useTrade';
 import { BatchSwapSorRoute } from '~/components/batch-swap/BatchSwapSorRoute';
@@ -10,11 +9,9 @@ import { BatchSwapList } from '~/components/batch-swap/BatchSwapList';
 import { AnimatePresence, AnimateSharedLayout, motion } from 'framer-motion';
 
 export function TradeContainer() {
-    const { priceFor } = useGetTokens();
-    const { tokenInData, tokenOutData, tokenInDynamicData, tokenOutDynamicData, tokenOut, tokenIn } = useTradeData();
-    const { swapInfo, loadingSwaps, isNativeAssetUnwrap, isNativeAssetWrap } = useTrade();
+    const { tokenOut, tokenIn } = useTradeData();
+    const { swapInfo, isNativeAssetUnwrap, isNativeAssetWrap } = useTrade();
     const showRouting = !isNativeAssetUnwrap && !isNativeAssetWrap && swapInfo && swapInfo.swaps.length > 0;
-    const hasNoRoute = !loadingSwaps && (!swapInfo || swapInfo.swaps.length === 0);
 
     return (
         <Box>
@@ -27,7 +24,6 @@ export function TradeContainer() {
                 templateColumns={{ base: '1fr', xl: '412px 1fr' }}
                 gap="10"
                 pb="20"
-                //pt="8"
             >
                 <GridItem area="swap">
                     <TradeInterfaceContainer />
@@ -62,7 +58,7 @@ export function TradeContainer() {
                                 <Text fontSize="xl" fontWeight="bold" lineHeight="1.2rem" mt="8">
                                     Latest swaps
                                 </Text>
-                                <Text mb="4" color="gray.200">
+                                <Text mb="4" color="subheading">
                                     The latest swaps for your selected token pair.
                                 </Text>
                             </motion.div>
@@ -71,29 +67,6 @@ export function TradeContainer() {
                             )}
                         </AnimateSharedLayout>
                     </Box>
-
-                    {/*<Flex mt="12" mb="8">
-                        {tokenIn ? (
-                            <TradeTokenDataCard
-                                token={tokenIn}
-                                price={priceFor(tokenIn.address)}
-                                data={tokenInData}
-                                dynamicData={tokenInDynamicData}
-                                flex={1}
-                                mr="4"
-                            />
-                        ) : null}
-                        {tokenOut ? (
-                            <TradeTokenDataCard
-                                token={tokenOut}
-                                price={priceFor(tokenOut.address)}
-                                data={tokenOutData}
-                                dynamicData={tokenOutDynamicData}
-                                flex={1}
-                            />
-                        ) : null}
-                    </Flex>
-                    <Box height="2xs" />*/}
                 </GridItem>
             </Grid>
         </Box>

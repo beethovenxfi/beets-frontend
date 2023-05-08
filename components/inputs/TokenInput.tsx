@@ -123,11 +123,11 @@ export const TokenInput = forwardRef(
                             fontSize=".85rem"
                             spacing="1"
                         >
-                            <Text>Balance:</Text>
+                            <Text color='inline'>Balance:</Text>
                             {isLoading ? (
                                 <Skeleton width="52px" height="16px" />
                             ) : (
-                                <Text>{tokenFormatAmountPrecise(userBalance, 4)}</Text>
+                                <Text color='inline'>{tokenFormatAmountPrecise(userBalance, 4)}</Text>
                             )}
                         </HStack>
                     )}
@@ -138,7 +138,7 @@ export const TokenInput = forwardRef(
                             bottom=".75rem"
                             right=".75rem"
                             fontWeight="normal"
-                            color="gray.200"
+                            color="inline"
                             size="xs"
                             fontSize=".85rem"
                         >

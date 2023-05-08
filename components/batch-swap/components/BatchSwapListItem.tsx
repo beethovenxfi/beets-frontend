@@ -14,6 +14,8 @@ import { tokenFormatAmount } from '~/lib/services/token/token-util';
 import { PercentChangeBadge } from '~/components/badge/PercentChangeBadge';
 import { etherscanGetAddressUrl, etherscanGetTxUrl } from '~/lib/util/etherscan';
 import { Fragment } from 'react';
+import { protocolThemeProp } from '~/styles/theme-util';
+import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 
 interface Props {
     batchSwap: GqlPoolBatchSwapFragment;
@@ -24,8 +26,11 @@ interface Props {
 }
 
 export function BatchSwapListItem({ tokenIn, tokenOut, tokenInPrice, tokenOutPrice, batchSwap }: Props) {
+    const { protocol } = useNetworkConfig();
     const exchangeRate = parseFloat(batchSwap.tokenAmountIn) / parseFloat(batchSwap.tokenAmountOut);
     const percentChange = tokenInPrice !== 0 ? (tokenOutPrice / tokenInPrice - exchangeRate) / exchangeRate : 0;
+
+    const timeBadgeProps = protocol === 'balancer' ? { variant: 'ghost'} : {};
 
     return (
         <Card px="2" pt="2" mb="1">
@@ -61,7 +66,7 @@ export function BatchSwapListItem({ tokenIn, tokenOut, tokenInPrice, tokenOutPri
                     <PercentChangeBadge percentChange={percentChange} />
                 </Box>
                 <Box>
-                    <Badge>{formatDistanceToNow(new Date(batchSwap.timestamp * 1000), { addSuffix: true })}</Badge>
+                    <Badge {...timeBadgeProps}>{formatDistanceToNow(new Date(batchSwap.timestamp * 1000), { addSuffix: true })}</Badge>
                 </Box>
             </Flex>
             <Box height="64px">
@@ -72,7 +77,7 @@ export function BatchSwapListItem({ tokenIn, tokenOut, tokenInPrice, tokenOutPri
                             address={batchSwap.tokenIn}
                             amount={batchSwap.tokenAmountIn}
                             padding="19.5px 0px"
-                            bgColor="beets.base.700"
+                            bgColor={protocolThemeProp({ balancer: 'gray.100', beets: 'beets.base.700' })}
                         />
                         <Flex flex="1" height="64px" alignItems="center" position="relative" top="2px">
                             <BatchSwapRouteDashedLineArrowSpacer />
@@ -89,7 +94,7 @@ export function BatchSwapListItem({ tokenIn, tokenOut, tokenInPrice, tokenOutPri
                             address={batchSwap.tokenOut}
                             amount={batchSwap.tokenAmountOut}
                             padding="19.5px 0px"
-                            bgColor="beets.base.700"
+                            bgColor={protocolThemeProp({ balancer: 'gray.100', beets: 'beets.base.700' })}
                         />
                     </Flex>
                 </Flex>

@@ -1,5 +1,6 @@
 import { Box, Flex, FlexProps, Text, VStack, useStyleConfig } from '@chakra-ui/react';
 import { ReactNode } from 'react';
+import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 
 interface Props {
     title: string;
@@ -8,6 +9,7 @@ interface Props {
 }
 
 export function PageMasthead({ title, image, subtitle = '' }: Props) {
+    const { protocol } = useNetworkConfig();
     const styles = useStyleConfig('PageMasthead') as FlexProps;
     return (
         <Flex
@@ -16,7 +18,7 @@ export function PageMasthead({ title, image, subtitle = '' }: Props) {
             mb={{ base: '6', lg: '8' }}
             alignItems="flex-end"
         >
-            <VStack alignItems='flex-start' spacing='0'>
+            <VStack alignItems="flex-start" spacing="0">
                 <Text fontSize="28px" fontWeight="semibold" as="h1" flex="1" mb="0">
                     {title}
                 </Text>
@@ -24,9 +26,11 @@ export function PageMasthead({ title, image, subtitle = '' }: Props) {
                     {subtitle}
                 </Text>
             </VStack>
-            <Box alignItems="flex-end" display={{ base: 'none', md: 'flex' }}>
-                {image}
-            </Box>
+            {protocol === 'beets' && (
+                <Box alignItems="flex-end" display={{ base: 'none', md: 'flex' }}>
+                    {image}
+                </Box>
+            )}
         </Flex>
     );
 }

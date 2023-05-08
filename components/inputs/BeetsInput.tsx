@@ -3,6 +3,7 @@ import { Box, BoxProps, Heading, HeadingProps, HStack, VStack } from '@chakra-ui
 import PresetSelector from './PresetSelector';
 import { Lock } from 'react-feather';
 import { forwardRef } from '@chakra-ui/react';
+import { protocolThemeProp } from '~/styles/theme-util';
 
 type Props = {
     label?: string;
@@ -14,7 +15,14 @@ type Props = {
 export const BeetsInput = forwardRef(
     ({ label, secondaryLabel, children, headingProps, wrapperProps, ...inputProps }: InputProps & Props, ref) => {
         return (
-            <Box position="relative" width="full" bg="blackAlpha.500" borderRadius="md" {...wrapperProps}>
+            <Box
+                position="relative"
+                width="full"
+                bg={protocolThemeProp({ balancer: 'gray.100', beets: 'blackAlpha.500' })}
+                shadow={protocolThemeProp({ balancer: 'inner', beets: 'none' })}
+                borderRadius="md"
+                {...wrapperProps}
+            >
                 <HStack>
                     {label && (
                         <Heading
@@ -22,7 +30,7 @@ export const BeetsInput = forwardRef(
                             top=".5rem"
                             left=".75rem"
                             fontWeight="normal"
-                            color="gray.200"
+                            color="inline"
                             size="xs"
                             {...headingProps}
                         >

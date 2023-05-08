@@ -9,7 +9,7 @@ import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 import { UserTokenBalancesProvider } from '~/lib/user/useUserTokenBalances';
 
 function Swap() {
-    const { chainId, appName } = useNetworkConfig();
+    const { chainId, appName, protocol } = useNetworkConfig();
 
     const TITLE = `${appName} | Swap`;
     const DESCRIPTION = 'Intelligent trades at optimal prices. Swap your tokens with the Smart Order Router.';

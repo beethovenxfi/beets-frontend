@@ -4,6 +4,7 @@ import { useTradeData } from '~/modules/trade/lib/useTradeData';
 import { useTradeChart } from '~/modules/trade/lib/useTradeChart';
 import { PercentChangeBadge } from '~/components/badge/PercentChangeBadge';
 import { InfoButton } from '~/components/info-button/InfoButton';
+import { protocolThemeProp } from '~/styles/theme-util';
 
 export function TradePageHeader() {
     const { tokenOut, tokenIn, currentRatio, reverseRatio } = useTradeData();
@@ -13,15 +14,19 @@ export function TradePageHeader() {
     return (
         <>
             <Flex>
-                <Text fontSize="2xl" fontWeight="bold" color="white">
+                <Text
+                    fontSize="2xl"
+                    fontWeight="bold"
+                    color={protocolThemeProp({ beets: 'white', balancer: 'gray.800' })}
+                >
                     1
-                    <Text as="span" fontSize="lg" fontWeight="normal" color="gray.100">
+                    <Text as="span" fontSize="lg" fontWeight="normal" color="inline">
                         {' '}
                         {tokenIn?.symbol}
                         {' = '}
                     </Text>
                     {tokenFormatAmount(reverseRatio)}
-                    <Text as="span" fontSize="lg" fontWeight="normal" color="gray.100">
+                    <Text as="span" fontSize="lg" fontWeight="normal" color="inline">
                         {' '}
                         {tokenOut?.symbol}
                     </Text>

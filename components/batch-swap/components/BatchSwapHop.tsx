@@ -1,6 +1,7 @@
 import { Box } from '@chakra-ui/react';
 import TokenAvatarSet from '~/components/token/TokenAvatarSet';
 import { NextLink } from '~/components/link/NextLink';
+import { protocolThemeProp } from '~/styles/theme-util';
 
 interface Props {
     hop: {
@@ -33,10 +34,11 @@ export function BatchSwapHop({ hop }: Props) {
             borderRadius="lg"
             px="2"
             py="1"
-            backgroundColor="beets.base.600"
+            bgColor={protocolThemeProp({ balancer: 'gray.100', beets: 'beets.base.700' })}
         >
             <NextLink href={`/pool/${hop.pool.id}`} chakraProps={{ color: 'white' }}>
                 <TokenAvatarSet
+                    mt="1.5"
                     imageSize={20}
                     width={80}
                     tokenData={[

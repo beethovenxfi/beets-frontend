@@ -1,5 +1,6 @@
 import { Box, Circle, Flex, Icon, IconProps } from '@chakra-ui/react';
 import { ChevronsRight } from 'react-feather';
+import { protocolThemeProp } from '~/styles/theme-util';
 
 export function BatchSwapRouteDashedLineLeftSide(props: IconProps) {
     return (
@@ -64,7 +65,7 @@ export function BatchSwapRouteDashedLineArrowSpacer() {
             <Circle
                 size="22px"
                 zIndex="1"
-                backgroundColor="beets.base.700"
+                bgColor={protocolThemeProp({ balancer: 'gray.100', beets: 'beets.base.700' })}
                 alignItems="center"
                 justifyContent="center"
                 display="flex"
