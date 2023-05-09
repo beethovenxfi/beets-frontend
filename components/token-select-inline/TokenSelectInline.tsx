@@ -12,6 +12,7 @@ import {
     Box,
     useStyleConfig,
     BoxProps,
+    MenuItemProps,
 } from '@chakra-ui/react';
 import React from 'react';
 import { Check, ChevronDown } from 'react-feather';
@@ -34,7 +35,7 @@ export function TokenSelectInline({ tokenOptions, selectedAddress, onOptionSelec
     const selectedToken = tokenOptions.find((option) => option.address === selectedAddress);
 
     const menuListStyles = useStyleConfig('MenuList', { variant: protocol }) as BoxProps;
-    const menuItemStyles = useStyleConfig('MenuListItem', { variant: protocol }) as BoxProps;
+    const menuItemStyles = useStyleConfig('MenuListItem', { variant: protocol }) as MenuItemProps;
 
     return (
         <Menu>

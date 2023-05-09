@@ -93,8 +93,8 @@ export function PoolProvider({ pool: poolFromProps, children }: { pool: GqlPoolU
             (pool.__typename === 'GqlPoolPhantomStable' &&
                 pool.factory &&
                 networkConfig.balancer.composableStableFactories.includes(pool.factory))) &&
-        pool.staking?.type === 'MASTER_CHEF' &&
-        !!pool.staking.farm;
+        poolStaking?.type === 'MASTER_CHEF' &&
+        !!poolStaking.farm;
     const supportsZapIntoGauge =
         ((pool.__typename === 'GqlPoolWeighted' &&
             networkConfig.balancer.weightedPoolV2PlusFactories.includes(pool.factory || '')) ||
@@ -122,6 +122,11 @@ export function PoolProvider({ pool: poolFromProps, children }: { pool: GqlPoolU
         pool.__typename === 'GqlPoolPhantomStable' ||
         pool.__typename === 'GqlPoolMetaStable';
 
+    const totalApr =
+        pool.dynamicData.apr.apr.__typename === 'GqlPoolAprRange'
+            ? parseFloat(pool.dynamicData.apr.apr.max)
+            : parseFloat(pool.dynamicData.apr.apr.total);
+
     useEffectOnce(() => {
         refetch();
         startPolling(30_000);
@@ -144,9 +149,7 @@ export function PoolProvider({ pool: poolFromProps, children }: { pool: GqlPoolU
                 bptPrice,
                 supportsZap,
                 formattedTypeName: poolGetTypeName(pool),
-                totalApr: parseFloat(
-                    'total' in pool.dynamicData.apr.apr ? pool.dynamicData.apr.apr.total : pool.dynamicData.apr.apr.max,
-                ),
+                totalApr,
                 isFbeetsPool: pool.id === networkConfig.fbeets.poolId,
                 isStablePool,
                 isComposablePool,

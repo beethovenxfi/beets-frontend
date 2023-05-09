@@ -631,6 +631,11 @@ export const GetBlocksPerDay = gql`
         avgBlockTime: blocksGetAverageBlockTime
     }
 `;
+export const GetBeetsPrice = gql`
+    query GetBeetsPrice {
+        beetsPrice: tokenGetProtocolTokenPrice
+    }
+`;
 export const GetUserData = gql`
     query GetUserData {
         balances: userGetPoolBalances {
@@ -645,6 +650,16 @@ export const GetUserData = gql`
             id
             type
             address
+            farm {
+                id
+                beetsPerBlock
+                rewarders {
+                    id
+                    address
+                    tokenAddress
+                    rewardPerSecond
+                }
+            }
             gauge {
                 id
                 gaugeAddress

@@ -14,10 +14,10 @@ import {
     useStyleConfig,
 } from '@chakra-ui/react';
 import StarsIcon from '~/components/apr-tooltip/StarsIcon';
-import numeral from 'numeral';
 import { AprText } from '~/components/apr-tooltip/AprText';
 import { Info } from 'react-feather';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
+import { getApr } from '~/lib/util/apr-util';
 
 interface Props {
     data: GqlPoolApr;
@@ -32,13 +32,6 @@ function AprTooltip({ data, textProps, onlySparkles, placement, aprLabel, sparkl
     const { protocol } = useNetworkConfig();
     // temp fix: https://github.com/chakra-ui/chakra-ui/issues/5896#issuecomment-1104085557
     const PopoverTrigger: React.FC<{ children: React.ReactNode }> = OrigPopoverTrigger;
-    const formatApr = (apr: string) => {
-        if (parseFloat(apr) < 0.0000001) {
-            return '0.00%';
-        }
-
-        return numeral(apr).format('0.00%');
-    };
 
     const popoverContentStyles = useStyleConfig('PopoverContent');
     const popoverbg = protocol === 'balancer' ? 'white' : 'beets.base.800';
@@ -49,7 +42,7 @@ function AprTooltip({ data, textProps, onlySparkles, placement, aprLabel, sparkl
             <HStack align="center">
                 {!onlySparkles && (
                     <Text fontSize="1rem" fontWeight="semibold" mr="1" {...textProps}>
-                        {formatApr('total' in data.apr ? data.apr.total : data.apr.max)}
+                        {getApr(data.apr)}
                         {aprLabel ? ' APR' : ''}
                     </Text>
                 )}
@@ -80,9 +73,7 @@ function AprTooltip({ data, textProps, onlySparkles, placement, aprLabel, sparkl
                     <Text textAlign="left">
                         Total APR
                         <br />
-                        <span style={{ fontSize: '1.5rem' }}>
-                            {formatApr('total' in data.apr ? data.apr.total : data.apr.max)}
-                        </span>
+                        <span style={{ fontSize: '1.5rem' }}>{getApr(data.apr)}</span>
                     </Text>
                 </PopoverHeader>
                 <Box p="2" fontSize="sm" bgColor="whiteAlpha.200">
@@ -90,8 +81,7 @@ function AprTooltip({ data, textProps, onlySparkles, placement, aprLabel, sparkl
                         return (
                             <Box key={index}>
                                 <Flex>
-                                    {formatApr('total' in item.apr ? item.apr.total : item.apr.max)}{' '}
-                                    <AprText>{item.title}</AprText>
+                                    {getApr(item.apr)} <AprText>{item.title}</AprText>
                                 </Flex>
                                 {item.subItems?.map((subItem, subItemIndex) => {
                                     const isSubItemsLengthOne = item.subItems?.length === 1;
@@ -119,10 +109,7 @@ function AprTooltip({ data, textProps, onlySparkles, placement, aprLabel, sparkl
                                             />
                                             <Box h="1px" w="0.75rem" mr="0.25rem" ml="-0.25rem" bgColor="gray.100" />
                                             <Flex>
-                                                {formatApr(
-                                                    'total' in subItem.apr ? subItem.apr.total : subItem.apr.max,
-                                                )}{' '}
-                                                <AprText>{subItem.title}</AprText>
+                                                {getApr(subItem.apr)} <AprText>{subItem.title}</AprText>
                                             </Flex>
                                         </Flex>
                                     );

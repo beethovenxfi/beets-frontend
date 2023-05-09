@@ -96,3 +96,7 @@ query GetBlocksPerDay {
     blocksPerDay: blocksGetBlocksPerDay
     avgBlockTime: blocksGetAverageBlockTime
 }
+
+query GetBeetsPrice {
+    beetsPrice: tokenGetProtocolTokenPrice
+}

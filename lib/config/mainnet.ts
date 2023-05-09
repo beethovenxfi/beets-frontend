@@ -47,10 +47,9 @@ export const mainnetNetworkConfig: NetworkConfig = {
     balancer: {
         vault: '0xba12222222228d8ba445958a75a0704d566bf2c8',
         batchRelayer: '0x1a58897ab366082028ced3740900ecbd765af738',
-        composableStableFactory: '0xf145cafb67081895ee80eb7c04a30cf87f07b745',
-        weightedPoolV2PlusFactories: [],
+        composableStableV1Factory: '0xf9ac7b9df2b3454e841110cce5550bd5ac6f875f',
         composableStableFactories: [],
-        weightedPoolV2Factory: '0xad901309d9e9dbc5df19c84f729f429f0189a633',
+        weightedPoolV2PlusFactories: ['0xad901309d9e9dbc5df19c84f729f429f0189a633'],
         linearFactories: {
             erc4626: ['0x4c4287b07d293e361281bceee8715c8cdeb64e34'],
             reaper: [
@@ -62,6 +61,7 @@ export const mainnetNetworkConfig: NetworkConfig = {
         linearRebalancers: {},
         reaperManualRebalancer: '0xf070996cf89cd3d2582705fc269f2c800e9a6a21',
         balancerQueries: '0xe39b5e3b6d74016b2f6a9673d7d7493b6df549d5',
+        sorQueries: '',
     },
     beetsPoolOwnerAddress: '0xcd983793adb846dce4830c22f30c7ef0c864a776',
     masterChefContractAddress: '0x8166994d9ebBe5829EC86Bd81258149B87faCfd3',
@@ -145,5 +145,6 @@ export const mainnetNetworkConfig: NetworkConfig = {
         swap: true,
         incentivizedPools: false,
         protocolTokenPrice: false,
+        claimAllRewards: false,
     },
 };

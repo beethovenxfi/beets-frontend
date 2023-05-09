@@ -212,6 +212,11 @@ export const optimismNetworkConfig: NetworkConfig = {
         '0x1f131ec1175f023ee1534b16fa8ab237c00e238100000000000000000000004a': true,
         '0x479a7d1fcdd71ce0c2ed3184bfbe9d23b92e8337000000000000000000000049': true,
     },
-    maBeetsEnabled: false,
-    claimAllRewardsEnabled: false,
+    featureFlags: {
+        maBeets: false,
+        swap: true,
+        incentivizedPools: true,
+        protocolTokenPrice: false,
+        claimAllRewards: false,
+    },
 };

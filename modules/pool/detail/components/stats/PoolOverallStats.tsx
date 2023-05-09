@@ -16,7 +16,7 @@ import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 import { getPoolStaking } from '~/lib/services/pool/lib/util';
 
 export default function PoolOverallStats() {
-    const { pool } = usePool();
+    const { pool, totalApr } = usePool();
     const poolStaking = getPoolStaking(pool);
     const { boostedByTypes, protocol } = useNetworkConfig();
     const { priceFor } = useGetTokens();
@@ -35,7 +35,7 @@ export default function PoolOverallStats() {
     const sharePricePercentChange = (sharePrice - sharePrice24hAgo) / sharePrice24hAgo;
     const beetsPerDay = parseFloat(poolStaking?.farm?.beetsPerBlock || '0') * (blocksData?.blocksPerDay || 0);
 
-    const rewards = pool.staking?.farm?.rewarders || pool.staking?.gauge?.rewards;
+    const rewards = poolStaking?.farm?.rewarders || poolStaking?.gauge?.rewards;
     const rewardsMapped = rewards?.map(({ tokenAddress, rewardPerSecond }) => ({ tokenAddress, rewardPerSecond }));
     const hasNonZeroRewards = (rewardsMapped || []).filter((reward) => reward.rewardPerSecond !== '0').length !== 0;
 
@@ -54,9 +54,7 @@ export default function PoolOverallStats() {
                     Pool APR
                 </Text>
                 <HStack>
-                    <Text fontSize="2.5rem" fontWeight="900" {...aprTextProps}>
-                        {numeral('total' in data.apr.apr ? data.apr.apr.total : data.apr.apr.max).format('0.00%')}
-                    </Text>
+                    <div className="apr-stripes">{numeral(totalApr).format('0.00%')}</div>
                     <AprTooltip onlySparkles data={data.apr} />
                 </HStack>
                 {boostedByTypes[pool.id] && <BoostedBadgeSmall boostedBy={boostedByTypes[pool.id]} />}

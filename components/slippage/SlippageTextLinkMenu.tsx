@@ -8,6 +8,7 @@ import {
     MenuButton,
     MenuItem,
     MenuList,
+    MenuItemProps,
     useDisclosure,
     useStyleConfig,
 } from '@chakra-ui/react';
@@ -25,7 +26,7 @@ export function SlippageTextLinkMenu() {
     const customIsValid = custom !== '' && parseFloat(custom) < 50 && parseFloat(custom) >= 0.01;
 
     const menuListStyles = useStyleConfig('MenuList', { variant: protocol }) as BoxProps;
-    const menuItemStyles = useStyleConfig('MenuListItem', { variant: protocol }) as BoxProps;
+    const menuItemStyles = useStyleConfig('MenuListItem', { variant: protocol }) as MenuItemProps;
 
     console.log('menu', menuListStyles);
     return (
