@@ -1,4 +1,4 @@
-import { GqlChain } from "~/apollo/generated/graphql-codegen-generated";
+import { GqlChain } from '~/apollo/generated/graphql-codegen-generated';
 
 export type BoostedByType =
     | 'reaper-aave'
@@ -113,6 +113,11 @@ export interface NetworkConfig {
     boostedByTypes: {
         [poolId: string]: BoostedByType;
     };
-    maBeetsEnabled: boolean;
-    claimAllRewardsEnabled: boolean;
+    featureFlags: {
+        maBeets: boolean;
+        swap: boolean;
+        incentivizedPools: boolean;
+        protocolTokenPrice: boolean;
+        claimAllRewards: boolean;
+    };
 }
