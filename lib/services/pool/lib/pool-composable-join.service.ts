@@ -19,7 +19,6 @@ import { parseUnits } from 'ethers/lib/utils';
 import { StablePoolEncoder, SwapV2 } from '@balancer-labs/sdk';
 import { oldBnum, oldBnumSubtractSlippage } from '~/lib/services/pool/lib/old-big-number';
 import {
-    getPoolStaking,
     poolBatchSwaps,
     poolGetEthAmountFromJoinData,
     poolGetMainTokenFromLinearPoolToken,
@@ -164,7 +163,6 @@ export class PoolComposableJoinService {
     }): Promise<PoolJoinBatchRelayerContractCallData> {
         const calls: string[] = [];
         const { ethAmount, ethAmountScaled } = poolGetEthAmountFromJoinData(data, this.wethAddress);
-        const poolStaking = getPoolStaking(this.pool);
 
         const batchSwapStep = processedSteps.find((step) => step.type === 'BatchSwap') as
             | ComposablePoolJoinProcessedBatchSwapStep
@@ -231,7 +229,7 @@ export class PoolComposableJoinService {
                     sender: data.userAddress,
                     recipient: data.userAddress,
                     token: this.pool.address,
-                    pid: parseInt(poolStaking!.id),
+                    pid: parseInt(this.pool.staking!.id),
                     amount: poolBptOutputRef,
                     outputReference: Zero,
                 }),
@@ -239,7 +237,7 @@ export class PoolComposableJoinService {
         } else if (data.zapIntoGauge) {
             calls.push(
                 this.batchRelayerService.gaugeEncodeDeposit({
-                    gauge: poolStaking!.id,
+                    gauge: this.pool.staking!.id,
                     sender: data.userAddress,
                     recipient: data.userAddress,
                     amount: poolBptOutputRef,

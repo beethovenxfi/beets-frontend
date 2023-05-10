@@ -14,7 +14,6 @@ import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 import { usePool } from '~/modules/pool/lib/usePool';
 import { createContext, ReactNode, useContext } from 'react';
 import { BigNumber } from 'ethers';
-import { getPoolStaking } from '~/lib/services/pool/lib/util';
 
 const DUST_THRESHOLD = BigNumber.from('1000000000000');
 
@@ -77,35 +76,34 @@ function usePoolUserBptWalletBalance() {
 
 export function usePoolUserStakedBalance() {
     const { pool } = usePool();
-    const poolStaking = getPoolStaking(pool);
     const { userAddress } = useUserAccount();
     const provider = useProvider();
 
     return useQuery(
-        ['poolUserStakedBalance', pool.id, poolStaking?.id || '', userAddress || ''],
+        ['poolUserStakedBalance', pool.id, pool.staking?.id || '', userAddress || ''],
         async (): Promise<AmountHumanReadable> => {
-            if (!userAddress || !poolStaking) {
+            if (!userAddress || !pool.staking) {
                 return '0';
             }
 
-            switch (poolStaking.type) {
+            switch (pool.staking.type) {
                 case 'MASTER_CHEF':
                     return masterChefService.getUserStakedBalance({
                         userAddress,
-                        farmId: poolStaking.id,
+                        farmId: pool.staking.id,
                         provider,
                     });
                 case 'FRESH_BEETS':
                     return freshBeetsService.getUserStakedBalance({
                         userAddress,
-                        farmId: poolStaking.id,
+                        farmId: pool.staking.id,
                         provider,
                         fBeetsRatio: '0',
                     });
                 case 'GAUGE':
                     return gaugeStakingService.getUserStakedBalance({
                         userAddress,
-                        gaugeAddress: poolStaking.gauge?.gaugeAddress || '',
+                        gaugeAddress: pool.staking.gauge?.gaugeAddress || '',
                         provider,
                     });
                 case 'RELIQUARY':

@@ -13,12 +13,10 @@ import { useReliquaryGlobalStats } from '../../lib/useReliquaryGlobalStats';
 import { numberFormatUSDValue } from '~/lib/util/number-formats';
 import startOfWeek from 'date-fns/startOfWeek';
 import { useGetReliquaryFarmSnapshotsQuery } from '~/apollo/generated/graphql-codegen-generated';
-import { getPoolStaking } from '~/lib/services/pool/lib/util';
 import { getApr } from '~/lib/util/apr-util';
 
 export default function ReliquaryOverallStats() {
     const { pool } = usePool();
-    const poolStaking = getPoolStaking(pool);
     const { priceFor, getToken } = useGetTokens();
     const { data: globalStats } = useReliquaryGlobalStats();
     const { data: snapshotData } = useGetReliquaryFarmSnapshotsQuery({
@@ -27,7 +25,7 @@ export default function ReliquaryOverallStats() {
 
     const data = pool.dynamicData;
 
-    const beetsPerDay = parseFloat(poolStaking?.reliquary?.beetsPerSecond || '0') * 86400;
+    const beetsPerDay = parseFloat(pool.staking?.reliquary?.beetsPerSecond || '0') * 86400;
     const incentivesDailyValue = beetsPerDay * priceFor(networkConfig.beets.address);
 
     const relicTokenBalancesWithSymbol = pool.tokens.map((token) => ({
@@ -104,7 +102,7 @@ export default function ReliquaryOverallStats() {
                             </VStack>
                         </VStack>
                     </VStack>
-                    {poolStaking?.reliquary && (
+                    {pool.staking?.reliquary && (
                         <VStack spacing="0" alignItems="flex-start">
                             <InfoButton
                                 labelProps={{

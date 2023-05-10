@@ -8,14 +8,12 @@ import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 import { useUserAccount } from '~/lib/user/useUserAccount';
 import { useSlippage } from '~/lib/global/useSlippage';
 import { usePool } from '~/modules/pool/lib/usePool';
-import { getPoolStaking } from '~/lib/services/pool/lib/util';
 
 export function usePoolJoinGetContractCallData(minimumBpt: AmountHumanReadable | null, zapEnabled?: boolean) {
     const { userAddress } = useUserAccount();
     const networkConfig = useNetworkConfig();
     const { slippage } = useSlippage();
     const { poolService, pool } = usePool();
-    const poolStaking = getPoolStaking(pool);
     const { inputAmounts } = useReactiveVar(investStateVar);
     const inputAmountsArray = tokenAmountsGetArrayFromMap(inputAmounts);
     const hasEth = networkConfig.eth.address.toLowerCase() in inputAmounts;
@@ -30,8 +28,8 @@ export function usePoolJoinGetContractCallData(minimumBpt: AmountHumanReadable |
         minimumBpt: minimumBpt || '0',
         userAddress: userAddress || '',
         wethIsEth: hasEth,
-        zapIntoMasterchefFarm: !!poolStaking?.farm && zapEnabled,
-        zapIntoGauge: !!poolStaking?.gauge && zapEnabled,
+        zapIntoMasterchefFarm: !!pool.staking?.farm && zapEnabled,
+        zapIntoGauge: !!pool.staking?.gauge && zapEnabled,
         slippage,
     };
 

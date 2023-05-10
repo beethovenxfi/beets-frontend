@@ -3,6 +3,7 @@
         "GqlPoolAprValue": ["GqlPoolAprRange", "GqlPoolAprTotal"],
         "GqlPoolBase": [
             "GqlPoolElement",
+            "GqlPoolGyro",
             "GqlPoolLinear",
             "GqlPoolLiquidityBootstrapping",
             "GqlPoolMetaStable",
@@ -17,6 +18,7 @@
         "GqlPoolTokenUnion": ["GqlPoolToken", "GqlPoolTokenLinear", "GqlPoolTokenPhantomStable"],
         "GqlPoolUnion": [
             "GqlPoolElement",
+            "GqlPoolGyro",
             "GqlPoolLinear",
             "GqlPoolLiquidityBootstrapping",
             "GqlPoolMetaStable",

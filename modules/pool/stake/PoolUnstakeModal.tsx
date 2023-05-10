@@ -27,7 +27,6 @@ import { CardRow } from '~/components/card/CardRow';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 import { usePool } from '~/modules/pool/lib/usePool';
 import { useUserSyncBalanceMutation } from '~/apollo/generated/graphql-codegen-generated';
-import { getPoolStaking } from '~/lib/services/pool/lib/util';
 
 interface Props {
     isOpen: boolean;
@@ -53,10 +52,9 @@ export function PoolUnstakeModal({ isOpen, onOpen, onClose }: Props) {
     const amountIsValid = !hasValue || parseFloat(userStakedBptBalance) >= parseFloat(amount);
     const amountValue = (parseFloat(amount) / parseFloat(userTotalBptBalance)) * userPoolBalanceUSD;
     const { pool } = usePool();
-    const poolStaking = getPoolStaking(pool);
 
     const { approve, ...approveQuery } = useApproveToken(pool);
-    const { withdraw, ...unstakeQuery } = useStakingWithdraw(poolStaking);
+    const { withdraw, ...unstakeQuery } = useStakingWithdraw(pool.staking);
     const loading = isLoadingBalances;
 
     useEffect(() => {

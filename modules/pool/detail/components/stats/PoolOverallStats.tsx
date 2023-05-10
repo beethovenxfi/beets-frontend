@@ -13,11 +13,9 @@ import { sumBy } from 'lodash';
 import { InfoButton } from '~/components/info-button/InfoButton';
 import { BoostedBadgeSmall } from '~/components/boosted-badge/BoostedBadgeSmall';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
-import { getPoolStaking } from '~/lib/services/pool/lib/util';
 
 export default function PoolOverallStats() {
     const { pool, totalApr } = usePool();
-    const poolStaking = getPoolStaking(pool);
     const { boostedByTypes, protocol } = useNetworkConfig();
     const { priceFor } = useGetTokens();
     const { data: blocksData } = useGetBlocksPerDayQuery({ fetchPolicy: 'cache-first' });
@@ -33,9 +31,9 @@ export default function PoolOverallStats() {
     const sharePrice24hAgo =
         totalShares24hAgo > 0 ? parseFloat(pool.dynamicData.totalLiquidity24hAgo) / totalShares24hAgo : 0;
     const sharePricePercentChange = (sharePrice - sharePrice24hAgo) / sharePrice24hAgo;
-    const beetsPerDay = parseFloat(poolStaking?.farm?.beetsPerBlock || '0') * (blocksData?.blocksPerDay || 0);
+    const beetsPerDay = parseFloat(pool.staking?.farm?.beetsPerBlock || '0') * (blocksData?.blocksPerDay || 0);
 
-    const rewards = poolStaking?.farm?.rewarders || poolStaking?.gauge?.rewards;
+    const rewards = pool.staking?.farm?.rewarders || pool.staking?.gauge?.rewards;
     const rewardsMapped = rewards?.map(({ tokenAddress, rewardPerSecond }) => ({ tokenAddress, rewardPerSecond }));
     const hasNonZeroRewards = (rewardsMapped || []).filter((reward) => reward.rewardPerSecond !== '0').length !== 0;
 
@@ -54,7 +52,9 @@ export default function PoolOverallStats() {
                     Pool APR
                 </Text>
                 <HStack>
-                    <div className="apr-stripes">{numeral(totalApr).format('0.00%')}</div>
+                    <Text fontSize="2.5rem" fontWeight="900" {...aprTextProps}>
+                        {numeral(totalApr).format('0.00%')}
+                    </Text>
                     <AprTooltip onlySparkles data={data.apr} />
                 </HStack>
                 {boostedByTypes[pool.id] && <BoostedBadgeSmall boostedBy={boostedByTypes[pool.id]} />}

@@ -31,12 +31,7 @@ import { BaseProvider } from '@ethersproject/providers';
 import { parseUnits } from 'ethers/lib/utils';
 import { oldBnum, oldBnumScale } from '~/lib/services/pool/lib/old-big-number';
 import { formatFixed } from '@ethersproject/bignumber';
-import {
-    getPoolStaking,
-    poolBatchSwaps,
-    poolQueryBatchSwap,
-    poolScaleTokenAmounts,
-} from '~/lib/services/pool/lib/util';
+import { poolBatchSwaps, poolQueryBatchSwap, poolScaleTokenAmounts } from '~/lib/services/pool/lib/util';
 import { MaxUint256, Zero } from '@ethersproject/constants';
 import { poolIsTokenPhantomBpt } from '~/lib/services/pool/pool-util';
 import { PoolProportionalInvestService } from './lib/pool-proportional-invest.service';
@@ -76,8 +71,6 @@ export class PoolWeightedBoostedService implements PoolService {
             : undefined;
         const ethAmountScaled = (ethAmount ? parseUnits(ethAmount.amount, 18) : Zero).toString();
 
-        const poolStaking = getPoolStaking(this.pool);
-
         calls.push(
             this.encodeBatchSwapStep({
                 tokensIn,
@@ -109,7 +102,7 @@ export class PoolWeightedBoostedService implements PoolService {
                     sender: this.batchRelayerService.batchRelayerAddress,
                     recipient: data.userAddress,
                     token: this.pool.address,
-                    pid: parseInt(poolStaking!.id),
+                    pid: parseInt(this.pool.staking!.id),
                     amount: this.batchRelayerService.toChainedReference(0),
                     outputReference: Zero,
                 }),

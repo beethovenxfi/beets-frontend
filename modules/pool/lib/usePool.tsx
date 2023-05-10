@@ -12,7 +12,6 @@ import { PoolService } from '~/lib/services/pool/pool-types';
 import { TokenBase } from '~/lib/services/token/token-types';
 import { uniqBy } from 'lodash';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
-import { getPoolStaking } from '~/lib/services/pool/lib/util';
 import { usePoolWithOnChainData } from './usePoolWithOnChainData';
 
 export interface PoolContextType {
@@ -71,7 +70,6 @@ export function PoolProvider({ pool: poolFromProps, children }: { pool: GqlPoolU
     }, [pool.address]);
 
     const poolService = poolGetServiceForPool(pool);
-    const poolStaking = getPoolStaking(pool);
 
     const { data: poolWithOnChainData } = usePoolWithOnChainData(pool);
     pool = poolWithOnChainData || pool;
@@ -88,19 +86,15 @@ export function PoolProvider({ pool: poolFromProps, children }: { pool: GqlPoolU
     const requiresBatchRelayerOnJoin = poolRequiresBatchRelayerOnJoin(pool);
     const requiresBatchRelayerOnExit = poolRequiresBatchRelayerOnExit(pool);
     const supportsZapIntoMasterchefFarm =
-        (pool.__typename === 'GqlPoolWeighted' ||
-            pool.__typename === 'GqlPoolStable' ||
-            (pool.__typename === 'GqlPoolPhantomStable' &&
-                pool.factory &&
-                networkConfig.balancer.composableStableFactories.includes(pool.factory))) &&
-        poolStaking?.type === 'MASTER_CHEF' &&
-        !!poolStaking.farm;
+        (pool.__typename === 'GqlPoolWeighted' || pool.__typename === 'GqlPoolStable') &&
+        pool.staking?.type === 'MASTER_CHEF' &&
+        !!pool.staking.farm;
     const supportsZapIntoGauge =
         ((pool.__typename === 'GqlPoolWeighted' &&
             networkConfig.balancer.weightedPoolV2PlusFactories.includes(pool.factory || '')) ||
             pool.__typename === 'GqlPoolPhantomStable') &&
-        poolStaking?.type === 'GAUGE' &&
-        !!poolStaking.gauge;
+        pool.staking?.type === 'GAUGE' &&
+        !!pool.staking.gauge;
     const supportsZap = supportsZapIntoMasterchefFarm || supportsZapIntoGauge;
 
     const allTokens = useMemo(
