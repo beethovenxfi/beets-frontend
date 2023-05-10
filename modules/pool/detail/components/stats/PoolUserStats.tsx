@@ -8,11 +8,9 @@ import { PoolUserStakedStats } from '~/modules/pool/detail/components/stats/Pool
 import { usePool } from '~/modules/pool/lib/usePool';
 import { BoostedBadgeSmall } from '~/components/boosted-badge/BoostedBadgeSmall';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
-import { getPoolStaking } from '~/lib/services/pool/lib/util';
 
 export default function PoolUserStats() {
     const { pool, totalApr } = usePool();
-    const poolStaking = getPoolStaking(pool);
     const { userPoolBalanceUSD, isLoading } = usePoolUserDepositBalance();
     const { boostedByTypes } = useNetworkConfig();
 
@@ -46,10 +44,10 @@ export default function PoolUserStats() {
                     </Text>
                 )}
             </VStack>
-            {poolStaking && (
+            {pool.staking && (
                 <PoolUserStakedStats
                     poolAddress={pool.address}
-                    staking={poolStaking}
+                    staking={pool.staking}
                     totalApr={totalApr}
                     userPoolBalanceUSD={userPoolBalanceUSD}
                 />

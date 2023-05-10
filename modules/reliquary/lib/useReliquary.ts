@@ -10,7 +10,6 @@ import { useRef } from 'react';
 import { TokenBase } from '~/lib/services/token/token-types';
 import { useUserBalances } from '~/lib/user/useUserBalances';
 import { useLegacyFBeetsBalance } from './useLegacyFbeetsBalance';
-import { getPoolStaking } from '~/lib/services/pool/lib/util';
 
 const selectedRelicId = makeVar<string | undefined>(undefined);
 const createRelic = makeVar<boolean>(false);
@@ -26,7 +25,6 @@ export default function useReliquary() {
         decimals: 18,
     });
     const { pool } = usePool();
-    const poolStaking = getPoolStaking(pool);
 
     const { userBalances: legacyBalances = [], isLoading: isLoadingLegacyBalances } = useUserBalances(
         [networkConfig.fbeets.address, networkConfig.fbeets.poolAddress],
@@ -83,8 +81,8 @@ export default function useReliquary() {
     const isLoading = isLoadingRelicPositions || isLoadingMaturityThresholds;
     const relicIds = relicPositions.map((relic) => parseInt(relic.relicId));
 
-    const beetsPerSecond = poolStaking?.reliquary?.beetsPerSecond || '0';
-    const reliquaryLevels = poolStaking?.reliquary?.levels || [];
+    const beetsPerSecond = pool.staking?.reliquary?.beetsPerSecond || '0';
+    const reliquaryLevels = pool.staking?.reliquary?.levels || [];
     const selectedRelicLevel = reliquaryLevels.find((level) => level.level === selectedRelic?.level);
     const weightedTotalBalance = sumBy(reliquaryLevels, (level) => parseFloat(level.balance) * level.allocationPoints);
 

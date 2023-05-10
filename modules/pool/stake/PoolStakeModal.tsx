@@ -28,7 +28,6 @@ import { CardRow } from '~/components/card/CardRow';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 import { usePool } from '~/modules/pool/lib/usePool';
 import { useUserSyncBalanceMutation } from '~/apollo/generated/graphql-codegen-generated';
-import { getPoolStaking } from '~/lib/services/pool/lib/util';
 
 interface Props {
     isOpen: boolean;
@@ -47,7 +46,6 @@ export function PoolStakeModal({ isOpen, onOpen, onClose }: Props) {
         refetch: refetchBptBalances,
     } = usePoolUserBptBalance();
     const { pool, bptPrice } = usePool();
-    const poolStaking = getPoolStaking(pool);
     const {
         hasApprovalToStakeAmount,
         isLoading: isLoadingAllowances,
@@ -61,7 +59,7 @@ export function PoolStakeModal({ isOpen, onOpen, onClose }: Props) {
     const amountIsValid = !hasValue || parseFloat(userWalletBptBalance) >= parseFloat(amount);
 
     const { approve, ...approveQuery } = useApproveToken(pool);
-    const { stake, ...stakeQuery } = useStakingDeposit(poolStaking || null);
+    const { stake, ...stakeQuery } = useStakingDeposit(pool.staking || null);
     const [steps, setSteps] = useState<TransactionStep[] | null>(null);
     const loading = isLoadingAllowances || isLoadingBalances;
 
@@ -175,7 +173,7 @@ export function PoolStakeModal({ isOpen, onOpen, onClose }: Props) {
                         }}
                         onSubmit={(id) => {
                             if (id === 'approve') {
-                                approve(poolStaking?.address || '');
+                                approve(pool.staking?.address || '');
                             } else if (id === 'stake') {
                                 stake(amount || '0');
                             }

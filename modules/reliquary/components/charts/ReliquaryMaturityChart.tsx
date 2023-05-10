@@ -6,11 +6,9 @@ import numeral from 'numeral';
 import { chartGetPrimaryColor } from '~/modules/pool/detail/components/charts/chart-util';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 import { usePool } from '~/modules/pool/lib/usePool';
-import { getPoolStaking } from '~/lib/services/pool/lib/util';
 
 export function ReliquaryMaturityChart() {
     const { pool } = usePool();
-    const poolStaking = getPoolStaking(pool);
     const { colors } = useTheme();
     const networkConfig = useNetworkConfig();
 
@@ -65,7 +63,7 @@ export function ReliquaryMaturityChart() {
             },
             series: [
                 {
-                    data: poolStaking?.reliquary?.levels?.map((level) => [level.level + 1, level.balance]),
+                    data: pool.staking?.reliquary?.levels?.map((level) => [level.level + 1, level.balance]),
                     type: 'bar',
                     itemStyle: {
                         opacity: 1,
@@ -79,7 +77,7 @@ export function ReliquaryMaturityChart() {
                 },
             ],
         }),
-        [JSON.stringify(poolStaking?.reliquary?.levels)],
+        [JSON.stringify(pool.staking?.reliquary?.levels)],
     );
 
     return <ReactECharts option={option} style={{ height: '100%' }} />;
