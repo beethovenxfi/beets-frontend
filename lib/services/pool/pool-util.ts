@@ -13,9 +13,9 @@ import { batchRelayerService } from '~/lib/services/batch-relayer/batch-relayer.
 import { networkConfig } from '~/lib/config/network-config';
 import { networkProvider } from '~/lib/global/network';
 import { PoolMetaStableService } from '~/lib/services/pool/pool-meta-stable.service';
-import { isSameAddress } from '@balancer-labs/sdk';
 import { PoolComposableStableService } from '~/lib/services/pool/pool-composable-stable.service';
 import { PoolWeightedV2Service } from '~/lib/services/pool/pool-weighted-v2.service';
+import { PoolGyroService } from './pool-gyro.service';
 
 export function poolGetTokensWithoutPhantomBpt(pool: GqlPoolUnion | GqlPoolPhantomStableNested | GqlPoolLinearNested) {
     return pool.tokens.filter((token) => token.address !== pool.address);
@@ -87,6 +87,8 @@ export function poolGetServiceForPool(pool: GqlPoolUnion): PoolService {
         }
         case 'GqlPoolMetaStable':
             return new PoolMetaStableService(pool, batchRelayerService, networkConfig.wethAddress);
+        case 'GqlPoolGyro':
+            return new PoolGyroService(pool, batchRelayerService, networkConfig.wethAddress, networkProvider);
     }
 
     throw new Error('unsupported pool type');

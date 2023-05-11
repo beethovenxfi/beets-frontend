@@ -261,11 +261,11 @@ export class PoolComposableJoinService {
     }): Promise<ComposablePoolJoinProcessedJoinPoolStep> {
         const pool = joinStep.pool;
         const bptAmount =
-            pool.__typename === 'GqlPoolWeighted'
+            pool.__typename === 'GqlPoolWeighted' || pool.__typename === 'GqlPoolGyro'
                 ? poolWeightedExactTokensInForBPTOut(tokenAmountsIn, pool)
                 : poolStableExactTokensInForBPTOut(tokenAmountsIn, pool);
         const bptZeroPriceImpact =
-            pool.__typename === 'GqlPoolWeighted'
+            pool.__typename === 'GqlPoolWeighted' || pool.__typename === 'GqlPoolGyro'
                 ? poolWeightedBptForTokensZeroPriceImpact(tokenAmountsIn, pool)
                 : poolStableBptForTokensZeroPriceImpact(tokenAmountsIn, pool);
 

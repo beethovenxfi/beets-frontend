@@ -42,6 +42,7 @@ import {
 } from '~/lib/services/pool/lib/old-big-number';
 import { parseUnits } from 'ethers/lib/utils';
 import {
+    GqlPoolGyro,
     GqlPoolPhantomStable,
     GqlPoolPhantomStableNested,
     GqlPoolToken,
@@ -593,6 +594,7 @@ export class PoolComposableExitService {
         option: GqlPoolWithdrawOption;
         tokenOption: GqlPoolToken;
     }): ComposablePoolSingleAssetExit {
+        console.log({ options: this.pool.tokens });
         const poolToken = this.pool.tokens.find((poolToken) => poolToken.address === option.poolTokenAddress)!;
         const tokenOut = this.pool.allTokens.find((token) => token.address === tokenOption.address)!;
         const linearPoolToken = this.nestedLinearPoolTokens.find((linearPoolToken) => {
@@ -635,7 +637,7 @@ export class PoolComposableExitService {
         poolToken,
     }: {
         bptIn: AmountHumanReadable;
-        pool: GqlPoolWeighted | GqlPoolPhantomStable | GqlPoolPhantomStableNested;
+        pool: GqlPoolWeighted | GqlPoolPhantomStable | GqlPoolPhantomStableNested | GqlPoolGyro;
         poolToken: GqlPoolTokenUnion;
     }): {
         tokenAmountOut: AmountHumanReadable;
@@ -644,13 +646,13 @@ export class PoolComposableExitService {
         const bptAmountScaled = oldBnumFromBnum(parseUnits(bptIn));
 
         const poolTokenAmountOut =
-            pool.__typename === 'GqlPoolWeighted'
+            pool.__typename === 'GqlPoolWeighted' || pool.__typename === 'GqlPoolGyro'
                 ? poolWeightedExactBPTInForTokenOut(pool, bptIn, poolToken.address)
                 : poolStableExactBPTInForTokenOut(pool, bptIn, poolToken.address);
         const tokenAmounts = [{ address: poolToken.address, amount: poolTokenAmountOut }];
 
         const bptZeroPriceImpact =
-            pool.__typename === 'GqlPoolWeighted'
+            pool.__typename === 'GqlPoolWeighted' || pool.__typename === 'GqlPoolGyro'
                 ? poolWeightedBptForTokensZeroPriceImpact(tokenAmounts, pool)
                 : poolStableBptForTokensZeroPriceImpact(tokenAmounts, pool);
 
@@ -688,11 +690,13 @@ export class PoolComposableExitService {
         return singleAssetExit;
     }
 
-    private isComposableV1(pool: GqlPoolWeighted | GqlPoolPhantomStable | GqlPoolPhantomStableNested): boolean {
+    private isComposableV1(
+        pool: GqlPoolWeighted | GqlPoolPhantomStable | GqlPoolPhantomStableNested | GqlPoolGyro,
+    ): boolean {
         return pool.factory === networkConfig.balancer.composableStableV1Factory;
     }
 
-    private getPoolKind(pool: GqlPoolWeighted | GqlPoolPhantomStable | GqlPoolPhantomStableNested) {
+    private getPoolKind(pool: GqlPoolWeighted | GqlPoolPhantomStable | GqlPoolPhantomStableNested | GqlPoolGyro) {
         if (this.isComposableV1(pool)) {
             return BatchRelayerPoolKind.COMPOSABLE_STABLE;
         } else if (pool.__typename === 'GqlPoolPhantomStable' || pool.__typename === 'GqlPoolPhantomStableNested') {
@@ -711,7 +715,7 @@ export class PoolComposableExitService {
         toInternalBalance,
         inputReference,
     }: {
-        pool: GqlPoolWeighted | GqlPoolPhantomStable | GqlPoolPhantomStableNested;
+        pool: GqlPoolWeighted | GqlPoolPhantomStable | GqlPoolPhantomStableNested | GqlPoolGyro;
         bptIn: AmountHumanReadable;
         slippage: string;
         exitAmounts: TokenAmountHumanReadable[];

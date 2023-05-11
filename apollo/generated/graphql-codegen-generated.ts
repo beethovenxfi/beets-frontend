@@ -4671,24 +4671,7 @@ export type GetPoolsQuery = {
                 symbol: string;
             }> | null;
         }>;
-        staking?: {
-            __typename: 'GqlPoolStaking';
-            id: string;
-            type: GqlPoolStakingType;
-            address: string;
-            farm?: {
-                __typename: 'GqlPoolStakingMasterChefFarm';
-                id: string;
-                beetsPerBlock: string;
-                rewarders?: Array<{
-                    __typename: 'GqlPoolStakingFarmRewarder';
-                    id: string;
-                    address: string;
-                    tokenAddress: string;
-                    rewardPerSecond: string;
-                }> | null;
-            } | null;
-        } | null;
+        staking?: { __typename: 'GqlPoolStaking'; id: string; type: GqlPoolStakingType; address: string } | null;
     }>;
 };
 
@@ -4769,24 +4752,7 @@ export type GqlPoolMinimalFragment = {
             symbol: string;
         }> | null;
     }>;
-    staking?: {
-        __typename: 'GqlPoolStaking';
-        id: string;
-        type: GqlPoolStakingType;
-        address: string;
-        farm?: {
-            __typename: 'GqlPoolStakingMasterChefFarm';
-            id: string;
-            beetsPerBlock: string;
-            rewarders?: Array<{
-                __typename: 'GqlPoolStakingFarmRewarder';
-                id: string;
-                address: string;
-                tokenAddress: string;
-                rewardPerSecond: string;
-            }> | null;
-        } | null;
-    } | null;
+    staking?: { __typename: 'GqlPoolStaking'; id: string; type: GqlPoolStakingType; address: string } | null;
 };
 
 export type GetReliquaryFarmSnapshotsQueryVariables = Exact<{

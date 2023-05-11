@@ -1,4 +1,5 @@
 import {
+    GqlPoolGyro,
     GqlPoolLinearNested,
     GqlPoolPhantomStable,
     GqlPoolPhantomStableNested,
@@ -221,8 +222,11 @@ export function poolStableBptForTokensZeroPriceImpact(
 
 export function poolWeightedExactTokensInForBPTOut(
     tokenAmounts: TokenAmountHumanReadable[],
-    pool: GqlPoolWeighted,
+    pool: GqlPoolWeighted | GqlPoolGyro,
 ): OldBigNumber {
+    const hasWeights = pool.tokens.find((token) => token.weight);
+    console.log({ hasWeights });
+
     return SDK.WeightedMath._calcBptOutGivenExactTokensIn(
         pool.tokens.map((token) => oldBnumScaleAmount(token.balance, token.decimals)),
         pool.tokens.map((token) => oldBnumScaleAmount(token.weight || '0', 18)),
@@ -234,7 +238,7 @@ export function poolWeightedExactTokensInForBPTOut(
 
 export function poolWeightedBptForTokensZeroPriceImpact(
     tokenAmounts: TokenAmountHumanReadable[],
-    pool: GqlPoolWeighted,
+    pool: GqlPoolWeighted | GqlPoolGyro,
 ): OldBigNumber {
     const denormAmounts = oldBnumPoolScaleTokenAmounts(tokenAmounts, pool.tokens);
     const tokenBalancesScaled = pool.tokens.map((token) => oldBnumScaleAmount(token.balance, token.decimals));
@@ -310,7 +314,7 @@ export async function poolQueryBatchSwap({
 }
 
 export function poolWeightedExactBPTInForTokenOut(
-    pool: GqlPoolWeighted,
+    pool: GqlPoolWeighted | GqlPoolGyro,
     bptAmount: AmountHumanReadable,
     tokenAddress: string,
 ): AmountHumanReadable {
@@ -331,7 +335,7 @@ export function poolWeightedExactBPTInForTokenOut(
 }
 
 export function poolWeightedBptInForExactTokenOut(
-    pool: GqlPoolWeighted,
+    pool: GqlPoolWeighted | GqlPoolGyro,
     tokenAmountOut: TokenAmountHumanReadable,
 ): AmountHumanReadable {
     const token = poolGetRequiredToken(tokenAmountOut.address, pool.tokens);
@@ -450,7 +454,7 @@ export function poolGetWrappedTokenFromLinearPoolToken(linearPoolToken: GqlPoolT
 }
 
 export function poolGetTotalShares(
-    pool: GqlPoolWeighted | GqlPoolPhantomStable | GqlPoolPhantomStableNested,
+    pool: GqlPoolWeighted | GqlPoolPhantomStable | GqlPoolPhantomStableNested | GqlPoolGyro,
 ): AmountHumanReadable {
     return pool.__typename === 'GqlPoolPhantomStableNested' ? pool.totalShares : pool.dynamicData.totalShares;
 }
@@ -477,7 +481,7 @@ function scaleTokenAmountDownFrom18Decimals(
 }
 
 export function poolGetPoolTokenForPossiblyNestedTokenOut(
-    pool: GqlPoolWeighted | GqlPoolPhantomStable | GqlPoolPhantomStableNested | GqlPoolLinearNested,
+    pool: GqlPoolWeighted | GqlPoolPhantomStable | GqlPoolPhantomStableNested | GqlPoolLinearNested | GqlPoolGyro,
     tokenOutAddress: string,
 ) {
     return pool.tokens.find((poolToken) => {
@@ -503,7 +507,9 @@ export function poolGetPoolTokenForPossiblyNestedTokenOut(
     });
 }
 
-export function poolHasOnlyLinearBpts(pool: GqlPoolWeighted | GqlPoolPhantomStable | GqlPoolPhantomStableNested) {
+export function poolHasOnlyLinearBpts(
+    pool: GqlPoolWeighted | GqlPoolPhantomStable | GqlPoolPhantomStableNested | GqlPoolGyro,
+) {
     for (const token of pool.tokens) {
         if (token.__typename !== 'GqlPoolTokenLinear') {
             return false;
