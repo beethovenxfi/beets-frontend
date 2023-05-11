@@ -278,7 +278,8 @@ export class ReliquaryService {
         const oldLevelProgressDiff = parseInt(maturityLevels[levelOnUpdateIndex].toString()) - maturity;
 
         const progressDiff = newLevelProgressDiff - oldLevelProgressDiff;
-        const levelDiff = levelOnUpdate - newLevel;
+        // you don't 'progress' through max level so we don't need to account for the time that would take
+        const levelDiff = levelOnUpdate === maxLevel ? 0 : levelOnUpdate - newLevel;
         const diff = progressDiff + levelDiff * 604800;
         const diffDate = new Date((nowTimestamp + diff) * 1000);
 
