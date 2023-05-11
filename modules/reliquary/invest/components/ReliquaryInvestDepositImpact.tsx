@@ -27,28 +27,31 @@ export function ReliquaryInvestDepositImpact({ bptIn, totalInvestValue = 0, reli
     }, [relicId]);
 
     return (
-        <Box w="full">
-            <Alert status="warning" mb="4">
-                <AlertIcon alignSelf="center" />
-                {!isFetching && depositImpact !== undefined ? (
-                    `Investing ${numberFormatUSDValue(
-                        totalInvestValue,
-                    )} into this relic will affect its maturity. It will take an additional ${formatDistanceToNowStrict(
-                        depositImpact.diffDate,
-                    )} to reach maximum maturity.`
-                ) : (
-                    <Box w="full">
-                        <SkeletonText
-                            my="2"
-                            startColor="beets.green"
-                            endColor="beets.highlight"
-                            noOfLines={3}
-                            spacing="4"
-                            skeletonHeight="2"
-                        />
-                    </Box>
-                )}
-            </Alert>
-        </Box>
+        depositImpact !== undefined &&
+        !depositImpact.staysMax && (
+            <Box w="full">
+                <Alert status="warning" mb="4">
+                    <AlertIcon alignSelf="center" />
+                    {!isFetching ? (
+                        `Investing ${numberFormatUSDValue(
+                            totalInvestValue,
+                        )} into this relic will affect its maturity. It will take an additional ${formatDistanceToNowStrict(
+                            depositImpact.diffDate,
+                        )} to reach maximum maturity.`
+                    ) : (
+                        <Box w="full">
+                            <SkeletonText
+                                my="2"
+                                startColor="beets.green"
+                                endColor="beets.highlight"
+                                noOfLines={3}
+                                spacing="4"
+                                skeletonHeight="2"
+                            />
+                        </Box>
+                    )}
+                </Alert>
+            </Box>
+        )
     );
 }

@@ -27,6 +27,7 @@ export type ReliquaryDepositImpact = {
     oldLevelProgress: string;
     newLevelProgress: string;
     diffDate: Date;
+    staysMax: boolean;
 };
 
 export class ReliquaryService {
@@ -281,6 +282,8 @@ export class ReliquaryService {
         const diff = progressDiff + levelDiff * 604800;
         const diffDate = new Date((nowTimestamp + diff) * 1000);
 
+        const staysMax = levelOnUpdate === maxLevel && newLevel === maxLevel;
+
         return {
             oldMaturity: maturity,
             newMaturity,
@@ -289,6 +292,7 @@ export class ReliquaryService {
             oldLevelProgress,
             newLevelProgress,
             diffDate,
+            staysMax,
         };
     }
 }
