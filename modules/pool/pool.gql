@@ -263,6 +263,14 @@ query GetPool($id: String!) {
                 }
             }
         }
+        ... on GqlPoolGyro {
+            nestingType
+            tokens {
+                ... on GqlPoolToken {
+                    ...GqlPoolToken
+                }
+            }
+        }
     }
 }
 
