@@ -7,6 +7,7 @@ import {
     GqlPoolTokenBase,
     GqlPoolTokenLinear,
     GqlPoolTokenPhantomStable,
+    GqlPoolTokenUnion,
     GqlPoolWeighted,
 } from '~/apollo/generated/graphql-codegen-generated';
 import { AmountHumanReadable, AmountScaledString, TokenAmountHumanReadable } from '~/lib/services/token/token-types';
@@ -220,16 +221,27 @@ export function poolStableBptForTokensZeroPriceImpact(
     return oldBnumFromBnum(bptZeroImpact);
 }
 
+function getTokenWeights(pool: GqlPoolWeighted | GqlPoolGyro): { weight: string }[] | GqlPoolTokenUnion[] {
+    const hasWeights = pool.tokens.find((token) => token.weight);
+    if (hasWeights) {
+        return pool.tokens;
+    } else {
+        const totalPoolBalance = pool.tokens
+            .map((token) => token.balance)
+            .reduce((a, b) => oldBnum(a).plus(b), oldBnum(0));
+        return pool.tokens.map((token) => ({ weight: oldBnum(token.balance).div(totalPoolBalance).toString() }));
+    }
+}
+
 export function poolWeightedExactTokensInForBPTOut(
     tokenAmounts: TokenAmountHumanReadable[],
     pool: GqlPoolWeighted | GqlPoolGyro,
 ): OldBigNumber {
-    const hasWeights = pool.tokens.find((token) => token.weight);
-    console.log({ hasWeights });
+    const tokenWeights = getTokenWeights(pool);
 
     return SDK.WeightedMath._calcBptOutGivenExactTokensIn(
         pool.tokens.map((token) => oldBnumScaleAmount(token.balance, token.decimals)),
-        pool.tokens.map((token) => oldBnumScaleAmount(token.weight || '0', 18)),
+        tokenWeights.map((token) => oldBnumScaleAmount(token.weight || '0', 18)),
         oldBnumPoolScaleTokenAmounts(tokenAmounts, pool.tokens),
         oldBnumScaleAmount(pool.dynamicData.totalShares),
         oldBnumScaleAmount(pool.dynamicData.swapFee),
@@ -242,7 +254,8 @@ export function poolWeightedBptForTokensZeroPriceImpact(
 ): OldBigNumber {
     const denormAmounts = oldBnumPoolScaleTokenAmounts(tokenAmounts, pool.tokens);
     const tokenBalancesScaled = pool.tokens.map((token) => oldBnumScaleAmount(token.balance, token.decimals));
-    const tokenWeightsScaled = pool.tokens.map((token) => oldBnumScaleAmount(token.weight || '0', 18));
+    const tokenWeights = getTokenWeights(pool);
+    const tokenWeightsScaled = tokenWeights.map((token) => oldBnumScaleAmount(token.weight || '0', 18));
 
     const result = weightedBPTForTokensZeroPriceImpact(
         tokenBalancesScaled.map((balance) => oldBnumToBnum(balance)),
