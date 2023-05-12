@@ -25,7 +25,7 @@ import { PoolProportionalInvestService } from './lib/pool-proportional-invest.se
 
 export class PoolGyroService implements PoolService {
     private readonly composableJoinService: PoolComposableJoinService;
-    //private readonly composableExitService: PoolComposableExitService;
+    private readonly composableExitService: PoolComposableExitService;
     private readonly proportionalInvestService: PoolProportionalInvestService;
 
     constructor(
@@ -35,7 +35,7 @@ export class PoolGyroService implements PoolService {
         private readonly provider: BaseProvider,
     ) {
         this.composableJoinService = new PoolComposableJoinService(pool, batchRelayerService, provider, wethAddress);
-        //this.composableExitService = new PoolComposableExitService(pool, batchRelayerService, provider, wethAddress);
+        this.composableExitService = new PoolComposableExitService(pool, batchRelayerService, provider, wethAddress);
         this.proportionalInvestService = new PoolProportionalInvestService(pool);
     }
 
@@ -133,39 +133,35 @@ export class PoolGyroService implements PoolService {
     public async exitGetProportionalPoolTokenWithdrawEstimate(
         bptIn: AmountHumanReadable,
     ): Promise<TokenAmountHumanReadable[]> {
-        return [{ address: '0x', amount: '0.0' }];
-        //return this.composableExitService.exitGetProportionalPoolTokenWithdrawEstimate(bptIn);
+        return this.composableExitService.exitGetProportionalPoolTokenWithdrawEstimate(bptIn);
     }
 
     public async exitGetProportionalWithdrawEstimate(
         bptIn: AmountHumanReadable,
         tokensOut: string[],
     ): Promise<TokenAmountHumanReadable[]> {
-        return [{ address: '0x', amount: '0.0' }];
-        // return this.composableExitService.exitGetProportionalWithdrawEstimate(bptIn, tokensOut);
+        return this.composableExitService.exitGetProportionalWithdrawEstimate(bptIn, tokensOut);
     }
 
     public async exitGetBptInForSingleAssetWithdraw(
         tokenAmount: TokenAmountHumanReadable,
     ): Promise<PoolExitBptInSingleAssetWithdrawOutput> {
-        return { bptIn: '0.0', priceImpact: 0 };
-        //return this.composableExitService.exitGetBptInForSingleAssetWithdraw(tokenAmount);
+        return this.composableExitService.exitGetBptInForSingleAssetWithdraw(tokenAmount);
     }
 
     public async exitGetSingleAssetWithdrawForBptIn(
         bptIn: AmountHumanReadable,
         tokenOutAddress: string,
     ): Promise<PoolExitSingleAssetWithdrawForBptInOutput> {
-        return { tokenAmount: '0.0', priceImpact: 0 };
-        //return this.composableExitService.exitGetSingleAssetWithdrawForBptIn(bptIn, tokenOutAddress);
+        return this.composableExitService.exitGetSingleAssetWithdrawForBptIn(bptIn, tokenOutAddress);
     }
 
     public async exitGetContractCallData(data: PoolExitData): Promise<PoolExitContractCallData> {
-        // if (data.kind === 'ExactBPTInForTokensOut') {
-        //     return this.composableExitService.exitExactBPTInForTokensOutGetContractCallData(data);
-        // } else if (data.kind === 'ExactBPTInForOneTokenOut') {
-        //     return this.composableExitService.exitExactBPTInForOneTokenOutGetContractCallData(data);
-        // }
+        if (data.kind === 'ExactBPTInForTokensOut') {
+            return this.composableExitService.exitExactBPTInForTokensOutGetContractCallData(data);
+        } else if (data.kind === 'ExactBPTInForOneTokenOut') {
+            return this.composableExitService.exitExactBPTInForOneTokenOutGetContractCallData(data);
+        }
 
         throw new Error('unsupported join type');
     }
