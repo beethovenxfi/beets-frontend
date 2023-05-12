@@ -68,7 +68,7 @@ export function ReliquaryInvestActions({ onInvestComplete, onClose }: Props) {
             const investStep: TransactionStep = {
                 id: 'reliquary-invest',
                 type: 'other',
-                buttonText: `${createRelic ? 'CREATE and ' : ''}DEPOSIT`,
+                buttonText: `${createRelic ? 'Create and d' : 'D'}eposit`,
                 tooltipText: 'Create and/or deposit into your relic',
             };
 
