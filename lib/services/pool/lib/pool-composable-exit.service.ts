@@ -594,7 +594,6 @@ export class PoolComposableExitService {
         option: GqlPoolWithdrawOption;
         tokenOption: GqlPoolToken;
     }): ComposablePoolSingleAssetExit {
-        console.log({ options: this.pool.tokens });
         const poolToken = this.pool.tokens.find((poolToken) => poolToken.address === option.poolTokenAddress)!;
         const tokenOut = this.pool.allTokens.find((token) => token.address === tokenOption.address)!;
         const linearPoolToken = this.nestedLinearPoolTokens.find((linearPoolToken) => {
