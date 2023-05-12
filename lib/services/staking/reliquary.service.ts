@@ -272,15 +272,8 @@ export class ReliquaryService {
             newLevel > maturityLevels.length ? 'max level reached' : `${newMaturity}/${maturityLevels[newLevel + 1]}`;
 
         const maxLevel = 10; // zero based indexing, frontend will show '11'
-        const newLevelIndex = newLevel === maxLevel ? maxLevel : newLevel + 1;
-        const newLevelProgressDiff = parseInt(maturityLevels[newLevelIndex].toString()) - newMaturity;
-        const levelOnUpdateIndex = levelOnUpdate === maxLevel ? maxLevel : levelOnUpdate + 1;
-        const oldLevelProgressDiff = parseInt(maturityLevels[levelOnUpdateIndex].toString()) - maturity;
-
-        const progressDiff = newLevelProgressDiff - oldLevelProgressDiff;
-        const levelDiff = levelOnUpdate - newLevel;
-        const diff = progressDiff + levelDiff * 604800;
-        const diffDate = new Date((nowTimestamp + diff) * 1000);
+        const secondsToMaxLevel = parseInt(maturityLevels[maxLevel].toString()) - newMaturity;
+        const diffDate = new Date((nowTimestamp + secondsToMaxLevel) * 1000);
 
         const staysMax = levelOnUpdate === maxLevel && newLevel === maxLevel;
 
