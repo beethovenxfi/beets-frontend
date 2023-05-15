@@ -22,7 +22,7 @@ interface Props {
 }
 
 export function PoolInvestTypeChoice({ onShowProportional, onShowCustom }: Props) {
-    const { pool, poolService, customInvestEnabled } = usePool();
+    const { pool, poolService, isGyroPool } = usePool();
     const { formattedPrice } = useGetTokens();
     const { userPoolTokenBalances, investableAmount } = usePoolUserTokenBalancesInWallet();
     const { canInvestProportionally } = useInvest();
@@ -90,7 +90,7 @@ export function PoolInvestTypeChoice({ onShowProportional, onShowCustom }: Props
                                         {numberFormatUSDValue(totalValueProportionalAmounts || 0)}
                                     </Text>
                                     <Text fontSize="sm">Proportional investment</Text>
-                                    <Text fontSize="xs" color={customInvestEnabled ? 'buttonHighlight' : 'transparent'}>
+                                    <Text fontSize="xs" color={isGyroPool ? 'buttonHighlight' : 'transparent'}>
                                         Recommended
                                     </Text>
                                 </VStack>
@@ -99,10 +99,10 @@ export function PoolInvestTypeChoice({ onShowProportional, onShowCustom }: Props
                     </BeetsTooltip>
                     <BeetsTooltip
                         noImage
-                        label={customInvestEnabled ? 'bla' : 'This pool does not support a custom investment.'}
+                        label={isGyroPool ? 'bla' : 'This pool does not support a custom investment.'}
                     >
                         <Box width="full">
-                            <Button variant="image" onClick={onShowCustom} disabled={!customInvestEnabled}>
+                            <Button variant="image" onClick={onShowCustom} disabled={!isGyroPool}>
                                 <VStack spacing="1">
                                     <Image src={BeetSmart} height="48" alt="beets-smart" />
                                     <Text fontSize="lg">{numberFormatUSDValue(investableAmount)}</Text>
