@@ -90,7 +90,7 @@ export function PoolInvestTypeChoice({ onShowProportional, onShowCustom }: Props
                                         {numberFormatUSDValue(totalValueProportionalAmounts || 0)}
                                     </Text>
                                     <Text fontSize="sm">Proportional investment</Text>
-                                    <Text fontSize="xs" color="beets.green">
+                                    <Text fontSize="xs" color={customInvestEnabled ? 'buttonHighlight' : 'transparent'}>
                                         Recommended
                                     </Text>
                                 </VStack>
