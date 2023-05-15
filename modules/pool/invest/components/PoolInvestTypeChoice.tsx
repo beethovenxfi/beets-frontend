@@ -97,10 +97,7 @@ export function PoolInvestTypeChoice({ onShowProportional, onShowCustom }: Props
                             </Button>
                         </Box>
                     </BeetsTooltip>
-                    <BeetsTooltip
-                        noImage
-                        label={isGyroPool ? 'bla' : 'This pool does not support a custom investment.'}
-                    >
+                    <BeetsTooltip noImage label={!isGyroPool ? 'This pool does not support a custom investment.' : ''}>
                         <Box width="full">
                             <Button variant="image" onClick={onShowCustom} disabled={!isGyroPool}>
                                 <VStack spacing="1">
