@@ -42,7 +42,6 @@ import {
 } from '~/lib/services/pool/lib/old-big-number';
 import { parseUnits } from 'ethers/lib/utils';
 import {
-    GqlPoolGyro,
     GqlPoolPhantomStable,
     GqlPoolPhantomStableNested,
     GqlPoolToken,
@@ -636,7 +635,7 @@ export class PoolComposableExitService {
         poolToken,
     }: {
         bptIn: AmountHumanReadable;
-        pool: GqlPoolWeighted | GqlPoolPhantomStable | GqlPoolPhantomStableNested | GqlPoolGyro;
+        pool: GqlPoolWeighted | GqlPoolPhantomStable | GqlPoolPhantomStableNested;
         poolToken: GqlPoolTokenUnion;
     }): {
         tokenAmountOut: AmountHumanReadable;
@@ -645,13 +644,13 @@ export class PoolComposableExitService {
         const bptAmountScaled = oldBnumFromBnum(parseUnits(bptIn));
 
         const poolTokenAmountOut =
-            pool.__typename === 'GqlPoolWeighted' || pool.__typename === 'GqlPoolGyro'
+            pool.__typename === 'GqlPoolWeighted'
                 ? poolWeightedExactBPTInForTokenOut(pool, bptIn, poolToken.address)
                 : poolStableExactBPTInForTokenOut(pool, bptIn, poolToken.address);
         const tokenAmounts = [{ address: poolToken.address, amount: poolTokenAmountOut }];
 
         const bptZeroPriceImpact =
-            pool.__typename === 'GqlPoolWeighted' || pool.__typename === 'GqlPoolGyro'
+            pool.__typename === 'GqlPoolWeighted'
                 ? poolWeightedBptForTokensZeroPriceImpact(tokenAmounts, pool)
                 : poolStableBptForTokensZeroPriceImpact(tokenAmounts, pool);
 
@@ -689,13 +688,11 @@ export class PoolComposableExitService {
         return singleAssetExit;
     }
 
-    private isComposableV1(
-        pool: GqlPoolWeighted | GqlPoolPhantomStable | GqlPoolPhantomStableNested | GqlPoolGyro,
-    ): boolean {
+    private isComposableV1(pool: GqlPoolWeighted | GqlPoolPhantomStable | GqlPoolPhantomStableNested): boolean {
         return pool.factory === networkConfig.balancer.composableStableV1Factory;
     }
 
-    private getPoolKind(pool: GqlPoolWeighted | GqlPoolPhantomStable | GqlPoolPhantomStableNested | GqlPoolGyro) {
+    private getPoolKind(pool: GqlPoolWeighted | GqlPoolPhantomStable | GqlPoolPhantomStableNested) {
         if (this.isComposableV1(pool)) {
             return BatchRelayerPoolKind.COMPOSABLE_STABLE;
         } else if (pool.__typename === 'GqlPoolPhantomStable' || pool.__typename === 'GqlPoolPhantomStableNested') {
@@ -714,7 +711,7 @@ export class PoolComposableExitService {
         toInternalBalance,
         inputReference,
     }: {
-        pool: GqlPoolWeighted | GqlPoolPhantomStable | GqlPoolPhantomStableNested | GqlPoolGyro;
+        pool: GqlPoolWeighted | GqlPoolPhantomStable | GqlPoolPhantomStableNested;
         bptIn: AmountHumanReadable;
         slippage: string;
         exitAmounts: TokenAmountHumanReadable[];
