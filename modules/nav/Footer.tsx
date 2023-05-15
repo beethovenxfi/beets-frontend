@@ -61,7 +61,7 @@ export function Footer() {
                     </Grid>
                     <HStack spacing="6" mt="24">
                         <Box>
-                            <Link href="https://discord.gg/jedS4zGk28" target="_blank" _active={{ boxShadow: 'none' }}>
+                            <Link href="https://discord.gg/beethovenx" target="_blank" _active={{ boxShadow: 'none' }}>
                                 <NextImage src={DiscordIcon} />
                             </Link>
                         </Box>
