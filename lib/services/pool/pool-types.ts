@@ -2,7 +2,6 @@ import { AmountHumanReadable, AmountScaledString, TokenAmountHumanReadable } fro
 import { BigNumberish } from 'ethers';
 import { BatchSwapStep, SwapKind } from '@balancer-labs/balancer-js';
 import {
-    GqlPoolGyro,
     GqlPoolLinearNested,
     GqlPoolPhantomStable,
     GqlPoolPhantomStableNested,
