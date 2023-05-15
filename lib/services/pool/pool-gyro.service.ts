@@ -1,9 +1,8 @@
 import { GqlPoolGyro } from '~/apollo/generated/graphql-codegen-generated';
 import {
-    ComposablePoolJoinProcessedStepsOutput,
     PoolExitBptInSingleAssetWithdrawOutput,
-    PoolExitContractCallData,
     PoolExitData,
+    PoolExitPoolContractCallData,
     PoolExitSingleAssetWithdrawForBptInOutput,
     PoolJoinContractCallData,
     PoolJoinData,
@@ -11,32 +10,29 @@ import {
     PoolService,
 } from '~/lib/services/pool/pool-types';
 import { AmountHumanReadable, TokenAmountHumanReadable } from '~/lib/services/token/token-types';
-import { BaseProvider } from '@ethersproject/providers';
-import { BatchRelayerService } from '~/lib/services/batch-relayer/batch-relayer.service';
 import {
-    poolGetPoolTokenForPossiblyNestedTokenOut,
+    poolGetProportionalExitAmountsForBptIn,
     poolGetProportionalJoinAmountsForFixedAmount,
-    poolGetNestedTokenEstimateForPoolTokenAmounts,
+    poolGetRequiredToken,
+    poolScaleTokenAmounts,
+    poolWeightedBptForTokensZeroPriceImpact,
+    poolWeightedExactTokensInForBPTOut,
 } from '~/lib/services/pool/lib/util';
-import { PoolComposableJoinService } from '~/lib/services/pool/lib/pool-composable-join.service';
-import { PoolComposableExitService } from '~/lib/services/pool/lib/pool-composable-exit.service';
 import { replaceEthWithWeth } from '~/lib/services/token/token-util';
 import { PoolProportionalInvestService } from './lib/pool-proportional-invest.service';
+import { PoolBaseService } from './lib/pool-base.service';
+import { WeightedPoolEncoder } from '@balancer-labs/balancer-js';
+import { parseUnits } from 'ethers/lib/utils.js';
+import { formatFixed } from '@ethersproject/bignumber';
+import { oldBnumSubtractSlippage } from './lib/old-big-number';
 
 export class PoolGyroService implements PoolService {
-    private readonly composableJoinService: PoolComposableJoinService;
-    private readonly composableExitService: PoolComposableExitService;
     private readonly proportionalInvestService: PoolProportionalInvestService;
+    private readonly baseService: PoolBaseService;
 
-    constructor(
-        private pool: GqlPoolGyro,
-        private batchRelayerService: BatchRelayerService,
-        private readonly wethAddress: string,
-        private readonly provider: BaseProvider,
-    ) {
-        this.composableJoinService = new PoolComposableJoinService(pool, batchRelayerService, provider, wethAddress);
-        this.composableExitService = new PoolComposableExitService(pool, batchRelayerService, provider, wethAddress);
+    constructor(private pool: GqlPoolGyro, private readonly wethAddress: string) {
         this.proportionalInvestService = new PoolProportionalInvestService(pool);
+        this.baseService = new PoolBaseService(pool, wethAddress);
     }
 
     public updatePool(pool: GqlPoolGyro) {
@@ -58,111 +54,123 @@ export class PoolGyroService implements PoolService {
         fixedAmount: TokenAmountHumanReadable,
         tokensIn: string[],
     ): Promise<TokenAmountHumanReadable[]> {
-        if (parseFloat(fixedAmount.amount) === 0) {
-            return tokensIn.map((address) => ({ address, amount: '0.0' }));
-        }
-
-        //map fixedAmount to the corresponding BPT
-        const poolToken = poolGetPoolTokenForPossiblyNestedTokenOut(this.pool, fixedAmount.address);
-        const { processedSteps } = await this.composableJoinService.processJoinSteps({
-            tokenAmountsIn: [fixedAmount],
-            slippage: '0',
-        });
-        const joinStep = processedSteps.find((step) => step.type === 'Join' && step.pool.id === this.pool.id)!;
-        const poolTokenFixedAmount = joinStep.tokenAmountsIn.find(
-            (amountIn) => amountIn.address === poolToken?.address,
-        );
-
-        if (!poolTokenFixedAmount) {
-            throw new Error('WeightedV2: failed to map fixed amount to pool token fixed amount');
-        }
-
-        //get the corresponding pool token amounts
-        const proportionalSuggestion = poolGetProportionalJoinAmountsForFixedAmount(
-            poolTokenFixedAmount,
-            this.pool.tokens,
-        );
-
-        //map pool token amounts to invest token amounts
-        return poolGetNestedTokenEstimateForPoolTokenAmounts({
-            pool: this.pool,
-            nestedTokens: tokensIn,
-            poolTokenAmounts: proportionalSuggestion,
-        });
+        return poolGetProportionalJoinAmountsForFixedAmount(fixedAmount, this.pool.tokens);
     }
 
     public async joinGetContractCallData(data: PoolJoinData): Promise<PoolJoinContractCallData> {
-        if (data.kind !== 'ExactTokensInForBPTOut') {
-            throw new Error('unsupported join type');
-        }
+        const bptAmountOut = 'minimumBpt' in data ? data.minimumBpt : '0';
+        const assets = this.pool.tokens.map((token) =>
+            data.wethIsEth ? this.baseService.wethToZero(token.address) : token.address,
+        );
+        const maxAmountsIn = poolScaleTokenAmounts(data.maxAmountsIn, this.pool.tokens);
+        // rn gyro only supports "ALL_TOKENS_IN_FOR_EXACT_BPT_OUT"
+        const userData = WeightedPoolEncoder.joinAllTokensInForExactBPTOut(parseUnits(bptAmountOut));
 
-        const { processedSteps } = await this.getJoinData(data.tokenAmountsIn, data.slippage);
-
-        return this.composableJoinService.joinGetContractCallData({
-            data,
-            processedSteps,
-        });
+        return { type: 'JoinPool', assets, maxAmountsIn, userData };
     }
 
     public async joinGetBptOutAndPriceImpactForTokensIn(
         tokenAmountsIn: TokenAmountHumanReadable[],
         slippage: AmountHumanReadable,
     ): Promise<PoolJoinEstimateOutput> {
-        const { priceImpact, minBptReceived, nestedPriceImpacts } = await this.getJoinData(tokenAmountsIn, slippage);
+        const bptAmount = poolWeightedExactTokensInForBPTOut(tokenAmountsIn, this.pool);
+
+        if (bptAmount.lt(0)) {
+            return { priceImpact: 0, minBptReceived: '0' };
+        }
+
+        const bptZeroPriceImpact = poolWeightedBptForTokensZeroPriceImpact(tokenAmountsIn, this.pool);
+        const minBptReceived = bptAmount.minus(bptAmount.times(slippage)).toFixed(0);
 
         return {
-            priceImpact,
-            minBptReceived,
-            nestedPriceImpacts,
+            priceImpact: bptAmount.div(bptZeroPriceImpact).minus(1).toNumber(),
+            minBptReceived: formatFixed(minBptReceived.toString(), 18),
         };
-    }
-
-    private async getJoinData(
-        tokenAmountsIn: TokenAmountHumanReadable[],
-        slippage: AmountHumanReadable,
-    ): Promise<ComposablePoolJoinProcessedStepsOutput> {
-        const data = await this.composableJoinService.processJoinSteps({
-            tokenAmountsIn,
-            slippage,
-        });
-
-        //TODO: cache data while tokenAmountsIn and slippage are constant
-        return data;
-    }
-
-    public async exitGetProportionalPoolTokenWithdrawEstimate(
-        bptIn: AmountHumanReadable,
-    ): Promise<TokenAmountHumanReadable[]> {
-        return this.composableExitService.exitGetProportionalPoolTokenWithdrawEstimate(bptIn);
     }
 
     public async exitGetProportionalWithdrawEstimate(
         bptIn: AmountHumanReadable,
         tokensOut: string[],
     ): Promise<TokenAmountHumanReadable[]> {
-        return this.composableExitService.exitGetProportionalWithdrawEstimate(bptIn, tokensOut);
+        return poolGetProportionalExitAmountsForBptIn(bptIn, this.pool.tokens, this.pool.dynamicData.totalShares);
     }
 
     public async exitGetBptInForSingleAssetWithdraw(
         tokenAmount: TokenAmountHumanReadable,
     ): Promise<PoolExitBptInSingleAssetWithdrawOutput> {
-        return this.composableExitService.exitGetBptInForSingleAssetWithdraw(tokenAmount);
+        // rn gyro does not support single asset withdraw
+        return {
+            bptIn: '0',
+            priceImpact: 0,
+        };
     }
 
     public async exitGetSingleAssetWithdrawForBptIn(
         bptIn: AmountHumanReadable,
         tokenOutAddress: string,
     ): Promise<PoolExitSingleAssetWithdrawForBptInOutput> {
-        return this.composableExitService.exitGetSingleAssetWithdrawForBptIn(bptIn, tokenOutAddress);
+        // rn gyro does not support single asset withdraw
+        return {
+            tokenAmount: '0',
+            priceImpact: 0,
+        };
     }
 
-    public async exitGetContractCallData(data: PoolExitData): Promise<PoolExitContractCallData> {
-        if (data.kind === 'ExactBPTInForTokensOut') {
-            return this.composableExitService.exitExactBPTInForTokensOutGetContractCallData(data);
-        } else if (data.kind === 'ExactBPTInForOneTokenOut') {
-            return this.composableExitService.exitExactBPTInForOneTokenOutGetContractCallData(data);
+    public async exitGetContractCallData(data: PoolExitData): Promise<PoolExitPoolContractCallData> {
+        switch (data.kind) {
+            case 'ExactBPTInForOneTokenOut': {
+                const token = this.pool.tokens.find((token) => token.address === data.tokenOutAddress);
+                const amountMinusSlippage = oldBnumSubtractSlippage(
+                    data.amountOut,
+                    token?.decimals || 18,
+                    data.slippage,
+                );
+
+                return {
+                    type: 'ExitPool',
+                    assets: this.pool.tokens.map((token) => token.address),
+                    minAmountsOut: poolScaleTokenAmounts(
+                        [{ address: data.tokenOutAddress, amount: amountMinusSlippage }],
+                        this.pool.tokens,
+                    ),
+                    userData: this.encodeExitPool(data),
+                };
+            }
+            case 'ExactBPTInForTokensOut': {
+                const minAmountsOut = data.amountsOut.map((amountOut) => {
+                    const token = this.pool.tokens.find((token) => token.address === amountOut.address);
+
+                    return {
+                        address: amountOut.address,
+                        amount: oldBnumSubtractSlippage(amountOut.amount, token?.decimals || 18, data.slippage),
+                    };
+                });
+
+                return {
+                    type: 'ExitPool',
+                    assets: this.pool.tokens.map((token) => token.address),
+                    minAmountsOut: poolScaleTokenAmounts(minAmountsOut, this.pool.tokens),
+                    userData: this.encodeExitPool(data),
+                };
+            }
         }
 
-        throw new Error('unsupported join type');
+        throw new Error('unsupported exit');
+    }
+
+    private encodeExitPool(data: PoolExitData): string {
+        if (data.kind == 'ExactBPTInForOneTokenOut') {
+            const token = poolGetRequiredToken(data.tokenOutAddress, this.pool.tokens);
+            return WeightedPoolEncoder.exitExactBPTInForOneTokenOut(parseUnits(data.bptAmountIn), token.index);
+        } else if (data.kind == 'ExactBPTInForTokensOut') {
+            return WeightedPoolEncoder.exitExactBPTInForTokensOut(parseUnits(data.bptAmountIn));
+        } else if (data.kind === 'BPTInForExactTokensOut') {
+            return WeightedPoolEncoder.exitBPTInForExactTokensOut(
+                poolScaleTokenAmounts(data.amountsOut, this.pool.tokens),
+                parseUnits(data.maxBPTAmountIn),
+            );
+        }
+
+        throw new Error('Unsupported exit type');
     }
 }

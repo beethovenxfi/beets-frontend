@@ -88,7 +88,7 @@ export function poolGetServiceForPool(pool: GqlPoolUnion): PoolService {
         case 'GqlPoolMetaStable':
             return new PoolMetaStableService(pool, batchRelayerService, networkConfig.wethAddress);
         case 'GqlPoolGyro':
-            return new PoolGyroService(pool, batchRelayerService, networkConfig.wethAddress, networkProvider);
+            return new PoolGyroService(pool, networkConfig.wethAddress);
     }
 
     throw new Error('unsupported pool type');
@@ -106,6 +106,8 @@ export function poolGetTypeName(pool: GqlPoolUnion) {
             return 'Liquidity bootstrapping pool';
         case 'GqlPoolMetaStable':
             return 'MetaStable pool';
+        case 'GqlPoolGyro':
+            return 'Gyro pool';
         default:
             return 'unknown';
     }
