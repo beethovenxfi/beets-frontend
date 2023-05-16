@@ -100,6 +100,16 @@ export class PoolMetaStableService implements PoolService {
             });
         }*/
 
+        if (data.zapIntoGauge) {
+            return this.batchRelayerService.encodeJoinPoolAndStake({
+                userData,
+                pool: this.pool,
+                assets,
+                maxAmountsIn,
+                userAddress: data.userAddress,
+            });
+        }
+
         return { type: 'JoinPool', assets, maxAmountsIn, userData };
     }
 
