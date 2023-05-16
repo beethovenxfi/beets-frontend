@@ -87,7 +87,10 @@ export class PoolStableService implements PoolService {
         const maxAmountsIn = poolScaleTokenAmounts(data.maxAmountsIn, this.pool.tokens);
         const userData = this.encodeJoinPool(data);
 
-        if (data.zapIntoMasterchefFarm && this.pool.staking?.type === 'MASTER_CHEF' && this.pool.staking.farm) {
+        if (
+            (this.pool.staking?.type === 'MASTER_CHEF' && data.zapIntoMasterchefFarm) ||
+            (this.pool.staking?.type === 'GAUGE' && data.zapIntoGauge)
+        ) {
             return this.batchRelayerService.encodeJoinPoolAndStake({
                 userData,
                 pool: this.pool,

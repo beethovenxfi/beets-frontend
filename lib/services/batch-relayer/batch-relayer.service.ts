@@ -200,7 +200,7 @@ export class BatchRelayerService {
             }),
         );
 
-        if (pool.staking && pool.staking.type === 'MASTER_CHEF') {
+        if (pool.staking?.type === 'MASTER_CHEF') {
             calls.push(
                 this.masterChefEncodeDeposit({
                     sender: this.batchRelayerAddress,
@@ -211,9 +211,7 @@ export class BatchRelayerService {
                     outputReference: Zero,
                 }),
             );
-        }
-
-        if (pool.staking && pool.staking.type === 'GAUGE') {
+        } else if (pool.staking?.type === 'GAUGE') {
             calls.push(
                 this.gaugeEncodeDeposit({
                     gauge: pool.staking!.id,
