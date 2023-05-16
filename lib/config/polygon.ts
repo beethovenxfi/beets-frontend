@@ -9,7 +9,6 @@ export const polygonNetworkConfig: NetworkConfig = {
     chainName: 'POLYGON',
     etherscanName: 'polygonscan',
     etherscanUrl: 'https://polygonscan.com',
-    protocol: 'balancer',
     testnet: false,
     eth: {
         name: 'Matic',
@@ -26,7 +25,6 @@ export const polygonNetworkConfig: NetworkConfig = {
     },
     rpcUrl: 'https://rpc.ankr.com/polygon',
     multicall: '0x275617327c958bd06b5d6b871e7f491d76113dd8',
-    protocolTokenAddress: '0x9a71012b13ca4d3d0cdc72a177df3ef03b0e76a3',
     beets: {
         address: '',
     },
@@ -139,11 +137,6 @@ export const polygonNetworkConfig: NetworkConfig = {
     },
     boostedByTypes: {},
     investDisabled: {},
-    featureFlags: {
-        maBeets: false,
-        swap: true,
-        incentivizedPools: false,
-        protocolTokenPrice: false,
-        claimAllRewards: false,
-    },
+    maBeetsEnabled: false,
+    claimAllRewardsEnabled: false,
 };
