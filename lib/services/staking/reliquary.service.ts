@@ -271,11 +271,13 @@ export class ReliquaryService {
         const newLevelProgress =
             newLevel > maturityLevels.length ? 'max level reached' : `${newMaturity}/${maturityLevels[newLevel + 1]}`;
 
-        const maxLevel = 10; // zero based indexing, frontend will show '11'
-        const secondsToMaxLevel = parseInt(maturityLevels[maxLevel].toString()) - newMaturity;
+        const secondsToMaxLevel =
+            parseInt(maturityLevels[networkConfig.reliquary.fbeets.maxLevel].toString()) - newMaturity;
         const diffDate = new Date((nowTimestamp + secondsToMaxLevel) * 1000);
 
-        const staysMax = levelOnUpdate === maxLevel && newLevel === maxLevel;
+        const staysMax =
+            levelOnUpdate === networkConfig.reliquary.fbeets.maxLevel &&
+            newLevel === networkConfig.reliquary.fbeets.maxLevel;
 
         return {
             oldMaturity: maturity,

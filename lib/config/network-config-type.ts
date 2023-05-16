@@ -55,6 +55,7 @@ export interface NetworkConfig {
             poolAddress: string;
             poolId: string;
             farmId: number;
+            maxLevel: number;
         };
     };
     balancer: {
