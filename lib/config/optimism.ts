@@ -38,6 +38,7 @@ export const optimismNetworkConfig: NetworkConfig = {
             poolId: '',
             poolAddress: '',
             farmId: 0,
+            maxLevel: 0,
         },
     },
     balancer: {

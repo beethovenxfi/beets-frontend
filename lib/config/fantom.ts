@@ -40,6 +40,7 @@ export const fantomNetworkConfig: NetworkConfig = {
             poolId: '0x9e4341acef4147196e99d648c5e43b3fc9d026780002000000000000000005ec',
             poolAddress: '0x9e4341acef4147196e99d648c5e43b3fc9d02678',
             farmId: 2,
+            maxLevel: 10,
         },
     },
     balancer: {

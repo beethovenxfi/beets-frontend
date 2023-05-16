@@ -26,15 +26,15 @@ export function ReliquaryInvestDepositImpact({ bptIn, totalInvestValue = 0, reli
         }
     }, [relicId]);
 
-    return (
+    return depositImpact !== undefined && !depositImpact.staysMax ? (
         <Box w="full">
             <Alert status="warning" mb="4">
                 <AlertIcon alignSelf="center" />
-                {!isFetching && depositImpact !== undefined ? (
+                {!isFetching ? (
                     `Investing ${numberFormatUSDValue(
                         totalInvestValue,
                     )} into this relic will affect its maturity. It will take an additional ${formatDistanceToNowStrict(
-                        depositImpact.diffDate,
+                        new Date(Date.now() + depositImpact.depositImpactTimeInMilliseconds),
                     )} to reach maximum maturity.`
                 ) : (
                     <Box w="full">
@@ -50,5 +50,5 @@ export function ReliquaryInvestDepositImpact({ bptIn, totalInvestValue = 0, reli
                 )}
             </Alert>
         </Box>
-    );
+    ) : null;
 }
