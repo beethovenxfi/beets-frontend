@@ -98,7 +98,7 @@ export class PoolWeightedService implements PoolService {
         const userData = this.encodeJoinPool(data);
 
         if (data.zapIntoMasterchefFarm && this.pool.staking?.type === 'MASTER_CHEF' && this.pool.staking.farm) {
-            return this.batchRelayerService.encodeJoinPoolAndStakeInMasterChefFarm({
+            return this.batchRelayerService.encodeJoinPoolAndStake({
                 userData,
                 pool: this.pool,
                 assets,
