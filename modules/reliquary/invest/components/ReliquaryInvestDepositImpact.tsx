@@ -34,7 +34,7 @@ export function ReliquaryInvestDepositImpact({ bptIn, totalInvestValue = 0, reli
                     `Investing ${numberFormatUSDValue(
                         totalInvestValue,
                     )} into this relic will affect its maturity. It will take an additional ${formatDistanceToNowStrict(
-                        depositImpact.diffDate,
+                        new Date(Date.now() + depositImpact.depositImpactTimeInMilliseconds),
                     )} to reach maximum maturity.`
                 ) : (
                     <Box w="full">
