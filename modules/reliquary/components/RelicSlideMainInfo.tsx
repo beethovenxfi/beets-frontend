@@ -74,25 +74,26 @@ export default function RelicSlideMainInfo({ isLoading, openInvestModal, openWit
                                         Level up progress
                                     </Text>
                                     <VStack alignItems="flex-start" w="full">
-                                        {!isMaxMaturity && (
-                                            <HStack spacing="1" color="beets.green">
-                                                <Text>Next level in</Text>
-                                                <Countdown date={levelUpDate} />
-                                            </HStack>
-                                        )}
-                                        {isMaxMaturity && (
+                                        {!isMaxMaturity ? (
+                                            <>
+                                                <HStack spacing="1" color="beets.green">
+                                                    <Text>Next level in</Text>
+                                                    <Countdown date={levelUpDate} />
+                                                </HStack>
+                                                <AnimatedProgress
+                                                    rounded="5"
+                                                    color="black"
+                                                    w="full"
+                                                    value={progressToNextLevel}
+                                                />
+                                            </>
+                                        ) : (
                                             <BeetsTooltip noImage label="You've achieved the max level, nice!">
                                                 <Box>
                                                     <Badge colorScheme="green">MAX LEVEL</Badge>
                                                 </Box>
                                             </BeetsTooltip>
                                         )}
-                                        <AnimatedProgress
-                                            rounded="5"
-                                            color="black"
-                                            w="full"
-                                            value={progressToNextLevel}
-                                        />
                                     </VStack>
                                 </VStack>
 

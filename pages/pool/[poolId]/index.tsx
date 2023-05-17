@@ -28,6 +28,7 @@ const PoolPage = ({ pool }: Props) => {
     }
 
     const isReliquaryPool = pool.id === networkConfig.reliquary.fbeets.poolId;
+    const isLegacyFbeetsPool = pool.id === networkConfig.fbeets.poolId;
 
     const PoolProviders: ProviderWithProps[] = [
         [PoolProvider, { pool }],
@@ -48,9 +49,9 @@ const PoolPage = ({ pool }: Props) => {
                 <meta property="twitter:title" content={`Beethoven X | ${pool.name}`} />
             </Head>
             <Compose providers={PoolProviders}>
-                {isReliquaryPool ? (
+                {isReliquaryPool || isLegacyFbeetsPool ? (
                     <RelicDepositBalanceProvider>
-                        <ReliquaryPool />
+                        <ReliquaryPool isLegacyFbeetsPool={isLegacyFbeetsPool} />
                     </RelicDepositBalanceProvider>
                 ) : (
                     <Pool />
