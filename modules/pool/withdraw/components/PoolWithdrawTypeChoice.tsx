@@ -129,7 +129,7 @@ export function PoolWithdrawTypeChoice({ onShowProportional, onShowSingleAsset }
 
                             {/* <Text fontSize="lg">{numberFormatUSDValue(data?.maxAmount || 0)}</Text> */}
                             <Text fontSize="sm">Proportional withdraw</Text>
-                            <Text fontSize="xs" color={isStablePool || !isGyroPool ? 'transparent' : 'beets.green'}>
+                            <Text fontSize="xs" color={isStablePool || isGyroPool ? 'transparent' : 'beets.green'}>
                                 Recommended
                             </Text>
                         </VStack>
@@ -139,7 +139,7 @@ export function PoolWithdrawTypeChoice({ onShowProportional, onShowSingleAsset }
                     label={
                         isStablePool
                             ? 'As this is a stable pool, you can withdraw either asset without any impact.'
-                            : !isGyroPool
+                            : isGyroPool
                             ? 'This pool does not support a single asset withdraw.'
                             : ''
                     }

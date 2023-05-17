@@ -90,16 +90,16 @@ export function PoolInvestTypeChoice({ onShowProportional, onShowCustom }: Props
                                         {numberFormatUSDValue(totalValueProportionalAmounts || 0)}
                                     </Text>
                                     <Text fontSize="sm">Proportional investment</Text>
-                                    <Text fontSize="xs" color={isGyroPool ? 'buttonHighlight' : 'transparent'}>
+                                    <Text fontSize="xs" color={isGyroPool ? 'transparent' : 'buttonHighlight'}>
                                         Recommended
                                     </Text>
                                 </VStack>
                             </Button>
                         </Box>
                     </BeetsTooltip>
-                    <BeetsTooltip noImage label={!isGyroPool ? 'This pool does not support a custom investment.' : ''}>
+                    <BeetsTooltip noImage label={isGyroPool ? 'This pool does not support a custom investment.' : ''}>
                         <Box width="full">
-                            <Button variant="image" onClick={onShowCustom} disabled={!isGyroPool}>
+                            <Button variant="image" onClick={onShowCustom} disabled={isGyroPool}>
                                 <VStack spacing="1">
                                     <Image src={BeetSmart} height="48" alt="beets-smart" />
                                     <Text fontSize="lg">{numberFormatUSDValue(investableAmount)}</Text>
