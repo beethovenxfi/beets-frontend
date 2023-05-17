@@ -89,6 +89,7 @@ export function PoolProvider({ pool: poolFromProps, children }: { pool: GqlPoolU
     const supportsZapIntoMasterchefFarm =
         (pool.__typename === 'GqlPoolWeighted' ||
             pool.__typename === 'GqlPoolStable' ||
+            pool.__typename === 'GqlPoolMetaStable' ||
             (pool.__typename === 'GqlPoolPhantomStable' &&
                 pool.factory &&
                 networkConfig.balancer.composableStableFactories.includes(pool.factory))) &&

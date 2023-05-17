@@ -89,18 +89,10 @@ export class PoolMetaStableService implements PoolService {
         const maxAmountsIn = poolScaleTokenAmounts(data.maxAmountsIn, this.pool.tokens);
         const userData = this.encodeJoinPool(data);
 
-        //TODO: meta stables are only on optimism so far, if this changes, need to fix this.
-        /*if (data.zapIntoMasterchefFarm && this.pool.staking?.type === 'MASTER_CHEF' && this.pool.staking.farm) {
-            return this.batchRelayerService.encodeJoinPoolAndStakeInMasterChefFarm({
-                userData,
-                pool: this.pool,
-                assets,
-                maxAmountsIn,
-                userAddress: data.userAddress,
-            });
-        }*/
-
-        if (data.zapIntoGauge) {
+        if (
+            (this.pool.staking?.type === 'MASTER_CHEF' && data.zapIntoMasterchefFarm) ||
+            (this.pool.staking?.type === 'GAUGE' && data.zapIntoGauge)
+        ) {
             return this.batchRelayerService.encodeJoinPoolAndStake({
                 userData,
                 pool: this.pool,
