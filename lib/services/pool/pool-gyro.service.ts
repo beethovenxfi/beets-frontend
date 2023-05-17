@@ -58,12 +58,12 @@ export class PoolGyroService implements PoolService {
     }
 
     public async joinGetContractCallData(data: PoolJoinData): Promise<PoolJoinContractCallData> {
+        // rn gyro only supports "ALL_TOKENS_IN_FOR_EXACT_BPT_OUT"
         const bptAmountOut = 'minimumBpt' in data ? data.minimumBpt : '0';
         const assets = this.pool.tokens.map((token) =>
             data.wethIsEth ? this.baseService.wethToZero(token.address) : token.address,
         );
         const maxAmountsIn = poolScaleTokenAmounts(data.maxAmountsIn, this.pool.tokens);
-        // rn gyro only supports "ALL_TOKENS_IN_FOR_EXACT_BPT_OUT"
         const userData = WeightedPoolEncoder.joinAllTokensInForExactBPTOut(parseUnits(bptAmountOut));
 
         return { type: 'JoinPool', assets, maxAmountsIn, userData };
@@ -117,60 +117,23 @@ export class PoolGyroService implements PoolService {
     }
 
     public async exitGetContractCallData(data: PoolExitData): Promise<PoolExitPoolContractCallData> {
-        switch (data.kind) {
-            case 'ExactBPTInForOneTokenOut': {
-                const token = this.pool.tokens.find((token) => token.address === data.tokenOutAddress);
-                const amountMinusSlippage = oldBnumSubtractSlippage(
-                    data.amountOut,
-                    token?.decimals || 18,
-                    data.slippage,
-                );
+        // rn gyro only supports "EXACT_BPT_IN_FOR_TOKENS_OUT"
+        const bptAmountIn = 'bptAmountIn' in data ? data.bptAmountIn : '0';
+        const amountsOut = 'amountsOut' in data ? data.amountsOut : [];
+        const minAmountsOut = amountsOut.map((amountOut) => {
+            const token = this.pool.tokens.find((token) => token.address === amountOut.address);
 
-                return {
-                    type: 'ExitPool',
-                    assets: this.pool.tokens.map((token) => token.address),
-                    minAmountsOut: poolScaleTokenAmounts(
-                        [{ address: data.tokenOutAddress, amount: amountMinusSlippage }],
-                        this.pool.tokens,
-                    ),
-                    userData: this.encodeExitPool(data),
-                };
-            }
-            case 'ExactBPTInForTokensOut': {
-                const minAmountsOut = data.amountsOut.map((amountOut) => {
-                    const token = this.pool.tokens.find((token) => token.address === amountOut.address);
+            return {
+                address: amountOut.address,
+                amount: oldBnumSubtractSlippage(amountOut.amount, token?.decimals || 18, data.slippage),
+            };
+        });
 
-                    return {
-                        address: amountOut.address,
-                        amount: oldBnumSubtractSlippage(amountOut.amount, token?.decimals || 18, data.slippage),
-                    };
-                });
-
-                return {
-                    type: 'ExitPool',
-                    assets: this.pool.tokens.map((token) => token.address),
-                    minAmountsOut: poolScaleTokenAmounts(minAmountsOut, this.pool.tokens),
-                    userData: this.encodeExitPool(data),
-                };
-            }
-        }
-
-        throw new Error('unsupported exit');
-    }
-
-    private encodeExitPool(data: PoolExitData): string {
-        if (data.kind == 'ExactBPTInForOneTokenOut') {
-            const token = poolGetRequiredToken(data.tokenOutAddress, this.pool.tokens);
-            return WeightedPoolEncoder.exitExactBPTInForOneTokenOut(parseUnits(data.bptAmountIn), token.index);
-        } else if (data.kind == 'ExactBPTInForTokensOut') {
-            return WeightedPoolEncoder.exitExactBPTInForTokensOut(parseUnits(data.bptAmountIn));
-        } else if (data.kind === 'BPTInForExactTokensOut') {
-            return WeightedPoolEncoder.exitBPTInForExactTokensOut(
-                poolScaleTokenAmounts(data.amountsOut, this.pool.tokens),
-                parseUnits(data.maxBPTAmountIn),
-            );
-        }
-
-        throw new Error('Unsupported exit type');
+        return {
+            type: 'ExitPool',
+            assets: this.pool.tokens.map((token) => token.address),
+            minAmountsOut: poolScaleTokenAmounts(minAmountsOut, this.pool.tokens),
+            userData: WeightedPoolEncoder.exitExactBPTInForTokensOut(parseUnits(bptAmountIn)),
+        };
     }
 }
