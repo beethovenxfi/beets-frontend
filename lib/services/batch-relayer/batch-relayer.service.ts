@@ -28,7 +28,7 @@ import {
 import { BigNumber, BigNumberish } from '@ethersproject/bignumber';
 import { AddressZero, MaxUint256, Zero } from '@ethersproject/constants';
 import { PoolJoinBatchRelayerContractCallData } from '~/lib/services/pool/pool-types';
-import { GqlPoolStable, GqlPoolWeighted } from '~/apollo/generated/graphql-codegen-generated';
+import { GqlPoolMetaStable, GqlPoolStable, GqlPoolWeighted } from '~/apollo/generated/graphql-codegen-generated';
 import { isSameAddress, Swaps, SwapType, SwapV2 } from '@balancer-labs/sdk';
 import { AmountScaledString, TokenAmountHumanReadable } from '~/lib/services/token/token-types';
 import { poolScaleSlippage } from '~/lib/services/pool/lib/util';
@@ -166,7 +166,7 @@ export class BatchRelayerService {
         return this.fBeetsBarStakingService.encodeLeave(params);
     }
 
-    public encodeJoinPoolAndStakeInMasterChefFarm({
+    public encodeJoinPoolAndStake({
         userAddress,
         pool,
         userData,
@@ -174,41 +174,57 @@ export class BatchRelayerService {
         maxAmountsIn,
     }: {
         userAddress: string;
-        pool: GqlPoolWeighted | GqlPoolStable;
+        pool: GqlPoolWeighted | GqlPoolStable | GqlPoolMetaStable;
         userData: string;
         assets: string[];
         maxAmountsIn: BigNumberish[];
     }): PoolJoinBatchRelayerContractCallData {
+        const calls: string[] = [];
         const ethIndex = assets.findIndex((asset) => asset === AddressZero);
         const ethAmount = ethIndex !== -1 ? maxAmountsIn[ethIndex] : undefined;
 
-        const vaultEncodedJoinPool = this.vaultEncodeJoinPool({
-            poolId: pool.id,
-            poolKind: 0,
-            sender: userAddress,
-            recipient: this.batchRelayerAddress,
-            joinPoolRequest: {
-                assets,
-                maxAmountsIn,
-                userData,
-                fromInternalBalance: false,
-            },
-            value: ethAmount || Zero,
-            outputReference: this.toChainedReference(0),
-        });
+        calls.push(
+            this.vaultEncodeJoinPool({
+                poolId: pool.id,
+                poolKind: 0,
+                sender: userAddress,
+                recipient: this.batchRelayerAddress,
+                joinPoolRequest: {
+                    assets,
+                    maxAmountsIn,
+                    userData,
+                    fromInternalBalance: false,
+                },
+                value: ethAmount || Zero,
+                outputReference: this.toChainedReference(0),
+            }),
+        );
 
-        const masterChefDeposit = this.masterChefEncodeDeposit({
-            sender: this.batchRelayerAddress,
-            recipient: userAddress,
-            token: pool.address,
-            pid: parseInt(pool.staking!.id),
-            amount: this.toChainedReference(0),
-            outputReference: Zero,
-        });
+        if (pool.staking?.type === 'MASTER_CHEF') {
+            calls.push(
+                this.masterChefEncodeDeposit({
+                    sender: this.batchRelayerAddress,
+                    recipient: userAddress,
+                    token: pool.address,
+                    pid: parseInt(pool.staking!.id),
+                    amount: this.toChainedReference(0),
+                    outputReference: Zero,
+                }),
+            );
+        } else if (pool.staking?.type === 'GAUGE') {
+            calls.push(
+                this.gaugeEncodeDeposit({
+                    gauge: pool.staking!.id,
+                    sender: this.batchRelayerAddress,
+                    recipient: userAddress,
+                    amount: this.toChainedReference(0),
+                }),
+            );
+        }
 
         return {
             type: 'BatchRelayer',
-            calls: [vaultEncodedJoinPool, masterChefDeposit],
+            calls,
             ethValue: ethAmount ? ethAmount.toString() : undefined,
         };
     }
