@@ -18,6 +18,7 @@ import { SubTransactionSubmittedContent } from '~/components/transaction/SubTran
 import TokenRow from '~/components/token/TokenRow';
 import { CurrentStepProvider } from '../../lib/useReliquaryCurrentStep';
 import { ReliquaryTransactionStepsSubmit, TransactionStep } from '../../components/ReliquaryTransactionStepsSubmit';
+import { useHasBatchRelayerApproval } from '~/lib/util/useHasBatchRelayerApproval';
 
 interface Props {
     onWithdrawComplete(): void;
@@ -41,9 +42,9 @@ export function ReliquaryWithdrawPreview({ onWithdrawComplete, onClose }: Props)
             poolTotalShares: pool.dynamicData.totalShares,
             poolTokens: pool.tokens,
         });
-    const { data: batchRelayerHasApprovedForAll, isLoading: isLoadingBatchRelayerHasApprovedForAll } =
-        useBatchRelayerHasApprovedForAll();
+    const { data: batchRelayerHasApprovedForAll } = useBatchRelayerHasApprovedForAll();
     const { reliquaryZap, ...reliquaryZapQuery } = useReliquaryZap('WITHDRAW');
+    const { data: hasBatchRelayerApproval } = useHasBatchRelayerApproval();
 
     const withdrawAmounts =
         selectedWithdrawType === 'SINGLE_ASSET' && singleAssetWithdraw
@@ -54,26 +55,29 @@ export function ReliquaryWithdrawPreview({ onWithdrawComplete, onClose }: Props)
 
     const totalWithdrawValue = sum(withdrawAmounts.map(priceForAmount));
 
-    const isLoading = isLoadingReliquaryContractCallData || isLoadingBatchRelayerHasApprovedForAll;
-
     useEffect(() => {
-        if (!isLoading) {
-            let investStep: TransactionStep = { id: 'exit', tooltipText: '', type: 'other', buttonText: 'Withdraw' };
+        const steps: TransactionStep[] = [{ id: 'exit', tooltipText: '', type: 'other', buttonText: 'Withdraw' }];
 
-            const steps: TransactionStep[] = [investStep];
-
-            if (!batchRelayerHasApprovedForAll) {
-                steps.unshift({
-                    id: 'batch-relayer-reliquary',
-                    type: 'other',
-                    buttonText: 'Approve Batch Relayer for all relics',
-                    tooltipText: 'This relic requires you to approve the batch relayer.',
-                });
-            }
-
-            setSteps(steps);
+        if (!batchRelayerHasApprovedForAll) {
+            steps.unshift({
+                id: 'batch-relayer-reliquary',
+                type: 'other',
+                buttonText: 'Approve Batch Relayer for all relics',
+                tooltipText: 'This relic requires you to approve the batch relayer.',
+            });
         }
-    }, [isLoading]);
+
+        if (!hasBatchRelayerApproval) {
+            steps.unshift({
+                id: 'batch-relayer',
+                type: 'other',
+                buttonText: 'Approve Batch Relayer',
+                tooltipText: 'This pool requires you to approve the batch relayer to withdraw.',
+            });
+        }
+
+        setSteps(steps);
+    }, []);
 
     return (
         <CurrentStepProvider>
