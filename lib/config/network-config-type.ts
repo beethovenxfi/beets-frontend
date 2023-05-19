@@ -96,6 +96,7 @@ export interface NetworkConfig {
     };
     gauge: {
         rewardHelperAddress: string;
+        balancerPseudoMinterAddress: string;
     };
     createPoolUrl: string;
     launchUrl?: string;

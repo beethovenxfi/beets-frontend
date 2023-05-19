@@ -9,6 +9,7 @@ export type BeetsTransactionType =
     | 'WRAP'
     | 'UNWRAP'
     | 'LEVEL_UP'
+    | 'MIGRATE'
     | 'BURN';
 export type ToastTransactionStatus = 'PENDING' | 'CONFIRMED' | 'ERROR';
 

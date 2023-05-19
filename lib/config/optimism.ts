@@ -143,6 +143,7 @@ export const optimismNetworkConfig: NetworkConfig = {
     },
     gauge: {
         rewardHelperAddress: '0x299dcdf14350999496204c141a0c20a29d71af3e',
+        balancerPseudoMinterAddress: '0x47B489bf5836f83ABD928C316F8e39bC0587B020'
     },
     createPoolUrl: 'https://opv1.beets.fi/#/pool-create',
     warnings: {

@@ -13,7 +13,7 @@ export function useStakingDeposit(staking: GqlPoolStaking | null) {
     const { userAddress } = useUserAccount();
     const { submit, submitAsync, ...rest } = useSubmitTransaction({
         config: {
-            addressOrName: staking?.type === 'GAUGE' ? staking?.address : networkConfig.masterChefContractAddress,
+            addressOrName: staking?.type === 'GAUGE' ? '0xF27D53f21d024643d50de50183932F17638229F6' : networkConfig.masterChefContractAddress,
             contractInterface: staking?.type === 'GAUGE' ? LiquidityGaugeV5 : BeethovenxMasterChefAbi,
             functionName: staking?.type === 'GAUGE' ? 'deposit(uint256)' : 'deposit',
         },
