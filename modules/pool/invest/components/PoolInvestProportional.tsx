@@ -76,9 +76,6 @@ export function PoolInvestProportional({ onShowPreview }: Props) {
               )
             : 0;
 
-    const hasTokenWithZeroAmount =
-        tokenProportionalAmounts && !!Object.values(tokenProportionalAmounts).find((amount) => amount === '0.0');
-
     return (
         <Box>
             <VStack p="4" spacing="4">
@@ -105,7 +102,6 @@ export function PoolInvestProportional({ onShowPreview }: Props) {
                                 setInputAmounts(inputAmounts);
                             }
                         }}
-                        isDisabled={hasTokenWithZeroAmount}
                     >
                         <SliderTrack>
                             <SliderFilledTrack />
