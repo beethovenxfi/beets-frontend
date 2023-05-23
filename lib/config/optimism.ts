@@ -44,6 +44,7 @@ export const optimismNetworkConfig: NetworkConfig = {
     balancer: {
         vault: '0xba12222222228d8ba445958a75a0704d566bf2c8',
         batchRelayer: '0x03f1ab8b19bce21eb06c364aec9e40322572a1e9',
+        balToken: '0xfe8b128ba8c78aabc59d4c64cee7ff28e9379921',
         composableStableFactories: [
             '0xf145cafb67081895ee80eb7c04a30cf87f07b745',
             '0xe2e901ab09f37884ba31622df3ca7fc19aa443be',
@@ -143,7 +144,8 @@ export const optimismNetworkConfig: NetworkConfig = {
     },
     gauge: {
         rewardHelperAddress: '0x299dcdf14350999496204c141a0c20a29d71af3e',
-        balancerPseudoMinterAddress: '0x47B489bf5836f83ABD928C316F8e39bC0587B020'
+        balancerPseudoMinterAddress: '0x4fb47126Fa83A8734991E41B942Ac29A3266C968',
+        veBALDelegationProxyAddress: '0x9dA18982a33FD0c7051B19F0d7C76F2d5E7e017c',
     },
     createPoolUrl: 'https://opv1.beets.fi/#/pool-create',
     warnings: {

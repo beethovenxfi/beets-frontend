@@ -9,8 +9,8 @@ export function useStakingMigration() {
     async function migrateGaugeStakedBalance(calls: string[]) {
         submit({
             args: [calls],
-            toastText: "Migrating staked balance...",
-            walletText: "Migrate staked balance."
+            toastText: 'Migrating staked balance...',
+            walletText: 'Migrate staked balance.',
         });
     }
 

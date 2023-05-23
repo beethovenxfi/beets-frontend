@@ -1,6 +1,7 @@
 import { AmountHumanReadable, TokenBase } from '~/lib/services/token/token-types';
 import { BaseProvider } from '@ethersproject/providers';
 import LiquidityGaugeV5Abi from '~/lib/abi/LiquidityGaugeV5.json';
+import LiquidityGaugeV6Abi from '~/lib/abi/LiquidityGaugeV6.json';
 import ChildChainGaugeRewardHelper from '~/lib/abi/ChildChainGaugeRewardHelper.json';
 import { BigNumber, Contract } from 'ethers';
 import { formatFixed, parseFixed } from '@ethersproject/bignumber';
@@ -10,6 +11,7 @@ import { GqlPoolStakingGauge } from '~/apollo/generated/graphql-codegen-generate
 import { networkConfig } from '~/lib/config/network-config';
 import { StakingPendingRewardAmount } from '~/lib/services/staking/staking-types';
 import { BatchRelayerService, batchRelayerService } from '../batch-relayer/batch-relayer.service';
+import { mapValues } from 'lodash';
 
 interface GetUserStakedBalanceInput {
     userAddress: string;
@@ -105,6 +107,35 @@ export class GaugeStakingService {
         }
 
         return pendingRewardAmounts;
+    }
+
+    public async getPendingBALRewards({
+        userAddress,
+        gauges,
+        provider,
+    }: {
+        userAddress: string;
+        gauges: string[];
+        provider: BaseProvider;
+    }) {
+        const multicaller = new Multicaller(this.chainId, provider, LiquidityGaugeV6Abi);
+
+        for (const gauge of gauges) {
+            multicaller.call(`${gauge}.claimableBAL`, gauge, 'claimable_tokens', [userAddress]);
+        }
+
+        if (multicaller.numCalls === 0) {
+            return {};
+        }
+
+        const result: {
+            [gaugeId: string]: {
+                claimableBAL: BigNumber;
+            };
+        } = await multicaller.execute({});
+
+        const formattedResult = mapValues(result, (data) => data.claimableBAL.toString());
+        return formattedResult;
     }
 
     public async getGaugeStakingMigrationCallData({
