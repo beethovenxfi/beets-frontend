@@ -26,7 +26,8 @@ export type ReliquaryDepositImpact = {
     newLevel: number;
     oldLevelProgress: string;
     newLevelProgress: string;
-    diffDate: Date;
+    depositImpactTimeInMilliseconds: number;
+    staysMax: boolean;
 };
 
 export class ReliquaryService {
@@ -270,12 +271,11 @@ export class ReliquaryService {
         const newLevelProgress =
             newLevel > maturityLevels.length ? 'max level reached' : `${newMaturity}/${maturityLevels[newLevel + 1]}`;
 
-        const newLevelProgressDiff = parseInt(maturityLevels[newLevel + 1].toString()) - newMaturity;
-        const oldLevelProgressDiff = parseInt(maturityLevels[levelOnUpdate + 1].toString()) - maturity;
-        const progressDiff = newLevelProgressDiff - oldLevelProgressDiff;
-        const levelDiff = levelOnUpdate - newLevel;
-        const diff = progressDiff + levelDiff * 604800;
-        const diffDate = new Date((nowTimestamp + diff) * 1000);
+        const depositImpactTimeInMilliseconds = (maturity - newMaturity) * 1000;
+
+        const staysMax =
+            levelOnUpdate === networkConfig.reliquary.fbeets.maxLevel &&
+            newLevel === networkConfig.reliquary.fbeets.maxLevel;
 
         return {
             oldMaturity: maturity,
@@ -284,7 +284,8 @@ export class ReliquaryService {
             newLevel,
             oldLevelProgress,
             newLevelProgress,
-            diffDate,
+            depositImpactTimeInMilliseconds,
+            staysMax,
         };
     }
 }
