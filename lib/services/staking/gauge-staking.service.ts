@@ -137,6 +137,37 @@ export class GaugeStakingService {
         const formattedResult = mapValues(result, (data) => data.claimableBAL.toString());
         return formattedResult;
     }
+
+    public async getGaugeStakingMigrationCallData({
+        userAddress,
+        stakedBalance,
+        legacyGaugeAddress,
+        preferredGaugeAddress,
+    }: {
+        userAddress: string;
+        stakedBalance: string;
+        legacyGaugeAddress: string;
+        preferredGaugeAddress: string;
+    }): Promise<string[]> {
+        const stakedBalanceScaled = parseFixed(stakedBalance, 18);
+
+        const withdrawFromLegacyGauge = this.batchRelayerService.gaugeEncodeWithdraw({
+            sender: userAddress,
+            recipient: networkConfig.balancer.batchRelayer,
+            amount: stakedBalanceScaled.toString(),
+            gauge: legacyGaugeAddress,
+        });
+
+        const depositToPreferredGauge = this.batchRelayerService.gaugeEncodeDeposit({
+            sender: userAddress,
+            recipient: networkConfig.balancer.batchRelayer,
+            amount: stakedBalanceScaled.toString(),
+            gauge: preferredGaugeAddress,
+        });
+
+        //below we use the output values of the peek to set our min/max values
+        return [withdrawFromLegacyGauge];
+    }
 }
 
 export const gaugeStakingService = new GaugeStakingService(
