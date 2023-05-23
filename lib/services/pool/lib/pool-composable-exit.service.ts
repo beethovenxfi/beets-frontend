@@ -305,9 +305,11 @@ export class PoolComposableExitService {
                 const wrappedToken = singleAssetExit.linearPool.wrappedToken;
                 const assetOutIdx = assets.length - 1;
                 const factory = singleAssetExit.linearPool.linearPoolToken.pool.factory || '';
+                const poolAddress = singleAssetExit.linearPool.linearPoolToken.pool.address || '';
 
                 calls.push(
                     this.batchRelayerService.getUnwrapCallForLinearPoolWithFactory({
+                        poolAddress,
                         factory,
                         wrappedToken: wrappedToken.address,
                         sender: this.batchRelayerService.batchRelayerAddress,
@@ -464,9 +466,11 @@ export class PoolComposableExitService {
                 for (const nestedLinearPool of nestedLinearPools) {
                     const factory = nestedLinearPool.linearPoolToken.pool.factory || '';
                     const assetIdx = assets.indexOf(nestedLinearPool.wrappedToken.address);
+                    const poolAddress = nestedLinearPool.linearPoolToken.pool.address || '';
 
                     calls.push(
                         this.batchRelayerService.getUnwrapCallForLinearPoolWithFactory({
+                            poolAddress,
                             factory,
                             wrappedToken: nestedLinearPool.wrappedToken.address,
                             sender: this.batchRelayerService.batchRelayerAddress,

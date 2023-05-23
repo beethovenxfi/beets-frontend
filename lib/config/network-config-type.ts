@@ -57,6 +57,7 @@ export interface NetworkConfig {
             poolAddress: string;
             poolId: string;
             farmId: number;
+            maxLevel: number;
         };
     };
     balancer: {
@@ -74,6 +75,9 @@ export interface NetworkConfig {
         reaperManualRebalancer?: string;
         sorQueries: string;
         balancerQueries: string;
+        unwrapExceptions: {
+            reaper: string[];
+        };
     };
     beetsPoolOwnerAddress: string;
     masterChefContractAddress: string;

@@ -15,6 +15,7 @@ import {
     oldBnumScale,
     oldBnumScaleAmount,
     oldBnumToBnum,
+    oldBnumToHumanReadable,
     oldBnumZero,
 } from '~/lib/services/pool/lib/old-big-number';
 import OldBigNumber from 'bignumber.js';
@@ -555,9 +556,9 @@ export function poolGetNestedTokenEstimateForPoolTokenAmounts({
             //TODO: this is an estimation, but should be adequate assuming rates are up to date
             tokenAmountsOut.push({
                 address: mainToken.address,
-                amount: formatFixed(
-                    oldBnumScaleAmount(bptAmount.amount).times(linearPoolToken.priceRate).toFixed(0),
-                    18,
+                amount: oldBnumToHumanReadable(
+                    oldBnumScale(bptAmount.amount, mainToken.decimals).times(linearPoolToken.priceRate),
+                    mainToken.decimals,
                 ),
             });
         }
