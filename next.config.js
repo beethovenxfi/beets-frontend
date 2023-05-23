@@ -12,7 +12,11 @@ const nextConfig = {
     reactStrictMode: true,
     productionBrowserSourceMaps: true,
 
-    webpack(config) {
+    webpack(config, { isServer }) {
+        console.log({ isServer });
+        if (!isServer) {
+            config.externals.push({ bufferutil: 'commonjs bufferutil', 'utf-8-validate': 'commonjs utf-8-validate' });
+        }
         config.resolve.alias['~'] = path.join(__dirname, 'src');
         return config;
     },

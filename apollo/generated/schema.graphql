@@ -62,7 +62,7 @@ type GqlLatestSyncedBlocks {
     userWalletSyncBlock: BigInt!
 }
 
-type GqlLge {
+type GqlLbp {
     address: String!
     adminAddress: String!
     adminIsMultisig: Boolean!
@@ -80,6 +80,7 @@ type GqlLge {
     startDate: String!
     swapFeePercentage: String!
     telegramUrl: String!
+    token: GqlLbpToken!
     tokenAmount: String!
     tokenContractAddress: String!
     tokenEndWeight: Int!
@@ -89,7 +90,7 @@ type GqlLge {
     websiteUrl: String!
 }
 
-input GqlLgeCreateInput {
+input GqlLbpCreateInput {
     address: String!
     bannerImageUrl: String!
     collateralAmount: String!
@@ -114,7 +115,27 @@ input GqlLgeCreateInput {
     websiteUrl: String!
 }
 
-input GqlLgeUpdateInput {
+type GqlLbpPriceData {
+    id: String!
+    price: Float!
+    timestamp: Int!
+    type: GqlLbpPriceType!
+}
+
+enum GqlLbpPriceType {
+    PREDICTED
+    REAL
+}
+
+type GqlLbpToken {
+    address: String!
+    decimals: Int!
+    id: String!
+    name: String!
+    symbol: String!
+}
+
+input GqlLbpUpdateInput {
     description: String!
     discordUrl: String!
     id: ID!
@@ -231,6 +252,8 @@ type GqlPoolDynamicData {
     volume24hAtl: BigDecimal!
     volume24hAtlTimestamp: Int!
     volume48h: BigDecimal!
+    yieldCapture24h: BigDecimal!
+    yieldCapture48h: BigDecimal!
 }
 
 type GqlPoolElement implements GqlPoolBase {
@@ -799,6 +822,7 @@ type GqlProtocolMetrics {
     totalLiquidity: BigDecimal!
     totalSwapFee: BigDecimal!
     totalSwapVolume: BigDecimal!
+    yieldCapture24h: BigDecimal!
 }
 
 type GqlRelicSnapshot {
@@ -1052,7 +1076,6 @@ scalar JSON
 type Mutation {
     beetsSyncFbeetsRatio: String!
     cacheAverageBlockTime: String!
-    lgeCreate(lge: GqlLgeCreateInput!, signature: String!): GqlLge!
     poolInitializeSnapshotsForPool(poolId: String!): String!
     poolLoadOnChainDataForAllPools: String!
     poolLoadOnChainDataForPoolsWithActiveUpdates: String!
@@ -1062,6 +1085,7 @@ type Mutation {
     poolReloadAllPoolAprs: String!
     poolReloadAllTokenNestedPoolIds: String!
     poolReloadPoolNestedTokens(poolId: String!): String!
+    poolReloadPoolTokenIndexes(poolId: String!): String!
     poolReloadStakingForAllPools(stakingTypes: [GqlPoolStakingType!]!): String!
     poolSyncAllPoolsFromSubgraph: [String!]!
     poolSyncLatestSnapshotsForAllPools(daysToSync: Int): String!
@@ -1075,6 +1099,7 @@ type Mutation {
     poolUpdateAprs: String!
     poolUpdateLifetimeValuesForAllPools: String!
     poolUpdateLiquidity24hAgoForAllPools: String!
+    poolUpdateLiquidityValuesForAllEmptyPools(maxShares: String!): String!
     poolUpdateLiquidityValuesForAllPools: String!
     poolUpdateVolumeAndFeeValuesForAllPools: String!
     protocolCacheMetrics: String!
@@ -1103,8 +1128,9 @@ type Query {
     blocksGetBlocksPerYear: Float!
     contentGetNewsItems: [GqlContentNewsItem!]!
     latestSyncedBlocks: GqlLatestSyncedBlocks!
-    lge(id: ID!): GqlLge!
-    lges: [GqlLge!]!
+    lbpGetChartData(id: ID!): [GqlLbpPriceData]!
+    lbpGetLbp(id: ID!): GqlLbp!
+    lbpGetLbps: [GqlLbp!]!
     poolGetAllPoolsSnapshots(range: GqlPoolSnapshotDataRange!): [GqlPoolSnapshot!]!
     poolGetBatchSwaps(first: Int, skip: Int, where: GqlPoolSwapFilter): [GqlPoolBatchSwap!]!
     poolGetFeaturedPoolGroups: [GqlPoolFeaturedPoolGroup!]!

@@ -20,7 +20,6 @@ export interface Scalars {
     Bytes: string;
     Date: any;
     GqlBigNumber: any;
-    /** The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf). */
     JSON: any;
 }
 
@@ -79,8 +78,8 @@ export interface GqlLatestSyncedBlocks {
     userWalletSyncBlock: Scalars['BigInt'];
 }
 
-export interface GqlLge {
-    __typename: 'GqlLge';
+export interface GqlLbp {
+    __typename: 'GqlLbp';
     address: Scalars['String'];
     adminAddress: Scalars['String'];
     adminIsMultisig: Scalars['Boolean'];
@@ -98,6 +97,7 @@ export interface GqlLge {
     startDate: Scalars['String'];
     swapFeePercentage: Scalars['String'];
     telegramUrl: Scalars['String'];
+    token: GqlLbpToken;
     tokenAmount: Scalars['String'];
     tokenContractAddress: Scalars['String'];
     tokenEndWeight: Scalars['Int'];
@@ -107,7 +107,7 @@ export interface GqlLge {
     websiteUrl: Scalars['String'];
 }
 
-export interface GqlLgeCreateInput {
+export interface GqlLbpCreateInput {
     address: Scalars['String'];
     bannerImageUrl: Scalars['String'];
     collateralAmount: Scalars['String'];
@@ -132,7 +132,26 @@ export interface GqlLgeCreateInput {
     websiteUrl: Scalars['String'];
 }
 
-export interface GqlLgeUpdateInput {
+export interface GqlLbpPriceData {
+    __typename: 'GqlLbpPriceData';
+    id: Scalars['String'];
+    price: Scalars['Float'];
+    timestamp: Scalars['Int'];
+    type: GqlLbpPriceType;
+}
+
+export type GqlLbpPriceType = 'PREDICTED' | 'REAL';
+
+export interface GqlLbpToken {
+    __typename: 'GqlLbpToken';
+    address: Scalars['String'];
+    decimals: Scalars['Int'];
+    id: Scalars['String'];
+    name: Scalars['String'];
+    symbol: Scalars['String'];
+}
+
+export interface GqlLbpUpdateInput {
     description: Scalars['String'];
     discordUrl: Scalars['String'];
     id: Scalars['ID'];
@@ -256,6 +275,8 @@ export interface GqlPoolDynamicData {
     volume24hAtl: Scalars['BigDecimal'];
     volume24hAtlTimestamp: Scalars['Int'];
     volume48h: Scalars['BigDecimal'];
+    yieldCapture24h: Scalars['BigDecimal'];
+    yieldCapture48h: Scalars['BigDecimal'];
 }
 
 export interface GqlPoolElement extends GqlPoolBase {
@@ -835,6 +856,7 @@ export interface GqlProtocolMetrics {
     totalLiquidity: Scalars['BigDecimal'];
     totalSwapFee: Scalars['BigDecimal'];
     totalSwapVolume: Scalars['BigDecimal'];
+    yieldCapture24h: Scalars['BigDecimal'];
 }
 
 export interface GqlRelicSnapshot {
@@ -1092,7 +1114,6 @@ export interface Mutation {
     __typename: 'Mutation';
     beetsSyncFbeetsRatio: Scalars['String'];
     cacheAverageBlockTime: Scalars['String'];
-    lgeCreate: GqlLge;
     poolInitializeSnapshotsForPool: Scalars['String'];
     poolLoadOnChainDataForAllPools: Scalars['String'];
     poolLoadOnChainDataForPoolsWithActiveUpdates: Scalars['String'];
@@ -1102,6 +1123,7 @@ export interface Mutation {
     poolReloadAllPoolAprs: Scalars['String'];
     poolReloadAllTokenNestedPoolIds: Scalars['String'];
     poolReloadPoolNestedTokens: Scalars['String'];
+    poolReloadPoolTokenIndexes: Scalars['String'];
     poolReloadStakingForAllPools: Scalars['String'];
     poolSyncAllPoolsFromSubgraph: Array<Scalars['String']>;
     poolSyncLatestSnapshotsForAllPools: Scalars['String'];
@@ -1115,6 +1137,7 @@ export interface Mutation {
     poolUpdateAprs: Scalars['String'];
     poolUpdateLifetimeValuesForAllPools: Scalars['String'];
     poolUpdateLiquidity24hAgoForAllPools: Scalars['String'];
+    poolUpdateLiquidityValuesForAllEmptyPools: Scalars['String'];
     poolUpdateLiquidityValuesForAllPools: Scalars['String'];
     poolUpdateVolumeAndFeeValuesForAllPools: Scalars['String'];
     protocolCacheMetrics: Scalars['String'];
@@ -1134,11 +1157,6 @@ export interface Mutation {
     userSyncChangedWalletBalancesForAllPools: Scalars['String'];
 }
 
-export interface MutationLgeCreateArgs {
-    lge: GqlLgeCreateInput;
-    signature: Scalars['String'];
-}
-
 export interface MutationPoolInitializeSnapshotsForPoolArgs {
     poolId: Scalars['String'];
 }
@@ -1148,6 +1166,10 @@ export interface MutationPoolLoadSnapshotsForPoolsArgs {
 }
 
 export interface MutationPoolReloadPoolNestedTokensArgs {
+    poolId: Scalars['String'];
+}
+
+export interface MutationPoolReloadPoolTokenIndexesArgs {
     poolId: Scalars['String'];
 }
 
@@ -1161,6 +1183,10 @@ export interface MutationPoolSyncLatestSnapshotsForAllPoolsArgs {
 
 export interface MutationPoolSyncPoolArgs {
     poolId: Scalars['String'];
+}
+
+export interface MutationPoolUpdateLiquidityValuesForAllEmptyPoolsArgs {
+    maxShares: Scalars['String'];
 }
 
 export interface MutationTokenDeletePriceArgs {
@@ -1199,8 +1225,9 @@ export interface Query {
     blocksGetBlocksPerYear: Scalars['Float'];
     contentGetNewsItems: Array<GqlContentNewsItem>;
     latestSyncedBlocks: GqlLatestSyncedBlocks;
-    lge: GqlLge;
-    lges: Array<GqlLge>;
+    lbpGetChartData: Array<Maybe<GqlLbpPriceData>>;
+    lbpGetLbp: GqlLbp;
+    lbpGetLbps: Array<GqlLbp>;
     poolGetAllPoolsSnapshots: Array<GqlPoolSnapshot>;
     poolGetBatchSwaps: Array<GqlPoolBatchSwap>;
     poolGetFeaturedPoolGroups: Array<GqlPoolFeaturedPoolGroup>;
@@ -1237,7 +1264,11 @@ export interface Query {
     userGetSwaps: Array<GqlPoolSwap>;
 }
 
-export interface QueryLgeArgs {
+export interface QueryLbpGetChartDataArgs {
+    id: Scalars['ID'];
+}
+
+export interface QueryLbpGetLbpArgs {
     id: Scalars['ID'];
 }
 

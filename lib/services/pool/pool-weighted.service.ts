@@ -28,7 +28,7 @@ import {
     PoolService,
 } from '~/lib/services/pool/pool-types';
 import { formatFixed } from '@ethersproject/bignumber';
-import { WeightedPoolEncoder } from '@balancer-labs/balancer-js';
+import { WeightedPoolEncoder } from '@balancer-labs/sdk';
 import { PoolBaseService } from '~/lib/services/pool/lib/pool-base.service';
 import OldBigNumber from 'bignumber.js';
 import { BatchRelayerService } from '~/lib/services/batch-relayer/batch-relayer.service';

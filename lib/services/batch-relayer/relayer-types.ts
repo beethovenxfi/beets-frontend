@@ -3,7 +3,7 @@ import { SubgraphPoolBase } from '@balancer-labs/sor';
 import {
     BatchSwapStep,
     ExitPoolRequest,
-    FetchPoolsInput,
+    //FetchPoolsInput,
     FundManagement,
     JoinPoolRequest,
     SwapType,
@@ -104,16 +104,16 @@ export interface ExitStablePhantomInput {
     slippage: string;
 }
 
-export interface ExitAndBatchSwapInput {
-    exiter: string;
-    swapRecipient: string;
-    poolId: string;
-    exits: ExitAndBatchSwapExitItemInput[];
-    userData: string;
-    slippage: string;
-    fetchPools: FetchPoolsInput;
-    unwrap?: boolean;
-}
+// export interface ExitAndBatchSwapInput {
+//     exiter: string;
+//     swapRecipient: string;
+//     poolId: string;
+//     exits: ExitAndBatchSwapExitItemInput[];
+//     userData: string;
+//     slippage: string;
+//     fetchPools: FetchPoolsInput;
+//     unwrap?: boolean;
+// }
 
 export interface ExitAndBatchSwapExitItemInput {
     exitToken: string;
@@ -130,19 +130,19 @@ export interface NestedLinearPool {
     wrappedToken: string;
 }
 
-export interface BatchRelayerJoinPool {
-    poolId: string;
-    tokens: {
-        address: string;
-        amount: string;
-    }[];
-    bptOut: string;
-    slippage: string;
-    funds: FundManagement;
-    fetchPools: FetchPoolsInput;
-    farmId?: number;
-    mintFBeets?: boolean;
-}
+// export interface BatchRelayerJoinPool {
+//     poolId: string;
+//     tokens: {
+//         address: string;
+//         amount: string;
+//     }[];
+//     bptOut: string;
+//     slippage: string;
+//     funds: FundManagement;
+//     fetchPools: FetchPoolsInput;
+//     farmId?: number;
+//     mintFBeets?: boolean;
+// }
 
 export interface EncodeBooMirrorWorldEnterInput {
     sender: string;

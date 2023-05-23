@@ -15,10 +15,7 @@ import {
     PoolService,
 } from '~/lib/services/pool/pool-types';
 import { AmountHumanReadable, AmountScaledString, TokenAmountHumanReadable } from '~/lib/services/token/token-types';
-import {
-    phantomStableBPTForTokensZeroPriceImpact as _bptForTokensZeroPriceImpact,
-    SwapTypes,
-} from '@balancer-labs/sor';
+import { stableBPTForTokensZeroPriceImpact as _bptForTokensZeroPriceImpact, SwapTypes } from '@balancer-labs/sor';
 import { parseUnits } from 'ethers/lib/utils';
 import { PoolBaseService } from '~/lib/services/pool/lib/pool-base.service';
 import { isSameAddress, Swaps, SwapType, SwapV2 } from '@balancer-labs/sdk';
@@ -32,7 +29,6 @@ import {
     oldBnumScaleDown,
 } from '~/lib/services/pool/lib/old-big-number';
 import OldBigNumber from 'bignumber.js';
-import { SwapKind } from '@balancer-labs/balancer-js';
 import { poolBatchSwaps, poolQueryBatchSwap, poolScaleAmp } from '~/lib/services/pool/lib/util';
 import { BatchRelayerService } from '~/lib/services/batch-relayer/batch-relayer.service';
 import {
@@ -79,7 +75,7 @@ export class PoolPhantomStableService implements PoolService {
 
         return {
             type: 'BatchSwap',
-            kind: SwapKind.GivenIn,
+            kind: SwapType.SwapExactIn,
             swaps,
             assets: data.wethIsEth ? assets.map((asset) => this.baseService.wethToZero(asset)) : assets,
             limits,
@@ -158,7 +154,7 @@ export class PoolPhantomStableService implements PoolService {
 
             return {
                 type: 'BatchSwap',
-                kind: SwapKind.GivenIn,
+                kind: SwapType.SwapExactIn,
                 swaps: swaps,
                 assets: assets,
                 limits: deltas,
@@ -170,7 +166,7 @@ export class PoolPhantomStableService implements PoolService {
 
             return {
                 type: 'BatchSwap',
-                kind: SwapKind.GivenIn,
+                kind: SwapType.SwapExactIn,
                 swaps: swaps,
                 assets: assets,
                 limits: deltas,
@@ -193,8 +189,6 @@ export class PoolPhantomStableService implements PoolService {
             denormAmounts,
             this.baseService.totalSharesScaled.toString(),
             this.baseService.ampScaled.toString(),
-            this.baseService.swapFeeScaled.toString(),
-            this.baseService.priceRatesScaled.map((priceRate) => priceRate.toString()),
         );
 
         return oldBnumFromBnum(bptZeroImpact);
@@ -307,8 +301,6 @@ export class PoolPhantomStableService implements PoolService {
                     denormAmounts,
                     oldBnumScaleAmount(poolToken.balance).toString(),
                     oldBnumFromBnum(poolScaleAmp(phantomStable.amp)).toString(),
-                    oldBnumScaleAmount(phantomStable.swapFee).toString(),
-                    phantomStable.tokens.map((token) => oldBnumScaleAmount(token.priceRate, 18).toString()),
                 );
 
                 return bptZeroImpact.toString();

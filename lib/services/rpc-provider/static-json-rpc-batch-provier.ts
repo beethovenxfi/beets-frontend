@@ -1,4 +1,3 @@
-import { Logger } from '@ethersproject/logger';
 import { Network } from '@ethersproject/networks';
 import { defineReadOnly } from '@ethersproject/properties';
 import { logger, providers } from 'ethers';
@@ -10,7 +9,7 @@ export class StaticJsonRpcBatchProvider extends providers.JsonRpcBatchProvider {
             network = await super.detectNetwork();
 
             if (!network) {
-                logger.throwError('no network detected', Logger.errors.UNKNOWN_ERROR, {});
+                logger.throwError('no network detected');
             }
 
             // If still not set, set it

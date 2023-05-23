@@ -12,8 +12,7 @@
     },
     "devDependencies": {
         "@apollo/client": "^3.6.9",
-        "@balancer-labs/balancer-js": "^1.0.1",
-        "@balancer-labs/sdk": "^0.1.10",
+        "@balancer-labs/sdk": "^1.0.5",
         "@balancer-labs/typechain": "^1.0.0",
         "@chakra-ui/react": "^2.2.6",
         "@emotion/react": "^11",

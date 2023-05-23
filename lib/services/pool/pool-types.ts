@@ -1,6 +1,6 @@
 import { AmountHumanReadable, AmountScaledString, TokenAmountHumanReadable } from '~/lib/services/token/token-types';
 import { BigNumberish } from 'ethers';
-import { BatchSwapStep, SwapKind } from '@balancer-labs/balancer-js';
+import { BatchSwapStep, SwapType } from '@balancer-labs/sdk';
 import {
     GqlPoolLinearNested,
     GqlPoolPhantomStable,
@@ -155,7 +155,7 @@ export interface PoolJoinPoolContractCallData {
 
 export interface PoolJoinBatchSwapContractCallData {
     type: 'BatchSwap';
-    kind: SwapKind;
+    kind: SwapType;
     swaps: BatchSwapStep[];
     assets: string[];
     limits: BigNumberish[];
@@ -181,7 +181,7 @@ export interface PoolExitPoolContractCallData {
 
 export interface PoolExitBatchSwapContractCallData {
     type: 'BatchSwap';
-    kind: SwapKind;
+    kind: SwapType;
     swaps: BatchSwapStep[];
     assets: string[];
     limits: BigNumberish[];
