@@ -11,10 +11,11 @@ interface Props extends BoxProps {
     pool: GqlPoolCardDataFragment;
     balance: string;
     balanceUSD: number;
+    totalApr: number;
 }
 
-export function PoolCardUser({ pool, balance, balanceUSD, ...rest }: Props) {
-    const dailyApr = parseFloat(pool.dynamicData.apr.total) / 365;
+export function PoolCardUser({ pool, balance, balanceUSD, totalApr, ...rest }: Props) {
+    const dailyApr = totalApr / 365;
 
     return (
         <LinkBox as="article" flex="1" {...rest}>

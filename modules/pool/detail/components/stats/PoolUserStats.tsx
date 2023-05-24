@@ -21,7 +21,7 @@ export default function PoolUserStats() {
                     My APR
                 </Text>
                 <HStack>
-                    <div className="apr-stripes">{numeral(pool.dynamicData.apr.total).format('0.00%')}</div>
+                    <div className="apr-stripes">{numeral(totalApr).format('0.00%')}</div>
                     <AprTooltip onlySparkles data={pool.dynamicData.apr} />
                 </HStack>
                 {boostedByTypes[pool.id] && <BoostedBadgeSmall boostedBy={boostedByTypes[pool.id]} />}

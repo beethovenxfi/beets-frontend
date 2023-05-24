@@ -1,3 +1,4 @@
+import { GqlChain } from '~/apollo/generated/graphql-codegen-generated';
 export type BoostedByType =
     | 'reaper-aave'
     | 'reaper-aave-granary'
@@ -21,6 +22,7 @@ export interface NetworkConfig {
     appName: string;
     chainId: string;
     networkName: string;
+    chainName: GqlChain;
     networkShortName: string;
     etherscanName: string;
     etherscanUrl: string;

@@ -5,6 +5,7 @@ export const optimismNetworkConfig: NetworkConfig = {
     chainId: '10',
     networkName: 'Optimism Mainnet',
     networkShortName: 'Optimism',
+    chainName: 'OPTIMISM',
     etherscanName: 'The Optimistic Explorer',
     etherscanUrl: 'https://optimistic.etherscan.io',
     testnet: false,

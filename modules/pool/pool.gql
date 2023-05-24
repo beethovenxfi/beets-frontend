@@ -42,18 +42,58 @@ query GetPool($id: String!) {
             fees24hAtlTimestamp
             apr {
                 hasRewardApr
-                thirdPartyApr
-                nativeRewardApr
+                thirdPartyApr {
+                    ... on GqlPoolAprTotal {
+                        total
+                    }
+                    ... on GqlPoolAprRange {
+                        min
+                        max
+                    }
+                }
+                nativeRewardApr {
+                    ... on GqlPoolAprTotal {
+                        total
+                    }
+                    ... on GqlPoolAprRange {
+                        min
+                        max
+                    }
+                }
                 swapApr
-                total
+                apr {
+                    ... on GqlPoolAprTotal {
+                        total
+                    }
+                    ... on GqlPoolAprRange {
+                        min
+                        max
+                    }
+                }
                 items {
                     id
                     title
-                    apr
+                    apr {
+                        ... on GqlPoolAprTotal {
+                            total
+                        }
+                        ... on GqlPoolAprRange {
+                            min
+                            max
+                        }
+                    }
                     subItems {
                         id
                         title
-                        apr
+                        apr {
+                            ... on GqlPoolAprTotal {
+                                total
+                            }
+                            ... on GqlPoolAprRange {
+                                min
+                                max
+                            }
+                        }
                     }
                 }
             }
@@ -103,6 +143,7 @@ query GetPool($id: String!) {
                     rewardPerSecond
                     tokenAddress
                 }
+                status
             }
             reliquary {
                 levels {
