@@ -7,12 +7,13 @@ import { GqlPoolStaking } from '~/apollo/generated/graphql-codegen-generated';
 import { useUserAccount } from '~/lib/user/useUserAccount';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 
-export function useStakingWithdraw(staking?: GqlPoolStaking | null) {
+export function useStakingWithdraw(staking?: GqlPoolStaking | null, customWithdrawalAddress?: string) {
     const networkConfig = useNetworkConfig();
     const { userAddress } = useUserAccount();
+    const withdrawFrom = customWithdrawalAddress || staking?.address || '';
     const { submit, submitAsync, ...rest } = useSubmitTransaction({
         config: {
-            addressOrName: staking?.type === 'GAUGE' ? staking?.address : networkConfig.masterChefContractAddress,
+            addressOrName: staking?.type === 'GAUGE' ? withdrawFrom : networkConfig.masterChefContractAddress,
             contractInterface: staking?.type === 'GAUGE' ? LiquidityGaugeV5 : BeethovenxMasterChefAbi,
             functionName: staking?.type === 'GAUGE' ? 'withdraw(uint256,bool)' : 'withdrawAndHarvest',
         },

@@ -13,29 +13,35 @@ import { Button, HStack, Text, useDisclosure } from '@chakra-ui/react';
 import { PoolGaugeMigrateModal } from '~/modules/pool/stake/PoolMigrateGaugeModal';
 
 export function PoolWarnings() {
-    const { pool, isFbeetsPool, isMigratableGauge } = usePool();
+    const { pool, isFbeetsPool } = usePool();
     const { isOpen: isMigrateModalVisible, onOpen } = useDisclosure();
     const bptBalances = usePoolUserBptBalance();
     const { total } = useLegacyFBeetsBalance();
     const { warnings } = useNetworkConfig();
-    const { showToast } = useToast();
+    const { showToast, removeToast } = useToast();
+    const showMigrationToast = parseFloat(bptBalances.userStakedBptBalance) > 0;
 
     useEffect(() => {
-        showToast({
-            id: 'migrate-gauge',
-            content: (
-                <HStack>
-                    <Text>
-                        This pool has been updated. To continue earning rewards, please migrate your deposited funds.
-                    </Text>
-                    <Button bg="orange.300" onClick={onOpen}>
-                        Migrate
-                    </Button>
-                </HStack>
-            ),
-            type: ToastType.Warn,
-        });
-    }, [isMigratableGauge]);
+        if (showMigrationToast) {
+            showToast({
+                id: 'migrate-gauge',
+                content: (
+                    <HStack>
+                        <Text>
+                            This pool has been updated. To continue earning rewards, please migrate your deposited
+                            funds.
+                        </Text>
+                        <Button bg="orange.300" onClick={onOpen}>
+                            Migrate
+                        </Button>
+                    </HStack>
+                ),
+                type: ToastType.Warn,
+            });
+        } else {
+            removeToast('migrate-gauge');
+        }
+    }, [showMigrationToast]);
 
     return (
         <>

@@ -9,11 +9,8 @@ import { BeetsTransactionStepsSubmit, TransactionStep } from '~/components/butto
 import { _usePoolUserBptBalance, usePoolUserBptBalance } from '../lib/usePoolUserBptBalance';
 import { oldBnumScaleAmount, oldBnumToHumanReadable } from '~/lib/services/pool/lib/old-big-number';
 import { usePool } from '../lib/usePool';
-import { useUserAccount } from '~/lib/user/useUserAccount';
 import { useStakingDeposit } from '~/lib/global/useStakingDeposit';
 import { useUserAllowances } from '~/lib/util/useUserAllowances';
-import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
-import { useGetTokens } from '~/lib/global/useToken';
 import { TokenBase } from '~/lib/services/token/token-types';
 
 interface Props {
@@ -30,29 +27,26 @@ export function PoolGaugeMigrateModal({
 }: Props) {
     const [steps, setSteps] = useState<TransactionStep[]>([]);
     const [depositAmount, setDepositAmount] = useState('');
-    const networkConfig = useNetworkConfig();
-    const { userAddress } = useUserAccount();
     const { isOpen, onOpen, onClose } = useDisclosure();
     const { pool } = usePool();
-    const { getToken } = useGetTokens();
     const [modalState, setModalState] = useState<'start' | 'proportional' | 'single-asset' | 'preview'>('start');
-    const { withdraw, ...unstakeQuery } = useStakingWithdraw(pool.staking);
+
+    const legacyGaugeAddress = (pool.staking?.gauge?.otherGauges || [])[0]?.gaugeAddress;
+    const { withdraw, ...unstakeQuery } = useStakingWithdraw(pool.staking, legacyGaugeAddress);
     const { stake, ...depositQuery } = useStakingDeposit(pool.staking as GqlPoolStaking);
     const {
-        userTotalBptBalance,
         userStakedBptBalance,
+        userLegacyStakedBptBalance,
         userWalletBptBalance,
         hasBptStaked,
         isLoading: isLoadingBalances,
         isRefetching: isRefetchingBalances,
         refetch: refetchBptBalances,
     } = usePoolUserBptBalance();
+
     const stakedAmount = oldBnumToHumanReadable(oldBnumScaleAmount(userStakedBptBalance));
-    const walletAmount = oldBnumToHumanReadable(oldBnumScaleAmount(userWalletBptBalance));
-    const { hasApprovalForAmount, ...rest } = useUserAllowances(
-        [pool],
-        '0xF27D53f21d024643d50de50183932F17638229F6' || '',
-    );
+
+    const { hasApprovalForAmount, ...rest } = useUserAllowances([pool], pool.staking?.address || '');
     const hasApprovalForDeposit = hasApprovalForAmount(pool.address, stakedAmount || depositAmount);
     const [userSyncBalance] = useUserSyncBalanceMutation();
     const initialRef = useRef(null);
@@ -72,7 +66,7 @@ export function PoolGaugeMigrateModal({
                 tooltipText: 'Approve the new gauge to spend your BPT',
                 type: 'tokenApproval',
                 buttonText: 'Approve the new gauge',
-                contractToApprove: '0xF27D53f21d024643d50de50183932F17638229F6',
+                contractToApprove: pool.staking?.address,
                 token: {
                     ...(bpt.current || {}),
                     amount: depositAmount,

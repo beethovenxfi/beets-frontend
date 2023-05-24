@@ -22,27 +22,36 @@ export function _usePoolUserBptBalance() {
     const { pool } = usePool();
     const { userWalletBptBalance, ...userWalletBalanceQuery } = usePoolUserBptWalletBalance();
     const { data: userStakedBptBalance, ...userStakedBalanceQuery } = usePoolUserStakedBalance();
-
+    const { data: legacyStakedBptBalance, ...legacyStakedBalanceQuery } = usePoolUserStakedBalance(
+        (pool.staking?.gauge?.otherGauges || [])[0]?.gaugeAddress || '',
+    );
     const userStakedBptBalanceScaled = parseUnits(userStakedBptBalance || '0', 18);
+    const userLegacyStakedBptBalanceScaled = parseUnits(legacyStakedBptBalance || '0', 18);
     const userTotalBptBalanceScaled = userWalletBptBalance.add(userStakedBptBalanceScaled);
     const userTotalBptBalance = formatFixed(userTotalBptBalanceScaled, 18);
     const userPercentShare = parseFloat(userTotalBptBalance) / parseFloat(pool.dynamicData.totalShares);
 
     async function refetch() {
         await userWalletBalanceQuery.refetch();
+        await legacyStakedBalanceQuery.refetch();
         await userStakedBalanceQuery.refetch();
     }
 
     return {
-        isLoading: userWalletBalanceQuery.isLoading || userStakedBalanceQuery.isLoading,
-        isRefetching: userWalletBalanceQuery.isRefetching || userStakedBalanceQuery.isRefetching,
-        isError: userWalletBalanceQuery.isError || userStakedBalanceQuery.isError,
-        error: userWalletBalanceQuery.error || userStakedBalanceQuery.error,
+        isLoading:
+            userWalletBalanceQuery.isLoading || userStakedBalanceQuery.isLoading || legacyStakedBalanceQuery.isLoading,
+        isRefetching:
+            userWalletBalanceQuery.isRefetching ||
+            userStakedBalanceQuery.isRefetching ||
+            legacyStakedBalanceQuery.isFetching,
+        isError: userWalletBalanceQuery.isError || userStakedBalanceQuery.isError || legacyStakedBalanceQuery.isError,
+        error: userWalletBalanceQuery.error || userStakedBalanceQuery.error || legacyStakedBalanceQuery.error,
         refetch,
 
         userTotalBptBalance: formatFixed(userWalletBptBalance.add(userStakedBptBalanceScaled), 18),
         userWalletBptBalance: formatFixed(userWalletBptBalance, 18),
         userStakedBptBalance: formatFixed(userStakedBptBalanceScaled, 18),
+        userLegacyStakedBptBalance: formatFixed(userLegacyStakedBptBalanceScaled, 18),
         hasBpt: userTotalBptBalanceScaled.gt(DUST_THRESHOLD),
         hasBptInWallet: userWalletBptBalance.gt(DUST_THRESHOLD),
         hasBptStaked: userStakedBptBalanceScaled.gt(DUST_THRESHOLD),
@@ -78,14 +87,14 @@ function usePoolUserBptWalletBalance() {
     };
 }
 
-export function usePoolUserStakedBalance() {
+export function usePoolUserStakedBalance(stakingAddress?: string) {
     const { pool } = usePool();
     const { userAddress } = useUserAccount();
     const provider = useProvider();
     const { data: fBeets } = useGetFbeetsRatioQuery();
 
     return useQuery(
-        ['poolUserStakedBalance', pool.id, pool.staking?.id || '', userAddress || ''],
+        ['poolUserStakedBalance', pool.id, pool.staking?.id || '', userAddress || '', stakingAddress],
         async (): Promise<AmountHumanReadable> => {
             if (!userAddress || !pool.staking) {
                 return '0';
@@ -108,7 +117,7 @@ export function usePoolUserStakedBalance() {
                 case 'GAUGE':
                     return gaugeStakingService.getUserStakedBalance({
                         userAddress,
-                        gaugeAddress: pool.staking.gauge?.gaugeAddress || '',
+                        gaugeAddress: stakingAddress || pool.staking.gauge?.gaugeAddress || '',
                         provider,
                     });
                 case 'RELIQUARY':
