@@ -11,8 +11,9 @@ export default function useStakingMintableRewards(staking: GqlPoolStaking[]) {
     const { userAddress } = useUserAccount();
     const networkConfig = useNetworkConfig();
     const provider = useProvider();
-    // TODO: Also need to check for gauge version here
-    const mintableGaugeAddresses = staking.filter((staking) => staking.type === 'GAUGE').map((gauge) => gauge.address);
+    const mintableGaugeAddresses = staking
+        .filter((staking) => staking.type === 'GAUGE' && staking.gauge?.version === 3)
+        .map((gauge) => gauge.address);
 
     const {
         submit: submitClaimBAL,
@@ -54,7 +55,11 @@ export default function useStakingMintableRewards(staking: GqlPoolStaking[]) {
         });
     }
 
-    const { data: claimableBALForGauges, isLoading, refetch } = useQuery(
+    const {
+        data: claimableBALForGauges,
+        isLoading,
+        refetch,
+    } = useQuery(
         ['claimableBalRewards', mintableGaugeAddresses, userAddress],
         async () => {
             if (userAddress) {
@@ -83,6 +88,6 @@ export default function useStakingMintableRewards(staking: GqlPoolStaking[]) {
             claimAllBAL,
             ...claimAllRest,
         },
-        refetch
+        refetch,
     };
 }

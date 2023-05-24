@@ -684,6 +684,7 @@ export const GetUserData = gql`
             gauge {
                 id
                 gaugeAddress
+                version
                 rewards {
                     id
                     rewardPerSecond
@@ -886,6 +887,7 @@ export const GetPool = gql`
                 gauge {
                     id
                     gaugeAddress
+                    version
                     rewards {
                         id
                         rewardPerSecond

@@ -29,6 +29,7 @@ query GetUserData {
         gauge {
             id
             gaugeAddress
+            version
             rewards {
                 id
                 rewardPerSecond

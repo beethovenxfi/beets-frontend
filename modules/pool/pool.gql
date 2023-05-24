@@ -138,6 +138,7 @@ query GetPool($id: String!) {
             gauge {
                 id
                 gaugeAddress
+                version
                 rewards {
                     id
                     rewardPerSecond
