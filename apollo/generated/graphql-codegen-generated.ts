@@ -1205,6 +1205,8 @@ export interface Mutation {
     userSyncBalanceAllPools: Scalars['String'];
     userSyncChangedStakedBalances: Scalars['String'];
     userSyncChangedWalletBalancesForAllPools: Scalars['String'];
+    veBalSyncAllUserBalances: Scalars['String'];
+    veBalSyncTotalSupply: Scalars['String'];
 }
 
 export interface MutationLgeCreateArgs {
@@ -1326,6 +1328,8 @@ export interface Query {
     userGetRelicSnapshots: Array<GqlUserRelicSnapshot>;
     userGetStaking: Array<GqlPoolStaking>;
     userGetSwaps: Array<GqlPoolSwap>;
+    veBalGetTotalSupply: Scalars['AmountHumanReadable'];
+    veBalGetUserBalance: Scalars['AmountHumanReadable'];
 }
 
 export interface QueryBeetsPoolGetReliquaryFarmSnapshotsArgs {
