@@ -684,6 +684,7 @@ export const GetUserData = gql`
             gauge {
                 id
                 gaugeAddress
+                status
                 otherGauges {
                     gaugeAddress
                     status
@@ -895,6 +896,7 @@ export const GetPool = gql`
                 gauge {
                     id
                     gaugeAddress
+                    status
                     otherGauges {
                         gaugeAddress
                         status

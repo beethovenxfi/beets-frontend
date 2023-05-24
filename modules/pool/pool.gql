@@ -138,6 +138,7 @@ query GetPool($id: String!) {
             gauge {
                 id
                 gaugeAddress
+                status
                 otherGauges {
                     gaugeAddress
                     status

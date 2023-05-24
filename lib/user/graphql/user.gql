@@ -29,6 +29,7 @@ query GetUserData {
         gauge {
             id
             gaugeAddress
+            status
             otherGauges {
                 gaugeAddress
                 status
