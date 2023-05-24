@@ -127,8 +127,6 @@ export function PoolProvider({ pool: poolFromProps, children }: { pool: GqlPoolU
             ? parseFloat(pool.dynamicData.apr.apr.max)
             : parseFloat(pool.dynamicData.apr.apr.total);
 
-    const isGyroPool = pool.__typename === 'GqlPoolGyro';
-
     useEffectOnce(() => {
         refetch();
         startPolling(30_000);
