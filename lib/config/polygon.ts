@@ -17,8 +17,8 @@ export const polygonNetworkConfig: NetworkConfig = {
         decimals: 18,
         iconUrl: 'https://assets.coingecko.com/coins/images/4713/large/matic-token-icon.png',
     },
-    wethAddress: '0x7ceb23fd6bc0add59e62ac25578270cff1b9f619',
-    wethAddressFormatted: '0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619',
+    wethAddress: '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270',
+    wethAddressFormatted: '0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270',
     coingecko: {
         nativeAssetId: 'polygon-pos',
         platformId: 'polygon-pos',
@@ -40,6 +40,7 @@ export const polygonNetworkConfig: NetworkConfig = {
             poolId: '',
             poolAddress: '',
             farmId: 0,
+            maxLevel: 0,
         },
     },
     balancer: {
@@ -59,6 +60,9 @@ export const polygonNetworkConfig: NetworkConfig = {
         linearRebalancers: {},
         balancerQueries: '0xe39b5e3b6d74016b2f6a9673d7d7493b6df549d5',
         sorQueries: '',
+        unwrapExceptions: {
+            reaper: [],
+        },
     },
     beetsPoolOwnerAddress: '0xcd983793adb846dce4830c22f30c7ef0c864a776',
     masterChefContractAddress: '0x8166994d9ebBe5829EC86Bd81258149B87faCfd3',
