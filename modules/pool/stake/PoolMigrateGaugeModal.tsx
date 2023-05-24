@@ -30,19 +30,18 @@ export function PoolGaugeMigrateModal({
     const { isOpen, onOpen, onClose } = useDisclosure();
     const { pool } = usePool();
     const [modalState, setModalState] = useState<'start' | 'proportional' | 'single-asset' | 'preview'>('start');
-
-    const legacyGaugeAddress = (pool.staking?.gauge?.otherGauges || [])[0]?.gaugeAddress;
-    const { withdraw, ...unstakeQuery } = useStakingWithdraw(pool.staking, legacyGaugeAddress);
-    const { stake, ...depositQuery } = useStakingDeposit(pool.staking as GqlPoolStaking);
     const {
         userStakedBptBalance,
         userLegacyStakedBptBalance,
         userWalletBptBalance,
         hasBptStaked,
+        userLegacyStakedGaugeAddress,
         isLoading: isLoadingBalances,
         isRefetching: isRefetchingBalances,
         refetch: refetchBptBalances,
     } = usePoolUserBptBalance();
+    const { withdraw, ...unstakeQuery } = useStakingWithdraw(pool.staking, userLegacyStakedGaugeAddress);
+    const { stake, ...depositQuery } = useStakingDeposit(pool.staking as GqlPoolStaking);
 
     const stakedAmount = oldBnumToHumanReadable(oldBnumScaleAmount(userStakedBptBalance));
 

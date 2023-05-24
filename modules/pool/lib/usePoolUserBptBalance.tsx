@@ -1,4 +1,4 @@
-import { AmountHumanReadable } from '~/lib/services/token/token-types';
+import { AmountHumanReadable, TokenAmountHumanReadable } from '~/lib/services/token/token-types';
 import { useGetFbeetsRatioQuery } from '~/apollo/generated/graphql-codegen-generated';
 import { useUserBalances } from '~/lib/user/useUserBalances';
 import { parseUnits } from 'ethers/lib/utils';
@@ -21,12 +21,24 @@ const DUST_THRESHOLD = BigNumber.from('1000000000000');
 export function _usePoolUserBptBalance() {
     const { pool } = usePool();
     const { userWalletBptBalance, ...userWalletBalanceQuery } = usePoolUserBptWalletBalance();
-    const { data: userStakedBptBalance, ...userStakedBalanceQuery } = usePoolUserStakedBalance();
+    const { data: userStakedBptBalance, ...userStakedBalanceQuery } = usePoolUserStakedBalance([
+        pool.staking?.gauge?.gaugeAddress || '',
+    ]);
     const { data: legacyStakedBptBalance, ...legacyStakedBalanceQuery } = usePoolUserStakedBalance(
-        (pool.staking?.gauge?.otherGauges || [])[0]?.gaugeAddress || '',
+        pool.staking?.gauge?.otherGauges?.map((gauge) => gauge.gaugeAddress) || [],
     );
-    const userStakedBptBalanceScaled = parseUnits(userStakedBptBalance || '0', 18);
-    const userLegacyStakedBptBalanceScaled = parseUnits(legacyStakedBptBalance || '0', 18);
+    const userStakedBptBalanceScaled = parseUnits(
+        (userStakedBptBalance && typeof userStakedBptBalance === 'object'
+            ? userStakedBptBalance.amount
+            : userStakedBptBalance) || '0',
+        18,
+    );
+    const userLegacyStakedBptBalanceScaled = parseUnits(
+        (legacyStakedBptBalance && typeof legacyStakedBptBalance === 'object'
+            ? legacyStakedBptBalance.amount
+            : legacyStakedBptBalance) || '0',
+        18,
+    );
     const userTotalBptBalanceScaled = userWalletBptBalance.add(userStakedBptBalanceScaled);
     const userTotalBptBalance = formatFixed(userTotalBptBalanceScaled, 18);
     const userPercentShare = parseFloat(userTotalBptBalance) / parseFloat(pool.dynamicData.totalShares);
@@ -52,6 +64,9 @@ export function _usePoolUserBptBalance() {
         userWalletBptBalance: formatFixed(userWalletBptBalance, 18),
         userStakedBptBalance: formatFixed(userStakedBptBalanceScaled, 18),
         userLegacyStakedBptBalance: formatFixed(userLegacyStakedBptBalanceScaled, 18),
+        userLegacyStakedGaugeAddress:
+            (legacyStakedBptBalance && typeof legacyStakedBptBalance === 'object' && legacyStakedBptBalance.address) ||
+            '',
         hasBpt: userTotalBptBalanceScaled.gt(DUST_THRESHOLD),
         hasBptInWallet: userWalletBptBalance.gt(DUST_THRESHOLD),
         hasBptStaked: userStakedBptBalanceScaled.gt(DUST_THRESHOLD),
@@ -87,15 +102,15 @@ function usePoolUserBptWalletBalance() {
     };
 }
 
-export function usePoolUserStakedBalance(stakingAddress?: string) {
+export function usePoolUserStakedBalance(stakingAddresses: string[]) {
     const { pool } = usePool();
     const { userAddress } = useUserAccount();
     const provider = useProvider();
     const { data: fBeets } = useGetFbeetsRatioQuery();
 
     return useQuery(
-        ['poolUserStakedBalance', pool.id, pool.staking?.id || '', userAddress || '', stakingAddress],
-        async (): Promise<AmountHumanReadable> => {
+        ['poolUserStakedBalance', pool.id, pool.staking?.id || '', userAddress || '', stakingAddresses],
+        async (): Promise<AmountHumanReadable | TokenAmountHumanReadable> => {
             if (!userAddress || !pool.staking) {
                 return '0';
             }
@@ -115,11 +130,21 @@ export function usePoolUserStakedBalance(stakingAddress?: string) {
                         fBeetsRatio: fBeets?.ratio || '0',
                     });
                 case 'GAUGE':
-                    return gaugeStakingService.getUserStakedBalance({
-                        userAddress,
-                        gaugeAddress: stakingAddress || pool.staking.gauge?.gaugeAddress || '',
-                        provider,
-                    });
+                    for (const stakingAddress of stakingAddresses) {
+                        const balance = await gaugeStakingService.getUserStakedBalance({
+                            userAddress,
+                            gaugeAddress: stakingAddress || '',
+                            provider,
+                        });
+
+                        if (balance !== '0.0') {
+                            return {
+                                address: stakingAddress,
+                                amount: balance,
+                            };
+                        }
+                    }
+                    return '0.0';
                 case 'RELIQUARY':
                     //TODO: implement
                     return '0';
