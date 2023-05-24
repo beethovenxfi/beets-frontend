@@ -12,6 +12,7 @@ import { usePool } from '../lib/usePool';
 import { useStakingDeposit } from '~/lib/global/useStakingDeposit';
 import { useUserAllowances } from '~/lib/util/useUserAllowances';
 import { TokenBase } from '~/lib/services/token/token-types';
+import { omit } from 'lodash';
 
 interface Props {
     activatorProps?: ButtonProps;
@@ -34,24 +35,26 @@ export function PoolGaugeMigrateModal({
         userStakedBptBalance,
         userLegacyStakedBptBalance,
         userWalletBptBalance,
-        hasBptStaked,
         userLegacyStakedGaugeAddress,
         isLoading: isLoadingBalances,
         isRefetching: isRefetchingBalances,
         refetch: refetchBptBalances,
     } = usePoolUserBptBalance();
-    const { withdraw, ...unstakeQuery } = useStakingWithdraw(pool.staking, userLegacyStakedGaugeAddress);
+
+    const legacyGqlPoolStaking = (pool.staking?.gauge?.otherGauges || []).find(
+        (g) => g.gaugeAddress === userLegacyStakedGaugeAddress,
+    );
+    const { withdraw, ...unstakeQuery } = useStakingWithdraw(pool.staking, legacyGqlPoolStaking);
     const { stake, ...depositQuery } = useStakingDeposit(pool.staking as GqlPoolStaking);
 
-    const stakedAmount = oldBnumToHumanReadable(oldBnumScaleAmount(userStakedBptBalance));
+    const stakedAmount = oldBnumToHumanReadable(oldBnumScaleAmount(userLegacyStakedBptBalance));
 
     const { hasApprovalForAmount, ...rest } = useUserAllowances([pool], pool.staking?.address || '');
     const hasApprovalForDeposit = hasApprovalForAmount(pool.address, stakedAmount || depositAmount);
     const [userSyncBalance] = useUserSyncBalanceMutation();
     const initialRef = useRef(null);
 
-    console.log('pushed', pool);
-
+    const hasLegacyBptStaked = parseFloat(userLegacyStakedBptBalance) > 0;
     const bpt = useRef<TokenBase>({
         address: pool.address,
         symbol: 'BPT',
@@ -74,12 +77,12 @@ export function PoolGaugeMigrateModal({
                 },
             });
         }
-        if (hasBptStaked) {
+        if (hasLegacyBptStaked) {
             _steps.unshift({ id: 'unstake', tooltipText: '', type: 'other', buttonText: 'Unstake' });
         }
         if (_steps.length < steps?.length) return;
         setSteps(_steps);
-    }, [hasBptStaked, depositAmount]);
+    }, [hasLegacyBptStaked, depositAmount]);
 
     useEffect(() => {
         setModalState('start');

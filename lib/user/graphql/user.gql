@@ -33,6 +33,7 @@ query GetUserData {
             status
             otherGauges {
                 gaugeAddress
+                version
                 status
                 id
                 rewards {

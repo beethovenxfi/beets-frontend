@@ -1752,6 +1752,7 @@ export type GetUserDataQuery = {
             otherGauges?: Array<{
                 __typename: 'GqlPoolStakingOtherGauge';
                 gaugeAddress: string;
+                version: number;
                 status: GqlPoolStakingGaugeStatus;
                 id: string;
                 rewards: Array<{
@@ -2422,6 +2423,7 @@ export type GetPoolQuery = {
                       otherGauges?: Array<{
                           __typename: 'GqlPoolStakingOtherGauge';
                           gaugeAddress: string;
+                          version: number;
                           status: GqlPoolStakingGaugeStatus;
                           id: string;
                           rewards: Array<{
@@ -2624,6 +2626,7 @@ export type GetPoolQuery = {
                       otherGauges?: Array<{
                           __typename: 'GqlPoolStakingOtherGauge';
                           gaugeAddress: string;
+                          version: number;
                           status: GqlPoolStakingGaugeStatus;
                           id: string;
                           rewards: Array<{
@@ -2843,6 +2846,7 @@ export type GetPoolQuery = {
                       otherGauges?: Array<{
                           __typename: 'GqlPoolStakingOtherGauge';
                           gaugeAddress: string;
+                          version: number;
                           status: GqlPoolStakingGaugeStatus;
                           id: string;
                           rewards: Array<{
@@ -3196,6 +3200,7 @@ export type GetPoolQuery = {
                       otherGauges?: Array<{
                           __typename: 'GqlPoolStakingOtherGauge';
                           gaugeAddress: string;
+                          version: number;
                           status: GqlPoolStakingGaugeStatus;
                           id: string;
                           rewards: Array<{
@@ -3412,6 +3417,7 @@ export type GetPoolQuery = {
                       otherGauges?: Array<{
                           __typename: 'GqlPoolStakingOtherGauge';
                           gaugeAddress: string;
+                          version: number;
                           status: GqlPoolStakingGaugeStatus;
                           id: string;
                           rewards: Array<{
@@ -3766,6 +3772,7 @@ export type GetPoolQuery = {
                       otherGauges?: Array<{
                           __typename: 'GqlPoolStakingOtherGauge';
                           gaugeAddress: string;
+                          version: number;
                           status: GqlPoolStakingGaugeStatus;
                           id: string;
                           rewards: Array<{
@@ -3982,6 +3989,7 @@ export type GetPoolQuery = {
                       otherGauges?: Array<{
                           __typename: 'GqlPoolStakingOtherGauge';
                           gaugeAddress: string;
+                          version: number;
                           status: GqlPoolStakingGaugeStatus;
                           id: string;
                           rewards: Array<{
@@ -4335,6 +4343,7 @@ export type GetPoolQuery = {
                       otherGauges?: Array<{
                           __typename: 'GqlPoolStakingOtherGauge';
                           gaugeAddress: string;
+                          version: number;
                           status: GqlPoolStakingGaugeStatus;
                           id: string;
                           rewards: Array<{
@@ -6246,6 +6255,7 @@ export const GetUserDataDocument = gql`
                 status
                 otherGauges {
                     gaugeAddress
+                    version
                     status
                     id
                     rewards {
@@ -6663,6 +6673,7 @@ export const GetPoolDocument = gql`
                     status
                     otherGauges {
                         gaugeAddress
+                        version
                         status
                         id
                         rewards {

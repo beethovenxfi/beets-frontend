@@ -142,6 +142,7 @@ query GetPool($id: String!) {
                 status
                 otherGauges {
                     gaugeAddress
+                    version
                     status
                     id
                     rewards {

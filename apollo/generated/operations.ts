@@ -688,6 +688,7 @@ export const GetUserData = gql`
                 status
                 otherGauges {
                     gaugeAddress
+                    version
                     status
                     id
                     rewards {
@@ -901,6 +902,7 @@ export const GetPool = gql`
                     status
                     otherGauges {
                         gaugeAddress
+                        version
                         status
                         id
                         rewards {
