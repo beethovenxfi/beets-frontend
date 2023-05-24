@@ -12,7 +12,7 @@ export default function useStakingMintableRewards(staking: GqlPoolStaking[]) {
     const networkConfig = useNetworkConfig();
     const provider = useProvider();
     const mintableGaugeAddresses = staking
-        .filter((staking) => staking.type === 'GAUGE' && staking.gauge?.version === 3)
+        .filter((staking) => staking.type === 'GAUGE' && staking.gauge?.version === 2)
         .map((gauge) => gauge.address);
 
     const {

@@ -17,7 +17,7 @@ import { useNetworkConfig } from './useNetworkConfig';
 function calculateClaimableBAL(stakingItems: GqlPoolStaking[], claimableBALForGauges: Record<string, string>) {
     let claimableBAL = 0;
     for (const stakingItem of stakingItems) {
-        if (stakingItem.type === 'GAUGE' && stakingItem.gauge?.version === 3) {
+        if (stakingItem.type === 'GAUGE' && stakingItem.gauge?.version === 2) {
             const claimableBALForGauge = claimableBALForGauges[stakingItem.gauge?.gaugeAddress || ''] || '0';
             claimableBAL += parseFloat(claimableBALForGauge);
         }
