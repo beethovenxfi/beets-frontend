@@ -1173,6 +1173,8 @@ type Mutation {
     userSyncBalanceAllPools: String!
     userSyncChangedStakedBalances: String!
     userSyncChangedWalletBalancesForAllPools: String!
+    veBalSyncAllUserBalances: String!
+    veBalSyncTotalSupply: String!
 }
 
 type Query {
@@ -1249,4 +1251,6 @@ type Query {
     userGetRelicSnapshots(farmId: String!, range: GqlUserSnapshotDataRange!): [GqlUserRelicSnapshot!]!
     userGetStaking: [GqlPoolStaking!]!
     userGetSwaps(first: Int = 10, poolId: String!, skip: Int = 0): [GqlPoolSwap!]!
+    veBalGetTotalSupply: AmountHumanReadable!
+    veBalGetUserBalance: AmountHumanReadable!
 }
