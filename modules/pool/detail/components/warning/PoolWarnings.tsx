@@ -19,7 +19,7 @@ export function PoolWarnings() {
     const { total } = useLegacyFBeetsBalance();
     const { warnings } = useNetworkConfig();
     const { showToast, removeToast } = useToast();
-    const showMigrationToast = parseFloat(bptBalances.userStakedBptBalance) > 0;
+    const showMigrationToast = parseFloat(bptBalances.userLegacyStakedBptBalance) > 0;
 
     useEffect(() => {
         if (showMigrationToast) {
