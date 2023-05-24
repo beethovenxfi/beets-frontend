@@ -99,7 +99,8 @@ export function PoolProvider({ pool: poolFromProps, children }: { pool: GqlPoolU
         ((pool.__typename === 'GqlPoolWeighted' &&
             networkConfig.balancer.weightedPoolV2PlusFactories.includes(pool.factory || '')) ||
             pool.__typename === 'GqlPoolPhantomStable' ||
-            pool.__typename === 'GqlPoolMetaStable') &&
+            pool.__typename === 'GqlPoolMetaStable' ||
+            pool.__typename === 'GqlPoolGyro') &&
         pool.staking?.type === 'GAUGE' &&
         !!pool.staking.gauge;
     const supportsZap = supportsZapIntoMasterchefFarm || supportsZapIntoGauge;

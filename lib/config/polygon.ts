@@ -45,7 +45,7 @@ export const polygonNetworkConfig: NetworkConfig = {
     },
     balancer: {
         vault: '0xba12222222228d8ba445958a75a0704d566bf2c8',
-        batchRelayer: '0x1a58897ab366082028ced3740900ecbd765af738',
+        batchRelayer: '0xd18d5d377eb23362e54fa496597d7e962d56c554',
         composableStableFactories: ['0x7bc6c0e73edaa66ef3f6e2f27b0ee8661834c6c9'],
         composableStableV1Factory: '0x136fd06fa01ecf624c7f2b3cb15742c1339dc2c4',
         weightedPoolV2PlusFactories: [

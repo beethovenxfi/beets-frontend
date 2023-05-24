@@ -88,7 +88,7 @@ export function poolGetServiceForPool(pool: GqlPoolUnion): PoolService {
         case 'GqlPoolMetaStable':
             return new PoolMetaStableService(pool, batchRelayerService, networkConfig.wethAddress);
         case 'GqlPoolGyro':
-            return new PoolGyroService(pool, networkConfig.wethAddress);
+            return new PoolGyroService(pool, batchRelayerService, networkConfig.wethAddress);
     }
 
     throw new Error('unsupported pool type');

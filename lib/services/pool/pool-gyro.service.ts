@@ -25,12 +25,17 @@ import { WeightedPoolEncoder } from '@balancer-labs/balancer-js';
 import { parseUnits } from 'ethers/lib/utils.js';
 import { formatFixed } from '@ethersproject/bignumber';
 import { oldBnumSubtractSlippage } from './lib/old-big-number';
+import { BatchRelayerService } from '../batch-relayer/batch-relayer.service';
 
 export class PoolGyroService implements PoolService {
     private readonly proportionalInvestService: PoolProportionalInvestService;
     private readonly baseService: PoolBaseService;
 
-    constructor(private pool: GqlPoolGyro, private readonly wethAddress: string) {
+    constructor(
+        private pool: GqlPoolGyro,
+        private batchRelayerService: BatchRelayerService,
+        private readonly wethAddress: string,
+    ) {
         this.proportionalInvestService = new PoolProportionalInvestService(pool);
         this.baseService = new PoolBaseService(pool, wethAddress);
     }
@@ -65,6 +70,20 @@ export class PoolGyroService implements PoolService {
         );
         const maxAmountsIn = poolScaleTokenAmounts(data.maxAmountsIn, this.pool.tokens);
         const userData = WeightedPoolEncoder.joinAllTokensInForExactBPTOut(parseUnits(bptAmountOut));
+
+        if (
+            (this.pool.staking?.type === 'MASTER_CHEF' && data.zapIntoMasterchefFarm) ||
+            (this.pool.staking?.type === 'GAUGE' && data.zapIntoGauge)
+        ) {
+            console.log({ batch: this.batchRelayerService });
+            return this.batchRelayerService.encodeJoinPoolAndStake({
+                userData,
+                pool: this.pool,
+                assets,
+                maxAmountsIn,
+                userAddress: data.userAddress,
+            });
+        }
 
         return { type: 'JoinPool', assets, maxAmountsIn, userData };
     }
