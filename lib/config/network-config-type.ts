@@ -100,6 +100,8 @@ export interface NetworkConfig {
     };
     gauge: {
         rewardHelperAddress: string;
+        balancerPseudoMinterAddress: string;
+        veBALDelegationProxyAddress: string;
     };
     createPoolUrl: string;
     launchUrl?: string;
