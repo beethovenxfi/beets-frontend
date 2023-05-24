@@ -50,6 +50,8 @@ export function PoolGaugeMigrateModal({
     const [userSyncBalance] = useUserSyncBalanceMutation();
     const initialRef = useRef(null);
 
+    console.log('pushed', pool);
+
     const bpt = useRef<TokenBase>({
         address: pool.address,
         symbol: 'BPT',
