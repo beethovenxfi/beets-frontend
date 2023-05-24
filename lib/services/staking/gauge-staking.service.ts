@@ -108,66 +108,6 @@ export class GaugeStakingService {
 
         return pendingRewardAmounts;
     }
-
-    public async getPendingBALRewards({
-        userAddress,
-        gauges,
-        provider,
-    }: {
-        userAddress: string;
-        gauges: string[];
-        provider: BaseProvider;
-    }) {
-        const multicaller = new Multicaller(this.chainId, provider, LiquidityGaugeV6Abi);
-
-        for (const gauge of gauges) {
-            multicaller.call(`${gauge}.claimableBAL`, gauge, 'claimable_tokens', [userAddress]);
-        }
-
-        if (multicaller.numCalls === 0) {
-            return {};
-        }
-
-        const result: {
-            [gaugeId: string]: {
-                claimableBAL: BigNumber;
-            };
-        } = await multicaller.execute({});
-
-        const formattedResult = mapValues(result, (data) => data.claimableBAL.toString());
-        return formattedResult;
-    }
-
-    public async getGaugeStakingMigrationCallData({
-        userAddress,
-        stakedBalance,
-        legacyGaugeAddress,
-        preferredGaugeAddress,
-    }: {
-        userAddress: string;
-        stakedBalance: string;
-        legacyGaugeAddress: string;
-        preferredGaugeAddress: string;
-    }): Promise<string[]> {
-        const stakedBalanceScaled = parseFixed(stakedBalance, 18);
-
-        const withdrawFromLegacyGauge = this.batchRelayerService.gaugeEncodeWithdraw({
-            sender: userAddress,
-            recipient: networkConfig.balancer.batchRelayer,
-            amount: stakedBalanceScaled.toString(),
-            gauge: legacyGaugeAddress,
-        });
-
-        const depositToPreferredGauge = this.batchRelayerService.gaugeEncodeDeposit({
-            sender: userAddress,
-            recipient: networkConfig.balancer.batchRelayer,
-            amount: stakedBalanceScaled.toString(),
-            gauge: preferredGaugeAddress,
-        });
-
-        //below we use the output values of the peek to set our min/max values
-        return [withdrawFromLegacyGauge];
-    }
 }
 
 export const gaugeStakingService = new GaugeStakingService(

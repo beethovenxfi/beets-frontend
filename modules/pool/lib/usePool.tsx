@@ -29,8 +29,6 @@ export interface PoolContextType {
     isFbeetsPool: boolean;
     isStablePool: boolean;
     isComposablePool: boolean;
-    isGyroPool: boolean;
-    isMigratableGauge: boolean;
 }
 
 export const PoolContext = createContext<PoolContextType | null>(null);
@@ -104,7 +102,6 @@ export function PoolProvider({ pool: poolFromProps, children }: { pool: GqlPoolU
         pool.staking?.type === 'GAUGE' &&
         !!pool.staking.gauge;
     const supportsZap = supportsZapIntoMasterchefFarm || supportsZapIntoGauge;
-    const isMigratableGauge = pool.staking?.type === 'GAUGE' && true;  // perform checks for otherGauges here
 
     const allTokens = useMemo(
         () =>
@@ -158,8 +155,6 @@ export function PoolProvider({ pool: poolFromProps, children }: { pool: GqlPoolU
                 isFbeetsPool: pool.id === networkConfig.fbeets.poolId,
                 isStablePool,
                 isComposablePool,
-                isGyroPool,
-                isMigratableGauge
             }}
         >
             {children}
