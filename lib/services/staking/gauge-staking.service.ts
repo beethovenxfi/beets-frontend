@@ -134,7 +134,7 @@ export class GaugeStakingService {
             };
         } = await multicaller.execute({});
 
-        const formattedResult = mapValues(result, (data) => data.claimableBAL.toString());
+        const formattedResult = mapValues(result, (data) => (data.claimableBAL || BigNumber.from(0)).toString());
         return formattedResult;
     }
 }

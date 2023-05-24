@@ -7,10 +7,12 @@ import { useSubmitTransaction } from '../util/useSubmitTransaction';
 import { useNetworkConfig } from './useNetworkConfig';
 import BalancerPseudoMinterAbi from '~/lib/abi/BalancerPseudoMinter.json';
 
-export default function useStakingMintableRewards(gauges: GqlPoolStaking[]) {
+export default function useStakingMintableRewards(staking: GqlPoolStaking[]) {
     const { userAddress } = useUserAccount();
     const networkConfig = useNetworkConfig();
     const provider = useProvider();
+    // TODO: Also need to check for gauge version here
+    const mintableGaugeAddresses = staking.filter((staking) => staking.type === 'GAUGE').map((gauge) => gauge.address);
 
     const {
         submit: submitClaimBAL,
@@ -45,21 +47,21 @@ export default function useStakingMintableRewards(gauges: GqlPoolStaking[]) {
         });
     }
 
-    function claimAllBAL(gaugeAddresses: string[]) {
-        return submitClaimBAL({
-            args: [gaugeAddresses],
+    function claimAllBAL() {
+        return submitClaimAllBAL({
+            args: [mintableGaugeAddresses],
             toastText: 'Claim all BAL rewards',
         });
     }
 
-    const { data: claimableBAL, isLoading } = useQuery(
-        ['claimableBalRewards', gauges.map((gauge) => gauge.address), userAddress],
+    const { data: claimableBALForGauges, isLoading, refetch } = useQuery(
+        ['claimableBalRewards', mintableGaugeAddresses, userAddress],
         async () => {
             if (userAddress) {
                 const claimableBAL = gaugeStakingService.getPendingBALRewards({
                     userAddress,
                     provider,
-                    gauges: gauges.map((gauge) => gauge.address),
+                    gauges: mintableGaugeAddresses,
                 });
                 return claimableBAL;
             }
@@ -71,7 +73,7 @@ export default function useStakingMintableRewards(gauges: GqlPoolStaking[]) {
     );
 
     return {
-        claimableBAL,
+        claimableBALForGauges,
         isLoading,
         claim: {
             claimBAL,
@@ -81,5 +83,6 @@ export default function useStakingMintableRewards(gauges: GqlPoolStaking[]) {
             claimAllBAL,
             ...claimAllRest,
         },
+        refetch
     };
 }

@@ -63,6 +63,7 @@ export interface NetworkConfig {
     balancer: {
         vault: string;
         batchRelayer: string;
+        balToken: string;
         composableStableFactories: string[];
         composableStableV1Factory: string;
         weightedPoolV2PlusFactories: string[];
