@@ -46,6 +46,7 @@ export function PoolUserStakedStats({ poolAddress, staking, totalApr, userPoolBa
     const dailyYield = totalApr / 365;
     const dailyYieldUSD = userPoolBalanceUSD * dailyYield;
     const beetsPerDay = parseFloat(staking.farm?.beetsPerBlock || '0') * (blocksData?.blocksPerDay || 0) * userShare;
+    const showClaimBALButton = staking.gauge?.gaugeAddress && staking.gauge.version === 2;
 
     return (
         <>
@@ -173,8 +174,8 @@ export function PoolUserStakedStats({ poolAddress, staking, totalApr, userPoolBa
                     </BeetsSubmitTransactionButton>
                 </Box>
                 <Box width="full">
-                    {staking.gauge?.gaugeAddress && (
-                        // <BeetsTooltip label="BAL rewards are claimed seperately as they are managed by the veBAL contract.">
+                    {showClaimBALButton && (
+                        <BeetsTooltip label="BAL rewards are claimed seperately as they are managed by the veBAL contract.">
                             <BeetsSubmitTransactionButton
                                 {...claimQuery}
                                 isDisabled={!hasPendingRewards}
@@ -188,7 +189,8 @@ export function PoolUserStakedStats({ poolAddress, staking, totalApr, userPoolBa
                             >
                                 Claim BAL rewards
                             </BeetsSubmitTransactionButton>
-                        // </BeetsTooltip>
+                            //{' '}
+                        </BeetsTooltip>
                     )}
                 </Box>
             </VStack>
