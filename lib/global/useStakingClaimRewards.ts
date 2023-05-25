@@ -33,10 +33,17 @@ export function useStakingClaimRewards(staking: GqlPoolStaking | null) {
                         toastText: 'Claim pending rewards',
                     });
                 case 'GAUGE':
-                    return submit({
-                        args: [staking.gauge?.gaugeAddress, userAddress],
-                        toastText: 'Claim pending rewards',
-                    });
+                    if (staking.gauge?.version === 1) {
+                        return submit({
+                            args: [staking.gauge?.gaugeAddress, userAddress],
+                            toastText: 'Claim pending rewards',
+                        });
+                    } else {
+                        return submit({
+                            args: [],
+                            toastText: 'Claim pending rewards',
+                        });
+                    }
             }
         }
     }

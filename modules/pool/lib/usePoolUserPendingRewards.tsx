@@ -20,8 +20,6 @@ export function _usePoolUserPendingRewards() {
         'usePoolUserPendingRewards',
     );
 
-    console.log('ding', data);
-
     const hasBeetsRewards =
         (data || []).filter((item) => item.address === networkConfig.beets.address && parseFloat(item.amount) > 0)
             .length > 0;

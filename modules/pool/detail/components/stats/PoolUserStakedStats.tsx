@@ -16,6 +16,7 @@ import { networkConfig } from '~/lib/config/network-config';
 import { InfoButton } from '~/components/info-button/InfoButton';
 import BeetsTooltip from '~/components/tooltip/BeetsTooltip';
 import useStakingMintableRewards from '~/lib/global/useStakingMintableRewards';
+import { sumBy } from 'lodash';
 
 interface Props {
     poolAddress: string;
@@ -50,6 +51,9 @@ export function PoolUserStakedStats({ poolAddress, staking, totalApr, userPoolBa
     const hasPendingBalRewards =
         parseFloat(pendingRewards.find((reward) => reward.address === networkConfig.balancer.balToken)?.amount || '0') >
         0;
+
+    const nonBALRewards = pendingRewards.filter((p) => p.address !== networkConfig.balancer.balToken);
+    const hasPendingNonBALRewards = sumBy(nonBALRewards, (r) => parseFloat(r.amount)) > 0;
 
     return (
         <>
@@ -165,7 +169,7 @@ export function PoolUserStakedStats({ poolAddress, staking, totalApr, userPoolBa
                 <Box width="full">
                     <BeetsSubmitTransactionButton
                         {...harvestQuery}
-                        isDisabled={!hasPendingRewards}
+                        isDisabled={!hasPendingNonBALRewards}
                         onClick={() => claim()}
                         onConfirmed={() => {
                             refetchPendingRewards();
