@@ -11,16 +11,31 @@ import { StakingPendingRewardAmount } from '~/lib/services/staking/staking-types
 import { gaugeStakingService } from '~/lib/services/staking/gauge-staking.service';
 import { useUserAccount } from '~/lib/user/useUserAccount';
 import { useRef } from 'react';
+import useStakingMintableRewards from './useStakingMintableRewards';
+import { useNetworkConfig } from './useNetworkConfig';
+
+function calculateClaimableBAL(stakingItems: GqlPoolStaking[], claimableBALForGauges: Record<string, string>) {
+    let claimableBAL = 0;
+    for (const stakingItem of stakingItems) {
+        if (stakingItem.type === 'GAUGE' && stakingItem.gauge?.version === 2) {
+            const claimableBALForGauge = claimableBALForGauges[stakingItem.gauge?.gaugeAddress || ''] || '0';
+            claimableBAL += parseFloat(claimableBALForGauge);
+        }
+    }
+    return claimableBAL;
+}
 
 export function useStakingPendingRewards(stakingItems: GqlPoolStaking[], hookName: string) {
     const provider = useProvider();
     const { userAddress } = useUserAccount();
-    const { tokens } = useGetTokens();
+    const networkConfig = useNetworkConfig();
+    const { tokens, priceForAmount } = useGetTokens();
     const stakingIds = stakingItems.map((staking) => staking.id);
     const isHardRefetch = useRef(false);
+    const { claimableBALForGauges, isLoading: isLoadingClaimableBAL } = useStakingMintableRewards(stakingItems);
 
     const query = useQuery(
-        ['useStakingPendingRewards', hookName, userAddress, stakingIds],
+        ['useStakingPendingRewards', hookName, userAddress, stakingIds, claimableBALForGauges],
         async () => {
             let pendingRewards: StakingPendingRewardAmount[] = [];
             const farms = stakingItems
@@ -51,6 +66,17 @@ export function useStakingPendingRewards(stakingItems: GqlPoolStaking[], hookNam
                 });
                 pendingRewards = [...pendingRewards, ...gaugePendingRewards];
             }
+
+            const claimableBALForPool = calculateClaimableBAL(stakingItems, claimableBALForGauges || {});
+
+            pendingRewards = [
+                ...pendingRewards,
+                {
+                    address: networkConfig.balancer.balToken,
+                    amount: claimableBALForPool.toString(),
+                    id: 'claimable-bal',
+                },
+            ];
 
             return pendingRewards;
         },
