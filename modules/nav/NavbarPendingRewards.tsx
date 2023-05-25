@@ -58,7 +58,6 @@ export function NavbarPendingRewards() {
     const totalPendingRewardsUSD = pendingRewardsTotalUSD + pendingReliquaryRewardsTotalUSD;
     const canClaimBAL = networkConfig.gauge.balancerPseudoMinterAddress !== AddressZero && pendingBALUSD > 0;
 
-    console.log('pending', pendingRewards);
     return (
         <Popover>
             {/*
