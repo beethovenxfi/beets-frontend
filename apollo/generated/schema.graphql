@@ -650,6 +650,7 @@ type GqlPoolStakingGauge {
     otherGauges: [GqlPoolStakingOtherGauge!]
     rewards: [GqlPoolStakingGaugeReward!]!
     status: GqlPoolStakingGaugeStatus!
+    version: Int!
 }
 
 type GqlPoolStakingGaugeReward {
@@ -675,6 +676,7 @@ type GqlPoolStakingOtherGauge {
     id: ID!
     rewards: [GqlPoolStakingGaugeReward!]!
     status: GqlPoolStakingGaugeStatus!
+    version: Int!
 }
 
 type GqlPoolStakingReliquaryFarm {

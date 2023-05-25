@@ -63,6 +63,7 @@ export interface NetworkConfig {
     balancer: {
         vault: string;
         batchRelayer: string;
+        balToken: string;
         composableStableFactories: string[];
         composableStableV1Factory: string;
         weightedPoolV2PlusFactories: string[];
@@ -100,6 +101,8 @@ export interface NetworkConfig {
     };
     gauge: {
         rewardHelperAddress: string;
+        balancerPseudoMinterAddress: string;
+        veBALDelegationProxyAddress: string;
     };
     createPoolUrl: string;
     launchUrl?: string;

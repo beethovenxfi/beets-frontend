@@ -100,7 +100,7 @@ export function BeetsTransactionStepsSubmit({
     }, [complete]);
 
     return (
-        <Box>
+        <Box width="full">
             {isLoading && !complete ? (
                 <Flex justifyContent="center" mb="6">
                     <Skeleton height="30px" width="180px" />
