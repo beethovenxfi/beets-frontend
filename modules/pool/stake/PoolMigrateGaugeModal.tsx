@@ -33,28 +33,28 @@ export function PoolGaugeMigrateModal({
     const [modalState, setModalState] = useState<'start' | 'proportional' | 'single-asset' | 'preview'>('start');
     const {
         userStakedBptBalance,
-        userLegacyStakedBptBalance,
+        userLegacyGaugeStakedBptBalance,
         userWalletBptBalance,
-        userLegacyStakedGaugeAddress,
+        userLegacyGaugeStakedGaugeAddress,
         isLoading: isLoadingBalances,
         isRefetching: isRefetchingBalances,
         refetch: refetchBptBalances,
     } = usePoolUserBptBalance();
 
     const legacyGqlPoolStaking = (pool.staking?.gauge?.otherGauges || []).find(
-        (g) => g.gaugeAddress === userLegacyStakedGaugeAddress,
+        (g) => g.gaugeAddress === userLegacyGaugeStakedGaugeAddress,
     );
     const { withdraw, ...unstakeQuery } = useStakingWithdraw(pool.staking, legacyGqlPoolStaking);
     const { stake, ...depositQuery } = useStakingDeposit(pool.staking as GqlPoolStaking);
 
-    const stakedAmount = oldBnumToHumanReadable(oldBnumScaleAmount(userLegacyStakedBptBalance));
+    const stakedAmount = oldBnumToHumanReadable(oldBnumScaleAmount(userLegacyGaugeStakedBptBalance));
 
     const { hasApprovalForAmount, ...rest } = useUserAllowances([pool], pool.staking?.address || '');
     const hasApprovalForDeposit = hasApprovalForAmount(pool.address, stakedAmount || depositAmount);
     const [userSyncBalance] = useUserSyncBalanceMutation();
     const initialRef = useRef(null);
 
-    const hasLegacyBptStaked = parseFloat(userLegacyStakedBptBalance) > 0;
+    const hasLegacyBptStaked = parseFloat(userLegacyGaugeStakedBptBalance) > 0;
     const bpt = useRef<TokenBase>({
         address: pool.address,
         symbol: 'BPT',
