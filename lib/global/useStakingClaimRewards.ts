@@ -11,7 +11,7 @@ export function useStakingClaimRewards(staking: GqlPoolStaking | null) {
     const { userAddress } = useUserAccount();
 
     const gaugeABI = staking?.gauge?.version === 1 ? ChildChainGaugeRewardHelper : LiquidityGaugeV6ABI;
-    const gaugeFunctionName = staking?.gauge?.version === 1 ? 'claimRewards' : 'claim_rewards';
+    const gaugeFunctionName = staking?.gauge?.version === 1 ? 'claimRewards' : 'claim_rewards()';
     const gaugeAddress =
         staking?.gauge?.version === 1 ? networkConfig.gauge.rewardHelperAddress : staking?.gauge?.gaugeAddress || '';
     const { submit, submitAsync, ...rest } = useSubmitTransaction({
