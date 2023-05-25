@@ -113,7 +113,7 @@ export class GaugeStakingService {
 
         for (const gauge of gauges) {
             for (const reward of gauge.rewards) {
-                if (v1Result[gauge.id][reward.tokenAddress]) {
+                if (v1Result && (v1Result[gauge.id] || {})[reward.tokenAddress]) {
                     const token = tokens.find((token) => token.address === reward.tokenAddress.toLowerCase());
                     pendingRewardAmounts.push({
                         address: reward.tokenAddress,
@@ -121,7 +121,7 @@ export class GaugeStakingService {
                         id: gauge.id,
                     });
                 }
-                if (v2Result[gauge.id][reward.tokenAddress]) {
+                if (v2Result && (v2Result[gauge.id] || {})[reward.tokenAddress]) {
                     const token = tokens.find((token) => token.address === reward.tokenAddress.toLowerCase());
                     pendingRewardAmounts.push({
                         address: reward.tokenAddress,
