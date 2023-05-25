@@ -94,12 +94,28 @@ export class GaugeStakingService {
 
         for (const gauge of gauges) {
             for (const reward of gauge.rewards) {
+<<<<<<< Updated upstream
                 if (result[gauge.id][reward.tokenAddress]) {
+=======
+                if ((v1Result[gauge.id] || {})[reward.tokenAddress]) {
+>>>>>>> Stashed changes
                     const token = tokens.find((token) => token.address === reward.tokenAddress.toLowerCase());
 
                     pendingRewardAmounts.push({
                         address: reward.tokenAddress,
+<<<<<<< Updated upstream
                         amount: formatFixed(result[gauge.id][reward.tokenAddress], token?.decimals || 18),
+=======
+                        amount: formatFixed(v1Result[gauge.id][reward.tokenAddress], token?.decimals || 18),
+                        id: gauge.id,
+                    });
+                }
+                if ((v2Result[gauge.id] || {})[reward.tokenAddress]) {
+                    const token = tokens.find((token) => token.address === reward.tokenAddress.toLowerCase());
+                    pendingRewardAmounts.push({
+                        address: reward.tokenAddress,
+                        amount: formatFixed(v2Result[gauge.id][reward.tokenAddress], token?.decimals || 18),
+>>>>>>> Stashed changes
                         id: gauge.id,
                     });
                 }
