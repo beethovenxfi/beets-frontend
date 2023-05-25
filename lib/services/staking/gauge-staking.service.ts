@@ -67,11 +67,15 @@ export class GaugeStakingService {
         tokens: TokenBase[];
         provider: BaseProvider;
     }): Promise<StakingPendingRewardAmount[]> {
-        const multicaller = new Multicaller(this.chainId, provider, ChildChainGaugeRewardHelper);
+        const v1Multicaller = new Multicaller(this.chainId, provider, ChildChainGaugeRewardHelper);
+        const v2Multicaller = new Multicaller(this.chainId, provider, LiquidityGaugeV6Abi);
 
-        for (const gauge of gauges) {
+        const v1Gauges = gauges.filter((g) => g.version === 1);
+        const v2Gauges = gauges.filter((g) => g.version === 2);
+
+        for (const gauge of v1Gauges) {
             for (const reward of gauge.rewards) {
-                multicaller.call(
+                v1Multicaller.call(
                     `${gauge.id}.${reward.tokenAddress}`,
                     this.gaugeRewardHelperAddress,
                     'pendingRewards',
@@ -80,26 +84,48 @@ export class GaugeStakingService {
             }
         }
 
-        if (multicaller.numCalls === 0) {
+        for (const gauge of v2Gauges) {
+            for (const reward of gauge.rewards) {
+                v2Multicaller.call(`${gauge.id}.${reward.tokenAddress}`, gauge.gaugeAddress, 'claimable_reward', [
+                    userAddress,
+                    reward.tokenAddress,
+                ]);
+            }
+        }
+
+        if (v1Multicaller.numCalls === 0 && v2Multicaller.numCalls === 0) {
             return [];
         }
 
-        const result: {
+        const v1Result: {
             [gaugeId: string]: {
                 [tokenAddress: string]: BigNumber;
             };
-        } = await multicaller.execute({});
+        } = await v1Multicaller.execute({});
+
+        const v2Result: {
+            [gaugeId: string]: {
+                [tokenAddress: string]: BigNumber;
+            };
+        } = await v2Multicaller.execute({});
 
         const pendingRewardAmounts: StakingPendingRewardAmount[] = [];
 
         for (const gauge of gauges) {
             for (const reward of gauge.rewards) {
-                if (result[gauge.id][reward.tokenAddress]) {
+                if (v1Result[gauge.id][reward.tokenAddress]) {
                     const token = tokens.find((token) => token.address === reward.tokenAddress.toLowerCase());
-
                     pendingRewardAmounts.push({
                         address: reward.tokenAddress,
-                        amount: formatFixed(result[gauge.id][reward.tokenAddress], token?.decimals || 18),
+                        amount: formatFixed(v1Result[gauge.id][reward.tokenAddress], token?.decimals || 18),
+                        id: gauge.id,
+                    });
+                }
+                if (v2Result[gauge.id][reward.tokenAddress]) {
+                    const token = tokens.find((token) => token.address === reward.tokenAddress.toLowerCase());
+                    pendingRewardAmounts.push({
+                        address: reward.tokenAddress,
+                        amount: formatFixed(v2Result[gauge.id][reward.tokenAddress], token?.decimals || 18),
                         id: gauge.id,
                     });
                 }
