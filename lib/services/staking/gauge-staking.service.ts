@@ -4,7 +4,7 @@ import LiquidityGaugeV5Abi from '~/lib/abi/LiquidityGaugeV5.json';
 import LiquidityGaugeV6Abi from '~/lib/abi/LiquidityGaugeV6.json';
 import ChildChainGaugeRewardHelper from '~/lib/abi/ChildChainGaugeRewardHelper.json';
 import { BigNumber, Contract } from 'ethers';
-import { formatFixed, parseFixed } from '@ethersproject/bignumber';
+import { formatFixed } from '@ethersproject/bignumber';
 import ERC20Abi from '~/lib/abi/ERC20.json';
 import { Multicaller } from '~/lib/services/util/multicaller.service';
 import { GqlPoolStakingGauge } from '~/apollo/generated/graphql-codegen-generated';
@@ -12,7 +12,6 @@ import { networkConfig } from '~/lib/config/network-config';
 import { StakingPendingRewardAmount } from '~/lib/services/staking/staking-types';
 import { BatchRelayerService, batchRelayerService } from '../batch-relayer/batch-relayer.service';
 import { mapValues } from 'lodash';
-import { parseUnits } from 'ethers/lib/utils.js';
 
 interface GetUserStakedBalanceInput {
     userAddress: string;
@@ -135,7 +134,7 @@ export class GaugeStakingService {
             };
         } = await multicaller.execute({});
 
-        const formattedResult = mapValues(result, (data) => parseUnits(data.claimableBAL.toString(), 18).toString());
+        const formattedResult = mapValues(result, (data) => formatFixed(data.claimableBAL.toString(), 18).toString());
         return formattedResult;
     }
 }

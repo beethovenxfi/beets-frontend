@@ -174,7 +174,7 @@ export function PoolUserStakedStats({ poolAddress, staking, totalApr, userPoolBa
                 </Box>
                 <Box width="full">
                     {staking.gauge?.gaugeAddress && (
-                        <BeetsTooltip label="BAL rewards are claimed seperately as they are managed by the veBAL contract.">
+                        // <BeetsTooltip label="BAL rewards are claimed seperately as they are managed by the veBAL contract.">
                             <BeetsSubmitTransactionButton
                                 {...claimQuery}
                                 isDisabled={!hasPendingRewards}
@@ -188,7 +188,7 @@ export function PoolUserStakedStats({ poolAddress, staking, totalApr, userPoolBa
                             >
                                 Claim BAL rewards
                             </BeetsSubmitTransactionButton>
-                        </BeetsTooltip>
+                        // </BeetsTooltip>
                     )}
                 </Box>
             </VStack>
