@@ -189,6 +189,7 @@ export function PoolUserStakedStats({ poolAddress, staking, totalApr, userPoolBa
                             >
                                 Claim BAL rewards
                             </BeetsSubmitTransactionButton>
+                            //{' '}
                         </BeetsTooltip>
                     )}
                 </Box>
