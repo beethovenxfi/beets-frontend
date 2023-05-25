@@ -30,7 +30,7 @@ function createApolloClient() {
 
     return new ApolloClient({
         ssrMode: typeof window === 'undefined',
-        link: concat(userMiddleware, new HttpLink({ uri: process.env.NEXT_PUBLIC_BACKEND_URL })),
+        link: concat(userMiddleware, new HttpLink({ uri: process.env.NEXT_PUBLIC_BACKEND_URL_V3 })),
         cache: new InMemoryCache({
             typePolicies: {
                 GqlToken: {
