@@ -12,6 +12,7 @@ import { networkConfig } from '~/lib/config/network-config';
 import { StakingPendingRewardAmount } from '~/lib/services/staking/staking-types';
 import { BatchRelayerService, batchRelayerService } from '../batch-relayer/batch-relayer.service';
 import { mapValues } from 'lodash';
+import { parseUnits } from 'ethers/lib/utils.js';
 
 interface GetUserStakedBalanceInput {
     userAddress: string;
@@ -134,7 +135,7 @@ export class GaugeStakingService {
             };
         } = await multicaller.execute({});
 
-        const formattedResult = mapValues(result, (data) => (data.claimableBAL || BigNumber.from(0)).toString());
+        const formattedResult = mapValues(result, (data) => parseUnits(data.claimableBAL.toString(), 18).toString());
         return formattedResult;
     }
 }
