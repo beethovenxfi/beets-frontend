@@ -31,10 +31,8 @@ export function useStakingWithdraw(staking?: GqlPoolStaking | null, customWithdr
     const { submit, submitAsync, ...rest } = useSubmitTransaction({
         config: {
             addressOrName: staking?.type === 'GAUGE' ? withdrawFrom : networkConfig.masterChefContractAddress,
-            contractInterface:
-                staking?.type === 'GAUGE' ? getGaugeABI(gaugeVersion) : BeethovenxMasterChefAbi,
-            functionName:
-                staking?.type === 'GAUGE' ? getGaugeFunctionCall(gaugeVersion) : 'withdrawAndHarvest',
+            contractInterface: staking?.type === 'GAUGE' ? getGaugeABI(gaugeVersion) : BeethovenxMasterChefAbi,
+            functionName: staking?.type === 'GAUGE' ? getGaugeFunctionCall(gaugeVersion) : 'withdrawAndHarvest',
         },
         transactionType: 'UNSTAKE',
     });
@@ -52,7 +50,6 @@ export function useStakingWithdraw(staking?: GqlPoolStaking | null, customWithdr
                         });
                     }
                     if (gaugeVersion === 2) {
-                        console.log('bingbong');
                         return submit({
                             args: [parseUnits(amount, 18)],
                             toastText: 'Withdraw and claim rewards',
