@@ -21,27 +21,27 @@ export function PoolWarnings() {
     const { showToast, removeToast } = useToast();
     const showMigrationToast = parseFloat(bptBalances.userLegacyStakedBptBalance) > 0;
 
-    useEffect(() => {
-        if (showMigrationToast) {
-            showToast({
-                id: 'migrate-gauge',
-                content: (
-                    <HStack>
-                        <Text>
-                            This pool has been updated. To continue earning rewards, please migrate your deposited
-                            funds.
-                        </Text>
-                        <Button bg="orange.300" onClick={onOpen}>
-                            Migrate
-                        </Button>
-                    </HStack>
-                ),
-                type: ToastType.Warn,
-            });
-        } else {
-            removeToast('migrate-gauge');
-        }
-    }, [showMigrationToast]);
+    // useEffect(() => {
+    //     if (showMigrationToast) {
+    //         showToast({
+    //             id: 'migrate-gauge',
+    //             content: (
+    //                 <HStack>
+    //                     <Text>
+    //                         This pool has been updated. To continue earning rewards, please migrate your deposited
+    //                         funds.
+    //                     </Text>
+    //                     <Button bg="orange.300" onClick={onOpen}>
+    //                         Migrate
+    //                     </Button>
+    //                 </HStack>
+    //             ),
+    //             type: ToastType.Warn,
+    //         });
+    //     } else {
+    //         removeToast('migrate-gauge');
+    //     }
+    // }, [showMigrationToast]);
 
     return (
         <>
