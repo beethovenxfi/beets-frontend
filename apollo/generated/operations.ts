@@ -685,12 +685,23 @@ export const GetUserData = gql`
                 id
                 gaugeAddress
                 version
+                status
+                otherGauges {
+                    gaugeAddress
+                    version
+                    status
+                    id
+                    rewards {
+                        id
+                        tokenAddress
+                        rewardPerSecond
+                    }
+                }
                 rewards {
                     id
                     rewardPerSecond
                     tokenAddress
                 }
-                status
             }
         }
     }
@@ -888,12 +899,23 @@ export const GetPool = gql`
                     id
                     gaugeAddress
                     version
+                    status
+                    otherGauges {
+                        gaugeAddress
+                        version
+                        status
+                        id
+                        rewards {
+                            id
+                            tokenAddress
+                            rewardPerSecond
+                        }
+                    }
                     rewards {
                         id
                         rewardPerSecond
                         tokenAddress
                     }
-                    status
                 }
                 reliquary {
                     levels {
