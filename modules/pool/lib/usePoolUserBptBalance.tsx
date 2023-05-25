@@ -45,8 +45,6 @@ export function _usePoolUserBptBalance() {
     const userTotalBptBalance = formatFixed(userTotalBptBalanceScaled, 18);
     const userPercentShare = parseFloat(userTotalBptBalance) / parseFloat(pool.dynamicData.totalShares);
 
-    console.log({ legacyGaugeStakedBptBalance });
-
     async function refetch() {
         await userWalletBalanceQuery.refetch();
         await legacyGaugeStakedBalanceQuery.refetch();
