@@ -13,6 +13,7 @@ import { useUserAccount } from '~/lib/user/useUserAccount';
 import { useRef } from 'react';
 import useStakingMintableRewards from './useStakingMintableRewards';
 import { useNetworkConfig } from './useNetworkConfig';
+import { uniqBy } from 'lodash';
 
 function calculateClaimableBAL(stakingItems: GqlPoolStaking[], claimableBALForGauges: Record<string, string>) {
     let claimableBAL = 0;
@@ -78,7 +79,7 @@ export function useStakingPendingRewards(stakingItems: GqlPoolStaking[], hookNam
                 },
             ];
 
-            return pendingRewards;
+            return pendingRewards.filter((pendingReward) => parseFloat(pendingReward.amount) > 0);
         },
         { enabled: !!userAddress && stakingItems.length > 0, refetchInterval: 15000 },
     );

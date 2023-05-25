@@ -33,7 +33,7 @@ export function useUserPendingRewards() {
         }),
     ].filter((reward) => parseFloat(reward.amount) > 0);
 
-    const pendingRewardsTotalUSD = sumBy(data || [], priceForAmount) + pendingBALUSD;
+    const pendingRewardsTotalUSD = sumBy(data || [], priceForAmount);
 
     return {
         pendingRewardsTotalUSD,
