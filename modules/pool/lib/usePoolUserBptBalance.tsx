@@ -24,7 +24,7 @@ export function _usePoolUserBptBalance() {
     const { data: userStakedBptBalance, ...userStakedBalanceQuery } = usePoolUserStakedBalance([
         pool.staking?.gauge?.gaugeAddress || '',
     ]);
-    const { data: legacyStakedBptBalance, ...legacyStakedBalanceQuery } = usePoolUserStakedBalance(
+    const { data: legacyGaugeStakedBptBalance, ...legacyGaugeStakedBalanceQuery } = usePoolUserStakedBalance(
         pool.staking?.gauge?.otherGauges?.map((gauge) => gauge.gaugeAddress) || [],
     );
     const userStakedBptBalanceScaled = parseUnits(
@@ -33,39 +33,48 @@ export function _usePoolUserBptBalance() {
             : userStakedBptBalance) || '0',
         18,
     );
-    const userLegacyStakedBptBalanceScaled = parseUnits(
-        (legacyStakedBptBalance && typeof legacyStakedBptBalance === 'object'
-            ? legacyStakedBptBalance.amount
-            : legacyStakedBptBalance) || '0',
+
+    // this one is only used for the legacy gauge migration
+    const userLegacyGaugeStakedBptBalanceScaled = parseUnits(
+        legacyGaugeStakedBptBalance && typeof legacyGaugeStakedBptBalance === 'object'
+            ? legacyGaugeStakedBptBalance.amount
+            : '0',
         18,
     );
     const userTotalBptBalanceScaled = userWalletBptBalance.add(userStakedBptBalanceScaled);
     const userTotalBptBalance = formatFixed(userTotalBptBalanceScaled, 18);
     const userPercentShare = parseFloat(userTotalBptBalance) / parseFloat(pool.dynamicData.totalShares);
 
+    console.log({ legacyGaugeStakedBptBalance });
+
     async function refetch() {
         await userWalletBalanceQuery.refetch();
-        await legacyStakedBalanceQuery.refetch();
+        await legacyGaugeStakedBalanceQuery.refetch();
         await userStakedBalanceQuery.refetch();
     }
 
     return {
         isLoading:
-            userWalletBalanceQuery.isLoading || userStakedBalanceQuery.isLoading || legacyStakedBalanceQuery.isLoading,
+            userWalletBalanceQuery.isLoading ||
+            userStakedBalanceQuery.isLoading ||
+            legacyGaugeStakedBalanceQuery.isLoading,
         isRefetching:
             userWalletBalanceQuery.isRefetching ||
             userStakedBalanceQuery.isRefetching ||
-            legacyStakedBalanceQuery.isFetching,
-        isError: userWalletBalanceQuery.isError || userStakedBalanceQuery.isError || legacyStakedBalanceQuery.isError,
-        error: userWalletBalanceQuery.error || userStakedBalanceQuery.error || legacyStakedBalanceQuery.error,
+            legacyGaugeStakedBalanceQuery.isFetching,
+        isError:
+            userWalletBalanceQuery.isError || userStakedBalanceQuery.isError || legacyGaugeStakedBalanceQuery.isError,
+        error: userWalletBalanceQuery.error || userStakedBalanceQuery.error || legacyGaugeStakedBalanceQuery.error,
         refetch,
 
         userTotalBptBalance: formatFixed(userWalletBptBalance.add(userStakedBptBalanceScaled), 18),
         userWalletBptBalance: formatFixed(userWalletBptBalance, 18),
         userStakedBptBalance: formatFixed(userStakedBptBalanceScaled, 18),
-        userLegacyStakedBptBalance: formatFixed(userLegacyStakedBptBalanceScaled, 18),
-        userLegacyStakedGaugeAddress:
-            (legacyStakedBptBalance && typeof legacyStakedBptBalance === 'object' && legacyStakedBptBalance.address) ||
+        userLegacyGaugeStakedBptBalance: formatFixed(userLegacyGaugeStakedBptBalanceScaled, 18),
+        userLegacyGaugeStakedGaugeAddress:
+            (legacyGaugeStakedBptBalance &&
+                typeof legacyGaugeStakedBptBalance === 'object' &&
+                legacyGaugeStakedBptBalance.address) ||
             '',
         hasBpt: userTotalBptBalanceScaled.gt(DUST_THRESHOLD),
         hasBptInWallet: userWalletBptBalance.gt(DUST_THRESHOLD),
