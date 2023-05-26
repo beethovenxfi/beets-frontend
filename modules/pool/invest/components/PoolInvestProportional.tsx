@@ -38,7 +38,7 @@ export function PoolInvestProportional({ onShowPreview }: Props) {
     const { tokenProportionalAmounts } = usePoolJoinGetProportionalInvestmentAmount();
     const { selectedInvestTokens, isInvestingWithEth } = useInvest();
 
-    const { getUserBalanceForToken, userPoolTokenBalances } = usePoolUserTokenBalancesInWallet();
+    const { userPoolTokenBalances } = usePoolUserTokenBalancesInWallet();
 
     async function onTokenAmountChange(token: GqlPoolToken, amount: string) {
         if (!amount) {
@@ -131,15 +131,12 @@ export function PoolInvestProportional({ onShowPreview }: Props) {
                         {investOptions.map((option, index) => {
                             const tokenOption = selectedInvestTokens[index];
                             const amount = inputAmounts[tokenOption.address];
-                            const tokenOptions = option.tokenOptions.filter(
-                                (tokenOption) => getUserBalanceForToken(tokenOption.address) !== '0.0',
-                            );
                             return (
                                 <TokenRow
                                     withInput
                                     onAmountChange={(amount) => onTokenAmountChange(tokenOption, amount)}
                                     key={tokenOption.address}
-                                    alternateTokens={tokenOptions}
+                                    alternateTokens={option.tokenOptions}
                                     address={tokenOption.address}
                                     selectedAlternateToken={
                                         selectedOptions[`${option.poolTokenIndex}`] || option.tokenOptions[0].address
