@@ -10,7 +10,9 @@ interface Props extends BoxProps {
 }
 
 export function PoolCard({ pool, ...rest }: Props) {
-    const dailyApr = parseFloat(pool.dynamicData.apr.total) / 365;
+    const dynamicDataApr = pool.dynamicData.apr.apr;
+    const totalApr = dynamicDataApr.__typename === 'GqlPoolAprRange' ? dynamicDataApr.max : dynamicDataApr.total;
+    const dailyApr = parseFloat(totalApr) / 365;
 
     return (
         <LinkBox as="article" flex="1" {...rest}>

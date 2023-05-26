@@ -15,7 +15,7 @@ import { BoostedBadgeSmall } from '~/components/boosted-badge/BoostedBadgeSmall'
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 
 export default function PoolOverallStats() {
-    const { pool } = usePool();
+    const { pool, totalApr } = usePool();
     const { boostedByTypes } = useNetworkConfig();
     const { priceFor } = useGetTokens();
     const { data: blocksData } = useGetBlocksPerDayQuery({ fetchPolicy: 'cache-first' });
@@ -51,7 +51,7 @@ export default function PoolOverallStats() {
                     Pool APR
                 </Text>
                 <HStack>
-                    <div className="apr-stripes">{numeral(data.apr.total).format('0.00%')}</div>
+                    <div className="apr-stripes">{numeral(totalApr).format('0.00%')}</div>
                     <AprTooltip onlySparkles data={data.apr} />
                 </HStack>
                 {boostedByTypes[pool.id] && <BoostedBadgeSmall boostedBy={boostedByTypes[pool.id]} />}

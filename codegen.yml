@@ -1,56 +1,56 @@
-schema: ${NEXT_PUBLIC_BACKEND_URL}
+schema: ${NEXT_PUBLIC_BACKEND_URL_V3}
 documents:
-  - 'pages/**/*.gql'
-  - 'components/**/*.gql'
-  - 'modules/**/*.gql'
-  - 'lib/**/*.gql'
+    - 'pages/**/*.gql'
+    - 'components/**/*.gql'
+    - 'modules/**/*.gql'
+    - 'lib/**/*.gql'
 hooks:
-  afterAllFileWrite:
-    - 'prettier --write'
+    afterAllFileWrite:
+        - 'prettier --write'
 
 generates:
-  # Generates a full copy of the remote schema
-  apollo/generated/schema.graphql:
-    plugins:
-      - schema-ast
+    # Generates a full copy of the remote schema
+    apollo/generated/schema.graphql:
+        plugins:
+            - schema-ast
 
-  # Generates fragment metadata needed by apollo cache
-  apollo/generated/fragmentMetadata.json:
-    plugins:
-      - fragment-matcher
+    # Generates fragment metadata needed by apollo cache
+    apollo/generated/fragmentMetadata.json:
+        plugins:
+            - fragment-matcher
 
-  # Generates query and mutation documents
-  apollo/generated/operations.ts:
-    plugins:
-      - typescript-document-nodes
+    # Generates query and mutation documents
+    apollo/generated/operations.ts:
+        plugins:
+            - typescript-document-nodes
 
-  # Generates query and mutation types
-  apollo/generated/graphql-codegen-generated.ts:
-    plugins:
-      - add:
-          content: '/* tslint:disable */'
-      - typescript
-      - typescript-operations
-      - typescript-react-apollo
-    config:
-      # Use interfaces where possible, instead of type aliases
-      declarationKind: 'interface'
+    # Generates query and mutation types
+    apollo/generated/graphql-codegen-generated.ts:
+        plugins:
+            - add:
+                  content: '/* tslint:disable */'
+            - typescript
+            - typescript-operations
+            - typescript-react-apollo
+        config:
+            # Use interfaces where possible, instead of type aliases
+            declarationKind: 'interface'
 
-      # Generate nullable fields as Maybe<T> (instead of { field?: Maybe<T> })
-      #avoidOptionals: true
+            # Generate nullable fields as Maybe<T> (instead of { field?: Maybe<T> })
+            #avoidOptionals: true
 
-      # Use string literal types instead of enums, for compatibility with omni types
-      enumsAsTypes: true
+            # Use string literal types instead of enums, for compatibility with omni types
+            enumsAsTypes: true
 
-      # __typename is always fetched, so don’t mark it as optional in generated types
-      nonOptionalTypename: true
+            # __typename is always fetched, so don’t mark it as optional in generated types
+            nonOptionalTypename: true
 
-      # Inline field selections in generated types, instead of using Pick<>
-      preResolveTypes: true
+            # Inline field selections in generated types, instead of using Pick<>
+            preResolveTypes: true
 
-      # Give scalars definite types, rather than 'any'
-      scalars:
-        BigInt: 'string'
-        BigDecimal: 'string'
-        Bytes: 'string'
-        AmountHumanReadable: 'string'
+            # Give scalars definite types, rather than 'any'
+            scalars:
+                BigInt: 'string'
+                BigDecimal: 'string'
+                Bytes: 'string'
+                AmountHumanReadable: 'string'

@@ -37,8 +37,6 @@ export function PoolUserSwapsTable() {
                 type = PoolTransactionType.Swap;
             }
 
-            console.log(swap);
-
             return {
                 transaction: swap,
                 type,

@@ -12,6 +12,7 @@ import {
     EncodeFBeetsBarEnterInput,
     EncodeFBeetsBarLeaveInput,
     EncodeGaugeDepositInput,
+    EncodeGaugeWithdrawInput,
     EncodeJoinPoolInput,
     EncodeMasterChefDepositInput,
     EncodeMasterChefWithdrawInput,
@@ -142,6 +143,10 @@ export class BatchRelayerService {
         return this.gaugeStakingService.encodeDeposit(params);
     }
 
+    public gaugeEncodeWithdraw(params: EncodeGaugeWithdrawInput): string {
+        return this.gaugeStakingService.encodeWithdraw(params);
+    }
+
     public reaperEncodeWrap(params: EncodeReaperWrapInput): string {
         return this.reaperWrappingService.encodeWrap(params);
     }
@@ -242,6 +247,7 @@ export class BatchRelayerService {
         sender,
         recipient,
         skipOutputRefs,
+        wethIsEth,
     }: {
         tokensIn: string[];
         tokensOut: string[];
@@ -255,6 +261,7 @@ export class BatchRelayerService {
         sender: string;
         recipient: string;
         skipOutputRefs?: boolean;
+        wethIsEth?: boolean;
     }): string {
         const limits = Swaps.getLimitsForSlippage(
             tokensIn,
@@ -268,7 +275,9 @@ export class BatchRelayerService {
         return this.vaultEncodeBatchSwap({
             swapType: SwapType.SwapExactIn,
             swaps,
-            assets,
+            assets: wethIsEth
+                ? assets.map((asset) => (isSameAddress(asset, this.wethAddress) ? AddressZero : asset))
+                : assets,
             funds: {
                 sender,
                 recipient,
