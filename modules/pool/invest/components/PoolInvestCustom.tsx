@@ -21,7 +21,7 @@ export function PoolInvestCustom({ onShowPreview }: Props) {
     const { pool, requiresBatchRelayerOnJoin } = usePool();
     const { inputAmounts, setInputAmount, setSelectedOption, zapEnabled } = useInvestState();
     const { selectedInvestTokens, hasValidUserInput } = useInvest();
-    const { getUserBalanceForToken, userPoolTokenBalances } = usePoolUserTokenBalancesInWallet();
+    const { userPoolTokenBalances } = usePoolUserTokenBalancesInWallet();
     const { hasHighPriceImpact, formattedPriceImpact } = usePoolJoinGetBptOutAndPriceImpactForTokensIn();
     const [acknowledgeHighPriceImpact, { toggle: toggleAcknowledgeHighPriceImpact }] = useBoolean(false);
     const { data: hasBatchRelayerApproval } = useHasBatchRelayerApproval();
@@ -33,12 +33,9 @@ export function PoolInvestCustom({ onShowPreview }: Props) {
                     <PoolInvestSummary />
                 </Box>
                 {pool.investConfig.options.map((option, index) => {
-                    const tokenOptions = option.tokenOptions.filter(
-                        (tokenOption) => getUserBalanceForToken(tokenOption.address) !== '0.0',
-                    );
                     return (
                         <BeetsTokenInputWithSlider
-                            tokenOptions={tokenOptions}
+                            tokenOptions={option.tokenOptions}
                             selectedTokenOption={selectedInvestTokens[index]}
                             balance={
                                 userPoolTokenBalances.find(
