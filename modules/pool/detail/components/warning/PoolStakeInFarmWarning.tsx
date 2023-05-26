@@ -52,11 +52,5 @@ export function PoolStakeInFarmWarning() {
         }
     }, [hasBptInWallet]);
 
-    useEffect(() => {
-        return () => {
-            removeToast('stake-alert');
-        };
-    }, []);
-
     return <PoolStakeModal isOpen={isOpen} onOpen={onOpen} onClose={onClose} />;
 }
