@@ -15,21 +15,25 @@ export function useInvest() {
     const { priceForAmount } = useGetTokens();
 
     const selectedInvestTokens: GqlPoolToken[] = pool.investConfig.options.map((option) => {
-        if (selectedOptions[`${option.poolTokenIndex}`]) {
-            return option.tokenOptions.find(
-                (tokenOption) => tokenOption.address === selectedOptions[`${option.poolTokenIndex}`],
-            )!;
-        } else {
-            const firstOptionWithNonZeroBalance = option.tokenOptions.find(
-                (option) => getUserBalanceForToken(option.address) !== '0.0',
-            );
-            // if there is more than 1 option and 1 of the options has a non-zero balance use that one
-            if (option.tokenOptions.length > 1 && firstOptionWithNonZeroBalance) {
-                setSelectedOption(option.poolTokenIndex, firstOptionWithNonZeroBalance.address);
-                return firstOptionWithNonZeroBalance;
+        if (option.tokenOptions.length > 1) {
+            if (selectedOptions[`${option.poolTokenIndex}`]) {
+                return option.tokenOptions.find(
+                    (tokenOption) => tokenOption.address === selectedOptions[`${option.poolTokenIndex}`],
+                )!;
             } else {
-                return option.tokenOptions[0];
+                const firstOptionWithNonZeroBalance = option.tokenOptions.find(
+                    (option) => getUserBalanceForToken(option.address) !== '0.0',
+                );
+                // if there is more than 1 option and 1 of the options has a non-zero balance use that one
+                if (firstOptionWithNonZeroBalance) {
+                    setSelectedOption(option.poolTokenIndex, firstOptionWithNonZeroBalance.address);
+                    return firstOptionWithNonZeroBalance;
+                } else {
+                    return option.tokenOptions[0];
+                }
             }
+        } else {
+            return option.tokenOptions[0];
         }
     });
 
