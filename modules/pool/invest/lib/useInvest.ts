@@ -10,22 +10,27 @@ import { usePool } from '~/modules/pool/lib/usePool';
 
 export function useInvest() {
     const { pool } = usePool();
-    const { selectedOptions, inputAmounts, zapEnabled } = useInvestState();
+    const { selectedOptions, inputAmounts, zapEnabled, setSelectedOption } = useInvestState();
     const { getUserBalanceForToken, userPoolTokenBalances } = usePoolUserTokenBalancesInWallet();
     const { priceForAmount } = useGetTokens();
 
     const selectedInvestTokens: GqlPoolToken[] = pool.investConfig.options.map((option) => {
-        const firstOptionWithNonZeroBalance = option.tokenOptions.find(
-            (option) => getUserBalanceForToken(option.address) !== '0.0',
-        );
-
-        return selectedOptions[`${option.poolTokenIndex}`]
-            ? option.tokenOptions.find(
-                  (tokenOption) => tokenOption.address === selectedOptions[`${option.poolTokenIndex}`],
-              )!
-            : option.tokenOptions.length > 1 && firstOptionWithNonZeroBalance // if there is more than 1 option and 1 of the options has a non-zero balance use that one
-            ? firstOptionWithNonZeroBalance
-            : option.tokenOptions[0];
+        if (selectedOptions[`${option.poolTokenIndex}`]) {
+            return option.tokenOptions.find(
+                (tokenOption) => tokenOption.address === selectedOptions[`${option.poolTokenIndex}`],
+            )!;
+        } else {
+            const firstOptionWithNonZeroBalance = option.tokenOptions.find(
+                (option) => getUserBalanceForToken(option.address) !== '0.0',
+            );
+            // if there is more than 1 option and 1 of the options has a non-zero balance use that one
+            if (option.tokenOptions.length > 1 && firstOptionWithNonZeroBalance) {
+                setSelectedOption(option.poolTokenIndex, firstOptionWithNonZeroBalance.address);
+                return firstOptionWithNonZeroBalance;
+            } else {
+                return option.tokenOptions[0];
+            }
+        }
     });
 
     const selectedInvestTokensWithAmounts = selectedInvestTokens.map((token) => ({
