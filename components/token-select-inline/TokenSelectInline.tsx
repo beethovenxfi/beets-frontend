@@ -32,7 +32,7 @@ export function TokenSelectInline({ tokenOptions, selectedAddress, onOptionSelec
     const selectedToken = tokenOptions.find((option) => option.address === selectedAddress);
     const tokenOptionsExtra = tokenOptions.map((option) => ({
         ...option,
-        hasNonZeroBalance: getUserBalanceForToken(option.address) !== '0.0',
+        hasZeroBalance: getUserBalanceForToken(option.address) === '0.0',
     }));
 
     console.log({ tokenOptions });
@@ -86,7 +86,7 @@ export function TokenSelectInline({ tokenOptions, selectedAddress, onOptionSelec
                                         <MenuItem
                                             key={option.address}
                                             display="flex"
-                                            isDisabled={!option.hasNonZeroBalance}
+                                            isDisabled={option.hasZeroBalance}
                                             onClick={() => onOptionSelect(option.address)}
                                         >
                                             <HStack spacing="1.5" flex="1">
