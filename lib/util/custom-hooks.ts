@@ -18,6 +18,10 @@ export function useAsyncEffect(effect: () => Promise<void>, deps?: DependencyLis
     }, deps);
 }
 
+export function useEffectOnUnmount(effect: () => void) {
+    useEffect(() => effect(), []);
+}
+
 /**
  * Runs the effect once on mount, after the specified duration. Cleans up on unmount.
  */
