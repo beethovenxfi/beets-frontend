@@ -1,16 +1,13 @@
 import { useInvestState } from '~/modules/pool/invest/lib/useInvestState';
 import { usePoolUserTokenBalancesInWallet } from '~/modules/pool/lib/usePoolUserTokenBalancesInWallet';
-import { Alert, Box, Button, Checkbox, Collapse, Text, useBoolean } from '@chakra-ui/react';
+import { Alert, Box, Button, Checkbox, Collapse, useBoolean } from '@chakra-ui/react';
 import { PoolInvestSummary } from '~/modules/pool/invest/components/PoolInvestSummary';
 import { PoolInvestSettings } from '~/modules/pool/invest/components/PoolInvestSettings';
-
 import { useInvest } from '~/modules/pool/invest/lib/useInvest';
 import { BeetsTokenInputWithSlider } from '~/components/inputs/BeetsTokenInputWithSlider';
 import { usePoolJoinGetBptOutAndPriceImpactForTokensIn } from '~/modules/pool/invest/lib/usePoolJoinGetBptOutAndPriceImpactForTokensIn';
-import { useHasBatchRelayerApproval } from '~/lib/util/useHasBatchRelayerApproval';
 import { usePool } from '~/modules/pool/lib/usePool';
 import React from 'react';
-import { BeetsBox } from '~/components/box/BeetsBox';
 import { PoolInvestPriceImpact } from '~/modules/pool/invest/components/PoolInvestPriceImpact';
 
 interface Props {
@@ -18,13 +15,12 @@ interface Props {
 }
 
 export function PoolInvestCustom({ onShowPreview }: Props) {
-    const { pool, requiresBatchRelayerOnJoin } = usePool();
-    const { inputAmounts, setInputAmount, setSelectedOption, zapEnabled } = useInvestState();
+    const { pool } = usePool();
+    const { customInputAmounts: inputAmounts, setInputAmount, setSelectedOption } = useInvestState(pool.id);
     const { selectedInvestTokens, hasValidUserInput } = useInvest();
     const { userPoolTokenBalances } = usePoolUserTokenBalancesInWallet();
     const { hasHighPriceImpact, formattedPriceImpact } = usePoolJoinGetBptOutAndPriceImpactForTokensIn();
     const [acknowledgeHighPriceImpact, { toggle: toggleAcknowledgeHighPriceImpact }] = useBoolean(false);
-    const { data: hasBatchRelayerApproval } = useHasBatchRelayerApproval();
 
     return (
         <Box>
@@ -42,9 +38,11 @@ export function PoolInvestCustom({ onShowPreview }: Props) {
                                     (userBalance) => userBalance.address === selectedInvestTokens[index].address,
                                 )?.amount || '0'
                             }
-                            setInputAmount={(amount) => setInputAmount(selectedInvestTokens[index].address, amount)}
+                            setInputAmount={(amount) =>
+                                setInputAmount('custom', selectedInvestTokens[index].address, amount)
+                            }
                             setSelectedTokenOption={(address) => setSelectedOption(option.poolTokenIndex, address)}
-                            value={inputAmounts[selectedInvestTokens[index].address]}
+                            value={inputAmounts ? inputAmounts[selectedInvestTokens[index].address] : '0'}
                             key={index}
                             mb="4"
                         />

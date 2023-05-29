@@ -14,13 +14,14 @@ import {
 import { PoolInvestProportional } from '~/modules/pool/invest/components/PoolInvestProportional';
 import { ChevronLeft } from 'react-feather';
 import { PoolInvestPreview } from '~/modules/pool/invest/components/PoolInvestPreview';
-import React, { ReactNode, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { PoolInvestTypeChoice } from '~/modules/pool/invest/components/PoolInvestTypeChoice';
 import { PoolInvestCustom } from '~/modules/pool/invest/components/PoolInvestCustom';
 import { animate, AnimatePresence, motion, useAnimation } from 'framer-motion';
 import { usePool } from '~/modules/pool/lib/usePool';
 import { BeetsModalBody, BeetsModalContent, BeetsModalHeader } from '~/components/modal/BeetsModal';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
+import { useInvestState } from './lib/useInvestState';
 
 interface Props {
     activatorLabel?: string;
@@ -56,6 +57,7 @@ export function PoolInvestModal({
     const containerControls = useAnimation();
     const modalContainerRef = useRef<HTMLDivElement | null>(null);
     const lastModalBounds = useRef<DOMRect | null>(null);
+    const { setInitialInvestState } = useInvestState(pool.id);
 
     function onModalClose() {
         if (investComplete) {
@@ -66,9 +68,14 @@ export function PoolInvestModal({
         _onClose && _onClose();
     }
 
+    function onModalOpen() {
+        setInitialInvestState();
+        onOpen();
+    }
+
     useEffect(() => {
         if (isVisible) {
-            onOpen();
+            onModalOpen();
         } else {
             onModalClose();
         }
@@ -121,7 +128,12 @@ export function PoolInvestModal({
     return (
         <Box width={{ base: 'full', md: 'fit-content' }}>
             {!noActivator && (
-                <Button variant="primary" onClick={onOpen} width={{ base: 'full', md: '140px' }} {...activatorProps}>
+                <Button
+                    variant="primary"
+                    onClick={onModalOpen}
+                    width={{ base: 'full', md: '140px' }}
+                    {...activatorProps}
+                >
                     {activatorLabel || 'Invest'}
                 </Button>
             )}

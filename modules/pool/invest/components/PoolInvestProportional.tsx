@@ -34,7 +34,12 @@ interface Props {
 export function PoolInvestProportional({ onShowPreview }: Props) {
     const { pool, poolService } = usePool();
     const investOptions = pool.investConfig.options;
-    const { setSelectedOption, selectedOptions, setInputAmounts, inputAmounts } = useInvestState();
+    const {
+        setSelectedOption,
+        selectedOptions,
+        setInputAmounts,
+        proportionalInputAmounts: inputAmounts,
+    } = useInvestState(pool.id);
     const { tokenProportionalAmounts } = usePoolJoinGetProportionalInvestmentAmount();
     const { selectedInvestTokens, isInvestingWithEth } = useInvest();
 
@@ -42,7 +47,7 @@ export function PoolInvestProportional({ onShowPreview }: Props) {
 
     async function onTokenAmountChange(token: GqlPoolToken, amount: string) {
         if (!amount) {
-            setInputAmounts({});
+            setInputAmounts('proportional', {});
             return;
         }
 
@@ -56,6 +61,7 @@ export function PoolInvestProportional({ onShowPreview }: Props) {
             );
 
             setInputAmounts(
+                'proportional',
                 mapValues(
                     keyBy(scaledAmounts, (amount) =>
                         isInvestingWithEth ? replaceWethWithEth(amount.address) : amount.address,
@@ -68,7 +74,10 @@ export function PoolInvestProportional({ onShowPreview }: Props) {
 
     const firstToken = selectedInvestTokens[0];
     const proportionalPercent =
-        tokenProportionalAmounts && tokenProportionalAmounts[firstToken.address] && inputAmounts[firstToken.address]
+        tokenProportionalAmounts &&
+        tokenProportionalAmounts[firstToken.address] &&
+        inputAmounts &&
+        inputAmounts[firstToken.address]
             ? Math.round(
                   (parseFloat(inputAmounts[firstToken.address]) /
                       parseFloat(tokenProportionalAmounts[firstToken.address])) *
@@ -87,7 +96,7 @@ export function PoolInvestProportional({ onShowPreview }: Props) {
                         value={proportionalPercent}
                         onChange={(value) => {
                             if (value === 0) {
-                                setInputAmounts({});
+                                setInputAmounts('proportional', {});
                             } else {
                                 const inputAmounts = mapValues(tokenProportionalAmounts || {}, (maxAmount, address) => {
                                     const tokenDecimals =
@@ -99,7 +108,7 @@ export function PoolInvestProportional({ onShowPreview }: Props) {
                                     );
                                 });
 
-                                setInputAmounts(inputAmounts);
+                                setInputAmounts('proportional', inputAmounts);
                             }
                         }}
                     >
@@ -130,7 +139,7 @@ export function PoolInvestProportional({ onShowPreview }: Props) {
                     <VStack width="full" divider={<StackDivider borderColor="whiteAlpha.200" />}>
                         {investOptions.map((option, index) => {
                             const tokenOption = selectedInvestTokens[index];
-                            const amount = inputAmounts[tokenOption.address];
+                            const amount = inputAmounts && inputAmounts[tokenOption.address];
                             return (
                                 <TokenRow
                                     withInput
@@ -139,13 +148,14 @@ export function PoolInvestProportional({ onShowPreview }: Props) {
                                     alternateTokens={option.tokenOptions}
                                     address={tokenOption.address}
                                     selectedAlternateToken={
-                                        selectedOptions[`${option.poolTokenIndex}`] || option.tokenOptions[0].address
+                                        (selectedOptions && selectedOptions[`${option.poolTokenIndex}`]) ||
+                                        option.tokenOptions[0].address
                                     }
                                     onSelectedAlternateToken={(address) => {
                                         setSelectedOption(option.poolTokenIndex, address);
-                                        setInputAmounts({});
+                                        setInputAmounts('proportional', {});
                                     }}
-                                    amount={amount}
+                                    amount={amount || '0'}
                                     balance={tokenGetAmountForAddress(tokenOption.address, userPoolTokenBalances)}
                                 />
                             );
