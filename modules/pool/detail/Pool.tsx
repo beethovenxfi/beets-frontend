@@ -9,10 +9,15 @@ import { PoolWithdrawModal } from '~/modules/pool/withdraw/PoolWithdrawModal';
 import { usePool } from '~/modules/pool/lib/usePool';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 import { PoolWarnings } from '~/modules/pool/detail/components/warning/PoolWarnings';
+import { useInvestState } from '../invest/lib/useInvestState';
+import { useEffectOnUnmount } from '~/lib/util/custom-hooks';
 
 export function Pool() {
     const { pool } = usePool();
     const { investDisabled } = useNetworkConfig();
+    const { clearInvestState } = useInvestState();
+
+    useEffectOnUnmount(() => clearInvestState());
 
     return (
         <Box marginBottom="8">
