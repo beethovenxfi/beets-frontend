@@ -184,6 +184,7 @@ export class PoolComposableJoinService {
                     slippage: '0.0001',
                     fromInternalBalance: false,
                     toInternalBalance: true,
+                    wethIsEth: data.wethIsEth,
                 }),
             );
         }

@@ -31,14 +31,9 @@ export function useUserPendingRewards() {
                 amount: `${sumBy(group, (item) => parseFloat(item.amount))}`,
             };
         }),
-        // explicitly include claimable BAL
-        {
-            address: networkConfig.balancer.balToken,
-            amount: totalClaimableBAL.toString(),
-        },
-    ].filter(reward => parseFloat(reward.amount) > 0);
+    ].filter((reward) => parseFloat(reward.amount) > 0);
 
-    const pendingRewardsTotalUSD = sumBy(data || [], priceForAmount) + pendingBALUSD;
+    const pendingRewardsTotalUSD = sumBy(data || [], priceForAmount);
 
     return {
         pendingRewardsTotalUSD,
