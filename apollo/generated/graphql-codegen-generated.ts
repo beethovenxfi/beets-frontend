@@ -527,11 +527,14 @@ export interface GqlPoolMinimal {
     staking?: Maybe<GqlPoolStaking>;
     symbol: Scalars['String'];
     type: GqlPoolMinimalType;
+    version: Scalars['Int'];
 }
 
 export type GqlPoolMinimalType =
     | 'ELEMENT'
     | 'GYRO'
+    | 'GYRO3'
+    | 'GYROE'
     | 'INVESTMENT'
     | 'LINEAR'
     | 'LIQUIDITY_BOOTSTRAPPING'
@@ -1178,6 +1181,7 @@ export interface Mutation {
     poolReloadPoolTokenIndexes: Scalars['String'];
     poolReloadStakingForAllPools: Scalars['String'];
     poolSetPoolsWithPreferredGaugesAsIncentivized: Scalars['String'];
+    poolSyncAllPoolVersions: Scalars['String'];
     poolSyncAllPoolsFromSubgraph: Array<Scalars['String']>;
     poolSyncLatestSnapshotsForAllPools: Scalars['String'];
     poolSyncNewPoolsFromSubgraph: Array<Scalars['String']>;

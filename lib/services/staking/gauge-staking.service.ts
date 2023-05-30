@@ -17,7 +17,20 @@ interface GetUserStakedBalanceInput {
     userAddress: string;
     gaugeAddress: string;
     provider: BaseProvider;
+    gaugeVersion?: number;
     decimals?: number;
+}
+
+function getGaugeABI(version: number) {
+    switch (version) {
+        case 1:
+            return LiquidityGaugeV5Abi;
+            break;
+        case 2:
+            return LiquidityGaugeV6Abi;
+        default:
+            return LiquidityGaugeV5Abi;
+    }
 }
 
 export class GaugeStakingService {
@@ -32,8 +45,10 @@ export class GaugeStakingService {
         provider,
         gaugeAddress,
         decimals = 18,
+        gaugeVersion = 1,
     }: GetUserStakedBalanceInput): Promise<AmountHumanReadable> {
-        const gaugeContract = new Contract(gaugeAddress, LiquidityGaugeV5Abi, provider);
+        let gaugeABI = getGaugeABI(gaugeVersion);
+        const gaugeContract = new Contract(gaugeAddress, gaugeABI, provider);
         const balance = await gaugeContract.balanceOf(userAddress);
 
         return formatFixed(balance, decimals);
@@ -54,6 +69,19 @@ export class GaugeStakingService {
         const response: BigNumber = await tokenContract.balanceOf(gaugeAddress);
 
         return formatFixed(response, decimals);
+    }
+
+    public async getGaugeTotalSupply({
+        gaugeAddress,
+        provider,
+    }: {
+        gaugeAddress: string;
+        provider: BaseProvider;
+    }): Promise<AmountHumanReadable> {
+        const gaugeContract = new Contract(gaugeAddress, LiquidityGaugeV6Abi, provider);
+        const response: BigNumber = await gaugeContract.totalSupply();
+
+        return formatFixed(response, 18);
     }
 
     public async getPendingRewards({
