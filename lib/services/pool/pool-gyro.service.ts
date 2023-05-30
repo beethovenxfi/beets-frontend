@@ -75,7 +75,6 @@ export class PoolGyroService implements PoolService {
             (this.pool.staking?.type === 'MASTER_CHEF' && data.zapIntoMasterchefFarm) ||
             (this.pool.staking?.type === 'GAUGE' && data.zapIntoGauge)
         ) {
-            console.log({ batch: this.batchRelayerService });
             return this.batchRelayerService.encodeJoinPoolAndStake({
                 userData,
                 pool: this.pool,
