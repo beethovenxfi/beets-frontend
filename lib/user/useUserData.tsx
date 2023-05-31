@@ -19,6 +19,7 @@ export function _useUserData() {
         notifyOnNetworkStatusChange: true,
         fetchPolicy: 'cache-first',
     });
+
     const { priceForAmount } = useGetTokens();
     const currentUserAddress = currentUserAddressVar();
     const userAddressChanged = userAddress !== currentUserAddress;
@@ -62,6 +63,8 @@ export function _useUserData() {
             address: networkConfig.fbeets.address,
             amount: fbeetsBalance.stakedBalance,
         }) + sum(poolBalances.map((balance) => parseFloat(balance.stakedBalance) * balance.tokenPrice));
+
+    const veBALBalance = data?.veBALUserBalance || '0';
 
     function bptBalanceForPool(poolId: string): AmountHumanReadable {
         const bptBalance = poolBalances.find((pool) => pool.poolId === poolId)?.totalBalance || '0';
@@ -121,6 +124,7 @@ export function _useUserData() {
         usdBalanceForPool,
         hasBptInWalletForPool,
         stakedValueUSD,
+        veBALBalance
     };
 }
 

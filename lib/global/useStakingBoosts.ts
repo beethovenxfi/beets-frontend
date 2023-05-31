@@ -4,6 +4,8 @@ import BigNumber from 'bignumber.js';
 import { useQuery } from 'react-query';
 import { gaugeStakingService } from '../services/staking/gauge-staking.service';
 import { useProvider } from 'wagmi';
+import { useUserData } from '../user/useUserData';
+import { useGetAppGlobalDataQuery } from '~/apollo/generated/graphql-codegen-generated';
 
 /**
  * calcUserBoost
@@ -32,6 +34,7 @@ function calcUserBoost({
     const _gaugeTotalSupply = new BigNumber(gaugeTotalSupply);
     const _userVeBALBalance = new BigNumber(userVeBALBalance);
     const _veBALTotalSupply = new BigNumber(veBALTotalSupply);
+
     const boost = new BigNumber(1).plus(
         new BigNumber(1.5)
             .times(_userVeBALBalance)
@@ -39,17 +42,22 @@ function calcUserBoost({
             .times(_gaugeTotalSupply)
             .div(_userGaugeBalance),
     );
-    const minBoost = new BigNumber(2.5).lt(boost) ? 2.5 : boost;
 
+    const minBoost = new BigNumber(2.5).lt(boost) ? new BigNumber(2.5) : boost;
+    if (minBoost.isNaN()) {
+        return '0.0'.toString();
+    }
     return minBoost.toString();
 }
 
 export default function useStakingBoosts() {
     const { pool } = usePool();
     const { userAddress } = useUserAccount();
-    const provider = useProvider();
+    const { veBALBalance } = useUserData();
+    const { data: globalData, loading: isLoadingGlobalData } = useGetAppGlobalDataQuery();
 
-    // TODO: Get VEBAL INFORMATION HERE
+    const veBALTotalSupply = globalData?.veBALTotalSupply || '0.0';
+    const provider = useProvider();
 
     const gaugeAddress = pool.staking?.gauge?.gaugeAddress || '';
     const gaugeVersion = pool.staking?.gauge?.version || 1;
@@ -77,14 +85,13 @@ export default function useStakingBoosts() {
         },
     );
 
-    const isLoading = isLoadingStakedBalance || isLoadingTotalSupply;
+    const isLoading = isLoadingStakedBalance || isLoadingTotalSupply || isLoadingGlobalData;
 
-    // TODO fill in total supply
-    const boost = calcUserBoost({
+    let boost = calcUserBoost({
         userGaugeBalance: stakedBalance || '0',
-        userVeBALBalance: '0',
+        userVeBALBalance: veBALBalance || '0',
         gaugeTotalSupply: totalSupply || '0',
-        veBALTotalSupply: '0',
+        veBALTotalSupply: veBALTotalSupply || '0',
     });
 
     return {

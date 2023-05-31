@@ -1601,6 +1601,7 @@ export type GetAppGlobalDataQuery = {
     beetsGetFbeetsRatio: string;
     blocksGetBlocksPerDay: number;
     blocksGetAverageBlockTime: number;
+    veBALTotalSupply: string;
     tokenGetTokens: Array<{
         __typename: 'GqlToken';
         address: string;
@@ -1715,6 +1716,7 @@ export type GetUserDataQueryVariables = Exact<{ [key: string]: never }>;
 
 export type GetUserDataQuery = {
     __typename: 'Query';
+    veBALUserBalance: string;
     balances: Array<{
         __typename: 'GqlUserPoolBalance';
         poolId: string;
@@ -5831,6 +5833,7 @@ export const GetAppGlobalDataDocument = gql`
         beetsGetFbeetsRatio
         blocksGetBlocksPerDay
         blocksGetAverageBlockTime
+        veBALTotalSupply: veBalGetTotalSupply
     }
 `;
 
@@ -6275,6 +6278,7 @@ export const GetUserDataDocument = gql`
                 }
             }
         }
+        veBALUserBalance: veBalGetUserBalance
     }
 `;
 
