@@ -132,7 +132,6 @@ export function useInvestState() {
 
     function toggleZapEnabled() {
         const state = investStateVar();
-        console.log({ before: state });
 
         investStateVar(
             state.map((state) => {
@@ -148,7 +147,6 @@ export function useInvestState() {
                 }
             }),
         );
-        console.log({ after: investStateVar() });
     }
 
     function setInputAmountsForType(investType: string) {
