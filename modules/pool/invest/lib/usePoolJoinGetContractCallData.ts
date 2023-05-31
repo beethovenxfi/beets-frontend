@@ -13,7 +13,7 @@ export function usePoolJoinGetContractCallData(minimumBpt: AmountHumanReadable |
     const networkConfig = useNetworkConfig();
     const { slippage } = useSlippage();
     const { poolService, pool } = usePool();
-    const { inputAmounts } = useInvestState(pool.id);
+    const { inputAmounts } = useInvestState();
     const inputAmountsArray = inputAmounts ? tokenAmountsGetArrayFromMap(inputAmounts) : [];
     const hasEth = inputAmounts && networkConfig.eth.address.toLowerCase() in inputAmounts;
     const tokenAmountsIn = hasEth

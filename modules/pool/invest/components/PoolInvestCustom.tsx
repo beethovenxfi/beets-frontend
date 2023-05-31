@@ -16,7 +16,7 @@ interface Props {
 
 export function PoolInvestCustom({ onShowPreview }: Props) {
     const { pool } = usePool();
-    const { customInputAmounts: inputAmounts, setInputAmount, setSelectedOption } = useInvestState(pool.id);
+    const { customInputAmounts: inputAmounts, setInputAmount, setSelectedOption } = useInvestState();
     const { selectedInvestTokens, hasValidUserInput } = useInvest();
     const { userPoolTokenBalances } = usePoolUserTokenBalancesInWallet();
     const { hasHighPriceImpact, formattedPriceImpact } = usePoolJoinGetBptOutAndPriceImpactForTokensIn();
@@ -38,9 +38,7 @@ export function PoolInvestCustom({ onShowPreview }: Props) {
                                     (userBalance) => userBalance.address === selectedInvestTokens[index].address,
                                 )?.amount || '0'
                             }
-                            setInputAmount={(amount) =>
-                                setInputAmount('custom', selectedInvestTokens[index].address, amount)
-                            }
+                            setInputAmount={(amount) => setInputAmount(selectedInvestTokens[index].address, amount)}
                             setSelectedTokenOption={(address) => setSelectedOption(option.poolTokenIndex, address)}
                             value={inputAmounts ? inputAmounts[selectedInvestTokens[index].address] : '0'}
                             key={index}

@@ -57,12 +57,14 @@ export function PoolInvestModal({
     const containerControls = useAnimation();
     const modalContainerRef = useRef<HTMLDivElement | null>(null);
     const lastModalBounds = useRef<DOMRect | null>(null);
-    const { setInitialInvestState } = useInvestState(pool.id);
+    const { setInitialInvestState, clearInvestState, setInputAmountsForType } = useInvestState();
 
     function onModalClose() {
         if (investComplete) {
             setModalState('start');
             setInvestType(null);
+            setInvestComplete(false);
+            clearInvestState();
         }
         onClose();
         _onClose && _onClose();
@@ -224,10 +226,12 @@ export function PoolInvestModal({
                                         onShowProportional={() => {
                                             setInvestType('proportional');
                                             setModalState('proportional');
+                                            setInputAmountsForType('proportional');
                                         }}
                                         onShowCustom={() => {
                                             setInvestType('custom');
                                             setModalState('custom');
+                                            setInputAmountsForType('custom');
                                         }}
                                     />
                                 </motion.div>

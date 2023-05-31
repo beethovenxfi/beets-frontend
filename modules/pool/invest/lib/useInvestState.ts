@@ -1,6 +1,7 @@
 import { makeVar, useReactiveVar } from '@apollo/client';
 import { AmountHumanReadable, AmountHumanReadableMap } from '~/lib/services/token/token-types';
 import { keyBy, mapValues } from 'lodash';
+import { usePool } from '../../lib/usePool';
 
 interface InvestTypeAmounts {
     inputAmounts: AmountHumanReadableMap;
@@ -16,7 +17,10 @@ interface InvestState {
 
 export const investStateVar = makeVar<InvestState[]>([]);
 
-export function useInvestState(poolId: string) {
+export function useInvestState() {
+    const { pool } = usePool();
+    const poolId = pool.id;
+
     function setInitialInvestState() {
         const state = investStateVar();
         const isPoolInState = state.findIndex((state) => state.poolId === poolId) !== -1;
@@ -42,24 +46,16 @@ export function useInvestState(poolId: string) {
         }
     }
 
-    function setInputAmounts(investType: string, inputAmounts: AmountHumanReadableMap) {
+    // only used for 'proportional'
+    function setInputAmounts(inputAmounts: AmountHumanReadableMap) {
         const state = investStateVar();
 
         investStateVar(
             state.map((state) => {
-                const proportional =
-                    investType === 'proportional'
-                        ? { proportional: { ...state.proportional, inputAmounts } }
-                        : { proportional: { ...state.proportional } };
-                const custom =
-                    investType === 'custom'
-                        ? { custom: { ...state.custom, inputAmounts } }
-                        : { custom: { ...state.custom } };
                 if (state.poolId === poolId) {
                     return {
                         ...state,
-                        ...proportional,
-                        ...custom,
+                        proportional: { inputAmounts },
                         inputAmounts,
                     };
                 } else {
@@ -69,36 +65,23 @@ export function useInvestState(poolId: string) {
         );
     }
 
-    function setInputAmount(investType: string, tokenAddress: string, amount: AmountHumanReadable) {
+    // only used for 'custom'
+    function setInputAmount(tokenAddress: string, amount: AmountHumanReadable) {
         const state = investStateVar();
 
         investStateVar(
             state.map((state) => {
-                const proportional =
-                    investType === 'proportional'
-                        ? {
-                              ...state.proportional,
-                              inputAmounts: {
-                                  ...state.proportional.inputAmounts,
-                                  [tokenAddress]: amount,
-                              },
-                          }
-                        : { ...state.proportional };
-                const custom =
-                    investType === 'custom'
-                        ? {
-                              ...state.custom,
-                              inputAmounts: {
-                                  ...state.custom.inputAmounts,
-                                  [tokenAddress]: amount,
-                              },
-                          }
-                        : { ...state.custom };
                 if (state.poolId === poolId) {
+                    const inputAmount = { [tokenAddress]: amount };
                     return {
                         ...state,
-                        ...proportional,
-                        ...custom,
+                        custom: {
+                            inputAmounts: {
+                                ...state.custom.inputAmounts,
+                                ...inputAmount,
+                            },
+                        },
+                        inputAmounts: { ...state.inputAmounts, ...inputAmount },
                     };
                 } else {
                     return state;
@@ -149,13 +132,35 @@ export function useInvestState(poolId: string) {
 
     function toggleZapEnabled() {
         const state = investStateVar();
+        console.log({ before: state });
+
+        investStateVar(
+            state.map((state) => {
+                console.log({ poolidstate: state.poolId, poolId });
+                if (state.poolId === poolId) {
+                    console.log({ enabled: !state.zapEnabled });
+                    return {
+                        ...state,
+                        zapEnabled: !state.zapEnabled,
+                    };
+                } else {
+                    return state;
+                }
+            }),
+        );
+        console.log({ after: investStateVar() });
+    }
+
+    function setInputAmountsForType(investType: string) {
+        const state = investStateVar();
 
         investStateVar(
             state.map((state) => {
                 if (state.poolId === poolId) {
                     return {
                         ...state,
-                        zapEnabled: !state.zapEnabled,
+                        inputAmounts:
+                            investType === 'custom' ? state.custom.inputAmounts : state.proportional.inputAmounts,
                     };
                 } else {
                     return state;
@@ -166,7 +171,6 @@ export function useInvestState(poolId: string) {
 
     function clearInvestState() {
         const state = investStateVar();
-
         investStateVar(state.filter((state) => state.poolId !== poolId));
     }
 
@@ -181,7 +185,7 @@ export function useInvestState(poolId: string) {
         setSelectedOptions,
         clearInvestState,
         toggleZapEnabled,
-        ...state,
+        setInputAmountsForType,
         zapEnabled: investState?.zapEnabled,
         selectedOptions: investState?.selectedOptions,
         inputAmounts: investState?.inputAmounts,
