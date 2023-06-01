@@ -21,7 +21,6 @@ import { animate, AnimatePresence, motion, useAnimation } from 'framer-motion';
 import { usePool } from '~/modules/pool/lib/usePool';
 import { BeetsModalBody, BeetsModalContent, BeetsModalHeader } from '~/components/modal/BeetsModal';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
-import { useInvestState } from './lib/useInvestState';
 
 interface Props {
     activatorLabel?: string;
@@ -57,14 +56,12 @@ export function PoolInvestModal({
     const containerControls = useAnimation();
     const modalContainerRef = useRef<HTMLDivElement | null>(null);
     const lastModalBounds = useRef<DOMRect | null>(null);
-    const { clearInvestState } = useInvestState();
 
     function onModalClose() {
         if (investComplete) {
             setModalState('start');
             setInvestType(null);
         }
-        clearInvestState();
         onClose();
         _onClose && _onClose();
     }
@@ -215,12 +212,10 @@ export function PoolInvestModal({
                                         onShowProportional={() => {
                                             setInvestType('proportional');
                                             setModalState('proportional');
-                                            clearInvestState();
                                         }}
                                         onShowCustom={() => {
                                             setInvestType('custom');
                                             setModalState('custom');
-                                            clearInvestState();
                                         }}
                                     />
                                 </motion.div>
