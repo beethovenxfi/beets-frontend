@@ -146,7 +146,7 @@ export const fantomNetworkConfig: NetworkConfig = {
     gauge: {
         rewardHelperAddress: AddressZero,
         balancerPseudoMinterAddress: AddressZero,
-        veBALDelegationProxyAddress: AddressZero
+        veBALDelegationProxyAddress: AddressZero,
     },
     createPoolUrl: 'https://v1.beets.fi/#/pool-create',
     launchUrl: 'https://v1.beets.fi/#/launch',
@@ -174,6 +174,7 @@ export const fantomNetworkConfig: NetworkConfig = {
         '0xf47f4d59c863c02cbfa3eefe6771b9c9fbe7b97800000000000000000000072b': 'reaper',
         '0xba0e9aea8a7fa1daab4edf244191f2387a4e472b000100000000000000000737': 'reaper',
     },
+    builtByTypes: {},
     investDisabled: {
         '0xa10285f445bcb521f1d623300dc4998b02f11c8f00000000000000000000043b': true,
     },

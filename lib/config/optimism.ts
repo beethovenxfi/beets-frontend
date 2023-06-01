@@ -213,6 +213,9 @@ export const optimismNetworkConfig: NetworkConfig = {
         '0x3c74c4ed512050eb843d89fb9dcd5ebb4668eb6d0002000000000000000000cc': 'beefy-exactly',
         '0x098f32d98d0d64dba199fc1923d3bf4192e787190001000000000000000000d2': 'reaper-sonne',
     },
+    builtByTypes: {
+        '0x58910d5bd045a20a37de147f8acea75b2d881f610002000000000000000000d3': 'gyroscope',
+    },
     investDisabled: {
         '0x1f131ec1175f023ee1534b16fa8ab237c00e238100000000000000000000004a': true,
         '0x479a7d1fcdd71ce0c2ed3184bfbe9d23b92e8337000000000000000000000049': true,

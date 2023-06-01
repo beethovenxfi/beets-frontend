@@ -8,11 +8,12 @@ import { PoolUserStakedStats } from '~/modules/pool/detail/components/stats/Pool
 import { usePool } from '~/modules/pool/lib/usePool';
 import { BoostedBadgeSmall } from '~/components/boosted-badge/BoostedBadgeSmall';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
+import { BuiltBadgeSmall } from '~/components/built-badge/BuiltBadgeSmall';
 
 export default function PoolUserStats() {
     const { pool, totalApr } = usePool();
     const { userPoolBalanceUSD, isLoading } = usePoolUserDepositBalance();
-    const { boostedByTypes } = useNetworkConfig();
+    const { boostedByTypes, builtByTypes } = useNetworkConfig();
 
     return (
         <Flex width="full" alignItems="flex-start" flex={1} flexDirection="column">
@@ -25,6 +26,7 @@ export default function PoolUserStats() {
                     <AprTooltip onlySparkles data={pool.dynamicData.apr} />
                 </HStack>
                 {boostedByTypes[pool.id] && <BoostedBadgeSmall boostedBy={boostedByTypes[pool.id]} />}
+                {builtByTypes[pool.id] && <BuiltBadgeSmall builtBy={builtByTypes[pool.id]} />}
             </VStack>
 
             <Box px="2" width="full">

@@ -9,8 +9,9 @@ import { numberFormatUSDValue } from '~/lib/util/number-formats';
 import { TokenAvatarSetInList, TokenAvatarSetInListTokenData } from '~/components/token/TokenAvatarSetInList';
 import { memo } from 'react';
 import { BoostedBadgeSmall } from '~/components/boosted-badge/BoostedBadgeSmall';
-import { BoostedByType } from '~/lib/config/network-config-type';
+import { BoostedByType, BuiltByType } from '~/lib/config/network-config-type';
 import { PoolListItemWarning } from '~/modules/pools/components/PoolListItemWarning';
+import { BuiltBadgeSmall } from '~/components/built-badge/BuiltBadgeSmall';
 
 interface Props extends BoxProps {
     pool: GqlPoolMinimalFragment;
@@ -19,6 +20,7 @@ interface Props extends BoxProps {
     tokens: TokenAvatarSetInListTokenData[];
     hasUnstakedBpt?: boolean;
     boostedBy?: BoostedByType;
+    builtBy?: BuiltByType;
     warningMessage?: string;
 }
 
@@ -32,6 +34,7 @@ export function PoolListItem({
     tokens,
     hasUnstakedBpt,
     boostedBy,
+    builtBy,
     warningMessage,
     ...rest
 }: Props) {
@@ -67,11 +70,11 @@ export function PoolListItem({
                                       lg: `"icons name userBalance tvl volume apr"`,
                                   }
                                 : {
-                                      base: `"name boosted"
+                                      base: `"name badge"
                                              "apr tvl"
                                              "fees volume"
                                              "icons icons"`,
-                                      lg: `"icons name boosted tvl volume apr"`,
+                                      lg: `"icons name badge tvl volume apr"`,
                                   }
                         }
                     >
@@ -105,12 +108,13 @@ export function PoolListItem({
                             </GridItem>
                         )}
                         <GridItem
-                            area="boosted"
+                            area="badge"
                             alignItems="center"
                             display={showUserBalance ? 'none' : 'flex'}
                             mb={{ base: '4', lg: '0' }}
                         >
                             {boostedBy && <BoostedBadgeSmall boostedBy={boostedBy} />}
+                            {builtBy && <BuiltBadgeSmall builtBy={builtBy} />}
                         </GridItem>
                         <StatGridItem
                             area="tvl"

@@ -8,6 +8,8 @@ export type BoostedByType =
     | 'reaper'
     | 'beefy-exactly';
 
+export type BuiltByType = 'gyroscope';
+
 export interface PoolDetailWarning {
     id: string;
     message: string;
@@ -116,6 +118,9 @@ export interface NetworkConfig {
     investDisabled: { [poolId: string]: boolean };
     boostedByTypes: {
         [poolId: string]: BoostedByType;
+    };
+    builtByTypes: {
+        [poolId: string]: BuiltByType;
     };
     maBeetsEnabled: boolean;
     claimAllRewardsEnabled: boolean;

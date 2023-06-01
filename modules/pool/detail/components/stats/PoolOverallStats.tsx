@@ -13,10 +13,11 @@ import { sumBy } from 'lodash';
 import { InfoButton } from '~/components/info-button/InfoButton';
 import { BoostedBadgeSmall } from '~/components/boosted-badge/BoostedBadgeSmall';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
+import { BuiltBadgeSmall } from '~/components/built-badge/BuiltBadgeSmall';
 
 export default function PoolOverallStats() {
     const { pool, totalApr } = usePool();
-    const { boostedByTypes } = useNetworkConfig();
+    const { boostedByTypes, builtByTypes } = useNetworkConfig();
     const { priceFor } = useGetTokens();
     const { data: blocksData } = useGetBlocksPerDayQuery({ fetchPolicy: 'cache-first' });
     const data = pool.dynamicData;
@@ -55,6 +56,7 @@ export default function PoolOverallStats() {
                     <AprTooltip onlySparkles data={data.apr} />
                 </HStack>
                 {boostedByTypes[pool.id] && <BoostedBadgeSmall boostedBy={boostedByTypes[pool.id]} />}
+                {builtByTypes[pool.id] && <BuiltBadgeSmall builtBy={builtByTypes[pool.id]} />}
             </VStack>
             <Divider />
             <VStack spacing="0" alignItems="flex-start">
