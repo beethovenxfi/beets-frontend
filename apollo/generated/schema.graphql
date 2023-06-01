@@ -301,6 +301,9 @@ type GqlPoolFilterDefinition {
 
 enum GqlPoolFilterType {
     ELEMENT
+    GYRO
+    GYRO3
+    GYROE
     INVESTMENT
     LINEAR
     LIQUIDITY_BOOTSTRAPPING
@@ -500,11 +503,14 @@ type GqlPoolMinimal {
     staking: GqlPoolStaking
     symbol: String!
     type: GqlPoolMinimalType!
+    version: Int!
 }
 
 enum GqlPoolMinimalType {
     ELEMENT
     GYRO
+    GYRO3
+    GYROE
     INVESTMENT
     LINEAR
     LIQUIDITY_BOOTSTRAPPING
@@ -1146,6 +1152,7 @@ type Mutation {
     poolReloadPoolTokenIndexes(poolId: String!): String!
     poolReloadStakingForAllPools(stakingTypes: [GqlPoolStakingType!]!): String!
     poolSetPoolsWithPreferredGaugesAsIncentivized: String!
+    poolSyncAllPoolVersions: String!
     poolSyncAllPoolsFromSubgraph: [String!]!
     poolSyncLatestSnapshotsForAllPools(daysToSync: Int): String!
     poolSyncNewPoolsFromSubgraph: [String!]!
