@@ -6,14 +6,13 @@ import { usePoolUserDepositBalance } from '~/modules/pool/lib/usePoolUserDeposit
 import { Flex, Skeleton } from '@chakra-ui/react';
 import { PoolUserStakedStats } from '~/modules/pool/detail/components/stats/PoolUserStakedStats';
 import { usePool } from '~/modules/pool/lib/usePool';
-import { BoostedBadgeSmall } from '~/components/boosted-badge/BoostedBadgeSmall';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
-import { BuiltBadgeSmall } from '~/components/built-badge/BuiltBadgeSmall';
+import { PoolBadgeSmall } from '~/components/pool-badge/PoolBadgeSmall';
 
 export default function PoolUserStats() {
     const { pool, totalApr } = usePool();
     const { userPoolBalanceUSD, isLoading } = usePoolUserDepositBalance();
-    const { boostedByTypes, builtByTypes } = useNetworkConfig();
+    const { poolBadgeTypes } = useNetworkConfig();
 
     return (
         <Flex width="full" alignItems="flex-start" flex={1} flexDirection="column">
@@ -25,8 +24,7 @@ export default function PoolUserStats() {
                     <div className="apr-stripes">{numeral(totalApr).format('0.00%')}</div>
                     <AprTooltip onlySparkles data={pool.dynamicData.apr} />
                 </HStack>
-                {boostedByTypes[pool.id] && <BoostedBadgeSmall boostedBy={boostedByTypes[pool.id]} />}
-                {builtByTypes[pool.id] && <BuiltBadgeSmall builtBy={builtByTypes[pool.id]} />}
+                {poolBadgeTypes[pool.id] && <PoolBadgeSmall poolBadge={poolBadgeTypes[pool.id]} />}
             </VStack>
 
             <Box px="2" width="full">

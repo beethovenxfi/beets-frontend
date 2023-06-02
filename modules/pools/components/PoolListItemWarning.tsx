@@ -1,6 +1,5 @@
 import { AlertTriangle } from 'react-feather';
 import { Box, BoxProps } from '@chakra-ui/react';
-import { BoostedByTooltips } from '~/components/boosted-badge/lib/boosted-by-tooltips';
 import BeetsTooltip from '~/components/tooltip/BeetsTooltip';
 
 interface Props extends BoxProps {

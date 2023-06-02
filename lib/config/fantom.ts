@@ -167,14 +167,13 @@ export const fantomNetworkConfig: NetworkConfig = {
         poolInvest: {},
         poolWithdraw: {},
     },
-    boostedByTypes: {
+    poolBadgeTypes: {
         '0xff2753aaba51c9f84689b9bd0a21b3cf380a1cff00000000000000000000072e': 'reaper',
         '0x7449f09c8f0ed490472d7c14b4eef235620d027000010000000000000000072d': 'reaper',
         '0x2e0d46d884af4053787e1838793bf98dcb87488e00020000000000000000072c': 'reaper',
         '0xf47f4d59c863c02cbfa3eefe6771b9c9fbe7b97800000000000000000000072b': 'reaper',
         '0xba0e9aea8a7fa1daab4edf244191f2387a4e472b000100000000000000000737': 'reaper',
     },
-    builtByTypes: {},
     investDisabled: {
         '0xa10285f445bcb521f1d623300dc4998b02f11c8f00000000000000000000043b': true,
     },
