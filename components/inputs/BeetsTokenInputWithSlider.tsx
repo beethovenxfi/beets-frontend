@@ -18,13 +18,13 @@ import { GqlPoolToken } from '~/apollo/generated/graphql-codegen-generated';
 import { useGetTokens } from '~/lib/global/useToken';
 import TokenAvatar from '~/components/token/TokenAvatar';
 import { AmountHumanReadable } from '~/lib/services/token/token-types';
-import { tokenFormatAmount } from '~/lib/services/token/token-util';
+import { tokenFormatAmount, tokenFormatAmountPrecise } from '~/lib/services/token/token-util';
 import { parseUnits } from 'ethers/lib/utils';
 import { tokenInputBlockInvalidCharacters, tokenInputTruncateDecimalPlaces } from '~/lib/util/input-util';
 import { oldBnumScale, oldBnumToHumanReadable } from '~/lib/services/pool/lib/old-big-number';
 import { BeetsBox } from '~/components/box/BeetsBox';
 import { TokenSelectInline } from '~/components/token-select-inline/TokenSelectInline';
-import { networkConfig } from '~/lib/config/network-config';
+import React from 'react';
 
 interface Props extends BoxProps {
     tokenOptions: GqlPoolToken[];
@@ -168,7 +168,7 @@ export function BeetsTokenInputWithSlider({
                             cursor={hasBalance ? 'pointer' : 'default'}
                         >
                             You have {tokenFormatAmount(balance)}
-                            {hasBalance && selectedTokenOption.address !== networkConfig.eth.address.toLowerCase() ? (
+                            {hasBalance ? (
                                 <Text color="beets.highlight" ml="1">
                                     Max
                                 </Text>
