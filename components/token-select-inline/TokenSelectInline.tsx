@@ -35,7 +35,6 @@ export function TokenSelectInline({ tokenOptions, selectedAddress, onOptionSelec
         hasZeroBalance: getUserBalanceForToken(option.address) === '0.0',
     }));
 
-    console.log({ tokenOptions });
     return (
         <Menu>
             {({ isOpen }) => (
