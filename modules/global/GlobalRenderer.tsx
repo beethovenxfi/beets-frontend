@@ -2,7 +2,7 @@ import { useUserAccount } from '~/lib/user/useUserAccount';
 import { useGetAppGlobalPollingDataQuery, useGetUserDataQuery } from '~/apollo/generated/graphql-codegen-generated';
 import { useEffectOnce } from '~/lib/util/custom-hooks';
 import { useEffect, useRef } from 'react';
-import { Box, HStack } from '@chakra-ui/react';
+import { Box, HStack, Text } from '@chakra-ui/react';
 import { ToastType, useToast } from '~/components/toast/BeetsToast';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 
@@ -39,8 +39,11 @@ export function GlobalRenderer() {
                 content: (
                     <HStack>
                         <Box>
-                            From June 6th 16:00 UTC until June 6th 20:00 UTC (expected) Optimism will be rolling out its
-                            highly anticipated Bedrock upgrade.
+                            <Text>
+                                From June 6th 16:00 UTC until June 6th 20:00 UTC (expected) Optimism will be rolling out
+                                its highly anticipated Bedrock upgrade.{' '}
+                            </Text>
+                            <Text>Any interaction with op.beets.fi will be paused during the upgrade.</Text>
                         </Box>
                     </HStack>
                 ),
