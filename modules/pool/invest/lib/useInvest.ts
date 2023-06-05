@@ -10,11 +10,15 @@ import { usePool } from '~/modules/pool/lib/usePool';
 
 export function useInvest() {
     const { pool } = usePool();
-    const { selectedOptions, inputAmounts, zapEnabled, setSelectedOption } = useInvestState();
+    const { selectedOptions, inputAmounts, zapEnabled } = useInvestState();
     const { getUserBalanceForToken, userPoolTokenBalances } = usePoolUserTokenBalancesInWallet();
     const { priceForAmount } = useGetTokens();
 
+    // need to assign a value
+    let firstTokenOption: GqlPoolToken = pool.investConfig.options[0].tokenOptions[0];
+
     const selectedInvestTokens: GqlPoolToken[] = pool.investConfig.options.map((option) => {
+        firstTokenOption = option.tokenOptions[0];
         if (option.tokenOptions.length > 1) {
             if (selectedOptions[`${option.poolTokenIndex}`]) {
                 return option.tokenOptions.find(
@@ -26,14 +30,12 @@ export function useInvest() {
                 );
                 // if there is more than 1 option and 1 of the options has a non-zero balance use that one
                 if (firstOptionWithNonZeroBalance) {
-                    setSelectedOption(option.poolTokenIndex, firstOptionWithNonZeroBalance.address);
-                    return firstOptionWithNonZeroBalance;
-                } else {
-                    return option.tokenOptions[0];
+                    firstTokenOption = firstOptionWithNonZeroBalance;
                 }
+                return firstTokenOption;
             }
         } else {
-            return option.tokenOptions[0];
+            return firstTokenOption;
         }
     });
 
@@ -74,5 +76,6 @@ export function useInvest() {
         hasValidUserInput,
         isInvestingWithEth,
         zapEnabled,
+        firstTokenOption,
     };
 }
