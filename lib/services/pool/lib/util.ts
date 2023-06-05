@@ -251,12 +251,11 @@ export function poolWeightedExactTokensInForBPTOut(
 
 export function poolWeightedBptForTokensZeroPriceImpact(
     tokenAmounts: TokenAmountHumanReadable[],
-    pool: GqlPoolWeighted | GqlPoolGyro,
+    pool: GqlPoolWeighted,
 ): OldBigNumber {
     const denormAmounts = oldBnumPoolScaleTokenAmounts(tokenAmounts, pool.tokens);
     const tokenBalancesScaled = pool.tokens.map((token) => oldBnumScaleAmount(token.balance, token.decimals));
-    const tokenWeights = getTokenWeights(pool);
-    const tokenWeightsScaled = tokenWeights.map((token) => oldBnumScaleAmount(token.weight || '0', 18));
+    const tokenWeightsScaled = pool.tokens.map((token) => oldBnumScaleAmount(token.weight || '0', 18));
 
     const result = weightedBPTForTokensZeroPriceImpact(
         tokenBalancesScaled.map((balance) => oldBnumToBnum(balance)),

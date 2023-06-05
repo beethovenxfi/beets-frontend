@@ -97,11 +97,10 @@ export class PoolGyroService implements PoolService {
             return { priceImpact: 0, minBptReceived: '0' };
         }
 
-        const bptZeroPriceImpact = poolWeightedBptForTokensZeroPriceImpact(tokenAmountsIn, this.pool);
         const minBptReceived = bptAmount.minus(bptAmount.times(slippage)).toFixed(0);
 
         return {
-            priceImpact: bptAmount.div(bptZeroPriceImpact).minus(1).toNumber(),
+            priceImpact: 0,
             minBptReceived: formatFixed(minBptReceived.toString(), 18),
         };
     }
