@@ -16,6 +16,7 @@ export const fantomNetworkConfig: NetworkConfig = {
         symbol: 'FTM',
         decimals: 18,
         iconUrl: 'https://assets.coingecko.com/coins/images/4001/large/Fantom.png',
+        minGasAmount: '0.1',
     },
     wethAddress: '0x21be370d5312f44cb42ce377bc9b8a0cef1a4c83',
     wethAddressFormatted: '0x21be370D5312f44cB42ce377BC9b8a0cEF1A4C83',
@@ -146,7 +147,7 @@ export const fantomNetworkConfig: NetworkConfig = {
     gauge: {
         rewardHelperAddress: AddressZero,
         balancerPseudoMinterAddress: AddressZero,
-        veBALDelegationProxyAddress: AddressZero
+        veBALDelegationProxyAddress: AddressZero,
     },
     createPoolUrl: 'https://v1.beets.fi/#/pool-create',
     launchUrl: 'https://v1.beets.fi/#/launch',

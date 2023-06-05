@@ -33,6 +33,7 @@ export interface NetworkConfig {
         symbol: string;
         decimals: number;
         iconUrl: string;
+        minGasAmount: string;
     };
     wethAddress: string;
     wethAddressFormatted: string;

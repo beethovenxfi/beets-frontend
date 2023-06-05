@@ -15,6 +15,7 @@ export const optimismNetworkConfig: NetworkConfig = {
         symbol: 'ETH',
         decimals: 18,
         iconUrl: 'https://optimistic.etherscan.io/images/svg/brands/optimism.svg?v=1.3',
+        minGasAmount: '0.0005',
     },
     wethAddress: '0x4200000000000000000000000000000000000006',
     wethAddressFormatted: '0x4200000000000000000000000000000000000006',
