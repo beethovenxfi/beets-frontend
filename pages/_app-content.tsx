@@ -1,4 +1,4 @@
-import { Box, Flex, useTheme } from '@chakra-ui/react';
+import { Box, useTheme } from '@chakra-ui/react';
 import { AppProps } from 'next/app';
 import { Navbar } from '~/modules/nav/Navbar';
 import { SubNavBar } from '~/modules/nav/SubNavBar';
@@ -16,6 +16,7 @@ export function AppContent({ Component, pageProps }: AppProps) {
     const { scrollY } = useElementScroll(ref);
     const theme = useTheme();
     const { userAddress } = useUserAccount();
+    const networkConfig = useNetworkConfig();
 
     return (
         <Box
@@ -39,6 +40,13 @@ export function AppContent({ Component, pageProps }: AppProps) {
             }}
         >
             <GlobalRenderer />
+            {networkConfig.chainId === '10' && (
+                <Box bg="orange.200" color="black" px={25} py={5} fontWeight="bold">
+                    Attention: On June 6th at 16:00 UTC Optimism will undergo scheduled downtime of approximately 4
+                    hours for the Bedrock upgrade. Transactions, deposits, and withdrawals will be temporarily
+                    unavailable during this period.
+                </Box>
+            )}
             <Box pt="3" />
             <Navbar scrollY={scrollY} />
             <Box pt="1" />
