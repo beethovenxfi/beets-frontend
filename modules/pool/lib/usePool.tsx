@@ -29,7 +29,7 @@ export interface PoolContextType {
     isFbeetsPool: boolean;
     isStablePool: boolean;
     isComposablePool: boolean;
-    isGyroPool: boolean;
+    canCustomInvest: boolean;
 }
 
 export const PoolContext = createContext<PoolContextType | null>(null);
@@ -129,7 +129,7 @@ export function PoolProvider({ pool: poolFromProps, children }: { pool: GqlPoolU
             ? parseFloat(pool.dynamicData.apr.apr.max)
             : parseFloat(pool.dynamicData.apr.apr.total);
 
-    const isGyroPool = pool.__typename === 'GqlPoolGyro';
+    const canCustomInvest = pool.__typename !== 'GqlPoolGyro';
 
     useEffectOnce(() => {
         refetch();
@@ -157,7 +157,7 @@ export function PoolProvider({ pool: poolFromProps, children }: { pool: GqlPoolU
                 isFbeetsPool: pool.id === networkConfig.fbeets.poolId,
                 isStablePool,
                 isComposablePool,
-                isGyroPool,
+                canCustomInvest,
             }}
         >
             {children}

@@ -34,7 +34,7 @@ interface Props {
 
 export function PoolWithdrawTypeChoice({ onShowProportional, onShowSingleAsset }: Props) {
     const unstakeDisclosure = useDisclosure();
-    const { pool, isGyroPool, isStablePool } = usePool();
+    const { pool, canCustomInvest, isStablePool } = usePool();
     const isMobile = useBreakpointValue({ base: true, md: false });
     const { formattedPrice } = useGetTokens();
     const { userPoolBalanceUSD, data, isLoading: isPoolUserDepositBalanceLoading } = usePoolUserDepositBalance();
@@ -129,7 +129,10 @@ export function PoolWithdrawTypeChoice({ onShowProportional, onShowSingleAsset }
 
                             {/* <Text fontSize="lg">{numberFormatUSDValue(data?.maxAmount || 0)}</Text> */}
                             <Text fontSize="sm">Proportional withdraw</Text>
-                            <Text fontSize="xs" color={isStablePool || isGyroPool ? 'transparent' : 'beets.green'}>
+                            <Text
+                                fontSize="xs"
+                                color={isStablePool || !canCustomInvest ? 'transparent' : 'beets.green'}
+                            >
                                 Recommended
                             </Text>
                         </VStack>
@@ -139,16 +142,16 @@ export function PoolWithdrawTypeChoice({ onShowProportional, onShowSingleAsset }
                     label={
                         isStablePool
                             ? 'As this is a stable pool, you can withdraw either asset without any impact.'
-                            : isGyroPool
-                            ? 'This pool does not support a single asset withdraw.'
-                            : ''
+                            : canCustomInvest
+                            ? ''
+                            : 'This pool does not support a single asset withdraw.'
                     }
                 >
                     <Box w="full">
                         <Button
                             variant="image"
                             onClick={onShowSingleAsset}
-                            disabled={valueInWallet === 0 || !isGyroPool}
+                            disabled={valueInWallet === 0 || !canCustomInvest}
                         >
                             <VStack spacing="1">
                                 <Image src={BeetSmart} height="48" alt="beets-smart" />

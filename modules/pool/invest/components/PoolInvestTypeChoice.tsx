@@ -22,7 +22,7 @@ interface Props {
 }
 
 export function PoolInvestTypeChoice({ onShowProportional, onShowCustom }: Props) {
-    const { pool, poolService, isGyroPool } = usePool();
+    const { pool, poolService, canCustomInvest } = usePool();
     const { formattedPrice } = useGetTokens();
     const { userPoolTokenBalances, investableAmount } = usePoolUserTokenBalancesInWallet();
     const { canInvestProportionally } = useInvest();
@@ -90,16 +90,19 @@ export function PoolInvestTypeChoice({ onShowProportional, onShowCustom }: Props
                                         {numberFormatUSDValue(totalValueProportionalAmounts || 0)}
                                     </Text>
                                     <Text fontSize="sm">Proportional investment</Text>
-                                    <Text fontSize="xs" color={isGyroPool ? 'transparent' : 'buttonHighlight'}>
+                                    <Text fontSize="xs" color={canCustomInvest ? 'buttonHighlight' : 'transparent'}>
                                         Recommended
                                     </Text>
                                 </VStack>
                             </Button>
                         </Box>
                     </BeetsTooltip>
-                    <BeetsTooltip noImage label={isGyroPool ? 'This pool does not support a custom investment.' : ''}>
+                    <BeetsTooltip
+                        noImage
+                        label={canCustomInvest ? '' : 'This pool does not support a custom investment.'}
+                    >
                         <Box width="full">
-                            <Button variant="image" onClick={onShowCustom} disabled={isGyroPool}>
+                            <Button variant="image" onClick={onShowCustom} disabled={!canCustomInvest}>
                                 <VStack spacing="1">
                                     <Image src={BeetSmart} height="48" alt="beets-smart" />
                                     <Text fontSize="lg">{numberFormatUSDValue(investableAmount)}</Text>
