@@ -276,6 +276,7 @@ query GetPool($id: String!) {
             }
         }
         ... on GqlPoolGyro {
+            type
             nestingType
             tokens {
                 ... on GqlPoolToken {

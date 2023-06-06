@@ -107,7 +107,14 @@ export function poolGetTypeName(pool: GqlPoolUnion) {
         case 'GqlPoolMetaStable':
             return 'MetaStable pool';
         case 'GqlPoolGyro':
-            return 'Gyro pool';
+            switch (pool.type) {
+                case 'GYRO':
+                    return 'Gyro 2CLP';
+                case 'GYRO3':
+                    return 'Gyro 3CLP';
+                case 'GYROE':
+                    return 'Gyro ECLP';
+            }
         default:
             return 'unknown';
     }

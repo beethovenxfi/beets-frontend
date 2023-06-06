@@ -349,6 +349,7 @@ export interface GqlPoolGyro extends GqlPoolBase {
     staking?: Maybe<GqlPoolStaking>;
     symbol: Scalars['String'];
     tokens: Array<GqlPoolTokenUnion>;
+    type: Scalars['String'];
     withdrawConfig: GqlPoolWithdrawConfig;
 }
 
@@ -1203,6 +1204,7 @@ export interface Mutation {
     tokenDeletePrice: Scalars['Boolean'];
     tokenDeleteTokenType: Scalars['String'];
     tokenInitChartData: Scalars['String'];
+    tokenReloadAllTokenTypes: Scalars['String'];
     tokenReloadTokenPrices?: Maybe<Scalars['Boolean']>;
     tokenSyncTokenDefinitions: Scalars['String'];
     tokenSyncTokenDynamicData: Scalars['String'];
@@ -2509,6 +2511,7 @@ export type GetPoolQuery = {
           }
         | {
               __typename: 'GqlPoolGyro';
+              type: string;
               nestingType: GqlPoolNestingType;
               id: string;
               address: string;
@@ -6832,6 +6835,7 @@ export const GetPoolDocument = gql`
                 }
             }
             ... on GqlPoolGyro {
+                type
                 nestingType
                 tokens {
                     ... on GqlPoolToken {

@@ -1036,6 +1036,7 @@ export const GetPool = gql`
                 }
             }
             ... on GqlPoolGyro {
+                type
                 nestingType
                 tokens {
                     ... on GqlPoolToken {

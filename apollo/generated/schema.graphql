@@ -331,6 +331,7 @@ type GqlPoolGyro implements GqlPoolBase {
     staking: GqlPoolStaking
     symbol: String!
     tokens: [GqlPoolTokenUnion!]!
+    type: String!
     withdrawConfig: GqlPoolWithdrawConfig!
 }
 
@@ -1171,6 +1172,7 @@ type Mutation {
     tokenDeletePrice(timestamp: Int!, tokenAddress: String!): Boolean!
     tokenDeleteTokenType(tokenAddress: String!, type: GqlTokenType!): String!
     tokenInitChartData(tokenAddress: String!): String!
+    tokenReloadAllTokenTypes: String!
     tokenReloadTokenPrices: Boolean
     tokenSyncTokenDefinitions: String!
     tokenSyncTokenDynamicData: String!
