@@ -14,13 +14,30 @@ export function useInvest() {
     const { getUserBalanceForToken, userPoolTokenBalances } = usePoolUserTokenBalancesInWallet();
     const { priceForAmount } = useGetTokens();
 
-    const selectedInvestTokens: GqlPoolToken[] = pool.investConfig.options.map((option) =>
-        selectedOptions[`${option.poolTokenIndex}`]
-            ? option.tokenOptions.find(
-                  (tokenOption) => tokenOption.address === selectedOptions[`${option.poolTokenIndex}`],
-              )!
-            : option.tokenOptions[0],
-    );
+    // need to assign a value
+    let firstTokenOption: GqlPoolToken = pool.investConfig.options[0].tokenOptions[0];
+
+    const selectedInvestTokens: GqlPoolToken[] = pool.investConfig.options.map((option) => {
+        firstTokenOption = option.tokenOptions[0];
+        if (option.tokenOptions.length > 1) {
+            if (selectedOptions[`${option.poolTokenIndex}`]) {
+                return option.tokenOptions.find(
+                    (tokenOption) => tokenOption.address === selectedOptions[`${option.poolTokenIndex}`],
+                )!;
+            } else {
+                const firstOptionWithNonZeroBalance = option.tokenOptions.find(
+                    (option) => getUserBalanceForToken(option.address) !== '0.0',
+                );
+                // if there is more than 1 option and 1 of the options has a non-zero balance use that one
+                if (firstOptionWithNonZeroBalance) {
+                    firstTokenOption = firstOptionWithNonZeroBalance;
+                }
+                return firstTokenOption;
+            }
+        } else {
+            return firstTokenOption;
+        }
+    });
 
     const selectedInvestTokensWithAmounts = selectedInvestTokens.map((token) => ({
         ...token,
@@ -59,5 +76,6 @@ export function useInvest() {
         hasValidUserInput,
         isInvestingWithEth,
         zapEnabled,
+        firstTokenOption,
     };
 }

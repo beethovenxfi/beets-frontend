@@ -16,6 +16,7 @@ import { Check, ChevronDown } from 'react-feather';
 import { GqlPoolToken } from '~/apollo/generated/graphql-codegen-generated';
 import TokenAvatar from '~/components/token/TokenAvatar';
 import BeetsTooltip from '../tooltip/BeetsTooltip';
+import { usePoolUserTokenBalancesInWallet } from '~/modules/pool/lib/usePoolUserTokenBalancesInWallet';
 
 interface Props {
     tokenOptions: GqlPoolToken[];
@@ -26,7 +27,13 @@ interface Props {
 
 export function TokenSelectInline({ tokenOptions, selectedAddress, onOptionSelect, minimal }: Props) {
     const theme = useTheme();
+    const { getUserBalanceForToken } = usePoolUserTokenBalancesInWallet();
+
     const selectedToken = tokenOptions.find((option) => option.address === selectedAddress);
+    const tokenOptionsExtra = tokenOptions.map((option) => ({
+        ...option,
+        hasZeroBalance: getUserBalanceForToken(option.address) === '0.0',
+    }));
 
     return (
         <Menu>
@@ -70,25 +77,26 @@ export function TokenSelectInline({ tokenOptions, selectedAddress, onOptionSelec
                             )}
                         </MenuButton>
                     </BeetsTooltip>
-                    <MenuList backgroundColor='transparent' p="0">
+                    <MenuList backgroundColor="transparent" p="0">
                         <Box py="1" px="1" backgroundColor="blackAlpha.400">
                             <Box backgroundColor="bg">
-                                <Box backgroundColor='blackAlpha.800'>
-                                {tokenOptions.map((option) => (
-                                    <MenuItem
-                                        key={option.address}
-                                        display="flex"
-                                        onClick={() => onOptionSelect(option.address)}
-                                    >
-                                        <HStack spacing="1.5" flex="1">
-                                            <TokenAvatar width="20px" height="20px" address={option.address} />
-                                            <Text color="gray.100" fontWeight="normal">
-                                                {option.symbol}
-                                            </Text>
-                                        </HStack>
-                                        {option.address === selectedAddress ? <Check /> : null}
-                                    </MenuItem>
-                                ))}
+                                <Box backgroundColor="blackAlpha.800">
+                                    {tokenOptionsExtra.map((option) => (
+                                        <MenuItem
+                                            key={option.address}
+                                            display="flex"
+                                            isDisabled={option.hasZeroBalance}
+                                            onClick={() => onOptionSelect(option.address)}
+                                        >
+                                            <HStack spacing="1.5" flex="1">
+                                                <TokenAvatar width="20px" height="20px" address={option.address} />
+                                                <Text color="gray.100" fontWeight="normal">
+                                                    {option.symbol}
+                                                </Text>
+                                            </HStack>
+                                            {option.address === selectedAddress ? <Check /> : null}
+                                        </MenuItem>
+                                    ))}
                                 </Box>
                             </Box>
                         </Box>
