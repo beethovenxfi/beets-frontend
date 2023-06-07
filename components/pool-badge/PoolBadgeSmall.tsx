@@ -4,7 +4,7 @@ import ReaperSonneBoosted from './assets/reaper-sonne-boosted.png';
 import OvernightBoosted from './assets/overnight-boosted-small.png';
 import ReaperBoosted from './assets/reaper-boosted.png';
 import BeefyExactlyBoosted from './assets/boosted-by-beefy-exactly.png';
-import GyroscopeBuilt from './assets/built-by-gyroscope.png';
+import GyroscopeBuilt from './assets/gyro-short.svg';
 import Image from 'next/image';
 import { PoolBadgeType } from '~/lib/config/network-config-type';
 import BeetsTooltip from '~/components/tooltip/BeetsTooltip';
