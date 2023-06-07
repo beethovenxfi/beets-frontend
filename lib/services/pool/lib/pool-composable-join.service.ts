@@ -381,7 +381,7 @@ export class PoolComposableJoinService {
             if (token.__typename === 'GqlPoolTokenLinear' || token.__typename === 'GqlPoolTokenPhantomStable') {
                 //This token is a nested BPT, not a mainToken
                 //Replace the amount with the chained reference value
-                const index = assets.findIndex((asset) => asset.toLowerCase() === token.address) || -1;
+                const index = assets.findIndex((asset) => asset.toLowerCase() === token.address);
 
                 //if the return amount is 0, we dont pass on the chained reference
                 if (index === -1 || deltas[index] === '0') {
