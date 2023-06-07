@@ -13,6 +13,7 @@ import { sumBy } from 'lodash';
 import { InfoButton } from '~/components/info-button/InfoButton';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 import { PoolBadgeSmall } from '~/components/pool-badge/PoolBadgeSmall';
+import PoolStatsGyroscope from '../thirdparty/PoolStatsGyroscope';
 
 export default function PoolOverallStats() {
     const { pool, totalApr } = usePool();
@@ -56,6 +57,7 @@ export default function PoolOverallStats() {
                 </HStack>
                 {poolBadgeTypes[pool.id] && <PoolBadgeSmall poolBadge={poolBadgeTypes[pool.id]} />}
             </VStack>
+            {pool.__typename === 'GqlPoolGyro' && <PoolStatsGyroscope />}
             <Divider />
             <VStack spacing="0" alignItems="flex-start">
                 <Text lineHeight="1rem" fontWeight="semibold" fontSize="sm" color="beets.base.50">
