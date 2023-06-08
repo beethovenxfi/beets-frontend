@@ -29,8 +29,9 @@ export function PoolMigrateLegacyFbeetsWarning() {
                     >
                         <Box>
                             <Text>
-                                Here you can only withdraw your wFTM & BEETS from the BPT. To withdraw from your v1
-                                fBEETS position go the maBEETS page and migrate it first.
+                                You have v1 fBEETS staked or in your wallet. First migrate those on the maBEETS page and
+                                withdraw from there afterwards. If you also have the Fidelio Duetto BPT, come back here
+                                to withdraw from that.
                             </Text>
                         </Box>
                         <Button
