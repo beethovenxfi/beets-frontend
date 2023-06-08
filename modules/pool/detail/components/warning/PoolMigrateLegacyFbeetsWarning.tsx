@@ -28,7 +28,10 @@ export function PoolMigrateLegacyFbeetsWarning() {
                         justifyContent={{ base: 'stretch', xl: undefined }}
                     >
                         <Box>
-                            <Text>You can migrate your v1 fBEETS position on the maBEETS page.</Text>
+                            <Text>
+                                Here you can only withdraw your wFTM & BEETS from the BPT. To withdraw from your v1
+                                fBEETS position go the maBEETS page and migrate it first.
+                            </Text>
                         </Box>
                         <Button
                             w={{ base: 'full', xl: 'inherit' }}
