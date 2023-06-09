@@ -30,6 +30,7 @@ enum GqlChain {
     MAINNET
     OPTIMISM
     POLYGON
+    ZKEVM
 }
 
 type GqlContentNewsItem {
@@ -317,6 +318,8 @@ enum GqlPoolFilterType {
 type GqlPoolGyro implements GqlPoolBase {
     address: Bytes!
     allTokens: [GqlPoolTokenExpanded!]!
+    alpha: String!
+    beta: String!
     chain: GqlChain!
     createTime: Int!
     decimals: Int!

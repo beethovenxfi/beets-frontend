@@ -39,7 +39,7 @@ export interface GqlBalancePoolAprSubItem {
     title: Scalars['String'];
 }
 
-export type GqlChain = 'ARBITRUM' | 'FANTOM' | 'GNOSIS' | 'MAINNET' | 'OPTIMISM' | 'POLYGON';
+export type GqlChain = 'ARBITRUM' | 'FANTOM' | 'GNOSIS' | 'MAINNET' | 'OPTIMISM' | 'POLYGON' | 'ZKEVM';
 
 export interface GqlContentNewsItem {
     __typename: 'GqlContentNewsItem';
@@ -335,6 +335,8 @@ export interface GqlPoolGyro extends GqlPoolBase {
     __typename: 'GqlPoolGyro';
     address: Scalars['Bytes'];
     allTokens: Array<GqlPoolTokenExpanded>;
+    alpha: Scalars['String'];
+    beta: Scalars['String'];
     chain: GqlChain;
     createTime: Scalars['Int'];
     decimals: Scalars['Int'];
@@ -2511,6 +2513,8 @@ export type GetPoolQuery = {
           }
         | {
               __typename: 'GqlPoolGyro';
+              alpha: string;
+              beta: string;
               type: string;
               nestingType: GqlPoolNestingType;
               id: string;
@@ -6835,6 +6839,8 @@ export const GetPoolDocument = gql`
                 }
             }
             ... on GqlPoolGyro {
+                alpha
+                beta
                 type
                 nestingType
                 tokens {
