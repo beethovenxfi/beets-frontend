@@ -16,7 +16,7 @@ import { PoolBadgeSmall } from '~/components/pool-badge/PoolBadgeSmall';
 import PoolStatsGyroscope from '../thirdparty/PoolStatsGyroscope';
 
 export default function PoolOverallStats() {
-    const { pool, totalApr } = usePool();
+    const { pool, totalApr, formattedTypeName } = usePool();
     const { poolBadgeTypes } = useNetworkConfig();
     const { priceFor } = useGetTokens();
     const { data: blocksData } = useGetBlocksPerDayQuery({ fetchPolicy: 'cache-first' });
@@ -57,7 +57,14 @@ export default function PoolOverallStats() {
                 </HStack>
                 {poolBadgeTypes[pool.id] && <PoolBadgeSmall poolBadge={poolBadgeTypes[pool.id]} />}
             </VStack>
-            {pool.__typename === 'GqlPoolGyro' && <PoolStatsGyroscope />}
+            {pool.__typename === 'GqlPoolGyro' && (
+                <PoolStatsGyroscope
+                    alpha={pool.alpha}
+                    beta={pool.beta}
+                    formattedTypeName={formattedTypeName}
+                    poolTokens={pool.tokens}
+                />
+            )}
             <Divider />
             <VStack spacing="0" alignItems="flex-start">
                 <Text lineHeight="1rem" fontWeight="semibold" fontSize="sm" color="beets.base.50">

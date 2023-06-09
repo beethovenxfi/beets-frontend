@@ -1,14 +1,15 @@
 import { Divider, VStack, Text } from '@chakra-ui/react';
 import numeral from 'numeral';
-import { usePool } from '~/modules/pool/lib/usePool';
+import { GqlPoolTokenUnion } from '~/apollo/generated/graphql-codegen-generated';
 
-export default function PoolOverallStats() {
-    const { pool, formattedTypeName } = usePool();
+interface Props {
+    alpha: string;
+    beta: string;
+    formattedTypeName: string;
+    poolTokens: GqlPoolTokenUnion[];
+}
 
-    // TODO: fetch from backend
-    const alpha = '0.97';
-    const beta = '1.02';
-
+export default function PoolStatsGyroscope({ alpha, beta, formattedTypeName, poolTokens }: Props) {
     const formatNumber = (value: string) => numeral(value).format('0.0000a');
 
     return (
@@ -30,7 +31,7 @@ export default function PoolOverallStats() {
                     {`${formatNumber(alpha)} - ${formatNumber(beta)}`}
                 </Text>
                 <Text color="white" fontSize="sm">
-                    {pool.tokens.length > 2 ? 'All asset pairs' : `${pool.tokens[0].symbol} / ${pool.tokens[1].symbol}`}
+                    {poolTokens.length > 2 ? 'All asset pairs' : `${poolTokens[0].symbol} / ${poolTokens[1].symbol}`}
                 </Text>
             </VStack>
         </>
