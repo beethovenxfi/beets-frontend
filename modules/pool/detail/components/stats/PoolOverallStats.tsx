@@ -81,7 +81,7 @@ export default function PoolOverallStats() {
                     24h Volume
                 </Text>
                 <Text color="white" fontSize="1.75rem">
-                    {numeral(data.volume24h).format('$0,0.00a')}
+                    {numberFormatUSDValue(data.volume24h, false)}
                 </Text>
                 <PercentChangeBadge percentChange={volumePercentChange} />
             </VStack>
@@ -90,7 +90,7 @@ export default function PoolOverallStats() {
                     24h Fees
                 </Text>
                 <Text color="white" fontSize="1.75rem">
-                    {numeral(data.fees24h).format('$0,0.00a')}
+                    {numberFormatUSDValue(data.fees24h)}
                 </Text>
             </VStack>
             {(hasNonZeroRewards || beetsPerDay > 0) && (
