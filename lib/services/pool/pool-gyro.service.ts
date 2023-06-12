@@ -44,6 +44,8 @@ export class PoolGyroService implements PoolService {
 
     public updatePool(pool: GqlPoolGyro) {
         this.pool = pool;
+        this.baseService.updatePool(pool);
+        this.proportionalInvestService.updatePool(pool);
     }
 
     public async joinGetMaxProportionalForUserBalances(userInvestTokenBalances: TokenAmountHumanReadable[]) {

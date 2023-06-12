@@ -13,6 +13,10 @@ import OldBigNumber from 'bignumber.js';
 export class PoolProportionalInvestService {
     constructor(private pool: GqlPoolWeighted | GqlPoolGyro) {}
 
+    public updatePool(pool: GqlPoolWeighted | GqlPoolGyro) {
+        this.pool = pool;
+    }
+
     public async getProportionalSuggestion(userInvestTokenBalances: TokenAmountHumanReadable[]) {
         // loop through the pool tokens to find out which token (and amount) would give the smallest bptOut amount
         // so we can use that as the base to calculate the proportions of the other tokens
