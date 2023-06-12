@@ -86,45 +86,47 @@ export function PaginatedTable({
                             </>
                         )}
                     </Flex>
-                    <Pagination
-                        onChange={onPageChange}
-                        defaultCurrent={1}
-                        total={count}
-                        pageSize={pageSize}
-                        itemRender={(pageNumber, type, element) => {
-                            if (type === 'prev') {
-                                return (
-                                    <IconButton
-                                        aria-label="previous"
-                                        icon={<ChevronLeft />}
-                                        borderTopRightRadius={0}
-                                        borderBottomRightRadius={0}
-                                    />
-                                );
-                            } else if (type === 'next') {
-                                return (
-                                    <IconButton
-                                        aria-label="next"
-                                        icon={<ChevronRight />}
-                                        borderTopLeftRadius={0}
-                                        borderBottomLeftRadius={0}
-                                    />
-                                );
-                            } else if (type === 'jump-prev') {
-                                return <Button borderRadius={0}>...</Button>;
-                            } else if (type === 'jump-next') {
-                                return <Button borderRadius={0}>...</Button>;
-                            }
+                    {pageSize && (
+                        <Pagination
+                            onChange={onPageChange}
+                            defaultCurrent={1}
+                            total={count}
+                            pageSize={pageSize}
+                            itemRender={(pageNumber, type, element) => {
+                                if (type === 'prev') {
+                                    return (
+                                        <IconButton
+                                            aria-label="previous"
+                                            icon={<ChevronLeft />}
+                                            borderTopRightRadius={0}
+                                            borderBottomRightRadius={0}
+                                        />
+                                    );
+                                } else if (type === 'next') {
+                                    return (
+                                        <IconButton
+                                            aria-label="next"
+                                            icon={<ChevronRight />}
+                                            borderTopLeftRadius={0}
+                                            borderBottomLeftRadius={0}
+                                        />
+                                    );
+                                } else if (type === 'jump-prev') {
+                                    return <Button borderRadius={0}>...</Button>;
+                                } else if (type === 'jump-next') {
+                                    return <Button borderRadius={0}>...</Button>;
+                                }
 
-                            const selected = pageNumber === currentPage;
+                                const selected = pageNumber === currentPage;
 
-                            return (
-                                <Button borderRadius={0} color={selected ? 'beets.highlight' : undefined}>
-                                    {element}
-                                </Button>
-                            );
-                        }}
-                    />
+                                return (
+                                    <Button borderRadius={0} color={selected ? 'beets.highlight' : undefined}>
+                                        {element}
+                                    </Button>
+                                );
+                            }}
+                        />
+                    )}
                 </Flex>
             )}
             {!isShort && isInfinite && (

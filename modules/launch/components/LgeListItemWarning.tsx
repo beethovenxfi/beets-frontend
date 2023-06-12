@@ -1,0 +1,19 @@
+import { AlertTriangle } from 'react-feather';
+import { Box, BoxProps } from '@chakra-ui/react';
+import BeetsTooltip from '~/components/tooltip/BeetsTooltip';
+
+interface Props extends BoxProps {
+    message: string;
+}
+
+export function LgeListItemWarning({ message, ...rest }: Props) {
+    return (
+        <Box {...rest}>
+            <BeetsTooltip label={message} noImage>
+                <Box color="yellow.500">
+                    <AlertTriangle size={18} />
+                </Box>
+            </BeetsTooltip>
+        </Box>
+    );
+}
