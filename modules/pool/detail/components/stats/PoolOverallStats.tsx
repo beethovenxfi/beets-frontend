@@ -81,7 +81,7 @@ export default function PoolOverallStats() {
                     24h Volume
                 </Text>
                 <Text color="white" fontSize="1.75rem">
-                    {numberFormatUSDValue(data.volume24h, false)}
+                    {numberFormatUSDValue(data.volume24h)}
                 </Text>
                 <PercentChangeBadge percentChange={volumePercentChange} />
             </VStack>
