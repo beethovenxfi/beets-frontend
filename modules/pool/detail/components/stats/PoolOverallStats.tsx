@@ -21,7 +21,8 @@ export default function PoolOverallStats() {
     const { data: blocksData } = useGetBlocksPerDayQuery({ fetchPolicy: 'cache-first' });
     const data = pool.dynamicData;
     const volumeYesterday = parseFloat(data.volume48h) - parseFloat(data.volume24h);
-    const volumePercentChange = (parseFloat(data.volume24h) - volumeYesterday) / volumeYesterday;
+    const volumePercentChange =
+        volumeYesterday !== 0 ? (parseFloat(data.volume24h) - volumeYesterday) / volumeYesterday : 0;
     const tvlPercentChange =
         (parseFloat(data.totalLiquidity) - parseFloat(data.totalLiquidity24hAgo)) /
         parseFloat(data.totalLiquidity24hAgo);
