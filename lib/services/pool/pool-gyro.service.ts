@@ -11,6 +11,7 @@ import {
 } from '~/lib/services/pool/pool-types';
 import { AmountHumanReadable, TokenAmountHumanReadable } from '~/lib/services/token/token-types';
 import {
+    oldBnumPoolScaleTokenAmounts,
     poolGetProportionalExitAmountsForBptIn,
     poolGetProportionalJoinAmountsForFixedAmount,
     poolGetRequiredToken,
@@ -24,8 +25,9 @@ import { PoolBaseService } from './lib/pool-base.service';
 import { WeightedPoolEncoder } from '@balancer-labs/balancer-js';
 import { parseUnits } from 'ethers/lib/utils.js';
 import { formatFixed } from '@ethersproject/bignumber';
-import { oldBnumSubtractSlippage } from './lib/old-big-number';
+import { oldBnum, oldBnumScaleAmount, oldBnumSubtractSlippage } from './lib/old-big-number';
 import { BatchRelayerService } from '../batch-relayer/batch-relayer.service';
+import * as SDK from '@georgeroman/balancer-v2-pools';
 
 export class PoolGyroService implements PoolService {
     private readonly proportionalInvestService: PoolProportionalInvestService;
@@ -91,7 +93,21 @@ export class PoolGyroService implements PoolService {
         tokenAmountsIn: TokenAmountHumanReadable[],
         slippage: AmountHumanReadable,
     ): Promise<PoolJoinEstimateOutput> {
-        const bptAmount = poolWeightedExactTokensInForBPTOut(tokenAmountsIn, this.pool);
+        // https://github.com/gyrostable/app/blob/f07cdec9e52585e5be6d3a916ce3833b1599f43c/src/utils/pools/findConstrainedMax.ts#LL15C1-L23C5
+        const totalPoolBalance = this.pool.tokens
+            .map((token) => token.balance)
+            .reduce((a, b) => oldBnum(a).plus(b), oldBnum(0));
+        const tokenProportions = this.pool.tokens.map((token) =>
+            oldBnum(token.balance).div(totalPoolBalance).toString(),
+        );
+
+        const bptAmount = SDK.WeightedMath._calcBptOutGivenExactTokensIn(
+            this.pool.tokens.map((token) => oldBnumScaleAmount(token.balance, token.decimals)),
+            tokenProportions.map((proportion) => oldBnumScaleAmount(proportion || '0', 18)),
+            oldBnumPoolScaleTokenAmounts(tokenAmountsIn, this.pool.tokens),
+            oldBnumScaleAmount(this.pool.dynamicData.totalShares),
+            oldBnumScaleAmount(this.pool.dynamicData.swapFee),
+        );
 
         if (bptAmount.lt(0)) {
             return { priceImpact: 0, minBptReceived: '0' };

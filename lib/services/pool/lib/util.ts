@@ -1,5 +1,4 @@
 import {
-    GqlPoolGyro,
     GqlPoolLinearNested,
     GqlPoolPhantomStable,
     GqlPoolPhantomStableNested,
@@ -7,7 +6,6 @@ import {
     GqlPoolTokenBase,
     GqlPoolTokenLinear,
     GqlPoolTokenPhantomStable,
-    GqlPoolTokenUnion,
     GqlPoolWeighted,
 } from '~/apollo/generated/graphql-codegen-generated';
 import { AmountHumanReadable, AmountScaledString, TokenAmountHumanReadable } from '~/lib/services/token/token-types';
@@ -222,27 +220,13 @@ export function poolStableBptForTokensZeroPriceImpact(
     return oldBnumFromBnum(bptZeroImpact);
 }
 
-function getTokenWeights(pool: GqlPoolWeighted | GqlPoolGyro): { weight: string }[] | GqlPoolTokenUnion[] {
-    const hasWeights = pool.tokens.find((token) => token.weight);
-    if (hasWeights) {
-        return pool.tokens;
-    } else {
-        const totalPoolBalance = pool.tokens
-            .map((token) => token.balance)
-            .reduce((a, b) => oldBnum(a).plus(b), oldBnum(0));
-        return pool.tokens.map((token) => ({ weight: oldBnum(token.balance).div(totalPoolBalance).toString() }));
-    }
-}
-
 export function poolWeightedExactTokensInForBPTOut(
     tokenAmounts: TokenAmountHumanReadable[],
-    pool: GqlPoolWeighted | GqlPoolGyro,
+    pool: GqlPoolWeighted,
 ): OldBigNumber {
-    const tokenWeights = getTokenWeights(pool);
-
     return SDK.WeightedMath._calcBptOutGivenExactTokensIn(
         pool.tokens.map((token) => oldBnumScaleAmount(token.balance, token.decimals)),
-        tokenWeights.map((token) => oldBnumScaleAmount(token.weight || '0', 18)),
+        pool.tokens.map((token) => oldBnumScaleAmount(token.weight || '0', 18)),
         oldBnumPoolScaleTokenAmounts(tokenAmounts, pool.tokens),
         oldBnumScaleAmount(pool.dynamicData.totalShares),
         oldBnumScaleAmount(pool.dynamicData.swapFee),
