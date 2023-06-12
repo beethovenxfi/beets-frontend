@@ -39,7 +39,7 @@ export interface GqlBalancePoolAprSubItem {
     title: Scalars['String'];
 }
 
-export type GqlChain = 'ARBITRUM' | 'FANTOM' | 'GNOSIS' | 'MAINNET' | 'OPTIMISM' | 'POLYGON';
+export type GqlChain = 'ARBITRUM' | 'FANTOM' | 'GNOSIS' | 'MAINNET' | 'OPTIMISM' | 'POLYGON' | 'ZKEVM';
 
 export interface GqlContentNewsItem {
     __typename: 'GqlContentNewsItem';
@@ -319,6 +319,9 @@ export interface GqlPoolFilterDefinition {
 
 export type GqlPoolFilterType =
     | 'ELEMENT'
+    | 'GYRO'
+    | 'GYRO3'
+    | 'GYROE'
     | 'INVESTMENT'
     | 'LINEAR'
     | 'LIQUIDITY_BOOTSTRAPPING'
@@ -332,6 +335,8 @@ export interface GqlPoolGyro extends GqlPoolBase {
     __typename: 'GqlPoolGyro';
     address: Scalars['Bytes'];
     allTokens: Array<GqlPoolTokenExpanded>;
+    alpha: Scalars['String'];
+    beta: Scalars['String'];
     chain: GqlChain;
     createTime: Scalars['Int'];
     decimals: Scalars['Int'];
@@ -346,6 +351,7 @@ export interface GqlPoolGyro extends GqlPoolBase {
     staking?: Maybe<GqlPoolStaking>;
     symbol: Scalars['String'];
     tokens: Array<GqlPoolTokenUnion>;
+    type: Scalars['String'];
     withdrawConfig: GqlPoolWithdrawConfig;
 }
 
@@ -527,11 +533,14 @@ export interface GqlPoolMinimal {
     staking?: Maybe<GqlPoolStaking>;
     symbol: Scalars['String'];
     type: GqlPoolMinimalType;
+    version: Scalars['Int'];
 }
 
 export type GqlPoolMinimalType =
     | 'ELEMENT'
     | 'GYRO'
+    | 'GYRO3'
+    | 'GYROE'
     | 'INVESTMENT'
     | 'LINEAR'
     | 'LIQUIDITY_BOOTSTRAPPING'
@@ -1178,6 +1187,7 @@ export interface Mutation {
     poolReloadPoolTokenIndexes: Scalars['String'];
     poolReloadStakingForAllPools: Scalars['String'];
     poolSetPoolsWithPreferredGaugesAsIncentivized: Scalars['String'];
+    poolSyncAllPoolVersions: Scalars['String'];
     poolSyncAllPoolsFromSubgraph: Array<Scalars['String']>;
     poolSyncLatestSnapshotsForAllPools: Scalars['String'];
     poolSyncNewPoolsFromSubgraph: Array<Scalars['String']>;
@@ -1196,6 +1206,7 @@ export interface Mutation {
     tokenDeletePrice: Scalars['Boolean'];
     tokenDeleteTokenType: Scalars['String'];
     tokenInitChartData: Scalars['String'];
+    tokenReloadAllTokenTypes: Scalars['String'];
     tokenReloadTokenPrices?: Maybe<Scalars['Boolean']>;
     tokenSyncTokenDefinitions: Scalars['String'];
     tokenSyncTokenDynamicData: Scalars['String'];
@@ -2120,6 +2131,39 @@ export type GqlPoolCardDataFragment = {
             weight?: string | null;
             symbol: string;
         }> | null;
+    }>;
+};
+
+export type GetLgesQueryVariables = Exact<{ [key: string]: never }>;
+
+export type GetLgesQuery = {
+    __typename: 'Query';
+    lges: Array<{
+        __typename: 'GqlLge';
+        address: string;
+        adminAddress: string;
+        adminIsMultisig: boolean;
+        bannerImageUrl: string;
+        collateralAmount: string;
+        collateralEndWeight: number;
+        collateralStartWeight: number;
+        collateralTokenAddress: string;
+        description: string;
+        discordUrl: string;
+        endDate: string;
+        id: string;
+        mediumUrl: string;
+        name: string;
+        startDate: string;
+        swapFeePercentage: string;
+        telegramUrl: string;
+        tokenAmount: string;
+        tokenContractAddress: string;
+        tokenEndWeight: number;
+        tokenIconUrl: string;
+        tokenStartWeight: number;
+        twitterUrl: string;
+        websiteUrl: string;
     }>;
 };
 
@@ -6489,6 +6533,63 @@ export function useGetHomeNewsItemsLazyQuery(
 export type GetHomeNewsItemsQueryHookResult = ReturnType<typeof useGetHomeNewsItemsQuery>;
 export type GetHomeNewsItemsLazyQueryHookResult = ReturnType<typeof useGetHomeNewsItemsLazyQuery>;
 export type GetHomeNewsItemsQueryResult = Apollo.QueryResult<GetHomeNewsItemsQuery, GetHomeNewsItemsQueryVariables>;
+export const GetLgesDocument = gql`
+    query getLges {
+        lges: lges {
+            address
+            adminAddress
+            adminIsMultisig
+            bannerImageUrl
+            collateralAmount
+            collateralEndWeight
+            collateralStartWeight
+            collateralTokenAddress
+            description
+            discordUrl
+            endDate
+            id
+            mediumUrl
+            name
+            startDate
+            swapFeePercentage
+            telegramUrl
+            tokenAmount
+            tokenContractAddress
+            tokenEndWeight
+            tokenIconUrl
+            tokenStartWeight
+            twitterUrl
+            websiteUrl
+        }
+    }
+`;
+
+/**
+ * __useGetLgesQuery__
+ *
+ * To run a query within a React component, call `useGetLgesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetLgesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetLgesQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetLgesQuery(baseOptions?: Apollo.QueryHookOptions<GetLgesQuery, GetLgesQueryVariables>) {
+    const options = { ...defaultOptions, ...baseOptions };
+    return Apollo.useQuery<GetLgesQuery, GetLgesQueryVariables>(GetLgesDocument, options);
+}
+export function useGetLgesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetLgesQuery, GetLgesQueryVariables>) {
+    const options = { ...defaultOptions, ...baseOptions };
+    return Apollo.useLazyQuery<GetLgesQuery, GetLgesQueryVariables>(GetLgesDocument, options);
+}
+export type GetLgesQueryHookResult = ReturnType<typeof useGetLgesQuery>;
+export type GetLgesLazyQueryHookResult = ReturnType<typeof useGetLgesLazyQuery>;
+export type GetLgesQueryResult = Apollo.QueryResult<GetLgesQuery, GetLgesQueryVariables>;
 export const GetLinearPoolsDocument = gql`
     query GetLinearPools {
         pools: poolGetLinearPools {

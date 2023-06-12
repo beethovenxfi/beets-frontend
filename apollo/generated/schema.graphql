@@ -30,6 +30,7 @@ enum GqlChain {
     MAINNET
     OPTIMISM
     POLYGON
+    ZKEVM
 }
 
 type GqlContentNewsItem {
@@ -301,6 +302,9 @@ type GqlPoolFilterDefinition {
 
 enum GqlPoolFilterType {
     ELEMENT
+    GYRO
+    GYRO3
+    GYROE
     INVESTMENT
     LINEAR
     LIQUIDITY_BOOTSTRAPPING
@@ -314,6 +318,8 @@ enum GqlPoolFilterType {
 type GqlPoolGyro implements GqlPoolBase {
     address: Bytes!
     allTokens: [GqlPoolTokenExpanded!]!
+    alpha: String!
+    beta: String!
     chain: GqlChain!
     createTime: Int!
     decimals: Int!
@@ -328,6 +334,7 @@ type GqlPoolGyro implements GqlPoolBase {
     staking: GqlPoolStaking
     symbol: String!
     tokens: [GqlPoolTokenUnion!]!
+    type: String!
     withdrawConfig: GqlPoolWithdrawConfig!
 }
 
@@ -500,11 +507,14 @@ type GqlPoolMinimal {
     staking: GqlPoolStaking
     symbol: String!
     type: GqlPoolMinimalType!
+    version: Int!
 }
 
 enum GqlPoolMinimalType {
     ELEMENT
     GYRO
+    GYRO3
+    GYROE
     INVESTMENT
     LINEAR
     LIQUIDITY_BOOTSTRAPPING
@@ -1146,6 +1156,7 @@ type Mutation {
     poolReloadPoolTokenIndexes(poolId: String!): String!
     poolReloadStakingForAllPools(stakingTypes: [GqlPoolStakingType!]!): String!
     poolSetPoolsWithPreferredGaugesAsIncentivized: String!
+    poolSyncAllPoolVersions: String!
     poolSyncAllPoolsFromSubgraph: [String!]!
     poolSyncLatestSnapshotsForAllPools(daysToSync: Int): String!
     poolSyncNewPoolsFromSubgraph: [String!]!
@@ -1164,6 +1175,7 @@ type Mutation {
     tokenDeletePrice(timestamp: Int!, tokenAddress: String!): Boolean!
     tokenDeleteTokenType(tokenAddress: String!, type: GqlTokenType!): String!
     tokenInitChartData(tokenAddress: String!): String!
+    tokenReloadAllTokenTypes: String!
     tokenReloadTokenPrices: Boolean
     tokenSyncTokenDefinitions: String!
     tokenSyncTokenDynamicData: String!
