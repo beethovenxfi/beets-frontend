@@ -9,13 +9,12 @@ import { useUserData } from '~/lib/user/useUserData';
 import { useEffect } from 'react';
 import { orderBy } from 'lodash';
 import { PoolListMobileHeader } from '~/modules/pools/components/PoolListMobileHeader';
-import { networkConfig } from '~/lib/config/network-config';
 import { useGetTokens } from '~/lib/global/useToken';
 import { GqlPoolMinimalFragment } from '~/apollo/generated/graphql-codegen-generated';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 
 function PoolList() {
-    const { boostedByTypes, warnings } = useNetworkConfig();
+    const { warnings, poolBadgeTypes } = useNetworkConfig();
     const { getToken } = useGetTokens();
     const { pools, refetch, loading, networkStatus, state, count, setPageSize, setPoolIds, showMyInvestments } =
         usePoolList();
@@ -77,7 +76,7 @@ function PoolList() {
                                 })),
                             }))}
                             hasUnstakedBpt={item.dynamicData.apr.hasRewardApr && hasBptInWalletForPool(item.id)}
-                            boostedBy={boostedByTypes[item.id]}
+                            poolBadge={poolBadgeTypes[item.id]}
                             warningMessage={warnings.poolList[item.id]}
                         />
                     );

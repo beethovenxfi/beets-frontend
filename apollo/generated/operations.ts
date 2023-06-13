@@ -1035,6 +1035,17 @@ export const GetPool = gql`
                     }
                 }
             }
+            ... on GqlPoolGyro {
+                alpha
+                beta
+                type
+                nestingType
+                tokens {
+                    ... on GqlPoolToken {
+                        ...GqlPoolToken
+                    }
+                }
+            }
         }
     }
     ${GqlPoolToken}

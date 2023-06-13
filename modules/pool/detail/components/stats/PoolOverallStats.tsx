@@ -1,4 +1,4 @@
-import { Box, Divider, HStack, Text, VStack } from '@chakra-ui/layout';
+import { Divider, HStack, Text, VStack } from '@chakra-ui/layout';
 import numeral from 'numeral';
 import AprTooltip from '~/components/apr-tooltip/AprTooltip';
 import { PercentChangeBadge } from '~/components/badge/PercentChangeBadge';
@@ -11,12 +11,13 @@ import { useGetBlocksPerDayQuery } from '~/apollo/generated/graphql-codegen-gene
 import { useGetTokens } from '~/lib/global/useToken';
 import { sumBy } from 'lodash';
 import { InfoButton } from '~/components/info-button/InfoButton';
-import { BoostedBadgeSmall } from '~/components/boosted-badge/BoostedBadgeSmall';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
+import { PoolBadgeSmall } from '~/components/pool-badge/PoolBadgeSmall';
+import PoolStatsGyroscope from '../thirdparty/PoolStatsGyroscope';
 
 export default function PoolOverallStats() {
-    const { pool, totalApr } = usePool();
-    const { boostedByTypes } = useNetworkConfig();
+    const { pool, totalApr, formattedTypeName } = usePool();
+    const { poolBadgeTypes } = useNetworkConfig();
     const { priceFor } = useGetTokens();
     const { data: blocksData } = useGetBlocksPerDayQuery({ fetchPolicy: 'cache-first' });
     const data = pool.dynamicData;
@@ -55,8 +56,16 @@ export default function PoolOverallStats() {
                     <div className="apr-stripes">{numeral(totalApr).format('0.00%')}</div>
                     <AprTooltip onlySparkles data={data.apr} />
                 </HStack>
-                {boostedByTypes[pool.id] && <BoostedBadgeSmall boostedBy={boostedByTypes[pool.id]} />}
+                {poolBadgeTypes[pool.id] && <PoolBadgeSmall poolBadge={poolBadgeTypes[pool.id]} />}
             </VStack>
+            {pool.__typename === 'GqlPoolGyro' && (
+                <PoolStatsGyroscope
+                    alpha={pool.alpha}
+                    beta={pool.beta}
+                    formattedTypeName={formattedTypeName}
+                    poolTokens={pool.tokens}
+                />
+            )}
             <Divider />
             <VStack spacing="0" alignItems="flex-start">
                 <Text lineHeight="1rem" fontWeight="semibold" fontSize="sm" color="beets.base.50">

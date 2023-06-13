@@ -29,6 +29,7 @@ export interface PoolContextType {
     isFbeetsPool: boolean;
     isStablePool: boolean;
     isComposablePool: boolean;
+    canCustomInvest: boolean;
 }
 
 export const PoolContext = createContext<PoolContextType | null>(null);
@@ -98,7 +99,8 @@ export function PoolProvider({ pool: poolFromProps, children }: { pool: GqlPoolU
         ((pool.__typename === 'GqlPoolWeighted' &&
             networkConfig.balancer.weightedPoolV2PlusFactories.includes(pool.factory || '')) ||
             pool.__typename === 'GqlPoolPhantomStable' ||
-            pool.__typename === 'GqlPoolMetaStable') &&
+            pool.__typename === 'GqlPoolMetaStable' ||
+            pool.__typename === 'GqlPoolGyro') &&
         pool.staking?.type === 'GAUGE' &&
         !!pool.staking.gauge;
     const supportsZap = supportsZapIntoMasterchefFarm || supportsZapIntoGauge;
@@ -127,6 +129,8 @@ export function PoolProvider({ pool: poolFromProps, children }: { pool: GqlPoolU
             ? parseFloat(pool.dynamicData.apr.apr.max)
             : parseFloat(pool.dynamicData.apr.apr.total);
 
+    const canCustomInvest = pool.__typename !== 'GqlPoolGyro';
+
     useEffectOnce(() => {
         refetch();
         startPolling(30_000);
@@ -153,6 +157,7 @@ export function PoolProvider({ pool: poolFromProps, children }: { pool: GqlPoolU
                 isFbeetsPool: pool.id === networkConfig.fbeets.poolId,
                 isStablePool,
                 isComposablePool,
+                canCustomInvest,
             }}
         >
             {children}

@@ -1,4 +1,4 @@
-export const BoostedByTooltips: { [type: string]: string } = {
+export const PoolBadgeTooltips: { [type: string]: string } = {
     'reaper-aave':
         'This pool deposits a portion of its assets into Reaper.Farm vault(s) to generate boosted yield. The vault(s) are configured to deposit assets to Aave in supply-only mode.',
     'reaper-aave-granary':
@@ -10,4 +10,6 @@ export const BoostedByTooltips: { [type: string]: string } = {
     reaper: 'This pool deposits a portion of its assets into the Reaper.Farm Multi-Strategy vault(s) to generate boosted yield. Assets are distributed across many protocols to generate the highest risk-adjusted yield.',
     'beefy-exactly':
         'This pool deposits a portion of its assets into Beefy vault(s) to generate boosted yield. The vault(s) are configured to deposit assets to Exactly in supply-only mode.',
+    gyroscope:
+        'The Gyroscope E-CLP merges the UX of StableSwap with the capital efficiency of Uniswap V3, featuring asymmetric price bounds and custom liquidity profiles.',
 };
