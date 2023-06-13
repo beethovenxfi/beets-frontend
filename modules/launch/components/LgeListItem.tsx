@@ -1,15 +1,34 @@
-import { Box, Grid, GridItem, GridItemProps, Text } from '@chakra-ui/react';
+import { Box, Grid, GridItem, Link as ChakraLink, Text } from '@chakra-ui/react';
 import Link from 'next/link';
 import { BoxProps } from '@chakra-ui/layout';
-import { GqlLge } from '~/apollo/generated/graphql-codegen-generated';
-import { useGetTokens } from '~/lib/global/useToken';
+import { useGetLgeToken } from './lib/useGetLgeToken';
+import TokenAvatar from '~/components/token/TokenAvatar';
+import { formatDistanceToNow } from 'date-fns';
+import { GqlLgeExtended } from '../LgeList';
+import DiscordIcon from '~/assets/icons/discord.svg';
+import TwitterIcon from '~/assets/icons/twitter.svg';
+import MediumIcon from '~/assets/icons/medium.svg';
+import TelegramIcon from '~/assets/icons/telegram.svg';
+import GlobeIcon from '~/assets/icons/globe.svg';
+import NextImage from 'next/image';
 
 interface Props extends BoxProps {
-    lge: GqlLge;
+    lge: GqlLgeExtended;
+}
+
+function getStatusText(lge: GqlLgeExtended) {
+    switch (lge.status) {
+        case 'active':
+            return `Ends in ${formatDistanceToNow(new Date(lge.endDate))}`;
+        case 'upcoming':
+            return `Starts in ${formatDistanceToNow(new Date(lge.startDate))}`;
+        case 'ended':
+            return `Ended ${formatDistanceToNow(new Date(lge.startDate))} ago`;
+    }
 }
 
 export function LgeListItem({ lge, ...rest }: Props) {
-    const { getToken } = useGetTokens();
+    const { token } = useGetLgeToken(lge.tokenContractAddress);
 
     return (
         <Box mb={{ base: '4', lg: '0' }} borderRadius={{ base: 'md', lg: '0' }} {...rest}>
@@ -39,23 +58,77 @@ export function LgeListItem({ lge, ...rest }: Props) {
                             {/* {warningMessage && <LgeListItemWarning ml="2" message={warningMessage} />} */}
                         </GridItem>
                         <GridItem area="token" alignItems="center" display="flex" mb={{ base: '4', lg: '0' }}>
-                            {lge.address.toLowerCase()}
+                            <TokenAvatar address={lge.tokenContractAddress} logoURI={lge.tokenIconUrl} size="xs" />
+                            <Text ml="2">{token?.symbol}</Text>
+                        </GridItem>
+                        <GridItem area="status" alignItems="center" display="flex" mb={{ base: '4', lg: '0' }}>
+                            {getStatusText(lge)}
+                        </GridItem>
+                        <GridItem area="links" alignItems="center" display="flex" mb={{ base: '4', lg: '0' }}>
+                            {lge.websiteUrl && (
+                                <Box mr="3">
+                                    <ChakraLink
+                                        href={lge.websiteUrl}
+                                        target="_blank"
+                                        color="gray.100"
+                                        _hover={{ color: 'beets.highlight' }}
+                                    >
+                                        <NextImage src={GlobeIcon} />
+                                    </ChakraLink>
+                                </Box>
+                            )}
+                            {lge.twitterUrl && (
+                                <Box mr="3">
+                                    <ChakraLink
+                                        href={lge.twitterUrl}
+                                        target="_blank"
+                                        color="gray.100"
+                                        _hover={{ color: 'beets.highlight' }}
+                                    >
+                                        <NextImage src={TwitterIcon} />
+                                    </ChakraLink>
+                                </Box>
+                            )}
+                            {lge.discordUrl && (
+                                <Box mr="3">
+                                    <ChakraLink
+                                        href={lge.twitterUrl}
+                                        target="_blank"
+                                        color="gray.100"
+                                        _hover={{ color: 'beets.highlight' }}
+                                    >
+                                        <NextImage src={DiscordIcon} />
+                                    </ChakraLink>
+                                </Box>
+                            )}
+                            {lge.telegramUrl && (
+                                <Box mr="3">
+                                    <ChakraLink
+                                        href={lge.telegramUrl}
+                                        target="_blank"
+                                        color="gray.100"
+                                        _hover={{ color: 'beets.highlight' }}
+                                    >
+                                        <NextImage src={TelegramIcon} />
+                                    </ChakraLink>
+                                </Box>
+                            )}
+                            {lge.mediumUrl && (
+                                <Box mr="3">
+                                    <ChakraLink
+                                        href={lge.mediumUrl}
+                                        target="_blank"
+                                        color="gray.100"
+                                        _hover={{ color: 'beets.highlight' }}
+                                    >
+                                        <NextImage src={MediumIcon} />
+                                    </ChakraLink>
+                                </Box>
+                            )}
                         </GridItem>
                     </Grid>
                 </a>
             </Link>
         </Box>
     );
-}
-
-function MobileLabel({ text }: { text: string }) {
-    return (
-        <Text fontSize="xs" color="gray.200" display={{ base: 'block', lg: 'none' }}>
-            {text}
-        </Text>
-    );
-}
-
-function StatGridItem(props: GridItemProps) {
-    return <GridItem area="fees" textAlign={{ base: 'left', lg: 'right' }} mb={{ base: '4', lg: '0' }} {...props} />;
 }
