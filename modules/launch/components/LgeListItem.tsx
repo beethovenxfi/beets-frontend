@@ -4,7 +4,7 @@ import { BoxProps } from '@chakra-ui/layout';
 import { useGetLgeToken } from './lib/useGetLgeToken';
 import TokenAvatar from '~/components/token/TokenAvatar';
 import { formatDistanceToNow } from 'date-fns';
-import { GqlLgeExtended } from '../LgeList';
+import { GqlLgeExtended } from '~/modules/launch/useLgeList';
 import DiscordIcon from '~/assets/icons/discord.svg';
 import TwitterIcon from '~/assets/icons/twitter.svg';
 import MediumIcon from '~/assets/icons/medium.svg';
@@ -23,7 +23,7 @@ function getStatusText(lge: GqlLgeExtended) {
         case 'upcoming':
             return `Starts in ${formatDistanceToNow(new Date(lge.startDate))}`;
         case 'ended':
-            return `Ended ${formatDistanceToNow(new Date(lge.startDate))} ago`;
+            return `Ended ${formatDistanceToNow(new Date(lge.endDate))} ago`;
     }
 }
 

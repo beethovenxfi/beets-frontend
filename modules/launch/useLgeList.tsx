@@ -1,16 +1,46 @@
 import { useGetLgesQuery } from '~/apollo/generated/graphql-codegen-generated';
-import { createContext, ReactNode, useContext } from 'react';
+import { createContext, ReactNode, useContext, useState } from 'react';
+import { GqlLge } from '~/apollo/generated/graphql-codegen-generated';
+import { orderBy } from 'lodash';
+
+export interface GqlLgeExtended extends GqlLge {
+    status: 'active' | 'upcoming' | 'ended';
+}
 
 export function _useLgeList() {
     const { data, loading, error, networkStatus } = useGetLgesQuery({
         notifyOnNetworkStatusChange: true,
     });
+    const [filter, setFilter] = useState('active-upcoming');
+    const now = new Date();
 
+    function lgeFilter(lge: GqlLge) {
+        const endDate = new Date(lge.endDate);
+        return filter === 'active-upcoming' ? now < endDate : now > endDate;
+    }
+
+    const lgesFiltered = (data?.lges || []).filter(lgeFilter);
+
+    const lgesSorted =
+        filter === 'active-upcoming'
+            ? orderBy(lgesFiltered, 'startDate', 'asc')
+            : orderBy(lgesFiltered, 'endDate', 'desc');
+
+    const lgesExtended: GqlLgeExtended[] = lgesSorted.map((lge) => {
+        const startDate = new Date(lge.startDate);
+        const endDate = new Date(lge.endDate);
+        const status = now < startDate ? 'upcoming' : now > endDate ? 'ended' : 'active';
+        return {
+            ...lge,
+            status,
+        };
+    });
     return {
-        lges: data?.lges || [],
+        lgesExtended,
         loading,
         error,
         networkStatus,
+        setFilter,
     };
 }
 
