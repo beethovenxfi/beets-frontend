@@ -21,7 +21,8 @@ export default function PoolOverallStats() {
     const { data: blocksData } = useGetBlocksPerDayQuery({ fetchPolicy: 'cache-first' });
     const data = pool.dynamicData;
     const volumeYesterday = parseFloat(data.volume48h) - parseFloat(data.volume24h);
-    const volumePercentChange = (parseFloat(data.volume24h) - volumeYesterday) / volumeYesterday;
+    const volumePercentChange =
+        volumeYesterday !== 0 ? (parseFloat(data.volume24h) - volumeYesterday) / volumeYesterday : 0;
     const tvlPercentChange =
         (parseFloat(data.totalLiquidity) - parseFloat(data.totalLiquidity24hAgo)) /
         parseFloat(data.totalLiquidity24hAgo);
@@ -80,7 +81,7 @@ export default function PoolOverallStats() {
                     24h Volume
                 </Text>
                 <Text color="white" fontSize="1.75rem">
-                    {numeral(data.volume24h).format('$0,0.00a')}
+                    {numberFormatUSDValue(data.volume24h)}
                 </Text>
                 <PercentChangeBadge percentChange={volumePercentChange} />
             </VStack>
@@ -89,7 +90,7 @@ export default function PoolOverallStats() {
                     24h Fees
                 </Text>
                 <Text color="white" fontSize="1.75rem">
-                    {numeral(data.fees24h).format('$0,0.00a')}
+                    {numberFormatUSDValue(data.fees24h)}
                 </Text>
             </VStack>
             {(hasNonZeroRewards || beetsPerDay > 0) && (
