@@ -221,4 +221,5 @@ export const optimismNetworkConfig: NetworkConfig = {
     },
     maBeetsEnabled: false,
     claimAllRewardsEnabled: false,
+    layerZeroChainId: 111,
 };
