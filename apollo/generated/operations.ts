@@ -749,6 +749,36 @@ export const GetHomeNewsItems = gql`
         }
     }
 `;
+export const GetLge = gql`
+    query GetLge($id: ID!) {
+        lge: lge(id: $id) {
+            address
+            adminAddress
+            adminIsMultisig
+            bannerImageUrl
+            collateralAmount
+            collateralEndWeight
+            collateralStartWeight
+            collateralTokenAddress
+            description
+            discordUrl
+            endDate
+            id
+            mediumUrl
+            name
+            startDate
+            swapFeePercentage
+            telegramUrl
+            tokenAmount
+            tokenContractAddress
+            tokenEndWeight
+            tokenIconUrl
+            tokenStartWeight
+            twitterUrl
+            websiteUrl
+        }
+    }
+`;
 export const GetLges = gql`
     query getLges {
         lges: lges {
