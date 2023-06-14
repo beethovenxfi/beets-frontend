@@ -7,8 +7,8 @@ import NextImage from 'next/image';
 import InvestMastheadImage from '~/assets/images/invest-masthead-image.png';
 import InvestMastheadOpImage from '~/assets/images/invest-masthead-image-OP.png';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
-import LgeList from '~/modules/launch/LgeList';
-import { LgeListProvider } from '~/modules/launch/useLgeList';
+import LgeList from '~/modules/lges/LgeList';
+import { LgeListProvider } from '~/modules/lges/useLgeList';
 
 function Launch() {
     const { chainId } = useNetworkConfig();

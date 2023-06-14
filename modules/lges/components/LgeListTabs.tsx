@@ -1,6 +1,6 @@
 import { HStack, TabList, Tabs } from '@chakra-ui/react';
 import BeetsTab from '~/components/tabs/BeetsTab';
-import { useLgeList } from '~/modules/launch/useLgeList';
+import { useLgeList } from '~/modules/lges/useLgeList';
 
 export function LgeListTabs() {
     const { setFilter } = useLgeList();
