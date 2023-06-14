@@ -14,19 +14,7 @@ export function _useLgeList() {
     const [filter, setFilter] = useState('active-upcoming');
     const now = new Date();
 
-    function lgeFilter(lge: GqlLge) {
-        const endDate = new Date(lge.endDate);
-        return filter === 'active-upcoming' ? now < endDate : now > endDate;
-    }
-
-    const lgesFiltered = (data?.lges || []).filter(lgeFilter);
-
-    const lgesSorted =
-        filter === 'active-upcoming'
-            ? orderBy(lgesFiltered, 'startDate', 'asc')
-            : orderBy(lgesFiltered, 'endDate', 'desc');
-
-    const lgesExtended: GqlLgeExtended[] = lgesSorted.map((lge) => {
+    const lgesExtended: GqlLgeExtended[] = (data?.lges || []).map((lge) => {
         const startDate = new Date(lge.startDate);
         const endDate = new Date(lge.endDate);
         const status = now < startDate ? 'upcoming' : now > endDate ? 'ended' : 'active';
@@ -35,8 +23,21 @@ export function _useLgeList() {
             status,
         };
     });
+
+    function lgeFilter(lge: GqlLge) {
+        const endDate = new Date(lge.endDate);
+        return filter === 'active-upcoming' ? now < endDate : now > endDate;
+    }
+
+    const lgesFiltered = lgesExtended.filter(lgeFilter);
+
+    const lgesSorted =
+        filter === 'active-upcoming'
+            ? orderBy(lgesFiltered, 'startDate', 'asc')
+            : orderBy(lgesFiltered, 'endDate', 'desc');
+
     return {
-        lgesExtended,
+        lges: lgesSorted,
         loading,
         error,
         networkStatus,

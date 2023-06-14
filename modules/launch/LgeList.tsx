@@ -5,16 +5,18 @@ import { PaginatedTable } from '~/components/table/PaginatedTable';
 import { LgeListItem } from '~/modules/launch/components/LgeListItem';
 import { LgeListTop } from '~/modules/launch/components/LgeListTop';
 import { LgeListTableHeader } from '~/modules/launch/components/LgeListTableHeader';
+import { useRouter } from 'next/router';
 
 function LgeList() {
-    const { lgesExtended, loading, error, networkStatus } = useLgeList();
+    const { lges, loading, error, networkStatus } = useLgeList();
+    const router = useRouter();
 
     return (
         <Box>
             {/* <LgeListMobileHeader /> */}
             <LgeListTop />
             <PaginatedTable
-                items={lgesExtended}
+                items={lges}
                 loading={loading}
                 fetchingMore={networkStatus === NetworkStatus.refetch}
                 renderTableHeader={() => <LgeListTableHeader />}
@@ -24,8 +26,9 @@ function LgeList() {
                             key={index}
                             lge={item}
                             borderBottomColor="beets.base.800"
-                            borderBottomWidth={index === lgesExtended.length - 1 ? 0 : 1}
+                            borderBottomWidth={index === lges.length - 1 ? 0 : 1}
                             bg="box.500"
+                            onClick={() => router.push(`/launch/${item.id}`)}
                         />
                     );
                 }}
