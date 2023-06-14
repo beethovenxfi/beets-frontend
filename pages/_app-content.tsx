@@ -1,4 +1,4 @@
-import { Box, Flex, useTheme } from '@chakra-ui/react';
+import { Box, useTheme } from '@chakra-ui/react';
 import { AppProps } from 'next/app';
 import { Navbar } from '~/modules/nav/Navbar';
 import { SubNavBar } from '~/modules/nav/SubNavBar';
@@ -7,15 +7,14 @@ import { useElementScroll } from 'framer-motion';
 import { Footer } from '~/modules/nav/Footer';
 import { NavbarMobile } from '~/modules/nav/NavbarMobile';
 import { GlobalRenderer } from '~/modules/global/GlobalRenderer';
-import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
-import { useUserAccount } from '~/lib/user/useUserAccount';
 import { UserWarning } from '~/components/user-warning/UserWarning';
+import useGlobalWarnings from '~/lib/global/useGlobalWarnings';
 
 export function AppContent({ Component, pageProps }: AppProps) {
     const ref = useRef(null);
     const { scrollY } = useElementScroll(ref);
     const theme = useTheme();
-    const { userAddress } = useUserAccount();
+    useGlobalWarnings();
 
     return (
         <Box
