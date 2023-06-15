@@ -66,6 +66,7 @@ export function ReliquaryWithdrawSingleAsset({ onShowPreview, ...rest }: Props) 
                 }
                 value={singleAssetWithdraw.amount}
                 setSelectedTokenOption={setSingleAssetWithdraw}
+                isWithdraw
             />
             <ReliquaryWithdrawSummary totalWithdrawValue={priceForAmount(singleAssetWithdraw)} mt="6" />
             <ReliquaryWithdrawSettings mt="6" />
