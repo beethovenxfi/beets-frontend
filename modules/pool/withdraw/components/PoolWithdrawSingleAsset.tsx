@@ -77,6 +77,7 @@ export function PoolWithdrawSingleAsset({ onShowPreview, ...rest }: Props) {
                     }
                     value={singleAssetWithdraw.amount}
                     setSelectedTokenOption={setSingleAssetWithdraw}
+                    isWithdraw={true}
                 />
                 <PoolWithdrawSettings mt="6" />
                 <Collapse in={hasHighPriceImpact} animateOpacity>
