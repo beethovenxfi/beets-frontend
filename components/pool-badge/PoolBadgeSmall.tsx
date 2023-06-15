@@ -4,20 +4,21 @@ import ReaperSonneBoosted from './assets/reaper-sonne-boosted.png';
 import OvernightBoosted from './assets/overnight-boosted-small.png';
 import ReaperBoosted from './assets/reaper-boosted.png';
 import BeefyExactlyBoosted from './assets/boosted-by-beefy-exactly.png';
+import GyroscopeBuilt from './assets/gyro-short.svg';
 import Image from 'next/image';
-import { BoostedByType } from '~/lib/config/network-config-type';
+import { PoolBadgeType } from '~/lib/config/network-config-type';
 import BeetsTooltip from '~/components/tooltip/BeetsTooltip';
 import { Box } from '@chakra-ui/react';
-import { BoostedByTooltips } from '~/components/boosted-badge/lib/boosted-by-tooltips';
+import { PoolBadgeTooltips } from '~/components/pool-badge/lib/pool-badge-tooltips';
 
 interface Props {
-    boostedBy: BoostedByType;
+    poolBadge: PoolBadgeType;
 }
 
-export function BoostedBadgeSmall({ boostedBy }: Props) {
+export function PoolBadgeSmall({ poolBadge }: Props) {
     let image = null;
 
-    switch (boostedBy) {
+    switch (poolBadge) {
         case 'reaper-aave':
             image = <Image src={ReaperAaveBoosted} alt="Reaper, AAVE boosted" height="28px" width="96px" />;
             break;
@@ -40,6 +41,9 @@ export function BoostedBadgeSmall({ boostedBy }: Props) {
         case 'beefy-exactly':
             image = <Image src={BeefyExactlyBoosted} alt="Beefy, Exactly boosted" height="28px" width="96px" />;
             break;
+        case 'gyroscope':
+            image = <Image src={GyroscopeBuilt} alt="Built by Gyroscope" height="28px" width="96px" />;
+            break;
     }
 
     if (image === null) {
@@ -47,7 +51,7 @@ export function BoostedBadgeSmall({ boostedBy }: Props) {
     }
 
     return (
-        <BeetsTooltip label={BoostedByTooltips[boostedBy]} noImage>
+        <BeetsTooltip label={PoolBadgeTooltips[poolBadge]} noImage>
             <Box>{image}</Box>
         </BeetsTooltip>
     );

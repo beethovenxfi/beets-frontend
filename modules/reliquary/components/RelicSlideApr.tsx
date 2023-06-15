@@ -56,6 +56,11 @@ export default function RelicSlideApr() {
     const { priceForAmount } = useGetTokens();
     const pendingRewardsUsdValue = sumBy(pendingRewards, priceForAmount);
 
+    const swapFeesItem = pool.dynamicData.apr.items.find((item) => item.title === 'Swap fees APR');
+    const swapFeesApr =
+        swapFeesItem?.apr && swapFeesItem.apr.__typename === 'GqlPoolAprTotal' ? swapFeesItem.apr.total : '0';
+    const totalSelectedRelicApr = (parseFloat(selectedRelicApr) + parseFloat(swapFeesApr)).toString();
+
     return (
         <>
             <Stack
@@ -84,7 +89,7 @@ export default function RelicSlideApr() {
                         Relic APR
                     </Text>
                     <HStack>
-                        <div className="apr-stripes">{numeral(selectedRelicApr).format('0.00%')}</div>
+                        <div className="apr-stripes">{numeral(totalSelectedRelicApr).format('0.00%')}</div>
                         <AprTooltip onlySparkles data={pool.dynamicData.apr} />
                     </HStack>
                     <HStack>

@@ -2546,6 +2546,10 @@ export type GetPoolQuery = {
           }
         | {
               __typename: 'GqlPoolGyro';
+              alpha: string;
+              beta: string;
+              type: string;
+              nestingType: GqlPoolNestingType;
               id: string;
               address: string;
               name: string;
@@ -2554,6 +2558,23 @@ export type GetPoolQuery = {
               factory?: string | null;
               symbol: string;
               createTime: number;
+              tokens: Array<
+                  | {
+                        __typename: 'GqlPoolToken';
+                        id: string;
+                        index: number;
+                        name: string;
+                        symbol: string;
+                        balance: string;
+                        address: string;
+                        priceRate: string;
+                        decimals: number;
+                        weight?: string | null;
+                        totalBalance: string;
+                    }
+                  | { __typename: 'GqlPoolTokenLinear' }
+                  | { __typename: 'GqlPoolTokenPhantomStable' }
+              >;
               dynamicData: {
                   __typename: 'GqlPoolDynamicData';
                   poolId: string;
@@ -6904,6 +6925,17 @@ export const GetPoolDocument = gql`
                     }
                     ... on GqlPoolTokenPhantomStable {
                         ...GqlPoolTokenPhantomStable
+                    }
+                }
+            }
+            ... on GqlPoolGyro {
+                alpha
+                beta
+                type
+                nestingType
+                tokens {
+                    ... on GqlPoolToken {
+                        ...GqlPoolToken
                     }
                 }
             }

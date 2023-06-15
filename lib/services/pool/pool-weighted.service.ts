@@ -51,6 +51,7 @@ export class PoolWeightedService implements PoolService {
     public updatePool(pool: GqlPoolWeighted) {
         this.pool = pool;
         this.baseService.updatePool(pool);
+        this.proportionalInvestService.updatePool(pool);
     }
 
     public async joinGetProportionalSuggestionForFixedAmount(

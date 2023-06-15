@@ -1,5 +1,6 @@
 import { sortBy } from 'lodash';
 import {
+    GqlPoolGyro,
     GqlPoolTokenPhantomStableNestedUnion,
     GqlPoolTokenUnion,
     GqlPoolWeighted,
@@ -10,7 +11,11 @@ import { oldBnum, oldBnumScale, oldBnumSum, oldBnumToHumanReadable } from './old
 import OldBigNumber from 'bignumber.js';
 
 export class PoolProportionalInvestService {
-    constructor(private pool: GqlPoolWeighted) {}
+    constructor(private pool: GqlPoolWeighted | GqlPoolGyro) {}
+
+    public updatePool(pool: GqlPoolWeighted | GqlPoolGyro) {
+        this.pool = pool;
+    }
 
     public async getProportionalSuggestion(userInvestTokenBalances: TokenAmountHumanReadable[]) {
         // loop through the pool tokens to find out which token (and amount) would give the smallest bptOut amount

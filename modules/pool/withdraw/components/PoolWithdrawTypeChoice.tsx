@@ -1,17 +1,10 @@
 import {
-    Alert,
-    AlertIcon,
     Box,
     Button,
-    Flex,
-    Grid,
-    GridItem,
     HStack,
     Link,
-    Radio,
     Skeleton,
     StackDivider,
-    Switch,
     Text,
     useBreakpointValue,
     useDisclosure,
@@ -19,18 +12,13 @@ import {
 } from '@chakra-ui/react';
 import { BeetsBox } from '~/components/box/BeetsBox';
 import { numberFormatUSDValue } from '~/lib/util/number-formats';
-import { tokenFormatAmount, tokenFormatAmountPrecise } from '~/lib/services/token/token-util';
+import { tokenFormatAmountPrecise } from '~/lib/services/token/token-util';
 import TokenAvatar from '~/components/token/TokenAvatar';
 import { useGetTokens } from '~/lib/global/useToken';
 import { usePoolUserDepositBalance } from '~/modules/pool/lib/usePoolUserDepositBalance';
 import { usePoolUserBptBalance } from '~/modules/pool/lib/usePoolUserBptBalance';
 import { PoolUnstakeModal } from '~/modules/pool/stake/PoolUnstakeModal';
-import { CardRow } from '~/components/card/CardRow';
 import { useWithdraw } from '~/modules/pool/withdraw/lib/useWithdraw';
-import { TokenSelectInline } from '~/components/token-select-inline/TokenSelectInline';
-import { useWithdrawState } from '~/modules/pool/withdraw/lib/useWithdrawState';
-import { PoolWithdrawWeightedPoolDescription } from '~/modules/pool/withdraw/components/PoolWithdrawWeightedPoolDescription';
-import { PoolWithdrawStablePoolDescription } from '~/modules/pool/withdraw/components/PoolWithdrawStablePoolDescription';
 import { usePool } from '~/modules/pool/lib/usePool';
 import { ExternalLink } from 'react-feather';
 import { etherscanGetTokenUrl } from '~/lib/util/etherscan';
@@ -38,7 +26,6 @@ import BeetsTooltip from '~/components/tooltip/BeetsTooltip';
 import Scales from '~/assets/icons/scales.svg';
 import Image from 'next/image';
 import BeetSmart from '~/assets/icons/beetx-smarts.svg';
-import BeetsThinking from '~/assets/icons/beetx-thinking.svg';
 
 interface Props {
     onShowProportional(): void;
@@ -47,17 +34,15 @@ interface Props {
 
 export function PoolWithdrawTypeChoice({ onShowProportional, onShowSingleAsset }: Props) {
     const unstakeDisclosure = useDisclosure();
-    const { pool, isFbeetsPool } = usePool();
+    const { pool, canCustomInvest, isStablePool } = usePool();
     const isMobile = useBreakpointValue({ base: true, md: false });
-    const { priceForAmount, formattedPrice } = useGetTokens();
+    const { formattedPrice } = useGetTokens();
     const { userPoolBalanceUSD, data, isLoading: isPoolUserDepositBalanceLoading } = usePoolUserDepositBalance();
     const { userTotalBptBalance, userWalletBptBalance, userStakedBptBalance, hasBptInWallet, hasBptStaked } =
         usePoolUserBptBalance();
     const valueStaked = (parseFloat(userStakedBptBalance) / parseFloat(userTotalBptBalance)) * userPoolBalanceUSD;
     const valueInWallet = (parseFloat(userWalletBptBalance) / parseFloat(userTotalBptBalance)) * userPoolBalanceUSD;
     const { selectedWithdrawTokenAddresses } = useWithdraw();
-    const { selectedOptions, setSelectedOption } = useWithdrawState();
-    const isStablePool = pool.__typename === 'GqlPoolStable' || pool.__typename === 'GqlPoolPhantomStable';
 
     const ChoiceOrientation = isMobile ? VStack : HStack;
 
@@ -144,16 +129,12 @@ export function PoolWithdrawTypeChoice({ onShowProportional, onShowSingleAsset }
 
                             {/* <Text fontSize="lg">{numberFormatUSDValue(data?.maxAmount || 0)}</Text> */}
                             <Text fontSize="sm">Proportional withdraw</Text>
-                            {!isStablePool && (
-                                <Text fontSize="xs" color="beets.green">
-                                    Recommended
-                                </Text>
-                            )}
-                            {isStablePool && (
-                                <Text fontSize="xs" color="beets.green">
-                                    &nbsp;
-                                </Text>
-                            )}
+                            <Text
+                                fontSize="xs"
+                                color={isStablePool || !canCustomInvest ? 'transparent' : 'beets.green'}
+                            >
+                                Recommended
+                            </Text>
                         </VStack>
                     </Button>
                 </Box>
@@ -161,34 +142,27 @@ export function PoolWithdrawTypeChoice({ onShowProportional, onShowSingleAsset }
                     label={
                         isStablePool
                             ? 'As this is a stable pool, you can withdraw either asset without any impact.'
-                            : ''
+                            : canCustomInvest
+                            ? ''
+                            : 'This pool does not support a single asset withdraw.'
                     }
                 >
-                    <Button
-                        _hover={{ borderColor: 'beets.green' }}
-                        borderWidth={1}
-                        borderColor="beets.transparent"
-                        height="140px"
-                        width="full"
-                        onClick={onShowSingleAsset}
-                        disabled={valueInWallet === 0}
-                    >
-                        <VStack spacing="1">
-                            <Image src={BeetSmart} height="48" alt="beets-smart" />
-                            {/* <Text fontSize="lg">{numberFormatUSDValue(investableAmount)}</Text> */}
-                            <Text fontSize="sm">Single asset withdraw</Text>
-                            {!isStablePool && (
-                                <Text fontSize="xs" color="beets.green">
-                                    &nbsp;
-                                </Text>
-                            )}
-                            {isStablePool && (
-                                <Text fontSize="xs" color="beets.green">
+                    <Box w="full">
+                        <Button
+                            variant="image"
+                            onClick={onShowSingleAsset}
+                            disabled={valueInWallet === 0 || !canCustomInvest}
+                        >
+                            <VStack spacing="1">
+                                <Image src={BeetSmart} height="48" alt="beets-smart" />
+                                {/* <Text fontSize="lg">{numberFormatUSDValue(investableAmount)}</Text> */}
+                                <Text fontSize="sm">Single asset withdraw</Text>
+                                <Text fontSize="xs" color={isStablePool ? 'beets.green' : 'transparent'}>
                                     Minimal price impact
                                 </Text>
-                            )}
-                        </VStack>
-                    </Button>
+                            </VStack>
+                        </Button>
+                    </Box>
                 </BeetsTooltip>
                 <PoolUnstakeModal {...unstakeDisclosure} />
             </ChoiceOrientation>

@@ -29,7 +29,12 @@ import {
 import { BigNumber, BigNumberish } from '@ethersproject/bignumber';
 import { AddressZero, MaxUint256, Zero } from '@ethersproject/constants';
 import { PoolJoinBatchRelayerContractCallData } from '~/lib/services/pool/pool-types';
-import { GqlPoolMetaStable, GqlPoolStable, GqlPoolWeighted } from '~/apollo/generated/graphql-codegen-generated';
+import {
+    GqlPoolGyro,
+    GqlPoolMetaStable,
+    GqlPoolStable,
+    GqlPoolWeighted,
+} from '~/apollo/generated/graphql-codegen-generated';
 import { isSameAddress, Swaps, SwapType, SwapV2 } from '@balancer-labs/sdk';
 import { AmountScaledString, TokenAmountHumanReadable } from '~/lib/services/token/token-types';
 import { poolScaleSlippage } from '~/lib/services/pool/lib/util';
@@ -179,7 +184,7 @@ export class BatchRelayerService {
         maxAmountsIn,
     }: {
         userAddress: string;
-        pool: GqlPoolWeighted | GqlPoolStable | GqlPoolMetaStable;
+        pool: GqlPoolWeighted | GqlPoolStable | GqlPoolMetaStable | GqlPoolGyro;
         userData: string;
         assets: string[];
         maxAmountsIn: BigNumberish[];

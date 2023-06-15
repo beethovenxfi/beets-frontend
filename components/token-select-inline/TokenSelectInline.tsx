@@ -23,9 +23,10 @@ interface Props {
     selectedAddress: string;
     onOptionSelect: (address: string) => void;
     minimal?: boolean;
+    isWithdraw?: boolean;
 }
 
-export function TokenSelectInline({ tokenOptions, selectedAddress, onOptionSelect, minimal }: Props) {
+export function TokenSelectInline({ tokenOptions, selectedAddress, onOptionSelect, minimal, isWithdraw }: Props) {
     const theme = useTheme();
     const { getUserBalanceForToken } = usePoolUserTokenBalancesInWallet();
 
@@ -85,7 +86,7 @@ export function TokenSelectInline({ tokenOptions, selectedAddress, onOptionSelec
                                         <MenuItem
                                             key={option.address}
                                             display="flex"
-                                            isDisabled={option.hasZeroBalance}
+                                            isDisabled={!isWithdraw && option.hasZeroBalance}
                                             onClick={() => onOptionSelect(option.address)}
                                         >
                                             <HStack spacing="1.5" flex="1">
