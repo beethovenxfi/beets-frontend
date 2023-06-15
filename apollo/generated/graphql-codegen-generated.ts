@@ -2134,6 +2134,41 @@ export type GqlPoolCardDataFragment = {
     }>;
 };
 
+export type GetLgeQueryVariables = Exact<{
+    id: Scalars['ID'];
+}>;
+
+export type GetLgeQuery = {
+    __typename: 'Query';
+    lge: {
+        __typename: 'GqlLge';
+        address: string;
+        adminAddress: string;
+        adminIsMultisig: boolean;
+        bannerImageUrl: string;
+        collateralAmount: string;
+        collateralEndWeight: number;
+        collateralStartWeight: number;
+        collateralTokenAddress: string;
+        description: string;
+        discordUrl: string;
+        endDate: string;
+        id: string;
+        mediumUrl: string;
+        name: string;
+        startDate: string;
+        swapFeePercentage: string;
+        telegramUrl: string;
+        tokenAmount: string;
+        tokenContractAddress: string;
+        tokenEndWeight: number;
+        tokenIconUrl: string;
+        tokenStartWeight: number;
+        twitterUrl: string;
+        websiteUrl: string;
+    };
+};
+
 export type GetLgesQueryVariables = Exact<{ [key: string]: never }>;
 
 export type GetLgesQuery = {
@@ -6554,6 +6589,64 @@ export function useGetHomeNewsItemsLazyQuery(
 export type GetHomeNewsItemsQueryHookResult = ReturnType<typeof useGetHomeNewsItemsQuery>;
 export type GetHomeNewsItemsLazyQueryHookResult = ReturnType<typeof useGetHomeNewsItemsLazyQuery>;
 export type GetHomeNewsItemsQueryResult = Apollo.QueryResult<GetHomeNewsItemsQuery, GetHomeNewsItemsQueryVariables>;
+export const GetLgeDocument = gql`
+    query GetLge($id: ID!) {
+        lge: lge(id: $id) {
+            address
+            adminAddress
+            adminIsMultisig
+            bannerImageUrl
+            collateralAmount
+            collateralEndWeight
+            collateralStartWeight
+            collateralTokenAddress
+            description
+            discordUrl
+            endDate
+            id
+            mediumUrl
+            name
+            startDate
+            swapFeePercentage
+            telegramUrl
+            tokenAmount
+            tokenContractAddress
+            tokenEndWeight
+            tokenIconUrl
+            tokenStartWeight
+            twitterUrl
+            websiteUrl
+        }
+    }
+`;
+
+/**
+ * __useGetLgeQuery__
+ *
+ * To run a query within a React component, call `useGetLgeQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetLgeQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetLgeQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGetLgeQuery(baseOptions: Apollo.QueryHookOptions<GetLgeQuery, GetLgeQueryVariables>) {
+    const options = { ...defaultOptions, ...baseOptions };
+    return Apollo.useQuery<GetLgeQuery, GetLgeQueryVariables>(GetLgeDocument, options);
+}
+export function useGetLgeLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetLgeQuery, GetLgeQueryVariables>) {
+    const options = { ...defaultOptions, ...baseOptions };
+    return Apollo.useLazyQuery<GetLgeQuery, GetLgeQueryVariables>(GetLgeDocument, options);
+}
+export type GetLgeQueryHookResult = ReturnType<typeof useGetLgeQuery>;
+export type GetLgeLazyQueryHookResult = ReturnType<typeof useGetLgeLazyQuery>;
+export type GetLgeQueryResult = Apollo.QueryResult<GetLgeQuery, GetLgeQueryVariables>;
 export const GetLgesDocument = gql`
     query getLges {
         lges: lges {
