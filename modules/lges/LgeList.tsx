@@ -1,4 +1,4 @@
-import { Box, Button, HStack, Link, Alert, Highlight, VStack } from '@chakra-ui/react';
+import { Box, Button, HStack, Heading, Link, Text, VStack } from '@chakra-ui/react';
 import { NetworkStatus } from '@apollo/client';
 import { GqlLgeExtended, useLgeList } from '~/modules/lges/useLgeList';
 import { PaginatedTable } from '~/components/table/PaginatedTable';
@@ -7,6 +7,8 @@ import { LgeListTop } from '~/modules/lges/components/LgeListTop';
 import { LgeListTableHeader } from '~/modules/lges/components/LgeListTableHeader';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
+import Card from '~/components/card/Card';
+import { AlertTriangle } from 'react-feather';
 
 function LgeList() {
     const { lges, loading, error, networkStatus } = useLgeList();
@@ -16,24 +18,33 @@ function LgeList() {
     return (
         <Box>
             {/* <LgeListMobileHeader /> */}
-            <Alert mb="4" variant="left-accent" status="warning" hidden={hidden}>
-                <VStack>
-                    <Box>
-                        <Highlight query={['anyone']} styles={{ fontWeight: 'bold', bg: '#C1C1D1', px: 1, py: 1 }}>
+            <Box hidden={hidden}>
+                <Card p="4" mb="4" bg="orange.200" color="black">
+                    <VStack>
+                        <HStack alignSelf="flex-start">
+                            <AlertTriangle />
+                            <Heading>Warning</Heading>
+                            <AlertTriangle />
+                        </HStack>
+                        <Text>
                             Participating in a Liquidity Bootstrapping Pool on Beethoven X is a high-risk endeavor. This
-                            is a permissionless service where ANYONE can create an event. Beethoven X is not liable for
-                            any losses incurred by using our platform. Please be careful and do your own research before
-                            participating in any event.
-                        </Highlight>
-                    </Box>
-                    <HStack mt="8" justifyContent="space-between" w="full">
-                        <Link href="https://docs.beets.fi/boundless-opportunity/lbp" isExternal>
-                            Read more...
-                        </Link>
-                        <Button onClick={() => setHidden(true)}>I understand</Button>
-                    </HStack>
-                </VStack>
-            </Alert>
+                            is a permissionless service where <span style={{ fontWeight: 'bold' }}>ANYONE</span> can
+                            create an event. Beethoven X is not liable for any losses incurred by using our platform.
+                            Please be careful and do your own research before participating in any event.
+                        </Text>
+                        <HStack pt="4" justifyContent="space-between" w="full">
+                            <Link href="https://docs.beets.fi/boundless-opportunity/lbp" isExternal>
+                                <Button color="black" border="1px">
+                                    Read more...
+                                </Button>
+                            </Link>
+                            <Button onClick={() => setHidden(true)} border="1px">
+                                I understand
+                            </Button>
+                        </HStack>
+                    </VStack>
+                </Card>
+            </Box>
             <LgeListTop />
             <PaginatedTable
                 items={lges}
