@@ -1,15 +1,13 @@
 import { useRouter } from 'next/router';
-import { GetLgeQuery, GetLgeQueryVariables } from '~/apollo/generated/graphql-codegen-generated';
+import { GetLgeQuery, GetLgeQueryVariables, GqlLge } from '~/apollo/generated/graphql-codegen-generated';
 import { initializeApolloClient, loadApolloState } from '~/apollo/client';
 import { GetLge } from '~/apollo/generated/operations';
 import Head from 'next/head';
 import { FallbackPlaceholder } from '~/components/fallback/FallbackPlaceholder';
-
-import { Img, Text, VStack } from '@chakra-ui/react';
-import Image from 'next/image';
+import { Text } from '@chakra-ui/react';
 
 interface Props {
-    lge: any;
+    lge: GqlLge;
 }
 
 const LgePage = ({ lge }: Props) => {
