@@ -50,7 +50,7 @@ export function LgeListItem({ lge, ...rest }: Props) {
                     area="project"
                     mb={{ base: '4', lg: '0' }}
                     alignItems="center"
-                    display={{ base: 'block', lg: 'none' }}
+                    display={{ base: 'block', lg: 'flex' }}
                 >
                     <MobileLabel text="Project" />
                     <Text fontSize={{ base: 'xl', lg: 'md' }} fontWeight={{ base: 'bold', lg: 'normal' }}>
@@ -61,7 +61,7 @@ export function LgeListItem({ lge, ...rest }: Props) {
                 <GridItem
                     area="token"
                     alignItems="center"
-                    display={{ base: 'block', lg: 'none' }}
+                    display={{ base: 'block', lg: 'flex' }}
                     mb={{ base: '4', lg: '0' }}
                 >
                     <MobileLabel text="Token" />
@@ -73,7 +73,7 @@ export function LgeListItem({ lge, ...rest }: Props) {
                 <GridItem
                     area="status"
                     alignItems="center"
-                    display={{ base: 'block', lg: 'none' }}
+                    display={{ base: 'block', lg: 'flex' }}
                     mb={{ base: '4', lg: '0' }}
                 >
                     <MobileLabel text="Status" />
@@ -82,7 +82,7 @@ export function LgeListItem({ lge, ...rest }: Props) {
                 <GridItem
                     area="links"
                     alignItems="center"
-                    display={{ base: 'block', lg: 'none' }}
+                    display={{ base: 'block', lg: 'flex' }}
                     mb={{ base: '4', lg: '0' }}
                 >
                     <MobileLabel text="Links" />
