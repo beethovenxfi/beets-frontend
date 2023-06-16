@@ -30,7 +30,6 @@ function LgeList() {
             <PaginatedTable
                 items={lges}
                 loading={loading}
-                fetchingMore={networkStatus === NetworkStatus.refetch}
                 renderTableHeader={() => <LgeListTableHeader />}
                 renderTableRow={(item: GqlLgeExtended, index) => {
                     return (

@@ -10,7 +10,7 @@ interface Props<T> extends BoxProps {
     pageSize?: number;
     count?: number;
     loading: boolean;
-    fetchingMore: boolean;
+    fetchingMore?: boolean;
     hidePageSizeChange?: boolean;
     onPageChange?: (page: number) => void;
     onPageSizeChange?: (pageSize: number) => void;
