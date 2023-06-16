@@ -3,11 +3,11 @@ import BeetsTab from '~/components/tabs/BeetsTab';
 import { useLgeList } from '~/modules/lges/useLgeList';
 
 export function LgeListTabs() {
-    const { setFilter } = useLgeList();
+    const { setStatus } = useLgeList();
     const TABS = [{ id: 'active-upcoming' }, { id: 'ended' }];
 
     const handleTabChanged = (index: number) => {
-        setFilter(TABS[index].id);
+        setStatus(TABS[index].id);
     };
 
     return (
