@@ -101,7 +101,6 @@ export function LgeListItem({ lge, ...rest }: Props) {
                     <Text fontSize={{ base: 'xl', lg: 'md' }} fontWeight={{ base: 'bold', lg: 'normal' }}>
                         {lge.name}
                     </Text>
-                    {/* {warningMessage && <LgeListItemWarning ml="2" message={warningMessage} />} */}
                 </GridItem>
                 <GridItem
                     area="token"
