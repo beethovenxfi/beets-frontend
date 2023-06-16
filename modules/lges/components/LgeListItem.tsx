@@ -1,4 +1,4 @@
-import { Box, Grid, GridItem, Link, Text } from '@chakra-ui/react';
+import { Box, Grid, GridItem, HStack, Link, Text } from '@chakra-ui/react';
 import { BoxProps } from '@chakra-ui/layout';
 import { useGetLgeToken } from './lib/useGetLgeToken';
 import TokenAvatar from '~/components/token/TokenAvatar';
@@ -35,35 +35,59 @@ export function LgeListItem({ lge, ...rest }: Props) {
                 py={{ base: '4', lg: '0' }}
                 height={{ lg: '63.5px' }}
                 templateColumns={{
-                    //base: '1fr 1fr',
+                    base: '1fr 1fr',
                     lg: 'repeat(4, 1fr)',
                 }}
                 gap="0"
                 templateAreas={{
-                    //   base: `"name boosted"
-                    //          "apr tvl"
-                    //          "fees volume"
-                    //          "icons icons"`,
+                    base: `"project status"
+                             "token links"`,
                     lg: `"project token status links"`,
                 }}
                 cursor="pointer"
             >
-                <GridItem area="project" mb={{ base: '4', lg: '0' }} alignItems="center" display="flex">
+                <GridItem
+                    area="project"
+                    mb={{ base: '4', lg: '0' }}
+                    alignItems="center"
+                    display={{ base: 'block', lg: 'none' }}
+                >
+                    <MobileLabel text="Project" />
                     <Text fontSize={{ base: 'xl', lg: 'md' }} fontWeight={{ base: 'bold', lg: 'normal' }}>
                         {lge.name}
                     </Text>
                     {/* {warningMessage && <LgeListItemWarning ml="2" message={warningMessage} />} */}
                 </GridItem>
-                <GridItem area="token" alignItems="center" display="flex" mb={{ base: '4', lg: '0' }}>
-                    <TokenAvatar address={lge.tokenContractAddress} logoURI={lge.tokenIconUrl} size="xs" />
-                    <Text ml="2">{token?.symbol}</Text>
+                <GridItem
+                    area="token"
+                    alignItems="center"
+                    display={{ base: 'block', lg: 'none' }}
+                    mb={{ base: '4', lg: '0' }}
+                >
+                    <MobileLabel text="Token" />
+                    <HStack mt="2">
+                        <TokenAvatar address={lge.tokenContractAddress} logoURI={lge.tokenIconUrl} size="xs" />
+                        <Text ml="2">{token?.symbol}</Text>
+                    </HStack>
                 </GridItem>
-                <GridItem area="status" alignItems="center" display="flex" mb={{ base: '4', lg: '0' }}>
+                <GridItem
+                    area="status"
+                    alignItems="center"
+                    display={{ base: 'block', lg: 'none' }}
+                    mb={{ base: '4', lg: '0' }}
+                >
+                    <MobileLabel text="Status" />
                     {getStatusText(lge)}
                 </GridItem>
-                <GridItem area="links" alignItems="center" display="flex" mb={{ base: '4', lg: '0' }}>
-                    {lge.websiteUrl && (
-                        <Box mr="3">
+                <GridItem
+                    area="links"
+                    alignItems="center"
+                    display={{ base: 'block', lg: 'none' }}
+                    mb={{ base: '4', lg: '0' }}
+                >
+                    <MobileLabel text="Links" />
+                    <HStack mt="2">
+                        {lge.websiteUrl && (
                             <Link
                                 href={lge.websiteUrl}
                                 target="_blank"
@@ -72,17 +96,13 @@ export function LgeListItem({ lge, ...rest }: Props) {
                             >
                                 <Globe size={28} />
                             </Link>
-                        </Box>
-                    )}
-                    {lge.twitterUrl && (
-                        <Box mr="3">
+                        )}
+                        {lge.twitterUrl && (
                             <Link href={lge.twitterUrl} target="_blank" color="gray.100">
                                 <IconTwitter color="#c1c1d1" _hover={{ color: 'beets.highlight' }} />
                             </Link>
-                        </Box>
-                    )}
-                    {lge.discordUrl && (
-                        <Box mr="3">
+                        )}
+                        {lge.discordUrl && (
                             <Link
                                 href={lge.twitterUrl}
                                 target="_blank"
@@ -91,10 +111,8 @@ export function LgeListItem({ lge, ...rest }: Props) {
                             >
                                 <IconDiscord color="#c1c1d1" _hover={{ color: 'beets.highlight' }} />
                             </Link>
-                        </Box>
-                    )}
-                    {lge.telegramUrl && (
-                        <Box mr="3">
+                        )}
+                        {lge.telegramUrl && (
                             <Link
                                 href={lge.telegramUrl}
                                 target="_blank"
@@ -103,10 +121,8 @@ export function LgeListItem({ lge, ...rest }: Props) {
                             >
                                 <IconTelegram color="#c1c1d1" _hover={{ color: 'beets.highlight' }} />
                             </Link>
-                        </Box>
-                    )}
-                    {lge.mediumUrl && (
-                        <Box mr="3">
+                        )}
+                        {lge.mediumUrl && (
                             <Link
                                 href={lge.mediumUrl}
                                 target="_blank"
@@ -115,10 +131,18 @@ export function LgeListItem({ lge, ...rest }: Props) {
                             >
                                 <IconMedium color="#c1c1d1" _hover={{ color: 'beets.highlight' }} />
                             </Link>
-                        </Box>
-                    )}
+                        )}
+                    </HStack>
                 </GridItem>
             </Grid>
         </Box>
+    );
+}
+
+function MobileLabel({ text }: { text: string }) {
+    return (
+        <Text fontSize="xs" color="gray.200" display={{ base: 'block', lg: 'none' }}>
+            {text}
+        </Text>
     );
 }

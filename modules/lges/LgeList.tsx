@@ -1,4 +1,4 @@
-import { Box, Text } from '@chakra-ui/react';
+import { Text } from '@chakra-ui/react';
 import { NetworkStatus } from '@apollo/client';
 import { GqlLgeExtended, useLgeList } from '~/modules/lges/useLgeList';
 import { PaginatedTable } from '~/components/table/PaginatedTable';
@@ -8,6 +8,7 @@ import { LgeListTableHeader } from '~/modules/lges/components/LgeListTableHeader
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { LgeWarning } from './components/LgeWarning';
+import { LgeListMobileHeader } from '~/modules/lges/components/LgeListMobileHeader';
 
 function LgeList() {
     const { lges, loading, networkStatus } = useLgeList();
@@ -16,7 +17,6 @@ function LgeList() {
 
     return (
         <>
-            {/* <LgeListMobileHeader /> */}
             <LgeWarning hidden={hidden} setHidden={() => setHidden(true)}>
                 <Text>
                     Participating in a Liquidity Bootstrapping Pool on Beethoven X is a high-risk endeavor. This is a
@@ -25,6 +25,7 @@ function LgeList() {
                     your own research before participating in any event.
                 </Text>
             </LgeWarning>
+            <LgeListMobileHeader />
             <LgeListTop />
             <PaginatedTable
                 items={lges}
