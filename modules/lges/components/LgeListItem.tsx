@@ -4,11 +4,12 @@ import { useGetLgeToken } from './lib/useGetLgeToken';
 import TokenAvatar from '~/components/token/TokenAvatar';
 import { formatDistanceToNow } from 'date-fns';
 import { GqlLgeExtended } from '~/modules/lges/useLgeList';
-import { Globe } from 'react-feather';
 import { IconTwitter } from '~/components/icons/IconTwitter';
 import { IconDiscord } from '~/components/icons/IconDiscord';
 import { IconTelegram } from '~/components/icons/IconTelegram';
 import { IconMedium } from '~/components/icons/IconMedium';
+import { IconGlobe } from '~/components/icons/IconGlobe';
+import React, { ReactNode } from 'react';
 
 interface Props extends BoxProps {
     lge: GqlLgeExtended;
@@ -25,8 +26,52 @@ function getStatusText(lge: GqlLgeExtended) {
     }
 }
 
+function getIconLink(urlType: keyof typeof lge, lge: GqlLgeExtended): ReactNode {
+    const href = lge[urlType] as string;
+
+    if (!href) {
+        return null;
+    }
+
+    const props = {
+        color: '#c1c1d1',
+    };
+
+    const hoverProps = { color: 'beets.highlight' };
+
+    let iconType;
+    switch (urlType) {
+        case 'discordUrl':
+            iconType = <IconDiscord {...props} _hover={hoverProps} />;
+            break;
+        case 'mediumUrl':
+            iconType = <IconMedium {...props} _hover={hoverProps} />;
+            break;
+        case 'telegramUrl':
+            iconType = <IconTelegram {...props} _hover={hoverProps} />;
+            break;
+        case 'twitterUrl':
+            iconType = <IconTwitter {...props} _hover={hoverProps} />;
+            break;
+        case 'websiteUrl':
+            iconType = <IconGlobe {...props} _hover={hoverProps} />;
+            break;
+    }
+    return (
+        <Link href={href} target="_blank" color="gray.100">
+            {iconType}
+        </Link>
+    );
+}
+
 export function LgeListItem({ lge, ...rest }: Props) {
     const { token } = useGetLgeToken(lge.tokenContractAddress);
+
+    // grab all urlTypes except for banner image & token icon
+    // reverse for now to to get the website url first
+    const urlTypes = Object.keys(lge)
+        .filter((key) => key.match('Url') && !key.match('Image') && !key.match('Icon'))
+        .reverse();
 
     return (
         <Box mb={{ base: '4', lg: '0' }} borderRadius={{ base: 'md', lg: '0' }} {...rest}>
@@ -86,53 +131,7 @@ export function LgeListItem({ lge, ...rest }: Props) {
                     mb={{ base: '4', lg: '0' }}
                 >
                     <MobileLabel text="Links" />
-                    <HStack mt="2">
-                        {lge.websiteUrl && (
-                            <Link
-                                href={lge.websiteUrl}
-                                target="_blank"
-                                color="gray.100"
-                                _hover={{ color: 'beets.highlight' }}
-                            >
-                                <Globe size={28} />
-                            </Link>
-                        )}
-                        {lge.twitterUrl && (
-                            <Link href={lge.twitterUrl} target="_blank" color="gray.100">
-                                <IconTwitter color="#c1c1d1" _hover={{ color: 'beets.highlight' }} />
-                            </Link>
-                        )}
-                        {lge.discordUrl && (
-                            <Link
-                                href={lge.twitterUrl}
-                                target="_blank"
-                                color="gray.100"
-                                _hover={{ color: 'beets.highlight' }}
-                            >
-                                <IconDiscord color="#c1c1d1" _hover={{ color: 'beets.highlight' }} />
-                            </Link>
-                        )}
-                        {lge.telegramUrl && (
-                            <Link
-                                href={lge.telegramUrl}
-                                target="_blank"
-                                color="gray.100"
-                                _hover={{ color: 'beets.highlight' }}
-                            >
-                                <IconTelegram color="#c1c1d1" _hover={{ color: 'beets.highlight' }} />
-                            </Link>
-                        )}
-                        {lge.mediumUrl && (
-                            <Link
-                                href={lge.mediumUrl}
-                                target="_blank"
-                                color="gray.100"
-                                _hover={{ color: 'beets.highlight' }}
-                            >
-                                <IconMedium color="#c1c1d1" _hover={{ color: 'beets.highlight' }} />
-                            </Link>
-                        )}
-                    </HStack>
+                    <HStack mt="2">{urlTypes.map((urlType) => getIconLink(urlType as keyof typeof lge, lge))}</HStack>
                 </GridItem>
             </Grid>
         </Box>
