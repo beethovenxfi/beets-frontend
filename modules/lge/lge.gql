@@ -1,28 +1,32 @@
+fragment GqlLge on GqlLge {
+    address
+    adminAddress
+    adminIsMultisig
+    bannerImageUrl
+    collateralAmount
+    collateralEndWeight
+    collateralStartWeight
+    collateralTokenAddress
+    description
+    discordUrl
+    endDate
+    id
+    mediumUrl
+    name
+    startDate
+    swapFeePercentage
+    telegramUrl
+    tokenAmount
+    tokenContractAddress
+    tokenEndWeight
+    tokenIconUrl
+    tokenStartWeight
+    twitterUrl
+    websiteUrl
+}
+
 query GetLge($id: ID!) {
     lge: lge(id: $id) {
-        address
-        adminAddress
-        adminIsMultisig
-        bannerImageUrl
-        collateralAmount
-        collateralEndWeight
-        collateralStartWeight
-        collateralTokenAddress
-        description
-        discordUrl
-        endDate
-        id
-        mediumUrl
-        name
-        startDate
-        swapFeePercentage
-        telegramUrl
-        tokenAmount
-        tokenContractAddress
-        tokenEndWeight
-        tokenIconUrl
-        tokenStartWeight
-        twitterUrl
-        websiteUrl
+        ...GqlLge
     }
 }

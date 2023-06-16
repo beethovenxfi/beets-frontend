@@ -1,28 +1,7 @@
+#import "../lge/lge.gql"
+
 query getLges {
     lges: lges {
-        address
-        adminAddress
-        adminIsMultisig
-        bannerImageUrl
-        collateralAmount
-        collateralEndWeight
-        collateralStartWeight
-        collateralTokenAddress
-        description
-        discordUrl
-        endDate
-        id
-        mediumUrl
-        name
-        startDate
-        swapFeePercentage
-        telegramUrl
-        tokenAmount
-        tokenContractAddress
-        tokenEndWeight
-        tokenIconUrl
-        tokenStartWeight
-        twitterUrl
-        websiteUrl
+        ...GqlLge
     }
 }

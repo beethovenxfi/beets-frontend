@@ -2134,6 +2134,34 @@ export type GqlPoolCardDataFragment = {
     }>;
 };
 
+export type GqlLgeFragment = {
+    __typename: 'GqlLge';
+    address: string;
+    adminAddress: string;
+    adminIsMultisig: boolean;
+    bannerImageUrl: string;
+    collateralAmount: string;
+    collateralEndWeight: number;
+    collateralStartWeight: number;
+    collateralTokenAddress: string;
+    description: string;
+    discordUrl: string;
+    endDate: string;
+    id: string;
+    mediumUrl: string;
+    name: string;
+    startDate: string;
+    swapFeePercentage: string;
+    telegramUrl: string;
+    tokenAmount: string;
+    tokenContractAddress: string;
+    tokenEndWeight: number;
+    tokenIconUrl: string;
+    tokenStartWeight: number;
+    twitterUrl: string;
+    websiteUrl: string;
+};
+
 export type GetLgeQueryVariables = Exact<{
     id: Scalars['ID'];
 }>;
@@ -5480,6 +5508,34 @@ export const GqlPoolFeaturedPoolGroupFragmentDoc = gql`
     }
     ${GqlPoolCardDataFragmentDoc}
 `;
+export const GqlLgeFragmentDoc = gql`
+    fragment GqlLge on GqlLge {
+        address
+        adminAddress
+        adminIsMultisig
+        bannerImageUrl
+        collateralAmount
+        collateralEndWeight
+        collateralStartWeight
+        collateralTokenAddress
+        description
+        discordUrl
+        endDate
+        id
+        mediumUrl
+        name
+        startDate
+        swapFeePercentage
+        telegramUrl
+        tokenAmount
+        tokenContractAddress
+        tokenEndWeight
+        tokenIconUrl
+        tokenStartWeight
+        twitterUrl
+        websiteUrl
+    }
+`;
 export const GqlPoolLinearFragmentDoc = gql`
     fragment GqlPoolLinear on GqlPoolLinear {
         id
@@ -6592,32 +6648,10 @@ export type GetHomeNewsItemsQueryResult = Apollo.QueryResult<GetHomeNewsItemsQue
 export const GetLgeDocument = gql`
     query GetLge($id: ID!) {
         lge: lge(id: $id) {
-            address
-            adminAddress
-            adminIsMultisig
-            bannerImageUrl
-            collateralAmount
-            collateralEndWeight
-            collateralStartWeight
-            collateralTokenAddress
-            description
-            discordUrl
-            endDate
-            id
-            mediumUrl
-            name
-            startDate
-            swapFeePercentage
-            telegramUrl
-            tokenAmount
-            tokenContractAddress
-            tokenEndWeight
-            tokenIconUrl
-            tokenStartWeight
-            twitterUrl
-            websiteUrl
+            ...GqlLge
         }
     }
+    ${GqlLgeFragmentDoc}
 `;
 
 /**
@@ -6650,32 +6684,10 @@ export type GetLgeQueryResult = Apollo.QueryResult<GetLgeQuery, GetLgeQueryVaria
 export const GetLgesDocument = gql`
     query getLges {
         lges: lges {
-            address
-            adminAddress
-            adminIsMultisig
-            bannerImageUrl
-            collateralAmount
-            collateralEndWeight
-            collateralStartWeight
-            collateralTokenAddress
-            description
-            discordUrl
-            endDate
-            id
-            mediumUrl
-            name
-            startDate
-            swapFeePercentage
-            telegramUrl
-            tokenAmount
-            tokenContractAddress
-            tokenEndWeight
-            tokenIconUrl
-            tokenStartWeight
-            twitterUrl
-            websiteUrl
+            ...GqlLge
         }
     }
+    ${GqlLgeFragmentDoc}
 `;
 
 /**
