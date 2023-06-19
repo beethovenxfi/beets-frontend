@@ -2,9 +2,10 @@ import { HStack, TabList, Tabs } from '@chakra-ui/react';
 import BeetsTab from '~/components/tabs/BeetsTab';
 import { useLgeList } from '~/modules/lges/useLgeList';
 
+const TABS = [{ id: 'active-upcoming' }, { id: 'ended' }];
+
 export function LgeListTabs() {
     const { setStatus } = useLgeList();
-    const TABS = [{ id: 'active-upcoming' }, { id: 'ended' }];
 
     const handleTabChanged = (index: number) => {
         setStatus(TABS[index].id);
