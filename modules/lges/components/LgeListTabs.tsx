@@ -1,6 +1,6 @@
 import { HStack, TabList, Tabs } from '@chakra-ui/react';
 import BeetsTab from '~/components/tabs/BeetsTab';
-import { useLgeList } from '~/modules/lges/useLgeList';
+import { useLgeList } from '~/modules/lges/lib/useLgeList';
 
 const TABS = [{ id: 'active-upcoming' }, { id: 'ended' }];
 

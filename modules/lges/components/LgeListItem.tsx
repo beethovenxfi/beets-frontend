@@ -3,7 +3,7 @@ import { BoxProps } from '@chakra-ui/layout';
 import { useGetLgeToken } from './lib/useGetLgeToken';
 import TokenAvatar from '~/components/token/TokenAvatar';
 import { formatDistanceToNow } from 'date-fns';
-import { GqlLgeExtended } from '~/modules/lges/useLgeList';
+import { GqlLgeExtended } from '~/modules/lges/lib/useLgeList';
 import { IconTwitter } from '~/components/icons/IconTwitter';
 import { IconDiscord } from '~/components/icons/IconDiscord';
 import { IconTelegram } from '~/components/icons/IconTelegram';
