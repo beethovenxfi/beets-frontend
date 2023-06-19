@@ -1,16 +1,16 @@
 import { AlertTriangle } from 'react-feather';
 import { Box, BoxProps, Button, HStack, Heading, VStack, Link, Spacer } from '@chakra-ui/react';
-import { ReactNode } from 'react';
+import { ReactNode, useState } from 'react';
 import Card from '~/components/card/Card';
 
 interface Props extends BoxProps {
     children: ReactNode | ReactNode[];
-    hidden: boolean;
-    setHidden: () => void;
     showReadMore?: boolean;
 }
 
-export function LgeWarning({ children, hidden, setHidden, showReadMore = true }: Props) {
+export function LgeWarning({ children, showReadMore = false }: Props) {
+    const [hidden, setHidden] = useState(false);
+
     return (
         <Box hidden={hidden}>
             <Card p="4" mb="4" bg="orange.200" color="black">
@@ -31,7 +31,7 @@ export function LgeWarning({ children, hidden, setHidden, showReadMore = true }:
                         ) : (
                             <Spacer />
                         )}
-                        <Button onClick={setHidden} border="1px">
+                        <Button onClick={() => setHidden(true)} border="1px">
                             I understand
                         </Button>
                     </HStack>

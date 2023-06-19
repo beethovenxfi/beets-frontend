@@ -1,23 +1,19 @@
 import { Text } from '@chakra-ui/react';
-import { NetworkStatus } from '@apollo/client';
-import { GqlLgeExtended, useLgeList } from '~/modules/lges/useLgeList';
+import { GqlLgeExtended, useLgeList } from '~/modules/lges/lib/useLgeList';
 import { PaginatedTable } from '~/components/table/PaginatedTable';
 import { LgeListItem } from '~/modules/lges/components/LgeListItem';
 import { LgeListTop } from '~/modules/lges/components/LgeListTop';
 import { LgeListTableHeader } from '~/modules/lges/components/LgeListTableHeader';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
 import { LgeWarning } from './components/LgeWarning';
 import { LgeListMobileHeader } from '~/modules/lges/components/LgeListMobileHeader';
 
 function LgeList() {
-    const { lges, loading, networkStatus } = useLgeList();
+    const { lges, loading } = useLgeList();
     const router = useRouter();
-    const [hidden, setHidden] = useState(false);
-
     return (
         <>
-            <LgeWarning hidden={hidden} setHidden={() => setHidden(true)}>
+            <LgeWarning showReadMore>
                 <Text>
                     Participating in a Liquidity Bootstrapping Pool on Beethoven X is a high-risk endeavor. This is a
                     permissionless service where <span style={{ fontWeight: 'bold' }}>ANYONE</span> can create an event.
