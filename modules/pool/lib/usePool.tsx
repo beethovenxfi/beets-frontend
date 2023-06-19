@@ -16,7 +16,7 @@ import { usePoolWithOnChainData } from './usePoolWithOnChainData';
 
 export interface PoolContextType {
     pool: GqlPoolUnion;
-    poolService: PoolService;
+    poolService: PoolService | null;
     bpt: TokenBase;
     bptPrice: number;
     allTokens: TokenBase[];
@@ -70,7 +70,7 @@ export function PoolProvider({ pool: poolFromProps, children }: { pool: GqlPoolU
         }
     }, [pool.address]);
 
-    const poolService = poolGetServiceForPool(pool);
+    const poolService = pool.__typename !== 'GqlPoolLiquidityBootstrapping' ? poolGetServiceForPool(pool) : null;
 
     const { data: poolWithOnChainData } = usePoolWithOnChainData(pool);
     pool = poolWithOnChainData || pool;
@@ -137,7 +137,7 @@ export function PoolProvider({ pool: poolFromProps, children }: { pool: GqlPoolU
     });
 
     useEffect(() => {
-        poolService.updatePool(pool);
+        poolService && poolService.updatePool(pool);
     }, [networkStatus]);
 
     return (
