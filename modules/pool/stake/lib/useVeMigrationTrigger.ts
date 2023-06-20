@@ -64,7 +64,7 @@ export default function useVeMigrationTrigger() {
                         slope
                         bias
                         votingEscrowID {
-                            omniLocks(where: { dstChainId: $layerZeroChainId }) {
+                            omniLocks(where: { dstChainId: $layerZeroChainId, localUser: $userId }) {
                                 slope
                                 bias
                             }
@@ -78,7 +78,7 @@ export default function useVeMigrationTrigger() {
     );
 
     // check all the locks on mainnet
-    const isLockBridgeSynced = mainnetLockData?.mainnetLocks.votingLocks.every((mainnetVeLock, i) => {
+    const isLockBridgeSynced = mainnetLockData?.mainnetLocks.votingLocks.every((mainnetVeLock) => {
         // check if the slope/bias match omni locks for op (dstChainId is filtered in query)
         return mainnetVeLock.votingEscrowID?.omniLocks.every((optimismOmniLock) => {
             return optimismOmniLock.slope === mainnetVeLock.slope && optimismOmniLock.bias === mainnetVeLock.bias;
