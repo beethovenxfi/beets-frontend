@@ -20,7 +20,7 @@ export function useInvest() {
     const selectedInvestTokens: GqlPoolToken[] = pool.investConfig.options.map((option) => {
         firstTokenOption = option.tokenOptions[0];
         if (option.tokenOptions.length > 1) {
-            if (selectedOptions[`${option.poolTokenIndex}`]) {
+            if (selectedOptions && selectedOptions[`${option.poolTokenIndex}`]) {
                 return option.tokenOptions.find(
                     (tokenOption) => tokenOption.address === selectedOptions[`${option.poolTokenIndex}`],
                 )!;
@@ -41,7 +41,7 @@ export function useInvest() {
 
     const selectedInvestTokensWithAmounts = selectedInvestTokens.map((token) => ({
         ...token,
-        amount: inputAmounts[token.address] || '0',
+        amount: inputAmounts && inputAmounts[token.address] ? inputAmounts[token.address] : '0',
     }));
 
     const userInvestTokenBalances: TokenAmountHumanReadable[] = selectedInvestTokens.map((token) => ({

@@ -1,6 +1,5 @@
 import { useQuery } from 'react-query';
-import { useReactiveVar } from '@apollo/client';
-import { investStateVar } from '~/modules/pool/invest/lib/useInvestState';
+import { useInvestState } from '~/modules/pool/invest/lib/useInvestState';
 import { replaceEthWithWeth, tokenAmountsGetArrayFromMap } from '~/lib/services/token/token-util';
 import { PoolJoinData } from '~/lib/services/pool/pool-types';
 import { AmountHumanReadable } from '~/lib/services/token/token-types';
@@ -14,9 +13,9 @@ export function usePoolJoinGetContractCallData(minimumBpt: AmountHumanReadable |
     const networkConfig = useNetworkConfig();
     const { slippage } = useSlippage();
     const { poolService, pool } = usePool();
-    const { inputAmounts } = useReactiveVar(investStateVar);
-    const inputAmountsArray = tokenAmountsGetArrayFromMap(inputAmounts);
-    const hasEth = networkConfig.eth.address.toLowerCase() in inputAmounts;
+    const { inputAmounts } = useInvestState();
+    const inputAmountsArray = inputAmounts ? tokenAmountsGetArrayFromMap(inputAmounts) : [];
+    const hasEth = inputAmounts && networkConfig.eth.address.toLowerCase() in inputAmounts;
     const tokenAmountsIn = hasEth
         ? inputAmountsArray.map(({ amount, address }) => ({ address: replaceEthWithWeth(address), amount }))
         : inputAmountsArray;
@@ -27,7 +26,7 @@ export function usePoolJoinGetContractCallData(minimumBpt: AmountHumanReadable |
         maxAmountsIn: tokenAmountsIn,
         minimumBpt: minimumBpt || '0',
         userAddress: userAddress || '',
-        wethIsEth: hasEth,
+        wethIsEth: !!hasEth,
         zapIntoMasterchefFarm: !!pool.staking?.farm && zapEnabled,
         zapIntoGauge: !!pool.staking?.gauge && zapEnabled,
         slippage,
