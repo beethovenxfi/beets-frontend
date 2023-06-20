@@ -15,10 +15,11 @@ export function useInvest() {
     const { priceForAmount } = useGetTokens();
 
     // need to assign a value
-    let firstTokenOption: GqlPoolToken = pool.investConfig.options[0].tokenOptions[0];
+    let firstTokenOption: GqlPoolToken =
+        pool.investConfig.options.find((option) => option.tokenOptions.length > 1)?.tokenOptions[0] ||
+        pool.investConfig.options[0].tokenOptions[0];
 
     const selectedInvestTokens: GqlPoolToken[] = pool.investConfig.options.map((option) => {
-        firstTokenOption = option.tokenOptions[0];
         if (option.tokenOptions.length > 1) {
             if (selectedOptions && selectedOptions[`${option.poolTokenIndex}`]) {
                 return option.tokenOptions.find(
@@ -35,7 +36,7 @@ export function useInvest() {
                 return firstTokenOption;
             }
         } else {
-            return firstTokenOption;
+            return option.tokenOptions[0];
         }
     });
 
