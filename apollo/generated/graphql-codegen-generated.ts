@@ -39,7 +39,7 @@ export interface GqlBalancePoolAprSubItem {
     title: Scalars['String'];
 }
 
-export type GqlChain = 'ARBITRUM' | 'FANTOM' | 'GNOSIS' | 'MAINNET' | 'OPTIMISM' | 'POLYGON';
+export type GqlChain = 'ARBITRUM' | 'FANTOM' | 'GNOSIS' | 'MAINNET' | 'OPTIMISM' | 'POLYGON' | 'ZKEVM';
 
 export interface GqlContentNewsItem {
     __typename: 'GqlContentNewsItem';
@@ -319,6 +319,9 @@ export interface GqlPoolFilterDefinition {
 
 export type GqlPoolFilterType =
     | 'ELEMENT'
+    | 'GYRO'
+    | 'GYRO3'
+    | 'GYROE'
     | 'INVESTMENT'
     | 'LINEAR'
     | 'LIQUIDITY_BOOTSTRAPPING'
@@ -332,6 +335,8 @@ export interface GqlPoolGyro extends GqlPoolBase {
     __typename: 'GqlPoolGyro';
     address: Scalars['Bytes'];
     allTokens: Array<GqlPoolTokenExpanded>;
+    alpha: Scalars['String'];
+    beta: Scalars['String'];
     chain: GqlChain;
     createTime: Scalars['Int'];
     decimals: Scalars['Int'];
@@ -346,6 +351,7 @@ export interface GqlPoolGyro extends GqlPoolBase {
     staking?: Maybe<GqlPoolStaking>;
     symbol: Scalars['String'];
     tokens: Array<GqlPoolTokenUnion>;
+    type: Scalars['String'];
     withdrawConfig: GqlPoolWithdrawConfig;
 }
 
@@ -527,11 +533,14 @@ export interface GqlPoolMinimal {
     staking?: Maybe<GqlPoolStaking>;
     symbol: Scalars['String'];
     type: GqlPoolMinimalType;
+    version: Scalars['Int'];
 }
 
 export type GqlPoolMinimalType =
     | 'ELEMENT'
     | 'GYRO'
+    | 'GYRO3'
+    | 'GYROE'
     | 'INVESTMENT'
     | 'LINEAR'
     | 'LIQUIDITY_BOOTSTRAPPING'
@@ -1178,6 +1187,7 @@ export interface Mutation {
     poolReloadPoolTokenIndexes: Scalars['String'];
     poolReloadStakingForAllPools: Scalars['String'];
     poolSetPoolsWithPreferredGaugesAsIncentivized: Scalars['String'];
+    poolSyncAllPoolVersions: Scalars['String'];
     poolSyncAllPoolsFromSubgraph: Array<Scalars['String']>;
     poolSyncLatestSnapshotsForAllPools: Scalars['String'];
     poolSyncNewPoolsFromSubgraph: Array<Scalars['String']>;
@@ -1196,6 +1206,7 @@ export interface Mutation {
     tokenDeletePrice: Scalars['Boolean'];
     tokenDeleteTokenType: Scalars['String'];
     tokenInitChartData: Scalars['String'];
+    tokenReloadAllTokenTypes: Scalars['String'];
     tokenReloadTokenPrices?: Maybe<Scalars['Boolean']>;
     tokenSyncTokenDefinitions: Scalars['String'];
     tokenSyncTokenDynamicData: Scalars['String'];
@@ -2502,6 +2513,10 @@ export type GetPoolQuery = {
           }
         | {
               __typename: 'GqlPoolGyro';
+              alpha: string;
+              beta: string;
+              type: string;
+              nestingType: GqlPoolNestingType;
               id: string;
               address: string;
               name: string;
@@ -2510,6 +2525,23 @@ export type GetPoolQuery = {
               factory?: string | null;
               symbol: string;
               createTime: number;
+              tokens: Array<
+                  | {
+                        __typename: 'GqlPoolToken';
+                        id: string;
+                        index: number;
+                        name: string;
+                        symbol: string;
+                        balance: string;
+                        address: string;
+                        priceRate: string;
+                        decimals: number;
+                        weight?: string | null;
+                        totalBalance: string;
+                    }
+                  | { __typename: 'GqlPoolTokenLinear' }
+                  | { __typename: 'GqlPoolTokenPhantomStable' }
+              >;
               dynamicData: {
                   __typename: 'GqlPoolDynamicData';
                   poolId: string;
@@ -6803,6 +6835,17 @@ export const GetPoolDocument = gql`
                     }
                     ... on GqlPoolTokenPhantomStable {
                         ...GqlPoolTokenPhantomStable
+                    }
+                }
+            }
+            ... on GqlPoolGyro {
+                alpha
+                beta
+                type
+                nestingType
+                tokens {
+                    ... on GqlPoolToken {
+                        ...GqlPoolToken
                     }
                 }
             }

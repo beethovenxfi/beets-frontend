@@ -1,12 +1,13 @@
 import { GqlChain } from '~/apollo/generated/graphql-codegen-generated';
-export type BoostedByType =
+export type PoolBadgeType =
     | 'reaper-aave'
     | 'reaper-aave-granary'
     | 'yearn'
     | 'reaper-sonne'
     | 'overnight'
     | 'reaper'
-    | 'beefy-exactly';
+    | 'beefy-exactly'
+    | 'gyroscope';
 
 export interface PoolDetailWarning {
     id: string;
@@ -33,6 +34,7 @@ export interface NetworkConfig {
         symbol: string;
         decimals: number;
         iconUrl: string;
+        minGasAmount: string;
     };
     wethAddress: string;
     wethAddressFormatted: string;
@@ -114,8 +116,8 @@ export interface NetworkConfig {
         poolList: { [poolId: string]: string };
     };
     investDisabled: { [poolId: string]: boolean };
-    boostedByTypes: {
-        [poolId: string]: BoostedByType;
+    poolBadgeTypes: {
+        [poolId: string]: PoolBadgeType;
     };
     maBeetsEnabled: boolean;
     claimAllRewardsEnabled: boolean;

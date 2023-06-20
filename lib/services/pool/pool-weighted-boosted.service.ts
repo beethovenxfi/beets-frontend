@@ -57,6 +57,7 @@ export class PoolWeightedBoostedService implements PoolService {
         this.pool = pool;
         this.baseService.updatePool(pool);
         this.weightedPoolService.updatePool(pool);
+        this.proportionalInvestService.updatePool(pool);
     }
 
     public async joinGetContractCallData(data: PoolJoinData): Promise<PoolJoinContractCallData> {

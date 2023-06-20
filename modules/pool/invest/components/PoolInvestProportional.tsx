@@ -41,7 +41,7 @@ export function PoolInvestProportional({ onShowPreview }: Props) {
         proportionalInputAmounts: inputAmounts,
     } = useInvestState();
     const { tokenProportionalAmounts } = usePoolJoinGetProportionalInvestmentAmount();
-    const { selectedInvestTokens, isInvestingWithEth } = useInvest();
+    const { selectedInvestTokens, isInvestingWithEth, firstTokenOption } = useInvest();
 
     const { userPoolTokenBalances } = usePoolUserTokenBalancesInWallet();
 
@@ -148,7 +148,7 @@ export function PoolInvestProportional({ onShowPreview }: Props) {
                                     address={tokenOption.address}
                                     selectedAlternateToken={
                                         (selectedOptions && selectedOptions[`${option.poolTokenIndex}`]) ||
-                                        option.tokenOptions[0].address
+                                        firstTokenOption.address
                                     }
                                     onSelectedAlternateToken={(address) => {
                                         setSelectedOption(option.poolTokenIndex, address);

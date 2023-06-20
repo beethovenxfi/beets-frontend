@@ -16,6 +16,7 @@ export const fantomNetworkConfig: NetworkConfig = {
         symbol: 'FTM',
         decimals: 18,
         iconUrl: 'https://assets.coingecko.com/coins/images/4001/large/Fantom.png',
+        minGasAmount: '0.1',
     },
     wethAddress: '0x21be370d5312f44cb42ce377bc9b8a0cef1a4c83',
     wethAddressFormatted: '0x21be370D5312f44cB42ce377BC9b8a0cEF1A4C83',
@@ -61,8 +62,8 @@ export const fantomNetworkConfig: NetworkConfig = {
         linearRebalancers: {
             '0x92502cd8e00f5b8e737b2ba203fdd7cd27b23c8f': '0x377ef852870ff2817e04b20629efdd583db49bac', // wftm
             '0xc385e76e575b2d71eb877c27dcc1608f77fada99': '0x268292559d120e101a38eff1d04e6d20a67334ea', // usdc
-            '0x685056d3a4e574b163d0fa05a78f1b0b3aa04a80': '0x3c1420df122ac809b9d1ba77906f833764d64501', // dai
-            '0xa0051ab2c3eb7f17758428b02a07cf72eb0ef1a3': '0x8553fdc738521b0408c22897f6ceeed7f753a2c9', // weth
+            '0x685056d3a4e574b163d0fa05a78f1b0b3aa04a80': '0x8553fdc738521b0408c22897f6ceeed7f753a2c9', // dai
+            '0xa0051ab2c3eb7f17758428b02a07cf72eb0ef1a3': '0x6ab39ca2a627f3d3762a47666c2046292097914a', // weth
             '0x3c1420df122ac809b9d1ba77906f833764d64501': '0xb7880303215e8cbcfad05a43ffde1a1396795df1', // wbtc
             '0x442988091cdc18acb8912cd3fe062cda9233f9dc': '0x4e568a948fe772e36b696ac5b11b174e9807dfaa', // fusdt
         },
@@ -146,7 +147,7 @@ export const fantomNetworkConfig: NetworkConfig = {
     gauge: {
         rewardHelperAddress: AddressZero,
         balancerPseudoMinterAddress: AddressZero,
-        veBALDelegationProxyAddress: AddressZero
+        veBALDelegationProxyAddress: AddressZero,
     },
     createPoolUrl: 'https://v1.beets.fi/#/pool-create',
     launchUrl: 'https://v1.beets.fi/#/launch',
@@ -167,12 +168,13 @@ export const fantomNetworkConfig: NetworkConfig = {
         poolInvest: {},
         poolWithdraw: {},
     },
-    boostedByTypes: {
+    poolBadgeTypes: {
         '0xff2753aaba51c9f84689b9bd0a21b3cf380a1cff00000000000000000000072e': 'reaper',
         '0x7449f09c8f0ed490472d7c14b4eef235620d027000010000000000000000072d': 'reaper',
         '0x2e0d46d884af4053787e1838793bf98dcb87488e00020000000000000000072c': 'reaper',
         '0xf47f4d59c863c02cbfa3eefe6771b9c9fbe7b97800000000000000000000072b': 'reaper',
         '0xba0e9aea8a7fa1daab4edf244191f2387a4e472b000100000000000000000737': 'reaper',
+        '0x6e6dc948ce85c62125ff7a1e543d761a88f0a4cb000000000000000000000743': 'reaper',
     },
     investDisabled: {
         '0xa10285f445bcb521f1d623300dc4998b02f11c8f00000000000000000000043b': true,

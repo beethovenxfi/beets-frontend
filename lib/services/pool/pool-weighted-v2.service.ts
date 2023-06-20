@@ -42,6 +42,7 @@ export class PoolWeightedV2Service implements PoolService {
     public updatePool(pool: GqlPoolWeighted) {
         this.pool = pool;
         this.composableJoinService.updatePool(pool);
+        this.proportionalInvestService.updatePool(pool);
     }
 
     public async joinGetMaxProportionalForUserBalances(userInvestTokenBalances: TokenAmountHumanReadable[]) {

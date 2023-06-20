@@ -1,11 +1,11 @@
 import { GqlPoolJoinExit, GqlPoolSwap } from '~/apollo/generated/graphql-codegen-generated';
 import { Box, Flex, Text, Link, Grid, GridItem, Stack, useBreakpointValue } from '@chakra-ui/react';
-import numeral from 'numeral';
 import { BoxProps, HStack } from '@chakra-ui/layout';
 import { ArrowDown, ArrowRight, ExternalLink, Minus, Plus, Zap } from 'react-feather';
 import { TokenAmountPill } from '~/components/token/TokenAmountPill';
 import { formatDistanceToNow } from 'date-fns';
 import { etherscanGetTxUrl } from '~/lib/util/etherscan';
+import { numberFormatUSDValue } from '~/lib/util/number-formats';
 
 export enum PoolTransactionType {
     Swap = 'SWAP',
@@ -133,10 +133,6 @@ function Pool(props: PoolTransaction) {
 }
 
 export default function PoolTransactionItem({ transaction, ...rest }: Props) {
-    const getFormattedValue = () => {
-        return numeral(transaction.transaction.valueUSD).format('$0,0.000');
-    };
-
     const flexAlign = { base: 'flex-start', lg: 'center' };
     const gridItemMb = { base: '4', lg: '0' };
     const justifyContent = { base: 'flex-start', lg: 'flex-end' };
@@ -171,7 +167,7 @@ export default function PoolTransactionItem({ transaction, ...rest }: Props) {
             <Flex align={flexAlign}>
                 <GridItem area="value" mb={gridItemMb}>
                     <MobileLabel text="Value" />
-                    <Text fontSize="md">{getFormattedValue()}</Text>
+                    <Text fontSize="md">{numberFormatUSDValue(transaction.transaction.valueUSD || '')}</Text>
                 </GridItem>
             </Flex>
             <Flex align={flexAlign} justify={justifyContent}>
