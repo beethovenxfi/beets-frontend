@@ -8,13 +8,14 @@ interface Props extends BoxProps {
     address: string;
     amount: AmountHumanReadable;
     amountFormat?: 'standard' | 'precise';
+    logoUri?: string;
 }
 
-export function TokenAmountPill({ address, amount, amountFormat = 'standard', ...rest }: Props) {
+export function TokenAmountPill({ address, amount, amountFormat = 'standard', logoUri, ...rest }: Props) {
     return (
         <BeetsBox p={2} {...rest}>
             <Flex alignItems="center">
-                <TokenAvatar address={address} size={'xs'} />
+                <TokenAvatar address={address} size={'xs'} logoURI={logoUri} />
                 <Text ml={2}>
                     {amountFormat === 'precise' ? tokenFormatAmountPrecise(amount) : tokenFormatAmount(amount)}
                 </Text>
