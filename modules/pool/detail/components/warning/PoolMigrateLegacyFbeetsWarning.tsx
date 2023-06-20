@@ -29,9 +29,8 @@ export function PoolMigrateLegacyFbeetsWarning() {
                     >
                         <Box>
                             <Text>
-                                You have v1 fBEETS staked or in your wallet. First migrate those on the maBEETS page and
-                                withdraw from there afterwards. If you also have the Fidelio Duetto BPT, come back here
-                                to withdraw from that.
+                                You currently have legacy fBEETS tokens staked or stored in your wallet. Start by
+                                migrating them on the maBEETS page and then proceed to manage them from there.
                             </Text>
                         </Box>
                         <Button
