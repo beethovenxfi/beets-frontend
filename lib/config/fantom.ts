@@ -178,6 +178,7 @@ export const fantomNetworkConfig: NetworkConfig = {
     },
     investDisabled: {
         '0xa10285f445bcb521f1d623300dc4998b02f11c8f00000000000000000000043b': true,
+        '0xcde5a11a4acb4ee4c805352cec57e236bdbc3837000200000000000000000019': true,
     },
     maBeetsEnabled: true,
     claimAllRewardsEnabled: true,
