@@ -2,6 +2,7 @@ import { AmountHumanReadable, TokenBase } from '~/lib/services/token/token-types
 import { BaseProvider } from '@ethersproject/providers';
 import LiquidityGaugeV5Abi from '~/lib/abi/LiquidityGaugeV5.json';
 import LiquidityGaugeV6Abi from '~/lib/abi/LiquidityGaugeV6.json';
+import GaugeWorkingBalanceHelperAbi from '~/lib/abi/GaugeWorkingBalanceHelper.json';
 import ChildChainGaugeRewardHelper from '~/lib/abi/ChildChainGaugeRewardHelper.json';
 import { BigNumber, Contract } from 'ethers';
 import { formatFixed } from '@ethersproject/bignumber';
@@ -162,6 +163,45 @@ export class GaugeStakingService {
 
         const formattedResult = mapValues(result, (data) => formatFixed(data.claimableBAL.toString(), 18).toString());
         return formattedResult;
+    }
+
+    public async getCheckpointableGauges({
+        provider,
+        gauges,
+        userAddress,
+    }: {
+        provider: BaseProvider;
+        gauges: string[];
+        userAddress: string;
+    }) {
+        const multicaller = new Multicaller(this.chainId, provider, GaugeWorkingBalanceHelperAbi);
+        for (const gauge of gauges) {
+            multicaller.call(
+                `${gauge}.workingBalanceSupplyRatios`,
+                networkConfig.gauge.workingBalanceHelperAddress,
+                'getWorkingBalanceToSupplyRatios',
+                [gauge, userAddress],
+            );
+        }
+
+        if (multicaller.numCalls === 0) {
+            return [];
+        }
+
+        const result: {
+            [gaugeId: string]: {
+                workingBalanceSupplyRatios: [BigNumber, BigNumber];
+            };
+        } = await multicaller.execute({});
+
+        const checkpointableGauges = [];
+        for (const gaugeId in result) {
+            if (result[gaugeId].workingBalanceSupplyRatios[1].gt(result[gaugeId].workingBalanceSupplyRatios[0])) {
+                checkpointableGauges.push(gaugeId);
+            }
+        }
+
+        return checkpointableGauges;
     }
 }
 

@@ -105,6 +105,7 @@ export interface NetworkConfig {
         rewardHelperAddress: string;
         balancerPseudoMinterAddress: string;
         veBALDelegationProxyAddress: string;
+        workingBalanceHelperAddress: string;
     };
     createPoolUrl: string;
     launchUrl?: string;
