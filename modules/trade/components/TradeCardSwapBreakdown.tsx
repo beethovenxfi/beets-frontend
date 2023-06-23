@@ -9,9 +9,11 @@ import CoingeckoLogo from '~/assets/images/coingecko.svg';
 import Image from 'next/image';
 import { useMemo } from 'react';
 
-interface Props {}
+interface Props {
+    isLge: boolean;
+}
 
-export function TradeCardSwapBreakdown({}: Props) {
+export function TradeCardSwapBreakdown({ isLge }: Props) {
     const { priceFor, priceForAmount } = useGetTokens();
     const { swapInfo, hasHighPriceImpact, hasNoticeablePriceImpact, priceImpact } = useTrade();
     const { tokenOut, tokenIn } = useTradeData();
@@ -62,22 +64,24 @@ export function TradeCardSwapBreakdown({}: Props) {
                         {tokenFormatAmount(swapInfo.effectivePrice)} {tokenIn.symbol}
                     </Text>
                 </HStack>
-                <HStack width="full" justifyContent="space-between">
-                    <HStack alignItems="center" spacing="1">
-                        <Text color="gray.100" fontSize=".85rem">
-                            Compared to
+                {!isLge && (
+                    <HStack width="full" justifyContent="space-between">
+                        <HStack alignItems="center" spacing="1">
+                            <Text color="gray.100" fontSize=".85rem">
+                                Compared to
+                            </Text>
+                            <Flex alignItems="center" height="full">
+                                <Image src={CoingeckoLogo} alt="Coingecko Logo" width="16" height="16" />
+                            </Flex>
+                        </HStack>
+                        <Text
+                            fontSize=".85rem"
+                            color={diff > 0 ? 'beets.green' : diff < -0.075 ? 'red' : diff < -0.02 ? 'orange' : 'white'}
+                        >
+                            {coingeckoVariationText}
                         </Text>
-                        <Flex alignItems="center" height="full">
-                            <Image src={CoingeckoLogo} alt="Coingecko Logo" width="16" height="16" />
-                        </Flex>
                     </HStack>
-                    <Text
-                        fontSize=".85rem"
-                        color={diff > 0 ? 'beets.green' : diff < -0.075 ? 'red' : diff < -0.02 ? 'orange' : 'white'}
-                    >
-                        {coingeckoVariationText}
-                    </Text>
-                </HStack>
+                )}
             </VStack>
         </AnimatePresence>
     );

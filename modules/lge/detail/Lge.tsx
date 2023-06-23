@@ -3,15 +3,32 @@ import { LgeWarning } from '~/modules/lges/components/LgeWarning';
 import { useLge } from '../lib/useLge';
 import Card from '~/components/card/Card';
 import { LgeDetails } from './LgeDetails';
+import { TradeCard } from '~/modules/trade/components/TradeCard';
+import { useUserLgeTokenBalances } from '../lib/useUserLgeTokenBalances';
+import { useUserImportedTokens } from '~/lib/user/useUserImportedTokens';
+import { useEffect } from 'react';
 
 export function Lge() {
     const { lge, status } = useLge();
+    const { isAmountLessThanEqUserBalance, refetch: refetchUserBalances } = useUserLgeTokenBalances();
+    const { loadToken, importToken, removeToken, tokenToImport } = useUserImportedTokens();
 
-    const hasEnded = status === 'ended';
     const startDate = lge && new Date(lge.startDate);
     const endDate = lge && new Date(lge.endDate);
     const hasEnded = status === 'ended';
     const isActive = status === 'active';
+
+    useEffect(() => {
+        if (lge) {
+            if (!tokenToImport) {
+                loadToken(lge.tokenContractAddress.toLowerCase());
+            } else {
+                importToken(!!lge);
+            }
+
+            //return () => removeToken(lge.tokenContractAddress.toLowerCase() || '');
+        }
+    }, [tokenToImport]);
 
     return (
         <Box marginBottom="8">
@@ -49,11 +66,15 @@ export function Lge() {
                             chart
                         </Box>
                     </GridItem>
-                    <GridItem>
-                        <Box h="500px" border="2px">
-                            trade box
-                        </Box>
-                    </GridItem>
+                    {isActive && (
+                        <GridItem>
+                            <TradeCard
+                                lge={lge}
+                                isAmountLessThanEqUserBalance={isAmountLessThanEqUserBalance}
+                                refetchUserBalances={refetchUserBalances}
+                            />
+                        </GridItem>
+                    )}
                 </Grid>
             </VStack>
             <LgeDetails />

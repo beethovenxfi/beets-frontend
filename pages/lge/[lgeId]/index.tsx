@@ -14,6 +14,9 @@ import { FallbackPlaceholder } from '~/components/fallback/FallbackPlaceholder';
 import { Lge } from '~/modules/lge/detail/Lge';
 import { LgeProvider } from '~/modules/lge/lib/useLge';
 import { PoolProvider } from '~/modules/pool/lib/usePool';
+import { UserLgeTokenBalancesProvider } from '~/modules/lge/lib/useUserLgeTokenBalances';
+import { UserTokenBalancesProvider } from '~/lib/user/useUserTokenBalances';
+import Compose, { ProviderWithProps } from '~/components/providers/Compose';
 
 interface Props {
     lge: GqlLge;
@@ -26,6 +29,13 @@ const LgePage = ({ lge, pool }: Props) => {
         return <FallbackPlaceholder />;
     }
 
+    const LgeProviders: ProviderWithProps[] = [
+        [LgeProvider, { lge }],
+        [PoolProvider, { pool }],
+        [UserTokenBalancesProvider, {}],
+        [UserLgeTokenBalancesProvider, {}],
+    ];
+
     return (
         <>
             <Head>
@@ -34,11 +44,9 @@ const LgePage = ({ lge, pool }: Props) => {
                 <meta property="og:title" content={`Beethoven X | ${lge.name} LBP`} />
                 <meta property="twitter:title" content={`Beethoven X | ${lge.name} LBP`} />
             </Head>
-            <LgeProvider lge={lge}>
-                <PoolProvider pool={pool}>
-                    <Lge />
-                </PoolProvider>
-            </LgeProvider>
+            <Compose providers={LgeProviders}>
+                <Lge />
+            </Compose>
         </>
     );
 };

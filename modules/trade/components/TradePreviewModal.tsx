@@ -12,13 +12,15 @@ import { Box, Modal, ModalOverlay, Portal, Text } from '@chakra-ui/react';
 import { ModalCloseButton } from '@chakra-ui/modal';
 import { motion } from 'framer-motion';
 import { TradeSubmittedContent } from '~/modules/trade/components/TradeSubmittedContent';
+import { GqlLge } from '~/apollo/generated/graphql-codegen-generated';
 
 interface Props {
     isOpen: boolean;
     onClose: () => void;
+    lge?: GqlLge;
 }
 
-export function TradePreviewModal({ isOpen, onClose }: Props) {
+export function TradePreviewModal({ isOpen, onClose, lge }: Props) {
     const batchSwapQuery = useBatchSwap();
     const initialRef = useRef(null);
     const [submitting, setSubmitting] = useState(false);
@@ -55,6 +57,7 @@ export function TradePreviewModal({ isOpen, onClose }: Props) {
                         <TradePreviewContent
                             query={batchSwapQuery}
                             onTransactionSubmitted={() => setSubmitting(true)}
+                            lge={lge}
                         />
                     )}
                     {submitting && (

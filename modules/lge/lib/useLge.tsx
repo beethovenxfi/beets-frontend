@@ -4,6 +4,7 @@ import { GqlLge, useGetLgeQuery } from '~/apollo/generated/graphql-codegen-gener
 export interface LgeContextType {
     lge: GqlLge | undefined;
     status: 'upcoming' | 'ended' | 'active';
+    tokens: string[];
 }
 
 export const LgeContext = createContext<LgeContextType | null>(null);
@@ -20,12 +21,14 @@ export function LgeProvider({ lge: lgeFromProps, children }: { lge: GqlLge; chil
     const startDate = lge && new Date(lge.startDate);
     const endDate = lge && new Date(lge.endDate);
     const status = startDate && now < startDate ? 'upcoming' : endDate && now > endDate ? 'ended' : 'active';
+    const tokens = [lge?.collateralTokenAddress.toLowerCase() || '', lge?.tokenContractAddress.toLowerCase() || ''];
 
     return (
         <LgeContext.Provider
             value={{
                 lge,
                 status,
+                tokens,
             }}
         >
             {children}
