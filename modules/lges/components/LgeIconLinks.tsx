@@ -11,7 +11,7 @@ interface Props {
     lge: GqlLge;
 }
 
-function getIconLink(urlType: keyof typeof lge, lge: GqlLge): ReactNode {
+function getIconLink(urlType: keyof typeof lge, lge: GqlLge, key: number): ReactNode {
     const href = lge[urlType] as string;
 
     if (!href) {
@@ -43,7 +43,7 @@ function getIconLink(urlType: keyof typeof lge, lge: GqlLge): ReactNode {
             break;
     }
     return (
-        <Link href={href} target="_blank" color="gray.100">
+        <Link href={href} target="_blank" color="gray.100" key={key}>
             {iconType}
         </Link>
     );
@@ -56,5 +56,7 @@ export function LgeIconLinks({ lge }: Props) {
         .filter((key) => key.match('Url') && !key.match('Image') && !key.match('Icon'))
         .reverse();
 
-    return <HStack mt="2">{urlTypes.map((urlType) => getIconLink(urlType as keyof typeof lge, lge))}</HStack>;
+    return (
+        <HStack mt="2">{urlTypes.map((urlType, index) => getIconLink(urlType as keyof typeof lge, lge, index))}</HStack>
+    );
 }
