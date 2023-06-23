@@ -8,13 +8,13 @@ import { LgeSwapsTable } from './LgeSwapsTable';
 import { useLge } from '../lib/useLge';
 import { usePool } from '~/modules/pool/lib/usePool';
 
-type Props = {};
+// swaps tab is disabled for non-active lges
+const tabs = ['About this lge', 'Swaps'];
 
-export function LgeDetails({ ...rest }: Props & BoxProps) {
+export function LgeDetails({ ...rest }: BoxProps) {
     const { lge, status } = useLge();
     const { pool } = usePool();
     const [activeTab, setActiveTab] = useState(0);
-    const tabs = ['About this lge', 'Swaps'];
 
     return (
         <Box width="full" {...rest}>
@@ -27,7 +27,11 @@ export function LgeDetails({ ...rest }: Props & BoxProps) {
                             </MenuButton>
                             <MenuList>
                                 {tabs.map((tab, index) => (
-                                    <MenuItem onClick={() => setActiveTab(index)} key={index}>
+                                    <MenuItem
+                                        onClick={() => setActiveTab(index)}
+                                        key={index}
+                                        isDisabled={index === 1 && status !== 'active'}
+                                    >
                                         {tab}
                                     </MenuItem>
                                 ))}
