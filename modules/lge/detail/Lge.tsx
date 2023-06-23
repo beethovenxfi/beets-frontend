@@ -10,10 +10,12 @@ export function Lge() {
     const hasEnded = status === 'ended';
     const startDate = lge && new Date(lge.startDate);
     const endDate = lge && new Date(lge.endDate);
+    const hasEnded = status === 'ended';
+    const isActive = status === 'active';
 
     return (
         <Box marginBottom="8">
-            {status !== 'active' && (
+            {!isActive && (
                 <Card p="4" mb="4" bg={hasEnded ? 'orange.200' : 'green.200'} color="black">
                     {`${lge?.name} Liquidity Bootstrapping Pool ${hasEnded ? 'ended' : 'starts'}: ${
                         hasEnded ? endDate : startDate
