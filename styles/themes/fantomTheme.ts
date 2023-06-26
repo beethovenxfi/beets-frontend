@@ -270,5 +270,13 @@ export const fantomTheme: Partial<ChakraTheme> = {
                 },
             },
         },
+        // TODO: define correct color
+        Stepper: {
+            baseStyle: {
+                description: {
+                    color: 'gray.200',
+                },
+            },
+        },
     },
 };
