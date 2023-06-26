@@ -11,7 +11,7 @@ import { useEffect } from 'react';
 export function Lge() {
     const { lge, status } = useLge();
     const { isAmountLessThanEqUserBalance, refetch: refetchUserBalances } = useUserLgeTokenBalances();
-    const { loadToken, importToken, removeToken, tokenToImport } = useUserImportedTokens();
+    const { loadToken, importToken, tokenToImport } = useUserImportedTokens();
 
     const startDate = lge && new Date(lge.startDate);
     const endDate = lge && new Date(lge.endDate);
@@ -23,10 +23,9 @@ export function Lge() {
             if (!tokenToImport) {
                 loadToken(lge.tokenContractAddress.toLowerCase());
             } else {
+                // token is stored in session so will be removed on browser tab/window close
                 importToken(!!lge);
             }
-
-            //return () => removeToken(lge.tokenContractAddress.toLowerCase() || '');
         }
     }, [tokenToImport]);
 
@@ -62,7 +61,7 @@ export function Lge() {
                 )}
                 <Grid gap="4" templateColumns={{ base: '1fr', lg: '2fr 1fr' }} width="full">
                     <GridItem>
-                        <Box h="500px" border="2px">
+                        <Box h="full" border="2px">
                             chart
                         </Box>
                     </GridItem>
