@@ -3,7 +3,7 @@ import { BoxProps } from '@chakra-ui/layout';
 import BeetsTab from '~/components/tabs/BeetsTab';
 import { useState } from 'react';
 import { ChevronDown } from 'react-feather';
-import { LgeDetailAboutThisLge } from './LgeDetailAboutThisLge';
+import { LgeDetailAbout } from './LgeDetailAbout';
 import { LgeSwapsTable } from './LgeSwapsTable';
 import { useLge } from '../lib/useLge';
 import { usePool } from '~/modules/pool/lib/usePool';
@@ -45,7 +45,7 @@ export function LgeDetails({ ...rest }: BoxProps) {
                             ))}
                         </HStack>
                     </TabList>
-                    {activeTab === 0 && lge && <LgeDetailAboutThisLge lge={lge} status={status} pool={pool} />}
+                    {activeTab === 0 && lge && <LgeDetailAbout lge={lge} status={status} pool={pool} />}
                     {activeTab === 1 && <LgeSwapsTable />}
                 </VStack>
             </Tabs>
