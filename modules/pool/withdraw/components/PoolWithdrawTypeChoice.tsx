@@ -122,7 +122,7 @@ export function PoolWithdrawTypeChoice({ onShowProportional, onShowSingleAsset }
                         height="140px"
                         width="full"
                         onClick={onShowProportional}
-                        disabled={valueInWallet === 0}
+                        disabled={parseFloat(userWalletBptBalance) === 0}
                     >
                         <VStack spacing="1">
                             <Image src={Scales} height="48" alt="beets-balanced" />
@@ -151,7 +151,7 @@ export function PoolWithdrawTypeChoice({ onShowProportional, onShowSingleAsset }
                         <Button
                             variant="image"
                             onClick={onShowSingleAsset}
-                            disabled={valueInWallet === 0 || !canCustomInvest}
+                            disabled={parseFloat(userWalletBptBalance) === 0 || !canCustomInvest}
                         >
                             <VStack spacing="1">
                                 <Image src={BeetSmart} height="48" alt="beets-smart" />

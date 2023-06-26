@@ -65,17 +65,24 @@ export const optimismNetworkConfig: NetworkConfig = {
             ],
         },
         linearRebalancers: {
-            '0xba7834bb3cd2db888e6a06fb45e82b4225cd0c71': '0xdc9d37d76e7a782460f94ffd811d4e0579f04756', //usdc
-            '0x9253d7e1b42fa01ede2c53f3a21b3b4d13239cd4': '0x1491b1bcb8e5b6608a984a3b56ad783bb4c5df49', //usdt
-            '0x888a6195d42a95e80d81e1c506172772a80b80bc': '0x4065e8da096917987d99bce9c8e78a74c6abc7f1', //dai
-            '0xdd89c7cd0613c1557b2daac6ae663282900204f1': '0x842afe129dcd4d2e1046a6491502e9495286d21e', //weth
-            '0xd0d334b6cfd77acc94bab28c7783982387856449': '0x9b5eaeacee3b2121afed32238015f37ea4dc6f7e', //bal
-            '0xa4e597c1bd01859b393b124ce18427aa4426a871': '0xfa0081569a9e5c80385f2ffb301db93288e53684', //op
-            '0xa1a77e5d7d769bfbb790a08ec976dc738bf795b9': '0x2bce16d9e5bbaa737be124f7da16a5a7bc699bcb', //wbtc
-            '0xc0d7013a05860271a1edb52415cf74bc85b2ace7': '0x87b57d325bc066890a400a5c88f34084a2454d91', //susd
-            '0x62ec8b26c08ffe504f22390a65e6e3c1e45e9877': '0x573f1fbde18ab2926a5e3fb80467ae50cf91d3f6', //soDAI
-            '0xb96c5bada4bf6a70e71795a3197ba94751dae2db': '0xbac75e5e03c68c3a9e0c200462d38440d8ffea45', //soUSDT
-            '0xedcfaf390906a8f91fb35b7bac23f3111dbaee1c': '0xe61b872d223362facb9fcbce359a56764bccfa36', //soUSDC
+            '0xba7834bb3cd2db888e6a06fb45e82b4225cd0c71': '0xdc9d37d76e7a782460f94ffd811d4e0579f04756', // usdc
+            '0x9253d7e1b42fa01ede2c53f3a21b3b4d13239cd4': '0x1491b1bcb8e5b6608a984a3b56ad783bb4c5df49', // usdt
+            '0x888a6195d42a95e80d81e1c506172772a80b80bc': '0x4065e8da096917987d99bce9c8e78a74c6abc7f1', // dai
+            '0xdd89c7cd0613c1557b2daac6ae663282900204f1': '0x842afe129dcd4d2e1046a6491502e9495286d21e', // weth
+            '0xd0d334b6cfd77acc94bab28c7783982387856449': '0x9b5eaeacee3b2121afed32238015f37ea4dc6f7e', // bal
+            '0xa4e597c1bd01859b393b124ce18427aa4426a871': '0xfa0081569a9e5c80385f2ffb301db93288e53684', // op
+            '0xa1a77e5d7d769bfbb790a08ec976dc738bf795b9': '0x2bce16d9e5bbaa737be124f7da16a5a7bc699bcb', // wbtc
+            '0xc0d7013a05860271a1edb52415cf74bc85b2ace7': '0x87b57d325bc066890a400a5c88f34084a2454d91', // susd
+            '0x62ec8b26c08ffe504f22390a65e6e3c1e45e9877': '0x573f1fbde18ab2926a5e3fb80467ae50cf91d3f6', // soDAI
+            '0xb96c5bada4bf6a70e71795a3197ba94751dae2db': '0xbac75e5e03c68c3a9e0c200462d38440d8ffea45', // soUSDT
+            '0xedcfaf390906a8f91fb35b7bac23f3111dbaee1c': '0xe61b872d223362facb9fcbce359a56764bccfa36', // soUSDC
+            '0xdc2007d9e9a33f50630f26069faab69c25f7758c': '0xd01e860e811a2942c1222586971a71d764bdd8c1', // rfUSDC
+            '0xbef1ccaada458a570c37b11a8872988ba1e4fdb9': '0xcb1ab294279078c5cf65406dd32083100c015325', // rfUSDT
+            '0x8fe33d737484ca194dedf64aafa8485327fc5372': '0xe243be0c0ec53f74ed0ee2171fd070e656f4b48f', // rfDAI
+            '0x8003eec4add35c6d23eb1ef61b4fa6bbbb23a41a': '0xc2bf5c38ebbcb9a710822f1ba2235e88ce51bc3a', // rfWETH
+            '0xb85245929dc65b5eddb56c4b4e84b20bce69db35': '0x46a76217415fd83ebb9e1f0ddf6b4f4f18fc5518', // rfWSETH
+            '0xd32f78f5ae235269c6d2cabbd26a57ff9fd62967': '0xa15abbf609133662a6794efaf12fbb0fdad647ac', // rfWBTC
+            '0x55b1f937b1335be355c82e207fd437182c986ba1': '0xa832e597273cf056d71490f6ea6f17218ba285df', // rfOP
         },
         reaperManualRebalancer: '0xf070996cf89cd3d2582705fc269f2c800e9a6a21',
         sorQueries: '0x1814a3b3e4362caf4eb54cd85b82d39bd7b34e41',
