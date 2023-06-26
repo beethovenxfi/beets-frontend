@@ -11,37 +11,38 @@ import {
     HStack,
     Spacer,
 } from '@chakra-ui/react';
-import { Dispatch, SetStateAction } from 'react';
+import { Dispatch, SetStateAction, useEffect } from 'react';
 
-interface FormData {
+export interface DetailsFormData {
     name: string;
-    description: string;
-    tokenAddress: string;
-    iconUrl: string;
     websiteUrl: string;
+    tokenContractAddress: string;
+    tokenIconUrl: string;
     twitterUrl: string;
     mediumUrl: string;
     discordUrl: string;
     telegramUrl: string;
+    description: string;
     bannerImageUrl: string;
 }
 
-export default function LgeCreateFormDetails({ setActiveStep }: { setActiveStep: Dispatch<SetStateAction<number>> }) {
+interface Props {
+    setActiveStep: Dispatch<SetStateAction<number>>;
+    setDetailsFormData: Dispatch<SetStateAction<DetailsFormData | null>>;
+    values: any;
+}
+
+export default function LgeCreateDetailsForm({ setActiveStep, setDetailsFormData, values }: Props) {
     const {
         handleSubmit,
         register,
         formState: { errors, isSubmitting },
         reset,
-    } = useForm<FormData>();
+    } = useForm<DetailsFormData>(values);
 
-    function onSubmit(values: FormData): Promise<void> {
+    function onSubmit(values: DetailsFormData): void {
         setActiveStep(1);
-        return new Promise((resolve) => {
-            setTimeout(() => {
-                alert(JSON.stringify(values, null, 2));
-                resolve();
-            }, 3000);
-        });
+        setDetailsFormData(values);
     }
 
     const invalidUrlPattern = {
@@ -101,30 +102,32 @@ export default function LgeCreateFormDetails({ setActiveStep }: { setActiveStep:
                     </FormControl>
                 </GridItem>
                 <GridItem>
-                    <FormControl isInvalid={!!errors.tokenAddress} isRequired>
-                        <FormLabel htmlFor="tokenAddress">Token address</FormLabel>
+                    <FormControl isInvalid={!!errors.tokenContractAddress} isRequired>
+                        <FormLabel htmlFor="tokenContractAddress">Token contract address</FormLabel>
                         <Input
-                            id="tokenAddress"
+                            id="tokenContractAddress"
                             placeholder="0x0123456789abcdef0123456789abcdef01234567"
-                            {...register('tokenAddress', {
+                            {...register('tokenContractAddress', {
                                 required: 'This is required',
                                 pattern: { value: /^0x[a-fA-F0-9]{40}$/, message: 'Invalid token address' },
                             })}
                         />
-                        <FormErrorMessage>{errors.tokenAddress && errors.tokenAddress.message}</FormErrorMessage>
+                        <FormErrorMessage>
+                            {errors.tokenContractAddress && errors.tokenContractAddress.message}
+                        </FormErrorMessage>
                     </FormControl>
                 </GridItem>
                 <GridItem>
-                    <FormControl isInvalid={!!errors.iconUrl} isRequired>
-                        <FormLabel htmlFor="iconUrl">Token icon url</FormLabel>
+                    <FormControl isInvalid={!!errors.tokenIconUrl} isRequired>
+                        <FormLabel htmlFor="tokenIconUrl">Token icon url</FormLabel>
                         <Input
-                            id="iconUrl"
-                            {...register('iconUrl', {
+                            id="tokenIconUrl"
+                            {...register('tokenIconUrl', {
                                 required: 'This is required',
                                 pattern: invalidUrlPattern,
                             })}
                         />
-                        <FormErrorMessage>{errors.iconUrl && errors.iconUrl.message}</FormErrorMessage>
+                        <FormErrorMessage>{errors.tokenIconUrl && errors.tokenIconUrl.message}</FormErrorMessage>
                     </FormControl>
                 </GridItem>
                 <GridItem>

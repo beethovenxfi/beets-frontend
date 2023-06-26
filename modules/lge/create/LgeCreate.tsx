@@ -12,7 +12,9 @@ import {
     Stepper,
     useSteps,
 } from '@chakra-ui/react';
-import LgeCreateFormDetails from './forms/LgeCreateFormDetails';
+import LgeCreateDetailsForm, { DetailsFormData } from './forms/LgeCreateDetailsForm';
+import LgeCreateConfigurationForm, { ConfigurationFormData } from './forms/LgeCreateConfigurationForm';
+import { useEffect, useState } from 'react';
 
 const steps = [
     { title: 'Details', description: 'Enter your project details' },
@@ -25,6 +27,13 @@ export function LgeCreate() {
         index: 0,
         count: steps.length,
     });
+
+    const [detailsFormData, setDetailsFormData] = useState<DetailsFormData | null>(null);
+    const [configurationFormData, setConfigurationFormData] = useState<ConfigurationFormData | null>(null);
+
+    useEffect(() => {
+        console.log({ detailsFormData, configurationFormData });
+    }, [detailsFormData, configurationFormData]);
 
     return (
         <>
@@ -48,8 +57,19 @@ export function LgeCreate() {
                         </Step>
                     ))}
                 </Stepper>
-                {activeStep === 0 && <LgeCreateFormDetails setActiveStep={setActiveStep} />}
-                {activeStep === 1 && <Box>TEST 2</Box>}
+                {activeStep === 0 && (
+                    <LgeCreateDetailsForm
+                        setActiveStep={setActiveStep}
+                        setDetailsFormData={setDetailsFormData}
+                        values={detailsFormData}
+                    />
+                )}
+                {activeStep === 1 && (
+                    <LgeCreateConfigurationForm
+                        setActiveStep={setActiveStep}
+                        setConfigurationFormData={setConfigurationFormData}
+                    />
+                )}
                 {activeStep === 2 && <Box>TEST 3</Box>}
             </Box>
         </>
