@@ -28,12 +28,12 @@ export function LgeCreate() {
         count: steps.length,
     });
 
-    const [detailsFormData, setDetailsFormData] = useState<DetailsFormData | null>(null);
-    const [configurationFormData, setConfigurationFormData] = useState<ConfigurationFormData | null>(null);
+    const [detailsFormData, setDetailsFormData] = useState<DetailsFormData>();
+    const [configurationFormData, setConfigurationFormData] = useState<ConfigurationFormData>();
 
-    useEffect(() => {
-        console.log({ detailsFormData, configurationFormData });
-    }, [detailsFormData, configurationFormData]);
+    // useEffect(() => {
+    //     console.log({ detailsFormData, configurationFormData });
+    // }, [detailsFormData, configurationFormData]);
 
     return (
         <>
@@ -68,6 +68,7 @@ export function LgeCreate() {
                     <LgeCreateConfigurationForm
                         setActiveStep={setActiveStep}
                         setConfigurationFormData={setConfigurationFormData}
+                        values={configurationFormData}
                     />
                 )}
                 {activeStep === 2 && <Box>TEST 3</Box>}

@@ -9,8 +9,12 @@ import {
     GridItem,
     HStack,
     Spacer,
+    InputGroup,
+    InputRightElement,
+    Text,
 } from '@chakra-ui/react';
-import { Dispatch, SetStateAction } from 'react';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import PercentageInput, { format, parse } from './components/PercentageInput';
 
 export interface ConfigurationFormData {
     startDate: string;
@@ -24,36 +28,59 @@ export interface ConfigurationFormData {
     collateralStartWeight: number;
     tokenEndWeight: number;
     collateralEndWeight: number;
-    swapFeePercentage: number;
+    swapFeePercentage: string;
     poolName: string;
     poolSymbol: string;
 }
 
+const defaultValues = {
+    startDate: '',
+    startTime: '',
+    endDate: '',
+    endTime: '',
+    collateralTokenAddress: '',
+    tokenAmount: '',
+    collateralAmount: '',
+    tokenStartWeight: 95,
+    collateralStartWeight: 5,
+    tokenEndWeight: 50,
+    collateralEndWeight: 50,
+    swapFeePercentage: '2',
+    poolName: '',
+    poolSymbol: '',
+};
+
 interface Props {
     setActiveStep: Dispatch<SetStateAction<number>>;
-    setConfigurationFormData: Dispatch<SetStateAction<ConfigurationFormData | null>>;
+    setConfigurationFormData: Dispatch<SetStateAction<ConfigurationFormData | undefined>>;
+    values: ConfigurationFormData | undefined;
 }
 
-export default function LgeCreateConfigurationForm({ setActiveStep }: Props) {
+export default function LgeCreateConfigurationForm({ setActiveStep, setConfigurationFormData, values }: Props) {
     const {
         handleSubmit,
         register,
         formState: { errors, isSubmitting },
         reset,
-    } = useForm<ConfigurationFormData>();
+        setValue,
+    } = useForm<ConfigurationFormData>({
+        defaultValues,
+        values,
+        resetOptions: {
+            keepDefaultValues: true,
+        },
+    });
 
-    function onSubmit(values: ConfigurationFormData): Promise<void> {
+    const [swapFeePercentage, setSwapFeePercentage] = useState(defaultValues.swapFeePercentage);
+
+    function onSubmit(values: ConfigurationFormData): void {
+        console.log({ values });
         setActiveStep(1);
-        return new Promise((resolve) => {
-            setTimeout(() => {
-                alert(JSON.stringify(values, null, 2));
-                resolve();
-            }, 3000);
-        });
+        setConfigurationFormData(values);
     }
 
     return (
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form onSubmit={handleSubmit(onSubmit)} noValidate>
             <Grid templateColumns={{ base: '1fr', lg: '1fr 1fr' }} gap="4" width="full">
                 <GridItem>
                     <FormControl isInvalid={!!errors.poolName} isRequired>
@@ -67,7 +94,7 @@ export default function LgeCreateConfigurationForm({ setActiveStep }: Props) {
                         <FormErrorMessage>{errors.poolName && errors.poolName.message}</FormErrorMessage>
                     </FormControl>
                 </GridItem>
-                <GridItem rowSpan={3}>
+                <GridItem>
                     <FormControl isInvalid={!!errors.poolSymbol} h="full" isRequired>
                         <FormLabel htmlFor="poolSymbol">Pool symbol</FormLabel>
                         <Input
@@ -81,8 +108,20 @@ export default function LgeCreateConfigurationForm({ setActiveStep }: Props) {
                 </GridItem>
 
                 <GridItem>
+                    <FormControl isInvalid={!!errors.startDate} isRequired>
+                        <FormLabel htmlFor="startDate">Start date</FormLabel>
+                        <Input
+                            id="startDate"
+                            {...register('startDate', {
+                                required: 'This is required',
+                            })}
+                        />
+                        <FormErrorMessage>{errors.startDate && errors.startDate.message}</FormErrorMessage>
+                    </FormControl>
+                </GridItem>
+                <GridItem>
                     <FormControl isInvalid={!!errors.startTime} isRequired>
-                        <FormLabel htmlFor="startTime">Start date</FormLabel>
+                        <FormLabel htmlFor="startTime">Start time</FormLabel>
                         <Input
                             id="startTime"
                             {...register('startTime', {
@@ -93,15 +132,8 @@ export default function LgeCreateConfigurationForm({ setActiveStep }: Props) {
                     </FormControl>
                 </GridItem>
                 <GridItem>
-                    <FormControl isInvalid={!!errors.startTime}>
-                        <FormLabel htmlFor="startTime">Start time</FormLabel>
-                        <Input id="startTime" {...register('startTime')} />
-                        <FormErrorMessage>{errors.startTime && errors.startTime.message}</FormErrorMessage>
-                    </FormControl>
-                </GridItem>
-                <GridItem>
                     <FormControl isInvalid={!!errors.endDate} isRequired>
-                        <FormLabel htmlFor="endDate">Token address</FormLabel>
+                        <FormLabel htmlFor="endDate">End date</FormLabel>
                         <Input
                             id="endDate"
                             {...register('endDate', {
@@ -124,12 +156,36 @@ export default function LgeCreateConfigurationForm({ setActiveStep }: Props) {
                     </FormControl>
                 </GridItem>
                 <GridItem>
-                    <FormControl isInvalid={!!errors.swapFeePercentage}>
+                    <FormControl isInvalid={!!errors.swapFeePercentage} isRequired>
                         <FormLabel htmlFor="swapFeePercentage">Swap fee percentage</FormLabel>
-                        <Input id="swapFeePercentage" {...register('swapFeePercentage')} />
+                        <PercentageInput
+                            id="swapFeePercentage"
+                            {...(register('swapFeePercentage'),
+                            {
+                                min: 0,
+                                max: 10,
+                                onChange: (valueString: string) => {
+                                    const value = parse(valueString);
+                                    setSwapFeePercentage(value);
+                                    setValue('swapFeePercentage', value);
+                                },
+                                value: format(swapFeePercentage),
+                            })}
+                        />
                         <FormErrorMessage>
                             {errors.swapFeePercentage && errors.swapFeePercentage.message}
                         </FormErrorMessage>
+                    </FormControl>
+                </GridItem>
+                <GridItem>
+                    <FormControl>
+                        <FormLabel htmlFor="platformFeePercentage">Platform fee percentage</FormLabel>
+                        <InputGroup>
+                            <Input id="platformFeePercentage" value={2} isReadOnly />
+                            <InputRightElement pointerEvents="none">
+                                <Text>%</Text>
+                            </InputRightElement>
+                        </InputGroup>
                     </FormControl>
                 </GridItem>
             </Grid>

@@ -26,10 +26,23 @@ export interface DetailsFormData {
     bannerImageUrl: string;
 }
 
+const defaultValues = {
+    name: '',
+    websiteUrl: '',
+    tokenContractAddress: '',
+    tokenIconUrl: '',
+    twitterUrl: '',
+    mediumUrl: '',
+    discordUrl: '',
+    telegramUrl: '',
+    description: '',
+    bannerImageUrl: '',
+};
+
 interface Props {
     setActiveStep: Dispatch<SetStateAction<number>>;
-    setDetailsFormData: Dispatch<SetStateAction<DetailsFormData | null>>;
-    values: any;
+    setDetailsFormData: Dispatch<SetStateAction<DetailsFormData | undefined>>;
+    values: DetailsFormData | undefined;
 }
 
 export default function LgeCreateDetailsForm({ setActiveStep, setDetailsFormData, values }: Props) {
@@ -38,7 +51,13 @@ export default function LgeCreateDetailsForm({ setActiveStep, setDetailsFormData
         register,
         formState: { errors, isSubmitting },
         reset,
-    } = useForm<DetailsFormData>(values);
+    } = useForm<DetailsFormData>({
+        defaultValues,
+        values,
+        resetOptions: {
+            keepDefaultValues: true,
+        },
+    });
 
     function onSubmit(values: DetailsFormData): void {
         setActiveStep(1);
@@ -88,7 +107,7 @@ export default function LgeCreateDetailsForm({ setActiveStep, setDetailsFormData
                             placeholder="https://example.com"
                             {...register('websiteUrl', {
                                 required: 'This is required',
-                                pattern: invalidUrlPattern,
+                                //pattern: invalidUrlPattern,
                             })}
                         />
                         <FormErrorMessage>{errors.websiteUrl && errors.websiteUrl.message}</FormErrorMessage>
@@ -109,7 +128,7 @@ export default function LgeCreateDetailsForm({ setActiveStep, setDetailsFormData
                             placeholder="0x0123456789abcdef0123456789abcdef01234567"
                             {...register('tokenContractAddress', {
                                 required: 'This is required',
-                                pattern: { value: /^0x[a-fA-F0-9]{40}$/, message: 'Invalid token address' },
+                                //pattern: { value: /^0x[a-fA-F0-9]{40}$/, message: 'Invalid token address' },
                             })}
                         />
                         <FormErrorMessage>
@@ -124,7 +143,7 @@ export default function LgeCreateDetailsForm({ setActiveStep, setDetailsFormData
                             id="tokenIconUrl"
                             {...register('tokenIconUrl', {
                                 required: 'This is required',
-                                pattern: invalidUrlPattern,
+                                //pattern: invalidUrlPattern,
                             })}
                         />
                         <FormErrorMessage>{errors.tokenIconUrl && errors.tokenIconUrl.message}</FormErrorMessage>
