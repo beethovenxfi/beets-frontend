@@ -51,6 +51,7 @@ export const networkProvider = response.provider({ chainId: parseInt(networkConf
 const { connectors } = getDefaultWallets({
     appName: networkConfig.appName,
     chains: networkChainDefinitions,
+    projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID || '',
 });
 
 export const wagmiClient = createClient({
