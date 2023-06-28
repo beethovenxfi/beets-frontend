@@ -39,7 +39,7 @@ export interface GqlBalancePoolAprSubItem {
     title: Scalars['String'];
 }
 
-export type GqlChain = 'ARBITRUM' | 'FANTOM' | 'GNOSIS' | 'MAINNET' | 'OPTIMISM' | 'POLYGON' | 'ZKEVM';
+export type GqlChain = 'ARBITRUM' | 'AVALANCHE' | 'FANTOM' | 'GNOSIS' | 'MAINNET' | 'OPTIMISM' | 'POLYGON' | 'ZKEVM';
 
 export interface GqlContentNewsItem {
     __typename: 'GqlContentNewsItem';
