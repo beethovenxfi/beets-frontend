@@ -9,9 +9,8 @@ import {
     GridItem,
     Textarea,
     HStack,
-    Spacer,
 } from '@chakra-ui/react';
-import { Dispatch, SetStateAction, useEffect } from 'react';
+import { Dispatch, SetStateAction } from 'react';
 
 export interface DetailsFormData {
     name: string;
@@ -179,13 +178,12 @@ export default function LgeCreateDetailsForm({ setActiveStep, setDetailsFormData
                 </GridItem>
             </Grid>
 
-            <HStack>
-                <Button mt={4} colorScheme="teal" onClick={() => reset()}>
-                    Clear form
-                </Button>
-                <Spacer />
+            <HStack justifyContent="space-between">
                 <Button mt={4} colorScheme="teal" isDisabled>
                     Prev
+                </Button>
+                <Button mt={4} colorScheme="teal" onClick={() => reset()}>
+                    Clear form
                 </Button>
                 <Button mt={4} colorScheme="teal" isLoading={isSubmitting} type="submit">
                     Next
