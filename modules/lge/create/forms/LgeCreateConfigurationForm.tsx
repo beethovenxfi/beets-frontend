@@ -346,7 +346,7 @@ export default function LgeCreateConfigurationForm({ setActiveStep, setConfigura
                 </GridItem>
             </Grid>
 
-            <HStack justifyContent="space-between">
+            <HStack justifyContent="space-between" mt="8">
                 <Button mt={4} colorScheme="teal" onClick={() => setActiveStep(0)}>
                     Prev
                 </Button>

@@ -15,9 +15,10 @@ import {
 import LgeCreateDetailsForm, { DetailsFormData } from './forms/LgeCreateDetailsForm';
 import LgeCreateConfigurationForm, { ConfigurationFormData } from './forms/LgeCreateConfigurationForm';
 import { useEffect, useState } from 'react';
+import LgeCreateCreation from './forms/LgeCreateCreation';
 
 const steps = [
-    { title: 'Details', description: 'Enter your project details' },
+    { title: 'Details', description: 'Enter your LBP details' },
     { title: 'Configuration', description: 'Configure your LBP' },
     { title: 'Creation', description: 'Create your LBP' },
 ];
@@ -37,9 +38,11 @@ export function LgeCreate() {
 
     return (
         <>
-            <Heading mb="16">Create an LBP</Heading>
+            <Heading as="h1" size="2xl" mb="16">
+                Create an LBP
+            </Heading>
             <Box w="1024px">
-                <Stepper index={activeStep} mb="8">
+                <Stepper index={activeStep} mb="16">
                     {steps.map((step, index) => (
                         <Step key={index}>
                             <StepIndicator>
@@ -71,7 +74,13 @@ export function LgeCreate() {
                         values={configurationFormData}
                     />
                 )}
-                {activeStep === 2 && <Box>TEST 3</Box>}
+                {activeStep === 2 && (
+                    <LgeCreateCreation
+                        setActiveStep={setActiveStep}
+                        detailsFormData={detailsFormData}
+                        configurationFormData={configurationFormData}
+                    />
+                )}
             </Box>
         </>
     );
