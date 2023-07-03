@@ -9,7 +9,7 @@ export function PoolWithdrawRewardsCheck() {
     return userStakedBptBalance && hasPendingRewards ? (
         <Alert status="warning" my="4">
             <AlertIcon />
-            Please claim all pending rewards before you withdraw completely.
+            You still have pending rewards to claim. Please claim them before you withdraw all funds from the pool.
         </Alert>
     ) : null;
 }
