@@ -1,4 +1,4 @@
-import { Button, Center, Grid, GridItem, HStack, Heading } from '@chakra-ui/react';
+import { Button, Grid, GridItem, HStack, Heading, useBreakpointValue } from '@chakra-ui/react';
 import { ConfigurationFormData } from './LgeCreateConfigurationForm';
 import { DetailsFormData } from './LgeCreateDetailsForm';
 import { Dispatch, SetStateAction } from 'react';
@@ -10,55 +10,85 @@ interface Props {
 }
 
 export default function LgeCreateCreation({ setActiveStep, detailsFormData, configurationFormData }: Props) {
+    const isMobile = useBreakpointValue({ base: true, lg: false });
+
     return (
         <>
-            <Grid templateColumns={{ base: '1fr', lg: '2fr 3fr' }} gap="4" width="full">
-                <GridItem colSpan={2} mb="4">
-                    <Center>
-                        <Heading>Details</Heading>
-                    </Center>
+            <Grid templateColumns={{ base: '1fr', lg: '1fr 3fr' }} gap={{ base: undefined, lg: '4' }}>
+                <GridItem colSpan={isMobile ? 1 : 2} mb="4">
+                    <Heading>Details</Heading>
                 </GridItem>
-                <GridItem>Name:</GridItem>
+                <GridItem fontWeight="bold">Name:</GridItem>
                 <GridItem>{detailsFormData?.name}</GridItem>
-                <GridItem>Description:</GridItem>
-                <GridItem>{detailsFormData?.description}</GridItem>
-                <GridItem>Launch token address:</GridItem>
-                <GridItem>{detailsFormData?.tokenContractAddress} + name?</GridItem>
-                <GridItem>Launch token icon (url):</GridItem>
-                <GridItem>{detailsFormData?.tokenIconUrl}</GridItem>
-                <GridItem>Website (url):</GridItem>
-                <GridItem>{detailsFormData?.websiteUrl}</GridItem>
-                <GridItem>Banner image (url):</GridItem>
-                <GridItem>{detailsFormData?.bannerImageUrl || '-'}</GridItem>
-                <GridItem>Twitter (url):</GridItem>
-                <GridItem>{detailsFormData?.twitterUrl || '-'}</GridItem>
-                <GridItem>Medium (url):</GridItem>
-                <GridItem>{detailsFormData?.mediumUrl || '-'}</GridItem>
-                <GridItem>Discord (url):</GridItem>
-                <GridItem>{detailsFormData?.discordUrl || '-'}</GridItem>
-                <GridItem colSpan={2} mt="8" mb="4">
-                    <Center>
-                        <Heading>Configuration</Heading>
-                    </Center>
+                <GridItem fontWeight="bold" mt={{ base: '2', lg: undefined }}>
+                    Description:
                 </GridItem>
-                <GridItem>Start date (UTC):</GridItem>
+                <GridItem>{detailsFormData?.description}</GridItem>
+                <GridItem fontWeight="bold" mt={{ base: '2', lg: undefined }}>
+                    Launch token address:
+                </GridItem>
+                <GridItem>{detailsFormData?.tokenContractAddress} + name?</GridItem>
+                <GridItem fontWeight="bold" mt={{ base: '2', lg: undefined }}>
+                    Launch token icon (url):
+                </GridItem>
+                <GridItem>{detailsFormData?.tokenIconUrl}</GridItem>
+                <GridItem fontWeight="bold" mt={{ base: '2', lg: undefined }}>
+                    Website (url):
+                </GridItem>
+                <GridItem>{detailsFormData?.websiteUrl}</GridItem>
+                <GridItem fontWeight="bold" mt={{ base: '2', lg: undefined }}>
+                    Banner image (url):
+                </GridItem>
+                <GridItem>{detailsFormData?.bannerImageUrl || '-'}</GridItem>
+                <GridItem fontWeight="bold" mt={{ base: '2', lg: undefined }}>
+                    Twitter (url):
+                </GridItem>
+                <GridItem>{detailsFormData?.twitterUrl || '-'}</GridItem>
+                <GridItem fontWeight="bold" mt={{ base: '2', lg: undefined }}>
+                    Medium (url):
+                </GridItem>
+                <GridItem>{detailsFormData?.mediumUrl || '-'}</GridItem>
+                <GridItem fontWeight="bold" mt={{ base: '2', lg: undefined }}>
+                    Discord (url):
+                </GridItem>
+                <GridItem>{detailsFormData?.discordUrl || '-'}</GridItem>
+                <GridItem colSpan={isMobile ? 1 : 2} mt="8" mb="4">
+                    <Heading>Configuration</Heading>
+                </GridItem>
+                <GridItem fontWeight="bold" mt={{ base: '2', lg: undefined }}>
+                    Start date (UTC):
+                </GridItem>
                 <GridItem>{configurationFormData?.startDate}</GridItem>
-                <GridItem>End date (UTC):</GridItem>
+                <GridItem fontWeight="bold" mt={{ base: '2', lg: undefined }}>
+                    End date (UTC):
+                </GridItem>
                 <GridItem>{configurationFormData?.endDate}</GridItem>
-                <GridItem>Pool name:</GridItem>
+                <GridItem fontWeight="bold" mt={{ base: '2', lg: undefined }}>
+                    Pool name:
+                </GridItem>
                 <GridItem>{configurationFormData?.poolName}</GridItem>
-                <GridItem>Pool symbol:</GridItem>
+                <GridItem fontWeight="bold" mt={{ base: '2', lg: undefined }}>
+                    Pool symbol:
+                </GridItem>
                 <GridItem>{configurationFormData?.poolSymbol}</GridItem>
-                <GridItem>Collateral token address:</GridItem>
+                <GridItem fontWeight="bold" mt={{ base: '2', lg: undefined }}>
+                    Collateral token address:
+                </GridItem>
                 <GridItem>{configurationFormData?.collateralTokenAddress}</GridItem>
-                <GridItem>Start weights:</GridItem>
+                <GridItem fontWeight="bold" mt={{ base: '2', lg: undefined }}>
+                    Start weights:
+                </GridItem>
                 <GridItem>{`${configurationFormData?.tokenStartWeight}% ${detailsFormData?.tokenContractAddress} - ${configurationFormData?.collateralStartWeight}% ${configurationFormData?.collateralTokenAddress}`}</GridItem>
-                <GridItem>End weights:</GridItem>
+                <GridItem fontWeight="bold" mt={{ base: '2', lg: undefined }}>
+                    End weights:
+                </GridItem>
                 <GridItem>{`${configurationFormData?.tokenEndWeight}% ${detailsFormData?.tokenContractAddress} - ${configurationFormData?.collateralEndWeight}% ${configurationFormData?.collateralTokenAddress}`}</GridItem>
-                <GridItem>Swap fee:</GridItem>
+                <GridItem fontWeight="bold" mt={{ base: '2', lg: undefined }}>
+                    Swap fee:
+                </GridItem>
                 <GridItem>{`${configurationFormData?.swapFeePercentage}%`}</GridItem>
             </Grid>
-            <HStack justifyContent="space-between" mt="8" w="55%">
+            <HStack justifyContent="space-between" mt="8" w={{ base: 'full', lg: '55%' }}>
                 <Button mt={4} colorScheme="teal" onClick={() => setActiveStep(1)}>
                     Prev
                 </Button>

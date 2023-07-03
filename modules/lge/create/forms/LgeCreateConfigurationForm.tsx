@@ -110,8 +110,8 @@ export default function LgeCreateConfigurationForm({ setActiveStep, setConfigura
 
     return (
         <form onSubmit={handleSubmit(onSubmit)} noValidate>
-            <Grid templateColumns={{ base: '1fr', lg: '1fr 1fr' }} gap="4" width="full">
-                <GridItem>
+            <Grid templateColumns={{ base: '1fr 1fr', lg: 'repeat(4, 1fr)' }} gap="4" width="full">
+                <GridItem colSpan={2}>
                     <FormControl isInvalid={!!errors.poolName} isRequired>
                         <FormLabel htmlFor="poolName">Pool name</FormLabel>
                         <Input
@@ -123,7 +123,7 @@ export default function LgeCreateConfigurationForm({ setActiveStep, setConfigura
                         <FormErrorMessage>{errors.poolName && errors.poolName.message}</FormErrorMessage>
                     </FormControl>
                 </GridItem>
-                <GridItem>
+                <GridItem colSpan={2}>
                     <FormControl isInvalid={!!errors.poolSymbol} isRequired>
                         <FormLabel htmlFor="poolSymbol">Pool symbol</FormLabel>
                         <Input
@@ -135,7 +135,7 @@ export default function LgeCreateConfigurationForm({ setActiveStep, setConfigura
                         <FormErrorMessage>{errors.poolSymbol && errors.poolSymbol.message}</FormErrorMessage>
                     </FormControl>
                 </GridItem>
-                <GridItem>
+                <GridItem colSpan={2}>
                     <FormControl isInvalid={!!errors.startDate} isRequired>
                         <FormLabel htmlFor="startDate">Start date</FormLabel>
                         <Input
@@ -160,7 +160,7 @@ export default function LgeCreateConfigurationForm({ setActiveStep, setConfigura
                         <FormErrorMessage>{errors.startTime && errors.startTime.message}</FormErrorMessage>
                     </FormControl>
                 </GridItem> */}
-                <GridItem>
+                <GridItem colSpan={2}>
                     <FormControl isInvalid={!!errors.endDate} isRequired>
                         <FormLabel htmlFor="endDate">End date</FormLabel>
                         <Input
@@ -187,7 +187,7 @@ export default function LgeCreateConfigurationForm({ setActiveStep, setConfigura
                 </GridItem> */}
                 <GridItem>
                     <FormControl isInvalid={!!errors.swapFeePercentage} isRequired>
-                        <FormLabel htmlFor="swapFeePercentage">Swap fee percentage</FormLabel>
+                        <FormLabel htmlFor="swapFeePercentage">Swap fee</FormLabel>
                         <PercentageInput
                             id="swapFeePercentage"
                             {...(register('swapFeePercentage'),
@@ -209,7 +209,7 @@ export default function LgeCreateConfigurationForm({ setActiveStep, setConfigura
                 </GridItem>
                 <GridItem>
                     <FormControl>
-                        <FormLabel htmlFor="platformFeePercentage">Platform fee percentage</FormLabel>
+                        <FormLabel htmlFor="platformFeePercentage">Platform fee</FormLabel>
                         <Input id="platformFeePercentage" value="2%" isReadOnly />
                     </FormControl>
                 </GridItem>
@@ -217,6 +217,18 @@ export default function LgeCreateConfigurationForm({ setActiveStep, setConfigura
                     <FormControl isReadOnly>
                         <FormLabel htmlFor="launchTokenAddress">Launch token</FormLabel>
                         <Input id="launchTokenAddress" value="USDC" />
+                    </FormControl>
+                </GridItem>
+                <GridItem>
+                    <FormControl isInvalid={!!errors.tokenAmount} isRequired>
+                        <FormLabel htmlFor="tokenAmount">Amount</FormLabel>
+                        <Input
+                            id="tokenAmount"
+                            {...register('tokenAmount', {
+                                required: 'This is required',
+                            })}
+                        />
+                        <FormErrorMessage>{errors.tokenAmount && errors.tokenAmount.message}</FormErrorMessage>
                     </FormControl>
                 </GridItem>
                 <GridItem>
@@ -241,7 +253,7 @@ export default function LgeCreateConfigurationForm({ setActiveStep, setConfigura
                                                 : null
                                         }
                                         onChange={(option) => onChange((option as TokenOption).value || '')}
-                                        placeholder="Select token"
+                                        placeholder="Select..."
                                         options={collateralTokenOptions}
                                         isSearchable={false}
                                         isInvalid={invalid}
@@ -257,20 +269,8 @@ export default function LgeCreateConfigurationForm({ setActiveStep, setConfigura
                     </FormControl>
                 </GridItem>
                 <GridItem>
-                    <FormControl isInvalid={!!errors.tokenAmount} isRequired>
-                        <FormLabel htmlFor="tokenAmount">Launch token amount</FormLabel>
-                        <Input
-                            id="tokenAmount"
-                            {...register('tokenAmount', {
-                                required: 'This is required',
-                            })}
-                        />
-                        <FormErrorMessage>{errors.tokenAmount && errors.tokenAmount.message}</FormErrorMessage>
-                    </FormControl>
-                </GridItem>
-                <GridItem>
                     <FormControl isInvalid={!!errors.collateralAmount} isRequired>
-                        <FormLabel htmlFor="collateralAmount">Collateral token amount</FormLabel>
+                        <FormLabel htmlFor="collateralAmount">Amount</FormLabel>
                         <Input
                             id="collateralAmount"
                             {...register('collateralAmount', {
@@ -282,7 +282,7 @@ export default function LgeCreateConfigurationForm({ setActiveStep, setConfigura
                         </FormErrorMessage>
                     </FormControl>
                 </GridItem>
-                <GridItem>
+                <GridItem colSpan={2}>
                     <FormControl isInvalid={!!errors.tokenStartWeight} isRequired>
                         <FormLabel htmlFor="tokenStartWeight">Start weights</FormLabel>
                         <SliderInput
@@ -313,7 +313,7 @@ export default function LgeCreateConfigurationForm({ setActiveStep, setConfigura
                         )}
                     </FormControl>
                 </GridItem>
-                <GridItem>
+                <GridItem colSpan={2}>
                     <FormControl isInvalid={!!errors.tokenEndWeight} isRequired>
                         <FormLabel htmlFor="tokenEndWeight">End weights</FormLabel>
                         <SliderInput

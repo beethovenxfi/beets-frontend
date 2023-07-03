@@ -12,6 +12,7 @@ import {
     Stepper,
     useSteps,
     useBreakpointValue,
+    Text,
 } from '@chakra-ui/react';
 import LgeCreateDetailsForm, { DetailsFormData } from './forms/LgeCreateDetailsForm';
 import LgeCreateConfigurationForm, { ConfigurationFormData } from './forms/LgeCreateConfigurationForm';
@@ -71,7 +72,9 @@ export function LgeCreate() {
                                 />
                             </StepIndicator>
                             <Box flexShrink="0">
-                                <StepTitle>{step.title}</StepTitle>
+                                <StepTitle>
+                                    <Text fontWeight={index === activeStep ? 'bold' : undefined}>{step.title}</Text>
+                                </StepTitle>
                                 <StepDescription>{step.description}</StepDescription>
                             </Box>
                             <StepSeparator />
