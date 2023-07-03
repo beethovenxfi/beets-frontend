@@ -97,9 +97,10 @@ export function PoolWithdrawSingleAsset({ onShowPreview, ...rest }: Props) {
                         </Box>
                     </Alert>
                 </Collapse>
-                {pool.staking?.type === 'GAUGE' && singleAssetWithdraw.amount === maxAmount && (
-                    <PoolWithdrawRewardsCheck />
-                )}
+                <PoolWithdrawRewardsCheck
+                    show={pool.staking?.type === 'GAUGE' && singleAssetWithdraw.amount === maxAmount}
+                />
+
                 <Button variant="primary" width="full" mt="8" onClick={onShowPreview} isDisabled={!isValid}>
                     Preview
                 </Button>
