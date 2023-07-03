@@ -97,7 +97,7 @@ export default function LgeCreateDetailsForm({ setActiveStep, setDetailsFormData
                         <FormErrorMessage>{errors.description && errors.description.message}</FormErrorMessage>
                     </FormControl>
                 </GridItem>
-                <GridItem mt={{ base: '6', lg: undefined }}>
+                <GridItem mt={{ base: '6', lg: '0' }}>
                     <FormControl isInvalid={!!errors.websiteUrl} isRequired>
                         <FormLabel htmlFor="websiteUrl">Website url</FormLabel>
                         <Input

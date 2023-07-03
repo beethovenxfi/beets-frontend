@@ -36,12 +36,14 @@ export function LgeCreate() {
     const [detailsFormData, setDetailsFormData] = useState<DetailsFormData>();
     const [configurationFormData, setConfigurationFormData] = useState<ConfigurationFormData>();
 
-    const element = document.getElementById('stepper');
-    if (element) {
-        scrollIntoView(element, {
-            behavior: 'smooth',
-            scrollMode: 'if-needed',
-        });
+    if (typeof window !== 'undefined') {
+        const element = document?.getElementById('stepper');
+        if (element) {
+            scrollIntoView(element, {
+                behavior: 'smooth',
+                scrollMode: 'if-needed',
+            });
+        }
     }
 
     // useEffect(() => {
@@ -50,14 +52,14 @@ export function LgeCreate() {
 
     return (
         <>
-            <Heading as="h1" size="2xl" mb={{ base: '8', lg: '16' }}>
+            <Heading as="h1" size="2xl" mb={{ base: '8', lg: '-8' }}>
                 Create an LBP
             </Heading>
             <Box w={{ base: undefined, lg: '1024px' }}>
                 <Stepper
                     id="stepper"
                     index={activeStep}
-                    mb={{ base: '4', lg: '16' }}
+                    mb={{ base: '6', lg: '-8' }}
                     orientation={isMobile ? 'vertical' : undefined}
                     height={{ base: '200px', lg: undefined }}
                     gap={{ base: '0', lg: undefined }}
