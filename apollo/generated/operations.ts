@@ -787,6 +787,15 @@ export const GetLge = gql`
     }
     ${GqlLge}
 `;
+export const CreateLge = gql`
+    mutation CreateLge($input: GqlLgeCreateInput!) {
+        lgeCreate(lge: $input) {
+            id
+            address
+            name
+        }
+    }
+`;
 export const GetLges = gql`
     query getLges {
         lges: lges {

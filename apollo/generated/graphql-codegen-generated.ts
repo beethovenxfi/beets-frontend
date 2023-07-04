@@ -2214,6 +2214,15 @@ export type GetLgeQuery = {
     };
 };
 
+export type CreateLgeMutationVariables = Exact<{
+    input: GqlLgeCreateInput;
+}>;
+
+export type CreateLgeMutation = {
+    __typename: 'Mutation';
+    lgeCreate: { __typename: 'GqlLge'; id: string; address: string; name: string };
+};
+
 export type GetLgesQueryVariables = Exact<{ [key: string]: never }>;
 
 export type GetLgesQuery = {
@@ -6702,6 +6711,43 @@ export function useGetLgeLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<Get
 export type GetLgeQueryHookResult = ReturnType<typeof useGetLgeQuery>;
 export type GetLgeLazyQueryHookResult = ReturnType<typeof useGetLgeLazyQuery>;
 export type GetLgeQueryResult = Apollo.QueryResult<GetLgeQuery, GetLgeQueryVariables>;
+export const CreateLgeDocument = gql`
+    mutation CreateLge($input: GqlLgeCreateInput!) {
+        lgeCreate(lge: $input) {
+            id
+            address
+            name
+        }
+    }
+`;
+export type CreateLgeMutationFn = Apollo.MutationFunction<CreateLgeMutation, CreateLgeMutationVariables>;
+
+/**
+ * __useCreateLgeMutation__
+ *
+ * To run a mutation, you first call `useCreateLgeMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateLgeMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createLgeMutation, { data, loading, error }] = useCreateLgeMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useCreateLgeMutation(
+    baseOptions?: Apollo.MutationHookOptions<CreateLgeMutation, CreateLgeMutationVariables>,
+) {
+    const options = { ...defaultOptions, ...baseOptions };
+    return Apollo.useMutation<CreateLgeMutation, CreateLgeMutationVariables>(CreateLgeDocument, options);
+}
+export type CreateLgeMutationHookResult = ReturnType<typeof useCreateLgeMutation>;
+export type CreateLgeMutationResult = Apollo.MutationResult<CreateLgeMutation>;
+export type CreateLgeMutationOptions = Apollo.BaseMutationOptions<CreateLgeMutation, CreateLgeMutationVariables>;
 export const GetLgesDocument = gql`
     query getLges {
         lges: lges {

@@ -32,3 +32,11 @@ query GetLge($id: ID!) {
         ...GqlLge
     }
 }
+
+mutation CreateLge($input: GqlLgeCreateInput!) {
+    lgeCreate(lge: $input) {
+        id
+        address
+        name
+    }
+}
