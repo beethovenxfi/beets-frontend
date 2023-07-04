@@ -12,13 +12,13 @@ import {
     FormHelperText,
 } from '@chakra-ui/react';
 import { Dispatch, SetStateAction, useState } from 'react';
-import PercentageInput, { format, parse } from './components/PercentageInput';
-import { SliderInput } from './components/SliderInput';
+import PercentageInput, { format, parse as parseInput } from '~/components/inputs/PercentageInput';
+import { SliderInput } from '~/components/inputs/SliderInput';
 import { ChakraStylesConfig, Select } from 'chakra-react-select';
 
 export interface ConfigurationFormData {
-    startTimestamp: number | null;
-    endTimestamp: number | null;
+    startDate: string;
+    endDate: string;
     collateralAddress: string;
     tokenAmount: string;
     collateralAmount: string;
@@ -32,8 +32,8 @@ export interface ConfigurationFormData {
 }
 
 const defaultValues: ConfigurationFormData = {
-    startTimestamp: null,
-    endTimestamp: null,
+    startDate: '',
+    endDate: '',
     collateralAddress: '',
     tokenAmount: '',
     collateralAmount: '',
@@ -83,7 +83,7 @@ export default function LgeCreateConfigurationForm({ setActiveStep, setConfigura
     ];
 
     const chakraStyles: ChakraStylesConfig = {
-        dropdownIndicator: (provided, state) => ({
+        dropdownIndicator: (provided) => ({
             ...provided,
             background: 'rgba(255,255,255,0.08)',
             p: 0,
@@ -93,13 +93,14 @@ export default function LgeCreateConfigurationForm({ setActiveStep, setConfigura
             ...provided,
             background: state.isFocused ? 'beets.base.600' : 'transparent',
         }),
-        menuList: (provided, state) => ({
+        menuList: (provided) => ({
             ...provided,
             background: 'beets.base.800',
         }),
     };
 
     function onSubmit(values: ConfigurationFormData): void {
+        console.log('test', { values });
         setActiveStep(2);
         setConfigurationFormData(values);
     }
@@ -132,32 +133,32 @@ export default function LgeCreateConfigurationForm({ setActiveStep, setConfigura
                     </FormControl>
                 </GridItem>
                 <GridItem colSpan={2}>
-                    <FormControl isInvalid={!!errors.startTimestamp} isRequired>
-                        <FormLabel htmlFor="startTimestamp">Start date</FormLabel>
+                    <FormControl isInvalid={!!errors.startDate} isRequired>
+                        <FormLabel htmlFor="startDate">Start date</FormLabel>
                         <Input
-                            id="startTimestamp"
+                            id="startDate"
                             type="datetime-local"
-                            {...register('startTimestamp', {
+                            {...register('startDate', {
                                 required: 'This is required',
                             })}
                         />
-                        <FormErrorMessage>{errors.startTimestamp && errors.startTimestamp.message}</FormErrorMessage>
+                        <FormErrorMessage>{errors.startDate && errors.startDate.message}</FormErrorMessage>
                     </FormControl>
                 </GridItem>
                 <GridItem colSpan={2}>
-                    <FormControl isInvalid={!!errors.endTimestamp} isRequired>
-                        <FormLabel htmlFor="endTimestamp">End date</FormLabel>
+                    <FormControl isInvalid={!!errors.endDate} isRequired>
+                        <FormLabel htmlFor="endDate">End date</FormLabel>
                         <Input
-                            id="endTimestamp"
+                            id="endDate"
                             type="datetime-local"
-                            {...register('endTimestamp', {
+                            {...register('endDate', {
                                 required: 'This is required',
                             })}
                         />
-                        <FormErrorMessage>{errors.endTimestamp && errors.endTimestamp.message}</FormErrorMessage>
+                        <FormErrorMessage>{errors.endDate && errors.endDate.message}</FormErrorMessage>
                     </FormControl>
                 </GridItem>
-                <GridItem>
+                <GridItem colSpan={2}>
                     <FormControl isInvalid={!!errors.swapFee} isRequired>
                         <FormLabel htmlFor="swapFee">Swap fee</FormLabel>
                         <PercentageInput
@@ -167,7 +168,7 @@ export default function LgeCreateConfigurationForm({ setActiveStep, setConfigura
                                 min: 0,
                                 max: 10,
                                 onChange: (valueString: string) => {
-                                    const value = parse(valueString);
+                                    const value = parseInput(valueString);
                                     setSwapFee(value);
                                     setValue('swapFee', value);
                                 },
@@ -177,10 +178,10 @@ export default function LgeCreateConfigurationForm({ setActiveStep, setConfigura
                         <FormErrorMessage>{errors.swapFee && errors.swapFee.message}</FormErrorMessage>
                     </FormControl>
                 </GridItem>
-                <GridItem>
+                <GridItem colSpan={2}>
                     <FormControl>
-                        <FormLabel htmlFor="platformFeePercentage">Platform fee</FormLabel>
-                        <Input id="platformFeePercentage" value="2%" isReadOnly />
+                        <FormLabel htmlFor="platformFee">Platform fee</FormLabel>
+                        <Input id="platformFee" value="2%" isReadOnly />
                     </FormControl>
                 </GridItem>
                 <GridItem>

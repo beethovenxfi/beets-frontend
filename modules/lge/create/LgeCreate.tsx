@@ -14,10 +14,12 @@ import {
     useBreakpointValue,
     Text,
 } from '@chakra-ui/react';
-import LgeCreateDetailsForm, { DetailsFormData } from './forms/LgeCreateDetailsForm';
-import LgeCreateConfigurationForm, { ConfigurationFormData } from './forms/LgeCreateConfigurationForm';
+import LgeCreateDetailsForm, { DetailsFormData } from '~/modules/lge/create/forms/components/LgeCreateDetailsForm';
+import LgeCreateConfigurationForm, {
+    ConfigurationFormData,
+} from '~/modules/lge/create/forms/components/LgeCreateConfigurationForm';
 import { useEffect, useState } from 'react';
-import LgeCreateCreation from './forms/LgeCreateCreation';
+import LgeCreateCreation from '~/modules/lge/create/forms/components/LgeCreateCreation';
 import scrollIntoView from 'smooth-scroll-into-view-if-needed';
 
 const steps = [

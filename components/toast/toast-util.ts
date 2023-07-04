@@ -10,7 +10,8 @@ export type BeetsTransactionType =
     | 'UNWRAP'
     | 'LEVEL_UP'
     | 'BURN'
-    | 'MIGRATE';
+    | 'MIGRATE'
+    | 'CREATE_LGE';
 export type ToastTransactionStatus = 'PENDING' | 'CONFIRMED' | 'ERROR';
 
 export function toastGetTransactionStatusHeadline(type: BeetsTransactionType, status: ToastTransactionStatus) {
