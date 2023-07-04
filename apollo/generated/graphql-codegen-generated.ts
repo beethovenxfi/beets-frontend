@@ -87,21 +87,23 @@ export interface GqlLge {
     adminAddress: Scalars['String'];
     adminIsMultisig: Scalars['Boolean'];
     bannerImageUrl: Scalars['String'];
+    collateralAddress: Scalars['String'];
     collateralAmount: Scalars['String'];
+    collateralDecimals: Scalars['Int'];
     collateralEndWeight: Scalars['Int'];
     collateralStartWeight: Scalars['Int'];
-    collateralTokenAddress: Scalars['String'];
     description: Scalars['String'];
     discordUrl: Scalars['String'];
-    endDate: Scalars['String'];
+    endTimestamp: Scalars['Int'];
     id: Scalars['ID'];
     mediumUrl: Scalars['String'];
     name: Scalars['String'];
-    startDate: Scalars['String'];
-    swapFeePercentage: Scalars['String'];
+    startTimestamp: Scalars['Int'];
+    swapFee: Scalars['String'];
     telegramUrl: Scalars['String'];
+    tokenAddress: Scalars['String'];
     tokenAmount: Scalars['String'];
-    tokenContractAddress: Scalars['String'];
+    tokenDecimals: Scalars['Int'];
     tokenEndWeight: Scalars['Int'];
     tokenIconUrl: Scalars['String'];
     tokenStartWeight: Scalars['Int'];
@@ -112,26 +114,33 @@ export interface GqlLge {
 export interface GqlLgeCreateInput {
     address: Scalars['String'];
     bannerImageUrl: Scalars['String'];
+    collateralAddress: Scalars['String'];
     collateralAmount: Scalars['String'];
     collateralEndWeight: Scalars['Int'];
     collateralStartWeight: Scalars['Int'];
-    collateralTokenAddress: Scalars['String'];
     description: Scalars['String'];
     discordUrl: Scalars['String'];
-    endDate: Scalars['String'];
+    endTimestamp: Scalars['Int'];
     id: Scalars['ID'];
     mediumUrl: Scalars['String'];
     name: Scalars['String'];
-    startDate: Scalars['String'];
-    swapFeePercentage: Scalars['String'];
+    startTimestamp: Scalars['Int'];
+    swapFee: Scalars['String'];
     telegramUrl: Scalars['String'];
+    tokenAddress: Scalars['String'];
     tokenAmount: Scalars['String'];
-    tokenContractAddress: Scalars['String'];
     tokenEndWeight: Scalars['Int'];
     tokenIconUrl: Scalars['String'];
     tokenStartWeight: Scalars['Int'];
     twitterUrl: Scalars['String'];
     websiteUrl: Scalars['String'];
+}
+
+export interface GqlLgePriceData {
+    __typename: 'GqlLgePriceData';
+    price: Scalars['Float'];
+    timestamp: Scalars['Int'];
+    type: Scalars['String'];
 }
 
 export interface GqlLgeUpdateInput {
@@ -1224,7 +1233,6 @@ export interface Mutation {
 
 export interface MutationLgeCreateArgs {
     lge: GqlLgeCreateInput;
-    signature: Scalars['String'];
 }
 
 export interface MutationPoolBlackListAddPoolArgs {
@@ -1303,6 +1311,7 @@ export interface Query {
     blocksGetBlocksPerSecond: Scalars['Float'];
     blocksGetBlocksPerYear: Scalars['Float'];
     contentGetNewsItems: Array<GqlContentNewsItem>;
+    getLgeChartData: Array<Maybe<GqlLgePriceData>>;
     latestSyncedBlocks: GqlLatestSyncedBlocks;
     lge: GqlLge;
     lges: Array<GqlLge>;
@@ -1348,6 +1357,10 @@ export interface Query {
 export interface QueryBeetsPoolGetReliquaryFarmSnapshotsArgs {
     id: Scalars['String'];
     range: GqlPoolSnapshotDataRange;
+}
+
+export interface QueryGetLgeChartDataArgs {
+    id: Scalars['ID'];
 }
 
 export interface QueryLgeArgs {
@@ -2140,21 +2153,23 @@ export type GqlLgeFragment = {
     adminAddress: string;
     adminIsMultisig: boolean;
     bannerImageUrl: string;
+    collateralAddress: string;
     collateralAmount: string;
+    collateralDecimals: number;
     collateralEndWeight: number;
     collateralStartWeight: number;
-    collateralTokenAddress: string;
     description: string;
     discordUrl: string;
-    endDate: string;
+    endTimestamp: number;
     id: string;
     mediumUrl: string;
     name: string;
-    startDate: string;
-    swapFeePercentage: string;
+    startTimestamp: number;
+    swapFee: string;
     telegramUrl: string;
+    tokenAddress: string;
     tokenAmount: string;
-    tokenContractAddress: string;
+    tokenDecimals: number;
     tokenEndWeight: number;
     tokenIconUrl: string;
     tokenStartWeight: number;
@@ -2174,21 +2189,23 @@ export type GetLgeQuery = {
         adminAddress: string;
         adminIsMultisig: boolean;
         bannerImageUrl: string;
+        collateralAddress: string;
         collateralAmount: string;
+        collateralDecimals: number;
         collateralEndWeight: number;
         collateralStartWeight: number;
-        collateralTokenAddress: string;
         description: string;
         discordUrl: string;
-        endDate: string;
+        endTimestamp: number;
         id: string;
         mediumUrl: string;
         name: string;
-        startDate: string;
-        swapFeePercentage: string;
+        startTimestamp: number;
+        swapFee: string;
         telegramUrl: string;
+        tokenAddress: string;
         tokenAmount: string;
-        tokenContractAddress: string;
+        tokenDecimals: number;
         tokenEndWeight: number;
         tokenIconUrl: string;
         tokenStartWeight: number;
@@ -2207,21 +2224,23 @@ export type GetLgesQuery = {
         adminAddress: string;
         adminIsMultisig: boolean;
         bannerImageUrl: string;
+        collateralAddress: string;
         collateralAmount: string;
+        collateralDecimals: number;
         collateralEndWeight: number;
         collateralStartWeight: number;
-        collateralTokenAddress: string;
         description: string;
         discordUrl: string;
-        endDate: string;
+        endTimestamp: number;
         id: string;
         mediumUrl: string;
         name: string;
-        startDate: string;
-        swapFeePercentage: string;
+        startTimestamp: number;
+        swapFee: string;
         telegramUrl: string;
+        tokenAddress: string;
         tokenAmount: string;
-        tokenContractAddress: string;
+        tokenDecimals: number;
         tokenEndWeight: number;
         tokenIconUrl: string;
         tokenStartWeight: number;
@@ -5514,21 +5533,23 @@ export const GqlLgeFragmentDoc = gql`
         adminAddress
         adminIsMultisig
         bannerImageUrl
+        collateralAddress
         collateralAmount
+        collateralDecimals
         collateralEndWeight
         collateralStartWeight
-        collateralTokenAddress
         description
         discordUrl
-        endDate
+        endTimestamp
         id
         mediumUrl
         name
-        startDate
-        swapFeePercentage
+        startTimestamp
+        swapFee
         telegramUrl
+        tokenAddress
         tokenAmount
-        tokenContractAddress
+        tokenDecimals
         tokenEndWeight
         tokenIconUrl
         tokenStartWeight
