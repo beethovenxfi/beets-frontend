@@ -135,9 +135,7 @@ export function useInvestState() {
 
         investStateVar(
             state.map((state) => {
-                console.log({ poolidstate: state.poolId, poolId });
                 if (state.poolId === poolId) {
-                    console.log({ enabled: !state.zapEnabled });
                     return {
                         ...state,
                         zapEnabled: !state.zapEnabled,
