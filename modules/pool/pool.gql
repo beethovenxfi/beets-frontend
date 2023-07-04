@@ -284,6 +284,9 @@ query GetPool($id: String!) {
                 ... on GqlPoolToken {
                     ...GqlPoolToken
                 }
+                ... on GqlPoolTokenLinear {
+                    ...GqlPoolTokenLinear
+                }
             }
         }
     }

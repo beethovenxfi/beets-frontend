@@ -1088,6 +1088,9 @@ export const GetPool = gql`
                     ... on GqlPoolToken {
                         ...GqlPoolToken
                     }
+                    ... on GqlPoolTokenLinear {
+                        ...GqlPoolTokenLinear
+                    }
                 }
             }
         }

@@ -2635,7 +2635,52 @@ export type GetPoolQuery = {
                         weight?: string | null;
                         totalBalance: string;
                     }
-                  | { __typename: 'GqlPoolTokenLinear' }
+                  | {
+                        __typename: 'GqlPoolTokenLinear';
+                        id: string;
+                        index: number;
+                        name: string;
+                        symbol: string;
+                        balance: string;
+                        address: string;
+                        priceRate: string;
+                        decimals: number;
+                        weight?: string | null;
+                        mainTokenBalance: string;
+                        wrappedTokenBalance: string;
+                        totalMainTokenBalance: string;
+                        totalBalance: string;
+                        pool: {
+                            __typename: 'GqlPoolLinearNested';
+                            id: string;
+                            name: string;
+                            symbol: string;
+                            address: string;
+                            owner: string;
+                            factory?: string | null;
+                            createTime: number;
+                            wrappedIndex: number;
+                            mainIndex: number;
+                            upperTarget: string;
+                            lowerTarget: string;
+                            totalShares: string;
+                            totalLiquidity: string;
+                            bptPriceRate: string;
+                            tokens: Array<{
+                                __typename: 'GqlPoolToken';
+                                id: string;
+                                index: number;
+                                name: string;
+                                symbol: string;
+                                balance: string;
+                                address: string;
+                                priceRate: string;
+                                decimals: number;
+                                weight?: string | null;
+                                totalBalance: string;
+                            }>;
+                        };
+                    }
                   | { __typename: 'GqlPoolTokenPhantomStable' }
               >;
               dynamicData: {
@@ -7041,6 +7086,9 @@ export const GetPoolDocument = gql`
                 tokens {
                     ... on GqlPoolToken {
                         ...GqlPoolToken
+                    }
+                    ... on GqlPoolTokenLinear {
+                        ...GqlPoolTokenLinear
                     }
                 }
             }
