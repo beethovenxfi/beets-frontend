@@ -15,7 +15,7 @@ import { Dispatch, SetStateAction } from 'react';
 export interface DetailsFormData {
     name: string;
     websiteUrl: string;
-    tokenContractAddress: string;
+    tokenAddress: string;
     tokenIconUrl: string;
     twitterUrl: string;
     mediumUrl: string;
@@ -28,7 +28,7 @@ export interface DetailsFormData {
 const defaultValues = {
     name: '',
     websiteUrl: '',
-    tokenContractAddress: '',
+    tokenAddress: '',
     tokenIconUrl: '',
     twitterUrl: '',
     mediumUrl: '',
@@ -119,19 +119,17 @@ export default function LgeCreateDetailsForm({ setActiveStep, setDetailsFormData
                     </FormControl>
                 </GridItem>
                 <GridItem>
-                    <FormControl isInvalid={!!errors.tokenContractAddress} isRequired>
-                        <FormLabel htmlFor="tokenContractAddress">Token contract address</FormLabel>
+                    <FormControl isInvalid={!!errors.tokenAddress} isRequired>
+                        <FormLabel htmlFor="tokenAddress">Token address</FormLabel>
                         <Input
-                            id="tokenContractAddress"
+                            id="tokenAddress"
                             placeholder="0x0123456789abcdef0123456789abcdef01234567"
-                            {...register('tokenContractAddress', {
+                            {...register('tokenAddress', {
                                 required: 'This is required',
                                 //pattern: { value: /^0x[a-fA-F0-9]{40}$/, message: 'Invalid token address' },
                             })}
                         />
-                        <FormErrorMessage>
-                            {errors.tokenContractAddress && errors.tokenContractAddress.message}
-                        </FormErrorMessage>
+                        <FormErrorMessage>{errors.tokenAddress && errors.tokenAddress.message}</FormErrorMessage>
                     </FormControl>
                 </GridItem>
                 <GridItem>

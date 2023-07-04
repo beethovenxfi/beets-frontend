@@ -27,7 +27,7 @@ export default function LgeCreateCreation({ setActiveStep, detailsFormData, conf
                 <GridItem fontWeight="bold" mt={{ base: '2', lg: undefined }}>
                     Launch token address:
                 </GridItem>
-                <GridItem>{detailsFormData?.tokenContractAddress} + name?</GridItem>
+                <GridItem>{detailsFormData?.tokenAddress} + name?</GridItem>
                 <GridItem fontWeight="bold" mt={{ base: '2', lg: undefined }}>
                     Launch token icon (url):
                 </GridItem>
@@ -58,11 +58,11 @@ export default function LgeCreateCreation({ setActiveStep, detailsFormData, conf
                 <GridItem fontWeight="bold" mt={{ base: '2', lg: undefined }}>
                     Start date (UTC):
                 </GridItem>
-                <GridItem>{configurationFormData?.startDate}</GridItem>
+                <GridItem>{configurationFormData?.startTimestamp}</GridItem>
                 <GridItem fontWeight="bold" mt={{ base: '2', lg: undefined }}>
                     End date (UTC):
                 </GridItem>
-                <GridItem>{configurationFormData?.endDate}</GridItem>
+                <GridItem>{configurationFormData?.endTimestamp}</GridItem>
                 <GridItem fontWeight="bold" mt={{ base: '2', lg: undefined }}>
                     Pool name:
                 </GridItem>
@@ -74,19 +74,19 @@ export default function LgeCreateCreation({ setActiveStep, detailsFormData, conf
                 <GridItem fontWeight="bold" mt={{ base: '2', lg: undefined }}>
                     Collateral token address:
                 </GridItem>
-                <GridItem>{configurationFormData?.collateralTokenAddress}</GridItem>
+                <GridItem>{configurationFormData?.collateralAddress}</GridItem>
                 <GridItem fontWeight="bold" mt={{ base: '2', lg: undefined }}>
                     Start weights:
                 </GridItem>
-                <GridItem>{`${configurationFormData?.tokenStartWeight}% ${detailsFormData?.tokenContractAddress} - ${configurationFormData?.collateralStartWeight}% ${configurationFormData?.collateralTokenAddress}`}</GridItem>
+                <GridItem>{`${configurationFormData?.tokenStartWeight}% ${detailsFormData?.tokenAddress} - ${configurationFormData?.collateralStartWeight}% ${configurationFormData?.collateralAddress}`}</GridItem>
                 <GridItem fontWeight="bold" mt={{ base: '2', lg: undefined }}>
                     End weights:
                 </GridItem>
-                <GridItem>{`${configurationFormData?.tokenEndWeight}% ${detailsFormData?.tokenContractAddress} - ${configurationFormData?.collateralEndWeight}% ${configurationFormData?.collateralTokenAddress}`}</GridItem>
+                <GridItem>{`${configurationFormData?.tokenEndWeight}% ${detailsFormData?.tokenAddress} - ${configurationFormData?.collateralEndWeight}% ${configurationFormData?.collateralAddress}`}</GridItem>
                 <GridItem fontWeight="bold" mt={{ base: '2', lg: undefined }}>
                     Swap fee:
                 </GridItem>
-                <GridItem>{`${configurationFormData?.swapFeePercentage}%`}</GridItem>
+                <GridItem>{`${configurationFormData?.swapFee}%`}</GridItem>
             </Grid>
             <HStack justifyContent="space-between" mt="8" w={{ base: 'full', lg: '55%' }}>
                 <Button mt={4} colorScheme="teal" onClick={() => setActiveStep(1)}>

@@ -17,35 +17,31 @@ import { SliderInput } from './components/SliderInput';
 import { ChakraStylesConfig, Select } from 'chakra-react-select';
 
 export interface ConfigurationFormData {
-    startDate: string;
-    // startTime: string;
-    endDate: string;
-    // endTime: string;
-    collateralTokenAddress: string;
+    startTimestamp: number | null;
+    endTimestamp: number | null;
+    collateralAddress: string;
     tokenAmount: string;
     collateralAmount: string;
     tokenStartWeight: string;
     collateralStartWeight: string;
     tokenEndWeight: string;
     collateralEndWeight: string;
-    swapFeePercentage: string;
+    swapFee: string;
     poolName: string;
     poolSymbol: string;
 }
 
-const defaultValues = {
-    startDate: '',
-    // startTime: '',
-    endDate: '',
-    // endTime: '',
-    collateralTokenAddress: '',
+const defaultValues: ConfigurationFormData = {
+    startTimestamp: null,
+    endTimestamp: null,
+    collateralAddress: '',
     tokenAmount: '',
     collateralAmount: '',
     tokenStartWeight: '95',
     collateralStartWeight: '5',
     tokenEndWeight: '50',
     collateralEndWeight: '50',
-    swapFeePercentage: '2',
+    swapFee: '2',
     poolName: '',
     poolSymbol: '',
 };
@@ -72,7 +68,7 @@ export default function LgeCreateConfigurationForm({ setActiveStep, setConfigura
         },
     });
 
-    const [swapFeePercentage, setSwapFeePercentage] = useState(defaultValues.swapFeePercentage);
+    const [swapFee, setSwapFee] = useState(defaultValues.swapFee);
     const [tokenStartWeight, setTokenStartWeight] = useState(defaultValues.tokenStartWeight);
     const [tokenEndWeight, setTokenEndWeight] = useState(defaultValues.tokenEndWeight);
 
@@ -136,75 +132,49 @@ export default function LgeCreateConfigurationForm({ setActiveStep, setConfigura
                     </FormControl>
                 </GridItem>
                 <GridItem colSpan={2}>
-                    <FormControl isInvalid={!!errors.startDate} isRequired>
-                        <FormLabel htmlFor="startDate">Start date</FormLabel>
+                    <FormControl isInvalid={!!errors.startTimestamp} isRequired>
+                        <FormLabel htmlFor="startTimestamp">Start date</FormLabel>
                         <Input
-                            id="startDate"
+                            id="startTimestamp"
                             type="datetime-local"
-                            {...register('startDate', {
+                            {...register('startTimestamp', {
                                 required: 'This is required',
                             })}
                         />
-                        <FormErrorMessage>{errors.startDate && errors.startDate.message}</FormErrorMessage>
+                        <FormErrorMessage>{errors.startTimestamp && errors.startTimestamp.message}</FormErrorMessage>
                     </FormControl>
                 </GridItem>
-                {/* <GridItem>
-                    <FormControl isInvalid={!!errors.startTime} isRequired>
-                        <FormLabel htmlFor="startTime">Start time</FormLabel>
-                        <Input
-                            id="startTime"
-                            {...register('startTime', {
-                                required: 'This is required',
-                            })}
-                        />
-                        <FormErrorMessage>{errors.startTime && errors.startTime.message}</FormErrorMessage>
-                    </FormControl>
-                </GridItem> */}
                 <GridItem colSpan={2}>
-                    <FormControl isInvalid={!!errors.endDate} isRequired>
-                        <FormLabel htmlFor="endDate">End date</FormLabel>
+                    <FormControl isInvalid={!!errors.endTimestamp} isRequired>
+                        <FormLabel htmlFor="endTimestamp">End date</FormLabel>
                         <Input
-                            id="endDate"
+                            id="endTimestamp"
                             type="datetime-local"
-                            {...register('endDate', {
+                            {...register('endTimestamp', {
                                 required: 'This is required',
                             })}
                         />
-                        <FormErrorMessage>{errors.endDate && errors.endDate.message}</FormErrorMessage>
+                        <FormErrorMessage>{errors.endTimestamp && errors.endTimestamp.message}</FormErrorMessage>
                     </FormControl>
                 </GridItem>
-                {/* <GridItem>
-                    <FormControl isInvalid={!!errors.endTime} isRequired>
-                        <FormLabel htmlFor="endTime">End time</FormLabel>
-                        <Input
-                            id="endTime"
-                            {...register('endTime', {
-                                required: 'This is required',
-                            })}
-                        />
-                        <FormErrorMessage>{errors.endTime && errors.endTime.message}</FormErrorMessage>
-                    </FormControl>
-                </GridItem> */}
                 <GridItem>
-                    <FormControl isInvalid={!!errors.swapFeePercentage} isRequired>
-                        <FormLabel htmlFor="swapFeePercentage">Swap fee</FormLabel>
+                    <FormControl isInvalid={!!errors.swapFee} isRequired>
+                        <FormLabel htmlFor="swapFee">Swap fee</FormLabel>
                         <PercentageInput
-                            id="swapFeePercentage"
-                            {...(register('swapFeePercentage'),
+                            id="swapFee"
+                            {...(register('swapFee'),
                             {
                                 min: 0,
                                 max: 10,
                                 onChange: (valueString: string) => {
                                     const value = parse(valueString);
-                                    setSwapFeePercentage(value);
-                                    setValue('swapFeePercentage', value);
+                                    setSwapFee(value);
+                                    setValue('swapFee', value);
                                 },
-                                value: format(swapFeePercentage),
+                                value: format(swapFee),
                             })}
                         />
-                        <FormErrorMessage>
-                            {errors.swapFeePercentage && errors.swapFeePercentage.message}
-                        </FormErrorMessage>
+                        <FormErrorMessage>{errors.swapFee && errors.swapFee.message}</FormErrorMessage>
                     </FormControl>
                 </GridItem>
                 <GridItem>
@@ -232,10 +202,10 @@ export default function LgeCreateConfigurationForm({ setActiveStep, setConfigura
                     </FormControl>
                 </GridItem>
                 <GridItem>
-                    <FormControl isInvalid={!!errors.collateralTokenAddress} isRequired>
-                        <FormLabel htmlFor="collateralTokenAddress">Collateral token</FormLabel>
+                    <FormControl isInvalid={!!errors.collateralAddress} isRequired>
+                        <FormLabel htmlFor="collateralAddress">Collateral token</FormLabel>
                         <Controller
-                            name="collateralTokenAddress"
+                            name="collateralAddress"
                             control={control}
                             rules={{ required: 'This is required' }}
                             render={({
