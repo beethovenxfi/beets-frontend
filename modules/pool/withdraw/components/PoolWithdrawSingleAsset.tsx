@@ -11,6 +11,7 @@ import { numberFormatUSDValue } from '~/lib/util/number-formats';
 import { usePoolExitGetProportionalWithdrawEstimate } from '../lib/usePoolExitGetProportionalWithdrawEstimate';
 import { useGetTokens } from '~/lib/global/useToken';
 import { sum } from 'lodash';
+import { PoolWithdrawRewardsCheck } from './PoolWithdrawRewardsCheck';
 
 interface Props extends BoxProps {
     onShowPreview: () => void;
@@ -96,6 +97,10 @@ export function PoolWithdrawSingleAsset({ onShowPreview, ...rest }: Props) {
                         </Box>
                     </Alert>
                 </Collapse>
+                <PoolWithdrawRewardsCheck
+                    show={pool.staking?.type === 'GAUGE' && singleAssetWithdraw.amount === maxAmount}
+                />
+
                 <Button variant="primary" width="full" mt="8" onClick={onShowPreview} isDisabled={!isValid}>
                     Preview
                 </Button>
