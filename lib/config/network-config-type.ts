@@ -81,6 +81,7 @@ export interface NetworkConfig {
             reaper: string[];
         };
     };
+    copperProxyAddress: string;
     beetsPoolOwnerAddress: string;
     masterChefContractAddress: string;
     defaultTokenIn: string;

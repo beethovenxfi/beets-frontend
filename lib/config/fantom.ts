@@ -81,6 +81,7 @@ export const fantomNetworkConfig: NetworkConfig = {
             ],
         },
     },
+    copperProxyAddress: '0xbc8a71c75ffbd2807c021f4f81a8832392def93c',
     beetsPoolOwnerAddress: '0xcd983793adb846dce4830c22f30c7ef0c864a776',
     masterChefContractAddress: '0x8166994d9ebBe5829EC86Bd81258149B87faCfd3',
     defaultTokenIn: '0x04068da6c83afcfa0e13ba15a6696662335d5b75',
