@@ -31,7 +31,7 @@ export interface ConfigurationFormData {
     poolSymbol: string;
 }
 
-const defaultValues: ConfigurationFormData = {
+export const defaultValues: ConfigurationFormData = {
     startDate: '',
     endDate: '',
     collateralAddress: '',
@@ -48,11 +48,17 @@ const defaultValues: ConfigurationFormData = {
 
 interface Props {
     setActiveStep: Dispatch<SetStateAction<number>>;
-    setConfigurationFormData: Dispatch<SetStateAction<ConfigurationFormData | undefined>>;
-    values: ConfigurationFormData | undefined;
+    setConfigurationFormData: Dispatch<SetStateAction<ConfigurationFormData>>;
+    values: ConfigurationFormData;
+    tokenSymbol: string;
 }
 
-export default function LgeCreateConfigurationForm({ setActiveStep, setConfigurationFormData, values }: Props) {
+export default function LgeCreateConfigurationForm({
+    setActiveStep,
+    setConfigurationFormData,
+    values,
+    tokenSymbol,
+}: Props) {
     const {
         handleSubmit,
         register,
@@ -78,8 +84,8 @@ export default function LgeCreateConfigurationForm({ setActiveStep, setConfigura
     }
 
     const collateralTokenOptions = [
-        { value: '0x1', label: 'USDC' },
-        { value: '0x2', label: 'wFTM' },
+        { value: '0x04068da6c83afcfa0e13ba15a6696662335d5b75', label: 'USDC' },
+        { value: '0x21be370d5312f44cb42ce377bc9b8a0cef1a4c83', label: 'wFTM' },
     ];
 
     const chakraStyles: ChakraStylesConfig = {
@@ -100,7 +106,6 @@ export default function LgeCreateConfigurationForm({ setActiveStep, setConfigura
     };
 
     function onSubmit(values: ConfigurationFormData): void {
-        console.log('test', { values });
         setActiveStep(2);
         setConfigurationFormData(values);
     }
@@ -186,8 +191,8 @@ export default function LgeCreateConfigurationForm({ setActiveStep, setConfigura
                 </GridItem>
                 <GridItem>
                     <FormControl isReadOnly>
-                        <FormLabel htmlFor="launchTokenAddress">Launch token</FormLabel>
-                        <Input id="launchTokenAddress" value="USDC" />
+                        <FormLabel htmlFor="launchTokenSymbol">Launch token</FormLabel>
+                        <Input id="launchTokenSymbol" value={tokenSymbol} />
                     </FormControl>
                 </GridItem>
                 <GridItem>

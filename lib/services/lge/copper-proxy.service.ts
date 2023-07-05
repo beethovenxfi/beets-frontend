@@ -1,5 +1,3 @@
-import { TransactionResponse } from '@ethersproject/abstract-provider';
-import { BaseProvider } from '@ethersproject/providers';
 import { orderBy } from 'lodash';
 import { parseUnits } from '@ethersproject/units';
 import { getAddress } from '@ethersproject/address';
@@ -17,18 +15,30 @@ interface PoolTokenInput {
     amount: BigNumber;
 }
 
-interface TokenInfoMap {
-    [address: string]: {
-        decimals: number;
-    };
+export type TokenInfoMap = {
+    [address: string]: number | undefined;
+};
+
+export interface LgeFormData extends ConfigurationFormData, DetailsFormData {}
+export interface LgeData {
+    name: string;
+    symbol: string;
+    tokens: string[];
+    amounts: BigNumber[];
+    weights: BigNumber[];
+    endWeights: BigNumber[];
+    isCorrectOrder: boolean;
+    //swap fee come in as 1 = 1%, so its base 16
+    swapFeePercentage: BigNumber;
+    userData: string;
+    startTime: number;
+    endTime: number;
 }
 
-export interface LgeData extends ConfigurationFormData, DetailsFormData {}
-
 export class CopperProxyService {
-    constructor(private readonly copperProxyAddress: string) {}
+    constructor() {}
 
-    public createAuction(data: LgeData, tokenInfoMap: TokenInfoMap): any {
+    public createLgeGetLgeData(data: LgeFormData, tokenInfoMap: TokenInfoMap): LgeData {
         const sorted = this.toSortedTokens(data, tokenInfoMap);
 
         return {
@@ -70,21 +80,21 @@ export class CopperProxyService {
     //     return sendTransaction(web3, token, ERC20Abi, 'approve', [this.copperProxyAddress, amount]);
     // }
 
-    private toSortedTokens(data: LgeData, tokenInfoMap: TokenInfoMap): PoolTokenInput[] {
+    private toSortedTokens(data: LgeFormData, tokenInfoMap: TokenInfoMap): PoolTokenInput[] {
         const collateralAddress = getAddress(data.collateralAddress);
         const tokenAddress = getAddress(data.tokenAddress);
 
         return this.sortTokens([
             {
                 address: collateralAddress,
-                amount: parseUnits(data.collateralAmount, tokenInfoMap[collateralAddress].decimals),
+                amount: parseUnits(data.collateralAmount, tokenInfoMap[collateralAddress]),
                 //weights come in as 1 = 1%, so its base 16
                 startWeight: parseUnits(`${data.collateralStartWeight}`, 16),
                 endWeight: parseUnits(`${data.collateralEndWeight}`, 16),
             },
             {
                 address: tokenAddress,
-                amount: parseUnits(data.tokenAmount, tokenInfoMap[tokenAddress].decimals),
+                amount: parseUnits(data.tokenAmount, tokenInfoMap[tokenAddress]),
                 startWeight: parseUnits(`${data.tokenStartWeight}`, 16),
                 endWeight: parseUnits(`${data.tokenEndWeight}`, 16),
             },
@@ -100,3 +110,5 @@ export class CopperProxyService {
         return sortedTokens[0].address.toLowerCase() === collateralTokenAddress.toLowerCase();
     }
 }
+
+export const copperProxyService = new CopperProxyService();

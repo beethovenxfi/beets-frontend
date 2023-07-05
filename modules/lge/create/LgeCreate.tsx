@@ -14,9 +14,13 @@ import {
     useBreakpointValue,
     Text,
 } from '@chakra-ui/react';
-import LgeCreateDetailsForm, { DetailsFormData } from '~/modules/lge/create/forms/components/LgeCreateDetailsForm';
+import LgeCreateDetailsForm, {
+    DetailsFormData,
+    defaultValues as detailsFormDefaultValues,
+} from '~/modules/lge/create/forms/components/LgeCreateDetailsForm';
 import LgeCreateConfigurationForm, {
     ConfigurationFormData,
+    defaultValues as configurationFormDefaultValues,
 } from '~/modules/lge/create/forms/components/LgeCreateConfigurationForm';
 import { useEffect, useState } from 'react';
 import LgeCreateCreation from '~/modules/lge/create/forms/components/LgeCreateCreation';
@@ -35,8 +39,9 @@ export function LgeCreate() {
     });
     const isMobile = useBreakpointValue({ base: true, lg: false });
 
-    const [detailsFormData, setDetailsFormData] = useState<DetailsFormData>();
-    const [configurationFormData, setConfigurationFormData] = useState<ConfigurationFormData>();
+    const [detailsFormData, setDetailsFormData] = useState<DetailsFormData>(detailsFormDefaultValues);
+    const [configurationFormData, setConfigurationFormData] =
+        useState<ConfigurationFormData>(configurationFormDefaultValues);
 
     if (typeof window !== 'undefined') {
         const element = document?.getElementById('stepper');
@@ -97,6 +102,7 @@ export function LgeCreate() {
                         setActiveStep={setActiveStep}
                         setConfigurationFormData={setConfigurationFormData}
                         values={configurationFormData}
+                        tokenSymbol={detailsFormData.tokenSymbol}
                     />
                 )}
                 {activeStep === 2 && (

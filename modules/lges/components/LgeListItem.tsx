@@ -18,11 +18,11 @@ interface Props extends BoxProps {
 function getStatusText(lge: GqlLgeExtended) {
     switch (lge.status) {
         case 'active':
-            return `Ends in ${formatDistanceToNow(new Date(lge.endDate))}`;
+            return `Ends in ${formatDistanceToNow(new Date(lge.endTimestamp))}`;
         case 'upcoming':
-            return `Starts in ${formatDistanceToNow(new Date(lge.startDate))}`;
+            return `Starts in ${formatDistanceToNow(new Date(lge.startTimestamp))}`;
         case 'ended':
-            return `Ended ${formatDistanceToNow(new Date(lge.endDate))} ago`;
+            return `Ended ${formatDistanceToNow(new Date(lge.endTimestamp))} ago`;
     }
 }
 
@@ -65,7 +65,7 @@ function getIconLink(urlType: keyof typeof lge, lge: GqlLgeExtended): ReactNode 
 }
 
 export function LgeListItem({ lge, ...rest }: Props) {
-    const { token } = useGetLgeToken(lge.tokenContractAddress);
+    const { token } = useGetLgeToken(lge.tokenAddress);
 
     // grab all urlTypes except for banner image & token icon
     // reverse for now to to get the website url first
@@ -110,7 +110,7 @@ export function LgeListItem({ lge, ...rest }: Props) {
                 >
                     <MobileLabel text="Token" />
                     <HStack mt="2">
-                        <TokenAvatar address={lge.tokenContractAddress} logoURI={lge.tokenIconUrl} size="xs" />
+                        <TokenAvatar address={lge.tokenAddress} logoURI={lge.tokenIconUrl} size="xs" />
                         <Text ml="2">{token?.symbol}</Text>
                     </HStack>
                 </GridItem>

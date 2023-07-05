@@ -10,7 +10,8 @@ import {
     Textarea,
     HStack,
 } from '@chakra-ui/react';
-import { Dispatch, SetStateAction } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
+import { useGetLgeToken } from '~/modules/lges/components/lib/useGetLgeToken';
 
 export interface DetailsFormData {
     name: string;
@@ -23,9 +24,10 @@ export interface DetailsFormData {
     telegramUrl: string;
     description: string;
     bannerImageUrl: string;
+    tokenSymbol: string;
 }
 
-const defaultValues = {
+export const defaultValues = {
     name: '',
     websiteUrl: '',
     tokenAddress: '',
@@ -36,12 +38,13 @@ const defaultValues = {
     telegramUrl: '',
     description: '',
     bannerImageUrl: '',
+    tokenSymbol: '',
 };
 
 interface Props {
     setActiveStep: Dispatch<SetStateAction<number>>;
-    setDetailsFormData: Dispatch<SetStateAction<DetailsFormData | undefined>>;
-    values: DetailsFormData | undefined;
+    setDetailsFormData: Dispatch<SetStateAction<DetailsFormData>>;
+    values: DetailsFormData;
 }
 
 export default function LgeCreateDetailsForm({ setActiveStep, setDetailsFormData, values }: Props) {
@@ -50,6 +53,7 @@ export default function LgeCreateDetailsForm({ setActiveStep, setDetailsFormData
         register,
         formState: { errors, isSubmitting },
         reset,
+        setValue,
     } = useForm<DetailsFormData>({
         defaultValues,
         values,
@@ -57,10 +61,12 @@ export default function LgeCreateDetailsForm({ setActiveStep, setDetailsFormData
             keepDefaultValues: true,
         },
     });
+    const [address, setAddress] = useState('');
+    const { token } = useGetLgeToken(address);
 
     function onSubmit(values: DetailsFormData): void {
         setActiveStep(1);
-        setDetailsFormData(values);
+        setDetailsFormData({ ...values, tokenSymbol: token?.symbol || '' });
     }
 
     const invalidUrlPattern = {
@@ -127,6 +133,11 @@ export default function LgeCreateDetailsForm({ setActiveStep, setDetailsFormData
                             {...register('tokenAddress', {
                                 required: 'This is required',
                                 //pattern: { value: /^0x[a-fA-F0-9]{40}$/, message: 'Invalid token address' },
+                                onChange: (evt: any) => {
+                                    const value = evt.target.value;
+                                    setAddress(value);
+                                    setValue('tokenAddress', value);
+                                },
                             })}
                         />
                         <FormErrorMessage>{errors.tokenAddress && errors.tokenAddress.message}</FormErrorMessage>

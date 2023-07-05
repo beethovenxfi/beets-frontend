@@ -15,8 +15,8 @@ export function _useLgeList() {
     const now = new Date();
 
     const lgesExtended: GqlLgeExtended[] = (data?.lges || []).map((lge) => {
-        const startDate = new Date(lge.startDate);
-        const endDate = new Date(lge.endDate);
+        const startDate = new Date(lge.startTimestamp);
+        const endDate = new Date(lge.endTimestamp);
         const status = now < startDate ? 'upcoming' : now > endDate ? 'ended' : 'active';
         return {
             ...lge,
@@ -25,7 +25,7 @@ export function _useLgeList() {
     });
 
     function lgeStatus(lge: GqlLge) {
-        const endDate = new Date(lge.endDate);
+        const endDate = new Date(lge.endTimestamp);
         return status === 'active-upcoming' ? now < endDate : now > endDate;
     }
 

@@ -4,7 +4,7 @@ import ERC20Abi from '~/lib/abi/ERC20.json';
 export function useGetLgeToken(address: string) {
     const { data, isError, isLoading } = useMultiCall({
         abi: ERC20Abi,
-        enabled: true,
+        enabled: !!address,
         calls: [
             { address, functionName: 'symbol' },
             { address, functionName: 'decimals' },
