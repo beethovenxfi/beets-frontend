@@ -23,6 +23,7 @@ fragment GqlLge on GqlLge {
     tokenEndWeight
     tokenIconUrl
     tokenStartWeight
+    tokenSymbol
     twitterUrl
     websiteUrl
 }

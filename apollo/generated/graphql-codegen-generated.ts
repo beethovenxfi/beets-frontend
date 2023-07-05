@@ -39,7 +39,7 @@ export interface GqlBalancePoolAprSubItem {
     title: Scalars['String'];
 }
 
-export type GqlChain = 'ARBITRUM' | 'FANTOM' | 'GNOSIS' | 'MAINNET' | 'OPTIMISM' | 'POLYGON' | 'ZKEVM';
+export type GqlChain = 'ARBITRUM' | 'AVALANCHE' | 'FANTOM' | 'GNOSIS' | 'MAINNET' | 'OPTIMISM' | 'POLYGON' | 'ZKEVM';
 
 export interface GqlContentNewsItem {
     __typename: 'GqlContentNewsItem';
@@ -107,6 +107,7 @@ export interface GqlLge {
     tokenEndWeight: Scalars['Int'];
     tokenIconUrl: Scalars['String'];
     tokenStartWeight: Scalars['Int'];
+    tokenSymbol: Scalars['String'];
     twitterUrl: Scalars['String'];
     websiteUrl: Scalars['String'];
 }
@@ -1182,6 +1183,7 @@ export interface Mutation {
     beetsSyncFbeetsRatio: Scalars['String'];
     cacheAverageBlockTime: Scalars['String'];
     lgeCreate: GqlLge;
+    lgeSyncFromSanity: Scalars['String'];
     poolBlackListAddPool: Scalars['String'];
     poolBlackListRemovePool: Scalars['String'];
     poolDeletePool: Scalars['String'];
@@ -1311,9 +1313,9 @@ export interface Query {
     blocksGetBlocksPerSecond: Scalars['Float'];
     blocksGetBlocksPerYear: Scalars['Float'];
     contentGetNewsItems: Array<GqlContentNewsItem>;
-    getLgeChartData: Array<Maybe<GqlLgePriceData>>;
     latestSyncedBlocks: GqlLatestSyncedBlocks;
     lge: GqlLge;
+    lgeGetChartData: Array<Maybe<GqlLgePriceData>>;
     lges: Array<GqlLge>;
     poolGetAllPoolsSnapshots: Array<GqlPoolSnapshot>;
     poolGetBatchSwaps: Array<GqlPoolBatchSwap>;
@@ -1359,11 +1361,11 @@ export interface QueryBeetsPoolGetReliquaryFarmSnapshotsArgs {
     range: GqlPoolSnapshotDataRange;
 }
 
-export interface QueryGetLgeChartDataArgs {
+export interface QueryLgeArgs {
     id: Scalars['ID'];
 }
 
-export interface QueryLgeArgs {
+export interface QueryLgeGetChartDataArgs {
     id: Scalars['ID'];
 }
 
@@ -2173,6 +2175,7 @@ export type GqlLgeFragment = {
     tokenEndWeight: number;
     tokenIconUrl: string;
     tokenStartWeight: number;
+    tokenSymbol: string;
     twitterUrl: string;
     websiteUrl: string;
 };
@@ -2209,6 +2212,7 @@ export type GetLgeQuery = {
         tokenEndWeight: number;
         tokenIconUrl: string;
         tokenStartWeight: number;
+        tokenSymbol: string;
         twitterUrl: string;
         websiteUrl: string;
     };
@@ -2253,6 +2257,7 @@ export type GetLgesQuery = {
         tokenEndWeight: number;
         tokenIconUrl: string;
         tokenStartWeight: number;
+        tokenSymbol: string;
         twitterUrl: string;
         websiteUrl: string;
     }>;
@@ -5562,6 +5567,7 @@ export const GqlLgeFragmentDoc = gql`
         tokenEndWeight
         tokenIconUrl
         tokenStartWeight
+        tokenSymbol
         twitterUrl
         websiteUrl
     }

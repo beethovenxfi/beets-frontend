@@ -25,6 +25,7 @@ scalar GqlBigNumber
 
 enum GqlChain {
     ARBITRUM
+    AVALANCHE
     FANTOM
     GNOSIS
     MAINNET
@@ -97,6 +98,7 @@ type GqlLge {
     tokenEndWeight: Int!
     tokenIconUrl: String!
     tokenStartWeight: Int!
+    tokenSymbol: String!
     twitterUrl: String!
     websiteUrl: String!
 }
@@ -1150,6 +1152,7 @@ type Mutation {
     beetsSyncFbeetsRatio: String!
     cacheAverageBlockTime: String!
     lgeCreate(lge: GqlLgeCreateInput!): GqlLge!
+    lgeSyncFromSanity: String!
     poolBlackListAddPool(poolId: String!): String!
     poolBlackListRemovePool(poolId: String!): String!
     poolDeletePool(poolId: String!): String!
@@ -1207,9 +1210,9 @@ type Query {
     blocksGetBlocksPerSecond: Float!
     blocksGetBlocksPerYear: Float!
     contentGetNewsItems: [GqlContentNewsItem!]!
-    getLgeChartData(id: ID!): [GqlLgePriceData]!
     latestSyncedBlocks: GqlLatestSyncedBlocks!
     lge(id: ID!): GqlLge!
+    lgeGetChartData(id: ID!): [GqlLgePriceData]!
     lges: [GqlLge!]!
     poolGetAllPoolsSnapshots(range: GqlPoolSnapshotDataRange!): [GqlPoolSnapshot!]!
     poolGetBatchSwaps(first: Int, skip: Int, where: GqlPoolSwapFilter): [GqlPoolBatchSwap!]!

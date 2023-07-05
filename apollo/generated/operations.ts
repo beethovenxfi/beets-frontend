@@ -175,6 +175,7 @@ export const GqlLge = gql`
         tokenEndWeight
         tokenIconUrl
         tokenStartWeight
+        tokenSymbol
         twitterUrl
         websiteUrl
     }
