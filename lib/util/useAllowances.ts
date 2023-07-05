@@ -46,7 +46,8 @@ export function useAllowances(
     function hasApprovalForAmount(address: string, amount: AmountHumanReadable) {
         if (amount === '') return true;
 
-        const allowance = allowances.find((allowance) => allowance.address === address.toLowerCase())?.amount || '0';
+        const allowance =
+            allowances.find((allowance) => allowance.address.toLowerCase() === address.toLowerCase())?.amount || '0';
         if (parseFloat(allowance) === 0) return false;
 
         const decimals = tokens.find((token) => token.address === address)?.decimals || 18;
