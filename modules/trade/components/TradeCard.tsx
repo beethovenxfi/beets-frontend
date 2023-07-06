@@ -2,14 +2,12 @@ import { Box, Button, useDisclosure, VStack } from '@chakra-ui/react';
 import { useAnimation } from 'framer-motion';
 import { TokenInput } from '~/components/inputs/TokenInput';
 import Card from '~/components/card/Card';
-
 import { TokenInputSwapButton } from '~/modules/trade/components/TokenInputSwapButton';
 import { TradeCardSwapBreakdown } from '~/modules/trade/components/TradeCardSwapBreakdown';
 import { useTradeCard } from '~/modules/trade/lib/useTradeCard';
 import { TokenSelectModal } from '~/components/token-select/TokenSelectModal';
 import { useUserAccount } from '~/lib/user/useUserAccount';
 import { WalletConnectButton } from '~/components/button/WalletConnectButton';
-import { useUserTokenBalances } from '~/lib/user/useUserTokenBalances';
 import { useGetTokens } from '~/lib/global/useToken';
 import { TradePreviewModal } from '~/modules/trade/components/TradePreviewModal';
 import { useUserAllowances } from '~/lib/util/useUserAllowances';
@@ -20,11 +18,20 @@ import { useWrapEth } from '~/lib/util/useWrapEth';
 import { useUnwrapEth } from '~/lib/util/useUnwrapEth';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 import { useRef } from 'react';
+import { useTrade } from '~/modules/trade/lib/useTrade';
+import { useEffectOnce } from '~/lib/util/custom-hooks';
+import { GqlLge } from '~/apollo/generated/graphql-codegen-generated';
+import { TokenAmountHumanReadable } from '~/lib/services/token/token-types';
 
-export function TradeCard() {
+interface Props {
+    lge?: GqlLge;
+    isAmountLessThanEqUserBalance: (amount: TokenAmountHumanReadable) => boolean;
+    refetchUserBalances: () => Promise<any>;
+}
+
+export function TradeCard({ lge, isAmountLessThanEqUserBalance, refetchUserBalances }: Props) {
     const networkConfig = useNetworkConfig();
     const { isConnected } = useUserAccount();
-    const { isAmountLessThanEqUserBalance, refetch: refetchUserBalances } = useUserTokenBalances();
     const controls = useAnimation();
     const tokenSelectDisclosure = useDisclosure();
     const tradePreviewDisclosure = useDisclosure();
@@ -58,6 +65,17 @@ export function TradeCard() {
         isLoading: isLoadingAllowances,
         refetch: refetchAllowances,
     } = useUserAllowances(tokens.filter((token) => token.address === tokenIn.toLowerCase()));
+
+    const { setTradeState } = useTrade();
+
+    useEffectOnce(() => {
+        if (lge) {
+            setTradeState({
+                tokenIn: lge.collateralTokenAddress.toLowerCase(),
+                tokenOut: lge.tokenContractAddress.toLowerCase(),
+            });
+        }
+    });
 
     const tokenInData = getToken(tokenIn);
     const isAmountMoreThanUserBalance = !isAmountLessThanEqUserBalance({ address: tokenIn, amount: sellAmount });
@@ -96,6 +114,7 @@ export function TradeCard() {
                             value={sellAmount}
                             showPresets
                             requiresApproval={!hasApprovalForSellAmount && !isNativeAssetUnwrap}
+                            lge={lge}
                         />
                     </Box>
                     <TokenInputSwapButton onSwap={handleTokensSwitched} isLoading={isLoadingOrFetching} />
@@ -106,6 +125,7 @@ export function TradeCard() {
                         toggleTokenSelect={() => showTokenSelect('tokenOut')}
                         onChange={handleBuyAmountChanged}
                         value={buyAmount}
+                        lge={lge}
                     />
                     <Box width="full" paddingTop="2">
                         {!isConnected ? (
@@ -164,7 +184,7 @@ export function TradeCard() {
                         )}
                     </Box>
                 </VStack>
-                {!isNativeAssetWrap && !isNativeAssetUnwrap && <TradeCardSwapBreakdown />}
+                {!isNativeAssetWrap && !isNativeAssetUnwrap && <TradeCardSwapBreakdown isLge={!!lge} />}
             </Card>
             <TokenSelectModal
                 finalFocusRef={tokenSelectKey === 'tokenIn' ? finalRefTokenIn : finalRefTokenOut}
@@ -178,6 +198,7 @@ export function TradeCard() {
                     tradePreviewDisclosure.onClose();
                     tradeStartPolling();
                 }}
+                lge={lge}
             />
         </Box>
     );

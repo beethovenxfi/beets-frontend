@@ -1,47 +1,35 @@
-import {
-    Alert,
-    AlertIcon,
-    Box,
-    Checkbox,
-    Flex,
-    HStack,
-    Link,
-    Spinner,
-    StackDivider,
-    Text,
-    VStack,
-} from '@chakra-ui/react';
+import { Alert, AlertIcon, Box, Checkbox, HStack, Link, Spinner, StackDivider, Text, VStack } from '@chakra-ui/react';
 import React, { useState } from 'react';
 import { BeetsSubmitTransactionButton } from '~/components/button/BeetsSubmitTransactionButton';
 import { useTrade } from '~/modules/trade/lib/useTrade';
 import { useGetTokens } from '~/lib/global/useToken';
 import { useSlippage } from '~/lib/global/useSlippage';
-import { tokenFormatAmount, tokenFormatAmountPrecise } from '~/lib/services/token/token-util';
+import { tokenFormatAmountPrecise } from '~/lib/services/token/token-util';
 import { oldBnum } from '~/lib/services/pool/lib/old-big-number';
 import { InfoButton } from '~/components/info-button/InfoButton';
 import { SlippageTextLinkMenu } from '~/components/slippage/SlippageTextLinkMenu';
-import numeral from 'numeral';
 import { BeetsBox } from '~/components/box/BeetsBox';
 import TokenAvatar from '~/components/token/TokenAvatar';
 import { ExternalLink } from 'react-feather';
 import { etherscanGetTokenUrl } from '~/lib/util/etherscan';
-import { CoingeckoIcon } from '~/assets/icons/CoingeckoIcon';
 import { SubmitTransactionQuery } from '~/lib/util/useSubmitTransaction';
-import { GqlSorGetSwapsResponseFragment } from '~/apollo/generated/graphql-codegen-generated';
+import { GqlLge, GqlSorGetSwapsResponseFragment } from '~/apollo/generated/graphql-codegen-generated';
 import { transactionMessageFromError } from '~/lib/util/transaction-util';
 import { useUserTokenBalances } from '~/lib/user/useUserTokenBalances';
+import { TradeCardSwapBreakdown } from './TradeCardSwapBreakdown';
 
 interface Props {
     query: Omit<SubmitTransactionQuery, 'submit' | 'submitAsync'> & {
         batchSwap: (swapInfo: GqlSorGetSwapsResponseFragment) => void;
     };
     onTransactionSubmitted: () => void;
+    lge?: GqlLge;
 }
 
-export function TradePreviewContent({ query, onTransactionSubmitted }: Props) {
+export function TradePreviewContent({ query, onTransactionSubmitted, lge }: Props) {
     const { batchSwap, ...batchSwapQuery } = query;
-    const { swapInfo, hasNoticeablePriceImpact, hasHighPriceImpact, priceImpact, refetchingSwaps } = useTrade();
-    const { getToken, formattedPrice, priceForAmount, priceFor } = useGetTokens();
+    const { swapInfo, hasHighPriceImpact, refetchingSwaps } = useTrade();
+    const { getToken, formattedPrice } = useGetTokens();
     const { slippage } = useSlippage();
     const tokenIn = getToken(swapInfo?.tokenIn || '');
     const tokenOut = getToken(swapInfo?.tokenOut || '');
@@ -67,14 +55,6 @@ export function TradePreviewContent({ query, onTransactionSubmitted }: Props) {
             .toString(),
     );
 
-    const valueIn = priceForAmount({ address: swapInfo.tokenIn, amount: swapInfo.tokenInAmount });
-    const tokenOutSwapPrice = valueIn / parseFloat(swapInfo.tokenOutAmount);
-    const diff = priceFor(swapInfo.tokenOut) / tokenOutSwapPrice - 1;
-    const coingeckoVariationText =
-        diff >= 0
-            ? `${numeral(Math.abs(diff)).format('%0.[00]')} cheaper`
-            : `within ${numeral(Math.abs(diff)).format('%0.[00]')}`;
-
     return (
         <VStack width="full">
             <Box width="full" p="4" pt="0" pb="2">
@@ -82,7 +62,16 @@ export function TradePreviewContent({ query, onTransactionSubmitted }: Props) {
                     <VStack divider={<StackDivider borderColor="whiteAlpha.200" />} spacing="4" alignItems="flex-start">
                         <HStack justifyContent="space-between" width="full">
                             <HStack>
-                                <TokenAvatar width="40px" height="40px" address={swapInfo.tokenIn} />
+                                <TokenAvatar
+                                    width="40px"
+                                    height="40px"
+                                    address={swapInfo.tokenIn}
+                                    logoURI={
+                                        lge?.tokenContractAddress.toLowerCase() === swapInfo.tokenIn
+                                            ? lge.tokenIconUrl
+                                            : ''
+                                    }
+                                />
                                 <Box>
                                     You sell
                                     <HStack spacing="1">
@@ -109,7 +98,16 @@ export function TradePreviewContent({ query, onTransactionSubmitted }: Props) {
                         </HStack>
                         <HStack justifyContent="space-between" width="full">
                             <HStack>
-                                <TokenAvatar width="40px" height="40px" address={swapInfo.tokenOut} />
+                                <TokenAvatar
+                                    width="40px"
+                                    height="40px"
+                                    address={swapInfo.tokenOut}
+                                    logoURI={
+                                        lge?.tokenContractAddress.toLowerCase() === swapInfo.tokenOut
+                                            ? lge.tokenIconUrl
+                                            : ''
+                                    }
+                                />
                                 <Box>
                                     to receive
                                     <HStack spacing="1">
@@ -193,48 +191,7 @@ export function TradePreviewContent({ query, onTransactionSubmitted }: Props) {
                     </BeetsSubmitTransactionButton>
                 </VStack>
             </Box>
-            <VStack width="full" py="4" backgroundColor="blackAlpha.500" px="5">
-                <HStack width="full" justifyContent="space-between">
-                    <Text color="gray.100" fontSize=".85rem">
-                        Price impact
-                    </Text>
-                    <Text
-                        fontSize=".85rem"
-                        color={hasHighPriceImpact ? 'beets.red' : hasNoticeablePriceImpact ? 'orange' : 'white'}
-                    >
-                        {numeral(priceImpact).format('0.00%')}
-                    </Text>
-                </HStack>
-                <HStack width="full" justifyContent="space-between">
-                    <Text color="gray.100" fontSize=".85rem">
-                        1 {tokenIn?.symbol} is
-                    </Text>
-                    <Text fontSize=".85rem" color="white">
-                        {tokenFormatAmount(swapInfo.effectivePriceReversed)} {tokenOut?.symbol}
-                    </Text>
-                </HStack>
-                <HStack width="full" justifyContent="space-between">
-                    <Text color="gray.100" fontSize=".85rem">
-                        1 {tokenOut?.symbol} is
-                    </Text>
-                    <Text fontSize=".85rem" color="white">
-                        {tokenFormatAmount(swapInfo.effectivePrice)} {tokenIn?.symbol}
-                    </Text>
-                </HStack>
-                <HStack width="full" justifyContent="space-between">
-                    <HStack alignItems="center" spacing="1">
-                        <Text color="gray.100" fontSize=".85rem">
-                            Compared to
-                        </Text>
-                        <Flex alignItems="center" height="full">
-                            <CoingeckoIcon width="16px" height="16px" />
-                        </Flex>
-                    </HStack>
-                    <Text color="white" fontSize=".85rem">
-                        {coingeckoVariationText}
-                    </Text>
-                </HStack>
-            </VStack>
+            <TradeCardSwapBreakdown isLge={!!lge} />
         </VStack>
     );
 }

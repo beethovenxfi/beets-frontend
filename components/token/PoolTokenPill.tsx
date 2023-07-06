@@ -4,11 +4,13 @@ import { Avatar, Box, Circle, Flex, Popover, PopoverContent, PopoverTrigger, Tex
 import numeral from 'numeral';
 import { useGetTokens } from '~/lib/global/useToken';
 import Jazzicon, { jsNumberForAddress } from 'react-jazzicon';
+import { useGetLgeToken } from '~/modules/lges/components/lib/useGetLgeToken';
 
 interface DisplayToken {
     address: string;
     weight?: string | null;
     nestedTokens?: { address: string }[] | null;
+    logoUri?: string;
 }
 
 interface Props {
@@ -17,14 +19,17 @@ interface Props {
 
 export function PoolTokenPill({ token }: Props) {
     const { getToken } = useGetTokens();
+    const { token: lgeToken } = useGetLgeToken(token.address);
 
     const content = (
         <BeetsBox p="2">
             <Flex alignItems="center">
-                <TokenAvatar address={token.address} size="xs" />
+                <TokenAvatar address={token.address} size="xs" logoURI={token.logoUri} />
                 <Text ml="2">
                     {token.nestedTokens
                         ? token.nestedTokens.map((nestedToken) => getToken(nestedToken.address)?.symbol).join('/')
+                        : token.logoUri
+                        ? lgeToken?.symbol
                         : getToken(token.address)?.symbol}
                 </Text>
                 {token.weight ? <Text ml="2">{numeral(token.weight).format('%')}</Text> : null}

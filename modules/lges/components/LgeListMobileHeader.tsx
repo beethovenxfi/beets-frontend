@@ -1,6 +1,6 @@
 import { Box, Flex } from '@chakra-ui/react';
 import { TextButtonPopupMenu } from '~/components/popup-menu/TextButtonPopupMenu';
-import { useLgeList } from '~/modules/lges/useLgeList';
+import { useLgeList } from '~/modules/lges/lib/useLgeList';
 
 export function LgeListMobileHeader() {
     const { status, setStatus } = useLgeList();

@@ -7,13 +7,11 @@ import { useUserTokenBalances } from '~/lib/user/useUserTokenBalances';
 import { useUserAccount } from '~/lib/user/useUserAccount';
 import PresetSelector from './PresetSelector';
 import { ChevronDown, Lock } from 'react-feather';
-import numeral from 'numeral';
-import { KeyboardEvent } from 'react';
 import { tokenInputBlockInvalidCharacters, tokenInputTruncateDecimalPlaces } from '~/lib/util/input-util';
 import { numberFormatLargeUsdValue } from '~/lib/util/number-formats';
-import { parseUnits } from 'ethers/lib/utils';
-import { oldBnumScaleAmount, oldBnumScaleDown } from '~/lib/services/pool/lib/old-big-number';
+import { oldBnumScaleAmount } from '~/lib/services/pool/lib/old-big-number';
 import { formatFixed } from '@ethersproject/bignumber';
+import { GqlLge } from '~/apollo/generated/graphql-codegen-generated';
 
 type Props = {
     label?: string;
@@ -21,27 +19,15 @@ type Props = {
     address: string | null;
     onChange?: (event: { currentTarget: { value: string } }) => void;
     value?: string | null;
-    showBalance?: boolean;
     showPresets?: boolean;
     requiresApproval?: boolean;
+    lge?: GqlLge;
 };
 
 export const TokenInput = forwardRef(
-    (
-        {
-            label,
-            toggleTokenSelect,
-            address,
-            onChange,
-            value,
-            requiresApproval,
-            showBalance = true,
-            showPresets,
-        }: Props,
-        ref,
-    ) => {
+    ({ label, toggleTokenSelect, address, onChange, value, requiresApproval, showPresets, lge }: Props, ref) => {
         const { getToken, priceForAmount } = useGetTokens();
-        const { userAddress, isConnected } = useUserAccount();
+        const { isConnected } = useUserAccount();
         const { userBalances, isLoading } = useUserTokenBalances();
 
         const userBalance = address ? tokenGetAmountForAddress(address, userBalances) : '0';
@@ -97,18 +83,27 @@ export const TokenInput = forwardRef(
                                 paddingY="1"
                                 onClick={toggleTokenSelect}
                                 backgroundColor="transparent"
-                                _hover={{ backgroundColor: 'beets.green', color: 'gray.500' }}
+                                _hover={!lge ? { backgroundColor: 'beets.green', color: 'gray.500' } : undefined}
                                 paddingX="1"
                                 _focus={{ boxShadow: 'none' }}
+                                pointerEvents={lge ? 'none' : 'auto'}
                             >
                                 <HStack spacing="none">
-                                    <TokenAvatar size="xs" address={address || ''} />
+                                    <TokenAvatar
+                                        size="xs"
+                                        address={address || ''}
+                                        logoURI={
+                                            lge?.tokenContractAddress.toLowerCase() === address ? lge?.tokenIconUrl : ''
+                                        }
+                                    />
                                     <Text fontSize="lg" paddingLeft="2">
                                         {token?.symbol}
                                     </Text>
-                                    <Box marginLeft="1">
-                                        <ChevronDown size={16} />
-                                    </Box>
+                                    {!lge && (
+                                        <Box marginLeft="1">
+                                            <ChevronDown size={16} />
+                                        </Box>
+                                    )}
                                 </HStack>
                             </Button>
                         </VStack>

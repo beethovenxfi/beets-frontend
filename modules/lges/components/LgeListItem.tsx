@@ -1,15 +1,11 @@
-import { Box, Grid, GridItem, HStack, Link, Text } from '@chakra-ui/react';
+import { Box, Grid, GridItem, HStack, Text } from '@chakra-ui/react';
 import { BoxProps } from '@chakra-ui/layout';
 import { useGetLgeToken } from './lib/useGetLgeToken';
 import TokenAvatar from '~/components/token/TokenAvatar';
 import { formatDistanceToNow } from 'date-fns';
-import { GqlLgeExtended } from '~/modules/lges/useLgeList';
-import { IconTwitter } from '~/components/icons/IconTwitter';
-import { IconDiscord } from '~/components/icons/IconDiscord';
-import { IconTelegram } from '~/components/icons/IconTelegram';
-import { IconMedium } from '~/components/icons/IconMedium';
-import { IconGlobe } from '~/components/icons/IconGlobe';
-import React, { ReactNode } from 'react';
+import { GqlLgeExtended } from '~/modules/lges/lib/useLgeList';
+import React from 'react';
+import { LgeIconLinks } from './LgeIconLinks';
 
 interface Props extends BoxProps {
     lge: GqlLgeExtended;
@@ -26,52 +22,8 @@ function getStatusText(lge: GqlLgeExtended) {
     }
 }
 
-function getIconLink(urlType: keyof typeof lge, lge: GqlLgeExtended): ReactNode {
-    const href = lge[urlType] as string;
-
-    if (!href) {
-        return null;
-    }
-
-    const props = {
-        color: '#c1c1d1',
-    };
-
-    const hoverProps = { color: 'beets.highlight' };
-
-    let iconType;
-    switch (urlType) {
-        case 'discordUrl':
-            iconType = <IconDiscord {...props} _hover={hoverProps} />;
-            break;
-        case 'mediumUrl':
-            iconType = <IconMedium {...props} _hover={hoverProps} />;
-            break;
-        case 'telegramUrl':
-            iconType = <IconTelegram {...props} _hover={hoverProps} />;
-            break;
-        case 'twitterUrl':
-            iconType = <IconTwitter {...props} _hover={hoverProps} />;
-            break;
-        case 'websiteUrl':
-            iconType = <IconGlobe {...props} _hover={hoverProps} />;
-            break;
-    }
-    return (
-        <Link href={href} target="_blank" color="gray.100">
-            {iconType}
-        </Link>
-    );
-}
-
 export function LgeListItem({ lge, ...rest }: Props) {
     const { token } = useGetLgeToken(lge.tokenAddress);
-
-    // grab all urlTypes except for banner image & token icon
-    // reverse for now to to get the website url first
-    const urlTypes = Object.keys(lge)
-        .filter((key) => key.match('Url') && !key.match('Image') && !key.match('Icon'))
-        .reverse();
 
     return (
         <Box mb={{ base: '4', lg: '0' }} borderRadius={{ base: 'md', lg: '0' }} {...rest}>
@@ -130,7 +82,7 @@ export function LgeListItem({ lge, ...rest }: Props) {
                     mb={{ base: '4', lg: '0' }}
                 >
                     <MobileLabel text="Links" />
-                    <HStack mt="2">{urlTypes.map((urlType) => getIconLink(urlType as keyof typeof lge, lge))}</HStack>
+                    <LgeIconLinks lge={lge} />
                 </GridItem>
             </Grid>
         </Box>

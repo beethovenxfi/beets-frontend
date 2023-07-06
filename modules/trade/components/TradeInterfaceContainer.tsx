@@ -2,8 +2,11 @@ import { AnimatePresence } from 'framer-motion';
 import { AnimatedBox } from '~/components/animation/chakra';
 import { TradeCard } from '~/modules/trade/components/TradeCard';
 import { Box } from '@chakra-ui/react';
+import { useUserTokenBalances } from '~/lib/user/useUserTokenBalances';
 
 export function TradeInterfaceContainer() {
+    const { isAmountLessThanEqUserBalance, refetch: refetchUserBalances } = useUserTokenBalances();
+
     return (
         <Box display="flex" justifyContent={{ md: 'center', xl: 'initial' }}>
             <Box w={{ base: 'full', md: '600px', xl: 'full' }} position="relative">
@@ -28,7 +31,10 @@ export function TradeInterfaceContainer() {
                         <TradeCard />
                     </AnimatedBox>
                 </AnimatePresence>*/}
-                <TradeCard />
+                <TradeCard
+                    isAmountLessThanEqUserBalance={isAmountLessThanEqUserBalance}
+                    refetchUserBalances={refetchUserBalances}
+                />
             </Box>
         </Box>
     );

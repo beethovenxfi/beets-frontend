@@ -1,17 +1,18 @@
 import numeral from 'numeral';
 
-export function numberFormatUSDValue(value: string | number) {
+export function numberFormatUSDValue(value: string | number, hasSign = true) {
     const valueNum = typeof value === 'string' ? parseFloat(value) : value;
+    const sign = hasSign ? '$' : '';
 
     if (valueNum < 0.0001) {
-        return '$0.00';
+        return `${sign}0.00`;
     } else if (valueNum < 1) {
-        return numeral(valueNum).format('$0.00[00]');
+        return numeral(valueNum).format(`${sign}0.00[00]`);
     } else if (valueNum > 10000) {
-        return numeral(valueNum).format('$0,0');
+        return numeral(valueNum).format(`${sign}0,0`);
     }
 
-    return numeral(valueNum).format('$0,0.00');
+    return numeral(valueNum).format(`${sign}0,0.00`);
 }
 
 export function numberLimitInputToNumDecimals(value: string, decimals = 18) {
