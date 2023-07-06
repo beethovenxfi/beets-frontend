@@ -2,6 +2,7 @@ import { AmountHumanReadable, TokenBase } from '~/lib/services/token/token-types
 import { BaseProvider } from '@ethersproject/providers';
 import LiquidityGaugeV5Abi from '~/lib/abi/LiquidityGaugeV5.json';
 import LiquidityGaugeV6Abi from '~/lib/abi/LiquidityGaugeV6.json';
+import BeethovenCheckpointer from '~/lib/abi/BeethovenCheckpointer.json';
 import GaugeWorkingBalanceHelperAbi from '~/lib/abi/GaugeWorkingBalanceHelper.json';
 import ChildChainGaugeRewardHelper from '~/lib/abi/ChildChainGaugeRewardHelper.json';
 import { BigNumber, Contract } from 'ethers';
@@ -163,6 +164,23 @@ export class GaugeStakingService {
 
         const formattedResult = mapValues(result, (data) => formatFixed(data.claimableBAL.toString(), 18).toString());
         return formattedResult;
+    }
+
+    public async checkpointGauges({
+        provider,
+        gauges,
+        userAddress,
+    }: {
+        provider: BaseProvider;
+        gauges: string[];
+        userAddress: string;
+    }) {
+        const gaugeCheckpointHelper = new Contract(
+            networkConfig.gauge.checkpointHelper,
+            BeethovenCheckpointer,
+            provider,
+        );
+        await gaugeCheckpointHelper['checkpoint_my_gauges'](gauges);
     }
 
     public async getCheckpointableGauges({

@@ -148,7 +148,8 @@ export const fantomNetworkConfig: NetworkConfig = {
         rewardHelperAddress: AddressZero,
         balancerPseudoMinterAddress: AddressZero,
         veBALDelegationProxyAddress: AddressZero,
-        workingBalanceHelperAddress: AddressZero
+        workingBalanceHelperAddress: AddressZero,
+        checkpointHelper: AddressZero
     },
     createPoolUrl: 'https://v1.beets.fi/#/pool-create',
     launchUrl: 'https://v1.beets.fi/#/launch',
