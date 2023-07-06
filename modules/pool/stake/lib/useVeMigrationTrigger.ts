@@ -44,7 +44,7 @@ export default function useVeMigrationTrigger() {
                 }
             }
         `,
-        { userId: '0x4ec8459bb6bab83d8987373f6ae47b9a60bd5a6a' },
+        { userId: userAddress },
         {
             enabled: areQueriesEnabled,
         },
@@ -73,7 +73,7 @@ export default function useVeMigrationTrigger() {
                 }
             }
         `,
-        { userId: '0x4ec8459bb6bab83d8987373f6ae47b9a60bd5a6a', layerZeroChainId },
+        { userId: userAddress, layerZeroChainId },
         { enabled: areQueriesEnabled },
     );
 
