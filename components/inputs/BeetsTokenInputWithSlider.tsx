@@ -34,7 +34,7 @@ interface Props extends BoxProps {
     setInputAmount: (amount: AmountHumanReadable) => void;
     value?: string;
     proportionalAmount?: string;
-
+    isWithdraw?: boolean;
     setSelectedTokenOption: (address: string) => void;
 }
 
@@ -46,6 +46,7 @@ export function BeetsTokenInputWithSlider({
     value,
     proportionalAmount,
     setSelectedTokenOption,
+    isWithdraw,
     ...rest
 }: Props) {
     const { formattedPrice } = useGetTokens();
@@ -75,6 +76,7 @@ export function BeetsTokenInputWithSlider({
                             tokenOptions={tokenOptions}
                             selectedAddress={selectedTokenOption.address}
                             onOptionSelect={(address) => setSelectedTokenOption(address)}
+                            isWithdraw={isWithdraw}
                         />
                     </Box>
                 ) : (

@@ -2,10 +2,8 @@ import { PoolOvernightWarning } from '~/modules/pool/detail/components/warning/P
 import { PoolMigrateLegacyFbeetsWarning } from '~/modules/pool/detail/components/warning/PoolMigrateLegacyFbeetsWarning';
 import { PoolDetailWarning } from '~/modules/pool/detail/components/warning/PoolDetailWarning';
 import { PoolStakeInFarmWarning } from '~/modules/pool/detail/components/warning/PoolStakeInFarmWarning';
-import { PoolFbeetsWarning } from '~/modules/pool/detail/components/warning/PoolFbeetsWarning';
 import { usePool } from '~/modules/pool/lib/usePool';
 import { usePoolUserBptBalance } from '~/modules/pool/lib/usePoolUserBptBalance';
-import { useLegacyFBeetsBalance } from '~/modules/reliquary/lib/useLegacyFbeetsBalance';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 import { useEffect } from 'react';
 import { ToastType, useToast } from '~/components/toast/BeetsToast';
@@ -16,7 +14,6 @@ export function PoolWarnings() {
     const { pool, isFbeetsPool } = usePool();
     const { isOpen: isMigrateModalVisible, onOpen } = useDisclosure();
     const bptBalances = usePoolUserBptBalance();
-    const { total } = useLegacyFBeetsBalance();
     const { warnings } = useNetworkConfig();
     const { showToast, removeToast } = useToast();
     const showMigrationToast = parseFloat(bptBalances.userLegacyGaugeStakedBptBalance) > 0;
@@ -49,7 +46,6 @@ export function PoolWarnings() {
             <PoolMigrateLegacyFbeetsWarning />
             {warnings.poolDetail[pool.id] && <PoolDetailWarning warning={warnings.poolDetail[pool.id]} />}
             {pool.staking && !isFbeetsPool && <PoolStakeInFarmWarning />}
-            {isFbeetsPool && bptBalances.hasBpt && total === 0 && <PoolFbeetsWarning />}
             <PoolGaugeMigrateModal noActivator isVisible={isMigrateModalVisible} />
         </>
     );

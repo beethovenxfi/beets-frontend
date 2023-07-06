@@ -28,7 +28,10 @@ export function PoolMigrateLegacyFbeetsWarning() {
                         justifyContent={{ base: 'stretch', xl: undefined }}
                     >
                         <Box>
-                            <Text>You can migrate your v1 fBEETS position on the maBEETS page.</Text>
+                            <Text>
+                                You currently have legacy fBEETS tokens staked or stored in your wallet. Start by
+                                migrating them on the maBEETS page and then proceed to manage them from there.
+                            </Text>
                         </Box>
                         <Button
                             w={{ base: 'full', xl: 'inherit' }}

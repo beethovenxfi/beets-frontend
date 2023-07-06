@@ -149,6 +149,34 @@ export const GqlPoolFeaturedPoolGroup = gql`
     }
     ${GqlPoolCardData}
 `;
+export const GqlLge = gql`
+    fragment GqlLge on GqlLge {
+        address
+        adminAddress
+        adminIsMultisig
+        bannerImageUrl
+        collateralAmount
+        collateralEndWeight
+        collateralStartWeight
+        collateralTokenAddress
+        description
+        discordUrl
+        endDate
+        id
+        mediumUrl
+        name
+        startDate
+        swapFeePercentage
+        telegramUrl
+        tokenAmount
+        tokenContractAddress
+        tokenEndWeight
+        tokenIconUrl
+        tokenStartWeight
+        twitterUrl
+        websiteUrl
+    }
+`;
 export const GqlPoolLinear = gql`
     fragment GqlPoolLinear on GqlPoolLinear {
         id
@@ -748,6 +776,22 @@ export const GetHomeNewsItems = gql`
             discussionUrl
         }
     }
+`;
+export const GetLge = gql`
+    query GetLge($id: ID!) {
+        lge: lge(id: $id) {
+            ...GqlLge
+        }
+    }
+    ${GqlLge}
+`;
+export const GetLges = gql`
+    query getLges {
+        lges: lges {
+            ...GqlLge
+        }
+    }
+    ${GqlLge}
 `;
 export const GetLinearPools = gql`
     query GetLinearPools {

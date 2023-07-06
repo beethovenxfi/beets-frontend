@@ -9,10 +9,12 @@ import { PoolWithdrawModal } from '~/modules/pool/withdraw/PoolWithdrawModal';
 import { usePool } from '~/modules/pool/lib/usePool';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 import { PoolWarnings } from '~/modules/pool/detail/components/warning/PoolWarnings';
+import { useLegacyFBeetsBalance } from '~/modules/reliquary/lib/useLegacyFbeetsBalance';
 
 export function Pool() {
-    const { pool } = usePool();
+    const { pool, isFbeetsPool } = usePool();
     const { investDisabled } = useNetworkConfig();
+    const { total } = useLegacyFBeetsBalance();
 
     return (
         <Box marginBottom="8">
@@ -21,7 +23,7 @@ export function Pool() {
                 <PoolWarnings />
                 <HStack width="full" justifyContent="flex-end">
                     {!investDisabled[pool.id] && <PoolInvestModal />}
-                    <PoolWithdrawModal />
+                    <PoolWithdrawModal activatorProps={{ disabled: isFbeetsPool && total > 0 }} />
                 </HStack>
                 <Grid gap="4" templateColumns={{ base: '1fr', lg: '300px 1fr' }} width="full">
                     <GridItem>

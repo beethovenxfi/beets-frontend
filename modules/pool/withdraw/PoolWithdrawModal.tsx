@@ -77,7 +77,6 @@ export function PoolWithdrawModal({
                     width={{ base: 'full', md: '140px' }}
                     variant="secondary"
                     {...activatorProps}
-                    disabled={userPoolBalanceUSD === 0}
                     isLoading={isPoolUserDepositBalanceLoading}
                 >
                     Withdraw

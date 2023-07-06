@@ -5,9 +5,10 @@ import { AddressZero } from '@ethersproject/constants';
 
 interface Props extends AvatarProps {
     address?: string | null;
+    logoURI?: string;
 }
 
-function TokenAvatar({ address, size, ...rest }: Props) {
+function TokenAvatar({ address, size, logoURI, ...rest }: Props) {
     const { getToken } = useGetTokens();
     const token = address ? getToken(address) : null;
 
@@ -15,7 +16,7 @@ function TokenAvatar({ address, size, ...rest }: Props) {
         <Avatar
             {...rest}
             size={size}
-            src={token?.logoURI || undefined}
+            src={logoURI || token?.logoURI || undefined}
             bg={'transparent'}
             icon={
                 token?.logoURI ? (

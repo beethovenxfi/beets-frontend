@@ -1,6 +1,5 @@
 import { useQuery } from 'react-query';
-import { useReactiveVar } from '@apollo/client';
-import { investStateVar } from '~/modules/pool/invest/lib/useInvestState';
+import { useInvestState } from '~/modules/pool/invest/lib/useInvestState';
 import { replaceEthWithWeth, tokenAmountsGetArrayFromMap } from '~/lib/services/token/token-util';
 import { useSlippage } from '~/lib/global/useSlippage';
 import numeral from 'numeral';
@@ -10,18 +9,23 @@ import { usePool } from '~/modules/pool/lib/usePool';
 export function usePoolJoinGetBptOutAndPriceImpactForTokensIn() {
     const networkConfig = useNetworkConfig();
     const { poolService, pool } = usePool();
-    const { inputAmounts, selectedOptions } = useReactiveVar(investStateVar);
+    const { inputAmounts, selectedOptions } = useInvestState();
     const { slippage } = useSlippage();
     //map the input amounts to the token being invested
-    const tokenAmountsIn = tokenAmountsGetArrayFromMap(inputAmounts).map(({ amount, address }) => {
-        const poolTokenIndex = pool.tokens.find((token) => token.address === address)?.index || -1;
-        const investOption = pool.investConfig.options.find((option) => option.poolTokenIndex === poolTokenIndex);
+    const tokenAmountsIn =
+        inputAmounts &&
+        tokenAmountsGetArrayFromMap(inputAmounts).map(({ amount, address }) => {
+            const poolTokenIndex = pool.tokens.find((token) => token.address === address)?.index || -1;
+            const investOption = pool.investConfig.options.find((option) => option.poolTokenIndex === poolTokenIndex);
 
-        return {
-            amount,
-            address: selectedOptions[`${poolTokenIndex}`] || investOption?.tokenOptions[0].address || address,
-        };
-    });
+            return {
+                amount,
+                address:
+                    (selectedOptions && selectedOptions[`${poolTokenIndex}`]) ||
+                    investOption?.tokenOptions[0].address ||
+                    address,
+            };
+        });
 
     const query = useQuery(
         ['joinGetBptOutAndPriceImpactForTokensIn', tokenAmountsIn, slippage],
@@ -42,7 +46,7 @@ export function usePoolJoinGetBptOutAndPriceImpactForTokensIn() {
 
             return poolService.joinGetBptOutAndPriceImpactForTokensIn(replacedWethTokenAmountsIn, slippage);
         },
-        { enabled: tokenAmountsIn.length > 0, staleTime: 0, cacheTime: 0 },
+        { enabled: tokenAmountsIn && tokenAmountsIn.length > 0, staleTime: 0, cacheTime: 0 },
     );
 
     const bptOutAndPriceImpact = query.data;
