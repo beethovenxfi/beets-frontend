@@ -7,14 +7,14 @@ import { useGaugeCheckpoint } from '~/modules/pool/stake/lib/useGaugeCheckpoint'
 import useVeMigrationTrigger from '~/modules/pool/stake/lib/useVeMigrationTrigger';
 
 export default function useGlobalWarnings() {
-    const { isOptimismSynced, isLoading: isLoadingMigrationData } = useVeMigrationTrigger();
+    const { isLoading: isLoadingMigrationData, shouldShowMigrationTrigger } = useVeMigrationTrigger();
     const { isLoading: isLoadingCheckpointableGauges, checkpointableGauges } = useCheckpointTrigger();
     const { checkpoint, ...checkpointMutation } = useGaugeCheckpoint();
     const { showToast, removeToast } = useToast();
 
     // sync veBAL warning
     useEffect(() => {
-        if (!isOptimismSynced && !isLoadingMigrationData) {
+        if (shouldShowMigrationTrigger) {
             showToast({
                 id: 'optimism-vebal-sync',
                 content: (
@@ -23,9 +23,11 @@ export default function useGlobalWarnings() {
                             You have a veBAL balance on Mainnet which is not synced to Optimism. Sync your balance to
                             ensure you are receiving your full reward potential.
                         </Text>
-                        <Button as={Link} href={'https://app.balancer.fi/#/ethereum/vebal'} target="_blank" px="4">
-                            Sync on Mainnet
-                        </Button>
+                        <Link href={'https://app.balancer.fi/#/ethereum/vebal'} target="_blank">
+                            <Button bg="orange.300" color="orange.700" px="4">
+                                Sync on Mainnet
+                            </Button>
+                        </Link>
                     </HStack>
                 ),
                 type: ToastType.Warn,
@@ -33,7 +35,7 @@ export default function useGlobalWarnings() {
         } else {
             removeToast('optimism-vebal-sync');
         }
-    }, [isOptimismSynced, isLoadingMigrationData]);
+    }, [isLoadingMigrationData, shouldShowMigrationTrigger]);
 
     // checkpoint gauges warning
     useEffect(() => {

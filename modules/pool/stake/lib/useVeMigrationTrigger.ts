@@ -44,9 +44,9 @@ export default function useVeMigrationTrigger() {
                 }
             }
         `,
-        { userId: userAddress },
+        { userId: userAddress?.toLowerCase() },
         {
-            enabled: areQueriesEnabled,
+            enabled: areQueriesEnabled && !!userAddress,
         },
     );
 
@@ -73,19 +73,23 @@ export default function useVeMigrationTrigger() {
                 }
             }
         `,
-        { userId: userAddress, layerZeroChainId },
-        { enabled: areQueriesEnabled },
+        { userId: userAddress?.toLowerCase(), layerZeroChainId },
+        { enabled: areQueriesEnabled && !!userAddress },
     );
 
     // check all the locks on mainnet
-    const isLockBridgeSynced = mainnetLockData?.mainnetLocks.votingLocks.every((mainnetVeLock) => {
+
+    const isLockBridgeSynced = ((mainnetLockData?.mainnetLocks || {}).votingLocks || []).every((mainnetVeLock) => {
+        if ((mainnetVeLock.votingEscrowID?.omniLocks || []).length === 0) {
+            return false;
+        }
         // check if the slope/bias match omni locks for op (dstChainId is filtered in query)
         return mainnetVeLock.votingEscrowID?.omniLocks.every((optimismOmniLock) => {
             return optimismOmniLock.slope === mainnetVeLock.slope && optimismOmniLock.bias === mainnetVeLock.bias;
         });
     });
 
-    const isOptimismSynced = optimismLockData.optimismLocks.votingLocks.every((optimismVeLock) => {
+    const isOptimismSynced = ((optimismLockData.optimismLocks || {}).votingLocks || []).every((optimismVeLock) => {
         return !!mainnetLockData.mainnetLocks.votingLocks.find(
             (mainnetVeLock) =>
                 mainnetVeLock.bias === optimismVeLock.bias && mainnetVeLock.slope === optimismVeLock.slope,
@@ -93,7 +97,7 @@ export default function useVeMigrationTrigger() {
     });
 
     const isLoading = isLoadingMainnetLocks || isLoadingOptimismLocks;
-    const shouldShowMigrationTrigger = !isOptimismSynced && !isLockBridgeSynced;
+    const shouldShowMigrationTrigger = !isOptimismSynced || !isLockBridgeSynced;
 
     return {
         isLoading,
