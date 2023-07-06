@@ -17,7 +17,7 @@ export function LgeListTableHeader() {
             display={{ base: 'none', lg: 'grid' }}
         >
             <GridItem>Project</GridItem>
-            <GridItem>Name</GridItem>
+            <GridItem>Token</GridItem>
             <GridItem>Status</GridItem>
             <GridItem>Links</GridItem>
         </Grid>

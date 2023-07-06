@@ -12,12 +12,11 @@ export function _useLgeList() {
         notifyOnNetworkStatusChange: true,
     });
     const [status, setStatus] = useState('active-upcoming');
-    const now = new Date();
+    const nowTimestamp = new Date().getTime() / 1000;
 
     const lgesExtended: GqlLgeExtended[] = (data?.lges || []).map((lge) => {
-        const startDate = new Date(lge.startTimestamp);
-        const endDate = new Date(lge.endTimestamp);
-        const status = now < startDate ? 'upcoming' : now > endDate ? 'ended' : 'active';
+        const status =
+            nowTimestamp < lge.startTimestamp ? 'upcoming' : nowTimestamp > lge.endTimestamp ? 'ended' : 'active';
         return {
             ...lge,
             status,
@@ -25,8 +24,8 @@ export function _useLgeList() {
     });
 
     function lgeStatus(lge: GqlLge) {
-        const endDate = new Date(lge.endTimestamp);
-        return status === 'active-upcoming' ? now < endDate : now > endDate;
+        const endTimestamp = lge.endTimestamp;
+        return status === 'active-upcoming' ? nowTimestamp < endTimestamp : nowTimestamp > endTimestamp;
     }
 
     const lgesFiltered = lgesExtended.filter(lgeStatus);

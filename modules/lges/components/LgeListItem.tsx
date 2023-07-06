@@ -18,11 +18,11 @@ interface Props extends BoxProps {
 function getStatusText(lge: GqlLgeExtended) {
     switch (lge.status) {
         case 'active':
-            return `Ends in ${formatDistanceToNow(new Date(lge.endTimestamp))}`;
+            return `Ends in ${formatDistanceToNow(new Date(lge.endTimestamp * 1000))}`;
         case 'upcoming':
-            return `Starts in ${formatDistanceToNow(new Date(lge.startTimestamp))}`;
+            return `Starts in ${formatDistanceToNow(new Date(lge.startTimestamp * 1000))}`;
         case 'ended':
-            return `Ended ${formatDistanceToNow(new Date(lge.endTimestamp))} ago`;
+            return `Ended ${formatDistanceToNow(new Date(lge.endTimestamp * 1000))} ago`;
     }
 }
 
