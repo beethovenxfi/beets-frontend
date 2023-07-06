@@ -1,4 +1,5 @@
 import { Text, Box, HStack, Link } from '@chakra-ui/react';
+import { format } from 'date-fns';
 import { useMemo } from 'react';
 import { ExternalLink } from 'react-feather';
 import { GqlLge } from '~/apollo/generated/graphql-codegen-generated';
@@ -35,7 +36,7 @@ function AddressLink({ title, address }: { title: string; address: string }) {
 }
 
 export function LgeDetailAboutInfo({ lge, status }: Props) {
-    const { token } = useGetLgeToken(lge.tokenContractAddress);
+    const { token } = useGetLgeToken(lge.tokenAddress);
     const { getToken } = useGetTokens();
 
     const tokenStartWeight = formatWeight(lge.tokenStartWeight);
@@ -47,7 +48,7 @@ export function LgeDetailAboutInfo({ lge, status }: Props) {
         () => [
             {
                 title: 'Token',
-                address: lge.tokenContractAddress,
+                address: lge.tokenAddress,
             },
             {
                 title: 'Owner',
@@ -69,11 +70,11 @@ export function LgeDetailAboutInfo({ lge, status }: Props) {
             <Card padding="2">
                 <CardRow>
                     <Box flex="1">{status === 'upcoming' ? 'Starts' : 'Started'}</Box>
-                    <Box>{lge.startDate}</Box>
+                    <Box>{format(new Date(lge.startTimestamp * 1000), "yyyy-MM-dd' 'HH:mm' 'O")}</Box>
                 </CardRow>
                 <CardRow>
                     <Box flex="1">{status === 'ended' ? 'Ended' : 'Ends'}</Box>
-                    <Box>{lge.endDate}</Box>
+                    <Box>{format(new Date(lge.endTimestamp * 1000), "yyyy-MM-dd' 'HH:mm' 'O")}</Box>
                 </CardRow>
                 <CardRow>
                     <Box flex="1">Launch token symbol</Box>
@@ -84,31 +85,31 @@ export function LgeDetailAboutInfo({ lge, status }: Props) {
                     <TokenAmountPill
                         fontSize="md"
                         amount={lge.tokenAmount}
-                        address={lge.tokenContractAddress}
+                        address={lge.tokenAddress}
                         logoUri={lge.tokenIconUrl}
                     />
                 </CardRow>
                 <CardRow>
                     <Box flex="1">Collateral token symbol</Box>
-                    <Box>{getToken(lge.collateralTokenAddress)?.symbol}</Box>
+                    <Box>{getToken(lge.collateralAddress)?.symbol}</Box>
                 </CardRow>
                 <CardRow alignItems="center">
                     <Box flex="1">Initial collateral token supply</Box>
-                    <TokenAmountPill fontSize="md" amount={lge.collateralAmount} address={lge.collateralTokenAddress} />
+                    <TokenAmountPill fontSize="md" amount={lge.collateralAmount} address={lge.collateralAddress} />
                 </CardRow>
                 <CardRow alignItems="center">
                     <Box flex="1">Start weights</Box>
                     <HStack>
                         <PoolTokenPill
                             token={{
-                                address: lge.tokenContractAddress,
+                                address: lge.tokenAddress,
                                 weight: tokenStartWeight,
                                 logoUri: lge.tokenIconUrl,
                             }}
                         />
                         <PoolTokenPill
                             token={{
-                                address: lge.collateralTokenAddress,
+                                address: lge.collateralAddress,
                                 weight: collateralStartWeight,
                             }}
                         />
@@ -119,14 +120,14 @@ export function LgeDetailAboutInfo({ lge, status }: Props) {
                     <HStack>
                         <PoolTokenPill
                             token={{
-                                address: lge.tokenContractAddress,
+                                address: lge.tokenAddress,
                                 weight: tokenEndWeight,
                                 logoUri: lge.tokenIconUrl,
                             }}
                         />
                         <PoolTokenPill
                             token={{
-                                address: lge.collateralTokenAddress,
+                                address: lge.collateralAddress,
                                 weight: collateralEndWeight,
                             }}
                         />
@@ -134,7 +135,7 @@ export function LgeDetailAboutInfo({ lge, status }: Props) {
                 </CardRow>
                 <CardRow>
                     <Box flex="1">Swap fee</Box>
-                    <Box>{lge.swapFeePercentage}%</Box>
+                    <Box>{lge.swapFee}%</Box>
                 </CardRow>
                 <CardRow>
                     <Box flex="1">Protocol fee</Box>

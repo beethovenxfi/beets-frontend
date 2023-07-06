@@ -67,9 +67,7 @@ export function TradePreviewContent({ query, onTransactionSubmitted, lge }: Prop
                                     height="40px"
                                     address={swapInfo.tokenIn}
                                     logoURI={
-                                        lge?.tokenContractAddress.toLowerCase() === swapInfo.tokenIn
-                                            ? lge.tokenIconUrl
-                                            : ''
+                                        lge?.tokenAddress.toLowerCase() === swapInfo.tokenIn ? lge.tokenIconUrl : ''
                                     }
                                 />
                                 <Box>
@@ -103,9 +101,7 @@ export function TradePreviewContent({ query, onTransactionSubmitted, lge }: Prop
                                     height="40px"
                                     address={swapInfo.tokenOut}
                                     logoURI={
-                                        lge?.tokenContractAddress.toLowerCase() === swapInfo.tokenOut
-                                            ? lge.tokenIconUrl
-                                            : ''
+                                        lge?.tokenAddress.toLowerCase() === swapInfo.tokenOut ? lge.tokenIconUrl : ''
                                     }
                                 />
                                 <Box>

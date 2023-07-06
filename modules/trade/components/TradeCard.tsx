@@ -71,8 +71,8 @@ export function TradeCard({ lge, isAmountLessThanEqUserBalance, refetchUserBalan
     useEffectOnce(() => {
         if (lge) {
             setTradeState({
-                tokenIn: lge.collateralTokenAddress.toLowerCase(),
-                tokenOut: lge.tokenContractAddress.toLowerCase(),
+                tokenIn: lge.collateralAddress.toLowerCase(),
+                tokenOut: lge.tokenAddress.toLowerCase(),
             });
         }
     });

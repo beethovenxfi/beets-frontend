@@ -3,13 +3,11 @@ import { useGetPoolSwapsQuery } from '~/apollo/generated/graphql-codegen-generat
 import { useMemo } from 'react';
 import { NetworkStatus } from '@apollo/client';
 import { useLge } from '~/modules/lge/lib/useLge';
-import { useGetLgeToken } from '~/modules/lges/components/lib/useGetLgeToken';
 import LgeTransactionHeader from '~/modules/lge/detail/LgeTransactionHeader';
 import LgeTransactionItem, { LgeTransactionType } from '~/modules/lge/detail/LgeTransactionItem';
 
 export function LgeSwapsTable() {
     const { lge } = useLge();
-    const { token } = useGetLgeToken(lge?.tokenContractAddress || '');
 
     const lgeId = lge?.id || '';
 
@@ -30,7 +28,7 @@ export function LgeSwapsTable() {
 
         const swapsOutput = swaps.map((swap) => {
             const type =
-                swap.tokenIn === lge?.collateralTokenAddress.toLowerCase()
+                swap.tokenIn === lge?.collateralAddress.toLowerCase()
                     ? LgeTransactionType.Buy
                     : LgeTransactionType.Sell;
             return {
@@ -53,12 +51,12 @@ export function LgeSwapsTable() {
             items={transactions}
             loading={false}
             fetchingMore={isFetchingMoreSwaps}
-            renderTableHeader={() => <LgeTransactionHeader symbol={token?.symbol || ''} />}
+            renderTableHeader={() => <LgeTransactionHeader symbol={lge?.tokenSymbol || ''} />}
             renderTableRow={(item) => (
                 <LgeTransactionItem
                     transaction={item}
-                    launchTokenSymbol={token?.symbol || ''}
-                    launchTokenAddress={lge?.tokenContractAddress.toLowerCase() || ''}
+                    launchTokenSymbol={lge?.tokenSymbol || ''}
+                    launchTokenAddress={lge?.tokenAddress.toLowerCase() || ''}
                 />
             )}
             onFetchMore={handleFetchMoreTransactions}

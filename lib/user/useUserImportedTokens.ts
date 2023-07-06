@@ -66,18 +66,14 @@ export function useUserImportedTokens() {
         setTokenToImport(null);
     }
 
-    function importToken(isLge?: boolean) {
+    function importToken() {
         if (tokenToImport && !getImportedToken(tokenToImport.address)) {
             const updated = [
                 ...userImportedTokensVar(),
                 { ...tokenToImport, chainId: parseInt(networkConfig.chainId) },
             ];
             userImportedTokensVar(updated);
-
-            isLge
-                ? sessionStorage.setItem(USER_IMPORTED_CACHE_KEY, JSON.stringify(updated))
-                : localStorage.setItem(USER_IMPORTED_CACHE_KEY, JSON.stringify(updated));
-
+            localStorage.setItem(USER_IMPORTED_CACHE_KEY, JSON.stringify(updated));
             clearTokenImport();
         }
     }

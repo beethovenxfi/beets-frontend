@@ -5,29 +5,16 @@ import Card from '~/components/card/Card';
 import { LgeDetails } from './LgeDetails';
 import { TradeCard } from '~/modules/trade/components/TradeCard';
 import { useUserLgeTokenBalances } from '../lib/useUserLgeTokenBalances';
-import { useUserImportedTokens } from '~/lib/user/useUserImportedTokens';
-import { useEffect } from 'react';
+import { format } from 'date-fns';
 
 export function Lge() {
     const { lge, status } = useLge();
     const { isAmountLessThanEqUserBalance, refetch: refetchUserBalances } = useUserLgeTokenBalances();
-    const { loadToken, importToken, tokenToImport } = useUserImportedTokens();
 
-    const startDate = lge && new Date(lge.startDate);
-    const endDate = lge && new Date(lge.endDate);
+    const startDate = lge && format(new Date(lge.startTimestamp * 1000), "yyyy-MM-dd' 'HH:mm' 'O");
+    const endDate = lge && format(new Date(lge.endTimestamp * 1000), "yyyy-MM-dd' 'HH:mm' 'O");
     const hasEnded = status === 'ended';
     const isActive = status === 'active';
-
-    useEffect(() => {
-        if (lge) {
-            if (!tokenToImport) {
-                loadToken(lge.tokenContractAddress.toLowerCase());
-            } else {
-                // token is stored in session so will be removed on browser tab/window close
-                importToken(!!lge);
-            }
-        }
-    }, [tokenToImport]);
 
     return (
         <Box marginBottom="8">

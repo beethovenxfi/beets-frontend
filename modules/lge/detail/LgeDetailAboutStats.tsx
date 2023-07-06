@@ -5,7 +5,6 @@ import { CardRow } from '~/components/card/CardRow';
 import { PoolTokenPill } from '~/components/token/PoolTokenPill';
 import { useGetTokens } from '~/lib/global/useToken';
 import { numberFormatUSDValue } from '~/lib/util/number-formats';
-import { useGetLgeToken } from '~/modules/lges/components/lib/useGetLgeToken';
 
 interface Props {
     lge: GqlLge;
@@ -29,11 +28,10 @@ function calculateLbpTokenPrice({
 }
 
 export function LgeDetailAboutStats({ lge, pool }: Props) {
-    const { token } = useGetLgeToken(lge.tokenContractAddress);
     const { priceForAmount, priceFor } = useGetTokens();
 
-    const poolLaunchToken = pool.tokens.find((token) => token.address === lge.tokenContractAddress.toLowerCase());
-    const poolCollateralToken = pool.tokens.find((token) => token.address === lge.collateralTokenAddress.toLowerCase());
+    const poolLaunchToken = pool.tokens.find((token) => token.address === lge.tokenAddress.toLowerCase());
+    const poolCollateralToken = pool.tokens.find((token) => token.address === lge.collateralAddress.toLowerCase());
     const poolCollateralTokenBalance = parseFloat(poolCollateralToken?.balance || '');
     const fundsRaised = poolCollateralTokenBalance - parseFloat(lge.collateralAmount);
     const fundsRaisedUsdValue = priceForAmount({
@@ -69,25 +67,25 @@ export function LgeDetailAboutStats({ lge, pool }: Props) {
                     <HStack>
                         <PoolTokenPill
                             token={{
-                                address: lge.tokenContractAddress,
+                                address: lge.tokenAddress,
                                 weight: poolLaunchToken?.weight,
                                 logoUri: lge.tokenIconUrl,
                             }}
                         />
                         <PoolTokenPill
                             token={{
-                                address: lge.collateralTokenAddress,
+                                address: lge.collateralAddress,
                                 weight: poolCollateralToken?.weight,
                             }}
                         />
                     </HStack>
                 </CardRow>
                 <CardRow>
-                    <Box flex="1">{`Current ${token?.symbol} price`}</Box>
+                    <Box flex="1">{`Current ${lge.tokenSymbol} price`}</Box>
                     <Box>{fundsRemoved ? '-' : numberFormatUSDValue(tokenPrice.toString())}</Box>
                 </CardRow>
                 <CardRow>
-                    <Box flex="1">{`Predicted ${token?.symbol} price`}</Box>
+                    <Box flex="1">{`Predicted ${lge.tokenSymbol} price`}</Box>
                     <Box>{fundsRemoved ? '-' : numberFormatUSDValue(predictedPrice.toString())}</Box>
                 </CardRow>
                 <CardRow>

@@ -17,11 +17,12 @@ export function LgeProvider({ lge: lgeFromProps, children }: { lge: GqlLge; chil
 
     const lge = data?.lge;
 
-    const now = new Date();
-    const startDate = lge && new Date(lge.startDate);
-    const endDate = lge && new Date(lge.endDate);
-    const status = startDate && now < startDate ? 'upcoming' : endDate && now > endDate ? 'ended' : 'active';
-    const tokens = [lge?.collateralTokenAddress.toLowerCase() || '', lge?.tokenContractAddress.toLowerCase() || ''];
+    const now = new Date().getTime();
+    const startTimestamp = lge && lge.startTimestamp * 1000;
+    const endTimestamp = lge && lge.endTimestamp * 1000;
+    const status =
+        startTimestamp && now < startTimestamp ? 'upcoming' : endTimestamp && now > endTimestamp ? 'ended' : 'active';
+    const tokens = [lge?.collateralAddress.toLowerCase() || '', lge?.tokenAddress.toLowerCase() || ''];
 
     return (
         <LgeContext.Provider

@@ -92,9 +92,7 @@ export const TokenInput = forwardRef(
                                     <TokenAvatar
                                         size="xs"
                                         address={address || ''}
-                                        logoURI={
-                                            lge?.tokenContractAddress.toLowerCase() === address ? lge?.tokenIconUrl : ''
-                                        }
+                                        logoURI={lge?.tokenAddress.toLowerCase() === address ? lge?.tokenIconUrl : ''}
                                     />
                                     <Text fontSize="lg" paddingLeft="2">
                                         {token?.symbol}
