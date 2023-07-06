@@ -5,7 +5,7 @@ import { networkConfig } from '~/lib/config/network-config';
 import { LgeData } from '~/lib/services/lge/copper-proxy.service';
 import CopperProxyAbi from '~/lib/abi/CopperProxy.json';
 
-export function useLgeCreateLge() {
+export function useLgeCreate() {
     const { submit, submitAsync, ...rest } = useSubmitTransaction({
         config: {
             addressOrName: networkConfig.copperProxyAddress,

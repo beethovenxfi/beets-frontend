@@ -6,9 +6,10 @@ import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 import { useUserAllowances } from '~/lib/util/useUserAllowances';
 import { useLGeCreateGetLgeData } from '~/modules/lge/create/forms/lib/useLgeCreateGetLgeData';
 import { BeetsTransactionStepsSubmit, TransactionStep } from '~/components/button/BeetsTransactionStepsSubmit';
-import { useLgeCreateLge } from '~/modules/lge/create/forms/lib/useLgeCreate';
+import { useLgeCreate } from '~/modules/lge/create/forms/lib/useLgeCreate';
 import { LgeFormData } from '~/lib/services/lge/copper-proxy.service';
 import { useCreateLgeMutation } from '~/apollo/generated/graphql-codegen-generated';
+import { useRouter } from 'next/router';
 
 interface Props {
     lgeData: LgeFormData;
@@ -25,10 +26,12 @@ export function LgeCreateModal({ lgeData }: Props) {
         isLoading: isLoadingUserAllowances,
         refetch: refetchUserAllowances,
     } = useUserAllowances(tokens, networkConfig.copperProxyAddress);
-    const { createLge, ...createQuery } = useLgeCreateLge();
+    const { createLge, txReceipt, ...createQuery } = useLgeCreate();
     const [createLgeMutation] = useCreateLgeMutation();
+    const router = useRouter();
 
     const [steps, setSteps] = useState<TransactionStep[] | null>(null);
+    const [isLoadingLbpData, setIsLoadingLbpData] = useState(false);
 
     const isLoading = isLoadingLgeData || isLoadingUserAllowances;
     const allLgeTokens = lgeTokens.map((token) => {
@@ -41,7 +44,15 @@ export function LgeCreateModal({ lgeData }: Props) {
         };
     });
 
-    console.log({ receipt: createQuery.txReceipt, response: createQuery.txResponse });
+    const POOL_CREATED_TOPIC_ID = '0x3c13bc30b8e878c53fd2a36b679409c073afd75950be43d8858768e956fbc20e';
+    const lgeId = useRef<string>();
+
+    function onModalClose() {
+        onClose();
+        if (lgeId.current) {
+            router.push(`/lge/${lgeId.current}`);
+        }
+    }
 
     useEffect(() => {
         if (!isLoading) {
@@ -73,6 +84,45 @@ export function LgeCreateModal({ lgeData }: Props) {
             setSteps(steps);
         }
     }, [isLoading]);
+
+    useEffect(() => {
+        if (txReceipt) {
+            const topics = txReceipt.logs.find((log) => log.topics[0] === POOL_CREATED_TOPIC_ID)?.topics;
+            if (topics) {
+                lgeId.current = topics[1];
+                const address = `0x${topics[2].slice(26)}`;
+                createLgeMutation({
+                    variables: {
+                        input: {
+                            address,
+                            bannerImageUrl: lgeData.bannerImageUrl,
+                            collateralAddress: lgeData.collateralAddress,
+                            collateralAmount: lgeData.collateralAmount,
+                            collateralEndWeight: parseInt(lgeData.collateralEndWeight),
+                            collateralStartWeight: parseInt(lgeData.collateralStartWeight),
+                            description: lgeData.description,
+                            discordUrl: lgeData.discordUrl,
+                            endTimestamp: new Date(lgeData.endDate).getTime() / 1000,
+                            id: lgeId.current,
+                            mediumUrl: lgeData.mediumUrl,
+                            name: lgeData.name,
+                            startTimestamp: new Date(lgeData.startDate).getTime() / 1000,
+                            swapFee: lgeData.swapFee,
+                            telegramUrl: lgeData.telegramUrl,
+                            tokenAddress: lgeData.tokenAddress,
+                            tokenAmount: lgeData.tokenAmount,
+                            tokenEndWeight: parseInt(lgeData.tokenEndWeight),
+                            tokenIconUrl: lgeData.tokenIconUrl,
+                            tokenStartWeight: parseInt(lgeData.tokenStartWeight),
+                            twitterUrl: lgeData.twitterUrl,
+                            websiteUrl: lgeData.websiteUrl,
+                        },
+                    },
+                });
+                setIsLoadingLbpData(false);
+            }
+        }
+    }, [txReceipt]);
 
     return (
         <>
@@ -106,10 +156,10 @@ export function LgeCreateModal({ lgeData }: Props) {
                         <BeetsModalHeader>TEST</BeetsModalHeader>
                         <BeetsModalBody p="0">
                             <BeetsTransactionStepsSubmit
-                                isLoading={steps === null}
+                                isLoading={steps === null || isLoadingLbpData}
                                 loadingButtonText="Create LBP"
-                                completeButtonText="Return to pool"
-                                onCompleteButtonClick={onClose}
+                                completeButtonText="Go to LBP"
+                                onCompleteButtonClick={onModalClose}
                                 steps={steps || []}
                                 onSubmit={(id) => {
                                     if (id === 'create' && data) {
@@ -120,22 +170,7 @@ export function LgeCreateModal({ lgeData }: Props) {
                                     if (id !== 'create') {
                                         refetchUserAllowances();
                                     } else {
-                                        createLgeMutation({
-                                            variables: {
-                                                input: {
-                                                    ...lgeData,
-                                                    address: lgeData.tokenAddress,
-                                                    startTimestamp: new Date(lgeData.startDate).getTime(),
-                                                    endTimestamp: new Date(lgeData.endDate).getTime(),
-                                                    id: 'test',
-                                                    collateralStartWeight: parseInt(lgeData.collateralStartWeight),
-                                                    collateralEndWeight: parseInt(lgeData.collateralEndWeight),
-                                                    tokenStartWeight: parseInt(lgeData.tokenStartWeight),
-                                                    tokenEndWeight: parseInt(lgeData.tokenEndWeight),
-                                                },
-                                            },
-                                        });
-                                        console.log('Done!!');
+                                        setIsLoadingLbpData(true);
                                     }
                                 }}
                                 queries={[{ ...createQuery, id: 'create' }]}
