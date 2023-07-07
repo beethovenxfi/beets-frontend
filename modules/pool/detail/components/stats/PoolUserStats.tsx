@@ -20,7 +20,7 @@ export default function PoolUserStats() {
         if (curr.apr.__typename === 'GqlPoolAprTotal') {
             return acc + parseFloat(curr.apr.total);
         } else if (curr.title.includes('BAL')) {
-            return acc + (parseFloat(curr.apr.min) + parseFloat(boost) * parseFloat(curr.apr.min));
+            return acc + parseFloat(boost) * parseFloat(curr.apr.min);
         } else {
             return totalApr;
         }
