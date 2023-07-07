@@ -158,8 +158,8 @@ export const optimismNetworkConfig: NetworkConfig = {
         rewardHelperAddress: '0x299dcdf14350999496204c141a0c20a29d71af3e',
         balancerPseudoMinterAddress: '0x4fb47126fa83a8734991e41b942ac29a3266c968',
         veBALDelegationProxyAddress: '0x9da18982a33fd0c7051b19f0d7c76f2d5e7e017c',
-        workingBalanceHelperAddress: '0x9129E834e15eA19b6069e8f08a8EcFc13686B8dC',
-        checkpointHelper: '0xcA4CdC9eEd85D9cE0b8eEf74457480364068AF9e'
+        workingBalanceHelperAddress: '0x9129e834e15ea19b6069e8f08a8ecfc13686b8dc',
+        checkpointHelper: '0xca4cdc9eed85d9ce0b8eef74457480364068af9e'
     },
     createPoolUrl: 'https://opv1.beets.fi/#/pool-create',
     warnings: {
