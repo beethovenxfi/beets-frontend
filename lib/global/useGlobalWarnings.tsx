@@ -21,7 +21,7 @@ export default function useGlobalWarnings() {
                     <HStack>
                         <Text>
                             You have a veBAL balance on Mainnet which is not synced to Optimism. Sync your balance to
-                            ensures you are receiving your full reward potential.
+                            ensure you are receiving your full reward potential.
                         </Text>
                         <Link href={'https://app.balancer.fi/#/ethereum/vebal'} target="_blank">
                             <Button bg="orange.300" color="orange.700" px="4">
