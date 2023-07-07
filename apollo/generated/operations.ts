@@ -587,6 +587,7 @@ export const GetAppGlobalData = gql`
         beetsGetFbeetsRatio
         blocksGetBlocksPerDay
         blocksGetAverageBlockTime
+        veBALTotalSupply: veBalGetTotalSupply
     }
 `;
 export const GetAppGlobalPollingData = gql`
@@ -732,6 +733,7 @@ export const GetUserData = gql`
                 }
             }
         }
+        veBALUserBalance: veBalGetUserBalance
     }
 `;
 export const UserSyncBalance = gql`
