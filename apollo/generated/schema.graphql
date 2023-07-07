@@ -78,24 +78,27 @@ type GqlLge {
     adminAddress: String!
     adminIsMultisig: Boolean!
     bannerImageUrl: String!
+    collateralAddress: String!
     collateralAmount: String!
+    collateralDecimals: Int!
     collateralEndWeight: Int!
     collateralStartWeight: Int!
-    collateralTokenAddress: String!
     description: String!
     discordUrl: String!
-    endDate: String!
+    endTimestamp: Int!
     id: ID!
     mediumUrl: String!
     name: String!
-    startDate: String!
-    swapFeePercentage: String!
+    startTimestamp: Int!
+    swapFee: String!
     telegramUrl: String!
+    tokenAddress: String!
     tokenAmount: String!
-    tokenContractAddress: String!
+    tokenDecimals: Int!
     tokenEndWeight: Int!
     tokenIconUrl: String!
     tokenStartWeight: Int!
+    tokenSymbol: String!
     twitterUrl: String!
     websiteUrl: String!
 }
@@ -103,26 +106,32 @@ type GqlLge {
 input GqlLgeCreateInput {
     address: String!
     bannerImageUrl: String!
+    collateralAddress: String!
     collateralAmount: String!
     collateralEndWeight: Int!
     collateralStartWeight: Int!
-    collateralTokenAddress: String!
     description: String!
     discordUrl: String!
-    endDate: String!
+    endTimestamp: Int!
     id: ID!
     mediumUrl: String!
     name: String!
-    startDate: String!
-    swapFeePercentage: String!
+    startTimestamp: Int!
+    swapFee: String!
     telegramUrl: String!
+    tokenAddress: String!
     tokenAmount: String!
-    tokenContractAddress: String!
     tokenEndWeight: Int!
     tokenIconUrl: String!
     tokenStartWeight: Int!
     twitterUrl: String!
     websiteUrl: String!
+}
+
+type GqlLgePriceData {
+    price: Float!
+    timestamp: Int!
+    type: String!
 }
 
 input GqlLgeUpdateInput {
@@ -1142,7 +1151,8 @@ type Mutation {
     beetsPoolLoadReliquarySnapshotsForAllFarms: String!
     beetsSyncFbeetsRatio: String!
     cacheAverageBlockTime: String!
-    lgeCreate(lge: GqlLgeCreateInput!, signature: String!): GqlLge!
+    lgeCreate(lge: GqlLgeCreateInput!): GqlLge!
+    lgeSyncFromSanity: String!
     poolBlackListAddPool(poolId: String!): String!
     poolBlackListRemovePool(poolId: String!): String!
     poolDeletePool(poolId: String!): String!
@@ -1202,6 +1212,7 @@ type Query {
     contentGetNewsItems: [GqlContentNewsItem!]!
     latestSyncedBlocks: GqlLatestSyncedBlocks!
     lge(id: ID!): GqlLge!
+    lgeGetChartData(id: ID!): [GqlLgePriceData]!
     lges: [GqlLge!]!
     poolGetAllPoolsSnapshots(range: GqlPoolSnapshotDataRange!): [GqlPoolSnapshot!]!
     poolGetBatchSwaps(first: Int, skip: Int, where: GqlPoolSwapFilter): [GqlPoolBatchSwap!]!

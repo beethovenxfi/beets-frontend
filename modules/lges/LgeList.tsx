@@ -1,5 +1,4 @@
 import { Text } from '@chakra-ui/react';
-import { NetworkStatus } from '@apollo/client';
 import { GqlLgeExtended, useLgeList } from '~/modules/lges/useLgeList';
 import { PaginatedTable } from '~/components/table/PaginatedTable';
 import { LgeListItem } from '~/modules/lges/components/LgeListItem';
@@ -11,7 +10,7 @@ import { LgeWarning } from './components/LgeWarning';
 import { LgeListMobileHeader } from '~/modules/lges/components/LgeListMobileHeader';
 
 function LgeList() {
-    const { lges, loading, networkStatus } = useLgeList();
+    const { lges, loading } = useLgeList();
     const router = useRouter();
     const [hidden, setHidden] = useState(false);
 

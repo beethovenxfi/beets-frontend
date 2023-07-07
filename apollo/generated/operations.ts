@@ -155,24 +155,27 @@ export const GqlLge = gql`
         adminAddress
         adminIsMultisig
         bannerImageUrl
+        collateralAddress
         collateralAmount
+        collateralDecimals
         collateralEndWeight
         collateralStartWeight
-        collateralTokenAddress
         description
         discordUrl
-        endDate
+        endTimestamp
         id
         mediumUrl
         name
-        startDate
-        swapFeePercentage
+        startTimestamp
+        swapFee
         telegramUrl
+        tokenAddress
         tokenAmount
-        tokenContractAddress
+        tokenDecimals
         tokenEndWeight
         tokenIconUrl
         tokenStartWeight
+        tokenSymbol
         twitterUrl
         websiteUrl
     }
@@ -587,6 +590,7 @@ export const GetAppGlobalData = gql`
         beetsGetFbeetsRatio
         blocksGetBlocksPerDay
         blocksGetAverageBlockTime
+        veBALTotalSupply: veBalGetTotalSupply
     }
 `;
 export const GetAppGlobalPollingData = gql`
@@ -732,6 +736,7 @@ export const GetUserData = gql`
                 }
             }
         }
+        veBALUserBalance: veBalGetUserBalance
     }
 `;
 export const UserSyncBalance = gql`
