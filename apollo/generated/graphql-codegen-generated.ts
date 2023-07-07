@@ -2157,24 +2157,27 @@ export type GqlLgeFragment = {
     adminAddress: string;
     adminIsMultisig: boolean;
     bannerImageUrl: string;
+    collateralAddress: string;
     collateralAmount: string;
+    collateralDecimals: number;
     collateralEndWeight: number;
     collateralStartWeight: number;
-    collateralTokenAddress: string;
     description: string;
     discordUrl: string;
-    endDate: string;
+    endTimestamp: number;
     id: string;
     mediumUrl: string;
     name: string;
-    startDate: string;
-    swapFeePercentage: string;
+    startTimestamp: number;
+    swapFee: string;
     telegramUrl: string;
+    tokenAddress: string;
     tokenAmount: string;
-    tokenContractAddress: string;
+    tokenDecimals: number;
     tokenEndWeight: number;
     tokenIconUrl: string;
     tokenStartWeight: number;
+    tokenSymbol: string;
     twitterUrl: string;
     websiteUrl: string;
 };
@@ -2191,24 +2194,27 @@ export type GetLgeQuery = {
         adminAddress: string;
         adminIsMultisig: boolean;
         bannerImageUrl: string;
+        collateralAddress: string;
         collateralAmount: string;
+        collateralDecimals: number;
         collateralEndWeight: number;
         collateralStartWeight: number;
-        collateralTokenAddress: string;
         description: string;
         discordUrl: string;
-        endDate: string;
+        endTimestamp: number;
         id: string;
         mediumUrl: string;
         name: string;
-        startDate: string;
-        swapFeePercentage: string;
+        startTimestamp: number;
+        swapFee: string;
         telegramUrl: string;
+        tokenAddress: string;
         tokenAmount: string;
-        tokenContractAddress: string;
+        tokenDecimals: number;
         tokenEndWeight: number;
         tokenIconUrl: string;
         tokenStartWeight: number;
+        tokenSymbol: string;
         twitterUrl: string;
         websiteUrl: string;
     };
@@ -2224,24 +2230,27 @@ export type GetLgesQuery = {
         adminAddress: string;
         adminIsMultisig: boolean;
         bannerImageUrl: string;
+        collateralAddress: string;
         collateralAmount: string;
+        collateralDecimals: number;
         collateralEndWeight: number;
         collateralStartWeight: number;
-        collateralTokenAddress: string;
         description: string;
         discordUrl: string;
-        endDate: string;
+        endTimestamp: number;
         id: string;
         mediumUrl: string;
         name: string;
-        startDate: string;
-        swapFeePercentage: string;
+        startTimestamp: number;
+        swapFee: string;
         telegramUrl: string;
+        tokenAddress: string;
         tokenAmount: string;
-        tokenContractAddress: string;
+        tokenDecimals: number;
         tokenEndWeight: number;
         tokenIconUrl: string;
         tokenStartWeight: number;
+        tokenSymbol: string;
         twitterUrl: string;
         websiteUrl: string;
     }>;
@@ -5531,24 +5540,27 @@ export const GqlLgeFragmentDoc = gql`
         adminAddress
         adminIsMultisig
         bannerImageUrl
+        collateralAddress
         collateralAmount
+        collateralDecimals
         collateralEndWeight
         collateralStartWeight
-        collateralTokenAddress
         description
         discordUrl
-        endDate
+        endTimestamp
         id
         mediumUrl
         name
-        startDate
-        swapFeePercentage
+        startTimestamp
+        swapFee
         telegramUrl
+        tokenAddress
         tokenAmount
-        tokenContractAddress
+        tokenDecimals
         tokenEndWeight
         tokenIconUrl
         tokenStartWeight
+        tokenSymbol
         twitterUrl
         websiteUrl
     }
