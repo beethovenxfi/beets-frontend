@@ -39,7 +39,7 @@ export interface GqlBalancePoolAprSubItem {
     title: Scalars['String'];
 }
 
-export type GqlChain = 'ARBITRUM' | 'FANTOM' | 'GNOSIS' | 'MAINNET' | 'OPTIMISM' | 'POLYGON';
+export type GqlChain = 'ARBITRUM' | 'AVALANCHE' | 'FANTOM' | 'GNOSIS' | 'MAINNET' | 'OPTIMISM' | 'POLYGON' | 'ZKEVM';
 
 export interface GqlContentNewsItem {
     __typename: 'GqlContentNewsItem';
@@ -87,24 +87,27 @@ export interface GqlLge {
     adminAddress: Scalars['String'];
     adminIsMultisig: Scalars['Boolean'];
     bannerImageUrl: Scalars['String'];
+    collateralAddress: Scalars['String'];
     collateralAmount: Scalars['String'];
+    collateralDecimals: Scalars['Int'];
     collateralEndWeight: Scalars['Int'];
     collateralStartWeight: Scalars['Int'];
-    collateralTokenAddress: Scalars['String'];
     description: Scalars['String'];
     discordUrl: Scalars['String'];
-    endDate: Scalars['String'];
+    endTimestamp: Scalars['Int'];
     id: Scalars['ID'];
     mediumUrl: Scalars['String'];
     name: Scalars['String'];
-    startDate: Scalars['String'];
-    swapFeePercentage: Scalars['String'];
+    startTimestamp: Scalars['Int'];
+    swapFee: Scalars['String'];
     telegramUrl: Scalars['String'];
+    tokenAddress: Scalars['String'];
     tokenAmount: Scalars['String'];
-    tokenContractAddress: Scalars['String'];
+    tokenDecimals: Scalars['Int'];
     tokenEndWeight: Scalars['Int'];
     tokenIconUrl: Scalars['String'];
     tokenStartWeight: Scalars['Int'];
+    tokenSymbol: Scalars['String'];
     twitterUrl: Scalars['String'];
     websiteUrl: Scalars['String'];
 }
@@ -112,26 +115,33 @@ export interface GqlLge {
 export interface GqlLgeCreateInput {
     address: Scalars['String'];
     bannerImageUrl: Scalars['String'];
+    collateralAddress: Scalars['String'];
     collateralAmount: Scalars['String'];
     collateralEndWeight: Scalars['Int'];
     collateralStartWeight: Scalars['Int'];
-    collateralTokenAddress: Scalars['String'];
     description: Scalars['String'];
     discordUrl: Scalars['String'];
-    endDate: Scalars['String'];
+    endTimestamp: Scalars['Int'];
     id: Scalars['ID'];
     mediumUrl: Scalars['String'];
     name: Scalars['String'];
-    startDate: Scalars['String'];
-    swapFeePercentage: Scalars['String'];
+    startTimestamp: Scalars['Int'];
+    swapFee: Scalars['String'];
     telegramUrl: Scalars['String'];
+    tokenAddress: Scalars['String'];
     tokenAmount: Scalars['String'];
-    tokenContractAddress: Scalars['String'];
     tokenEndWeight: Scalars['Int'];
     tokenIconUrl: Scalars['String'];
     tokenStartWeight: Scalars['Int'];
     twitterUrl: Scalars['String'];
     websiteUrl: Scalars['String'];
+}
+
+export interface GqlLgePriceData {
+    __typename: 'GqlLgePriceData';
+    price: Scalars['Float'];
+    timestamp: Scalars['Int'];
+    type: Scalars['String'];
 }
 
 export interface GqlLgeUpdateInput {
@@ -319,6 +329,9 @@ export interface GqlPoolFilterDefinition {
 
 export type GqlPoolFilterType =
     | 'ELEMENT'
+    | 'GYRO'
+    | 'GYRO3'
+    | 'GYROE'
     | 'INVESTMENT'
     | 'LINEAR'
     | 'LIQUIDITY_BOOTSTRAPPING'
@@ -332,6 +345,8 @@ export interface GqlPoolGyro extends GqlPoolBase {
     __typename: 'GqlPoolGyro';
     address: Scalars['Bytes'];
     allTokens: Array<GqlPoolTokenExpanded>;
+    alpha: Scalars['String'];
+    beta: Scalars['String'];
     chain: GqlChain;
     createTime: Scalars['Int'];
     decimals: Scalars['Int'];
@@ -346,6 +361,7 @@ export interface GqlPoolGyro extends GqlPoolBase {
     staking?: Maybe<GqlPoolStaking>;
     symbol: Scalars['String'];
     tokens: Array<GqlPoolTokenUnion>;
+    type: Scalars['String'];
     withdrawConfig: GqlPoolWithdrawConfig;
 }
 
@@ -1167,6 +1183,7 @@ export interface Mutation {
     beetsSyncFbeetsRatio: Scalars['String'];
     cacheAverageBlockTime: Scalars['String'];
     lgeCreate: GqlLge;
+    lgeSyncFromSanity: Scalars['String'];
     poolBlackListAddPool: Scalars['String'];
     poolBlackListRemovePool: Scalars['String'];
     poolDeletePool: Scalars['String'];
@@ -1200,6 +1217,7 @@ export interface Mutation {
     tokenDeletePrice: Scalars['Boolean'];
     tokenDeleteTokenType: Scalars['String'];
     tokenInitChartData: Scalars['String'];
+    tokenReloadAllTokenTypes: Scalars['String'];
     tokenReloadTokenPrices?: Maybe<Scalars['Boolean']>;
     tokenSyncTokenDefinitions: Scalars['String'];
     tokenSyncTokenDynamicData: Scalars['String'];
@@ -1217,7 +1235,6 @@ export interface Mutation {
 
 export interface MutationLgeCreateArgs {
     lge: GqlLgeCreateInput;
-    signature: Scalars['String'];
 }
 
 export interface MutationPoolBlackListAddPoolArgs {
@@ -1298,6 +1315,7 @@ export interface Query {
     contentGetNewsItems: Array<GqlContentNewsItem>;
     latestSyncedBlocks: GqlLatestSyncedBlocks;
     lge: GqlLge;
+    lgeGetChartData: Array<Maybe<GqlLgePriceData>>;
     lges: Array<GqlLge>;
     poolGetAllPoolsSnapshots: Array<GqlPoolSnapshot>;
     poolGetBatchSwaps: Array<GqlPoolBatchSwap>;
@@ -1344,6 +1362,10 @@ export interface QueryBeetsPoolGetReliquaryFarmSnapshotsArgs {
 }
 
 export interface QueryLgeArgs {
+    id: Scalars['ID'];
+}
+
+export interface QueryLgeGetChartDataArgs {
     id: Scalars['ID'];
 }
 

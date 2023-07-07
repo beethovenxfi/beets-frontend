@@ -25,11 +25,13 @@ scalar GqlBigNumber
 
 enum GqlChain {
     ARBITRUM
+    AVALANCHE
     FANTOM
     GNOSIS
     MAINNET
     OPTIMISM
     POLYGON
+    ZKEVM
 }
 
 type GqlContentNewsItem {
@@ -76,24 +78,27 @@ type GqlLge {
     adminAddress: String!
     adminIsMultisig: Boolean!
     bannerImageUrl: String!
+    collateralAddress: String!
     collateralAmount: String!
+    collateralDecimals: Int!
     collateralEndWeight: Int!
     collateralStartWeight: Int!
-    collateralTokenAddress: String!
     description: String!
     discordUrl: String!
-    endDate: String!
+    endTimestamp: Int!
     id: ID!
     mediumUrl: String!
     name: String!
-    startDate: String!
-    swapFeePercentage: String!
+    startTimestamp: Int!
+    swapFee: String!
     telegramUrl: String!
+    tokenAddress: String!
     tokenAmount: String!
-    tokenContractAddress: String!
+    tokenDecimals: Int!
     tokenEndWeight: Int!
     tokenIconUrl: String!
     tokenStartWeight: Int!
+    tokenSymbol: String!
     twitterUrl: String!
     websiteUrl: String!
 }
@@ -101,26 +106,32 @@ type GqlLge {
 input GqlLgeCreateInput {
     address: String!
     bannerImageUrl: String!
+    collateralAddress: String!
     collateralAmount: String!
     collateralEndWeight: Int!
     collateralStartWeight: Int!
-    collateralTokenAddress: String!
     description: String!
     discordUrl: String!
-    endDate: String!
+    endTimestamp: Int!
     id: ID!
     mediumUrl: String!
     name: String!
-    startDate: String!
-    swapFeePercentage: String!
+    startTimestamp: Int!
+    swapFee: String!
     telegramUrl: String!
+    tokenAddress: String!
     tokenAmount: String!
-    tokenContractAddress: String!
     tokenEndWeight: Int!
     tokenIconUrl: String!
     tokenStartWeight: Int!
     twitterUrl: String!
     websiteUrl: String!
+}
+
+type GqlLgePriceData {
+    price: Float!
+    timestamp: Int!
+    type: String!
 }
 
 input GqlLgeUpdateInput {
@@ -301,6 +312,9 @@ type GqlPoolFilterDefinition {
 
 enum GqlPoolFilterType {
     ELEMENT
+    GYRO
+    GYRO3
+    GYROE
     INVESTMENT
     LINEAR
     LIQUIDITY_BOOTSTRAPPING
@@ -314,6 +328,8 @@ enum GqlPoolFilterType {
 type GqlPoolGyro implements GqlPoolBase {
     address: Bytes!
     allTokens: [GqlPoolTokenExpanded!]!
+    alpha: String!
+    beta: String!
     chain: GqlChain!
     createTime: Int!
     decimals: Int!
@@ -328,6 +344,7 @@ type GqlPoolGyro implements GqlPoolBase {
     staking: GqlPoolStaking
     symbol: String!
     tokens: [GqlPoolTokenUnion!]!
+    type: String!
     withdrawConfig: GqlPoolWithdrawConfig!
 }
 
@@ -1134,7 +1151,8 @@ type Mutation {
     beetsPoolLoadReliquarySnapshotsForAllFarms: String!
     beetsSyncFbeetsRatio: String!
     cacheAverageBlockTime: String!
-    lgeCreate(lge: GqlLgeCreateInput!, signature: String!): GqlLge!
+    lgeCreate(lge: GqlLgeCreateInput!): GqlLge!
+    lgeSyncFromSanity: String!
     poolBlackListAddPool(poolId: String!): String!
     poolBlackListRemovePool(poolId: String!): String!
     poolDeletePool(poolId: String!): String!
@@ -1168,6 +1186,7 @@ type Mutation {
     tokenDeletePrice(timestamp: Int!, tokenAddress: String!): Boolean!
     tokenDeleteTokenType(tokenAddress: String!, type: GqlTokenType!): String!
     tokenInitChartData(tokenAddress: String!): String!
+    tokenReloadAllTokenTypes: String!
     tokenReloadTokenPrices: Boolean
     tokenSyncTokenDefinitions: String!
     tokenSyncTokenDynamicData: String!
@@ -1193,6 +1212,7 @@ type Query {
     contentGetNewsItems: [GqlContentNewsItem!]!
     latestSyncedBlocks: GqlLatestSyncedBlocks!
     lge(id: ID!): GqlLge!
+    lgeGetChartData(id: ID!): [GqlLgePriceData]!
     lges: [GqlLge!]!
     poolGetAllPoolsSnapshots(range: GqlPoolSnapshotDataRange!): [GqlPoolSnapshot!]!
     poolGetBatchSwaps(first: Int, skip: Int, where: GqlPoolSwapFilter): [GqlPoolBatchSwap!]!

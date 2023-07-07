@@ -23,11 +23,10 @@ interface GetUserStakedBalanceInput {
 
 function getGaugeABI(version: number) {
     switch (version) {
-        case 1:
-            return LiquidityGaugeV5Abi;
-            break;
         case 2:
             return LiquidityGaugeV6Abi;
+        case 1:
+            return LiquidityGaugeV5Abi;
         default:
             return LiquidityGaugeV5Abi;
     }
@@ -47,7 +46,7 @@ export class GaugeStakingService {
         decimals = 18,
         gaugeVersion = 1,
     }: GetUserStakedBalanceInput): Promise<AmountHumanReadable> {
-        let gaugeABI = getGaugeABI(gaugeVersion);
+        const gaugeABI = getGaugeABI(gaugeVersion);
         const gaugeContract = new Contract(gaugeAddress, gaugeABI, provider);
         const balance = await gaugeContract.balanceOf(userAddress);
 
