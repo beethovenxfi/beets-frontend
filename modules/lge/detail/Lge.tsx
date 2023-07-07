@@ -46,13 +46,14 @@ export function Lge() {
                         </Text>
                     </LgeWarning>
                 )}
-                <Grid gap="4" templateColumns={{ base: '1fr', lg: '2fr 1fr' }} width="full">
-                    <GridItem>
-                        <Box h="full" border="2px">
-                            chart
-                        </Box>
-                    </GridItem>
-                    {isActive && (
+                {isActive && (
+                    <Grid gap="4" templateColumns={{ base: '1fr', lg: '2fr 1fr' }} width="full">
+                        <GridItem>
+                            <Box h="full" border="2px">
+                                chart
+                            </Box>
+                        </GridItem>
+
                         <GridItem>
                             <TradeCard
                                 lge={lge}
@@ -60,8 +61,8 @@ export function Lge() {
                                 refetchUserBalances={refetchUserBalances}
                             />
                         </GridItem>
-                    )}
-                </Grid>
+                    </Grid>
+                )}
             </VStack>
             <LgeDetails />
         </Box>
