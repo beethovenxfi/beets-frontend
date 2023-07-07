@@ -11,7 +11,6 @@ import { useEffect } from 'react';
 import { ToastType, useToast } from '~/components/toast/BeetsToast';
 import { Button, HStack, Text, useDisclosure } from '@chakra-ui/react';
 import { PoolGaugeMigrateModal } from '~/modules/pool/stake/PoolMigrateGaugeModal';
-import useStakingBoosts from '~/lib/global/useStakingBoosts';
 
 export function PoolWarnings() {
     const { pool, isFbeetsPool } = usePool();
@@ -19,7 +18,6 @@ export function PoolWarnings() {
     const bptBalances = usePoolUserBptBalance();
     const { total } = useLegacyFBeetsBalance();
     const { warnings } = useNetworkConfig();
-    useStakingBoosts();
     const { showToast, removeToast } = useToast();
     const showMigrationToast = parseFloat(bptBalances.userLegacyGaugeStakedBptBalance) > 0;
 
