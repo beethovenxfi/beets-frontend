@@ -2,11 +2,11 @@ import { orderBy } from 'lodash';
 import { parseUnits } from '@ethersproject/units';
 import { getAddress } from '@ethersproject/address';
 import { BigNumber } from '@ethersproject/bignumber';
-import ERC20Abi from '~/lib/abi/ERC20.json';
 import { ConfigurationFormData } from '~/modules/lge/create/forms/components/LgeCreateConfigurationForm';
 import { bnToNormalizedWeights } from '~/lib/util/numbers';
 import { DetailsFormData } from '~/modules/lge/create/forms/components/LgeCreateDetailsForm';
 import { WeightedPoolEncoder } from '@balancer-labs/sdk';
+import { networkConfig } from '~/lib/config/network-config';
 
 interface PoolTokenInput {
     address: string;
@@ -36,7 +36,7 @@ export interface LgeData {
 }
 
 export class CopperProxyService {
-    constructor() {}
+    constructor(private readonly copperProxyContractAddress: string) {}
 
     public createLgeGetLgeData(data: LgeFormData, tokenInfoMap: TokenInfoMap): LgeData {
         const sorted = this.toSortedTokens(data, tokenInfoMap);
@@ -76,10 +76,6 @@ export class CopperProxyService {
     //     ]);
     // }
 
-    // async approveToken(web3: BaseProvider, token: string, amount: string): Promise<TransactionResponse> {
-    //     return sendTransaction(web3, token, ERC20Abi, 'approve', [this.copperProxyAddress, amount]);
-    // }
-
     private toSortedTokens(data: LgeFormData, tokenInfoMap: TokenInfoMap): PoolTokenInput[] {
         const collateralAddress = getAddress(data.collateralAddress);
         const tokenAddress = getAddress(data.tokenAddress);
@@ -106,9 +102,9 @@ export class CopperProxyService {
     }
 
     //true if, collateral token is index 0
-    private isCorrectOrder(sortedTokens: PoolTokenInput[], collateralTokenAddress: string) {
-        return sortedTokens[0].address.toLowerCase() === collateralTokenAddress.toLowerCase();
+    private isCorrectOrder(sortedTokens: PoolTokenInput[], collateralAddress: string) {
+        return sortedTokens[0].address.toLowerCase() === collateralAddress.toLowerCase();
     }
 }
 
-export const copperProxyService = new CopperProxyService();
+export const copperProxyService = new CopperProxyService(networkConfig.copperProxyAddress);
