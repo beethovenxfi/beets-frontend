@@ -65,7 +65,7 @@ function getIconLink(urlType: keyof typeof lge, lge: GqlLgeExtended): ReactNode 
 }
 
 export function LgeListItem({ lge, ...rest }: Props) {
-    const { token } = useGetLgeToken(lge.tokenContractAddress);
+    const { token } = useGetLgeToken(lge.tokenAddress);
 
     // grab all urlTypes except for banner image & token icon
     // reverse for now to to get the website url first
@@ -110,7 +110,7 @@ export function LgeListItem({ lge, ...rest }: Props) {
                 >
                     <MobileLabel text="Token" />
                     <HStack mt="2">
-                        <TokenAvatar address={lge.tokenContractAddress} logoURI={lge.tokenIconUrl} size="xs" />
+                        <TokenAvatar address={lge.tokenAddress} logoURI={lge.tokenIconUrl} size="xs" />
                         <Text ml="2">{token?.symbol}</Text>
                     </HStack>
                 </GridItem>
