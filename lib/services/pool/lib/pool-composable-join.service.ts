@@ -19,6 +19,7 @@ import { parseUnits } from 'ethers/lib/utils';
 import { StablePoolEncoder, SwapV2 } from '@balancer-labs/sdk';
 import { oldBnum, oldBnumSubtractSlippage } from '~/lib/services/pool/lib/old-big-number';
 import {
+    poolGyroExactTokensInForBPTOut,
     poolBatchSwaps,
     poolGetEthAmountFromJoinData,
     poolGetMainTokenFromLinearPoolToken,
@@ -262,11 +263,15 @@ export class PoolComposableJoinService {
     }): Promise<ComposablePoolJoinProcessedJoinPoolStep> {
         const pool = joinStep.pool;
         const bptAmount =
-            pool.__typename === 'GqlPoolWeighted'
+            pool.__typename === 'GqlPoolGyro'
+                ? poolGyroExactTokensInForBPTOut(tokenAmountsIn, pool)
+                : pool.__typename === 'GqlPoolWeighted'
                 ? poolWeightedExactTokensInForBPTOut(tokenAmountsIn, pool)
                 : poolStableExactTokensInForBPTOut(tokenAmountsIn, pool);
         const bptZeroPriceImpact =
-            pool.__typename === 'GqlPoolWeighted'
+            pool.__typename === 'GqlPoolGyro'
+                ? oldBnum(0)
+                : pool.__typename === 'GqlPoolWeighted'
                 ? poolWeightedBptForTokensZeroPriceImpact(tokenAmountsIn, pool)
                 : poolStableBptForTokensZeroPriceImpact(tokenAmountsIn, pool);
 

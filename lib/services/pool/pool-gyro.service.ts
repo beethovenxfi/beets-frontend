@@ -28,10 +28,14 @@ import { formatFixed } from '@ethersproject/bignumber';
 import { oldBnum, oldBnumScaleAmount, oldBnumSubtractSlippage } from './lib/old-big-number';
 import { BatchRelayerService } from '../batch-relayer/batch-relayer.service';
 import * as SDK from '@georgeroman/balancer-v2-pools';
+import { PoolWeightedV2Service } from './pool-weighted-v2.service';
+import { networkProvider } from '~/lib/global/network';
+import { networkConfig } from '~/lib/config/network-config';
 
 export class PoolGyroService implements PoolService {
     private readonly proportionalInvestService: PoolProportionalInvestService;
     private readonly baseService: PoolBaseService;
+    private readonly weightedV2Service: PoolWeightedV2Service;
 
     constructor(
         private pool: GqlPoolGyro,
@@ -40,6 +44,12 @@ export class PoolGyroService implements PoolService {
     ) {
         this.proportionalInvestService = new PoolProportionalInvestService(pool);
         this.baseService = new PoolBaseService(pool, wethAddress);
+        this.weightedV2Service = new PoolWeightedV2Service(
+            pool,
+            batchRelayerService,
+            networkConfig.wethAddress,
+            networkProvider,
+        );
     }
 
     public updatePool(pool: GqlPoolGyro) {
@@ -63,7 +73,9 @@ export class PoolGyroService implements PoolService {
         fixedAmount: TokenAmountHumanReadable,
         tokensIn: string[],
     ): Promise<TokenAmountHumanReadable[]> {
-        return poolGetProportionalJoinAmountsForFixedAmount(fixedAmount, this.pool.tokens);
+        // return poolGetProportionalJoinAmountsForFixedAmount(fixedAmount, this.pool.tokens);
+
+        return this.weightedV2Service.joinGetProportionalSuggestionForFixedAmount(fixedAmount, tokensIn);
     }
 
     public async joinGetContractCallData(data: PoolJoinData): Promise<PoolJoinContractCallData> {

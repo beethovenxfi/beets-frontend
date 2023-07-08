@@ -1,4 +1,5 @@
 import {
+    GqlPoolGyro,
     GqlPoolLinearNested,
     GqlPoolPhantomStable,
     GqlPoolPhantomStableNested,
@@ -21,7 +22,11 @@ import {
 import OldBigNumber from 'bignumber.js';
 import { BigNumber } from 'ethers';
 import { formatUnits, parseUnits } from '@ethersproject/units';
-import { PoolJoinExactTokensInForBPTOut, PoolWithPossibleNesting } from '~/lib/services/pool/pool-types';
+import {
+    PoolJoinEstimateOutput,
+    PoolJoinExactTokensInForBPTOut,
+    PoolWithPossibleNesting,
+} from '~/lib/services/pool/pool-types';
 import { AddressZero, WeiPerEther, Zero } from '@ethersproject/constants';
 import * as SDK from '@georgeroman/balancer-v2-pools';
 import {
@@ -252,6 +257,25 @@ export function poolWeightedBptForTokensZeroPriceImpact(
     return oldBnumFromBnum(result);
 }
 
+export function poolGyroExactTokensInForBPTOut(
+    tokenAmountsIn: TokenAmountHumanReadable[],
+    pool: GqlPoolGyro,
+): OldBigNumber {
+    // https://github.com/gyrostable/app/blob/f07cdec9e52585e5be6d3a916ce3833b1599f43c/src/utils/pools/findConstrainedMax.ts#LL15C1-L23C5
+    const totalPoolBalance = pool.tokens.map((token) => token.balance).reduce((a, b) => oldBnum(a).plus(b), oldBnum(0));
+    const tokenProportions = pool.tokens.map((token) => oldBnum(token.balance).div(totalPoolBalance).toString());
+
+    const bptAmount = SDK.WeightedMath._calcBptOutGivenExactTokensIn(
+        pool.tokens.map((token) => oldBnumScaleAmount(token.balance, token.decimals)),
+        tokenProportions.map((proportion) => oldBnumScaleAmount(proportion || '0', 18)),
+        oldBnumPoolScaleTokenAmounts(tokenAmountsIn, pool.tokens),
+        oldBnumScaleAmount(pool.dynamicData.totalShares),
+        oldBnumScaleAmount(pool.dynamicData.swapFee),
+    );
+
+    return bptAmount;
+}
+
 export function scaleTo18AndApplyPriceRate(amount: AmountHumanReadable, token: GqlPoolTokenBase): OldBigNumber {
     const denormAmount = oldBnum(parseUnits(amount, 18).toString())
         .times(token.priceRate)
@@ -478,7 +502,7 @@ function scaleTokenAmountDownFrom18Decimals(
 }
 
 export function poolGetPoolTokenForPossiblyNestedTokenOut(
-    pool: GqlPoolWeighted | GqlPoolPhantomStable | GqlPoolPhantomStableNested | GqlPoolLinearNested,
+    pool: GqlPoolWeighted | GqlPoolPhantomStable | GqlPoolPhantomStableNested | GqlPoolLinearNested | GqlPoolGyro,
     tokenOutAddress: string,
 ) {
     return pool.tokens.find((poolToken) => {

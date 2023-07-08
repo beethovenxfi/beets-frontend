@@ -1,4 +1,4 @@
-import { GqlPoolWeighted } from '~/apollo/generated/graphql-codegen-generated';
+import { GqlPoolGyro, GqlPoolWeighted } from '~/apollo/generated/graphql-codegen-generated';
 import {
     ComposablePoolJoinProcessedStepsOutput,
     PoolExitBptInSingleAssetWithdrawOutput,
@@ -29,7 +29,7 @@ export class PoolWeightedV2Service implements PoolService {
     private readonly proportionalInvestService: PoolProportionalInvestService;
 
     constructor(
-        private pool: GqlPoolWeighted,
+        private pool: GqlPoolWeighted | GqlPoolGyro,
         private batchRelayerService: BatchRelayerService,
         private readonly wethAddress: string,
         private readonly provider: BaseProvider,
