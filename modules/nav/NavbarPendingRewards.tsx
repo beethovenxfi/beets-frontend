@@ -28,6 +28,7 @@ import { sumBy } from 'lodash';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 import useStakingMintableRewards from '~/lib/global/useStakingMintableRewards';
 import { AddressZero } from '@ethersproject/constants';
+import useStakingBoosts from '~/lib/global/useStakingBoosts';
 
 export function NavbarPendingRewards() {
     const {

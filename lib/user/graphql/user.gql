@@ -49,6 +49,7 @@ query GetUserData {
             }
         }
     }
+    veBALUserBalance: veBalGetUserBalance
 }
 
 mutation UserSyncBalance($poolId: String!) {

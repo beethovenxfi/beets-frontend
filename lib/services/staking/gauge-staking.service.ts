@@ -2,6 +2,8 @@ import { AmountHumanReadable, TokenBase } from '~/lib/services/token/token-types
 import { BaseProvider } from '@ethersproject/providers';
 import LiquidityGaugeV5Abi from '~/lib/abi/LiquidityGaugeV5.json';
 import LiquidityGaugeV6Abi from '~/lib/abi/LiquidityGaugeV6.json';
+import BeethovenCheckpointer from '~/lib/abi/BeethovenCheckpointer.json';
+import GaugeWorkingBalanceHelperAbi from '~/lib/abi/GaugeWorkingBalanceHelper.json';
 import ChildChainGaugeRewardHelper from '~/lib/abi/ChildChainGaugeRewardHelper.json';
 import { BigNumber, Contract } from 'ethers';
 import { formatFixed } from '@ethersproject/bignumber';
@@ -17,7 +19,19 @@ interface GetUserStakedBalanceInput {
     userAddress: string;
     gaugeAddress: string;
     provider: BaseProvider;
+    gaugeVersion?: number;
     decimals?: number;
+}
+
+function getGaugeABI(version: number) {
+    switch (version) {
+        case 2:
+            return LiquidityGaugeV6Abi;
+        case 1:
+            return LiquidityGaugeV5Abi;
+        default:
+            return LiquidityGaugeV5Abi;
+    }
 }
 
 export class GaugeStakingService {
@@ -32,8 +46,10 @@ export class GaugeStakingService {
         provider,
         gaugeAddress,
         decimals = 18,
+        gaugeVersion = 1,
     }: GetUserStakedBalanceInput): Promise<AmountHumanReadable> {
-        const gaugeContract = new Contract(gaugeAddress, LiquidityGaugeV5Abi, provider);
+        const gaugeABI = getGaugeABI(gaugeVersion);
+        const gaugeContract = new Contract(gaugeAddress, gaugeABI, provider);
         const balance = await gaugeContract.balanceOf(userAddress);
 
         return formatFixed(balance, decimals);
@@ -54,6 +70,19 @@ export class GaugeStakingService {
         const response: BigNumber = await tokenContract.balanceOf(gaugeAddress);
 
         return formatFixed(response, decimals);
+    }
+
+    public async getGaugeTotalSupply({
+        gaugeAddress,
+        provider,
+    }: {
+        gaugeAddress: string;
+        provider: BaseProvider;
+    }): Promise<AmountHumanReadable> {
+        const gaugeContract = new Contract(gaugeAddress, LiquidityGaugeV6Abi, provider);
+        const response: BigNumber = await gaugeContract.totalSupply();
+
+        return formatFixed(response, 18);
     }
 
     public async getPendingRewards({
@@ -162,6 +191,62 @@ export class GaugeStakingService {
 
         const formattedResult = mapValues(result, (data) => formatFixed(data.claimableBAL.toString(), 18).toString());
         return formattedResult;
+    }
+
+    public async checkpointGauges({
+        provider,
+        gauges,
+        userAddress,
+    }: {
+        provider: BaseProvider;
+        gauges: string[];
+        userAddress: string;
+    }) {
+        const gaugeCheckpointHelper = new Contract(
+            networkConfig.gauge.checkpointHelper,
+            BeethovenCheckpointer,
+            provider,
+        );
+        await gaugeCheckpointHelper['checkpoint_my_gauges'](gauges);
+    }
+
+    public async getCheckpointableGauges({
+        provider,
+        gauges,
+        userAddress,
+    }: {
+        provider: BaseProvider;
+        gauges: string[];
+        userAddress: string;
+    }) {
+        const multicaller = new Multicaller(this.chainId, provider, GaugeWorkingBalanceHelperAbi);
+        for (const gauge of gauges) {
+            multicaller.call(
+                `${gauge}.workingBalanceSupplyRatios`,
+                networkConfig.gauge.workingBalanceHelperAddress,
+                'getWorkingBalanceToSupplyRatios',
+                [gauge, userAddress],
+            );
+        }
+
+        if (multicaller.numCalls === 0) {
+            return [];
+        }
+
+        const result: {
+            [gaugeId: string]: {
+                workingBalanceSupplyRatios: [BigNumber, BigNumber];
+            };
+        } = await multicaller.execute({});
+
+        const checkpointableGauges = [];
+        for (const gaugeId in result) {
+            if (result[gaugeId].workingBalanceSupplyRatios[1].gt(result[gaugeId].workingBalanceSupplyRatios[0])) {
+                checkpointableGauges.push(gaugeId);
+            }
+        }
+
+        return checkpointableGauges;
     }
 }
 

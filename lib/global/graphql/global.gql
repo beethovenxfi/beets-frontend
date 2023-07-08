@@ -16,6 +16,7 @@ query GetAppGlobalData {
     beetsGetFbeetsRatio
     blocksGetBlocksPerDay
     blocksGetAverageBlockTime
+    veBALTotalSupply: veBalGetTotalSupply
 }
 
 query GetAppGlobalPollingData {
