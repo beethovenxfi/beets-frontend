@@ -4,6 +4,7 @@ import Card from '~/components/card/Card';
 import { useCompose } from './ComposeProvider';
 import BeetsTooltip from '~/components/tooltip/BeetsTooltip';
 import AdvancedPoolComposeTokens from './AdvancedPoolComposeTokens';
+import { AdvancedPoolComposeFees } from './AdvancedPoolComposeFees';
 
 interface Props {}
 
@@ -17,6 +18,7 @@ export default function AdvancedPoolCreation(props: Props) {
                 <HStack spacing="0">
                     {poolTypes.map((poolType) => (
                         <BeetsTooltip
+                            key={`choose-pooltye-${poolType.type}`}
                             noImage
                             label={
                                 !poolType.isEnabled ? 'This pool type is not supported by the compose UI yet.' : null
@@ -44,9 +46,12 @@ export default function AdvancedPoolCreation(props: Props) {
                     ))}
                 </HStack>
             </Card>
-            <Box width="75%">
-                <AdvancedPoolComposeTokens />
-            </Box>
+            <HStack width="75%" alignItems='flex-start'>
+                <Box>
+                    <AdvancedPoolComposeTokens />
+                </Box>
+                <AdvancedPoolComposeFees />
+            </HStack>
         </VStack>
     );
 }

@@ -104,7 +104,8 @@ export const TokenInput = forwardRef(
                                 <HStack spacing="none">
                                     <TokenAvatar size="xs" address={address || ''} />
                                     <Text fontSize="lg" paddingLeft="2">
-                                        {token?.symbol}
+                                        {!(token?.address && token.symbol) && 'Choose a token'}
+                                        {token?.address && token.symbol && token?.symbol}
                                     </Text>
                                     <Box marginLeft="1">
                                         <ChevronDown size={16} />

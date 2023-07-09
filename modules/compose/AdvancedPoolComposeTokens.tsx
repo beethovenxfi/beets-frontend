@@ -1,5 +1,5 @@
 import { Box, Button, HStack, Heading, Text, VStack, useDisclosure } from '@chakra-ui/react';
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { useCompose } from './ComposeProvider';
 import { TokenInput } from '~/components/inputs/TokenInput';
 import TokenRow from '~/components/token/TokenRow';
@@ -8,6 +8,8 @@ import { Plus, X } from 'react-feather';
 import { BeetsBox } from '~/components/box/BeetsBox';
 import BeetsTooltip from '~/components/tooltip/BeetsTooltip';
 import { TokenSelectModal } from '~/components/token-select/TokenSelectModal';
+import { GenericTokenSelectModal } from '~/components/token-select/GenericTokenSelectModal';
+import { ToastType, useToast } from '~/components/toast/BeetsToast';
 
 interface Props {}
 
@@ -21,9 +23,10 @@ function AddTokenButton(_: any) {
 }
 
 export default function AdvancedPoolComposeTokens(props: Props) {
-    const { poolTypes, tokens, MAX_TOKENS, removeTokenByAddress, removeTokenByIndex } = useCompose();
+    const { poolTypes, tokens, MAX_TOKENS, removeTokenByAddress, removeTokenByIndex, setTokens } = useCompose();
+    const [activeTokenSelectIndex, setActiveTokenSelectIndex] = useState<number | null>(null);
     const tokenSelectDisclosure = useDisclosure();
-
+    const { showToast, removeToast } = useToast();
     const isMaxTokens = tokens.length === MAX_TOKENS;
     const finalRefTokenIn = useRef(null);
 
@@ -36,11 +39,47 @@ export default function AdvancedPoolComposeTokens(props: Props) {
     }
 
     function showTokenSelect(tokenIndex: number) {
+        setActiveTokenSelectIndex(tokenIndex);
         tokenSelectDisclosure.onOpen();
     }
 
+    function handleTokenSelectedForIndex(tokenIndex: number | null) {
+        if (tokenIndex === null) return (address: string) => {};
+        return function (address: string) {
+            if (tokens.find((token) => token.address === address)) {
+                showToast({
+                    id: 'compose-existing-token',
+                    content: 'You already have this token added',
+                    auto: true,
+                    type: ToastType.Error,
+                });
+                return;
+            }
+            const newTokens = [...tokens];
+            newTokens[tokenIndex] = {
+                ...newTokens[tokenIndex],
+                address: address,
+            };
+            setTokens(newTokens);
+        };
+    }
+
+    function handleTokenAmountChangedForIndex(tokenIndex: number | null) {
+        // type doesn't matter here, just a blank event
+        if (tokenIndex === null) return (event: any) => {};
+        return function (event: { currentTarget: { value: string } }) {
+            const newTokens = [...tokens];
+            newTokens[tokenIndex] = {
+                ...newTokens[tokenIndex],
+                amount: event.currentTarget.value,
+            };
+            console.log('newTokens', newTokens);
+            setTokens(newTokens);
+        };
+    }
+
     return (
-        <Card py="3" px="3" width="50%">
+        <Card py="3" px="3" width="100%">
             <VStack spacing="2" width="full" alignItems="flex-start">
                 <VStack width="full" spacing="3">
                     <VStack spacing="1" width="full" alignItems="flex-start">
@@ -52,14 +91,15 @@ export default function AdvancedPoolComposeTokens(props: Props) {
                     </VStack>
                     <VStack width="full" spacing="2">
                         {tokens.map((token, i) => (
-                            <HStack width="full">
-                                <BeetsBox width="full" pl="4" pr="3" py="2" key={`${token.address}-${i}`}>
+                            <HStack key={`compose-token-select-${token}-${i}`} width="full">
+                                <BeetsBox width="full" pl="2" pr="3" py="2" key={`${token.address}-${i}`}>
                                     <HStack width="full" spacing="4">
                                         <VStack spacing="0" width="full">
                                             <TokenInput
-                                                toggleTokenSelect={() => showTokenSelect('tokenOut')}
+                                                toggleTokenSelect={() => showTokenSelect(i)}
                                                 address={token.address}
-                                                amount={token.amount}
+                                                value={token.amount}
+                                                onChange={handleTokenAmountChangedForIndex(i)}
                                             />
                                         </VStack>
                                         <BeetsTooltip noImage label="Remove this token">
@@ -85,11 +125,13 @@ export default function AdvancedPoolComposeTokens(props: Props) {
                     </HStack>
                 )}
             </VStack>
-            <TokenSelectModal
+            <GenericTokenSelectModal
                 finalFocusRef={finalRefTokenIn}
                 isOpen={tokenSelectDisclosure.isOpen}
                 onOpen={tokenSelectDisclosure.onOpen}
                 onClose={tokenSelectDisclosure.onClose}
+                handleTokenSelected={handleTokenSelectedForIndex(activeTokenSelectIndex)}
+                title="Choose a token"
             />
         </Card>
     );

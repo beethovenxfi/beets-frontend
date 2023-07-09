@@ -57,9 +57,6 @@ export async function getStaticProps() {
     return loadApolloState({
         client,
         pageSetup: async () => {
-            await client.query<GetLgesQuery, GetLgesQueryVariables>({
-                query: GetLges,
-            });
         },
     });
 }

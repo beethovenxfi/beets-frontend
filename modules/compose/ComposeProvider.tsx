@@ -19,6 +19,7 @@ const POOL_TYPES = [
 ];
 
 const MAX_TOKENS = 8;
+const FEE_PRESETS = ['0.001', '0.003', '0.01'];
 
 const ComposeProviderContext = React.createContext<ReturnType<typeof _useCompose> | null>(null);
 export const useCompose: () => ReturnType<typeof _useCompose> = () => {
@@ -43,6 +44,9 @@ export interface PoolCreationToken {
 function _useCompose() {
     const [step, setStep] = useState<ComposeStep>('choose-tokens');
     const [creationExperience, _setCreationExperience] = useState<PoolCreationExperience | null>(null);
+    // recommended fee is 0.3%
+    const [currentFee, setCurrentFee] = useState(FEE_PRESETS[1]);
+    const [isUsingCustomFee, setIsUsingCustomFee] = useState(false);
     const [tokens, setTokens] = useState<PoolCreationToken[]>([
         { address: '', amount: '0.0' },
         { address: '', amount: '0.0' },
@@ -76,14 +80,20 @@ function _useCompose() {
 
     return {
         activeStep: step,
-        setActiveStep: setStep,
-        setCreationExperience,
         creationExperience,
         poolTypes: POOL_TYPES,
+        tokens,
+        MAX_TOKENS,
+        FEE_PRESETS,
+        isUsingCustomFee,
+        currentFee,
+        setCurrentFee,
+        setIsUsingCustomFee,
+        setActiveStep: setStep,
+        setCreationExperience,
         addBlankToken,
         removeTokenByAddress,
         removeTokenByIndex,
-        tokens,
-        MAX_TOKENS,
+        setTokens,
     };
 }
