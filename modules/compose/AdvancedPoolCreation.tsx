@@ -5,6 +5,8 @@ import { useCompose } from './ComposeProvider';
 import BeetsTooltip from '~/components/tooltip/BeetsTooltip';
 import AdvancedPoolComposeTokens from './AdvancedPoolComposeTokens';
 import { AdvancedPoolComposeFees } from './AdvancedPoolComposeFees';
+import { AdvancedPoolComposeFeeManager } from './AdvancedPoolComposeFeeManager';
+import { AdvancedPoolComposeSubmit } from './AdvancedPoolComposeSubmit';
 
 interface Props {}
 
@@ -46,11 +48,17 @@ export default function AdvancedPoolCreation(props: Props) {
                     ))}
                 </HStack>
             </Card>
-            <HStack width="75%" alignItems='flex-start'>
-                <Box>
+            <HStack width="75%" alignItems="flex-start">
+                <Box width="full">
+                    {/* TODO ADD WEIGHTS */}
                     <AdvancedPoolComposeTokens />
                 </Box>
-                <AdvancedPoolComposeFees />
+                <VStack width="full">
+                    <AdvancedPoolComposeFees />
+                    <AdvancedPoolComposeFeeManager />
+                    {/* TODO IMPLEMENT SUBMISSION PREREQUISITES AND VALIDATION */}
+                    <AdvancedPoolComposeSubmit />
+                </VStack>
             </HStack>
         </VStack>
     );

@@ -47,6 +47,7 @@ function _useCompose() {
     // recommended fee is 0.3%
     const [currentFee, setCurrentFee] = useState(FEE_PRESETS[1]);
     const [isUsingCustomFee, setIsUsingCustomFee] = useState(false);
+    const [feeManager, setFeeManager] = useState<string | null>(null);
     const [tokens, setTokens] = useState<PoolCreationToken[]>([
         { address: '', amount: '0.0' },
         { address: '', amount: '0.0' },
@@ -87,6 +88,8 @@ function _useCompose() {
         FEE_PRESETS,
         isUsingCustomFee,
         currentFee,
+        feeManager,
+        setFeeManager,
         setCurrentFee,
         setIsUsingCustomFee,
         setActiveStep: setStep,
