@@ -16,7 +16,7 @@ import { sortBy } from 'lodash';
 import { Zero } from '@ethersproject/constants';
 import { BatchRelayerService } from '~/lib/services/batch-relayer/batch-relayer.service';
 import { parseUnits } from 'ethers/lib/utils';
-import { StablePoolEncoder, SwapV2 } from '@balancer-labs/sdk';
+import { StablePoolEncoder, SwapV2, WeightedPoolEncoder } from '@balancer-labs/sdk';
 import { oldBnum, oldBnumSubtractSlippage } from '~/lib/services/pool/lib/old-big-number';
 import {
     poolGyroExactTokensInForBPTOut,
@@ -371,7 +371,7 @@ export class PoolComposableJoinService {
         const pool = step.pool;
         const joinHasNativeAsset = wethIsEth && pool.tokens.find((token) => token.address === this.wethAddress);
         const tokensWithPhantomBpt =
-            pool.__typename === 'GqlPoolWeighted'
+            pool.__typename === 'GqlPoolWeighted' || pool.__typename === 'GqlPoolGyro'
                 ? sortBy(pool.tokens, 'index')
                 : sortBy([...pool.tokens, { address: pool.address, decimals: 18, __typename: 'pool' }], 'address');
         const bptIdx = tokensWithPhantomBpt.findIndex((token) => token.address === pool.address);
@@ -408,11 +408,14 @@ export class PoolComposableJoinService {
             joinPoolRequest: {
                 assets: tokensWithPhantomBpt.map((token) => token.address),
                 maxAmountsIn: amountsIn,
-                userData: StablePoolEncoder.joinExactTokensInForBPTOut(
-                    //required that that bpt idx is not included here
-                    amountsIn.filter((amount, idx) => idx !== bptIdx),
-                    parseUnits(oldBnumSubtractSlippage(step.minBptReceived, 18, slippage), 18),
-                ),
+                userData:
+                    pool.__typename === 'GqlPoolGyro'
+                        ? WeightedPoolEncoder.joinAllTokensInForExactBPTOut(parseUnits(step.minBptReceived))
+                        : StablePoolEncoder.joinExactTokensInForBPTOut(
+                              //required that that bpt idx is not included here
+                              amountsIn.filter((amount, idx) => idx !== bptIdx),
+                              parseUnits(oldBnumSubtractSlippage(step.minBptReceived, 18, slippage), 18),
+                          ),
                 fromInternalBalance: batchSwapStep !== null,
             },
             value: joinHasNativeAsset ? ethAmountScaled : Zero,

@@ -1,5 +1,6 @@
 import { GqlPoolGyro } from '~/apollo/generated/graphql-codegen-generated';
 import {
+    ComposablePoolJoinProcessedStepsOutput,
     PoolExitBptInSingleAssetWithdrawOutput,
     PoolExitData,
     PoolExitPoolContractCallData,
@@ -12,12 +13,11 @@ import {
 import { AmountHumanReadable, TokenAmountHumanReadable } from '~/lib/services/token/token-types';
 import {
     oldBnumPoolScaleTokenAmounts,
+    poolGetNestedTokenEstimateForPoolTokenAmounts,
+    poolGetPoolTokenForPossiblyNestedTokenOut,
     poolGetProportionalExitAmountsForBptIn,
     poolGetProportionalJoinAmountsForFixedAmount,
-    poolGetRequiredToken,
     poolScaleTokenAmounts,
-    poolWeightedBptForTokensZeroPriceImpact,
-    poolWeightedExactTokensInForBPTOut,
 } from '~/lib/services/pool/lib/util';
 import { replaceEthWithWeth } from '~/lib/services/token/token-util';
 import { PoolProportionalInvestService } from './lib/pool-proportional-invest.service';
@@ -28,14 +28,13 @@ import { formatFixed } from '@ethersproject/bignumber';
 import { oldBnum, oldBnumScaleAmount, oldBnumSubtractSlippage } from './lib/old-big-number';
 import { BatchRelayerService } from '../batch-relayer/batch-relayer.service';
 import * as SDK from '@georgeroman/balancer-v2-pools';
-import { PoolWeightedV2Service } from './pool-weighted-v2.service';
 import { networkProvider } from '~/lib/global/network';
-import { networkConfig } from '~/lib/config/network-config';
+import { PoolComposableJoinService } from './lib/pool-composable-join.service';
 
 export class PoolGyroService implements PoolService {
     private readonly proportionalInvestService: PoolProportionalInvestService;
     private readonly baseService: PoolBaseService;
-    private readonly weightedV2Service: PoolWeightedV2Service;
+    private readonly composableJoinService: PoolComposableJoinService;
 
     constructor(
         private pool: GqlPoolGyro,
@@ -44,11 +43,11 @@ export class PoolGyroService implements PoolService {
     ) {
         this.proportionalInvestService = new PoolProportionalInvestService(pool);
         this.baseService = new PoolBaseService(pool, wethAddress);
-        this.weightedV2Service = new PoolWeightedV2Service(
+        this.composableJoinService = new PoolComposableJoinService(
             pool,
             batchRelayerService,
-            networkConfig.wethAddress,
             networkProvider,
+            wethAddress,
         );
     }
 
@@ -73,34 +72,86 @@ export class PoolGyroService implements PoolService {
         fixedAmount: TokenAmountHumanReadable,
         tokensIn: string[],
     ): Promise<TokenAmountHumanReadable[]> {
-        // return poolGetProportionalJoinAmountsForFixedAmount(fixedAmount, this.pool.tokens);
+        if (parseFloat(fixedAmount.amount) === 0) {
+            return tokensIn.map((address) => ({ address, amount: '0.0' }));
+        }
 
-        return this.weightedV2Service.joinGetProportionalSuggestionForFixedAmount(fixedAmount, tokensIn);
+        //map fixedAmount to the corresponding BPT
+        const poolToken = poolGetPoolTokenForPossiblyNestedTokenOut(this.pool, fixedAmount.address);
+        const { processedSteps } = await this.composableJoinService.processJoinSteps({
+            tokenAmountsIn: [fixedAmount],
+            slippage: '0',
+        });
+        const joinStep = processedSteps.find((step) => step.type === 'Join' && step.pool.id === this.pool.id)!;
+        const poolTokenFixedAmount = joinStep.tokenAmountsIn.find(
+            (amountIn) => amountIn.address === poolToken?.address,
+        );
+
+        if (!poolTokenFixedAmount) {
+            throw new Error('Gyro: failed to map fixed amount to pool token fixed amount');
+        }
+
+        //get the corresponding pool token amounts
+        const proportionalSuggestion = poolGetProportionalJoinAmountsForFixedAmount(
+            poolTokenFixedAmount,
+            this.pool.tokens,
+        );
+
+        //map pool token amounts to invest token amounts
+        return poolGetNestedTokenEstimateForPoolTokenAmounts({
+            pool: this.pool,
+            nestedTokens: tokensIn,
+            poolTokenAmounts: proportionalSuggestion,
+        });
     }
 
     public async joinGetContractCallData(data: PoolJoinData): Promise<PoolJoinContractCallData> {
-        // rn gyro only supports "ALL_TOKENS_IN_FOR_EXACT_BPT_OUT"
-        const bptAmountOut = 'minimumBpt' in data ? data.minimumBpt : '0';
-        const assets = this.pool.tokens.map((token) =>
-            data.wethIsEth ? this.baseService.wethToZero(token.address) : token.address,
-        );
-        const maxAmountsIn = poolScaleTokenAmounts(data.maxAmountsIn, this.pool.tokens);
-        const userData = WeightedPoolEncoder.joinAllTokensInForExactBPTOut(parseUnits(bptAmountOut));
+        // // rn gyro only supports "ALL_TOKENS_IN_FOR_EXACT_BPT_OUT"
+        // const bptAmountOut = 'minimumBpt' in data ? data.minimumBpt : '0';
+        // const assets = this.pool.tokens.map((token) =>
+        //     data.wethIsEth ? this.baseService.wethToZero(token.address) : token.address,
+        // );
+        // const maxAmountsIn = poolScaleTokenAmounts(data.maxAmountsIn, this.pool.tokens);
+        // const userData = WeightedPoolEncoder.joinAllTokensInForExactBPTOut(parseUnits(bptAmountOut));
 
-        if (
-            (this.pool.staking?.type === 'MASTER_CHEF' && data.zapIntoMasterchefFarm) ||
-            (this.pool.staking?.type === 'GAUGE' && data.zapIntoGauge)
-        ) {
-            return this.batchRelayerService.encodeJoinPoolAndStake({
-                userData,
-                pool: this.pool,
-                assets,
-                maxAmountsIn,
-                userAddress: data.userAddress,
-            });
+        // if (
+        //     (this.pool.staking?.type === 'MASTER_CHEF' && data.zapIntoMasterchefFarm) ||
+        //     (this.pool.staking?.type === 'GAUGE' && data.zapIntoGauge)
+        // ) {
+        //     return this.batchRelayerService.encodeJoinPoolAndStake({
+        //         userData,
+        //         pool: this.pool,
+        //         assets,
+        //         maxAmountsIn,
+        //         userAddress: data.userAddress,
+        //     });
+        // }
+
+        // return { type: 'JoinPool', assets, maxAmountsIn, userData };
+
+        if (data.kind !== 'ExactTokensInForBPTOut') {
+            throw new Error('unsupported join type');
         }
 
-        return { type: 'JoinPool', assets, maxAmountsIn, userData };
+        const { processedSteps } = await this.getJoinData(data.maxAmountsIn, data.slippage);
+
+        return this.composableJoinService.joinGetContractCallData({
+            data,
+            processedSteps,
+        });
+    }
+
+    private async getJoinData(
+        tokenAmountsIn: TokenAmountHumanReadable[],
+        slippage: AmountHumanReadable,
+    ): Promise<ComposablePoolJoinProcessedStepsOutput> {
+        const data = await this.composableJoinService.processJoinSteps({
+            tokenAmountsIn,
+            slippage,
+        });
+
+        //TODO: cache data while tokenAmountsIn and slippage are constant
+        return data;
     }
 
     public async joinGetBptOutAndPriceImpactForTokensIn(

@@ -158,7 +158,9 @@ export class PoolProportionalInvestService {
     ) {
         return userInvestTokenBalances.find((balance) => {
             if (poolToken.__typename === 'GqlPoolTokenLinear') {
-                return !!poolToken.pool.tokens.find((nestedPoolToken) => nestedPoolToken.address === balance.address);
+                return !!poolToken.pool.tokens.find(
+                    (nestedPoolToken) => nestedPoolToken.address === replaceEthWithWeth(balance.address),
+                );
             }
         })!;
     }
