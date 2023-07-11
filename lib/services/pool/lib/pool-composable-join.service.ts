@@ -118,10 +118,7 @@ export class PoolComposableJoinService {
                 currentTokenAmountsIn = [
                     ...currentTokenAmountsIn.filter((amountIn) => !step.tokensIn.includes(amountIn.address)),
                     //TODO: should this take slippage into account
-                    {
-                        address: step.pool.address,
-                        amount: oldBnumSubtractSlippage(joinPoolResponse.minBptReceived, 18, slippage),
-                    },
+                    { address: step.pool.address, amount: joinPoolResponse.minBptReceived },
                 ];
 
                 processedSteps.push(joinPoolResponse);
