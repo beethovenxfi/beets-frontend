@@ -118,7 +118,10 @@ export class PoolComposableJoinService {
                 currentTokenAmountsIn = [
                     ...currentTokenAmountsIn.filter((amountIn) => !step.tokensIn.includes(amountIn.address)),
                     //TODO: should this take slippage into account
-                    { address: step.pool.address, amount: joinPoolResponse.minBptReceived },
+                    {
+                        address: step.pool.address,
+                        amount: oldBnumSubtractSlippage(joinPoolResponse.minBptReceived, 18, slippage),
+                    },
                 ];
 
                 processedSteps.push(joinPoolResponse);
@@ -399,6 +402,8 @@ export class PoolComposableJoinService {
             return parseUnits(tokenAmountIn?.amount || '0', token.decimals).toString();
         });
 
+        const minBpt = parseUnits(oldBnumSubtractSlippage(step.minBptReceived, 18, slippage), 18);
+
         return this.batchRelayerService.vaultEncodeJoinPool({
             poolId: pool.id,
             poolKind: 0,
@@ -410,11 +415,11 @@ export class PoolComposableJoinService {
                 maxAmountsIn: amountsIn,
                 userData:
                     pool.__typename === 'GqlPoolGyro'
-                        ? WeightedPoolEncoder.joinAllTokensInForExactBPTOut(parseUnits(step.minBptReceived))
+                        ? WeightedPoolEncoder.joinAllTokensInForExactBPTOut(minBpt)
                         : StablePoolEncoder.joinExactTokensInForBPTOut(
                               //required that that bpt idx is not included here
                               amountsIn.filter((amount, idx) => idx !== bptIdx),
-                              parseUnits(oldBnumSubtractSlippage(step.minBptReceived, 18, slippage), 18),
+                              minBpt,
                           ),
                 fromInternalBalance: batchSwapStep !== null,
             },

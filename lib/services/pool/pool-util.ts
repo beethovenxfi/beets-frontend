@@ -31,8 +31,9 @@ export function poolIsTokenPhantomBpt(poolToken: GqlPoolTokenUnion) {
 
 export function poolRequiresBatchRelayerOnJoin(pool: GqlPoolUnion) {
     return (
-        ((pool.__typename === 'GqlPoolWeighted' || pool.__typename === 'GqlPoolGyro') &&
+        (pool.__typename === 'GqlPoolWeighted' &&
             (pool.nestingType === 'HAS_SOME_PHANTOM_BPT' || pool.nestingType === 'HAS_ONLY_PHANTOM_BPT')) ||
+        pool.__typename === 'GqlPoolGyro' ||
         networkConfig.balancer.composableStableFactories.includes(pool.factory || '')
     );
 }
@@ -41,6 +42,7 @@ export function poolRequiresBatchRelayerOnExit(pool: GqlPoolUnion) {
     return (
         (pool.__typename === 'GqlPoolWeighted' &&
             (pool.nestingType === 'HAS_SOME_PHANTOM_BPT' || pool.nestingType === 'HAS_ONLY_PHANTOM_BPT')) ||
+        pool.__typename === 'GqlPoolGyro' ||
         networkConfig.balancer.composableStableFactories.includes(pool.factory || '') ||
         networkConfig.balancer.weightedPoolV2PlusFactories.includes(pool.factory || '')
     );

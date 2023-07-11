@@ -2,8 +2,8 @@ import { GqlPoolGyro } from '~/apollo/generated/graphql-codegen-generated';
 import {
     ComposablePoolJoinProcessedStepsOutput,
     PoolExitBptInSingleAssetWithdrawOutput,
+    PoolExitContractCallData,
     PoolExitData,
-    PoolExitPoolContractCallData,
     PoolExitSingleAssetWithdrawForBptInOutput,
     PoolJoinContractCallData,
     PoolJoinData,
@@ -15,26 +15,25 @@ import {
     oldBnumPoolScaleTokenAmounts,
     poolGetNestedTokenEstimateForPoolTokenAmounts,
     poolGetPoolTokenForPossiblyNestedTokenOut,
-    poolGetProportionalExitAmountsForBptIn,
     poolGetProportionalJoinAmountsForFixedAmount,
-    poolScaleTokenAmounts,
+    poolGyroExactTokensInForBPTOut,
 } from '~/lib/services/pool/lib/util';
 import { replaceEthWithWeth } from '~/lib/services/token/token-util';
 import { PoolProportionalInvestService } from './lib/pool-proportional-invest.service';
 import { PoolBaseService } from './lib/pool-base.service';
-import { WeightedPoolEncoder } from '@balancer-labs/balancer-js';
-import { parseUnits } from 'ethers/lib/utils.js';
 import { formatFixed } from '@ethersproject/bignumber';
-import { oldBnum, oldBnumScaleAmount, oldBnumSubtractSlippage } from './lib/old-big-number';
+import { oldBnum, oldBnumScaleAmount } from './lib/old-big-number';
 import { BatchRelayerService } from '../batch-relayer/batch-relayer.service';
 import * as SDK from '@georgeroman/balancer-v2-pools';
 import { networkProvider } from '~/lib/global/network';
 import { PoolComposableJoinService } from './lib/pool-composable-join.service';
+import { PoolComposableExitService } from './lib/pool-composable-exit.service';
 
 export class PoolGyroService implements PoolService {
     private readonly proportionalInvestService: PoolProportionalInvestService;
     private readonly baseService: PoolBaseService;
     private readonly composableJoinService: PoolComposableJoinService;
+    private readonly composableExitService: PoolComposableExitService;
 
     constructor(
         private pool: GqlPoolGyro,
@@ -44,6 +43,12 @@ export class PoolGyroService implements PoolService {
         this.proportionalInvestService = new PoolProportionalInvestService(pool);
         this.baseService = new PoolBaseService(pool, wethAddress);
         this.composableJoinService = new PoolComposableJoinService(
+            pool,
+            batchRelayerService,
+            networkProvider,
+            wethAddress,
+        );
+        this.composableExitService = new PoolComposableExitService(
             pool,
             batchRelayerService,
             networkProvider,
@@ -154,35 +159,34 @@ export class PoolGyroService implements PoolService {
         return data;
     }
 
+    // public async joinGetBptOutAndPriceImpactForTokensIn(
+    //     tokenAmountsIn: TokenAmountHumanReadable[],
+    //     slippage: AmountHumanReadable,
+    // ): Promise<PoolJoinEstimateOutput> {
+    //     const bptAmount = poolGyroExactTokensInForBPTOut(tokenAmountsIn, this.pool);
+
+    //     if (bptAmount.lt(0)) {
+    //         return { priceImpact: 0, minBptReceived: '0' };
+    //     }
+
+    //     const minBptReceived = bptAmount.minus(bptAmount.times(slippage)).toFixed(0);
+
+    //     return {
+    //         priceImpact: 0,
+    //         minBptReceived: formatFixed(minBptReceived.toString(), 18),
+    //     };
+    // }
+
     public async joinGetBptOutAndPriceImpactForTokensIn(
         tokenAmountsIn: TokenAmountHumanReadable[],
         slippage: AmountHumanReadable,
     ): Promise<PoolJoinEstimateOutput> {
-        // https://github.com/gyrostable/app/blob/f07cdec9e52585e5be6d3a916ce3833b1599f43c/src/utils/pools/findConstrainedMax.ts#LL15C1-L23C5
-        const totalPoolBalance = this.pool.tokens
-            .map((token) => token.balance)
-            .reduce((a, b) => oldBnum(a).plus(b), oldBnum(0));
-        const tokenProportions = this.pool.tokens.map((token) =>
-            oldBnum(token.balance).div(totalPoolBalance).toString(),
-        );
-
-        const bptAmount = SDK.WeightedMath._calcBptOutGivenExactTokensIn(
-            this.pool.tokens.map((token) => oldBnumScaleAmount(token.balance, token.decimals)),
-            tokenProportions.map((proportion) => oldBnumScaleAmount(proportion || '0', 18)),
-            oldBnumPoolScaleTokenAmounts(tokenAmountsIn, this.pool.tokens),
-            oldBnumScaleAmount(this.pool.dynamicData.totalShares),
-            oldBnumScaleAmount(this.pool.dynamicData.swapFee),
-        );
-
-        if (bptAmount.lt(0)) {
-            return { priceImpact: 0, minBptReceived: '0' };
-        }
-
-        const minBptReceived = bptAmount.minus(bptAmount.times(slippage)).toFixed(0);
+        const { priceImpact, minBptReceived, nestedPriceImpacts } = await this.getJoinData(tokenAmountsIn, slippage);
 
         return {
-            priceImpact: 0,
-            minBptReceived: formatFixed(minBptReceived.toString(), 18),
+            priceImpact,
+            minBptReceived,
+            nestedPriceImpacts,
         };
     }
 
@@ -190,7 +194,7 @@ export class PoolGyroService implements PoolService {
         bptIn: AmountHumanReadable,
         tokensOut: string[],
     ): Promise<TokenAmountHumanReadable[]> {
-        return poolGetProportionalExitAmountsForBptIn(bptIn, this.pool.tokens, this.pool.dynamicData.totalShares);
+        return this.composableExitService.exitGetProportionalWithdrawEstimate(bptIn, tokensOut);
     }
 
     public async exitGetBptInForSingleAssetWithdraw(
@@ -214,24 +218,12 @@ export class PoolGyroService implements PoolService {
         };
     }
 
-    public async exitGetContractCallData(data: PoolExitData): Promise<PoolExitPoolContractCallData> {
+    public async exitGetContractCallData(data: PoolExitData): Promise<PoolExitContractCallData> {
         // rn gyro only supports "EXACT_BPT_IN_FOR_TOKENS_OUT"
-        const bptAmountIn = 'bptAmountIn' in data ? data.bptAmountIn : '0';
-        const amountsOut = 'amountsOut' in data ? data.amountsOut : [];
-        const minAmountsOut = amountsOut.map((amountOut) => {
-            const token = this.pool.tokens.find((token) => token.address === amountOut.address);
+        if (data.kind === 'ExactBPTInForTokensOut') {
+            return this.composableExitService.exitExactBPTInForTokensOutGetContractCallData(data);
+        }
 
-            return {
-                address: amountOut.address,
-                amount: oldBnumSubtractSlippage(amountOut.amount, token?.decimals || 18, data.slippage),
-            };
-        });
-
-        return {
-            type: 'ExitPool',
-            assets: this.pool.tokens.map((token) => token.address),
-            minAmountsOut: poolScaleTokenAmounts(minAmountsOut, this.pool.tokens),
-            userData: WeightedPoolEncoder.exitExactBPTInForTokensOut(parseUnits(bptAmountIn)),
-        };
+        throw new Error('unsupported exit type');
     }
 }

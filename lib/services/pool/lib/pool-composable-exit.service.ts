@@ -20,6 +20,7 @@ import {
     poolGetProportionalExitAmountsForBptIn,
     poolGetTotalShares,
     poolGetWrappedTokenFromLinearPoolToken,
+    poolGyroExactBPTInForTokenOut,
     poolHasOnlyLinearBpts,
     poolQueryBatchSwap,
     poolStableBptForTokensZeroPriceImpact,
@@ -38,10 +39,10 @@ import {
     oldBnumFromBnum,
     oldBnumScaleAmount,
     oldBnumSubtractSlippage,
-    oldBnumToHumanReadable,
 } from '~/lib/services/pool/lib/old-big-number';
 import { parseUnits } from 'ethers/lib/utils';
 import {
+    GqlPoolGyro,
     GqlPoolPhantomStable,
     GqlPoolPhantomStableNested,
     GqlPoolToken,
@@ -639,7 +640,7 @@ export class PoolComposableExitService {
         poolToken,
     }: {
         bptIn: AmountHumanReadable;
-        pool: GqlPoolWeighted | GqlPoolPhantomStable | GqlPoolPhantomStableNested;
+        pool: GqlPoolWeighted | GqlPoolPhantomStable | GqlPoolPhantomStableNested | GqlPoolGyro;
         poolToken: GqlPoolTokenUnion;
     }): {
         tokenAmountOut: AmountHumanReadable;
@@ -648,13 +649,17 @@ export class PoolComposableExitService {
         const bptAmountScaled = oldBnumFromBnum(parseUnits(bptIn));
 
         const poolTokenAmountOut =
-            pool.__typename === 'GqlPoolWeighted'
+            pool.__typename === 'GqlPoolGyro'
+                ? poolGyroExactBPTInForTokenOut(pool, bptIn, poolToken.address)
+                : pool.__typename === 'GqlPoolWeighted'
                 ? poolWeightedExactBPTInForTokenOut(pool, bptIn, poolToken.address)
                 : poolStableExactBPTInForTokenOut(pool, bptIn, poolToken.address);
         const tokenAmounts = [{ address: poolToken.address, amount: poolTokenAmountOut }];
 
         const bptZeroPriceImpact =
-            pool.__typename === 'GqlPoolWeighted'
+            pool.__typename === 'GqlPoolGyro'
+                ? oldBnum(0)
+                : pool.__typename === 'GqlPoolWeighted'
                 ? poolWeightedBptForTokensZeroPriceImpact(tokenAmounts, pool)
                 : poolStableBptForTokensZeroPriceImpact(tokenAmounts, pool);
 
@@ -692,11 +697,13 @@ export class PoolComposableExitService {
         return singleAssetExit;
     }
 
-    private isComposableV1(pool: GqlPoolWeighted | GqlPoolPhantomStable | GqlPoolPhantomStableNested): boolean {
+    private isComposableV1(
+        pool: GqlPoolWeighted | GqlPoolPhantomStable | GqlPoolPhantomStableNested | GqlPoolGyro,
+    ): boolean {
         return pool.factory === networkConfig.balancer.composableStableV1Factory;
     }
 
-    private getPoolKind(pool: GqlPoolWeighted | GqlPoolPhantomStable | GqlPoolPhantomStableNested) {
+    private getPoolKind(pool: GqlPoolWeighted | GqlPoolPhantomStable | GqlPoolPhantomStableNested | GqlPoolGyro) {
         if (this.isComposableV1(pool)) {
             return BatchRelayerPoolKind.COMPOSABLE_STABLE;
         } else if (pool.__typename === 'GqlPoolPhantomStable' || pool.__typename === 'GqlPoolPhantomStableNested') {
@@ -715,7 +722,7 @@ export class PoolComposableExitService {
         toInternalBalance,
         inputReference,
     }: {
-        pool: GqlPoolWeighted | GqlPoolPhantomStable | GqlPoolPhantomStableNested;
+        pool: GqlPoolWeighted | GqlPoolPhantomStable | GqlPoolPhantomStableNested | GqlPoolGyro;
         bptIn: AmountHumanReadable;
         slippage: string;
         exitAmounts: TokenAmountHumanReadable[];
@@ -728,7 +735,7 @@ export class PoolComposableExitService {
                 ? this.batchRelayerService.toChainedReference(inputReference).toString()
                 : parseUnits(bptIn, 18).toString();
         const tokensWithPhantomBpt =
-            pool.__typename === 'GqlPoolWeighted'
+            pool.__typename === 'GqlPoolWeighted' || pool.__typename === 'GqlPoolGyro'
                 ? sortBy(pool.tokens, 'index')
                 : sortBy([...pool.tokens, { address: pool.address, decimals: 18, __typename: 'pool' }], 'address');
 
@@ -757,7 +764,7 @@ export class PoolComposableExitService {
             minAmountsOut: this.isComposableV1(pool) ? tokensWithPhantomBpt.map(() => '0') : minAmountsOut,
             userData: this.isComposableV1(pool)
                 ? defaultAbiCoder.encode(['uint256', 'uint256[]', 'uint256'], [1, amountsOutScaled, maxBptIn])
-                : pool.__typename === 'GqlPoolWeighted'
+                : pool.__typename === 'GqlPoolWeighted' || pool.__typename === 'GqlPoolGyro'
                 ? WeightedPoolEncoder.exitExactBPTInForTokensOut(maxBptIn)
                 : //TODO: move this to the composable stable encoder once its merged in
                   defaultAbiCoder.encode(['uint256', 'uint256'], [2, maxBptIn]),

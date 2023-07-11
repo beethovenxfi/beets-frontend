@@ -334,6 +334,31 @@ export async function poolQueryBatchSwap({
     return response.map((item: BigNumber) => item.toString());
 }
 
+export function poolGyroExactBPTInForTokenOut(
+    pool: GqlPoolGyro,
+    bptAmount: AmountHumanReadable,
+    tokenAddress: string,
+): AmountHumanReadable {
+    const totalPoolBalance = pool.tokens.map((token) => token.balance).reduce((a, b) => oldBnum(a).plus(b), oldBnum(0));
+    const tokenProportions = pool.tokens.map((token) => oldBnum(token.balance).div(totalPoolBalance).toString());
+
+    const token = poolGetRequiredToken(tokenAddress, pool.tokens);
+    const tokenBalance = oldBnumScaleAmount(token.balance, token.decimals);
+    const tokenIdx = pool.tokens.findIndex((token) => token.address === tokenAddress);
+    const tokenNormalizedWeight = oldBnum(tokenProportions[tokenIdx] || '0');
+    const bptAmountIn = oldBnumScaleAmount(bptAmount);
+
+    const tokenOut = SDK.WeightedMath._calcTokenOutGivenExactBptIn(
+        tokenBalance,
+        tokenNormalizedWeight,
+        bptAmountIn,
+        oldBnumScaleAmount(pool.dynamicData.totalShares),
+        oldBnumScaleAmount(pool.dynamicData.swapFee),
+    );
+
+    return formatFixed(tokenOut.toString(), token.decimals);
+}
+
 export function poolWeightedExactBPTInForTokenOut(
     pool: GqlPoolWeighted,
     bptAmount: AmountHumanReadable,
@@ -475,7 +500,7 @@ export function poolGetWrappedTokenFromLinearPoolToken(linearPoolToken: GqlPoolT
 }
 
 export function poolGetTotalShares(
-    pool: GqlPoolWeighted | GqlPoolPhantomStable | GqlPoolPhantomStableNested,
+    pool: GqlPoolWeighted | GqlPoolPhantomStable | GqlPoolPhantomStableNested | GqlPoolGyro,
 ): AmountHumanReadable {
     return pool.__typename === 'GqlPoolPhantomStableNested' ? pool.totalShares : pool.dynamicData.totalShares;
 }
@@ -528,7 +553,9 @@ export function poolGetPoolTokenForPossiblyNestedTokenOut(
     });
 }
 
-export function poolHasOnlyLinearBpts(pool: GqlPoolWeighted | GqlPoolPhantomStable | GqlPoolPhantomStableNested) {
+export function poolHasOnlyLinearBpts(
+    pool: GqlPoolWeighted | GqlPoolPhantomStable | GqlPoolPhantomStableNested | GqlPoolGyro,
+) {
     for (const token of pool.tokens) {
         if (token.__typename !== 'GqlPoolTokenLinear') {
             return false;
