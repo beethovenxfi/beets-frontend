@@ -12,19 +12,14 @@ import {
 } from '~/lib/services/pool/pool-types';
 import { AmountHumanReadable, TokenAmountHumanReadable } from '~/lib/services/token/token-types';
 import {
-    oldBnumPoolScaleTokenAmounts,
     poolGetNestedTokenEstimateForPoolTokenAmounts,
     poolGetPoolTokenForPossiblyNestedTokenOut,
     poolGetProportionalJoinAmountsForFixedAmount,
-    poolGyroExactTokensInForBPTOut,
 } from '~/lib/services/pool/lib/util';
 import { replaceEthWithWeth } from '~/lib/services/token/token-util';
 import { PoolProportionalInvestService } from './lib/pool-proportional-invest.service';
 import { PoolBaseService } from './lib/pool-base.service';
-import { formatFixed } from '@ethersproject/bignumber';
-import { oldBnum, oldBnumScaleAmount } from './lib/old-big-number';
 import { BatchRelayerService } from '../batch-relayer/batch-relayer.service';
-import * as SDK from '@georgeroman/balancer-v2-pools';
 import { networkProvider } from '~/lib/global/network';
 import { PoolComposableJoinService } from './lib/pool-composable-join.service';
 import { PoolComposableExitService } from './lib/pool-composable-exit.service';
@@ -111,29 +106,8 @@ export class PoolGyroService implements PoolService {
     }
 
     public async joinGetContractCallData(data: PoolJoinData): Promise<PoolJoinContractCallData> {
-        // // rn gyro only supports "ALL_TOKENS_IN_FOR_EXACT_BPT_OUT"
-        // const bptAmountOut = 'minimumBpt' in data ? data.minimumBpt : '0';
-        // const assets = this.pool.tokens.map((token) =>
-        //     data.wethIsEth ? this.baseService.wethToZero(token.address) : token.address,
-        // );
-        // const maxAmountsIn = poolScaleTokenAmounts(data.maxAmountsIn, this.pool.tokens);
-        // const userData = WeightedPoolEncoder.joinAllTokensInForExactBPTOut(parseUnits(bptAmountOut));
-
-        // if (
-        //     (this.pool.staking?.type === 'MASTER_CHEF' && data.zapIntoMasterchefFarm) ||
-        //     (this.pool.staking?.type === 'GAUGE' && data.zapIntoGauge)
-        // ) {
-        //     return this.batchRelayerService.encodeJoinPoolAndStake({
-        //         userData,
-        //         pool: this.pool,
-        //         assets,
-        //         maxAmountsIn,
-        //         userAddress: data.userAddress,
-        //     });
-        // }
-
-        // return { type: 'JoinPool', assets, maxAmountsIn, userData };
-
+        // rn gyro only supports "ALL_TOKENS_IN_FOR_EXACT_BPT_OUT"
+        // TODO check this again
         if (data.kind !== 'ExactTokensInForBPTOut') {
             throw new Error('unsupported join type');
         }
@@ -158,24 +132,6 @@ export class PoolGyroService implements PoolService {
         //TODO: cache data while tokenAmountsIn and slippage are constant
         return data;
     }
-
-    // public async joinGetBptOutAndPriceImpactForTokensIn(
-    //     tokenAmountsIn: TokenAmountHumanReadable[],
-    //     slippage: AmountHumanReadable,
-    // ): Promise<PoolJoinEstimateOutput> {
-    //     const bptAmount = poolGyroExactTokensInForBPTOut(tokenAmountsIn, this.pool);
-
-    //     if (bptAmount.lt(0)) {
-    //         return { priceImpact: 0, minBptReceived: '0' };
-    //     }
-
-    //     const minBptReceived = bptAmount.minus(bptAmount.times(slippage)).toFixed(0);
-
-    //     return {
-    //         priceImpact: 0,
-    //         minBptReceived: formatFixed(minBptReceived.toString(), 18),
-    //     };
-    // }
 
     public async joinGetBptOutAndPriceImpactForTokensIn(
         tokenAmountsIn: TokenAmountHumanReadable[],
