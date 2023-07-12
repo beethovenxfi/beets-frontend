@@ -1,4 +1,3 @@
-import { GqlPoolWeighted } from '~/apollo/generated/graphql-codegen-generated';
 import {
     ComposablePoolJoinBatchSwapStep,
     ComposablePoolJoinPoolStep,
@@ -30,7 +29,6 @@ import {
     poolStableExactTokensInForBPTOut,
     poolWeightedBptForTokensZeroPriceImpact,
     poolWeightedExactTokensInForBPTOut,
-    tokenAmountsAllZero,
 } from '~/lib/services/pool/lib/util';
 import { BaseProvider } from '@ethersproject/providers';
 import { formatFixed, parseFixed } from '@ethersproject/bignumber';
