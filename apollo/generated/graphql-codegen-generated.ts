@@ -87,24 +87,27 @@ export interface GqlLge {
     adminAddress: Scalars['String'];
     adminIsMultisig: Scalars['Boolean'];
     bannerImageUrl: Scalars['String'];
+    collateralAddress: Scalars['String'];
     collateralAmount: Scalars['String'];
+    collateralDecimals: Scalars['Int'];
     collateralEndWeight: Scalars['Int'];
     collateralStartWeight: Scalars['Int'];
-    collateralTokenAddress: Scalars['String'];
     description: Scalars['String'];
     discordUrl: Scalars['String'];
-    endDate: Scalars['String'];
+    endTimestamp: Scalars['Int'];
     id: Scalars['ID'];
     mediumUrl: Scalars['String'];
     name: Scalars['String'];
-    startDate: Scalars['String'];
-    swapFeePercentage: Scalars['String'];
+    startTimestamp: Scalars['Int'];
+    swapFee: Scalars['String'];
     telegramUrl: Scalars['String'];
+    tokenAddress: Scalars['String'];
     tokenAmount: Scalars['String'];
-    tokenContractAddress: Scalars['String'];
+    tokenDecimals: Scalars['Int'];
     tokenEndWeight: Scalars['Int'];
     tokenIconUrl: Scalars['String'];
     tokenStartWeight: Scalars['Int'];
+    tokenSymbol: Scalars['String'];
     twitterUrl: Scalars['String'];
     websiteUrl: Scalars['String'];
 }
@@ -112,26 +115,33 @@ export interface GqlLge {
 export interface GqlLgeCreateInput {
     address: Scalars['String'];
     bannerImageUrl: Scalars['String'];
+    collateralAddress: Scalars['String'];
     collateralAmount: Scalars['String'];
     collateralEndWeight: Scalars['Int'];
     collateralStartWeight: Scalars['Int'];
-    collateralTokenAddress: Scalars['String'];
     description: Scalars['String'];
     discordUrl: Scalars['String'];
-    endDate: Scalars['String'];
+    endTimestamp: Scalars['Int'];
     id: Scalars['ID'];
     mediumUrl: Scalars['String'];
     name: Scalars['String'];
-    startDate: Scalars['String'];
-    swapFeePercentage: Scalars['String'];
+    startTimestamp: Scalars['Int'];
+    swapFee: Scalars['String'];
     telegramUrl: Scalars['String'];
+    tokenAddress: Scalars['String'];
     tokenAmount: Scalars['String'];
-    tokenContractAddress: Scalars['String'];
     tokenEndWeight: Scalars['Int'];
     tokenIconUrl: Scalars['String'];
     tokenStartWeight: Scalars['Int'];
     twitterUrl: Scalars['String'];
     websiteUrl: Scalars['String'];
+}
+
+export interface GqlLgePriceData {
+    __typename: 'GqlLgePriceData';
+    price: Scalars['Float'];
+    timestamp: Scalars['Int'];
+    type: Scalars['String'];
 }
 
 export interface GqlLgeUpdateInput {
@@ -1173,6 +1183,7 @@ export interface Mutation {
     beetsSyncFbeetsRatio: Scalars['String'];
     cacheAverageBlockTime: Scalars['String'];
     lgeCreate: GqlLge;
+    lgeSyncFromSanity: Scalars['String'];
     poolBlackListAddPool: Scalars['String'];
     poolBlackListRemovePool: Scalars['String'];
     poolDeletePool: Scalars['String'];
@@ -1224,7 +1235,6 @@ export interface Mutation {
 
 export interface MutationLgeCreateArgs {
     lge: GqlLgeCreateInput;
-    signature: Scalars['String'];
 }
 
 export interface MutationPoolBlackListAddPoolArgs {
@@ -1305,6 +1315,7 @@ export interface Query {
     contentGetNewsItems: Array<GqlContentNewsItem>;
     latestSyncedBlocks: GqlLatestSyncedBlocks;
     lge: GqlLge;
+    lgeGetChartData: Array<Maybe<GqlLgePriceData>>;
     lges: Array<GqlLge>;
     poolGetAllPoolsSnapshots: Array<GqlPoolSnapshot>;
     poolGetBatchSwaps: Array<GqlPoolBatchSwap>;
@@ -1351,6 +1362,10 @@ export interface QueryBeetsPoolGetReliquaryFarmSnapshotsArgs {
 }
 
 export interface QueryLgeArgs {
+    id: Scalars['ID'];
+}
+
+export interface QueryLgeGetChartDataArgs {
     id: Scalars['ID'];
 }
 
@@ -1608,6 +1623,7 @@ export type GetAppGlobalDataQuery = {
     beetsGetFbeetsRatio: string;
     blocksGetBlocksPerDay: number;
     blocksGetAverageBlockTime: number;
+    veBALTotalSupply: string;
     tokenGetTokens: Array<{
         __typename: 'GqlToken';
         address: string;
@@ -1722,6 +1738,7 @@ export type GetUserDataQueryVariables = Exact<{ [key: string]: never }>;
 
 export type GetUserDataQuery = {
     __typename: 'Query';
+    veBALUserBalance: string;
     balances: Array<{
         __typename: 'GqlUserPoolBalance';
         poolId: string;
@@ -2131,102 +2148,6 @@ export type GqlPoolCardDataFragment = {
             weight?: string | null;
             symbol: string;
         }> | null;
-    }>;
-};
-
-export type GqlLgeFragment = {
-    __typename: 'GqlLge';
-    address: string;
-    adminAddress: string;
-    adminIsMultisig: boolean;
-    bannerImageUrl: string;
-    collateralAmount: string;
-    collateralEndWeight: number;
-    collateralStartWeight: number;
-    collateralTokenAddress: string;
-    description: string;
-    discordUrl: string;
-    endDate: string;
-    id: string;
-    mediumUrl: string;
-    name: string;
-    startDate: string;
-    swapFeePercentage: string;
-    telegramUrl: string;
-    tokenAmount: string;
-    tokenContractAddress: string;
-    tokenEndWeight: number;
-    tokenIconUrl: string;
-    tokenStartWeight: number;
-    twitterUrl: string;
-    websiteUrl: string;
-};
-
-export type GetLgeQueryVariables = Exact<{
-    id: Scalars['ID'];
-}>;
-
-export type GetLgeQuery = {
-    __typename: 'Query';
-    lge: {
-        __typename: 'GqlLge';
-        address: string;
-        adminAddress: string;
-        adminIsMultisig: boolean;
-        bannerImageUrl: string;
-        collateralAmount: string;
-        collateralEndWeight: number;
-        collateralStartWeight: number;
-        collateralTokenAddress: string;
-        description: string;
-        discordUrl: string;
-        endDate: string;
-        id: string;
-        mediumUrl: string;
-        name: string;
-        startDate: string;
-        swapFeePercentage: string;
-        telegramUrl: string;
-        tokenAmount: string;
-        tokenContractAddress: string;
-        tokenEndWeight: number;
-        tokenIconUrl: string;
-        tokenStartWeight: number;
-        twitterUrl: string;
-        websiteUrl: string;
-    };
-};
-
-export type GetLgesQueryVariables = Exact<{ [key: string]: never }>;
-
-export type GetLgesQuery = {
-    __typename: 'Query';
-    lges: Array<{
-        __typename: 'GqlLge';
-        address: string;
-        adminAddress: string;
-        adminIsMultisig: boolean;
-        bannerImageUrl: string;
-        collateralAmount: string;
-        collateralEndWeight: number;
-        collateralStartWeight: number;
-        collateralTokenAddress: string;
-        description: string;
-        discordUrl: string;
-        endDate: string;
-        id: string;
-        mediumUrl: string;
-        name: string;
-        startDate: string;
-        swapFeePercentage: string;
-        telegramUrl: string;
-        tokenAmount: string;
-        tokenContractAddress: string;
-        tokenEndWeight: number;
-        tokenIconUrl: string;
-        tokenStartWeight: number;
-        twitterUrl: string;
-        websiteUrl: string;
     }>;
 };
 
@@ -5508,34 +5429,6 @@ export const GqlPoolFeaturedPoolGroupFragmentDoc = gql`
     }
     ${GqlPoolCardDataFragmentDoc}
 `;
-export const GqlLgeFragmentDoc = gql`
-    fragment GqlLge on GqlLge {
-        address
-        adminAddress
-        adminIsMultisig
-        bannerImageUrl
-        collateralAmount
-        collateralEndWeight
-        collateralStartWeight
-        collateralTokenAddress
-        description
-        discordUrl
-        endDate
-        id
-        mediumUrl
-        name
-        startDate
-        swapFeePercentage
-        telegramUrl
-        tokenAmount
-        tokenContractAddress
-        tokenEndWeight
-        tokenIconUrl
-        tokenStartWeight
-        twitterUrl
-        websiteUrl
-    }
-`;
 export const GqlPoolLinearFragmentDoc = gql`
     fragment GqlPoolLinear on GqlPoolLinear {
         id
@@ -5983,6 +5876,7 @@ export const GetAppGlobalDataDocument = gql`
         beetsGetFbeetsRatio
         blocksGetBlocksPerDay
         blocksGetAverageBlockTime
+        veBALTotalSupply: veBalGetTotalSupply
     }
 `;
 
@@ -6427,6 +6321,7 @@ export const GetUserDataDocument = gql`
                 }
             }
         }
+        veBALUserBalance: veBalGetUserBalance
     }
 `;
 
@@ -6645,77 +6540,6 @@ export function useGetHomeNewsItemsLazyQuery(
 export type GetHomeNewsItemsQueryHookResult = ReturnType<typeof useGetHomeNewsItemsQuery>;
 export type GetHomeNewsItemsLazyQueryHookResult = ReturnType<typeof useGetHomeNewsItemsLazyQuery>;
 export type GetHomeNewsItemsQueryResult = Apollo.QueryResult<GetHomeNewsItemsQuery, GetHomeNewsItemsQueryVariables>;
-export const GetLgeDocument = gql`
-    query GetLge($id: ID!) {
-        lge: lge(id: $id) {
-            ...GqlLge
-        }
-    }
-    ${GqlLgeFragmentDoc}
-`;
-
-/**
- * __useGetLgeQuery__
- *
- * To run a query within a React component, call `useGetLgeQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetLgeQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetLgeQuery({
- *   variables: {
- *      id: // value for 'id'
- *   },
- * });
- */
-export function useGetLgeQuery(baseOptions: Apollo.QueryHookOptions<GetLgeQuery, GetLgeQueryVariables>) {
-    const options = { ...defaultOptions, ...baseOptions };
-    return Apollo.useQuery<GetLgeQuery, GetLgeQueryVariables>(GetLgeDocument, options);
-}
-export function useGetLgeLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetLgeQuery, GetLgeQueryVariables>) {
-    const options = { ...defaultOptions, ...baseOptions };
-    return Apollo.useLazyQuery<GetLgeQuery, GetLgeQueryVariables>(GetLgeDocument, options);
-}
-export type GetLgeQueryHookResult = ReturnType<typeof useGetLgeQuery>;
-export type GetLgeLazyQueryHookResult = ReturnType<typeof useGetLgeLazyQuery>;
-export type GetLgeQueryResult = Apollo.QueryResult<GetLgeQuery, GetLgeQueryVariables>;
-export const GetLgesDocument = gql`
-    query getLges {
-        lges: lges {
-            ...GqlLge
-        }
-    }
-    ${GqlLgeFragmentDoc}
-`;
-
-/**
- * __useGetLgesQuery__
- *
- * To run a query within a React component, call `useGetLgesQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetLgesQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetLgesQuery({
- *   variables: {
- *   },
- * });
- */
-export function useGetLgesQuery(baseOptions?: Apollo.QueryHookOptions<GetLgesQuery, GetLgesQueryVariables>) {
-    const options = { ...defaultOptions, ...baseOptions };
-    return Apollo.useQuery<GetLgesQuery, GetLgesQueryVariables>(GetLgesDocument, options);
-}
-export function useGetLgesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetLgesQuery, GetLgesQueryVariables>) {
-    const options = { ...defaultOptions, ...baseOptions };
-    return Apollo.useLazyQuery<GetLgesQuery, GetLgesQueryVariables>(GetLgesDocument, options);
-}
-export type GetLgesQueryHookResult = ReturnType<typeof useGetLgesQuery>;
-export type GetLgesLazyQueryHookResult = ReturnType<typeof useGetLgesLazyQuery>;
-export type GetLgesQueryResult = Apollo.QueryResult<GetLgesQuery, GetLgesQueryVariables>;
 export const GetLinearPoolsDocument = gql`
     query GetLinearPools {
         pools: poolGetLinearPools {

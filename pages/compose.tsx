@@ -1,6 +1,4 @@
 import { initializeApolloClient, loadApolloState } from '~/apollo/client';
-import { GetLges } from '~/apollo/generated/operations';
-import { GetLgesQuery, GetLgesQueryVariables } from '~/apollo/generated/graphql-codegen-generated';
 import Head from 'next/head';
 import { PageMasthead } from '~/components/masthead/PageMasthead';
 import NextImage from 'next/image';
@@ -56,8 +54,7 @@ export async function getStaticProps() {
 
     return loadApolloState({
         client,
-        pageSetup: async () => {
-        },
+        pageSetup: async () => {},
     });
 }
 

@@ -105,6 +105,8 @@ export interface NetworkConfig {
         rewardHelperAddress: string;
         balancerPseudoMinterAddress: string;
         veBALDelegationProxyAddress: string;
+        workingBalanceHelperAddress: string;
+        checkpointHelper: string;
     };
     createPoolUrl: string;
     launchUrl?: string;
@@ -121,4 +123,5 @@ export interface NetworkConfig {
     };
     maBeetsEnabled: boolean;
     claimAllRewardsEnabled: boolean;
+    layerZeroChainId: number;
 }
