@@ -46,13 +46,13 @@ export function useStakingWithdraw(staking?: GqlPoolStaking | null, customWithdr
                     if (gaugeVersion === 1) {
                         return submit({
                             args: [parseUnits(amount, 18), true],
-                            toastText: 'Withdraw and claim rewards',
+                            toastText: 'Withdraw',
                         });
                     }
                     if (gaugeVersion === 2) {
                         return submit({
                             args: [parseUnits(amount, 18)],
-                            toastText: 'Withdraw and claim rewards',
+                            toastText: 'Withdraw',
                         });
                     }
                 case 'FRESH_BEETS':
