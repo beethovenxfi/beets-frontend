@@ -1,7 +1,0 @@
-#import "../lge/lge.gql"
-
-query getLges {
-    lges: lges {
-        ...GqlLge
-    }
-}
