@@ -1,15 +1,20 @@
 import { Box, Button, HStack, Heading, Text, VStack, useDisclosure } from '@chakra-ui/react';
 import React, { useRef, useState } from 'react';
-import { useCompose } from './ComposeProvider';
+import { PoolCreationToken, useCompose } from './ComposeProvider';
 import { TokenInput } from '~/components/inputs/TokenInput';
 import TokenRow from '~/components/token/TokenRow';
 import Card from '~/components/card/Card';
-import { Plus, X } from 'react-feather';
+import { Lock, Plus, Unlock, X } from 'react-feather';
 import { BeetsBox } from '~/components/box/BeetsBox';
 import BeetsTooltip from '~/components/tooltip/BeetsTooltip';
 import { TokenSelectModal } from '~/components/token-select/TokenSelectModal';
 import { GenericTokenSelectModal } from '~/components/token-select/GenericTokenSelectModal';
 import { ToastType, useToast } from '~/components/toast/BeetsToast';
+import { BeetsInput } from '~/components/inputs/BeetsInput';
+import { useDebouncedCallback } from 'use-debounce';
+import { isNaN, update } from 'lodash';
+import Scales from '~/assets/icons/scales.svg';
+import Image from 'next/image';
 
 interface Props {}
 
@@ -23,18 +28,40 @@ function AddTokenButton(_: any) {
 }
 
 export default function AdvancedPoolComposeTokens(props: Props) {
-    const { poolTypes, tokens, MAX_TOKENS, removeTokenByAddress, removeTokenByIndex, setTokens } = useCompose();
+    const {
+        poolTypes,
+        tokens,
+        MAX_TOKENS,
+        removeTokenByAddress,
+        removeTokenByIndex,
+        toggleLockTokenByAddress,
+        toggleLockTokenByIndex,
+        setTokens,
+        distributeTokenWeights,
+    } = useCompose();
     const [activeTokenSelectIndex, setActiveTokenSelectIndex] = useState<number | null>(null);
     const tokenSelectDisclosure = useDisclosure();
-    const { showToast, removeToast } = useToast();
+    const { showToast } = useToast();
     const isMaxTokens = tokens.length === MAX_TOKENS;
     const finalRefTokenIn = useRef(null);
+
+    const debouncedDistributeTokens = useDebouncedCallback((tokens: PoolCreationToken[]) => {
+        distributeTokenWeights(tokens);
+    }, 100);
 
     function removeToken(tokenAddress: string, index: number) {
         if (!tokenAddress) {
             removeTokenByIndex(index);
         } else {
             removeTokenByAddress(tokenAddress);
+        }
+    }
+
+    function toggleLockToken(tokenAddress: string, index: number) {
+        if (!tokenAddress) {
+            toggleLockTokenByIndex(index);
+        } else {
+            toggleLockTokenByAddress(tokenAddress);
         }
     }
 
@@ -73,8 +100,24 @@ export default function AdvancedPoolComposeTokens(props: Props) {
                 ...newTokens[tokenIndex],
                 amount: event.currentTarget.value,
             };
-            console.log('newTokens', newTokens);
             setTokens(newTokens);
+        };
+    }
+
+    function handleTokenWeightChangedForIndex(tokenIndex: number | null) {
+        // type doesn't matter here, just a blank event
+        if (tokenIndex === null) return (event: any) => {};
+        return function (event: { currentTarget: { value: string } }) {
+            let updatedDecimalWeight = parseInt(event.currentTarget.value, 10);
+            if (isNaN(updatedDecimalWeight)) updatedDecimalWeight = 0;
+            const newTokens = [...tokens];
+            newTokens[tokenIndex] = {
+                ...newTokens[tokenIndex],
+                weight: updatedDecimalWeight,
+                isLocked: true,
+            };
+            setTokens(newTokens);
+            debouncedDistributeTokens(newTokens);
         };
     }
 
@@ -94,25 +137,73 @@ export default function AdvancedPoolComposeTokens(props: Props) {
                             <HStack key={`compose-token-select-${token}-${i}`} width="full">
                                 <BeetsBox width="full" pl="2" pr="3" py="2" key={`${token.address}-${i}`}>
                                     <HStack width="full" spacing="4">
-                                        <VStack spacing="0" width="full">
+                                        <HStack spacing="2" width="full">
                                             <TokenInput
                                                 toggleTokenSelect={() => showTokenSelect(i)}
                                                 address={token.address}
                                                 value={token.amount}
                                                 onChange={handleTokenAmountChangedForIndex(i)}
                                             />
+                                            <VStack>
+                                                <BeetsTooltip noImage label="Adjust this token's pool weight">
+                                                    <BeetsInput
+                                                        wrapperProps={{
+                                                            height: '40px',
+                                                            padding: 'none',
+                                                            width: '70px',
+                                                        }}
+                                                        height="100%"
+                                                        width="70px"
+                                                        py="0"
+                                                        minHeight="none"
+                                                        fontWeight="medium"
+                                                        fontSize="1rem"
+                                                        px="2"
+                                                        placeholder="50"
+                                                        value={token.weight}
+                                                        onChange={handleTokenWeightChangedForIndex(i)}
+                                                        // borderColor={isUsingCustomFee ? 'beets.green' : 'transparent'}
+                                                        // borderWidth={2}
+                                                    >
+                                                        <Box
+                                                            top="0"
+                                                            bottom="0"
+                                                            transform="translateY(20%)"
+                                                            right="12px"
+                                                            position="absolute"
+                                                        >
+                                                            <Text color="whiteAlpha.600">%</Text>
+                                                        </Box>
+                                                    </BeetsInput>
+                                                </BeetsTooltip>
+                                            </VStack>
+                                        </HStack>
+                                        <VStack>
+                                            <BeetsTooltip noImage label="Lock this token's weight">
+                                                <Button
+                                                    onClick={() => toggleLockToken(token.address, i)}
+                                                    bg={token.isLocked ? 'beets.highlight' : 'whiteAlpha.400'}
+                                                    color={token.isLocked ? 'beets.base.700' : 'inherit'}
+                                                    _hover={{ bg: 'beets.highlight', color: 'beets.base.700' }}
+                                                    rounded="full"
+                                                    p="0"
+                                                >
+                                                    {token.isLocked && <Lock width="12px" />}
+                                                    {!token.isLocked && <Unlock width="12px" />}
+                                                </Button>
+                                            </BeetsTooltip>
+                                            <BeetsTooltip noImage label="Remove this token">
+                                                <Button
+                                                    onClick={() => removeToken(token.address, i)}
+                                                    bg="red.500"
+                                                    _hover={{ bg: 'red.600' }}
+                                                    rounded="full"
+                                                    p="0"
+                                                >
+                                                    <X width="12px" />
+                                                </Button>
+                                            </BeetsTooltip>
                                         </VStack>
-                                        <BeetsTooltip noImage label="Remove this token">
-                                            <Button
-                                                onClick={() => removeToken(token.address, i)}
-                                                bg="red.500"
-                                                _hover={{ bg: 'red.600' }}
-                                                rounded="full"
-                                                p="0"
-                                            >
-                                                <X width="12px" />
-                                            </Button>
-                                        </BeetsTooltip>
                                     </HStack>
                                 </BeetsBox>
                             </HStack>

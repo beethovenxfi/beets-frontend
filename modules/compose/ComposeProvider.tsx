@@ -1,3 +1,4 @@
+import { sumBy } from 'lodash';
 import React, { ReactNode, useContext, useEffect, useState } from 'react';
 
 const POOL_TYPES = [
@@ -39,6 +40,8 @@ export type PoolCreationExperience = 'simple' | 'advanced';
 export interface PoolCreationToken {
     address: string;
     amount: string;
+    isLocked: boolean;
+    weight: number;
 }
 
 function _useCompose() {
@@ -49,8 +52,8 @@ function _useCompose() {
     const [isUsingCustomFee, setIsUsingCustomFee] = useState(false);
     const [feeManager, setFeeManager] = useState<string | null>(null);
     const [tokens, setTokens] = useState<PoolCreationToken[]>([
-        { address: '', amount: '0.0' },
-        { address: '', amount: '0.0' },
+        { address: '', amount: '0.0', isLocked: false, weight: 50 },
+        { address: '', amount: '0.0', isLocked: false, weight: 50 },
     ]);
 
     useEffect(() => {
@@ -68,15 +71,69 @@ function _useCompose() {
     }
 
     function addBlankToken() {
-        setTokens([...tokens, { address: '', amount: '0.0' }]);
+        const newTokens = [...tokens, { address: '', amount: '0.0', weight: 0, isLocked: false }];
+        setTokens(newTokens);
+        distributeTokenWeights(newTokens);
     }
 
     function removeTokenByIndex(index: number) {
-        setTokens(tokens.filter((_, i) => i !== index));
+        const newTokens = tokens.filter((_, i) => i !== index);
+        setTokens(newTokens);
+        distributeTokenWeights(newTokens);
     }
 
     function removeTokenByAddress(address: string) {
-        setTokens(tokens.filter((token) => token.address !== address));
+        const newTokens = tokens.filter((token) => token.address !== address);
+        setTokens(newTokens);
+        distributeTokenWeights(newTokens);
+    }
+
+    function toggleLockTokenByIndex(index: number) {
+        const newTokens = tokens.map((token, i) => {
+            if (i === index) {
+                return {
+                    ...token,
+                    isLocked: !token.isLocked,
+                };
+            }
+            return token;
+        });
+        setTokens(newTokens);
+        distributeTokenWeights(newTokens);
+    }
+
+    function toggleLockTokenByAddress(address: string) {
+        const newTokens = tokens.map((token) => {
+            if (token.address === address) {
+                return {
+                    ...token,
+                    isLocked: !token.isLocked,
+                };
+            }
+            return token;
+        });
+        setTokens(newTokens);
+        distributeTokenWeights(newTokens);
+    }
+
+    function distributeTokenWeights(tokens: PoolCreationToken[]) {
+        const lockedTokens = tokens.filter((token) => token.isLocked);
+        const lockedWeight = sumBy(lockedTokens, (token) => token.weight);
+        const distributableWeight = 100 - lockedWeight;
+        const numUnlockedTokens = tokens.length - lockedTokens.length;
+
+        if (distributableWeight > 0 && numUnlockedTokens > 0) {
+            const distributableWeightPerUnlockedToken = distributableWeight / numUnlockedTokens;
+
+            const tokensWithDistributedWeights = tokens.map((token) => {
+                if (token.isLocked) return token;
+                return {
+                    ...token,
+                    weight: distributableWeightPerUnlockedToken,
+                };
+            });
+            setTokens(tokensWithDistributedWeights);
+        }
     }
 
     return {
@@ -98,5 +155,8 @@ function _useCompose() {
         removeTokenByAddress,
         removeTokenByIndex,
         setTokens,
+        distributeTokenWeights,
+        toggleLockTokenByAddress,
+        toggleLockTokenByIndex,
     };
 }
