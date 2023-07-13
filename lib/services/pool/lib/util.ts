@@ -22,7 +22,11 @@ import {
 import OldBigNumber from 'bignumber.js';
 import { BigNumber } from 'ethers';
 import { formatUnits, parseUnits } from '@ethersproject/units';
-import { PoolJoinExactTokensInForBPTOut, PoolWithPossibleNesting } from '~/lib/services/pool/pool-types';
+import {
+    PoolJoinAllTokensInForExactBPTOut,
+    PoolJoinExactTokensInForBPTOut,
+    PoolWithPossibleNesting,
+} from '~/lib/services/pool/pool-types';
 import { AddressZero, WeiPerEther, Zero } from '@ethersproject/constants';
 import * as SDK from '@georgeroman/balancer-v2-pools';
 import {
@@ -150,11 +154,11 @@ export function poolScaleSlippage(slippage: number | string) {
 }
 
 export function poolGetEthAmountFromJoinData(
-    data: PoolJoinExactTokensInForBPTOut,
+    data: PoolJoinExactTokensInForBPTOut | PoolJoinAllTokensInForExactBPTOut,
     wethAddress: string,
 ): { ethAmount: AmountHumanReadable | undefined; ethAmountScaled: AmountScaledString } {
     const ethAmount = data.wethIsEth
-        ? data.tokenAmountsIn.find((tokenAmountIn) => tokenAmountIn.address === wethAddress)
+        ? data.maxAmountsIn.find((tokenAmountIn) => tokenAmountIn.address === wethAddress)
         : undefined;
     const ethAmountScaled = (ethAmount ? parseUnits(ethAmount.amount, 18) : Zero).toString();
 

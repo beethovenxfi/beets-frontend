@@ -1,7 +1,11 @@
 import { useQuery } from 'react-query';
 import { useInvestState } from '~/modules/pool/invest/lib/useInvestState';
 import { replaceEthWithWeth, tokenAmountsGetArrayFromMap } from '~/lib/services/token/token-util';
-import { PoolJoinData } from '~/lib/services/pool/pool-types';
+import {
+    PoolJoinAllTokensInForExactBPTOut,
+    PoolJoinData,
+    PoolJoinExactTokensInForBPTOut,
+} from '~/lib/services/pool/pool-types';
 import { AmountHumanReadable } from '~/lib/services/token/token-types';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 import { useUserAccount } from '~/lib/user/useUserAccount';
@@ -20,16 +24,31 @@ export function usePoolJoinGetContractCallData(minimumBpt: AmountHumanReadable |
         ? inputAmountsArray.map(({ amount, address }) => ({ address: replaceEthWithWeth(address), amount }))
         : inputAmountsArray;
 
-    const data: PoolJoinData = {
-        kind: 'ExactTokensInForBPTOut',
-        tokenAmountsIn,
+    const baseData = {
         maxAmountsIn: tokenAmountsIn,
-        minimumBpt: minimumBpt || '0',
         userAddress: userAddress || '',
         wethIsEth: !!hasEth,
+        slippage,
+    };
+
+    const poolData =
+        pool.__typename === 'GqlPoolGyro'
+            ? ({
+                  kind: 'AllTokensInForExactBPTOut',
+                  bptAmountOut: minimumBpt,
+                  ...baseData,
+              } as PoolJoinAllTokensInForExactBPTOut)
+            : ({
+                  kind: 'ExactTokensInForBPTOut',
+                  tokenAmountsIn,
+                  minimumBpt: minimumBpt || '0',
+                  ...baseData,
+              } as PoolJoinExactTokensInForBPTOut);
+
+    const data: PoolJoinData = {
         zapIntoMasterchefFarm: !!pool.staking?.farm && zapEnabled,
         zapIntoGauge: !!pool.staking?.gauge && zapEnabled,
-        slippage,
+        ...poolData,
     };
 
     return useQuery(

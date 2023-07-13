@@ -6,6 +6,7 @@ import {
     ComposablePoolJoinProcessedStepsOutput,
     ComposablePoolJoinStep,
     ComposablePoolProcessedJoinStep,
+    PoolJoinAllTokensInForExactBPTOut,
     PoolJoinBatchRelayerContractCallData,
     PoolJoinExactTokensInForBPTOut,
     PoolWithPossibleNesting,
@@ -157,7 +158,7 @@ export class PoolComposableJoinService {
         data,
         processedSteps,
     }: {
-        data: PoolJoinExactTokensInForBPTOut;
+        data: PoolJoinExactTokensInForBPTOut | PoolJoinAllTokensInForExactBPTOut;
         processedSteps: ComposablePoolProcessedJoinStep[];
     }): Promise<PoolJoinBatchRelayerContractCallData> {
         const calls: string[] = [];

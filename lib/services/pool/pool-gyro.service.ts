@@ -105,8 +105,7 @@ export class PoolGyroService implements PoolService {
 
     public async joinGetContractCallData(data: PoolJoinData): Promise<PoolJoinContractCallData> {
         // rn gyro only supports "ALL_TOKENS_IN_FOR_EXACT_BPT_OUT"
-        // TODO check this again
-        if (data.kind !== 'ExactTokensInForBPTOut') {
+        if (data.kind !== 'AllTokensInForExactBPTOut') {
             throw new Error('unsupported join type');
         }
 
