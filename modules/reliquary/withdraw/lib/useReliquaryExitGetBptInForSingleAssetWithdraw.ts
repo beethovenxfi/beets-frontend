@@ -13,7 +13,12 @@ export function useReliquaryExitGetBptInForSingleAssetWithdraw() {
     const query = useQuery(
         ['exitGetBptInForSingleAssetWithdraw', singleAsset],
         async () => {
-            if (!singleAsset || singleAsset.amount === '' || parseFloat(singleAsset.amount) === 0) {
+            if (
+                !singleAsset ||
+                singleAsset.amount === '' ||
+                parseFloat(singleAsset.amount) === 0 ||
+                !poolService.exitGetBptInForSingleAssetWithdraw
+            ) {
                 return {
                     bptIn: '0',
                     priceImpact: 0,
