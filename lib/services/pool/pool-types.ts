@@ -205,7 +205,7 @@ export interface ComposablePoolJoinBatchSwapStep {
 
 export interface ComposablePoolJoinPoolStep {
     type: 'Join';
-    pool: GqlPoolWeighted | GqlPoolPhantomStable | GqlPoolPhantomStableNested | GqlPoolGyro;
+    pool: PoolWithPossibleNesting | GqlPoolPhantomStableNested;
     tokensIn: string[];
 }
 
@@ -222,7 +222,7 @@ export interface ComposablePoolJoinProcessedBatchSwapStep {
 
 export interface ComposablePoolJoinProcessedJoinPoolStep {
     type: 'Join';
-    pool: GqlPoolWeighted | GqlPoolPhantomStable | GqlPoolPhantomStableNested | GqlPoolGyro;
+    pool: PoolWithPossibleNesting | GqlPoolPhantomStableNested;
     priceImpact: number;
     minBptReceived: AmountHumanReadable;
     tokenAmountsIn: TokenAmountHumanReadable[];
