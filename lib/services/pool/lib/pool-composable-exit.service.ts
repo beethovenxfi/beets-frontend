@@ -20,7 +20,6 @@ import {
     poolGetProportionalExitAmountsForBptIn,
     poolGetTotalShares,
     poolGetWrappedTokenFromLinearPoolToken,
-    poolGyroExactBPTInForTokenOut,
     poolHasOnlyLinearBpts,
     poolQueryBatchSwap,
     poolStableBptForTokensZeroPriceImpact,
@@ -115,7 +114,7 @@ export class PoolComposableExitService {
 
         const { tokenAmountOut, priceImpact } = this.getAmountOutForBptIn({
             bptIn,
-            pool: this.pool,
+            pool: this.pool as GqlPoolPhantomStable | GqlPoolPhantomStableNested | GqlPoolWeighted,
             poolToken: singleAssetExit.poolToken,
         });
 
@@ -198,7 +197,7 @@ export class PoolComposableExitService {
 
         const { priceImpact } = this.getAmountOutForBptIn({
             bptIn,
-            pool: this.pool,
+            pool: this.pool as GqlPoolPhantomStable | GqlPoolPhantomStableNested | GqlPoolWeighted,
             poolToken: singleAssetExit.poolToken,
         });
 
@@ -220,7 +219,7 @@ export class PoolComposableExitService {
         if (this.isWeightedPool) {
             const { tokenAmountOut } = this.getAmountOutForBptIn({
                 bptIn: bptAmountIn,
-                pool: this.pool,
+                pool: this.pool as GqlPoolPhantomStable | GqlPoolPhantomStableNested | GqlPoolWeighted,
                 poolToken,
             });
 
@@ -640,7 +639,7 @@ export class PoolComposableExitService {
         poolToken,
     }: {
         bptIn: AmountHumanReadable;
-        pool: GqlPoolWeighted | GqlPoolPhantomStable | GqlPoolPhantomStableNested | GqlPoolGyro;
+        pool: GqlPoolWeighted | GqlPoolPhantomStable | GqlPoolPhantomStableNested;
         poolToken: GqlPoolTokenUnion;
     }): {
         tokenAmountOut: AmountHumanReadable;
@@ -649,17 +648,13 @@ export class PoolComposableExitService {
         const bptAmountScaled = oldBnumFromBnum(parseUnits(bptIn));
 
         const poolTokenAmountOut =
-            pool.__typename === 'GqlPoolGyro'
-                ? poolGyroExactBPTInForTokenOut(pool, bptIn, poolToken.address)
-                : pool.__typename === 'GqlPoolWeighted'
+            pool.__typename === 'GqlPoolWeighted'
                 ? poolWeightedExactBPTInForTokenOut(pool, bptIn, poolToken.address)
                 : poolStableExactBPTInForTokenOut(pool, bptIn, poolToken.address);
         const tokenAmounts = [{ address: poolToken.address, amount: poolTokenAmountOut }];
 
         const bptZeroPriceImpact =
-            pool.__typename === 'GqlPoolGyro'
-                ? oldBnum(0)
-                : pool.__typename === 'GqlPoolWeighted'
+            pool.__typename === 'GqlPoolWeighted'
                 ? poolWeightedBptForTokensZeroPriceImpact(tokenAmounts, pool)
                 : poolStableBptForTokensZeroPriceImpact(tokenAmounts, pool);
 

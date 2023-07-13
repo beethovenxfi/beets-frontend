@@ -1,10 +1,8 @@
 import { GqlPoolGyro } from '~/apollo/generated/graphql-codegen-generated';
 import {
     ComposablePoolJoinProcessedStepsOutput,
-    PoolExitBptInSingleAssetWithdrawOutput,
     PoolExitContractCallData,
     PoolExitData,
-    PoolExitSingleAssetWithdrawForBptInOutput,
     PoolJoinContractCallData,
     PoolJoinData,
     PoolJoinEstimateOutput,
@@ -151,27 +149,6 @@ export class PoolGyroService implements PoolService {
         tokensOut: string[],
     ): Promise<TokenAmountHumanReadable[]> {
         return this.composableExitService.exitGetProportionalWithdrawEstimate(bptIn, tokensOut);
-    }
-
-    public async exitGetBptInForSingleAssetWithdraw(
-        tokenAmount: TokenAmountHumanReadable,
-    ): Promise<PoolExitBptInSingleAssetWithdrawOutput> {
-        // rn gyro does not support single asset withdraw
-        return {
-            bptIn: '0',
-            priceImpact: 0,
-        };
-    }
-
-    public async exitGetSingleAssetWithdrawForBptIn(
-        bptIn: AmountHumanReadable,
-        tokenOutAddress: string,
-    ): Promise<PoolExitSingleAssetWithdrawForBptInOutput> {
-        // rn gyro does not support single asset withdraw
-        return {
-            tokenAmount: '0',
-            priceImpact: 0,
-        };
     }
 
     public async exitGetContractCallData(data: PoolExitData): Promise<PoolExitContractCallData> {

@@ -35,11 +35,11 @@ export interface PoolService {
         bptIn: AmountHumanReadable,
         tokensIn: string[],
     ): Promise<TokenAmountHumanReadable[]>;
-    exitGetSingleAssetWithdrawForBptIn(
+    exitGetSingleAssetWithdrawForBptIn?(
         bptIn: AmountHumanReadable,
         tokenOutAddress: string,
     ): Promise<PoolExitSingleAssetWithdrawForBptInOutput>;
-    exitGetBptInForSingleAssetWithdraw(
+    exitGetBptInForSingleAssetWithdraw?(
         tokenAmount: TokenAmountHumanReadable,
     ): Promise<PoolExitBptInSingleAssetWithdrawOutput>;
     exitGetContractCallData(data: PoolExitData): Promise<PoolExitContractCallData>;
