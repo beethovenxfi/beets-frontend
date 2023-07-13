@@ -22,11 +22,7 @@ import {
 import OldBigNumber from 'bignumber.js';
 import { BigNumber } from 'ethers';
 import { formatUnits, parseUnits } from '@ethersproject/units';
-import {
-    PoolJoinEstimateOutput,
-    PoolJoinExactTokensInForBPTOut,
-    PoolWithPossibleNesting,
-} from '~/lib/services/pool/pool-types';
+import { PoolJoinExactTokensInForBPTOut, PoolWithPossibleNesting } from '~/lib/services/pool/pool-types';
 import { AddressZero, WeiPerEther, Zero } from '@ethersproject/constants';
 import * as SDK from '@georgeroman/balancer-v2-pools';
 import {
