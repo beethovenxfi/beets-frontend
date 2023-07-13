@@ -12,7 +12,7 @@ export function useReliquaryExitGetSingleAssetWithdrawForBptIn() {
     return useQuery(
         ['exitGetSingleAssetWithdrawForBptIn', userWalletBptBalance, singleAsset?.address],
         async () => {
-            if (!singleAsset) {
+            if (!singleAsset || !poolService.exitGetSingleAssetWithdrawForBptIn) {
                 return {
                     tokenAmount: '0',
                     priceImpact: 0,
