@@ -1,6 +1,10 @@
 import { Interface } from '@ethersproject/abi';
 import GaugeActionsAbi from '~/lib/abi/GaugeActions.json';
-import { EncodeGaugeDepositInput } from '~/lib/services/batch-relayer/relayer-types';
+import {
+    EncodeGaugeClaimRewardsInput,
+    EncodeGaugeDepositInput,
+    EncodeGaugeWithdrawInput,
+} from '~/lib/services/batch-relayer/relayer-types';
 
 export class GaugeActionsService {
     public encodeDeposit(params: EncodeGaugeDepositInput): string {
@@ -14,7 +18,7 @@ export class GaugeActionsService {
         ]);
     }
 
-    public encodeWithdraw(params: EncodeGaugeDepositInput): string {
+    public encodeWithdraw(params: EncodeGaugeWithdrawInput): string {
         const gaugeActionsLibrary = new Interface(GaugeActionsAbi);
 
         return gaugeActionsLibrary.encodeFunctionData('gaugeWithdraw', [
@@ -23,5 +27,11 @@ export class GaugeActionsService {
             params.recipient,
             params.amount,
         ]);
+    }
+
+    public encodeClaimRewards(params: EncodeGaugeClaimRewardsInput): string {
+        const gaugeActionsLibrary = new Interface(GaugeActionsAbi);
+
+        return gaugeActionsLibrary.encodeFunctionData('gaugeClaimRewards', [params.gauges]);
     }
 }

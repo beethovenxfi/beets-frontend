@@ -21,12 +21,13 @@ import { useApproveToken } from '~/lib/util/useApproveToken';
 import { BeetsTransactionStepsSubmit } from '~/components/button/BeetsTransactionStepsSubmit';
 import { BeetsBox } from '~/components/box/BeetsBox';
 import { usePoolUserDepositBalance } from '~/modules/pool/lib/usePoolUserDepositBalance';
-import { oldBnumScaleAmount, oldBnumToHumanReadable } from '~/lib/services/pool/lib/old-big-number';
+import { oldBnumScaleAmount, oldBnumToBnum, oldBnumToHumanReadable } from '~/lib/services/pool/lib/old-big-number';
 import { useStakingWithdraw } from '~/lib/global/useStakingWithdraw';
 import { CardRow } from '~/components/card/CardRow';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 import { usePool } from '~/modules/pool/lib/usePool';
 import { useUserSyncBalanceMutation } from '~/apollo/generated/graphql-codegen-generated';
+import { useGaugeUnstakeGetContractCallData } from './lib/useGaugeUnstakeGetContractCallData';
 
 interface Props {
     isOpen: boolean;
@@ -52,10 +53,13 @@ export function PoolUnstakeModal({ isOpen, onOpen, onClose }: Props) {
     const amountIsValid = !hasValue || parseFloat(userStakedBptBalance) >= parseFloat(amount);
     const amountValue = (parseFloat(amount) / parseFloat(userTotalBptBalance)) * userPoolBalanceUSD;
     const { pool } = usePool();
-
     const { approve, ...approveQuery } = useApproveToken(pool);
     const { withdraw, ...unstakeQuery } = useStakingWithdraw(pool.staking);
     const loading = isLoadingBalances;
+
+    const { data } = useGaugeUnstakeGetContractCallData(
+        oldBnumToBnum(oldBnumScaleAmount(userStakedBptBalance).times(percent).div(100)),
+    );
 
     useEffect(() => {
         if (isOpen && userStakedBptBalance) {

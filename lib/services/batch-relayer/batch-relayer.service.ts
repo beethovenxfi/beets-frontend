@@ -11,6 +11,7 @@ import {
     EncodeExitPoolInput,
     EncodeFBeetsBarEnterInput,
     EncodeFBeetsBarLeaveInput,
+    EncodeGaugeClaimRewardsInput,
     EncodeGaugeDepositInput,
     EncodeGaugeWithdrawInput,
     EncodeJoinPoolInput,
@@ -150,6 +151,10 @@ export class BatchRelayerService {
 
     public gaugeEncodeWithdraw(params: EncodeGaugeWithdrawInput): string {
         return this.gaugeStakingService.encodeWithdraw(params);
+    }
+
+    public gaugeEncodeClaimRewards(params: EncodeGaugeClaimRewardsInput): string {
+        return this.gaugeStakingService.encodeClaimRewards(params);
     }
 
     public reaperEncodeWrap(params: EncodeReaperWrapInput): string {

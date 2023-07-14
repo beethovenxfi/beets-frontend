@@ -227,11 +227,10 @@ export interface EncodeGaugeDepositInput {
     amount: BigNumberish;
 }
 
-export interface EncodeGaugeWithdrawInput {
-    gauge: string;
-    sender: string;
-    recipient: string;
-    amount: BigNumberish;
+export interface EncodeGaugeWithdrawInput extends EncodeGaugeDepositInput {}
+
+export interface EncodeGaugeClaimRewardsInput {
+    gauges: string[];
 }
 
 export interface EncodeReliquaryCreateRelicAndDepositInput {
