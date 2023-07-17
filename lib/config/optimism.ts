@@ -130,11 +130,6 @@ export const optimismNetworkConfig: NetworkConfig = {
             url: 'https://pro.olympusdao.finance/#/bond',
         },
         {
-            title: 'Multichain Bridge',
-            subTitle: 'ETH / AVAX / BSC / MATIC',
-            url: 'https://app.multichain.org/#/router',
-        },
-        {
             title: 'AllBridge',
             subTitle: 'SOL / MATIC / CELO',
             url: 'https://app.allbridge.io/bridge?from=SOL&to=FTM&asset=SOL',
