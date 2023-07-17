@@ -20,18 +20,23 @@ export class GaugeWithdrawService {
         recipient: string;
         amount: BigNumberish;
     }) {
-        return [
-            hasPendingNonBALRewards && this.getGaugeEncodeClaimRewardsCallData({ gauges: [gauge] }),
-            this.getGaugeEncodeWithdrawCallData({ gauge, sender, recipient, amount }),
-        ];
+        const calls: string[] = [];
+
+        if (hasPendingNonBALRewards) {
+            calls.push(this.getGaugeEncodeClaimRewardsCallData({ gauges: [gauge] }));
+        }
+
+        calls.push(this.getGaugeEncodeWithdrawCallData({ gauge, sender, recipient, amount }));
+
+        return calls;
     }
 
-    private getGaugeEncodeWithdrawCallData({ gauge, sender, recipient, amount }: EncodeGaugeWithdrawInput) {
-        this.batchRelayerService.gaugeEncodeWithdraw({ gauge, sender, recipient, amount });
+    private getGaugeEncodeWithdrawCallData({ gauge, sender, recipient, amount }: EncodeGaugeWithdrawInput): string {
+        return this.batchRelayerService.gaugeEncodeWithdraw({ gauge, sender, recipient, amount });
     }
 
-    private getGaugeEncodeClaimRewardsCallData({ gauges }: EncodeGaugeClaimRewardsInput) {
-        this.batchRelayerService.gaugeEncodeClaimRewards({ gauges });
+    private getGaugeEncodeClaimRewardsCallData({ gauges }: EncodeGaugeClaimRewardsInput): string {
+        return this.batchRelayerService.gaugeEncodeClaimRewards({ gauges });
     }
 }
 
