@@ -16,7 +16,7 @@ import { sortBy } from 'lodash';
 import { Zero } from '@ethersproject/constants';
 import { BatchRelayerService } from '~/lib/services/batch-relayer/batch-relayer.service';
 import { parseUnits } from 'ethers/lib/utils';
-import { StablePoolEncoder, SwapV2, WeightedPoolEncoder } from '@balancer-labs/sdk';
+import { StablePoolEncoder, SwapV2, WeightedPoolEncoder, isSameAddress } from '@balancer-labs/sdk';
 import { oldBnum, oldBnumSubtractSlippage } from '~/lib/services/pool/lib/old-big-number';
 import {
     poolGyroExactTokensInForBPTOut,
@@ -35,6 +35,7 @@ import { BaseProvider } from '@ethersproject/providers';
 import { formatFixed, parseFixed } from '@ethersproject/bignumber';
 import { SwapTypes } from '@balancer-labs/sor';
 import { BigNumber } from 'ethers';
+import { AddressZero } from '@ethersproject/constants';
 
 export class PoolComposableJoinService {
     constructor(
@@ -399,6 +400,9 @@ export class PoolComposableJoinService {
         });
 
         const minBpt = parseUnits(oldBnumSubtractSlippage(step.minBptReceived, 18, slippage), 18);
+        const joinAssets = tokensWithPhantomBpt
+            .map((token) => token.address)
+            .map((address) => (isSameAddress(address, this.wethAddress) ? AddressZero : address));
 
         return this.batchRelayerService.vaultEncodeJoinPool({
             poolId: pool.id,
@@ -407,7 +411,7 @@ export class PoolComposableJoinService {
             //recipient: isNestedJoin ? batchRelayerService.batchRelayerAddress : userAddress,
             recipient: userAddress,
             joinPoolRequest: {
-                assets: tokensWithPhantomBpt.map((token) => token.address),
+                assets: joinAssets,
                 maxAmountsIn: amountsIn,
                 userData:
                     pool.__typename === 'GqlPoolGyro'
