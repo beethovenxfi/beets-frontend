@@ -53,13 +53,14 @@ export function HomeLearn(props: BoxProps) {
                         title="Basics: How to set up a MetaMask wallet"
                         description="To begin your DeFi journey, you first need a web3 wallet. From the basics of setting one up to your first transactions, learn all there is to know about navigating MetaMask in DeFi."
                         url="https://blockbytes.com/2022/05/26/how-to-set-up-metamask-for-web-3/"
+                        last={true}
                     />
-                    <HomeLearnItem
+                    {/* <HomeLearnItem
                         title="Basics: How to bridge to Optimism?"
                         description="Are you interested in exploring a whole new ecosystem? Bridges in web3 can be confusing to navigate even for the most experienced users. Learn about all the right steps you need to take to get your assets bridged across safely."
                         url="https://blockbytes.com/2022/07/06/how-to-bridge-tokens-to-optimism-with-multichain/"
                         last={true}
-                    />
+                    /> */}
                 </GridItem>
                 <GridItem>
                     <BeetsSubHeadline mb="8">Other resources</BeetsSubHeadline>
