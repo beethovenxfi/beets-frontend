@@ -7,12 +7,13 @@ import { GqlPoolStaking, useUserSyncBalanceMutation } from '~/apollo/generated/g
 import { useStakingWithdraw } from '~/lib/global/useStakingWithdraw';
 import { BeetsTransactionStepsSubmit, TransactionStep } from '~/components/button/BeetsTransactionStepsSubmit';
 import { _usePoolUserBptBalance, usePoolUserBptBalance } from '../lib/usePoolUserBptBalance';
-import { oldBnumScaleAmount, oldBnumToHumanReadable } from '~/lib/services/pool/lib/old-big-number';
+import { oldBnumScaleAmount, oldBnumToBnum, oldBnumToHumanReadable } from '~/lib/services/pool/lib/old-big-number';
 import { usePool } from '../lib/usePool';
 import { useStakingDeposit } from '~/lib/global/useStakingDeposit';
 import { useUserAllowances } from '~/lib/util/useUserAllowances';
 import { TokenBase } from '~/lib/services/token/token-types';
 import { omit } from 'lodash';
+import { useGaugeUnstakeGetContractCallData } from './lib/useGaugeUnstakeGetContractCallData';
 
 interface Props {
     activatorProps?: ButtonProps;
@@ -44,7 +45,12 @@ export function PoolGaugeMigrateModal({
     const legacyGqlPoolStaking = (pool.staking?.gauge?.otherGauges || []).find(
         (g) => g.gaugeAddress === userLegacyGaugeStakedGaugeAddress,
     );
-    const { withdraw, ...unstakeQuery } = useStakingWithdraw(pool.staking, legacyGqlPoolStaking);
+    const { data: contractCalls } = useGaugeUnstakeGetContractCallData(
+        oldBnumToBnum(oldBnumScaleAmount(userLegacyGaugeStakedBptBalance)),
+        legacyGqlPoolStaking,
+    );
+
+    const { withdraw, ...unstakeQuery } = useStakingWithdraw(pool.staking);
     const { stake, ...depositQuery } = useStakingDeposit(pool.staking as GqlPoolStaking);
 
     const stakedAmount = oldBnumToHumanReadable(oldBnumScaleAmount(userLegacyGaugeStakedBptBalance));
@@ -103,7 +109,7 @@ export function PoolGaugeMigrateModal({
 
     function handleTransactionSubmit(txId: string) {
         if (txId === 'unstake') {
-            withdraw(stakedAmount);
+            withdraw({ contractCalls });
             setDepositAmount(stakedAmount);
         }
         if (txId === 'deposit') {

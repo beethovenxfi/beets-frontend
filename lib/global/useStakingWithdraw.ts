@@ -1,32 +1,14 @@
 import { batchRelayerContractConfig, useSubmitTransaction } from '~/lib/util/useSubmitTransaction';
 import BeethovenxMasterChefAbi from '~/lib/abi/BeethovenxMasterChef.json';
-import LiquidityGaugeV5 from '~/lib/abi/LiquidityGaugeV5.json';
-import LiquidityGaugeV6 from '~/lib/abi/LiquidityGaugeV6.json';
 import { AmountHumanReadable } from '~/lib/services/token/token-types';
 import { parseUnits } from 'ethers/lib/utils';
-import { GqlPoolStaking, GqlPoolStakingOtherGauge } from '~/apollo/generated/graphql-codegen-generated';
+import { GqlPoolStaking } from '~/apollo/generated/graphql-codegen-generated';
 import { useUserAccount } from '~/lib/user/useUserAccount';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 
-function getGaugeABI(gaugeVersion: number | undefined) {
-    if (gaugeVersion === 2) {
-        return LiquidityGaugeV6;
-    }
-    return LiquidityGaugeV5;
-}
-
-function getGaugeFunctionCall(gaugeVersion: number | undefined) {
-    if (gaugeVersion === 2) {
-        return 'withdraw(uint256)';
-    }
-    return 'withdraw(uint256,bool)';
-}
-
-export function useStakingWithdraw(staking?: GqlPoolStaking | null, customWithdrawalGauge?: GqlPoolStakingOtherGauge) {
+export function useStakingWithdraw(staking?: GqlPoolStaking | null) {
     const networkConfig = useNetworkConfig();
     const { userAddress } = useUserAccount();
-    const withdrawFrom = customWithdrawalGauge?.gaugeAddress || staking?.address || '';
-    const gaugeVersion = customWithdrawalGauge?.version || staking?.gauge?.version;
 
     const { submit, submitAsync, ...rest } = useSubmitTransaction({
         config:
@@ -40,29 +22,20 @@ export function useStakingWithdraw(staking?: GqlPoolStaking | null, customWithdr
         transactionType: 'UNSTAKE',
     });
 
-    function withdraw(amount: AmountHumanReadable) {
-        const gaugeVersion = customWithdrawalGauge?.version || staking?.gauge?.version;
-
+    function withdraw(options: { amount?: AmountHumanReadable; contractCalls?: string[] }) {
         if (staking) {
             switch (staking.type) {
                 case 'GAUGE':
-                    if (gaugeVersion === 1) {
-                        return submit({
-                            args: [parseUnits(amount, 18), true],
-                            toastText: 'Withdraw',
-                        });
-                    }
-                    if (gaugeVersion === 2) {
-                        return submit({
-                            args: [parseUnits(amount, 18)],
-                            toastText: 'Withdraw',
-                        });
-                    }
+                    return submit({
+                        args: [options.contractCalls],
+                        toastText: 'Withdraw and claim rewards',
+                    });
+
                 case 'FRESH_BEETS':
                 case 'MASTER_CHEF':
                 default:
                     return submit({
-                        args: [staking.farm?.id, parseUnits(amount, 18), userAddress],
+                        args: [staking.farm?.id, parseUnits(options.amount || '', 18), userAddress],
                         toastText: 'Withdraw and claim rewards',
                     });
             }

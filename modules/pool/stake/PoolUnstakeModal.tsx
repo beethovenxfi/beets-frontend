@@ -57,7 +57,7 @@ export function PoolUnstakeModal({ isOpen, onOpen, onClose }: Props) {
     const { withdraw, ...unstakeQuery } = useStakingWithdraw(pool.staking);
     const loading = isLoadingBalances;
 
-    const { data } = useGaugeUnstakeGetContractCallData(
+    const { data: contractCalls } = useGaugeUnstakeGetContractCallData(
         oldBnumToBnum(oldBnumScaleAmount(userStakedBptBalance).times(percent).div(100)),
     );
 
@@ -140,7 +140,7 @@ export function PoolUnstakeModal({ isOpen, onOpen, onClose }: Props) {
                         completeButtonText="Close"
                         onCompleteButtonClick={onCloseModal}
                         onSubmit={() => {
-                            withdraw(amount);
+                            withdraw({ contractCalls });
                         }}
                         onConfirmed={async (id) => {
                             refetchBptBalances();
