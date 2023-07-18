@@ -1,4 +1,4 @@
-import { useSubmitTransaction } from '~/lib/util/useSubmitTransaction';
+import { batchRelayerContractConfig, useSubmitTransaction } from '~/lib/util/useSubmitTransaction';
 import BeethovenxMasterChefAbi from '~/lib/abi/BeethovenxMasterChef.json';
 import LiquidityGaugeV5 from '~/lib/abi/LiquidityGaugeV5.json';
 import LiquidityGaugeV6 from '~/lib/abi/LiquidityGaugeV6.json';
@@ -29,11 +29,14 @@ export function useStakingWithdraw(staking?: GqlPoolStaking | null, customWithdr
     const gaugeVersion = customWithdrawalGauge?.version || staking?.gauge?.version;
 
     const { submit, submitAsync, ...rest } = useSubmitTransaction({
-        config: {
-            addressOrName: staking?.type === 'GAUGE' ? withdrawFrom : networkConfig.masterChefContractAddress,
-            contractInterface: staking?.type === 'GAUGE' ? getGaugeABI(gaugeVersion) : BeethovenxMasterChefAbi,
-            functionName: staking?.type === 'GAUGE' ? getGaugeFunctionCall(gaugeVersion) : 'withdrawAndHarvest',
-        },
+        config:
+            staking?.type === 'GAUGE'
+                ? batchRelayerContractConfig
+                : {
+                      addressOrName: networkConfig.masterChefContractAddress,
+                      contractInterface: BeethovenxMasterChefAbi,
+                      functionName: 'withdrawAndHarvest',
+                  },
         transactionType: 'UNSTAKE',
     });
 
