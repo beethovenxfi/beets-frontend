@@ -30,6 +30,6 @@ export function useGaugeUnstakeGetContractCallData(
 
             return contractCallData;
         },
-        { enabled: hasPendingNonBALRewards || hasPendingBalRewards, staleTime: 0, cacheTime: 0 },
+        { enabled: hasPendingNonBALRewards || hasPendingBalRewards || amount !== '0.0', staleTime: 0, cacheTime: 0 },
     );
 }
