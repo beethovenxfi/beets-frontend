@@ -53,7 +53,6 @@ export function Footer() {
                         </GridItem>
                         <GridItem>
                             <FooterLink href="https://pro.olympusdao.finance/#/bond">Olympus Bonds</FooterLink>
-                            <FooterLink href="https://app.multichain.org/#/router">Multichain Bridge</FooterLink>
                             <FooterLink href="https://app.allbridge.io/bridge?from=SOL&to=FTM&asset=SOL">
                                 AllBridge
                             </FooterLink>
