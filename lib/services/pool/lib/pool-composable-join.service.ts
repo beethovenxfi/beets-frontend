@@ -395,9 +395,7 @@ export class PoolComposableJoinService {
             return parseUnits(tokenAmountIn?.amount || '0', token.decimals).toString();
         });
 
-        const joinAssets = tokensWithPhantomBpt
-            .map((token) => token.address)
-            .map((address) => (isSameAddress(address, this.wethAddress) ? AddressZero : address));
+        const joinAssets = tokensWithPhantomBpt.map((token) => token.address);
 
         return this.batchRelayerService.vaultEncodeJoinPool({
             poolId: pool.id,
@@ -406,7 +404,9 @@ export class PoolComposableJoinService {
             //recipient: isNestedJoin ? batchRelayerService.batchRelayerAddress : userAddress,
             recipient: userAddress,
             joinPoolRequest: {
-                assets: joinAssets,
+                assets: joinHasNativeAsset
+                    ? joinAssets.map((address) => (isSameAddress(address, this.wethAddress) ? AddressZero : address))
+                    : joinAssets,
                 maxAmountsIn: amountsIn,
                 userData: StablePoolEncoder.joinExactTokensInForBPTOut(
                     //required that that bpt idx is not included here
