@@ -79,7 +79,10 @@ export function useStakingPendingRewards(stakingItems: GqlPoolStaking[], hookNam
                 },
             ];
 
-            return pendingRewards.filter((pendingReward) => parseFloat(pendingReward.amount) > 0);
+            return {
+                pendingRewards: pendingRewards.filter((pendingReward) => parseFloat(pendingReward.amount) > 0),
+                gauges: gauges.map((gauge) => gauge.gaugeAddress),
+            };
         },
         { enabled: !!userAddress && stakingItems.length > 0, refetchInterval: 15000 },
     );

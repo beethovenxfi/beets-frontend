@@ -25,8 +25,8 @@ export function useGaugeUnstakeGetContractCallData(
 
     return useQuery(
         ['unstakeGetContractCallData', data],
-        async () => {
-            const contractCallData = await gaugeWithdrawService.getGaugeClaimRewardsAndWithdrawContractCallData(data);
+        () => {
+            const contractCallData = gaugeWithdrawService.getGaugeClaimRewardsAndWithdrawContractCallData(data);
 
             return contractCallData;
         },

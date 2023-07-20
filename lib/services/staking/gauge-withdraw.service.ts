@@ -35,7 +35,7 @@ export class GaugeWithdrawService {
         return this.batchRelayerService.gaugeEncodeWithdraw({ gauge, sender, recipient, amount });
     }
 
-    private getGaugeEncodeClaimRewardsCallData({ gauges }: EncodeGaugeClaimRewardsInput): string {
+    public getGaugeEncodeClaimRewardsCallData({ gauges }: EncodeGaugeClaimRewardsInput): string {
         return this.batchRelayerService.gaugeEncodeClaimRewards({ gauges });
     }
 }

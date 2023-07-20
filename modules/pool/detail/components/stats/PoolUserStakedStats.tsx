@@ -177,7 +177,7 @@ export function PoolUserStakedStats({ poolAddress, staking, totalApr, userPoolBa
                         }}
                         width="full"
                     >
-                        Claim rewards
+                        Claim other rewards
                     </BeetsSubmitTransactionButton>
                 </Box>
                 <Box width="full">

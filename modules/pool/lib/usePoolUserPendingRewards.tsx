@@ -21,10 +21,11 @@ export function _usePoolUserPendingRewards() {
     );
 
     const hasBeetsRewards =
-        (data || []).filter((item) => item.address === networkConfig.beets.address && parseFloat(item.amount) > 0)
-            .length > 0;
+        (data?.pendingRewards || []).filter(
+            (item) => item.address === networkConfig.beets.address && parseFloat(item.amount) > 0,
+        ).length > 0;
 
-    const pendingRewardsTotalUSD = sumBy(data || [], priceForAmount);
+    const pendingRewardsTotalUSD = sumBy(data?.pendingRewards || [], priceForAmount);
     const rewardTokens = uniq([
         ...(hasBeetsRewards ? [networkConfig.beets.address] : []),
         ...(farm?.rewarders || []).map((rewarder) => rewarder.tokenAddress),
@@ -32,7 +33,7 @@ export function _usePoolUserPendingRewards() {
     ]);
 
     const pendingRewards: TokenAmountHumanReadable[] = rewardTokens.map((rewardToken) => {
-        const pending = (data || []).find((data) => data.address === rewardToken);
+        const pending = (data?.pendingRewards || []).find((data) => data.address === rewardToken);
         return pending || { address: rewardToken, amount: '0' };
     });
 

@@ -29,6 +29,8 @@ import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 import useStakingMintableRewards from '~/lib/global/useStakingMintableRewards';
 import { AddressZero } from '@ethersproject/constants';
 import useStakingBoosts from '~/lib/global/useStakingBoosts';
+import { useGaugeClaimGetContractCallData } from './lib/useGaugeClaimGetContractCallData';
+import { useUserGaugeClaimAllOtherPendingRewards } from './lib/useUserGaugeClaimAllOtherPendingRewards';
 
 export function NavbarPendingRewards() {
     const {
@@ -38,6 +40,7 @@ export function NavbarPendingRewards() {
         stakingType,
         isLoading: pendingRewardsLoading,
         pendingBALUSD,
+        gauges,
     } = useUserPendingRewards();
     const { stakedValueUSD, loading: userDataLoading } = useUserData();
     const { priceForAmount, getToken } = useGetTokens();
@@ -58,6 +61,9 @@ export function NavbarPendingRewards() {
 
     const totalPendingRewardsUSD = pendingRewardsTotalUSD + pendingReliquaryRewardsTotalUSD;
     const canClaimBAL = networkConfig.gauge.balancerPseudoMinterAddress !== AddressZero && pendingBALUSD > 0;
+
+    const { data: contractCalls } = useGaugeClaimGetContractCallData(gauges || []);
+    const { claimAll } = useUserGaugeClaimAllOtherPendingRewards();
 
     return (
         <Popover>
@@ -140,7 +146,7 @@ export function NavbarPendingRewards() {
                                         in {staking.length} {isMasterChefOrFreshBeets ? 'farm(s)' : 'gauge(s)'}
                                     </Box>
                                 </BeetsBox>
-                                {networkConfig.claimAllRewardsEnabled && (
+                                {isMasterChefOrFreshBeets ? (
                                     <Box mt="4" justifySelf="flex-end">
                                         <BeetsSubmitTransactionButton
                                             {...harvestQuery}
@@ -149,6 +155,21 @@ export function NavbarPendingRewards() {
                                             width="full"
                                         >
                                             Claim all pool rewards
+                                        </BeetsSubmitTransactionButton>
+                                    </Box>
+                                ) : (
+                                    <Box mt="4" justifySelf="flex-end">
+                                        <BeetsSubmitTransactionButton
+                                            {...harvestQuery}
+                                            isDisabled={pendingRewardsTotalUSD < 0.01}
+                                            onClick={() => {
+                                                if (contractCalls) {
+                                                    claimAll(contractCalls);
+                                                }
+                                            }}
+                                            width="full"
+                                        >
+                                            Claim all other pending rewards
                                         </BeetsSubmitTransactionButton>
                                     </Box>
                                 )}
