@@ -50,6 +50,7 @@ export const optimismNetworkConfig: NetworkConfig = {
         composableStableFactories: [
             '0xf145cafb67081895ee80eb7c04a30cf87f07b745',
             '0xe2e901ab09f37884ba31622df3ca7fc19aa443be',
+            '0x043a2dad730d585c44fb79d2614f295d2d625412'
         ],
         composableStableV1Factory: '0xf145cafb67081895ee80eb7c04a30cf87f07b745',
         weightedPoolV2PlusFactories: [
