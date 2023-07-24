@@ -50,6 +50,7 @@ export const optimismNetworkConfig: NetworkConfig = {
         composableStableFactories: [
             '0xf145cafb67081895ee80eb7c04a30cf87f07b745',
             '0xe2e901ab09f37884ba31622df3ca7fc19aa443be',
+            '0x043a2dad730d585c44fb79d2614f295d2d625412'
         ],
         composableStableV1Factory: '0xf145cafb67081895ee80eb7c04a30cf87f07b745',
         weightedPoolV2PlusFactories: [
@@ -130,11 +131,6 @@ export const optimismNetworkConfig: NetworkConfig = {
             url: 'https://pro.olympusdao.finance/#/bond',
         },
         {
-            title: 'Multichain Bridge',
-            subTitle: 'ETH / AVAX / BSC / MATIC',
-            url: 'https://app.multichain.org/#/router',
-        },
-        {
             title: 'AllBridge',
             subTitle: 'SOL / MATIC / CELO',
             url: 'https://app.allbridge.io/bridge?from=SOL&to=FTM&asset=SOL',
@@ -159,7 +155,7 @@ export const optimismNetworkConfig: NetworkConfig = {
         balancerPseudoMinterAddress: '0x4fb47126fa83a8734991e41b942ac29a3266c968',
         veBALDelegationProxyAddress: '0x9da18982a33fd0c7051b19f0d7c76f2d5e7e017c',
         workingBalanceHelperAddress: '0x9129e834e15ea19b6069e8f08a8ecfc13686b8dc',
-        checkpointHelper: '0xca4cdc9eed85d9ce0b8eef74457480364068af9e'
+        checkpointHelper: '0xca4cdc9eed85d9ce0b8eef74457480364068af9e',
     },
     createPoolUrl: 'https://opv1.beets.fi/#/pool-create',
     warnings: {
@@ -223,6 +219,8 @@ export const optimismNetworkConfig: NetworkConfig = {
         '0x3c74c4ed512050eb843d89fb9dcd5ebb4668eb6d0002000000000000000000cc': 'beefy-exactly',
         '0x098f32d98d0d64dba199fc1923d3bf4192e787190001000000000000000000d2': 'reaper-sonne',
         '0x58910d5bd045a20a37de147f8acea75b2d881f610002000000000000000000d3': 'gyroscope',
+        '0x7ca75bdea9dede97f8b13c6641b768650cb837820002000000000000000000d5': 'gyroscope',
+        '0x2c4a83f98d1cdbeeec825fabacd09c46e2dd3c570002000000000000000000de': 'gyroscope',
     },
     investDisabled: {
         '0x1f131ec1175f023ee1534b16fa8ab237c00e238100000000000000000000004a': true,
