@@ -61,7 +61,6 @@ function calculateBoostFromGauge(
     // initializes variables for max boost and boost
     let boost = 0.0;
     let veBalShare = userVeBAL / totalVeBAL;
-    let veBalRatio = totalVeBAL / totalVeBAL;
     let userBalanceAdjusted = userBalance / 10e17;
     // Takes into account the above changes on the working balance and working supply due to additional veBAL or liquidity
     // This can only be an approximation without pulling in the actual veBAL balance of all users to determine
@@ -72,10 +71,7 @@ function calculateBoostFromGauge(
     );
 
     let workingSupplyAdjusted =
-        (workingSupply -
-            workingBalance -
-            (totalSupply - userBalance) * 0.4 * veBalRatio +
-            (totalSupply - userBalance) * 0.4) /
+        (workingSupply - workingBalance - (totalSupply - userBalance) * 0.4 + (totalSupply - userBalance) * 0.4) /
             10e17 +
         workingBalanceAdjusted;
 
