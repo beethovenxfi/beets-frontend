@@ -50,6 +50,46 @@ function calcUserBoost({
     return minBoost.toString();
 }
 
+function calculateBoostFromGauge(
+    workingBalance: number,
+    workingSupply: number,
+    totalSupply: number,
+    userBalance: number,
+    userVeBAL: number,
+    totalVeBAL: number,
+) {
+    // initializes variables for max boost and boost
+    let boost = 0.0;
+    let veBalShare = userVeBAL / totalVeBAL;
+    let veBalRatio = totalVeBAL / totalVeBAL;
+    let userBalanceAdjusted = userBalance / 10e17;
+    // Takes into account the above changes on the working balance and working supply due to additional veBAL or liquidity
+    // This can only be an approximation without pulling in the actual veBAL balance of all users to determine
+    // if those with max boost would be moved below the max boost threshhold.
+    let workingBalanceAdjusted = Math.min(
+        0.4 * userBalanceAdjusted + 0.6 * (totalSupply / 10e17) * veBalShare,
+        userBalance / 10e17,
+    );
+
+    let workingSupplyAdjusted =
+        (workingSupply -
+            workingBalance -
+            (totalSupply - userBalance) * 0.4 * veBalRatio +
+            (totalSupply - userBalance) * 0.4) /
+            10e17 +
+        workingBalanceAdjusted;
+
+    if (workingBalanceAdjusted) {
+        boost =
+            workingBalanceAdjusted /
+            workingSupplyAdjusted /
+            ((0.4 * userBalanceAdjusted) /
+                (0.4 * userBalanceAdjusted + workingSupplyAdjusted - workingBalanceAdjusted));
+    }
+
+    return boost.toString();
+}
+
 export default function useStakingBoosts() {
     const { pool } = usePool();
     const { userAddress } = useUserAccount();
@@ -85,13 +125,53 @@ export default function useStakingBoosts() {
         },
     );
 
-    const isLoading = isLoadingStakedBalance || isLoadingTotalSupply || isLoadingGlobalData;
+    const { data: workingSupply, isLoading: isLoadingWorkingSupply } = useQuery(
+        ['gaugeWorkingSupply', gaugeAddress],
+        async () => {
+            const workingSupply = gaugeStakingService.getGaugeWorkingSupply({
+                gaugeAddress,
+                provider,
+            });
+            return workingSupply;
+        },
+    );
+
+    const { data: workingBalance, isLoading: isLoadingWorkingBalance } = useQuery(
+        ['gaugeWorkingBalance', userAddress, gaugeAddress],
+        async () => {
+            const workingBalances = gaugeStakingService.getGaugeWorkingBalance({
+                userAddress: userAddress as string,
+                gaugeAddress,
+                provider,
+            });
+            return workingBalances;
+        },
+    );
+
+    const isLoading =
+        isLoadingStakedBalance ||
+        isLoadingTotalSupply ||
+        isLoadingGlobalData ||
+        isLoadingWorkingSupply ||
+        isLoadingWorkingBalance;
 
     let boost = calcUserBoost({
         userGaugeBalance: stakedBalance || '0',
         userVeBALBalance: veBALBalance || '0',
         gaugeTotalSupply: totalSupply || '0',
         veBALTotalSupply: veBALTotalSupply || '0',
+    });
+
+    console.log({
+        boost,
+        boostNew: calculateBoostFromGauge(
+            parseFloat(workingBalance || ''),
+            parseFloat(workingSupply || ''),
+            parseFloat(totalSupply || ''),
+            parseFloat(stakedBalance || ''),
+            parseFloat(veBALBalance || ''),
+            parseFloat(veBALTotalSupply || ''),
+        ),
     });
 
     return {
