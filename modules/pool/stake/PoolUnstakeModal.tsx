@@ -17,8 +17,7 @@ import { usePoolUserBptBalance } from '~/modules/pool/lib/usePoolUserBptBalance'
 import { Modal, ModalBody, ModalCloseButton, ModalContent } from '@chakra-ui/modal';
 import { capitalize } from 'lodash';
 import { tokenFormatAmount } from '~/lib/services/token/token-util';
-import { useApproveToken } from '~/lib/util/useApproveToken';
-import { BeetsTransactionStepsSubmit } from '~/components/button/BeetsTransactionStepsSubmit';
+import { BeetsTransactionStepsSubmit, TransactionStep } from '~/components/button/BeetsTransactionStepsSubmit';
 import { BeetsBox } from '~/components/box/BeetsBox';
 import { usePoolUserDepositBalance } from '~/modules/pool/lib/usePoolUserDepositBalance';
 import { oldBnumScaleAmount, oldBnumToBnum, oldBnumToHumanReadable } from '~/lib/services/pool/lib/old-big-number';
@@ -28,6 +27,7 @@ import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 import { usePool } from '~/modules/pool/lib/usePool';
 import { useUserSyncBalanceMutation } from '~/apollo/generated/graphql-codegen-generated';
 import { useGaugeUnstakeGetContractCallData } from './lib/useGaugeUnstakeGetContractCallData';
+import { useHasMinterApproval } from '~/lib/util/useHasMinterApproval';
 
 interface Props {
     isOpen: boolean;
@@ -53,9 +53,10 @@ export function PoolUnstakeModal({ isOpen, onOpen, onClose }: Props) {
     const amountIsValid = !hasValue || parseFloat(userStakedBptBalance) >= parseFloat(amount);
     const amountValue = (parseFloat(amount) / parseFloat(userTotalBptBalance)) * userPoolBalanceUSD;
     const { pool } = usePool();
-    const { approve, ...approveQuery } = useApproveToken(pool);
     const { withdraw, ...unstakeQuery } = useStakingWithdraw(pool.staking);
-    const loading = isLoadingBalances;
+    const [steps, setSteps] = useState<TransactionStep[] | null>(null);
+    const { data: hasMinterApproval, isLoading: isLoadingHasMinterApproval } = useHasMinterApproval();
+    const loading = isLoadingBalances || isLoadingHasMinterApproval;
 
     const { data: contractCalls } = useGaugeUnstakeGetContractCallData(
         oldBnumToBnum(oldBnumScaleAmount(userStakedBptBalance).times(percent).div(100)),
@@ -67,8 +68,30 @@ export function PoolUnstakeModal({ isOpen, onOpen, onClose }: Props) {
         }
     }, [isOpen]);
 
+    useEffect(() => {
+        if (!loading) {
+            setSteps([
+                ...(!hasMinterApproval
+                    ? [
+                          {
+                              id: 'minter',
+                              type: 'other' as const,
+                              buttonText: 'Approve batch relayer for minting',
+                              tooltipText: 'Approve batch relayer for minting',
+                          },
+                      ]
+                    : []),
+                {
+                    id: 'unstake',
+                    type: 'other',
+                    buttonText: 'Unstake BPT',
+                    tooltipText: 'Unstake BPT and claim all rewards',
+                },
+            ]);
+        }
+    }, [loading, isOpen]);
+
     function onCloseModal() {
-        approveQuery.reset();
         unstakeQuery.reset();
         onClose();
     }
@@ -139,14 +162,16 @@ export function PoolUnstakeModal({ isOpen, onOpen, onClose }: Props) {
                         loadingButtonText="Loading balances..."
                         completeButtonText="Close"
                         onCompleteButtonClick={onCloseModal}
-                        onSubmit={() => {
-                            withdraw({ contractCalls });
+                        onSubmit={(id) => {
+                            if (id === 'unstake' && contractCalls) {
+                                withdraw({ contractCalls });
+                            }
                         }}
                         onConfirmed={async (id) => {
                             refetchBptBalances();
                             userSyncBalance({ variables: { poolId: pool.id } });
                         }}
-                        steps={[{ id: 'unstake', tooltipText: '', type: 'other', buttonText: 'Unstake BPT' }]}
+                        steps={steps || []}
                         queries={[{ ...unstakeQuery, id: 'unstake' }]}
                         isDisabled={!hasValue || !amountIsValid}
                     />

@@ -3,6 +3,7 @@ import GaugeActionsAbi from '~/lib/abi/GaugeActions.json';
 import {
     EncodeGaugeClaimRewardsInput,
     EncodeGaugeDepositInput,
+    EncodeGaugeMintInput,
     EncodeGaugeWithdrawInput,
 } from '~/lib/services/batch-relayer/relayer-types';
 
@@ -33,5 +34,11 @@ export class GaugeActionsService {
         const gaugeActionsLibrary = new Interface(GaugeActionsAbi);
 
         return gaugeActionsLibrary.encodeFunctionData('gaugeClaimRewards', [params.gauges]);
+    }
+
+    public encodeMint(params: EncodeGaugeMintInput): string {
+        const gaugeActionsLibrary = new Interface(GaugeActionsAbi);
+
+        return gaugeActionsLibrary.encodeFunctionData('gaugeMint', [params.gauges, params.outputReference]);
     }
 }

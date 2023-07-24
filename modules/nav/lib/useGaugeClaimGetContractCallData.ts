@@ -1,13 +1,13 @@
 import { useQuery } from 'react-query';
-import { gaugeWithdrawService } from '~/lib/services/staking/gauge-withdraw.service';
+import { gaugeService } from '~/lib/services/staking/gauge.service';
 
 export function useGaugeClaimGetContractCallData(gauges: string[]) {
     return useQuery(
-        ['unstakeGetContractCallData', gauges],
+        ['claimGetContractCallData', gauges],
         () => {
-            const contractCallData = gaugeWithdrawService.getGaugeEncodeClaimRewardsCallData({ gauges });
+            const contractCallData = gaugeService.getGaugeEncodeClaimRewardsCallData({ gauges });
 
-            return [contractCallData];
+            return contractCallData;
         },
         { enabled: !!gauges.length, staleTime: 0, cacheTime: 0 },
     );

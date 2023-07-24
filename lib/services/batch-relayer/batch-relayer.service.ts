@@ -13,6 +13,7 @@ import {
     EncodeFBeetsBarLeaveInput,
     EncodeGaugeClaimRewardsInput,
     EncodeGaugeDepositInput,
+    EncodeGaugeMintInput,
     EncodeGaugeWithdrawInput,
     EncodeJoinPoolInput,
     EncodeMasterChefDepositInput,
@@ -155,6 +156,10 @@ export class BatchRelayerService {
 
     public gaugeEncodeClaimRewards(params: EncodeGaugeClaimRewardsInput): string {
         return this.gaugeStakingService.encodeClaimRewards(params);
+    }
+
+    public gaugeEncodeMint(params: EncodeGaugeMintInput): string {
+        return this.gaugeStakingService.encodeMint(params);
     }
 
     public reaperEncodeWrap(params: EncodeReaperWrapInput): string {

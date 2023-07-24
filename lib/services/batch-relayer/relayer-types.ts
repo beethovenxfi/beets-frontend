@@ -233,6 +233,11 @@ export interface EncodeGaugeClaimRewardsInput {
     gauges: string[];
 }
 
+export interface EncodeGaugeMintInput {
+    gauges: string[];
+    outputReference: BigNumberish;
+}
+
 export interface EncodeReliquaryCreateRelicAndDepositInput {
     sender: string;
     recipient: string;

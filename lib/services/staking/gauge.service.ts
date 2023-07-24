@@ -1,8 +1,12 @@
 import { batchRelayerService, BatchRelayerService } from '~/lib/services/batch-relayer/batch-relayer.service';
-import { EncodeGaugeClaimRewardsInput, EncodeGaugeWithdrawInput } from '../batch-relayer/relayer-types';
+import {
+    EncodeGaugeClaimRewardsInput,
+    EncodeGaugeMintInput,
+    EncodeGaugeWithdrawInput,
+} from '../batch-relayer/relayer-types';
 import { BigNumberish } from '@ethersproject/bignumber';
 
-export class GaugeWithdrawService {
+export class GaugeService {
     constructor(private readonly batchRelayerService: BatchRelayerService) {}
 
     public getGaugeClaimRewardsAndWithdrawContractCallData({
@@ -12,6 +16,7 @@ export class GaugeWithdrawService {
         sender,
         recipient,
         amount,
+        outputReference,
     }: {
         hasPendingNonBALRewards: boolean;
         hasPendingBalRewards: boolean;
@@ -19,11 +24,16 @@ export class GaugeWithdrawService {
         sender: string;
         recipient: string;
         amount: BigNumberish;
+        outputReference: BigNumberish;
     }) {
         const calls: string[] = [];
 
         if (hasPendingNonBALRewards) {
             calls.push(this.getGaugeEncodeClaimRewardsCallData({ gauges: [gauge] }));
+        }
+
+        if (hasPendingBalRewards) {
+            calls.push(this.getGaugeEncodeMintCallData({ gauges: [gauge], outputReference }));
         }
 
         calls.push(this.getGaugeEncodeWithdrawCallData({ gauge, sender, recipient, amount }));
@@ -38,6 +48,10 @@ export class GaugeWithdrawService {
     public getGaugeEncodeClaimRewardsCallData({ gauges }: EncodeGaugeClaimRewardsInput): string {
         return this.batchRelayerService.gaugeEncodeClaimRewards({ gauges });
     }
+
+    public getGaugeEncodeMintCallData({ gauges, outputReference }: EncodeGaugeMintInput): string {
+        return this.batchRelayerService.gaugeEncodeMint({ gauges, outputReference });
+    }
 }
 
-export const gaugeWithdrawService = new GaugeWithdrawService(batchRelayerService);
+export const gaugeService = new GaugeService(batchRelayerService);
