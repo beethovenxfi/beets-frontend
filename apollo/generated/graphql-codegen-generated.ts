@@ -81,81 +81,6 @@ export interface GqlLatestSyncedBlocks {
     userWalletSyncBlock: Scalars['BigInt'];
 }
 
-export interface GqlLge {
-    __typename: 'GqlLge';
-    address: Scalars['String'];
-    adminAddress: Scalars['String'];
-    adminIsMultisig: Scalars['Boolean'];
-    bannerImageUrl: Scalars['String'];
-    collateralAddress: Scalars['String'];
-    collateralAmount: Scalars['String'];
-    collateralDecimals: Scalars['Int'];
-    collateralEndWeight: Scalars['Int'];
-    collateralStartWeight: Scalars['Int'];
-    description: Scalars['String'];
-    discordUrl: Scalars['String'];
-    endTimestamp: Scalars['Int'];
-    id: Scalars['ID'];
-    mediumUrl: Scalars['String'];
-    name: Scalars['String'];
-    startTimestamp: Scalars['Int'];
-    swapFee: Scalars['String'];
-    telegramUrl: Scalars['String'];
-    tokenAddress: Scalars['String'];
-    tokenAmount: Scalars['String'];
-    tokenDecimals: Scalars['Int'];
-    tokenEndWeight: Scalars['Int'];
-    tokenIconUrl: Scalars['String'];
-    tokenStartWeight: Scalars['Int'];
-    tokenSymbol: Scalars['String'];
-    twitterUrl: Scalars['String'];
-    websiteUrl: Scalars['String'];
-}
-
-export interface GqlLgeCreateInput {
-    address: Scalars['String'];
-    bannerImageUrl: Scalars['String'];
-    collateralAddress: Scalars['String'];
-    collateralAmount: Scalars['String'];
-    collateralEndWeight: Scalars['Int'];
-    collateralStartWeight: Scalars['Int'];
-    description: Scalars['String'];
-    discordUrl: Scalars['String'];
-    endTimestamp: Scalars['Int'];
-    id: Scalars['ID'];
-    mediumUrl: Scalars['String'];
-    name: Scalars['String'];
-    startTimestamp: Scalars['Int'];
-    swapFee: Scalars['String'];
-    telegramUrl: Scalars['String'];
-    tokenAddress: Scalars['String'];
-    tokenAmount: Scalars['String'];
-    tokenEndWeight: Scalars['Int'];
-    tokenIconUrl: Scalars['String'];
-    tokenStartWeight: Scalars['Int'];
-    twitterUrl: Scalars['String'];
-    websiteUrl: Scalars['String'];
-}
-
-export interface GqlLgePriceData {
-    __typename: 'GqlLgePriceData';
-    price: Scalars['Float'];
-    timestamp: Scalars['Int'];
-    type: Scalars['String'];
-}
-
-export interface GqlLgeUpdateInput {
-    description: Scalars['String'];
-    discordUrl: Scalars['String'];
-    id: Scalars['ID'];
-    mediumUrl: Scalars['String'];
-    name: Scalars['String'];
-    telegramUrl: Scalars['String'];
-    tokenIconUrl: Scalars['String'];
-    twitterUrl: Scalars['String'];
-    websiteUrl: Scalars['String'];
-}
-
 export interface GqlPoolApr {
     __typename: 'GqlPoolApr';
     apr: GqlPoolAprValue;
@@ -1182,8 +1107,6 @@ export interface Mutation {
     beetsPoolLoadReliquarySnapshotsForAllFarms: Scalars['String'];
     beetsSyncFbeetsRatio: Scalars['String'];
     cacheAverageBlockTime: Scalars['String'];
-    lgeCreate: GqlLge;
-    lgeSyncFromSanity: Scalars['String'];
     poolBlackListAddPool: Scalars['String'];
     poolBlackListRemovePool: Scalars['String'];
     poolDeletePool: Scalars['String'];
@@ -1231,10 +1154,6 @@ export interface Mutation {
     userSyncChangedWalletBalancesForAllPools: Scalars['String'];
     veBalSyncAllUserBalances: Scalars['String'];
     veBalSyncTotalSupply: Scalars['String'];
-}
-
-export interface MutationLgeCreateArgs {
-    lge: GqlLgeCreateInput;
 }
 
 export interface MutationPoolBlackListAddPoolArgs {
@@ -1314,9 +1233,6 @@ export interface Query {
     blocksGetBlocksPerYear: Scalars['Float'];
     contentGetNewsItems: Array<GqlContentNewsItem>;
     latestSyncedBlocks: GqlLatestSyncedBlocks;
-    lge: GqlLge;
-    lgeGetChartData: Array<Maybe<GqlLgePriceData>>;
-    lges: Array<GqlLge>;
     poolGetAllPoolsSnapshots: Array<GqlPoolSnapshot>;
     poolGetBatchSwaps: Array<GqlPoolBatchSwap>;
     poolGetFeaturedPoolGroups: Array<GqlPoolFeaturedPoolGroup>;
@@ -1359,14 +1275,6 @@ export interface Query {
 export interface QueryBeetsPoolGetReliquaryFarmSnapshotsArgs {
     id: Scalars['String'];
     range: GqlPoolSnapshotDataRange;
-}
-
-export interface QueryLgeArgs {
-    id: Scalars['ID'];
-}
-
-export interface QueryLgeGetChartDataArgs {
-    id: Scalars['ID'];
 }
 
 export interface QueryPoolGetAllPoolsSnapshotsArgs {
