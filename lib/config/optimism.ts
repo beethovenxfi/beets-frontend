@@ -50,7 +50,7 @@ export const optimismNetworkConfig: NetworkConfig = {
         composableStableFactories: [
             '0xf145cafb67081895ee80eb7c04a30cf87f07b745',
             '0xe2e901ab09f37884ba31622df3ca7fc19aa443be',
-            '0x043a2dad730d585c44fb79d2614f295d2d625412'
+            '0x043a2dad730d585c44fb79d2614f295d2d625412',
         ],
         composableStableV1Factory: '0xf145cafb67081895ee80eb7c04a30cf87f07b745',
         weightedPoolV2PlusFactories: [
@@ -77,13 +77,13 @@ export const optimismNetworkConfig: NetworkConfig = {
             '0x62ec8b26c08ffe504f22390a65e6e3c1e45e9877': '0x573f1fbde18ab2926a5e3fb80467ae50cf91d3f6', // soDAI
             '0xb96c5bada4bf6a70e71795a3197ba94751dae2db': '0xbac75e5e03c68c3a9e0c200462d38440d8ffea45', // soUSDT
             '0xedcfaf390906a8f91fb35b7bac23f3111dbaee1c': '0xe61b872d223362facb9fcbce359a56764bccfa36', // soUSDC
-            '0xdc2007d9e9a33f50630f26069faab69c25f7758c': '0xd01e860e811a2942c1222586971a71d764bdd8c1', // rfUSDC
-            '0xbef1ccaada458a570c37b11a8872988ba1e4fdb9': '0xcb1ab294279078c5cf65406dd32083100c015325', // rfUSDT
-            '0x8fe33d737484ca194dedf64aafa8485327fc5372': '0xe243be0c0ec53f74ed0ee2171fd070e656f4b48f', // rfDAI
-            '0x8003eec4add35c6d23eb1ef61b4fa6bbbb23a41a': '0xc2bf5c38ebbcb9a710822f1ba2235e88ce51bc3a', // rfWETH
-            '0xb85245929dc65b5eddb56c4b4e84b20bce69db35': '0x46a76217415fd83ebb9e1f0ddf6b4f4f18fc5518', // rfWSETH
-            '0xd32f78f5ae235269c6d2cabbd26a57ff9fd62967': '0xa15abbf609133662a6794efaf12fbb0fdad647ac', // rfWBTC
-            '0x55b1f937b1335be355c82e207fd437182c986ba1': '0xa832e597273cf056d71490f6ea6f17218ba285df', // rfOP
+            '0xf970659221bb9d01b615321b63a26e857ffc030b': '0x42fe737ba23d172542d6c079952cafcd9b4a5256', // rfusdc multi strat
+            '0x20715545c15c76461861cb0d6ba96929766d05a5': '0xa9d40f2aa0121105ce763f13166fd19c4b964d3d', // rfusdt multi strat
+            '0xa5d4802b4ce6b745b0c9e1b4a79c093d197869c8': '0xed8f7907195e050411a6a7824bca6acc5c37806c', // rfdai multi strat
+            '0x2e2b8b82123789d895fd79913f6dfa51f5b5a0e6': '0x072c30dc3c2f7ce3b8f50600e6e57fb1e9bdf409', // rfweth multi strat
+            '0x48ace81c09382bfc08ed102e7eadd37e3b049752': '0xa20f3951d881b98ceb17149ba88ddb94ccd4cc16', // rfwsteth multi strat
+            '0x8025586ac5fb265a23b9492e7414beccc2059ec3': '0x6344dfaabe0635fc19aa599a772a3182878c32f4', // rfwbtc multi strat
+            '0x3e9cbffd270ae67abb09d28988e7e785498c7373': '0xee5e347e679ed3d86d8280a92b99bb6c09fbb374', // rfop multi strat
         },
         reaperManualRebalancer: '0xf070996cf89cd3d2582705fc269f2c800e9a6a21',
         sorQueries: '0x1814a3b3e4362caf4eb54cd85b82d39bd7b34e41',
