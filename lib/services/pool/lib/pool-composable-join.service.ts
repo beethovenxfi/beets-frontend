@@ -400,9 +400,7 @@ export class PoolComposableJoinService {
         });
 
         const minBpt = parseUnits(oldBnumSubtractSlippage(step.minBptReceived, 18, slippage), 18);
-        const joinAssets = tokensWithPhantomBpt
-            .map((token) => token.address)
-            .map((address) => (isSameAddress(address, this.wethAddress) ? AddressZero : address));
+        const joinAssets = tokensWithPhantomBpt.map((token) => token.address);
 
         return this.batchRelayerService.vaultEncodeJoinPool({
             poolId: pool.id,
@@ -411,7 +409,9 @@ export class PoolComposableJoinService {
             //recipient: isNestedJoin ? batchRelayerService.batchRelayerAddress : userAddress,
             recipient: userAddress,
             joinPoolRequest: {
-                assets: joinAssets,
+                assets: joinHasNativeAsset
+                    ? joinAssets.map((address) => (isSameAddress(address, this.wethAddress) ? AddressZero : address))
+                    : joinAssets,
                 maxAmountsIn: amountsIn,
                 userData:
                     pool.__typename === 'GqlPoolGyro'
