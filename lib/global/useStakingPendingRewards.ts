@@ -13,16 +13,18 @@ import { useUserAccount } from '~/lib/user/useUserAccount';
 import { useRef } from 'react';
 import useStakingMintableRewards from './useStakingMintableRewards';
 import { useNetworkConfig } from './useNetworkConfig';
-import { uniqBy } from 'lodash';
+import { sum } from 'lodash';
 
 function calculateClaimableBAL(stakingItems: GqlPoolStaking[], claimableBALForGauges: Record<string, string>) {
     let claimableBAL = 0;
-    for (const stakingItem of stakingItems) {
-        if (stakingItem.type === 'GAUGE' && stakingItem.gauge?.version === 2) {
-            const claimableBALForGauge = claimableBALForGauges[stakingItem.gauge?.gaugeAddress || ''] || '0';
-            claimableBAL += parseFloat(claimableBALForGauge);
-        }
-    }
+    // temporary workaround to show all BAL rewards, even when user unstaked from a boosted gauge
+    // for (const stakingItem of stakingItems) {
+    //     if (stakingItem.type === 'GAUGE' && stakingItem.gauge?.version === 2) {
+    //         const claimableBALForGauge = claimableBALForGauges[stakingItem.gauge?.gaugeAddress || ''] || '0';
+    //         claimableBAL += parseFloat(claimableBALForGauge);
+    //     }
+    // }
+    claimableBAL = sum(Object.values(claimableBALForGauges));
     return claimableBAL;
 }
 
@@ -78,6 +80,8 @@ export function useStakingPendingRewards(stakingItems: GqlPoolStaking[], hookNam
                     id: 'claimable-bal',
                 },
             ];
+
+            console.log({ pendingRewards });
 
             return pendingRewards.filter((pendingReward) => parseFloat(pendingReward.amount) > 0);
         },
