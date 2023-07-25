@@ -8,11 +8,28 @@ import { PoolUserStakedStats } from '~/modules/pool/detail/components/stats/Pool
 import { usePool } from '~/modules/pool/lib/usePool';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 import { PoolBadgeSmall } from '~/components/pool-badge/PoolBadgeSmall';
+import useStakingBoosts from '~/lib/global/useStakingBoosts';
 
 export default function PoolUserStats() {
     const { pool, totalApr } = usePool();
     const { userPoolBalanceUSD, isLoading } = usePoolUserDepositBalance();
     const { poolBadgeTypes } = useNetworkConfig();
+    const { boost } = useStakingBoosts();
+
+    const boostedApr = pool.dynamicData.apr.items.reduce((acc, curr) => {
+        if (curr.apr.__typename === 'GqlPoolAprTotal') {
+            return acc + parseFloat(curr.apr.total);
+        } else if (curr.title.includes('BAL')) {
+            return acc + parseFloat(boost) * parseFloat(curr.apr.min);
+        } else {
+            return totalApr;
+        }
+    }, 0);
+
+    const myApr =
+        pool.staking?.type === 'GAUGE' && pool.dynamicData.apr.items.find((item) => item.title.includes('BAL'))
+            ? boostedApr
+            : totalApr;
 
     return (
         <Flex width="full" alignItems="flex-start" flex={1} flexDirection="column">
@@ -21,7 +38,7 @@ export default function PoolUserStats() {
                     My APR
                 </Text>
                 <HStack>
-                    <div className="apr-stripes">{numeral(totalApr).format('0.00%')}</div>
+                    <div className="apr-stripes">{numeral(myApr).format('0.00%')}</div>
                     <AprTooltip onlySparkles data={pool.dynamicData.apr} />
                 </HStack>
                 {poolBadgeTypes[pool.id] && <PoolBadgeSmall poolBadge={poolBadgeTypes[pool.id]} />}
@@ -48,7 +65,7 @@ export default function PoolUserStats() {
                 <PoolUserStakedStats
                     poolAddress={pool.address}
                     staking={pool.staking}
-                    totalApr={totalApr}
+                    totalApr={myApr}
                     userPoolBalanceUSD={userPoolBalanceUSD}
                 />
             )}
