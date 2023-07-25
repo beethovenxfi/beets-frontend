@@ -11,9 +11,15 @@ export default function useStakingMintableRewards(staking: GqlPoolStaking[]) {
     const { userAddress } = useUserAccount();
     const networkConfig = useNetworkConfig();
     const provider = useProvider();
-    const mintableGaugeAddresses = staking
-        .filter((staking) => staking.type === 'GAUGE' && staking.gauge?.version === 2)
-        .map((gauge) => gauge.address);
+
+    // temporary work around to claim all BAL from all gauges, also when user unstaked but forgot to claim them
+    // const mintableGaugeAddresses = staking
+    //     .filter((staking) => staking.type === 'GAUGE' && staking.gauge?.version === 2)
+    //     .map((gauge) => gauge.address);
+    const mintableGaugeAddresses = [
+        '0xf27d53f21d024643d50de50183932f17638229f6', // rocket fuel
+        '0x9f9f8d58496691d541c40dbc2b1b20f8c43e8d8c', // gyro eclp wsteth/weth
+    ];
 
     const {
         submit: submitClaimBAL,
