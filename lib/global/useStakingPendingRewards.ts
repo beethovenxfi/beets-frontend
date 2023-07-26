@@ -81,8 +81,6 @@ export function useStakingPendingRewards(stakingItems: GqlPoolStaking[], hookNam
                 },
             ];
 
-            console.log({ pendingRewards });
-
             return pendingRewards.filter((pendingReward) => parseFloat(pendingReward.amount) > 0);
         },
         { enabled: !!userAddress && stakingItems.length > 0, refetchInterval: 15000 },
