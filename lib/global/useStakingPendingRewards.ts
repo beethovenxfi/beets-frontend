@@ -18,6 +18,8 @@ import { sum } from 'lodash';
 function calculateClaimableBAL(stakingItems: GqlPoolStaking[], claimableBALForGauges: Record<string, string>) {
     let claimableBAL = 0;
     // temporary workaround to show all BAL rewards, even when user unstaked from a boosted gauge
+    // because the boosted gauge addresses are hardcoded in 'useStakingMintableRewards.ts' we can jum sum them here
+    // this workaround will be removed when v6 of the batch relayer is released
     // for (const stakingItem of stakingItems) {
     //     if (stakingItem.type === 'GAUGE' && stakingItem.gauge?.version === 2) {
     //         const claimableBALForGauge = claimableBALForGauges[stakingItem.gauge?.gaugeAddress || ''] || '0';

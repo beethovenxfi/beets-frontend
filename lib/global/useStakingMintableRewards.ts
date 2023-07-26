@@ -12,7 +12,8 @@ export default function useStakingMintableRewards(staking: GqlPoolStaking[]) {
     const networkConfig = useNetworkConfig();
     const provider = useProvider();
 
-    // temporary work around to claim all BAL from all gauges, also when user unstaked but forgot to claim them
+    // temporary work around to claim all BAL from all boosted gauges (hardcoded below), even when user unstaked but forgot to claim them
+    // this workaround will be removed when v6 of the batch relayer is released
     // const mintableGaugeAddresses = staking
     //     .filter((staking) => staking.type === 'GAUGE' && staking.gauge?.version === 2)
     //     .map((gauge) => gauge.address);
