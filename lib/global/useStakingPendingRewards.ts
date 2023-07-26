@@ -26,7 +26,7 @@ function calculateClaimableBAL(stakingItems: GqlPoolStaking[], claimableBALForGa
     //         claimableBAL += parseFloat(claimableBALForGauge);
     //     }
     // }
-    claimableBAL = sum(Object.values(claimableBALForGauges));
+    claimableBAL = sum(Object.values(claimableBALForGauges).map((value) => parseFloat(value)));
     return claimableBAL;
 }
 
