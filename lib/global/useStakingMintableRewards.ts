@@ -6,6 +6,7 @@ import { useProvider } from 'wagmi';
 import { useSubmitTransaction } from '../util/useSubmitTransaction';
 import { useNetworkConfig } from './useNetworkConfig';
 import BalancerPseudoMinterAbi from '~/lib/abi/BalancerPseudoMinter.json';
+import { AddressZero } from '@ethersproject/constants';
 
 export default function useStakingMintableRewards(staking: GqlPoolStaking[]) {
     const { userAddress } = useUserAccount();
@@ -80,7 +81,7 @@ export default function useStakingMintableRewards(staking: GqlPoolStaking[]) {
             return {};
         },
         {
-            enabled: !!userAddress,
+            enabled: !!userAddress && networkConfig.gauge.balancerPseudoMinterAddress !== AddressZero,
         },
     );
 
