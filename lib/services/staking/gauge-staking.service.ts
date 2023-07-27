@@ -269,7 +269,10 @@ export class GaugeStakingService {
 
         const checkpointableGauges = [];
         for (const gaugeId in result) {
-            if (result[gaugeId].workingBalanceSupplyRatios[1].gt(result[gaugeId].workingBalanceSupplyRatios[0])) {
+            if (
+                result[gaugeId].workingBalanceSupplyRatios &&
+                result[gaugeId].workingBalanceSupplyRatios[1].gt(result[gaugeId].workingBalanceSupplyRatios[0])
+            ) {
                 checkpointableGauges.push(gaugeId);
             }
         }

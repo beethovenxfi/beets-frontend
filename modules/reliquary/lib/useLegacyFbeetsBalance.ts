@@ -40,7 +40,7 @@ export function useLegacyFBeetsBalance() {
 
             return stakedBalance;
         },
-        {},
+        { enabled: !!networkConfig.fbeets.address },
     );
 
     return {
