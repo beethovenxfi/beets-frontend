@@ -4,7 +4,7 @@ import axios from 'axios';
 
 import constants from '~/lib/global/constants';
 
-export type SupportedSubgraphs = 'mainnet-gauge' | 'optimism-gauge';
+export type SupportedSubgraphs = 'mainnet-gauge' | 'optimism-gauge' | 'aura';
 export type SubgraphResponse<T> = {
     data: T;
 };
