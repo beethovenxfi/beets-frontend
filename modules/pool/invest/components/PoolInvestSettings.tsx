@@ -65,7 +65,7 @@ export function PoolInvestSettings({ ...rest }: BoxProps) {
                                 </Box>
                                 <Switch
                                     id="zap-into-aura"
-                                    colorScheme="green"
+                                    colorScheme="purple"
                                     isChecked={auraZapEnabled}
                                     onChange={toggleAuraZapEnabled}
                                 />
