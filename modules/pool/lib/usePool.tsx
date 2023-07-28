@@ -13,6 +13,7 @@ import { TokenBase } from '~/lib/services/token/token-types';
 import { uniqBy } from 'lodash';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 import { usePoolWithOnChainData } from './usePoolWithOnChainData';
+import usePoolGetAuraPools, { AuraPool } from './usePoolAuraPools';
 
 export interface PoolContextType {
     pool: GqlPoolUnion;
@@ -30,6 +31,8 @@ export interface PoolContextType {
     isStablePool: boolean;
     isComposablePool: boolean;
     canCustomInvest: boolean;
+    auraPool: AuraPool | undefined;
+    hasAuraPool: boolean;
 }
 
 export const PoolContext = createContext<PoolContextType | null>(null);
@@ -131,6 +134,13 @@ export function PoolProvider({ pool: poolFromProps, children }: { pool: GqlPoolU
 
     const canCustomInvest = pool.__typename !== 'GqlPoolGyro';
 
+    const { auraPools } = usePoolGetAuraPools();
+
+    const auraPool = networkConfig.auraEnabled
+        ? auraPools?.pools.find((auraPool) => auraPool.balancerPoolId === pool.id)
+        : undefined;
+    const hasAuraPool = !!auraPool;
+
     useEffectOnce(() => {
         refetch();
         startPolling(30_000);
@@ -158,6 +168,8 @@ export function PoolProvider({ pool: poolFromProps, children }: { pool: GqlPoolU
                 isStablePool,
                 isComposablePool,
                 canCustomInvest,
+                auraPool,
+                hasAuraPool,
             }}
         >
             {children}

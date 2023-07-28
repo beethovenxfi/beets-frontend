@@ -49,7 +49,10 @@ export const fantomNetworkConfig: NetworkConfig = {
         vault: '0x20dd72Ed959b6147912C2e529F0a0C651c33c9ce',
         batchRelayer: '0x0faa25293a36241c214f3760c6ff443e1b731981',
         balToken: AddressZero,
-        composableStableFactories: ['0x5c3094982cf3c97a06b7d62a6f7669f14a199b19', '0x23f03a4fb344d8b98833d2ace093cc305e03474f'],
+        composableStableFactories: [
+            '0x5c3094982cf3c97a06b7d62a6f7669f14a199b19',
+            '0x23f03a4fb344d8b98833d2ace093cc305e03474f',
+        ],
         composableStableV1Factory: '',
         weightedPoolV2PlusFactories: [
             '0x8ea1c497c16726e097f62c8c9fbd944143f27090',
@@ -80,6 +83,9 @@ export const fantomNetworkConfig: NetworkConfig = {
                 '0x442988091cdc18acb8912cd3fe062cda9233f9dc',
             ],
         },
+    },
+    aura: {
+        boosterLite: AddressZero,
     },
     beetsPoolOwnerAddress: '0xcd983793adb846dce4830c22f30c7ef0c864a776',
     masterChefContractAddress: '0x8166994d9ebBe5829EC86Bd81258149B87faCfd3',
@@ -177,6 +183,7 @@ export const fantomNetworkConfig: NetworkConfig = {
         '0xa10285f445bcb521f1d623300dc4998b02f11c8f00000000000000000000043b': true,
         '0xcde5a11a4acb4ee4c805352cec57e236bdbc3837000200000000000000000019': true,
     },
+    auraEnabled: false,
     maBeetsEnabled: true,
     claimAllRewardsEnabled: true,
     layerZeroChainId: -1,

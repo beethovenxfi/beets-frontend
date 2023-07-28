@@ -10,7 +10,7 @@ import { usePool } from '~/modules/pool/lib/usePool';
 
 export function useInvest() {
     const { pool } = usePool();
-    const { selectedOptions, inputAmounts, zapEnabled } = useInvestState();
+    const { selectedOptions, inputAmounts, zapEnabled, auraZapEnabled } = useInvestState();
     const { getUserBalanceForToken, userPoolTokenBalances } = usePoolUserTokenBalancesInWallet();
     const { priceForAmount } = useGetTokens();
 
@@ -77,6 +77,7 @@ export function useInvest() {
         hasValidUserInput,
         isInvestingWithEth,
         zapEnabled,
+        auraZapEnabled,
         firstTokenOption,
     };
 }

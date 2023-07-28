@@ -92,6 +92,9 @@ export const optimismNetworkConfig: NetworkConfig = {
             reaper: [],
         },
     },
+    aura: {
+        boosterLite: '0x98ef32edd24e2c92525e59afc4475c1242a30184',
+    },
     beetsPoolOwnerAddress: '0xd9e2889ac8c6fff8e94c7c1beeade1352df1a513',
     masterChefContractAddress: '',
     defaultTokenIn: '0x7f5c764cbc14f9669b88837ca1490cca17c31607',
@@ -226,6 +229,7 @@ export const optimismNetworkConfig: NetworkConfig = {
         '0x1f131ec1175f023ee1534b16fa8ab237c00e238100000000000000000000004a': true,
         '0x479a7d1fcdd71ce0c2ed3184bfbe9d23b92e8337000000000000000000000049': true,
     },
+    auraEnabled: true,
     maBeetsEnabled: false,
     claimAllRewardsEnabled: false,
     layerZeroChainId: 111,

@@ -13,6 +13,7 @@ interface InvestState {
     selectedOptions: { [poolTokenIndex: string]: string };
     inputAmounts: AmountHumanReadableMap;
     zapEnabled: boolean;
+    auraZapEnabled: boolean;
 }
 
 export const investStateVar = makeVar<InvestState[]>([]);
@@ -41,6 +42,7 @@ export function useInvestState() {
                     inputAmounts: {},
                     selectedOptions: {},
                     zapEnabled: false,
+                    auraZapEnabled: false,
                 },
             ]);
         }
@@ -147,6 +149,23 @@ export function useInvestState() {
         );
     }
 
+    function toggleAuraZapEnabled() {
+        const state = investStateVar();
+
+        investStateVar(
+            state.map((state) => {
+                if (state.poolId === poolId) {
+                    return {
+                        ...state,
+                        auraZapEnabled: !state.auraZapEnabled,
+                    };
+                } else {
+                    return state;
+                }
+            }),
+        );
+    }
+
     function setInputAmountsForType(investType: string) {
         const state = investStateVar();
 
@@ -181,8 +200,10 @@ export function useInvestState() {
         setSelectedOptions,
         clearInvestState,
         toggleZapEnabled,
+        toggleAuraZapEnabled,
         setInputAmountsForType,
         zapEnabled: investState?.zapEnabled,
+        auraZapEnabled: investState?.auraZapEnabled,
         selectedOptions: investState?.selectedOptions,
         inputAmounts: investState?.inputAmounts,
         customInputAmounts: investState?.custom.inputAmounts,

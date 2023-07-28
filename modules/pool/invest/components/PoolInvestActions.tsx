@@ -16,6 +16,10 @@ import { useUserSyncBalanceMutation } from '~/apollo/generated/graphql-codegen-g
 import { useHasBatchRelayerApproval } from '~/lib/util/useHasBatchRelayerApproval';
 import { SubTransactionSubmittedContent } from '~/components/transaction/SubTransactionSubmittedContent';
 import { transactionMessageFromError } from '~/lib/util/transaction-util';
+import { usePoolUserAuraStakingAllowance } from '../../lib/usePoolUserAuraStakingAllowance';
+import { useJoinPoolAura } from '../lib/useJoinPoolAura';
+import { useApproveToken } from '~/lib/util/useApproveToken';
+import { parseUnits } from 'ethers/lib/utils.js';
 
 interface Props {
     onInvestComplete(): void;
@@ -24,15 +28,21 @@ interface Props {
 
 export function PoolInvestActions({ onInvestComplete, onClose }: Props) {
     const networkConfig = useNetworkConfig();
-    const { pool, requiresBatchRelayerOnJoin } = usePool();
-    const { selectedInvestTokensWithAmounts, totalInvestValue, zapEnabled } = useInvest();
+    const { pool, requiresBatchRelayerOnJoin, auraPool, bpt } = usePool();
+    const { selectedInvestTokensWithAmounts, totalInvestValue, zapEnabled, auraZapEnabled } = useInvest();
     const { joinPool, ...joinQuery } = useJoinPool(pool, zapEnabled);
+    const { joinPoolAura, ...joinAuraQuery } = useJoinPoolAura(pool);
     const allInvestTokens = pool.investConfig.options.map((option) => option.tokenOptions).flat();
     const {
         hasApprovalForAmount,
         isLoading: isLoadingUserAllowances,
         refetch: refetchUserAllowances,
     } = useUserAllowances(allInvestTokens, networkConfig.balancer.vault);
+    const {
+        hasApprovalToStakeAmount,
+        isLoading: isLoadingAuraStakingAllowance,
+        refetch: refetchAuraStakingAllowance,
+    } = usePoolUserAuraStakingAllowance();
     const [steps, setSteps] = useState<TransactionStep[] | null>(null);
     const {
         data: hasBatchRelayerApproval,
@@ -50,8 +60,14 @@ export function PoolInvestActions({ onInvestComplete, onClose }: Props) {
     const { refetch: refetchUserBptBalance } = usePoolUserBptBalance();
     const [userSyncBalance] = useUserSyncBalanceMutation();
 
-    const isLoading = isLoadingUserAllowances || isLoadingContractCallData || isLoadingBatchRelayerApproval;
-    const isBatchRelayerApprovalRequired = requiresBatchRelayerOnJoin || zapEnabled;
+    const { approve, ...approveQuery } = useApproveToken(bpt);
+
+    const isLoading =
+        isLoadingUserAllowances ||
+        isLoadingContractCallData ||
+        isLoadingBatchRelayerApproval ||
+        isLoadingAuraStakingAllowance;
+    const isBatchRelayerApprovalRequired = !auraZapEnabled && (requiresBatchRelayerOnJoin || zapEnabled);
 
     useEffect(() => {
         refetchBatchRelayerApproval({});
@@ -89,6 +105,23 @@ export function PoolInvestActions({ onInvestComplete, onClose }: Props) {
                     type: 'other',
                     buttonText: 'Approve Batch Relayer',
                     tooltipText: 'This pool requires you to approve the batch relayer.',
+                });
+            }
+
+            if (auraZapEnabled) {
+                if (!hasApprovalToStakeAmount(bptOutAndPriceImpact?.minBptReceived || '0')) {
+                    steps.push({
+                        id: 'approve',
+                        type: 'other' as const,
+                        buttonText: 'Approve BPT for Aura',
+                        tooltipText: 'Approve BPT Aura',
+                    });
+                }
+                steps.push({
+                    id: 'stake',
+                    type: 'other' as const,
+                    buttonText: 'Deposit & stake BPT in Aura',
+                    tooltipText: 'Deposit & stake BPT in Aura',
                 });
             }
 
@@ -130,21 +163,31 @@ export function PoolInvestActions({ onInvestComplete, onClose }: Props) {
                     onCompleteButtonClick={onClose}
                     steps={steps || []}
                     onSubmit={(id) => {
-                        if (id === 'invest' && contractCallData) {
+                        if (id === 'approve') {
+                            approve(networkConfig.aura.boosterLite || '');
+                        } else if (id === 'invest' && contractCallData) {
                             joinPool(contractCallData, selectedInvestTokensWithAmounts);
+                        } else if (id === 'stake') {
+                            joinPoolAura(auraPool?.id, parseUnits(bptOutAndPriceImpact?.minBptReceived || '0', 18));
                         }
                     }}
                     onConfirmed={(id) => {
-                        if (id !== 'invest') {
+                        if (id === 'tokenApproval') {
                             refetchUserAllowances();
-                        } else {
+                        } else if (id === 'approve') {
+                            refetchAuraStakingAllowance();
+                        } else if (id === 'invest' || id === 'stake') {
                             refetchUserTokenBalances();
                             refetchUserBptBalance();
                             userSyncBalance({ variables: { poolId: pool.id } });
                             onInvestComplete();
                         }
                     }}
-                    queries={[{ ...joinQuery, id: 'invest' }]}
+                    queries={[
+                        { ...joinQuery, id: 'invest' },
+                        { ...joinAuraQuery, id: 'stake' },
+                        { ...approveQuery, id: 'approve' },
+                    ]}
                 />
             </Box>
             <FadeInBox width="full" isVisible={joinQuery.isConfirmed || joinQuery.isPending || joinQuery.isFailed}>

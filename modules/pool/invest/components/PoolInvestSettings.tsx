@@ -8,8 +8,8 @@ import { usePool } from '~/modules/pool/lib/usePool';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 
 export function PoolInvestSettings({ ...rest }: BoxProps) {
-    const { zapEnabled, toggleZapEnabled } = useInvestState();
-    const { supportsZap } = usePool();
+    const { auraZapEnabled, zapEnabled, toggleAuraZapEnabled, toggleZapEnabled } = useInvestState();
+    const { supportsZap, hasAuraPool } = usePool();
     const networkConfig = useNetworkConfig();
 
     useEffect(() => {
@@ -19,6 +19,18 @@ export function PoolInvestSettings({ ...rest }: BoxProps) {
             toggleZapEnabled();
         }
     }, [supportsZap]);
+
+    useEffect(() => {
+        if (zapEnabled && auraZapEnabled) {
+            toggleAuraZapEnabled();
+        }
+    }, [zapEnabled]);
+
+    useEffect(() => {
+        if (zapEnabled && auraZapEnabled) {
+            toggleZapEnabled();
+        }
+    }, [auraZapEnabled]);
 
     return (
         <Box {...rest} width="full">
@@ -38,6 +50,24 @@ export function PoolInvestSettings({ ...rest }: BoxProps) {
                                     colorScheme="green"
                                     isChecked={zapEnabled}
                                     onChange={toggleZapEnabled}
+                                />
+                            </Flex>
+                        </>
+                    )}
+                    {hasAuraPool && (
+                        <>
+                            <Flex width="full">
+                                <Box flex="1">
+                                    <InfoButton
+                                        label="Or deposit & stake into Aura"
+                                        infoText="When enabled your investment BPTs are automatically deposited into Aura. You will then need to manage the BPTs in their app."
+                                    />
+                                </Box>
+                                <Switch
+                                    id="zap-into-aura"
+                                    colorScheme="green"
+                                    isChecked={auraZapEnabled}
+                                    onChange={toggleAuraZapEnabled}
                                 />
                             </Flex>
                         </>

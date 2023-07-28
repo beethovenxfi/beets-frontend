@@ -2,19 +2,17 @@ import { gql } from '@apollo/client';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 import useSubgraphQuery from '~/lib/global/useSubgraphQuery';
 
-export type AuraPools = {
-    id: string;
+export type AuraPool = {
+    id: number;
     name: string;
     rewardPool: string;
     balancerPoolId: string;
 };
 
-export default function useGetAuraPools() {
-    const { chainId } = useNetworkConfig();
+export default function usePoolAuraPools() {
+    const { chainId, auraEnabled } = useNetworkConfig();
 
-    const areQueriesEnabled = chainId === '10';
-
-    const { data: auraPools, isLoading } = useSubgraphQuery<AuraPools>(
+    const { data: auraPools, isLoading } = useSubgraphQuery<{ pools: AuraPool[] }>(
         'aura',
         gql`
             query GetPools($chainId: Int) {
@@ -23,16 +21,15 @@ export default function useGetAuraPools() {
                     name
                     rewardPool
                     balancerPoolId
+                    isShutdown
                 }
             }
         `,
-        { chainId },
+        { chainId: parseInt(chainId) },
         {
-            enabled: areQueriesEnabled,
+            enabled: auraEnabled,
         },
     );
-
-    console.log({ auraPools });
 
     return {
         auraPools,

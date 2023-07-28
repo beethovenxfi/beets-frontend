@@ -81,6 +81,9 @@ export interface NetworkConfig {
             reaper: string[];
         };
     };
+    aura: {
+        boosterLite: string;
+    };
     beetsPoolOwnerAddress: string;
     masterChefContractAddress: string;
     defaultTokenIn: string;
@@ -121,6 +124,7 @@ export interface NetworkConfig {
     poolBadgeTypes: {
         [poolId: string]: PoolBadgeType;
     };
+    auraEnabled: boolean;
     maBeetsEnabled: boolean;
     claimAllRewardsEnabled: boolean;
     layerZeroChainId: number;
