@@ -139,7 +139,7 @@ export function PoolProvider({ pool: poolFromProps, children }: { pool: GqlPoolU
     const auraPool = networkConfig.auraEnabled
         ? auraPools?.pools.find((auraPool) => auraPool.balancerPoolId === pool.id)
         : undefined;
-    const hasAuraPool = !!auraPool;
+    const hasAuraPool = !!auraPool && !auraPool.isShutdown;
 
     useEffectOnce(() => {
         refetch();

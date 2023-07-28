@@ -7,6 +7,7 @@ export type AuraPool = {
     name: string;
     rewardPool: string;
     balancerPoolId: string;
+    isShutdown: boolean;
 };
 
 export default function usePoolAuraPools() {
