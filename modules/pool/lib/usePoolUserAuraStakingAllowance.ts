@@ -9,7 +9,7 @@ export function usePoolUserAuraStakingAllowance() {
     const { hasApprovalForAmount, ...rest } = useUserAllowances([bpt], networkConfig.aura.boosterLite);
 
     function hasApprovalToStakeAmount(amount: AmountHumanReadable) {
-        return hasApprovalForAmount(networkConfig.aura.boosterLite, amount);
+        return hasApprovalForAmount(bpt.address, amount);
     }
 
     return {
