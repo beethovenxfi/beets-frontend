@@ -1,21 +1,11 @@
-import {
-    Alert,
-    AlertIcon,
-    Box,
-    Button,
-    HStack,
-    Link,
-    useBreakpointValue,
-    useDisclosure,
-    VStack,
-} from '@chakra-ui/react';
+import { Box, Button, HStack, useBreakpointValue, useDisclosure, VStack } from '@chakra-ui/react';
 import { PoolStakeModal } from '~/modules/pool/stake/PoolStakeModal';
 import { usePoolUserBptBalance } from '~/modules/pool/lib/usePoolUserBptBalance';
 import { numberFormatUSDValue } from '~/lib/util/number-formats';
-import { FadeInOutBox } from '~/components/animation/FadeInOutBox';
 import { usePool } from '~/modules/pool/lib/usePool';
 import { ToastType, useToast } from '~/components/toast/BeetsToast';
 import { useEffect } from 'react';
+import { useInvestState } from '~/modules/pool/invest/lib/useInvestState';
 
 export function PoolStakeInFarmWarning() {
     const { pool } = usePool();
@@ -25,13 +15,16 @@ export function PoolStakeInFarmWarning() {
         (parseFloat(userWalletBptBalance) / parseFloat(pool.dynamicData.totalShares)) *
         parseFloat(pool.dynamicData.totalLiquidity);
 
-    const { showToast, updateToast, removeToast, toastList } = useToast();
+    const { showToast, removeToast } = useToast();
     const isMobile = useBreakpointValue({ base: true, lg: false });
+
+    const { inputAmounts } = useInvestState();
 
     const StackComponent = isMobile ? VStack : HStack;
 
     useEffect(() => {
-        if (hasBptInWallet) {
+        // also don't show toast while investing
+        if (hasBptInWallet && Object.keys(inputAmounts || {}).length === 0) {
             showToast({
                 id: 'stake-alert',
                 type: ToastType.Warn,
