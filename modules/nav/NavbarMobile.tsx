@@ -32,8 +32,6 @@ export function NavbarMobile() {
                         px="4"
                     />
                 )}
-
-                {networkConfig.launchUrl && <NavbarLink href={networkConfig.launchUrl} text="Launch" px="4" />}
             </Flex>
         </Box>
     );
