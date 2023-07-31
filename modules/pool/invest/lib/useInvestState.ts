@@ -22,9 +22,14 @@ export function useInvestState() {
     const { pool } = usePool();
     const poolId = pool.id;
 
+    function isPoolInInvestState() {
+        const state = investStateVar();
+        return state.findIndex((state) => state.poolId === poolId) !== -1;
+    }
+
     function setInitialInvestState() {
         const state = investStateVar();
-        const isPoolInState = state.findIndex((state) => state.poolId === poolId) !== -1;
+        const isPoolInState = isPoolInInvestState();
 
         if (isPoolInState) {
             return;
@@ -202,6 +207,7 @@ export function useInvestState() {
         toggleZapEnabled,
         toggleAuraZapEnabled,
         setInputAmountsForType,
+        isPoolInInvestState: isPoolInInvestState(),
         zapEnabled: investState?.zapEnabled,
         auraZapEnabled: investState?.auraZapEnabled,
         selectedOptions: investState?.selectedOptions,

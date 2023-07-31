@@ -18,13 +18,13 @@ export function PoolStakeInFarmWarning() {
     const { showToast, removeToast } = useToast();
     const isMobile = useBreakpointValue({ base: true, lg: false });
 
-    const { inputAmounts } = useInvestState();
+    const { isPoolInInvestState } = useInvestState();
 
     const StackComponent = isMobile ? VStack : HStack;
 
     useEffect(() => {
         // also don't show toast while investing
-        if (hasBptInWallet && Object.keys(inputAmounts || {}).length === 0) {
+        if (hasBptInWallet && !isPoolInInvestState) {
             showToast({
                 id: 'stake-alert',
                 type: ToastType.Warn,
@@ -43,7 +43,7 @@ export function PoolStakeInFarmWarning() {
         } else {
             removeToast('stake-alert');
         }
-    }, [hasBptInWallet]);
+    }, [hasBptInWallet, isPoolInInvestState]);
 
     return <PoolStakeModal isOpen={isOpen} onOpen={onOpen} onClose={onClose} />;
 }
