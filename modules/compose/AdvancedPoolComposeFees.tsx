@@ -33,7 +33,7 @@ export function AdvancedPoolComposeFees(props: Props) {
     }
 
     return (
-        <Card py="3" px="3" width='full'>
+        <Card py="3" px="3" width='full' height='full'>
             <VStack alignItems="flex-start" spacing="3">
                 <VStack alignItems="flex-start" spacing="1">
                     <Heading size="sm">Pool Fees</Heading>

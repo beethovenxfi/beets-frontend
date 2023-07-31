@@ -2,6 +2,7 @@ export type ProviderWithProps = [React.JSXElementConstructor<React.PropsWithChil
 interface Props {
     providers: Array<ProviderWithProps>;
     children: React.ReactNode;
+    
 }
 
 export default function Compose(props: Props) {

@@ -35,7 +35,7 @@ export default function ComposeProvider({ children }: Props) {
     return <ComposeProviderContext.Provider value={providerValue}>{children}</ComposeProviderContext.Provider>;
 }
 
-export type ComposeStep = 'choose-tokens';
+export type ComposeStep = 'choose-tokens' | 'preview';
 export type PoolCreationExperience = 'simple' | 'advanced';
 export interface PoolCreationToken {
     address: string;
@@ -44,6 +44,9 @@ export interface PoolCreationToken {
     weight: number;
 }
 
+export type ManagerOption = 'dao-managed' | 'other-manager';
+export type OtherManagerOption = 'self-managed' | 'custom-eoa';
+
 function _useCompose() {
     const [step, setStep] = useState<ComposeStep>('choose-tokens');
     const [creationExperience, _setCreationExperience] = useState<PoolCreationExperience | null>(null);
@@ -51,10 +54,15 @@ function _useCompose() {
     const [currentFee, setCurrentFee] = useState(FEE_PRESETS[1]);
     const [isUsingCustomFee, setIsUsingCustomFee] = useState(false);
     const [feeManager, setFeeManager] = useState<string | null>(null);
+    const [managerOption, setManagerOption] = useState<ManagerOption>('dao-managed');
+    const [otherManagerOption, setOtherManagerOption] = useState<OtherManagerOption | undefined>();
+
     const [tokens, setTokens] = useState<PoolCreationToken[]>([
         { address: '', amount: '0.0', isLocked: false, weight: 50 },
         { address: '', amount: '0.0', isLocked: false, weight: 50 },
     ]);
+
+    console.log('fee manager', feeManager, isUsingCustomFee);
 
     useEffect(() => {
         const cachedCreationExperience = localStorage.getItem(
@@ -146,6 +154,10 @@ function _useCompose() {
         isUsingCustomFee,
         currentFee,
         feeManager,
+        managerOption,
+        otherManagerOption,
+        setOtherManagerOption,
+        setManagerOption,
         setFeeManager,
         setCurrentFee,
         setIsUsingCustomFee,

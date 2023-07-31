@@ -14,8 +14,12 @@ export default function AdvancedPoolCreation(props: Props) {
     const { poolTypes } = useCompose();
 
     return (
-        <VStack spacing="4" width="full">
-            <Heading size="md">Advanced Pool Creation</Heading>
+        <VStack spacing="4" width="full" mb='10'>
+            <Box width="75%">
+                <Heading size="md" width="full" textAlign="left">
+                    Pool Creation
+                </Heading>
+            </Box>
             <Card width="75%">
                 <HStack spacing="0">
                     {poolTypes.map((poolType) => (
@@ -48,18 +52,19 @@ export default function AdvancedPoolCreation(props: Props) {
                     ))}
                 </HStack>
             </Card>
-            <HStack width="75%" alignItems="flex-start">
+            <VStack width="75%" alignItems="flex-start">
+                <AdvancedPoolComposeTokens />
                 <Box width="full">
-                    {/* TODO ADD WEIGHTS */}
-                    <AdvancedPoolComposeTokens />
+                    <HStack>
+                        <VStack width="full">
+                            <AdvancedPoolComposeFees />
+                            <AdvancedPoolComposeFeeManager />
+                            {/* TODO IMPLEMENT SUBMISSION PREREQUISITES AND VALIDATION */}
+                            <AdvancedPoolComposeSubmit />
+                        </VStack>
+                    </HStack>
                 </Box>
-                <VStack width="full">
-                    <AdvancedPoolComposeFees />
-                    <AdvancedPoolComposeFeeManager />
-                    {/* TODO IMPLEMENT SUBMISSION PREREQUISITES AND VALIDATION */}
-                    <AdvancedPoolComposeSubmit />
-                </VStack>
-            </HStack>
+            </VStack>
         </VStack>
     );
 }

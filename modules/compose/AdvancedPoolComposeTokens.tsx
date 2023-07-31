@@ -1,5 +1,6 @@
-import { Box, Button, HStack, Heading, Text, VStack, useDisclosure } from '@chakra-ui/react';
+import { Box, Button, Grid, HStack, Heading, Text, VStack, useBreakpointValue, useDisclosure } from '@chakra-ui/react';
 import React, { useRef, useState } from 'react';
+import { Swiper, SwiperSlide } from 'swiper/react';
 import { PoolCreationToken, useCompose } from './ComposeProvider';
 import { TokenInput } from '~/components/inputs/TokenInput';
 import TokenRow from '~/components/token/TokenRow';
@@ -15,6 +16,8 @@ import { useDebouncedCallback } from 'use-debounce';
 import { isNaN, update } from 'lodash';
 import Scales from '~/assets/icons/scales.svg';
 import Image from 'next/image';
+import BeetsCarousel, { BeetsCarouselItem } from '~/components/carousel/BeetsCarousel';
+import { Pagination } from 'swiper';
 
 interface Props {}
 
@@ -44,6 +47,7 @@ export default function AdvancedPoolComposeTokens(props: Props) {
     const { showToast } = useToast();
     const isMaxTokens = tokens.length === MAX_TOKENS;
     const finalRefTokenIn = useRef(null);
+    const isMobile = useBreakpointValue({ base: true, lg: false });
 
     const debouncedDistributeTokens = useDebouncedCallback((tokens: PoolCreationToken[]) => {
         distributeTokenWeights(tokens);
@@ -132,9 +136,9 @@ export default function AdvancedPoolComposeTokens(props: Props) {
                             each. You can add up to 8 tokens.
                         </Text>
                     </VStack>
-                    <VStack width="full" spacing="2">
+                    <Grid width="full" templateColumns="1fr 1fr" columnGap="0.5rem" rowGap="0.5rem">
                         {tokens.map((token, i) => (
-                            <HStack key={`compose-token-select-${token}-${i}`} width="full">
+                            <HStack key={`compose-token-select-${token}-${i}`}>
                                 <BeetsBox width="full" pl="2" pr="3" py="2" key={`${token.address}-${i}`}>
                                     <HStack width="full" spacing="4">
                                         <HStack spacing="2" width="full">
@@ -184,7 +188,10 @@ export default function AdvancedPoolComposeTokens(props: Props) {
                                                     onClick={() => toggleLockToken(token.address, i)}
                                                     bg={token.isLocked ? 'beets.highlight' : 'whiteAlpha.400'}
                                                     color={token.isLocked ? 'beets.base.700' : 'inherit'}
-                                                    _hover={{ bg: 'beets.highlight', color: 'beets.base.700' }}
+                                                    _hover={{
+                                                        bg: 'beets.highlight',
+                                                        color: 'beets.base.700',
+                                                    }}
                                                     rounded="full"
                                                     p="0"
                                                 >
@@ -208,7 +215,7 @@ export default function AdvancedPoolComposeTokens(props: Props) {
                                 </BeetsBox>
                             </HStack>
                         ))}
-                    </VStack>
+                    </Grid>
                 </VStack>
                 {!isMaxTokens && (
                     <HStack width="full">

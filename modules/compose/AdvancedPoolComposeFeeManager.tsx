@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useCompose } from './ComposeProvider';
+import { ManagerOption, OtherManagerOption, useCompose } from './ComposeProvider';
 import Card from '~/components/card/Card';
 import { Heading, Radio, RadioGroup, Text, VStack } from '@chakra-ui/react';
 import { BeetsInput } from '~/components/inputs/BeetsInput';
@@ -10,15 +10,12 @@ import { ToastType, useToast } from '~/components/toast/BeetsToast';
 
 interface Props {}
 
-type ManagerOption = 'dao-managed' | 'other-manager';
-type OtherManagerOption = 'self-managed' | 'custom-eoa';
 export function AdvancedPoolComposeFeeManager(props: Props) {
     const { userAddress } = useUserAccount();
-    const { setFeeManager, feeManager } = useCompose();
+    const { setFeeManager, feeManager, managerOption, setManagerOption, otherManagerOption, setOtherManagerOption } =
+        useCompose();
     const { showToast } = useToast();
     // const [isUsingCustomEOA, setIsUsingCustomEOA] = useState(false);
-    const [managerOption, setManagerOption] = useState<ManagerOption>('dao-managed');
-    const [otherManagerOption, setOtherManagerOption] = useState<OtherManagerOption | undefined>();
 
     function handleFeeManagerOptionSelected(manager: ManagerOption) {
         if (manager === 'dao-managed') {
@@ -61,8 +58,14 @@ export function AdvancedPoolComposeFeeManager(props: Props) {
 
     const notDaoManaged = managerOption !== 'dao-managed';
     const isUsingCustomEOA = otherManagerOption === 'custom-eoa';
+
+    console.log({
+        notDaoManaged,
+        isUsingCustomEOA,
+        managerOption,
+    });
     return (
-        <Card py="3" px="3" width="full">
+        <Card py="3" px="3" width="full" height="full">
             <VStack alignItems="flex-start" spacing="3">
                 <VStack alignItems="flex-start" spacing="1">
                     <Heading size="sm">Fee Manager</Heading>
@@ -107,6 +110,7 @@ export function AdvancedPoolComposeFeeManager(props: Props) {
                                 px="2"
                                 placeholder="0x48daF..."
                                 onChange={handleCustomFeeManagerChanged}
+                                value={feeManager || ''}
                                 borderColor={isUsingCustomEOA ? 'beets.green' : 'transparent'}
                                 borderWidth={2}
                             />

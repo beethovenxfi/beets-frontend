@@ -3,6 +3,7 @@ import { useCompose } from './ComposeProvider';
 import ComposeChooseFlowType from './ComposeChooseFlowType';
 import AdvancedPoolCreation from './AdvancedPoolCreation';
 import SimpleCreationChooseTokens from './SimpleCreationChooseTokens.tsx';
+import PoolComposePreview from './PoolComposePreview';
 
 interface Props {}
 
@@ -17,7 +18,12 @@ export default function ComposeFlow(props: Props) {
                     return <SimpleCreationChooseTokens />;
             }
         case 'advanced':
-            return <AdvancedPoolCreation />;
+            switch (activeStep) {
+                case 'preview':
+                    return <PoolComposePreview />;
+                default:
+                    return <AdvancedPoolCreation />;
+            }
         default:
             return <ComposeChooseFlowType />;
     }
