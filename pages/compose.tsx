@@ -28,8 +28,8 @@ function Compose() {
                 <meta property="og:description" content={DESCRIPTION} />
                 <meta property="twitter:description" content={DESCRIPTION} />
             </Head>
-            {/* <PageMasthead
-                title="Create a pool"
+            <PageMasthead
+                title="Weighted pool creation"
                 image={
                     <NextImage
                         src={chainId === '10' ? InvestMastheadOpImage : InvestMastheadImage}
@@ -37,7 +37,7 @@ function Compose() {
                         height="68px"
                     />
                 }
-            /> */}
+            />
             <UserTokenBalancesProvider>
                 <ComposeProvider>
                     <Box mt="8">

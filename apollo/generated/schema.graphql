@@ -73,79 +73,6 @@ type GqlLatestSyncedBlocks {
     userWalletSyncBlock: BigInt!
 }
 
-type GqlLge {
-    address: String!
-    adminAddress: String!
-    adminIsMultisig: Boolean!
-    bannerImageUrl: String!
-    collateralAddress: String!
-    collateralAmount: String!
-    collateralDecimals: Int!
-    collateralEndWeight: Int!
-    collateralStartWeight: Int!
-    description: String!
-    discordUrl: String!
-    endTimestamp: Int!
-    id: ID!
-    mediumUrl: String!
-    name: String!
-    startTimestamp: Int!
-    swapFee: String!
-    telegramUrl: String!
-    tokenAddress: String!
-    tokenAmount: String!
-    tokenDecimals: Int!
-    tokenEndWeight: Int!
-    tokenIconUrl: String!
-    tokenStartWeight: Int!
-    tokenSymbol: String!
-    twitterUrl: String!
-    websiteUrl: String!
-}
-
-input GqlLgeCreateInput {
-    address: String!
-    bannerImageUrl: String!
-    collateralAddress: String!
-    collateralAmount: String!
-    collateralEndWeight: Int!
-    collateralStartWeight: Int!
-    description: String!
-    discordUrl: String!
-    endTimestamp: Int!
-    id: ID!
-    mediumUrl: String!
-    name: String!
-    startTimestamp: Int!
-    swapFee: String!
-    telegramUrl: String!
-    tokenAddress: String!
-    tokenAmount: String!
-    tokenEndWeight: Int!
-    tokenIconUrl: String!
-    tokenStartWeight: Int!
-    twitterUrl: String!
-    websiteUrl: String!
-}
-
-type GqlLgePriceData {
-    price: Float!
-    timestamp: Int!
-    type: String!
-}
-
-input GqlLgeUpdateInput {
-    description: String!
-    discordUrl: String!
-    id: ID!
-    mediumUrl: String!
-    name: String!
-    telegramUrl: String!
-    tokenIconUrl: String!
-    twitterUrl: String!
-    websiteUrl: String!
-}
-
 type GqlPoolApr {
     apr: GqlPoolAprValue!
     hasRewardApr: Boolean!
@@ -1142,6 +1069,30 @@ input GqlUserSwapVolumeFilter {
     tokenOutIn: [String!]
 }
 
+type GqlVotingGauge {
+    addedTimestamp: Int
+    address: Bytes!
+    isKilled: Boolean!
+    relativeWeightCap: String
+}
+
+type GqlVotingGaugeToken {
+    address: String!
+    logoURI: String!
+    symbol: String!
+    weight: String
+}
+
+type GqlVotingPool {
+    address: Bytes!
+    chain: GqlChain!
+    gauge: GqlVotingGauge!
+    id: ID!
+    symbol: String!
+    tokens: [GqlVotingGaugeToken!]!
+    type: GqlPoolMinimalType!
+}
+
 """
 The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
 """
@@ -1151,8 +1102,6 @@ type Mutation {
     beetsPoolLoadReliquarySnapshotsForAllFarms: String!
     beetsSyncFbeetsRatio: String!
     cacheAverageBlockTime: String!
-    lgeCreate(lge: GqlLgeCreateInput!): GqlLge!
-    lgeSyncFromSanity: String!
     poolBlackListAddPool(poolId: String!): String!
     poolBlackListRemovePool(poolId: String!): String!
     poolDeletePool(poolId: String!): String!
@@ -1211,9 +1160,6 @@ type Query {
     blocksGetBlocksPerYear: Float!
     contentGetNewsItems: [GqlContentNewsItem!]!
     latestSyncedBlocks: GqlLatestSyncedBlocks!
-    lge(id: ID!): GqlLge!
-    lgeGetChartData(id: ID!): [GqlLgePriceData]!
-    lges: [GqlLge!]!
     poolGetAllPoolsSnapshots(range: GqlPoolSnapshotDataRange!): [GqlPoolSnapshot!]!
     poolGetBatchSwaps(first: Int, skip: Int, where: GqlPoolSwapFilter): [GqlPoolBatchSwap!]!
     poolGetFeaturedPoolGroups: [GqlPoolFeaturedPoolGroup!]!
@@ -1279,4 +1225,5 @@ type Query {
     userGetSwaps(first: Int = 10, poolId: String!, skip: Int = 0): [GqlPoolSwap!]!
     veBalGetTotalSupply: AmountHumanReadable!
     veBalGetUserBalance: AmountHumanReadable!
+    veBalGetVotingList: [GqlVotingPool!]!
 }

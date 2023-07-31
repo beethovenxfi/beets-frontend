@@ -1,4 +1,5 @@
-import { sumBy } from 'lodash';
+import { bnum } from '@balancer-labs/sor';
+import { sum, sumBy } from 'lodash';
 import React, { ReactNode, useContext, useEffect, useState } from 'react';
 
 const POOL_TYPES = [
@@ -6,16 +7,6 @@ const POOL_TYPES = [
         type: 'weighted',
         isEnabled: true,
         name: 'Weighted Pool',
-    },
-    {
-        type: 'boosted',
-        isEnabled: false,
-        name: 'Boosted Pool',
-    },
-    {
-        type: 'stable',
-        isEnabled: false,
-        name: 'Stable Pool',
     },
 ];
 
@@ -61,8 +52,6 @@ function _useCompose() {
         { address: '', amount: '0.0', isLocked: false, weight: 50 },
         { address: '', amount: '0.0', isLocked: false, weight: 50 },
     ]);
-
-    console.log('fee manager', feeManager, isUsingCustomFee);
 
     useEffect(() => {
         const cachedCreationExperience = localStorage.getItem(
@@ -125,23 +114,41 @@ function _useCompose() {
     }
 
     function distributeTokenWeights(tokens: PoolCreationToken[]) {
-        const lockedTokens = tokens.filter((token) => token.isLocked);
-        const lockedWeight = sumBy(lockedTokens, (token) => token.weight);
-        const distributableWeight = 100 - lockedWeight;
-        const numUnlockedTokens = tokens.length - lockedTokens.length;
+        // get all the locked weights and sum those bad boys
+        let lockedPct = sum(tokens.filter((token) => token.isLocked).map((token) => token.weight / 100));
+        // makes it so that new allocations are set as 0
+        if (lockedPct > 1) lockedPct = 1;
+        const pctAvailableToDistribute = bnum(1).minus(lockedPct);
+        const unlockedWeights = tokens.filter((token) => !token.isLocked);
+        const evenDistributionWeight = pctAvailableToDistribute.div(unlockedWeights.length);
 
-        if (distributableWeight > 0 && numUnlockedTokens > 0) {
-            const distributableWeightPerUnlockedToken = distributableWeight / numUnlockedTokens;
+        const error = pctAvailableToDistribute.minus(evenDistributionWeight.times(unlockedWeights.length));
+        const isErrorDivisible = error.mod(unlockedWeights.length).eq(0);
+        const distributableError = isErrorDivisible ? error.div(unlockedWeights.length) : error;
 
-            const tokensWithDistributedWeights = tokens.map((token) => {
-                if (token.isLocked) return token;
+        const normalisedWeights = unlockedWeights.map((_, i) => {
+            const evenDistributionWeight4DP = Number(evenDistributionWeight.toFixed(4));
+            const errorScaledTo4DP = Number(distributableError.toString()) * 1e14;
+            if (!isErrorDivisible && i === 0) {
+                return evenDistributionWeight4DP + errorScaledTo4DP;
+            } else if (isErrorDivisible) {
+                return evenDistributionWeight4DP + errorScaledTo4DP;
+            } else {
+                return evenDistributionWeight4DP;
+            }
+        });
+
+        const newTokens = tokens.map((token, i) => {
+            if (unlockedWeights.find((uToken) => uToken.address === token.address)) {
                 return {
                     ...token,
-                    weight: distributableWeightPerUnlockedToken,
+                    weight: Number((normalisedWeights[i] * 100).toFixed(2)) || 0,
                 };
-            });
-            setTokens(tokensWithDistributedWeights);
-        }
+            } else {
+                return token;
+            }
+        });
+        setTokens(newTokens);
     }
 
     return {

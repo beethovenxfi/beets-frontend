@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { ManagerOption, OtherManagerOption, useCompose } from './ComposeProvider';
 import Card from '~/components/card/Card';
-import { Heading, Radio, RadioGroup, Text, VStack } from '@chakra-ui/react';
+import { Alert, Heading, Radio, RadioGroup, Text, VStack } from '@chakra-ui/react';
 import { BeetsInput } from '~/components/inputs/BeetsInput';
 import { useUserAccount } from '~/lib/user/useUserAccount';
 import { useDebouncedCallback } from 'use-debounce';
 import { isAddress } from 'ethers/lib/utils.js';
 import { ToastType, useToast } from '~/components/toast/BeetsToast';
+import { networkConfig } from '~/lib/config/network-config';
 
 interface Props {}
 
@@ -19,8 +20,7 @@ export function AdvancedPoolComposeFeeManager(props: Props) {
 
     function handleFeeManagerOptionSelected(manager: ManagerOption) {
         if (manager === 'dao-managed') {
-            // TODO: set the EOA for dao here
-            // setFeeManager()
+            setFeeManager(networkConfig.beetsPoolOwnerAddress);
             setOtherManagerOption(undefined);
         } else {
         }
@@ -59,22 +59,18 @@ export function AdvancedPoolComposeFeeManager(props: Props) {
     const notDaoManaged = managerOption !== 'dao-managed';
     const isUsingCustomEOA = otherManagerOption === 'custom-eoa';
 
-    console.log({
-        notDaoManaged,
-        isUsingCustomEOA,
-        managerOption,
-    });
     return (
         <Card py="3" px="3" width="full" height="full">
             <VStack alignItems="flex-start" spacing="3">
                 <VStack alignItems="flex-start" spacing="1">
                     <Heading size="sm">Fee Manager</Heading>
-                    <Text lineHeight="1rem" fontSize="0.85rem">
+                    <Text lineHeight="1rem" fontSize="0.95rem">
                         You can choose to elect a fee manager for your pool. The fee manager can be yourself, an address
                         of your choosing or the BeethovenX DAO. By default, the BeethovenX DAO is the fee manager.
                     </Text>
                 </VStack>
                 <VStack width="full" alignItems="flex-start" spacing="4">
+                    <Alert status="warning" color='yellow.100'>To be eligible for gauge rewards, the pool must be managed by the BeethovenX DAO</Alert>
                     <VStack width="full" alignItems="flex-start">
                         <RadioGroup value={managerOption} onChange={handleFeeManagerOptionSelected}>
                             <VStack width="full" alignItems="flex-start" spacing="1">

@@ -37,7 +37,7 @@ export function AdvancedPoolComposeFees(props: Props) {
             <VStack alignItems="flex-start" spacing="3">
                 <VStack alignItems="flex-start" spacing="1">
                     <Heading size="sm">Pool Fees</Heading>
-                    <Text lineHeight="1rem" fontSize="0.85rem">
+                    <Text lineHeight="1rem" fontSize="0.95rem">
                         0.30% is best for most weighted pools with established tokens. Go higher for more exotic tokens.
                         You can also specify your own custom fee.
                     </Text>

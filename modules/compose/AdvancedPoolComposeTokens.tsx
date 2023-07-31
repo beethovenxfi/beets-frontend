@@ -154,10 +154,10 @@ export default function AdvancedPoolComposeTokens(props: Props) {
                                                         wrapperProps={{
                                                             height: '40px',
                                                             padding: 'none',
-                                                            width: '70px',
+                                                            width: '85px',
                                                         }}
                                                         height="100%"
-                                                        width="70px"
+                                                        width="85px"
                                                         py="0"
                                                         minHeight="none"
                                                         fontWeight="medium"
@@ -166,8 +166,6 @@ export default function AdvancedPoolComposeTokens(props: Props) {
                                                         placeholder="50"
                                                         value={token.weight}
                                                         onChange={handleTokenWeightChangedForIndex(i)}
-                                                        // borderColor={isUsingCustomFee ? 'beets.green' : 'transparent'}
-                                                        // borderWidth={2}
                                                     >
                                                         <Box
                                                             top="0"

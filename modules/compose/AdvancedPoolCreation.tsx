@@ -11,47 +11,8 @@ import { AdvancedPoolComposeSubmit } from './AdvancedPoolComposeSubmit';
 interface Props {}
 
 export default function AdvancedPoolCreation(props: Props) {
-    const { poolTypes } = useCompose();
-
     return (
-        <VStack spacing="4" width="full" mb='10'>
-            <Box width="75%">
-                <Heading size="md" width="full" textAlign="left">
-                    Pool Creation
-                </Heading>
-            </Box>
-            <Card width="75%">
-                <HStack spacing="0">
-                    {poolTypes.map((poolType) => (
-                        <BeetsTooltip
-                            key={`choose-pooltye-${poolType.type}`}
-                            noImage
-                            label={
-                                !poolType.isEnabled ? 'This pool type is not supported by the compose UI yet.' : null
-                            }
-                        >
-                            <Box width="full">
-                                <Button
-                                    disabled={!poolType.isEnabled}
-                                    fontSize="0.85rem"
-                                    width="full"
-                                    roundedRight="none"
-                                    py="6"
-                                >
-                                    <VStack spacing="0">
-                                        <Text>{poolType.name}</Text>
-                                        {!poolType.isEnabled && (
-                                            <Text fontSize="0.85rem" color="orange.300" fontWeight="regular">
-                                                Under production
-                                            </Text>
-                                        )}
-                                    </VStack>
-                                </Button>
-                            </Box>
-                        </BeetsTooltip>
-                    ))}
-                </HStack>
-            </Card>
+        <VStack spacing="4" width="full" mb="10">
             <VStack width="75%" alignItems="flex-start">
                 <AdvancedPoolComposeTokens />
                 <Box width="full">

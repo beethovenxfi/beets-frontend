@@ -17,9 +17,6 @@ export default function PreviewPoolTokenSelections(props: Props) {
                 <VStack width="full" spacing="3">
                     <VStack spacing="1" width="full" alignItems="flex-start">
                         <Heading size="sm">Pool Tokens</Heading>
-                        {/* <Text lineHeight="1rem" fontSize="0.95rem">
-                            These are your selected pool tokens, their weights and initial liquidity amounts.
-                        </Text> */}
                     </VStack>
                     <Grid width="full" templateColumns="1fr 1fr" columnGap="0.5rem" rowGap="0.5rem">
                         {tokens.map((token, i) => (
@@ -27,8 +24,17 @@ export default function PreviewPoolTokenSelections(props: Props) {
                                 <BeetsBox width="full" pl="2" pr="3" py="2" key={`${token.address}-${i}`}>
                                     <HStack width="full" spacing="4">
                                         <HStack spacing="2" width="full">
-                                            <BeetsBox borderWidth={2} borderColor='beets.green' bg='beets.greenAlpha.50' py='2' px='4'>
-                                                <Text color='beets.green'>{token.weight}%</Text>
+                                            <BeetsBox
+                                                borderWidth={2}
+                                                borderColor="beets.green"
+                                                bg="beets.greenAlpha.50"
+                                                py="2"
+                                                px="4"
+                                                minWidth='92px'
+                                                display='flex'
+                                                justifyContent='center'
+                                            >
+                                                <Text color="beets.green">{token.weight}%</Text>
                                             </BeetsBox>
                                             <TokenRow address={token.address} amount={token.amount} />
                                         </HStack>

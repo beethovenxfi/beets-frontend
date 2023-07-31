@@ -20,7 +20,6 @@ export default function PreviewPoolTokenFees(props: Props) {
     const isDAOManager = beetsPoolOwnerAddress === feeManager;
     const isSelfManager = userAddress === feeManager;
 
-    console.log({ isDAOManager, isSelfManager})
     return (
         <HStack spacing="4" width="full" justifyContent="flex-start">
             <BeetsBox py="3" pl="4" pr="6" display="flex" justifyContent="flex-start">
@@ -46,7 +45,7 @@ export default function PreviewPoolTokenFees(props: Props) {
                             <BeetsBox rounded="full" px="2" pt="2" pb="0">
                                 <Image src={BeetsSmart} width="24" height="24" alt="your-profile" />
                             </BeetsBox>
-                            <VStack alignItems="flex-start" spacing="0.5">
+                            <VStack alignItems="flex-start" spacing="0">
                                 <Heading size="sm">
                                     <HStack spacing="0">
                                         <Text color="beets.highlight">{parseFloat(currentFee) * 100}%&nbsp;</Text>
