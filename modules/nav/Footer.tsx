@@ -35,13 +35,6 @@ export function Footer() {
                                     (FTM)
                                 </Text>
                             </FooterLink>
-                            <FooterLink href="https://v1.beets.fi/#/launch" linkType="internal">
-                                Launch
-                                <Text as="span" fontSize="2xs">
-                                    {' '}
-                                    (FTM)
-                                </Text>
-                            </FooterLink>
                         </GridItem>
                         <GridItem>
                             <FooterLink href="https://snapshot.org/#/beets.eth">Vote</FooterLink>

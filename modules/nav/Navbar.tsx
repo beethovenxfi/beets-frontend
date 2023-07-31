@@ -68,10 +68,6 @@ export function Navbar({ scrollY }: Props) {
                                     mr="5"
                                 />
                             )}
-                            {networkConfig.launchUrl && (
-                                <NavbarLink href={networkConfig.launchUrl} text="Launch" mr={5} />
-                            )}
-
                             {/*<NavbarAdditionalLinksMenu />*/}
                         </Flex>
                     </Box>

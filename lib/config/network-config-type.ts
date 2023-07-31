@@ -109,7 +109,6 @@ export interface NetworkConfig {
         checkpointHelper: string;
     };
     createPoolUrl: string;
-    launchUrl?: string;
     stakeUrl?: string;
     warnings: {
         poolDetail: { [poolId: string]: PoolDetailWarning };
