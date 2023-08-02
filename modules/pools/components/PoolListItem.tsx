@@ -11,6 +11,10 @@ import { memo } from 'react';
 import { PoolBadgeType } from '~/lib/config/network-config-type';
 import { PoolListItemWarning } from '~/modules/pools/components/PoolListItemWarning';
 import { PoolBadgeSmall } from '~/components/pool-badge/PoolBadgeSmall';
+import BeetsTooltip from '~/components/tooltip/BeetsTooltip';
+import AuraLogo from '~/assets/logo/aura_iso_colors.png';
+import Image from 'next/image';
+import { networkConfig } from '~/lib/config/network-config';
 
 interface Props extends BoxProps {
     pool: GqlPoolMinimalFragment;
@@ -35,6 +39,8 @@ export function PoolListItem({
     warningMessage,
     ...rest
 }: Props) {
+    const hasAuraStaking = Object.keys(networkConfig.auraStaking).includes(pool.id);
+
     return (
         <Box
             mb={{ base: '4', lg: '0' }}
@@ -87,6 +93,16 @@ export function PoolListItem({
                             <Text fontSize={{ base: 'xl', lg: 'md' }} fontWeight={{ base: 'bold', lg: 'normal' }}>
                                 {pool.name}
                             </Text>
+                            {hasAuraStaking && (
+                                <BeetsTooltip
+                                    label="For this pool you can deposit & stake your BPT on Aura Finance for extra boosted rewards"
+                                    noImage
+                                >
+                                    <Box ml="2" mt="1">
+                                        <Image src={AuraLogo} alt="Aura Finance" height="24px" width="24px" />
+                                    </Box>
+                                </BeetsTooltip>
+                            )}
                             {warningMessage && <PoolListItemWarning ml="2" message={warningMessage} />}
                         </GridItem>
                         {showUserBalance && (

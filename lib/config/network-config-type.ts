@@ -120,6 +120,7 @@ export interface NetworkConfig {
     poolBadgeTypes: {
         [poolId: string]: PoolBadgeType;
     };
+    auraStaking: { [poolId: string]: string };
     maBeetsEnabled: boolean;
     claimAllRewardsEnabled: boolean;
     layerZeroChainId: number;
