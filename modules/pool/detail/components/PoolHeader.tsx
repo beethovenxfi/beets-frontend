@@ -10,6 +10,7 @@ import {
     VStack,
     Wrap,
     WrapItem,
+    Link,
 } from '@chakra-ui/react';
 import numeral from 'numeral';
 import { PoolTokenPill } from '~/components/token/PoolTokenPill';
@@ -20,6 +21,7 @@ import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 import { AddressZero } from '@ethersproject/constants';
 import { usePool } from '~/modules/pool/lib/usePool';
 import { useToast } from '~/components/toast/BeetsToast';
+import AuraLogo from '~/assets/logo/aura_iso_colors.png';
 
 function PoolHeader() {
     const networkConfig = useNetworkConfig();
@@ -35,6 +37,8 @@ function PoolHeader() {
     const tooltipText2 = `Dynamic swap fees are controlled by the ${
         hasBeetsOwner ? 'Beethoven X Liquidity Committee Multisig' : 'pool owner'
     }.`;
+
+    const hasAuraStaking = Object.keys(networkConfig.auraStaking).includes(pool.id);
 
     return (
         <VStack width="full" alignItems="flex-start" mb="8">
@@ -53,40 +57,81 @@ function PoolHeader() {
                     </WrapItem>
                 ))}
             </Wrap>
-            <Popover trigger="hover" placement="right">
-                <PopoverTrigger>
+            <HStack>
+                <Popover trigger="hover" placement="right">
+                    <PopoverTrigger>
+                        <HStack
+                            paddingX="3"
+                            paddingY="2"
+                            bg="whiteAlpha.200"
+                            spacing="2"
+                            fontSize="md"
+                            rounded="full"
+                            color="beets.base.50"
+                            justifyContent="center"
+                            fontWeight="semibold"
+                        >
+                            {!hasZeroOwner && (
+                                <Flex alignItems="center">
+                                    {hasBeetsOwner ? (
+                                        <Image src={PoolOwnerImage} width="24" height="24" alt="Pool Owner Image" />
+                                    ) : (
+                                        <HelpCircle size="24" />
+                                    )}
+                                </Flex>
+                            )}
+                            <HStack spacing="1">
+                                <Text>{numeral(pool.dynamicData.swapFee).format('0.0[00]%')}</Text>
+                                <Text>{swapFeeType} Fee</Text>
+                            </HStack>
+                        </HStack>
+                    </PopoverTrigger>
+                    <PopoverContent w="200px" bgColor="beets.base.800" shadow="2xl">
+                        <Box p="2" fontSize="sm" bgColor="whiteAlpha.200">
+                            {tooltipText1} {!hasZeroOwner && tooltipText2}
+                        </Box>
+                    </PopoverContent>
+                </Popover>
+                {hasAuraStaking && (
                     <HStack
                         paddingX="3"
                         paddingY="2"
-                        bg="whiteAlpha.200"
+                        bg="whiteAlpha.300"
                         spacing="2"
                         fontSize="md"
                         rounded="full"
-                        color="beets.base.50"
                         justifyContent="center"
                         fontWeight="semibold"
+                        border="2px"
+                        borderColor="aura.pink"
+                        _hover={{ borderColor: 'aura.purple' }}
                     >
-                        {!hasZeroOwner && (
-                            <Flex alignItems="center">
-                                {hasBeetsOwner ? (
-                                    <Image src={PoolOwnerImage} width="24" height="24" alt="Pool Owner Image" />
-                                ) : (
-                                    <HelpCircle size="24" />
-                                )}
-                            </Flex>
-                        )}
-                        <HStack spacing="1">
-                            <Text>{numeral(pool.dynamicData.swapFee).format('0.0[00]%')}</Text>
-                            <Text>{swapFeeType} Fee</Text>
-                        </HStack>
+                        <Popover trigger="hover" placement="right">
+                            <PopoverTrigger>
+                                <Link
+                                    mr="2"
+                                    href={networkConfig.auraStaking[pool.id]}
+                                    isExternal
+                                    style={{ textDecoration: 'none' }}
+                                >
+                                    <HStack>
+                                        <Text mr="2" color="beets.base.50">
+                                            Boosted rewards are available on Aura
+                                        </Text>
+                                        <Image src={AuraLogo} alt="Aura Finance" height="24px" width="24px" />
+                                    </HStack>
+                                </Link>
+                            </PopoverTrigger>
+                            <PopoverContent w="200px" bgColor="beets.base.800" shadow="2xl" ml="6">
+                                <Box p="2" fontSize="sm" bgColor="whiteAlpha.200">
+                                    For this pool you can deposit & stake your BPT on Aura Finance for extra boosted
+                                    rewards
+                                </Box>
+                            </PopoverContent>
+                        </Popover>
                     </HStack>
-                </PopoverTrigger>
-                <PopoverContent w="200px" bgColor="beets.base.800" shadow="2xl">
-                    <Box p="2" fontSize="sm" bgColor="whiteAlpha.200">
-                        {tooltipText1} {!hasZeroOwner && tooltipText2}
-                    </Box>
-                </PopoverContent>
-            </Popover>
+                )}
+            </HStack>
         </VStack>
     );
 }
