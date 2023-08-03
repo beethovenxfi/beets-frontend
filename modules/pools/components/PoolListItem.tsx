@@ -69,7 +69,7 @@ export function PoolListItem({
                         py={{ base: '4', lg: '0' }}
                         height={{ lg: '63.5px' }}
                         templateColumns={{
-                            base: '1fr 1fr',
+                            base: '1.75fr 1fr',
                             lg: showUserBalance ? '90px 1fr 150px 200px 0px 200px' : '90px 1fr 100px 146px 200px 200px',
                             xl: showUserBalance
                                 ? '90px 1fr 150px 200px 200px 200px'
@@ -171,7 +171,7 @@ export function PoolListItem({
                             <MobileLabel text="APR" />
                             <MemoizedAprTooltip
                                 data={pool.dynamicData.apr}
-                                textProps={{ fontWeight: 'normal', fontSize: { base: 'lg', lg: 'md' } }}
+                                textProps={{ fontWeight: 'normal', fontSize: { base: 'xl', lg: 'md' } }}
                             />
                         </StatGridItem>
                         <StatGridItem area="fees" display={{ base: 'block', lg: 'none' }}>
