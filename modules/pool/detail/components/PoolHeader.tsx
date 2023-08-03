@@ -127,7 +127,7 @@ function PoolHeader() {
                             >
                                 <HStack>
                                     <Text mr="2" color="beets.base.50">
-                                        {`Boosted rewards ${isMobile ? '' : 'are available '}on Aura`}
+                                        Boosted rewards available on Aura
                                     </Text>
                                     <Image src={AuraLogo} alt="Aura Finance" height="24px" width="24px" />
                                 </HStack>
