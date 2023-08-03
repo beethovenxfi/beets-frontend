@@ -29,20 +29,6 @@ interface Props extends BoxProps {
 const MemoizedTokenAvatarSetInList = memo(TokenAvatarSetInList);
 const MemoizedAprTooltip = memo(AprTooltip);
 
-function AuraLogo({ ...rest }: BoxProps) {
-    return (
-        <BeetsTooltip
-            label="For this pool you can deposit & stake your BPT on Aura Finance for extra boosted rewards"
-            noImage
-            {...rest}
-        >
-            <Box ml="2" mt="1">
-                <Image src={AuraIcon} alt="Aura Finance" height="24px" width="24px" />
-            </Box>
-        </BeetsTooltip>
-    );
-}
-
 export function PoolListItem({
     pool,
     userBalance,
@@ -108,7 +94,16 @@ export function PoolListItem({
                             <Text fontSize={{ base: 'lg', lg: 'md' }} fontWeight={{ base: 'bold', lg: 'normal' }}>
                                 {pool.name}
                             </Text>
-                            {hasAuraStaking && <AuraLogo />}
+                            {hasAuraStaking && (
+                                <BeetsTooltip
+                                    label="For this pool you can deposit & stake your BPT on Aura Finance for extra boosted rewards"
+                                    noImage
+                                >
+                                    <Box ml="2" mt="1">
+                                        <Image src={AuraIcon} alt="Aura Finance" height="24px" width="24px" />
+                                    </Box>
+                                </BeetsTooltip>
+                            )}
                             {warningMessage && <PoolListItemWarning ml="2" message={warningMessage} />}
                         </GridItem>
                         {showUserBalance && (
