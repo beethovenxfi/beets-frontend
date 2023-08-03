@@ -12,7 +12,7 @@ import { PoolBadgeType } from '~/lib/config/network-config-type';
 import { PoolListItemWarning } from '~/modules/pools/components/PoolListItemWarning';
 import { PoolBadgeSmall } from '~/components/pool-badge/PoolBadgeSmall';
 import BeetsTooltip from '~/components/tooltip/BeetsTooltip';
-import AuraIcon from '~/assets/logo/aura_iso_colors.png';
+import AuraLogo from '~/assets/logo/aura_iso_colors.png';
 import Image from 'next/image';
 import { networkConfig } from '~/lib/config/network-config';
 
@@ -100,7 +100,7 @@ export function PoolListItem({
                                     noImage
                                 >
                                     <Box ml="2" mt="1">
-                                        <Image src={AuraIcon} alt="Aura Finance" height="24px" width="24px" />
+                                        <Image src={AuraLogo} alt="Aura Finance" height="24px" width="24px" />
                                     </Box>
                                 </BeetsTooltip>
                             )}
