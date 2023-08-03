@@ -11,6 +11,8 @@ import {
     WrapItem,
     Link,
     StackProps,
+    Stack,
+    useBreakpointValue,
 } from '@chakra-ui/react';
 import numeral from 'numeral';
 import { PoolTokenPill } from '~/components/token/PoolTokenPill';
@@ -30,9 +32,10 @@ interface Props {
 function CustomTooltip({ trigger, content, ...rest }: Props & StackProps) {
     // temp fix: https://github.com/chakra-ui/chakra-ui/issues/5896#issuecomment-1104085557
     const PopoverTrigger: React.FC<{ children: React.ReactNode }> = OrigPopoverTrigger;
+    const isMobile = useBreakpointValue({ base: true, lg: false });
 
     return (
-        <Popover trigger="hover" placement="right">
+        <Popover trigger="hover" placement={isMobile ? 'top' : 'right'}>
             <PopoverTrigger>
                 <HStack
                     paddingX="3"
@@ -89,7 +92,7 @@ function PoolHeader() {
                     </WrapItem>
                 ))}
             </Wrap>
-            <HStack>
+            <Stack direction={{ base: 'column', lg: 'row' }}>
                 <CustomTooltip
                     trigger={
                         <>
@@ -109,6 +112,7 @@ function PoolHeader() {
                         </>
                     }
                     content={`${tooltipText1} ${!hasZeroOwner && tooltipText2}`}
+                    alignSelf="flex-start"
                 />
                 {hasAuraStaking && (
                     <CustomTooltip
@@ -121,7 +125,7 @@ function PoolHeader() {
                             >
                                 <HStack>
                                     <Text mr="2" color="beets.base.50">
-                                        Boosted rewards are available on Aura
+                                        Boosted rewards available on Aura
                                     </Text>
                                     <Image src={AuraLogo} alt="Aura Finance" height="24px" width="24px" />
                                 </HStack>
@@ -136,7 +140,7 @@ function PoolHeader() {
                         bg="whiteAlpha.300"
                     />
                 )}
-            </HStack>
+            </Stack>
         </VStack>
     );
 }

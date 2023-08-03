@@ -55,7 +55,7 @@ export function PoolListItem({
                         py={{ base: '4', lg: '0' }}
                         height={{ lg: '63.5px' }}
                         templateColumns={{
-                            base: '1fr 1fr',
+                            base: '1.75fr 1fr',
                             lg: showUserBalance ? '90px 1fr 150px 200px 0px 200px' : '90px 1fr 100px 146px 200px 200px',
                             xl: showUserBalance
                                 ? '90px 1fr 150px 200px 200px 200px'
@@ -73,7 +73,8 @@ export function PoolListItem({
                                       lg: `"icons name userBalance tvl volume apr"`,
                                   }
                                 : {
-                                      base: `"name badge"
+                                      base: `"name name"
+                                             "badge badge"
                                              "apr tvl"
                                              "fees volume"
                                              "icons icons"`,
@@ -90,7 +91,7 @@ export function PoolListItem({
                             />
                         </GridItem>
                         <GridItem area="name" mb={{ base: '4', lg: '0' }} alignItems="center" display="flex">
-                            <Text fontSize={{ base: 'xl', lg: 'md' }} fontWeight={{ base: 'bold', lg: 'normal' }}>
+                            <Text fontSize={{ base: 'lg', lg: 'md' }} fontWeight={{ base: 'bold', lg: 'normal' }}>
                                 {pool.name}
                             </Text>
                             {hasAuraStaking && (
@@ -120,14 +121,16 @@ export function PoolListItem({
                                 </Text>
                             </GridItem>
                         )}
-                        <GridItem
-                            area="badge"
-                            alignItems="center"
-                            display={showUserBalance ? 'none' : 'flex'}
-                            mb={{ base: '4', lg: '0' }}
-                        >
-                            {poolBadge && <PoolBadgeSmall poolBadge={poolBadge} />}
-                        </GridItem>
+                        {poolBadge && (
+                            <GridItem
+                                area="badge"
+                                alignItems="center"
+                                display={showUserBalance ? 'none' : 'flex'}
+                                mb={{ base: '4', lg: '0' }}
+                            >
+                                <PoolBadgeSmall poolBadge={poolBadge} />
+                            </GridItem>
+                        )}
                         <StatGridItem
                             area="tvl"
                             display={{ base: 'block', lg: 'flex' }}
