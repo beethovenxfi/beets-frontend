@@ -69,6 +69,7 @@ export interface NetworkConfig {
         composableStableFactories: string[];
         composableStableV1Factory: string;
         weightedPoolV2PlusFactories: string[];
+        weightedPoolFactory: string;
         linearFactories: {
             erc4626: string[];
             reaper: string[];

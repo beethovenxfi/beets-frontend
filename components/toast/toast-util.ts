@@ -11,7 +11,9 @@ export type BeetsTransactionType =
     | 'LEVEL_UP'
     | 'BURN'
     | 'MIGRATE'
-    | 'CHECKPOINT';
+    | 'CHECKPOINT'
+    | 'CREATE_POOL';
+
 export type ToastTransactionStatus = 'PENDING' | 'CONFIRMED' | 'ERROR';
 
 export function toastGetTransactionStatusHeadline(type: BeetsTransactionType, status: ToastTransactionStatus) {
@@ -143,6 +145,15 @@ export function toastGetTransactionStatusHeadline(type: BeetsTransactionType, st
                 return 'Burn relic confirmed';
             case 'ERROR':
                 return 'Burn relic error';
+        }
+    } else if (type === 'CREATE_POOL') {
+        switch (status) {
+            case 'PENDING':
+                return 'Create pool pending';
+            case 'CONFIRMED':
+                return 'Create pool confirmed';
+            case 'ERROR':
+                return 'Create pool error';
         }
     }
 
