@@ -15,147 +15,80 @@ export type BeetsTransactionType =
     | 'CREATE_POOL';
 
 export type ToastTransactionStatus = 'PENDING' | 'CONFIRMED' | 'ERROR';
+export type ToastHeadlines = Record<ToastTransactionStatus, string>;
+const TRANSACTION_HEADLINES: Record<BeetsTransactionType, ToastHeadlines> = {
+    JOIN: {
+        PENDING: 'Invest pending',
+        CONFIRMED: 'Invest confirmed',
+        ERROR: 'Invest error',
+    },
+    SWAP: {
+        PENDING: 'Swap pending',
+        CONFIRMED: 'Swap confirmed',
+        ERROR: 'Swap error',
+    },
+    EXIT: {
+        PENDING: 'Withdraw pending',
+        CONFIRMED: 'Withdraw confirmed',
+        ERROR: 'Withdraw error',
+    },
+    HARVEST: {
+        PENDING: 'Harvest pending',
+        CONFIRMED: 'Harvest confirmed',
+        ERROR: 'Harvest error',
+    },
+    STAKE: {
+        PENDING: 'Stake pending',
+        CONFIRMED: 'Stake confirmed',
+        ERROR: 'Stake error',
+    },
+    UNSTAKE: {
+        PENDING: 'Unstake pending',
+        CONFIRMED: 'Unstake confirmed',
+        ERROR: 'Unstake error',
+    },
+    APPROVE: {
+        PENDING: 'Approve pending',
+        CONFIRMED: 'Approve confirmed',
+        ERROR: 'Approve error',
+    },
+    WRAP: {
+        PENDING: 'Wrap pending',
+        CONFIRMED: 'Wrap confirmed',
+        ERROR: 'Wrap error',
+    },
+    UNWRAP: {
+        PENDING: 'Unwrap pending',
+        CONFIRMED: 'Unwrap confirmed',
+        ERROR: 'Unwrap error',
+    },
+    LEVEL_UP: {
+        PENDING: 'Level up relic pending',
+        CONFIRMED: 'Level up relic confirmed',
+        ERROR: 'Level up relic error',
+    },
+    BURN: {
+        PENDING: 'Burn relic pending',
+        CONFIRMED: 'Burn relic confirmed',
+        ERROR: 'Burn relic error',
+    },
+    MIGRATE: {
+        PENDING: 'Migrate pending',
+        CONFIRMED: 'Migrate confirmed',
+        ERROR: 'Migrate error',
+    },
+    CHECKPOINT: {
+        PENDING: 'Checkpoint pending',
+        CONFIRMED: 'Checkpoint confirmed',
+        ERROR: 'Checkpoint error',
+    },
+    CREATE_POOL: {
+        PENDING: 'Create pool pending',
+        CONFIRMED: 'Create pool confirmed',
+        ERROR: 'Create pool error',
+    },
+};
 
-export function toastGetTransactionStatusHeadline(type: BeetsTransactionType, status: ToastTransactionStatus) {
-    if (type === 'JOIN') {
-        switch (status) {
-            case 'PENDING':
-                //return i18next.t('Toast - Headline - Invest pending', 'Invest pending');
-                return 'Invest pending';
-            case 'CONFIRMED':
-                //return i18next.t('Toast - Headline - Invest confirmed', 'Invest confirmed');
-                return 'Invest confirmed';
-            case 'ERROR':
-                //return i18next.t('Toast - Headline - Invest error', 'Invest error');
-                return 'Invest error';
-        }
-    } else if (type === 'EXIT') {
-        switch (status) {
-            case 'PENDING':
-                //return i18next.t('Toast - Headline - Withdraw pending', 'Withdraw pending');
-                return 'Withdraw pending';
-            case 'CONFIRMED':
-                //return i18next.t('Toast - Headline - Withdraw confirmed', 'Withdraw confirmed');
-                return 'Withdraw confirmed';
-            case 'ERROR':
-                //return i18next.t('Toast - Headline - Withdraw error', 'Withdraw error');
-                return 'Withdraw error';
-        }
-    } else if (type === 'SWAP') {
-        switch (status) {
-            case 'PENDING':
-                //return i18next.t('Toast - Headline - Trade pending', 'Trade pending');
-                return 'Swap pending';
-            case 'CONFIRMED':
-                //return i18next.t('Toast - Headline - Trade confirmed', 'Trade confirmed');
-                return 'Swap confirmed';
-            case 'ERROR':
-                //return i18next.t('Toast - Headline - Trade error', 'Trade error');
-                return 'Swap error';
-        }
-    } else if (type === 'HARVEST') {
-        switch (status) {
-            case 'PENDING':
-                //return i18next.t('Toast - Headline - Trade pending', 'Trade pending');
-                return 'Harvest pending';
-            case 'CONFIRMED':
-                //return i18next.t('Toast - Headline - Trade confirmed', 'Trade confirmed');
-                return 'Harvest confirmed';
-            case 'ERROR':
-                //return i18next.t('Toast - Headline - Trade error', 'Trade error');
-                return 'Harvest error';
-        }
-    } else if (type === 'STAKE') {
-        switch (status) {
-            case 'PENDING':
-                //return i18next.t('Toast - Headline - Trade pending', 'Trade pending');
-                return 'Stake pending';
-            case 'CONFIRMED':
-                //return i18next.t('Toast - Headline - Trade confirmed', 'Trade confirmed');
-                return 'Stake confirmed';
-            case 'ERROR':
-                //return i18next.t('Toast - Headline - Trade error', 'Trade error');
-                return 'Stake error';
-        }
-    } else if (type === 'CHECKPOINT') {
-        switch (status) {
-            case 'PENDING':
-                return 'Checkpoint pending';
-            case 'CONFIRMED':
-                return 'Checkpoint confirmed';
-            case 'ERROR':
-                return 'Checkpoint error';
-        }
-    } else if (type === 'UNSTAKE') {
-        switch (status) {
-            case 'PENDING':
-                //return i18next.t('Toast - Headline - Trade pending', 'Trade pending');
-                return 'Unstake pending';
-            case 'CONFIRMED':
-                //return i18next.t('Toast - Headline - Trade confirmed', 'Trade confirmed');
-                return 'Unstake confirmed';
-            case 'ERROR':
-                //return i18next.t('Toast - Headline - Trade error', 'Trade error');
-                return 'Unstake error';
-        }
-    } else if (type === 'APPROVE') {
-        switch (status) {
-            case 'PENDING':
-                //return i18next.t('Toast - Headline - Trade pending', 'Trade pending');
-                return 'Approve pending';
-            case 'CONFIRMED':
-                //return i18next.t('Toast - Headline - Trade confirmed', 'Trade confirmed');
-                return 'Approve confirmed';
-            case 'ERROR':
-                //return i18next.t('Toast - Headline - Trade error', 'Trade error');
-                return 'Approve error';
-        }
-    } else if (type === 'WRAP') {
-        switch (status) {
-            case 'PENDING':
-                return 'Wrap pending';
-            case 'CONFIRMED':
-                return 'Wrap confirmed';
-            case 'ERROR':
-                return 'Wrap error';
-        }
-    } else if (type === 'UNWRAP') {
-        switch (status) {
-            case 'PENDING':
-                return 'Unwrap pending';
-            case 'CONFIRMED':
-                return 'Unwrap confirmed';
-            case 'ERROR':
-                return 'Unwrap error';
-        }
-    } else if (type === 'LEVEL_UP') {
-        switch (status) {
-            case 'PENDING':
-                return 'Level up relic pending';
-            case 'CONFIRMED':
-                return 'Level up relic confirmed';
-            case 'ERROR':
-                return 'Level up relic error';
-        }
-    } else if (type === 'BURN') {
-        switch (status) {
-            case 'PENDING':
-                return 'Burn relic pending';
-            case 'CONFIRMED':
-                return 'Burn relic confirmed';
-            case 'ERROR':
-                return 'Burn relic error';
-        }
-    } else if (type === 'CREATE_POOL') {
-        switch (status) {
-            case 'PENDING':
-                return 'Create pool pending';
-            case 'CONFIRMED':
-                return 'Create pool confirmed';
-            case 'ERROR':
-                return 'Create pool error';
-        }
-    }
-
-    return 'Missing headline';
+export function getToastTransactionHeadline(type: BeetsTransactionType, status: ToastTransactionStatus) {
+    return TRANSACTION_HEADLINES[type][status] || 'Missing headline';
 }

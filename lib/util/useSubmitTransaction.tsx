@@ -1,5 +1,5 @@
 import { Address, useContractWrite, useProvider, useSigner, useWaitForTransaction } from 'wagmi';
-import { BeetsTransactionType, toastGetTransactionStatusHeadline } from '~/components/toast/toast-util';
+import { BeetsTransactionType, getToastTransactionHeadline } from '~/components/toast/toast-util';
 import { networkConfig } from '~/lib/config/network-config';
 import { Vault__factory } from '@balancer-labs/typechain';
 import batchRelayerAbi from '~/lib/abi/BatchRelayer.json';
@@ -80,7 +80,7 @@ export function useSubmitTransaction({ config, transactionType }: Props): Submit
         onSuccess(data) {
             showToast({
                 id: data.hash,
-                badge: toastGetTransactionStatusHeadline(transactionType, 'PENDING'),
+                badge: getToastTransactionHeadline(transactionType, 'PENDING'),
                 content: <Text>{toastText.current}</Text>,
                 type: ToastType.Loading,
             });
@@ -113,7 +113,7 @@ export function useSubmitTransaction({ config, transactionType }: Props): Submit
         onSettled() {
             updateToast(contractWrite.data?.hash || '', {
                 type: ToastType.Success,
-                badge: toastGetTransactionStatusHeadline(transactionType, 'CONFIRMED'),
+                badge: getToastTransactionHeadline(transactionType, 'CONFIRMED'),
                 content: <Text>{toastText.current}</Text>,
                 auto: true,
             });
