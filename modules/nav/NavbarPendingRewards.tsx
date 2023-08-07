@@ -26,9 +26,6 @@ import { NavbarPendingRewardsReliquary } from './NavbarPendingRewardsReliquary';
 import { useReliquaryPendingRewards } from '../reliquary/lib/useReliquaryPendingRewards';
 import { sumBy } from 'lodash';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
-import useStakingMintableRewards from '~/lib/global/useStakingMintableRewards';
-import { AddressZero } from '@ethersproject/constants';
-import useStakingBoosts from '~/lib/global/useStakingBoosts';
 import { useGaugeClaimGetContractCallData } from './lib/useGaugeClaimGetContractCallData';
 import { useUserGaugeClaimAllOtherPendingRewards } from './lib/useUserGaugeClaimAllOtherPendingRewards';
 
@@ -49,9 +46,6 @@ export function NavbarPendingRewards() {
     const farmIds = staking.map((stake) => stake?.farm?.id || '');
     const isMasterChefOrFreshBeets = stakingType === 'MASTER_CHEF' || stakingType === 'FRESH_BEETS';
     const networkConfig = useNetworkConfig();
-    const {
-        claimAll: { claimAllBAL, ...claimAllQuery },
-    } = useStakingMintableRewards(staking);
 
     const { data: pendingReliquaryRewards } = useReliquaryPendingRewards();
 
@@ -60,9 +54,12 @@ export function NavbarPendingRewards() {
     );
 
     const totalPendingRewardsUSD = pendingRewardsTotalUSD + pendingReliquaryRewardsTotalUSD;
-    const canClaimBAL = networkConfig.gauge.balancerPseudoMinterAddress !== AddressZero && pendingBALUSD > 0;
 
-    const { data: contractCalls } = useGaugeClaimGetContractCallData(gauges || []);
+    const { data: contractCalls } = useGaugeClaimGetContractCallData(
+        totalPendingRewardsUSD > 0.01,
+        pendingBALUSD > 0.01,
+        gauges || [],
+    );
     const { claimAll } = useUserGaugeClaimAllOtherPendingRewards();
 
     return (
@@ -161,7 +158,7 @@ export function NavbarPendingRewards() {
                                     <Box mt="4" justifySelf="flex-end">
                                         <BeetsSubmitTransactionButton
                                             {...harvestQuery}
-                                            isDisabled={pendingRewardsTotalUSD < 0.01}
+                                            isDisabled={pendingRewardsTotalUSD < 0.01 || pendingBALUSD < 0.01}
                                             onClick={() => {
                                                 if (contractCalls) {
                                                     claimAll(contractCalls);
@@ -169,18 +166,7 @@ export function NavbarPendingRewards() {
                                             }}
                                             width="full"
                                         >
-                                            Claim all other pending rewards
-                                        </BeetsSubmitTransactionButton>
-                                    </Box>
-                                )}
-                                {canClaimBAL && (
-                                    <Box mt="4" justifySelf="flex-end">
-                                        <BeetsSubmitTransactionButton
-                                            {...claimAllQuery}
-                                            onClick={() => claimAllBAL()}
-                                            width="full"
-                                        >
-                                            Claim all pending BAL
+                                            Claim all pending gauge rewards
                                         </BeetsSubmitTransactionButton>
                                     </Box>
                                 )}

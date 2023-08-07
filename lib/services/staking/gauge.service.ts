@@ -12,7 +12,7 @@ export class GaugeService {
     public getGaugeClaimRewardsAndWithdrawContractCallData({
         hasPendingNonBALRewards,
         hasPendingBalRewards,
-        gauge,
+        gauges,
         sender,
         recipient,
         amount,
@@ -20,7 +20,7 @@ export class GaugeService {
     }: {
         hasPendingNonBALRewards: boolean;
         hasPendingBalRewards: boolean;
-        gauge: string;
+        gauges: string[];
         sender: string;
         recipient: string;
         amount: BigNumberish;
@@ -28,15 +28,42 @@ export class GaugeService {
     }) {
         const calls: string[] = [];
 
+        const rewardsCalls = this.getGaugeClaimRewardsContractCallData({
+            hasPendingNonBALRewards,
+            hasPendingBalRewards,
+            gauges,
+            outputReference,
+        });
+
+        if (!rewardsCalls.length) {
+            calls.push(...rewardsCalls);
+        }
+
+        calls.push(this.getGaugeEncodeWithdrawCallData({ gauge: gauges[0], sender, recipient, amount }));
+
+        return calls;
+    }
+
+    public getGaugeClaimRewardsContractCallData({
+        hasPendingNonBALRewards,
+        hasPendingBalRewards,
+        gauges,
+        outputReference,
+    }: {
+        hasPendingNonBALRewards: boolean;
+        hasPendingBalRewards: boolean;
+        gauges: string[];
+        outputReference: BigNumberish;
+    }) {
+        const calls: string[] = [];
+
         if (hasPendingNonBALRewards) {
-            calls.push(this.getGaugeEncodeClaimRewardsCallData({ gauges: [gauge] }));
+            calls.push(this.getGaugeEncodeClaimRewardsCallData({ gauges }));
         }
 
         if (hasPendingBalRewards) {
-            calls.push(this.getGaugeEncodeMintCallData({ gauges: [gauge], outputReference }));
+            calls.push(this.getGaugeEncodeMintCallData({ gauges, outputReference }));
         }
-
-        calls.push(this.getGaugeEncodeWithdrawCallData({ gauge, sender, recipient, amount }));
 
         return calls;
     }

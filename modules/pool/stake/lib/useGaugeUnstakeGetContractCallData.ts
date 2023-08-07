@@ -18,7 +18,7 @@ export function useGaugeUnstakeGetContractCallData(
     const data = {
         hasPendingNonBALRewards,
         hasPendingBalRewards,
-        gauge: customWithdrawalGauge?.gaugeAddress || pool.staking?.id || '',
+        gauges: [customWithdrawalGauge?.gaugeAddress || pool.staking?.id || ''],
         sender: userAddress || '',
         recipient: userAddress || '',
         amount,
