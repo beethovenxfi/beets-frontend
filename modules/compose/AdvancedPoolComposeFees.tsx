@@ -22,21 +22,21 @@ export function AdvancedPoolComposeFees(props: Props) {
         return false;
     }
 
-    function handlePresetClicked(preset: string) {
+function handlePresetClicked(preset: string) {
         setIsUsingCustomFee(false);
         handleFeeChanged(preset);
     }
 
     function handleCustomFeeChanged(event: { currentTarget: { value: string } }) {
         setIsUsingCustomFee(true);
-        setCurrentFee(event.currentTarget.value);
+        setCurrentFee((parseFloat(event.currentTarget.value) / 100).toString());
     }
 
     return (
         <Card py="3" px="3" width='full' height='full'>
             <VStack alignItems="flex-start" spacing="3">
                 <VStack alignItems="flex-start" spacing="1">
-                    <Heading size="sm">Pool Fees</Heading>
+                    <Heading size="sm">2. Pool Fees</Heading>
                     <Text lineHeight="1rem" fontSize="0.95rem">
                         0.30% is best for most weighted pools with established tokens. Go higher for more exotic tokens.
                         You can also specify your own custom fee.

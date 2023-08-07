@@ -1,6 +1,9 @@
 import { bnum } from '@balancer-labs/sor';
+import { isAddress } from 'ethers/lib/utils.js';
 import { sum, sumBy } from 'lodash';
 import React, { ReactNode, useContext, useEffect, useState } from 'react';
+import { networkConfig } from '~/lib/config/network-config';
+import { useGetTokens } from '~/lib/global/useToken';
 
 const POOL_TYPES = [
     {
@@ -39,14 +42,17 @@ export type ManagerOption = 'dao-managed' | 'other-manager';
 export type OtherManagerOption = 'self-managed' | 'custom-eoa';
 
 function _useCompose() {
+    const { getToken } = useGetTokens();
     const [step, setStep] = useState<ComposeStep>('choose-tokens');
     const [creationExperience, _setCreationExperience] = useState<PoolCreationExperience | null>(null);
     // recommended fee is 0.3%
     const [currentFee, setCurrentFee] = useState(FEE_PRESETS[1]);
     const [isUsingCustomFee, setIsUsingCustomFee] = useState(false);
-    const [feeManager, setFeeManager] = useState<string | null>(null);
+    const [feeManager, setFeeManager] = useState<string | null>(networkConfig.beetsPoolOwnerAddress);
     const [managerOption, setManagerOption] = useState<ManagerOption>('dao-managed');
+    const [poolName, setPoolName] = useState<string>();
     const [otherManagerOption, setOtherManagerOption] = useState<OtherManagerOption | undefined>();
+    const [progressValidatedTo, setProgressValidatedTo] = useState(-1);
 
     const [tokens, setTokens] = useState<PoolCreationToken[]>([
         { address: '', amount: '0.0', isLocked: false, weight: 50 },
@@ -59,6 +65,25 @@ function _useCompose() {
         ) as PoolCreationExperience | null;
         setCreationExperience(cachedCreationExperience);
     }, []);
+
+    useEffect(() => {
+        setPoolName(getPoolSymbol());
+    }, [tokens]);
+
+    useEffect(() => {
+        if (areTokensAndWeightsValid()) {
+            setProgressValidatedTo(0);
+        }
+        if (areTokensAndWeightsValid() && isPoolFeeValid()) {
+            setProgressValidatedTo(1);
+        }
+        if (areTokensAndWeightsValid() && isPoolFeeValid() && isFeeManagerValid()) {
+            setProgressValidatedTo(2);
+        }
+        if (areTokensAndWeightsValid() && isPoolFeeValid() && isFeeManagerValid() && isPoolNameValid()) {
+            setProgressValidatedTo(3);
+        }
+    }, [tokens, currentFee, feeManager, poolName]);
 
     function setCreationExperience(experience: PoolCreationExperience | null) {
         _setCreationExperience(experience);
@@ -83,6 +108,21 @@ function _useCompose() {
         const newTokens = tokens.filter((token) => token.address !== address);
         setTokens(newTokens);
         distributeTokenWeights(newTokens);
+    }
+
+    function getPoolSymbol() {
+        let valid = true;
+
+        const tokenSymbols = tokens.map((token) => {
+            const weightRounded = Math.round(token.weight);
+            const tokenInfo = getToken(token.address);
+            if (!tokenInfo) {
+                valid = false;
+            }
+            return tokenInfo ? `${Math.round(weightRounded)}${tokenInfo.symbol}` : '';
+        });
+
+        return valid ? tokenSymbols.join('-') : '';
     }
 
     function toggleLockTokenByIndex(index: number) {
@@ -151,6 +191,25 @@ function _useCompose() {
         setTokens(newTokens);
     }
 
+    function areTokensAndWeightsValid() {
+        const totalTokenWeight = sumBy(tokens, (token) => token.weight);
+        const areTokenSelectionsValid = tokens.every((token) => isAddress(token.address));
+
+        return totalTokenWeight === 100 && areTokenSelectionsValid;
+    }
+
+    function isPoolFeeValid() {
+        return parseFloat(currentFee) < 0.1;
+    }
+
+    function isFeeManagerValid() {
+        return isAddress(feeManager || '');
+    }
+
+    function isPoolNameValid() {
+        return poolName != '';
+    }
+
     return {
         activeStep: step,
         creationExperience,
@@ -163,6 +222,14 @@ function _useCompose() {
         feeManager,
         managerOption,
         otherManagerOption,
+        poolName,
+        progressValidatedTo,
+        isFeeManagerValid,
+        isPoolFeeValid,
+        isPoolNameValid,
+        areTokensAndWeightsValid,
+        setProgressValidatedTo,
+        setPoolName,
         setOtherManagerOption,
         setManagerOption,
         setFeeManager,
@@ -177,5 +244,6 @@ function _useCompose() {
         distributeTokenWeights,
         toggleLockTokenByAddress,
         toggleLockTokenByIndex,
+        getPoolSymbol,
     };
 }

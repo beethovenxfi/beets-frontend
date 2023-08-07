@@ -7,24 +7,26 @@ import AdvancedPoolComposeTokens from './AdvancedPoolComposeTokens';
 import { AdvancedPoolComposeFees } from './AdvancedPoolComposeFees';
 import { AdvancedPoolComposeFeeManager } from './AdvancedPoolComposeFeeManager';
 import { AdvancedPoolComposeSubmit } from './AdvancedPoolComposeSubmit';
+import { AdvancedPoolComposeName } from './AdvancedPoolComposeName';
+import { ChevronDown } from 'react-feather';
+import AdvancedPoolComposeProgress from './AdvancedPoolComposeProgress';
 
 interface Props {}
 
 export default function AdvancedPoolCreation(props: Props) {
     return (
         <VStack spacing="4" width="full" mb="10">
-            <VStack width="75%" alignItems="flex-start">
+            <VStack width="75%" alignItems="center">
                 <AdvancedPoolComposeTokens />
-                <Box width="full">
-                    <HStack>
-                        <VStack width="full">
-                            <AdvancedPoolComposeFees />
-                            <AdvancedPoolComposeFeeManager />
-                            {/* TODO IMPLEMENT SUBMISSION PREREQUISITES AND VALIDATION */}
-                            <AdvancedPoolComposeSubmit />
-                        </VStack>
-                    </HStack>
-                </Box>
+                <AdvancedPoolComposeProgress step={0} />
+                <AdvancedPoolComposeFees />
+                <AdvancedPoolComposeProgress step={1} />
+                <AdvancedPoolComposeFeeManager />
+                {/* TODO IMPLEMENT SUBMISSION PREREQUISITES AND VALIDATION */}
+                <AdvancedPoolComposeProgress step={2} />
+                <AdvancedPoolComposeName />
+                <AdvancedPoolComposeProgress step={3} />
+                <AdvancedPoolComposeSubmit />
             </VStack>
         </VStack>
     );

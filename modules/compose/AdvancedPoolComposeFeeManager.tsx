@@ -63,8 +63,8 @@ export function AdvancedPoolComposeFeeManager(props: Props) {
         <Card py="3" px="3" width="full" height="full">
             <VStack alignItems="flex-start" spacing="3">
                 <VStack alignItems="flex-start" spacing="1">
-                    <Heading size="sm">Fee Manager</Heading>
-                    <Text lineHeight="1rem" fontSize="0.95rem">
+                    <Heading size="sm">3. Fee Manager</Heading>
+                    <Text lineHeight="1.25rem" fontSize="0.95rem">
                         You can choose to elect a fee manager for your pool. The fee manager can be yourself, an address
                         of your choosing or the BeethovenX DAO. By default, the BeethovenX DAO is the fee manager.
                     </Text>

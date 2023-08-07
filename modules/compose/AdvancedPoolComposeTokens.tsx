@@ -130,8 +130,8 @@ export default function AdvancedPoolComposeTokens(props: Props) {
             <VStack spacing="2" width="full" alignItems="flex-start">
                 <VStack width="full" spacing="3">
                     <VStack spacing="1" width="full" alignItems="flex-start">
-                        <Heading size="sm">Choose tokens</Heading>
-                        <Text lineHeight="1rem" fontSize="0.85rem">
+                        <Heading size="sm">1. Choose tokens</Heading>
+                        <Text lineHeight="1rem" fontSize="0.95rem">
                             Customize the weight of each pool token and the amount of liquidity you want to seed for
                             each. You can add up to 8 tokens.
                         </Text>
@@ -216,9 +216,11 @@ export default function AdvancedPoolComposeTokens(props: Props) {
                     </Grid>
                 </VStack>
                 {!isMaxTokens && (
-                    <HStack width="full">
-                        <AddTokenButton />
-                    </HStack>
+                    <BeetsTooltip noImage label="Add a token">
+                        <HStack width="full">
+                            <AddTokenButton />
+                        </HStack>
+                    </BeetsTooltip>
                 )}
             </VStack>
             <GenericTokenSelectModal

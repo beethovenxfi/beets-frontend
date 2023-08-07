@@ -15,7 +15,7 @@ import { useCompose } from './ComposeProvider';
 interface Props {}
 
 export default function PoolComposePreview(props: Props) {
-    const { setActiveStep } = useCompose();
+    const { setActiveStep, poolName } = useCompose();
 
     function goBack() {
         setActiveStep('choose-tokens');
@@ -39,7 +39,7 @@ export default function PoolComposePreview(props: Props) {
                         onClick={goBack}
                     />
                     <Heading width="full" textAlign="left" size="md">
-                        Preview your pool
+                        Preview your pool - {poolName}
                     </Heading>
                     <Text fontSize="0.95rem">
                         Verify your pool fee and token selections before finalising pool creation. You can go back and
