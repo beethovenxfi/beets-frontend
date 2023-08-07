@@ -6,6 +6,8 @@ import { usePoolUserBptBalance } from '~/modules/pool/lib/usePoolUserBptBalance'
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 import { usePool } from '~/modules/pool/lib/usePool';
 import { createContext, ReactNode, useContext } from 'react';
+import useStakingMintableRewards from '~/lib/global/useStakingMintableRewards';
+import { GqlPoolStaking } from '~/apollo/generated/graphql-codegen-generated';
 
 export function _usePoolUserPendingRewards() {
     const networkConfig = useNetworkConfig();
@@ -18,6 +20,10 @@ export function _usePoolUserPendingRewards() {
     const { data, isLoading, ...rest } = useStakingPendingRewards(
         pool.staking && hasBpt ? [pool.staking] : [],
         'usePoolUserPendingRewards',
+    );
+
+    const { claimableBALForGauges, isLoading: isLoadingClaimableBAL } = useStakingMintableRewards(
+        pool.staking && hasBpt ? [pool.staking] : [],
     );
 
     const hasBeetsRewards =
@@ -51,8 +57,9 @@ export function _usePoolUserPendingRewards() {
         hasPendingRewards,
         hasPendingBalRewards,
         hasPendingNonBALRewards,
+        claimableBALForGauges,
         ...rest,
-        isLoading: isLoading || balancesLoading,
+        isLoading: isLoading || balancesLoading || isLoadingClaimableBAL,
     };
 }
 

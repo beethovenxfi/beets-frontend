@@ -14,9 +14,6 @@ import { useStakingClaimRewards } from '~/lib/global/useStakingClaimRewards';
 import { CardRow } from '~/components/card/CardRow';
 import { networkConfig } from '~/lib/config/network-config';
 import { InfoButton } from '~/components/info-button/InfoButton';
-import BeetsTooltip from '~/components/tooltip/BeetsTooltip';
-import useStakingMintableRewards from '~/lib/global/useStakingMintableRewards';
-import { sumBy } from 'lodash';
 
 interface Props {
     poolAddress: string;
@@ -28,17 +25,14 @@ interface Props {
 export function PoolUserStakedStats({ poolAddress, staking, totalApr, userPoolBalanceUSD }: Props) {
     const { data: blocksData } = useGetBlocksPerDayQuery({ fetchPolicy: 'cache-first' });
     const {
+        hasPendingRewards,
         pendingRewards,
         pendingRewardsTotalUSD,
-        hasPendingRewards,
+        claimableBALForGauges,
         hardRefetch: refetchPendingRewards,
         isLoading: isLoadingPendingRewards,
     } = usePoolUserPendingRewards();
     const { claim, ...harvestQuery } = useStakingClaimRewards(staking);
-    const {
-        claim: { claimBAL, ...claimQuery },
-        refetch: refetchClaimableBAL,
-    } = useStakingMintableRewards([staking]);
     const { data, isLoading: isLoadingTotalStakedBalance } = useStakingTotalStakedBalance(poolAddress, staking);
     const { userStakedBptBalance, isLoading: isLoadingUserBptBalance } = usePoolUserBptBalance();
     const { refetch: refetchUserTokenBalances } = usePoolUserTokenBalancesInWallet();
@@ -47,13 +41,8 @@ export function PoolUserStakedStats({ poolAddress, staking, totalApr, userPoolBa
     const dailyYield = totalApr / 365;
     const dailyYieldUSD = userPoolBalanceUSD * dailyYield;
     const beetsPerDay = parseFloat(staking.farm?.beetsPerBlock || '0') * (blocksData?.blocksPerDay || 0) * userShare;
-    const showClaimBALButton = staking.gauge?.gaugeAddress && staking.gauge.version === 2;
-    const hasPendingBalRewards =
-        parseFloat(pendingRewards.find((reward) => reward.address === networkConfig.balancer.balToken)?.amount || '0') >
-        0;
 
-    const nonBALRewards = pendingRewards.filter((p) => p.address !== networkConfig.balancer.balToken);
-    const hasPendingNonBALRewards = sumBy(nonBALRewards, (r) => parseFloat(r.amount)) > 0;
+    console.log({ claimableBALForGauges });
 
     return (
         <>
@@ -169,7 +158,7 @@ export function PoolUserStakedStats({ poolAddress, staking, totalApr, userPoolBa
                 <Box width="full">
                     <BeetsSubmitTransactionButton
                         {...harvestQuery}
-                        isDisabled={!hasPendingNonBALRewards}
+                        isDisabled={!hasPendingRewards || Object.values(claimableBALForGauges || {})[0] !== '0.0'}
                         onClick={() => claim()}
                         onConfirmed={() => {
                             refetchPendingRewards();
@@ -177,25 +166,8 @@ export function PoolUserStakedStats({ poolAddress, staking, totalApr, userPoolBa
                         }}
                         width="full"
                     >
-                        Claim other rewards
+                        Claim rewards
                     </BeetsSubmitTransactionButton>
-                </Box>
-                <Box width="full">
-                    {showClaimBALButton && (
-                        <BeetsSubmitTransactionButton
-                            {...claimQuery}
-                            isDisabled={!hasPendingBalRewards}
-                            onClick={() => claimBAL(staking.gauge?.gaugeAddress || '')}
-                            onConfirmed={() => {
-                                refetchPendingRewards();
-                                refetchUserTokenBalances();
-                                refetchClaimableBAL();
-                            }}
-                            width="full"
-                        >
-                            Claim BAL rewards
-                        </BeetsSubmitTransactionButton>
-                    )}
                 </Box>
             </VStack>
         </>
