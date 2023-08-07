@@ -34,11 +34,6 @@ export function HomeLearn(props: BoxProps) {
                         title="Gauge Voting"
                         description="30% of all the Beethoven X emissions are distributed to liquidity pools based on a bi-weekly gauge vote. Learn all about how to get involved, the mechanics of the gauge vote, bribes, snapshots and more."
                         url="https://beethovenxio.medium.com/beethoven-x-gauge-vote-maximising-your-melody-fbeb10e5711b"
-                    />
-                    <HomeLearnItem
-                        title="LBP launches"
-                        description="A capital efficient process for fair distribution and permissionless price discovery, Liquidity Bootstrapping Pools (LBPs) have set the standard for new token launches. Discover more about how they work and how you can get involved in the fairest token launch possible."
-                        url="https://beethovenxio.medium.com/lbp-launches-a706e439dfd2"
                         last={true}
                     />
                 </GridItem>

@@ -131,6 +131,10 @@ export const optimismTheme: Partial<ChakraTheme> = {
                 '900': 'rgba(0, 255, 255, 0.9)',
             },
         },
+        aura: {
+            pink: '#9c4ed6',
+            purple: '#5d24c6',
+        },
     },
     components: {
         Select: {

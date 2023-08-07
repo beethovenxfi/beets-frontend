@@ -14,9 +14,10 @@ import { InfoButton } from '~/components/info-button/InfoButton';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 import { PoolBadgeSmall } from '~/components/pool-badge/PoolBadgeSmall';
 import PoolStatsGyroscope from '../thirdparty/PoolStatsGyroscope';
+import { getApr } from '~/lib/util/apr-util';
 
 export default function PoolOverallStats() {
-    const { pool, totalApr, formattedTypeName } = usePool();
+    const { pool, formattedTypeName } = usePool();
     const { poolBadgeTypes } = useNetworkConfig();
     const { priceFor } = useGetTokens();
     const { data: blocksData } = useGetBlocksPerDayQuery({ fetchPolicy: 'cache-first' });
@@ -53,7 +54,7 @@ export default function PoolOverallStats() {
                     Pool APR
                 </Text>
                 <HStack>
-                    <div className="apr-stripes">{numeral(totalApr).format('0.00%')}</div>
+                    <div className="apr-stripes">{getApr(pool.dynamicData.apr.apr)}</div>
                     <AprTooltip onlySparkles data={data.apr} />
                 </HStack>
                 {poolBadgeTypes[pool.id] && <PoolBadgeSmall poolBadge={poolBadgeTypes[pool.id]} />}

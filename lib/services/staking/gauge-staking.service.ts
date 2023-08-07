@@ -85,6 +85,34 @@ export class GaugeStakingService {
         return formatFixed(response, 18);
     }
 
+    public async getGaugeWorkingSupply({
+        gaugeAddress,
+        provider,
+    }: {
+        gaugeAddress: string;
+        provider: BaseProvider;
+    }): Promise<AmountHumanReadable> {
+        const gaugeContract = new Contract(gaugeAddress, LiquidityGaugeV6Abi, provider);
+        const response: BigNumber = await gaugeContract.working_supply();
+
+        return formatFixed(response, 18);
+    }
+
+    public async getGaugeWorkingBalance({
+        userAddress,
+        gaugeAddress,
+        provider,
+    }: {
+        userAddress: string;
+        gaugeAddress: string;
+        provider: BaseProvider;
+    }): Promise<AmountHumanReadable> {
+        const gaugeContract = new Contract(gaugeAddress, LiquidityGaugeV6Abi, provider);
+        const response: BigNumber = await gaugeContract.working_balances(userAddress);
+
+        return formatFixed(response, 18);
+    }
+
     public async getPendingRewards({
         userAddress,
         gauges,
@@ -241,7 +269,10 @@ export class GaugeStakingService {
 
         const checkpointableGauges = [];
         for (const gaugeId in result) {
-            if (result[gaugeId].workingBalanceSupplyRatios[1].gt(result[gaugeId].workingBalanceSupplyRatios[0])) {
+            if (
+                result[gaugeId].workingBalanceSupplyRatios &&
+                result[gaugeId].workingBalanceSupplyRatios[1].gt(result[gaugeId].workingBalanceSupplyRatios[0])
+            ) {
                 checkpointableGauges.push(gaugeId);
             }
         }
