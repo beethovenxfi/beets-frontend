@@ -21,6 +21,7 @@ export default function useStakingMintableRewards(staking: GqlPoolStaking[]) {
     const mintableGaugeAddresses = [
         '0xf27d53f21d024643d50de50183932f17638229f6', // rocket fuel
         '0x9f9f8d58496691d541c40dbc2b1b20f8c43e8d8c', // gyro eclp wsteth/weth
+        '0xa30992b40a0cb4b2da081ddbd843f9cce25c2fe3', // shanghai shakedown
     ];
 
     const {
