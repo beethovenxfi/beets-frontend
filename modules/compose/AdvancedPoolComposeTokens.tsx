@@ -1,4 +1,15 @@
-import { Box, Button, Grid, HStack, Heading, Text, VStack, useBreakpointValue, useDisclosure } from '@chakra-ui/react';
+import {
+    Alert,
+    Box,
+    Button,
+    Grid,
+    HStack,
+    Heading,
+    Text,
+    VStack,
+    useBreakpointValue,
+    useDisclosure,
+} from '@chakra-ui/react';
 import React, { useRef, useState } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { PoolCreationToken, useCompose } from './ComposeProvider';
@@ -41,6 +52,7 @@ export default function AdvancedPoolComposeTokens(props: Props) {
         toggleLockTokenByIndex,
         setTokens,
         distributeTokenWeights,
+        getTokenAndWeightValidations,
     } = useCompose();
     const [activeTokenSelectIndex, setActiveTokenSelectIndex] = useState<number | null>(null);
     const tokenSelectDisclosure = useDisclosure();
@@ -48,6 +60,7 @@ export default function AdvancedPoolComposeTokens(props: Props) {
     const isMaxTokens = tokens.length === MAX_TOKENS;
     const finalRefTokenIn = useRef(null);
     const isMobile = useBreakpointValue({ base: true, lg: false });
+    const { hasInvalidTokenWeights, areTokenSelectionsValid, invalidTotalWeight } = getTokenAndWeightValidations();
 
     const debouncedDistributeTokens = useDebouncedCallback((tokens: PoolCreationToken[]) => {
         distributeTokenWeights(tokens);
@@ -221,6 +234,23 @@ export default function AdvancedPoolComposeTokens(props: Props) {
                             <AddTokenButton />
                         </HStack>
                     </BeetsTooltip>
+                )}
+                {hasInvalidTokenWeights && (
+                    <Alert status="error">
+                        One or more of your token selections has an invalid weight. Tokens weights must be filled in and
+                        greater than 1% for any one token.
+                    </Alert>
+                )}
+                {!areTokenSelectionsValid && (
+                    <Alert status="error">
+                        Please make sure all your pool tokens have a valid token selected. You can always remove a token
+                        you do not want by clicking the red cross.
+                    </Alert>
+                )}
+                {invalidTotalWeight && (
+                    <Alert status="error">
+                        The sum of weights for all your token selections must equal exactly 100%.
+                    </Alert>
                 )}
             </VStack>
             <GenericTokenSelectModal

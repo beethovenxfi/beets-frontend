@@ -55,8 +55,8 @@ function _useCompose() {
     const [progressValidatedTo, setProgressValidatedTo] = useState(-1);
 
     const [tokens, setTokens] = useState<PoolCreationToken[]>([
-        { address: '', amount: '0.0', isLocked: false, weight: 50 },
-        { address: '', amount: '0.0', isLocked: false, weight: 50 },
+        { address: networkConfig.beets.address, amount: '0.0', isLocked: false, weight: 50 },
+        { address: networkConfig.balancer.balToken, amount: '0.0', isLocked: false, weight: 50 },
     ]);
 
     useEffect(() => {
@@ -71,17 +71,34 @@ function _useCompose() {
     }, [tokens]);
 
     useEffect(() => {
-        if (areTokensAndWeightsValid()) {
+        if (getTokenAndWeightValidations().isValid) {
             setProgressValidatedTo(0);
+        } else {
+            setProgressValidatedTo(-1);
+            return;
         }
-        if (areTokensAndWeightsValid() && isPoolFeeValid()) {
+        if (getTokenAndWeightValidations().isValid && getPoolFeeValidations().isValid) {
             setProgressValidatedTo(1);
+        } else {
+            setProgressValidatedTo(0);
+            return;
         }
-        if (areTokensAndWeightsValid() && isPoolFeeValid() && isFeeManagerValid()) {
+        if (getTokenAndWeightValidations().isValid && getPoolFeeValidations().isValid && isFeeManagerValid()) {
             setProgressValidatedTo(2);
+        } else {
+            setProgressValidatedTo(1);
+            return;
         }
-        if (areTokensAndWeightsValid() && isPoolFeeValid() && isFeeManagerValid() && isPoolNameValid()) {
+        if (
+            getTokenAndWeightValidations().isValid &&
+            getPoolFeeValidations().isValid &&
+            isFeeManagerValid() &&
+            isPoolNameValid()
+        ) {
+            setProgressValidatedTo(4);
+        } else {
             setProgressValidatedTo(3);
+            return;
         }
     }, [tokens, currentFee, feeManager, poolName]);
 
@@ -155,10 +172,12 @@ function _useCompose() {
 
     function distributeTokenWeights(tokens: PoolCreationToken[]) {
         // get all the locked weights and sum those bad boys
-        let lockedPct = sum(tokens.filter((token) => token.isLocked).map((token) => token.weight / 100));
+        let lockedPct = parseFloat(
+            sum(tokens.filter((token) => token.isLocked).map((token) => token.weight / 100)).toFixed(4),
+        );
         // makes it so that new allocations are set as 0
         if (lockedPct > 1) lockedPct = 1;
-        const pctAvailableToDistribute = bnum(1).minus(lockedPct);
+        const pctAvailableToDistribute = bnum(bnum(1).minus(lockedPct));
         const unlockedWeights = tokens.filter((token) => !token.isLocked);
         const evenDistributionWeight = pctAvailableToDistribute.div(unlockedWeights.length);
 
@@ -178,28 +197,39 @@ function _useCompose() {
             }
         });
 
-        const newTokens = tokens.map((token, i) => {
-            if (unlockedWeights.find((uToken) => uToken.address === token.address)) {
-                return {
-                    ...token,
-                    weight: Number((normalisedWeights[i] * 100).toFixed(2)) || 0,
-                };
-            } else {
-                return token;
-            }
+        const updatedUnlockedTokens = unlockedWeights.map((token, i) => {
+            return {
+                ...token,
+                weight: Number((normalisedWeights[i] * 100).toFixed(2)) || 0,
+            };
         });
-        setTokens(newTokens);
+
+        const updatedTokens = [...tokens.filter((token) => token.isLocked), ...updatedUnlockedTokens];
+        setTokens(updatedTokens);
     }
 
-    function areTokensAndWeightsValid() {
+    function getTokenAndWeightValidations() {
         const totalTokenWeight = sumBy(tokens, (token) => token.weight);
         const areTokenSelectionsValid = tokens.every((token) => isAddress(token.address));
-
-        return totalTokenWeight === 100 && areTokenSelectionsValid;
+        const hasInvalidTokenWeights = tokens.some((token) => token.weight < 1);
+        return {
+            areTokenSelectionsValid,
+            hasInvalidTokenWeights,
+            invalidTotalWeight: totalTokenWeight !== 100,
+            isValid: totalTokenWeight === 100 && areTokenSelectionsValid && !hasInvalidTokenWeights,
+        };
     }
 
-    function isPoolFeeValid() {
-        return parseFloat(currentFee) < 0.1;
+    function getPoolFeeValidations() {
+        const isFeeValid = parseFloat(currentFee) < 0.1;
+        const isFeeEmpty = currentFee === null || currentFee === '' || isNaN(parseFloat(currentFee));
+        const isFeeZero = parseFloat(currentFee) === 0;
+        return {
+            isFeeEmpty,
+            isFeeZero,
+            isFeeValid,
+            isValid: !isFeeEmpty && !isFeeZero && isFeeValid,
+        };
     }
 
     function isFeeManagerValid() {
@@ -225,9 +255,9 @@ function _useCompose() {
         poolName,
         progressValidatedTo,
         isFeeManagerValid,
-        isPoolFeeValid,
+        getTokenAndWeightValidations,
         isPoolNameValid,
-        areTokensAndWeightsValid,
+        getPoolFeeValidations,
         setProgressValidatedTo,
         setPoolName,
         setOtherManagerOption,

@@ -13,16 +13,17 @@ interface Props {}
 
 export function AdvancedPoolComposeFeeManager(props: Props) {
     const { userAddress } = useUserAccount();
-    const { setFeeManager, feeManager, managerOption, setManagerOption, otherManagerOption, setOtherManagerOption } =
+    const { setFeeManager, feeManager, managerOption, setManagerOption, otherManagerOption, setOtherManagerOption, isFeeManagerValid } =
         useCompose();
     const { showToast } = useToast();
-    // const [isUsingCustomEOA, setIsUsingCustomEOA] = useState(false);
 
     function handleFeeManagerOptionSelected(manager: ManagerOption) {
         if (manager === 'dao-managed') {
             setFeeManager(networkConfig.beetsPoolOwnerAddress);
             setOtherManagerOption(undefined);
         } else {
+            setFeeManager(userAddress || '');
+            setOtherManagerOption('self-managed');
         }
         setManagerOption(manager);
     }
@@ -59,6 +60,16 @@ export function AdvancedPoolComposeFeeManager(props: Props) {
     const notDaoManaged = managerOption !== 'dao-managed';
     const isUsingCustomEOA = otherManagerOption === 'custom-eoa';
 
+    function getInputBorderColour() {
+        if (!isFeeManagerValid()) {
+            return 'red.400';
+        }
+        if (isUsingCustomEOA) {
+            return 'beets.green';
+        }
+        return 'transparent';
+    }
+
     return (
         <Card py="3" px="3" width="full" height="full">
             <VStack alignItems="flex-start" spacing="3">
@@ -70,7 +81,9 @@ export function AdvancedPoolComposeFeeManager(props: Props) {
                     </Text>
                 </VStack>
                 <VStack width="full" alignItems="flex-start" spacing="4">
-                    <Alert status="warning" color='yellow.100'>To be eligible for gauge rewards, the pool must be managed by the BeethovenX DAO</Alert>
+                    <Alert status="warning" color="yellow.100">
+                        To be eligible for gauge rewards, the pool must be managed by the BeethovenX DAO
+                    </Alert>
                     <VStack width="full" alignItems="flex-start">
                         <RadioGroup value={managerOption} onChange={handleFeeManagerOptionSelected}>
                             <VStack width="full" alignItems="flex-start" spacing="1">
@@ -107,12 +120,15 @@ export function AdvancedPoolComposeFeeManager(props: Props) {
                                 placeholder="0x48daF..."
                                 onChange={handleCustomFeeManagerChanged}
                                 value={feeManager || ''}
-                                borderColor={isUsingCustomEOA ? 'beets.green' : 'transparent'}
+                                borderColor={getInputBorderColour()}
                                 borderWidth={2}
                             />
                         </VStack>
                     )}
                 </VStack>
+                {!isFeeManagerValid() && (
+                    <Alert status="error">Please make sure the you have filled in the custom fee manager with a correct ethereum address.</Alert>
+                )}
             </VStack>
         </Card>
     );

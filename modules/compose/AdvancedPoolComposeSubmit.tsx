@@ -7,13 +7,18 @@ import { isAddress } from 'ethers/lib/utils.js';
 interface Props {}
 
 export function AdvancedPoolComposeSubmit(props: Props) {
-    const { setActiveStep, tokens, feeManager } = useCompose();
+    const { setActiveStep, tokens, feeManager, isPoolNameValid, getPoolFeeValidations, getTokenAndWeightValidations } =
+        useCompose();
 
     const totalTokenWeight = sumBy(tokens, (token) => token.weight);
     const isInvalidTokenWeighTotal = totalTokenWeight < 100;
     const isInvalidFeeManager = feeManager === null || feeManager === '' || !isAddress(feeManager);
-    const isPreviewDisabled = isInvalidTokenWeighTotal || isInvalidFeeManager;
-
+    const isPreviewDisabled =
+        isInvalidTokenWeighTotal ||
+        isInvalidFeeManager ||
+        !getTokenAndWeightValidations().isValid ||
+        !getPoolFeeValidations().isValid ||
+        !isPoolNameValid();
     function goToPreview() {
         // TODO validate inputs
         setActiveStep('preview');
@@ -21,12 +26,6 @@ export function AdvancedPoolComposeSubmit(props: Props) {
 
     return (
         <VStack width="full">
-            {isInvalidTokenWeighTotal && (
-                <Alert status="error">Please ensure that all the token weights in the pool sum to 100%.</Alert>
-            )}
-            {isInvalidFeeManager && (
-                <Alert status="error">Please make sure that the fee manager address is correct.</Alert>
-            )}
             <Button isDisabled={isPreviewDisabled} onClick={goToPreview} width="full" variant="primary">
                 Preview
             </Button>

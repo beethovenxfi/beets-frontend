@@ -1,16 +1,23 @@
 import React from 'react';
 import { useCompose } from './ComposeProvider';
 import Card from '~/components/card/Card';
-import { Box, Button, HStack, Heading, Text, VStack } from '@chakra-ui/react';
+import { Alert, Box, Button, HStack, Heading, Text, VStack } from '@chakra-ui/react';
 import { BeetsInput } from '~/components/inputs/BeetsInput';
 
 interface Props {}
 
 export function AdvancedPoolComposeName(props: Props) {
-    const { getPoolSymbol, setPoolName, poolName } = useCompose();
+    const { getPoolSymbol, setPoolName, poolName, isPoolNameValid } = useCompose();
 
     function handlePoolNameChanged(event: { currentTarget: { value: string } }) {
         setPoolName(event.currentTarget.value);
+    }
+
+    function getInputBorderColour() {
+        if (!isPoolNameValid()) {
+            return 'red.400';
+        }
+        return 'transparent';
     }
 
     const poolSymbol = getPoolSymbol();
@@ -39,6 +46,7 @@ export function AdvancedPoolComposeName(props: Props) {
                         placeholder="My very cool pool name"
                         onChange={handlePoolNameChanged}
                         borderWidth={2}
+                        borderColor={getInputBorderColour()}
                     />
                 </VStack>
                 {poolSymbol && (
@@ -49,6 +57,7 @@ export function AdvancedPoolComposeName(props: Props) {
                         </Text>
                     </VStack>
                 )}
+                {!isPoolNameValid() && <Alert status="error">Please ensure the pool name is filled in.</Alert>}
             </VStack>
         </Card>
     );

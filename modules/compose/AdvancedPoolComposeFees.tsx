@@ -1,13 +1,16 @@
 import React from 'react';
 import { useCompose } from './ComposeProvider';
 import Card from '~/components/card/Card';
-import { Box, Button, HStack, Heading, Text, VStack } from '@chakra-ui/react';
+import { Alert, Box, Button, HStack, Heading, Text, VStack } from '@chakra-ui/react';
 import { BeetsInput } from '~/components/inputs/BeetsInput';
 
 interface Props {}
 
 export function AdvancedPoolComposeFees(props: Props) {
-    const { FEE_PRESETS, setCurrentFee, currentFee, setIsUsingCustomFee, isUsingCustomFee } = useCompose();
+    const { FEE_PRESETS, setCurrentFee, currentFee, setIsUsingCustomFee, isUsingCustomFee, getPoolFeeValidations } =
+        useCompose();
+
+    const { isValid, isFeeEmpty, isFeeZero, isFeeValid } = getPoolFeeValidations();
 
     function handleFeeChanged(preset: string) {
         setCurrentFee(preset);
@@ -22,7 +25,7 @@ export function AdvancedPoolComposeFees(props: Props) {
         return false;
     }
 
-function handlePresetClicked(preset: string) {
+    function handlePresetClicked(preset: string) {
         setIsUsingCustomFee(false);
         handleFeeChanged(preset);
     }
@@ -32,8 +35,18 @@ function handlePresetClicked(preset: string) {
         setCurrentFee((parseFloat(event.currentTarget.value) / 100).toString());
     }
 
+    function getInputBorderColour() {
+        if (!isValid) {
+            return 'red.400';
+        }
+        if (isUsingCustomFee) {
+            return 'beets.green';
+        }
+        return 'transparent';
+    }
+
     return (
-        <Card py="3" px="3" width='full' height='full'>
+        <Card py="3" px="3" width="full" height="full">
             <VStack alignItems="flex-start" spacing="3">
                 <VStack alignItems="flex-start" spacing="1">
                     <Heading size="sm">2. Pool Fees</Heading>
@@ -67,7 +80,7 @@ function handlePresetClicked(preset: string) {
                         px="2"
                         placeholder="0.1"
                         onChange={handleCustomFeeChanged}
-                        borderColor={isUsingCustomFee ? 'beets.green' : 'transparent'}
+                        borderColor={getInputBorderColour()}
                         borderWidth={2}
                     >
                         <Box top="0" bottom="0" transform="translateY(20%)" right="12px" position="absolute">
@@ -75,6 +88,11 @@ function handlePresetClicked(preset: string) {
                         </Box>
                     </BeetsInput>
                 </HStack>
+                {isFeeEmpty && (
+                    <Alert status="error">Please ensure that you have selected or filled in a pool fee.</Alert>
+                )}
+                {isFeeZero && <Alert status="error">The pool fee cannot be zero.</Alert>}
+                {!isFeeValid && <Alert status="error">The pool fee must be less than 10%.</Alert>}
             </VStack>
         </Card>
     );
