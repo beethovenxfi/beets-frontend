@@ -18,13 +18,14 @@ import { GqlPoolToken } from '~/apollo/generated/graphql-codegen-generated';
 import { useGetTokens } from '~/lib/global/useToken';
 import TokenAvatar from '~/components/token/TokenAvatar';
 import { AmountHumanReadable } from '~/lib/services/token/token-types';
-import { tokenFormatAmount, tokenFormatAmountPrecise } from '~/lib/services/token/token-util';
+import { tokenFormatAmount } from '~/lib/services/token/token-util';
 import { parseUnits } from 'ethers/lib/utils';
 import { tokenInputBlockInvalidCharacters, tokenInputTruncateDecimalPlaces } from '~/lib/util/input-util';
 import { oldBnumScale, oldBnumToHumanReadable } from '~/lib/services/pool/lib/old-big-number';
 import { BeetsBox } from '~/components/box/BeetsBox';
 import { TokenSelectInline } from '~/components/token-select-inline/TokenSelectInline';
-import React from 'react';
+import { networkConfig } from '~/lib/config/network-config';
+import { formatFixed } from '@ethersproject/bignumber';
 
 interface Props extends BoxProps {
     tokenOptions: GqlPoolToken[];
@@ -33,7 +34,7 @@ interface Props extends BoxProps {
     setInputAmount: (amount: AmountHumanReadable) => void;
     value?: string;
     proportionalAmount?: string;
-
+    isWithdraw?: boolean;
     setSelectedTokenOption: (address: string) => void;
 }
 
@@ -45,6 +46,7 @@ export function BeetsTokenInputWithSlider({
     value,
     proportionalAmount,
     setSelectedTokenOption,
+    isWithdraw,
     ...rest
 }: Props) {
     const { formattedPrice } = useGetTokens();
@@ -54,6 +56,16 @@ export function BeetsTokenInputWithSlider({
         parseUnits(value, selectedTokenOption.decimals).lte(parseUnits(balance, selectedTokenOption.decimals));
     const [changing, setIsChanging] = useBoolean(false);
     const sliderValue = Math.round(hasBalance ? (parseFloat(value || '0') / parseFloat(balance)) * 100 : 0);
+    const isEth = selectedTokenOption.address === networkConfig.eth.address.toLowerCase();
+    const [warning, setWarning] = useBoolean(false);
+    const maxTokenAmount = isEth
+        ? formatFixed(
+              parseUnits(balance, selectedTokenOption.decimals)
+                  .sub(parseUnits(networkConfig.eth.minGasAmount, selectedTokenOption.decimals))
+                  .toString(),
+              selectedTokenOption.decimals,
+          )
+        : balance;
 
     return (
         <BeetsBox borderRadius="md" width="full" px="2" pt="2" pb="1" {...rest}>
@@ -64,6 +76,7 @@ export function BeetsTokenInputWithSlider({
                             tokenOptions={tokenOptions}
                             selectedAddress={selectedTokenOption.address}
                             onOptionSelect={(address) => setSelectedTokenOption(address)}
+                            isWithdraw={isWithdraw}
                         />
                     </Box>
                 ) : (
@@ -86,11 +99,15 @@ export function BeetsTokenInputWithSlider({
                         textAlign="right"
                         value={value || ''}
                         onChange={(e) => {
-                            const newValue = tokenInputTruncateDecimalPlaces(
-                                e.currentTarget.value,
-                                selectedTokenOption.decimals,
-                            );
-
+                            let inputAmount = '';
+                            if (isEth && parseFloat(e.currentTarget.value) > parseFloat(maxTokenAmount)) {
+                                inputAmount = maxTokenAmount;
+                                setWarning.on();
+                            } else {
+                                inputAmount = e.currentTarget.value;
+                                setWarning.off();
+                            }
+                            const newValue = tokenInputTruncateDecimalPlaces(inputAmount, selectedTokenOption.decimals);
                             setInputAmount(newValue);
                         }}
                         isInvalid={!isValid}
@@ -118,15 +135,16 @@ export function BeetsTokenInputWithSlider({
                     value={sliderValue > 100 ? 0 : sliderValue}
                     isDisabled={!hasBalance}
                     onChange={(value) => {
-                        if (value === 100) {
-                            setInputAmount(balance);
+                        const amount = oldBnumToHumanReadable(
+                            oldBnumScale(balance, selectedTokenOption.decimals).times(value / 100),
+                            selectedTokenOption.decimals,
+                        );
+                        if (isEth && parseFloat(amount) > parseFloat(maxTokenAmount)) {
+                            setInputAmount(maxTokenAmount);
+                            setWarning.on();
                         } else {
-                            setInputAmount(
-                                oldBnumToHumanReadable(
-                                    oldBnumScale(balance, selectedTokenOption.decimals).times(value / 100),
-                                    selectedTokenOption.decimals,
-                                ),
-                            );
+                            setInputAmount(amount);
+                            setWarning.off();
                         }
                     }}
                 >
@@ -161,7 +179,8 @@ export function BeetsTokenInputWithSlider({
                             display="flex"
                             onClick={() => {
                                 if (hasBalance) {
-                                    setInputAmount(balance);
+                                    setInputAmount(maxTokenAmount);
+                                    setWarning.on();
                                 }
                             }}
                             _hover={{ textDecoration: 'none' }}
@@ -184,6 +203,12 @@ export function BeetsTokenInputWithSlider({
                     )}
                 </Box>
             </Flex>
+            {isEth && warning && (
+                <Text fontSize="sm" color="orange">
+                    {`To ensure a smooth transaction, at least ${networkConfig.eth.minGasAmount} ${selectedTokenOption.symbol}
+                    must be left in your wallet to pay for native fees.`}
+                </Text>
+            )}
         </BeetsBox>
     );
 }

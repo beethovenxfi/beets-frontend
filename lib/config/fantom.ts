@@ -6,6 +6,7 @@ export const fantomNetworkConfig: NetworkConfig = {
     chainId: '250',
     networkName: 'Fantom Opera',
     networkShortName: 'Fantom',
+    chainName: 'FANTOM',
     etherscanName: 'FTM Scan',
     etherscanUrl: 'https://ftmscan.com',
     testnet: false,
@@ -15,6 +16,7 @@ export const fantomNetworkConfig: NetworkConfig = {
         symbol: 'FTM',
         decimals: 18,
         iconUrl: 'https://assets.coingecko.com/coins/images/4001/large/Fantom.png',
+        minGasAmount: '0.1',
     },
     wethAddress: '0x21be370d5312f44cb42ce377bc9b8a0cef1a4c83',
     wethAddressFormatted: '0x21be370D5312f44cB42ce377BC9b8a0cEF1A4C83',
@@ -46,7 +48,11 @@ export const fantomNetworkConfig: NetworkConfig = {
     balancer: {
         vault: '0x20dd72Ed959b6147912C2e529F0a0C651c33c9ce',
         batchRelayer: '0x0faa25293a36241c214f3760c6ff443e1b731981',
-        composableStableFactories: ['0x5c3094982cf3c97a06b7d62a6f7669f14a199b19'],
+        balToken: AddressZero,
+        composableStableFactories: [
+            '0x5c3094982cf3c97a06b7d62a6f7669f14a199b19',
+            '0x23f03a4fb344d8b98833d2ace093cc305e03474f',
+        ],
         composableStableV1Factory: '',
         weightedPoolV2PlusFactories: [
             '0x8ea1c497c16726e097f62c8c9fbd944143f27090',
@@ -59,8 +65,8 @@ export const fantomNetworkConfig: NetworkConfig = {
         linearRebalancers: {
             '0x92502cd8e00f5b8e737b2ba203fdd7cd27b23c8f': '0x377ef852870ff2817e04b20629efdd583db49bac', // wftm
             '0xc385e76e575b2d71eb877c27dcc1608f77fada99': '0x268292559d120e101a38eff1d04e6d20a67334ea', // usdc
-            '0x685056d3a4e574b163d0fa05a78f1b0b3aa04a80': '0x3c1420df122ac809b9d1ba77906f833764d64501', // dai
-            '0xa0051ab2c3eb7f17758428b02a07cf72eb0ef1a3': '0x8553fdc738521b0408c22897f6ceeed7f753a2c9', // weth
+            '0x685056d3a4e574b163d0fa05a78f1b0b3aa04a80': '0x8553fdc738521b0408c22897f6ceeed7f753a2c9', // dai
+            '0xa0051ab2c3eb7f17758428b02a07cf72eb0ef1a3': '0x6ab39ca2a627f3d3762a47666c2046292097914a', // weth
             '0x3c1420df122ac809b9d1ba77906f833764d64501': '0xb7880303215e8cbcfad05a43ffde1a1396795df1', // wbtc
             '0x442988091cdc18acb8912cd3fe062cda9233f9dc': '0x4e568a948fe772e36b696ac5b11b174e9807dfaa', // fusdt
         },
@@ -80,8 +86,8 @@ export const fantomNetworkConfig: NetworkConfig = {
     },
     beetsPoolOwnerAddress: '0xcd983793adb846dce4830c22f30c7ef0c864a776',
     masterChefContractAddress: '0x8166994d9ebBe5829EC86Bd81258149B87faCfd3',
-    defaultTokenIn: '0x04068da6c83afcfa0e13ba15a6696662335d5b75',
-    defaultTokenOut: '0x21be370d5312f44cb42ce377bc9b8a0cef1a4c83',
+    defaultTokenIn: '0x21be370d5312f44cb42ce377bc9b8a0cef1a4c83',
+    defaultTokenOut: '0xf24bcf4d1e507740041c9cfd2dddb29585adce1e',
     farmTypeName: 'farm',
     additionalLinks: [
         {
@@ -117,11 +123,6 @@ export const fantomNetworkConfig: NetworkConfig = {
             url: 'https://pro.olympusdao.finance/#/bond',
         },
         {
-            title: 'Multichain Bridge',
-            subTitle: 'ETH / AVAX / BSC / MATIC',
-            url: 'https://app.multichain.org/#/router',
-        },
-        {
             title: 'AllBridge',
             subTitle: 'SOL / MATIC / CELO',
             url: 'https://app.allbridge.io/bridge?from=SOL&to=FTM&asset=SOL',
@@ -143,9 +144,12 @@ export const fantomNetworkConfig: NetworkConfig = {
     },
     gauge: {
         rewardHelperAddress: AddressZero,
+        balancerPseudoMinterAddress: AddressZero,
+        veBALDelegationProxyAddress: AddressZero,
+        workingBalanceHelperAddress: AddressZero,
+        checkpointHelper: AddressZero,
     },
     createPoolUrl: 'https://v1.beets.fi/#/pool-create',
-    launchUrl: 'https://v1.beets.fi/#/launch',
     stakeUrl: 'https://beets.fi/#/stake',
     warnings: {
         poolList: {
@@ -163,16 +167,20 @@ export const fantomNetworkConfig: NetworkConfig = {
         poolInvest: {},
         poolWithdraw: {},
     },
-    boostedByTypes: {
+    poolBadgeTypes: {
         '0xff2753aaba51c9f84689b9bd0a21b3cf380a1cff00000000000000000000072e': 'reaper',
         '0x7449f09c8f0ed490472d7c14b4eef235620d027000010000000000000000072d': 'reaper',
         '0x2e0d46d884af4053787e1838793bf98dcb87488e00020000000000000000072c': 'reaper',
         '0xf47f4d59c863c02cbfa3eefe6771b9c9fbe7b97800000000000000000000072b': 'reaper',
         '0xba0e9aea8a7fa1daab4edf244191f2387a4e472b000100000000000000000737': 'reaper',
+        '0x6e6dc948ce85c62125ff7a1e543d761a88f0a4cb000000000000000000000743': 'reaper',
     },
+    auraStaking: {},
     investDisabled: {
         '0xa10285f445bcb521f1d623300dc4998b02f11c8f00000000000000000000043b': true,
+        '0xcde5a11a4acb4ee4c805352cec57e236bdbc3837000200000000000000000019': true,
     },
     maBeetsEnabled: true,
     claimAllRewardsEnabled: true,
+    layerZeroChainId: -1,
 };

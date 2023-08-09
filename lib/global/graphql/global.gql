@@ -16,6 +16,7 @@ query GetAppGlobalData {
     beetsGetFbeetsRatio
     blocksGetBlocksPerDay
     blocksGetAverageBlockTime
+    veBALTotalSupply: veBalGetTotalSupply
 }
 
 query GetAppGlobalPollingData {
@@ -23,7 +24,7 @@ query GetAppGlobalPollingData {
         price
         address
     }
-    protocolMetrics {
+    protocolMetricsChain {
         totalLiquidity
         totalSwapVolume
         totalSwapFee
@@ -33,7 +34,7 @@ query GetAppGlobalPollingData {
     }
     blocksGetBlocksPerDay
     blocksGetAverageBlockTime
-    beetsGetBeetsPrice
+    tokenGetProtocolTokenPrice
 }
 
 query GetTokens {
@@ -81,7 +82,7 @@ query GetFbeetsRatio {
 }
 
 query GetProtocolData {
-    protocolData: protocolMetrics {
+    protocolData: protocolMetricsChain {
         totalLiquidity
         totalSwapVolume
         totalSwapFee
@@ -89,7 +90,7 @@ query GetProtocolData {
         swapFee24h
         swapVolume24h
     }
-    beetsPrice: beetsGetBeetsPrice
+    beetsPrice: tokenGetProtocolTokenPrice
 }
 
 query GetBlocksPerDay {
@@ -98,5 +99,5 @@ query GetBlocksPerDay {
 }
 
 query GetBeetsPrice {
-    beetsPrice: beetsGetBeetsPrice
+    beetsPrice: tokenGetProtocolTokenPrice
 }

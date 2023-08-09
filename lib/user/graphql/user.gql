@@ -29,6 +29,19 @@ query GetUserData {
         gauge {
             id
             gaugeAddress
+            version
+            status
+            otherGauges {
+                gaugeAddress
+                version
+                status
+                id
+                rewards {
+                    id
+                    tokenAddress
+                    rewardPerSecond
+                }
+            }
             rewards {
                 id
                 rewardPerSecond
@@ -36,6 +49,7 @@ query GetUserData {
             }
         }
     }
+    veBALUserBalance: veBalGetUserBalance
 }
 
 mutation UserSyncBalance($poolId: String!) {

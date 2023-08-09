@@ -12,7 +12,6 @@ import { PoolService } from '~/lib/services/pool/pool-types';
 import { TokenBase } from '~/lib/services/token/token-types';
 import { uniqBy } from 'lodash';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
-import { isSameAddress } from '@balancer-labs/sdk';
 import { usePoolWithOnChainData } from './usePoolWithOnChainData';
 
 export interface PoolContextType {
@@ -30,6 +29,7 @@ export interface PoolContextType {
     isFbeetsPool: boolean;
     isStablePool: boolean;
     isComposablePool: boolean;
+    canCustomInvest: boolean;
 }
 
 export const PoolContext = createContext<PoolContextType | null>(null);
@@ -99,7 +99,8 @@ export function PoolProvider({ pool: poolFromProps, children }: { pool: GqlPoolU
         ((pool.__typename === 'GqlPoolWeighted' &&
             networkConfig.balancer.weightedPoolV2PlusFactories.includes(pool.factory || '')) ||
             pool.__typename === 'GqlPoolPhantomStable' ||
-            pool.__typename === 'GqlPoolMetaStable') &&
+            pool.__typename === 'GqlPoolMetaStable' ||
+            pool.__typename === 'GqlPoolGyro') &&
         pool.staking?.type === 'GAUGE' &&
         !!pool.staking.gauge;
     const supportsZap = supportsZapIntoMasterchefFarm || supportsZapIntoGauge;
@@ -123,6 +124,13 @@ export function PoolProvider({ pool: poolFromProps, children }: { pool: GqlPoolU
         pool.__typename === 'GqlPoolPhantomStable' ||
         pool.__typename === 'GqlPoolMetaStable';
 
+    const totalApr =
+        pool.dynamicData.apr.apr.__typename === 'GqlPoolAprRange'
+            ? parseFloat(pool.dynamicData.apr.apr.max)
+            : parseFloat(pool.dynamicData.apr.apr.total);
+
+    const canCustomInvest = pool.__typename !== 'GqlPoolGyro';
+
     useEffectOnce(() => {
         refetch();
         startPolling(30_000);
@@ -145,10 +153,11 @@ export function PoolProvider({ pool: poolFromProps, children }: { pool: GqlPoolU
                 bptPrice,
                 supportsZap,
                 formattedTypeName: poolGetTypeName(pool),
-                totalApr: parseFloat(pool.dynamicData.apr.total),
+                totalApr,
                 isFbeetsPool: pool.id === networkConfig.fbeets.poolId,
                 isStablePool,
                 isComposablePool,
+                canCustomInvest,
             }}
         >
             {children}

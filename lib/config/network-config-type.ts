@@ -1,11 +1,13 @@
-export type BoostedByType =
+import { GqlChain } from '~/apollo/generated/graphql-codegen-generated';
+export type PoolBadgeType =
     | 'reaper-aave'
     | 'reaper-aave-granary'
     | 'yearn'
     | 'reaper-sonne'
     | 'overnight'
     | 'reaper'
-    | 'beefy-exactly';
+    | 'beefy-exactly'
+    | 'gyroscope';
 
 export interface PoolDetailWarning {
     id: string;
@@ -21,6 +23,7 @@ export interface NetworkConfig {
     appName: string;
     chainId: string;
     networkName: string;
+    chainName: GqlChain;
     networkShortName: string;
     etherscanName: string;
     etherscanUrl: string;
@@ -31,6 +34,7 @@ export interface NetworkConfig {
         symbol: string;
         decimals: number;
         iconUrl: string;
+        minGasAmount: string;
     };
     wethAddress: string;
     wethAddressFormatted: string;
@@ -61,6 +65,7 @@ export interface NetworkConfig {
     balancer: {
         vault: string;
         batchRelayer: string;
+        balToken: string;
         composableStableFactories: string[];
         composableStableV1Factory: string;
         weightedPoolV2PlusFactories: string[];
@@ -98,9 +103,12 @@ export interface NetworkConfig {
     };
     gauge: {
         rewardHelperAddress: string;
+        balancerPseudoMinterAddress: string;
+        veBALDelegationProxyAddress: string;
+        workingBalanceHelperAddress: string;
+        checkpointHelper: string;
     };
     createPoolUrl: string;
-    launchUrl?: string;
     stakeUrl?: string;
     warnings: {
         poolDetail: { [poolId: string]: PoolDetailWarning };
@@ -109,9 +117,11 @@ export interface NetworkConfig {
         poolList: { [poolId: string]: string };
     };
     investDisabled: { [poolId: string]: boolean };
-    boostedByTypes: {
-        [poolId: string]: BoostedByType;
+    poolBadgeTypes: {
+        [poolId: string]: PoolBadgeType;
     };
+    auraStaking: { [poolId: string]: string };
     maBeetsEnabled: boolean;
     claimAllRewardsEnabled: boolean;
+    layerZeroChainId: number;
 }

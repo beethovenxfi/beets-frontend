@@ -14,17 +14,35 @@ export function useInvest() {
     const { getUserBalanceForToken, userPoolTokenBalances } = usePoolUserTokenBalancesInWallet();
     const { priceForAmount } = useGetTokens();
 
-    const selectedInvestTokens: GqlPoolToken[] = pool.investConfig.options.map((option) =>
-        selectedOptions[`${option.poolTokenIndex}`]
-            ? option.tokenOptions.find(
-                  (tokenOption) => tokenOption.address === selectedOptions[`${option.poolTokenIndex}`],
-              )!
-            : option.tokenOptions[0],
-    );
+    // need to assign a value
+    let firstTokenOption: GqlPoolToken =
+        pool.investConfig.options.find((option) => option.tokenOptions.length > 1)?.tokenOptions[0] ||
+        pool.investConfig.options[0].tokenOptions[0];
+
+    const selectedInvestTokens: GqlPoolToken[] = pool.investConfig.options.map((option) => {
+        if (option.tokenOptions.length > 1) {
+            if (selectedOptions && selectedOptions[`${option.poolTokenIndex}`]) {
+                return option.tokenOptions.find(
+                    (tokenOption) => tokenOption.address === selectedOptions[`${option.poolTokenIndex}`],
+                )!;
+            } else {
+                const firstOptionWithNonZeroBalance = option.tokenOptions.find(
+                    (option) => getUserBalanceForToken(option.address) !== '0.0',
+                );
+                // if there is more than 1 option and 1 of the options has a non-zero balance use that one
+                if (firstOptionWithNonZeroBalance) {
+                    firstTokenOption = firstOptionWithNonZeroBalance;
+                }
+                return firstTokenOption;
+            }
+        } else {
+            return option.tokenOptions[0];
+        }
+    });
 
     const selectedInvestTokensWithAmounts = selectedInvestTokens.map((token) => ({
         ...token,
-        amount: inputAmounts[token.address] || '0',
+        amount: inputAmounts && inputAmounts[token.address] ? inputAmounts[token.address] : '0',
     }));
 
     const userInvestTokenBalances: TokenAmountHumanReadable[] = selectedInvestTokens.map((token) => ({
@@ -59,5 +77,6 @@ export function useInvest() {
         hasValidUserInput,
         isInvestingWithEth,
         zapEnabled,
+        firstTokenOption,
     };
 }

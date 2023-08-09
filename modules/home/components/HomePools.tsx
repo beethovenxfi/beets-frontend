@@ -54,14 +54,22 @@ export function HomePools(props: BoxProps) {
                             </Skeleton>
                         </Flex>
                         <PoolCardCarousel
-                            items={userPools.map((pool) => (
-                                <PoolCardUser
-                                    pool={pool}
-                                    key={pool.id}
-                                    balance={bptBalanceForPool(pool.id)}
-                                    balanceUSD={usdBalanceForPool(pool.id)}
-                                />
-                            ))}
+                            items={userPools.map((pool) => {
+                                const dynamicDataApr = pool.dynamicData.apr.apr;
+                                const totalApr =
+                                    dynamicDataApr.__typename === 'GqlPoolAprRange'
+                                        ? dynamicDataApr.max
+                                        : dynamicDataApr.total;
+                                return (
+                                    <PoolCardUser
+                                        pool={pool}
+                                        key={pool.id}
+                                        balance={bptBalanceForPool(pool.id)}
+                                        balanceUSD={usdBalanceForPool(pool.id)}
+                                        totalApr={parseFloat(totalApr)}
+                                    />
+                                );
+                            })}
                             loading={getPoolsQuery.loading}
                             cardHeight="327px"
                         />

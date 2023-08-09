@@ -12,6 +12,7 @@ import {
     EncodeFBeetsBarEnterInput,
     EncodeFBeetsBarLeaveInput,
     EncodeGaugeDepositInput,
+    EncodeGaugeWithdrawInput,
     EncodeJoinPoolInput,
     EncodeMasterChefDepositInput,
     EncodeMasterChefWithdrawInput,
@@ -28,7 +29,12 @@ import {
 import { BigNumber, BigNumberish } from '@ethersproject/bignumber';
 import { AddressZero, MaxUint256, Zero } from '@ethersproject/constants';
 import { PoolJoinBatchRelayerContractCallData } from '~/lib/services/pool/pool-types';
-import { GqlPoolMetaStable, GqlPoolStable, GqlPoolWeighted } from '~/apollo/generated/graphql-codegen-generated';
+import {
+    GqlPoolGyro,
+    GqlPoolMetaStable,
+    GqlPoolStable,
+    GqlPoolWeighted,
+} from '~/apollo/generated/graphql-codegen-generated';
 import { isSameAddress, Swaps, SwapType, SwapV2 } from '@balancer-labs/sdk';
 import { AmountScaledString, TokenAmountHumanReadable } from '~/lib/services/token/token-types';
 import { poolScaleSlippage } from '~/lib/services/pool/lib/util';
@@ -142,6 +148,10 @@ export class BatchRelayerService {
         return this.gaugeStakingService.encodeDeposit(params);
     }
 
+    public gaugeEncodeWithdraw(params: EncodeGaugeWithdrawInput): string {
+        return this.gaugeStakingService.encodeWithdraw(params);
+    }
+
     public reaperEncodeWrap(params: EncodeReaperWrapInput): string {
         return this.reaperWrappingService.encodeWrap(params);
     }
@@ -174,7 +184,7 @@ export class BatchRelayerService {
         maxAmountsIn,
     }: {
         userAddress: string;
-        pool: GqlPoolWeighted | GqlPoolStable | GqlPoolMetaStable;
+        pool: GqlPoolWeighted | GqlPoolStable | GqlPoolMetaStable | GqlPoolGyro;
         userData: string;
         assets: string[];
         maxAmountsIn: BigNumberish[];
@@ -242,6 +252,7 @@ export class BatchRelayerService {
         sender,
         recipient,
         skipOutputRefs,
+        wethIsEth,
     }: {
         tokensIn: string[];
         tokensOut: string[];
@@ -255,6 +266,7 @@ export class BatchRelayerService {
         sender: string;
         recipient: string;
         skipOutputRefs?: boolean;
+        wethIsEth?: boolean;
     }): string {
         const limits = Swaps.getLimitsForSlippage(
             tokensIn,
@@ -268,7 +280,9 @@ export class BatchRelayerService {
         return this.vaultEncodeBatchSwap({
             swapType: SwapType.SwapExactIn,
             swaps,
-            assets,
+            assets: wethIsEth
+                ? assets.map((asset) => (isSameAddress(asset, this.wethAddress) ? AddressZero : asset))
+                : assets,
             funds: {
                 sender,
                 recipient,

@@ -39,7 +39,7 @@ export const useToast = () => useContext(BeetsToastContext);
 const getBgColor = (toastType: ToastType) => {
     switch (toastType) {
         case ToastType.Info:
-            return 'beets.base.300';
+            return 'beets.base.200';
         case ToastType.Error:
             return 'red.400';
         case ToastType.Success:

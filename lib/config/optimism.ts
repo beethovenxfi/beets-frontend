@@ -5,6 +5,7 @@ export const optimismNetworkConfig: NetworkConfig = {
     chainId: '10',
     networkName: 'Optimism Mainnet',
     networkShortName: 'Optimism',
+    chainName: 'OPTIMISM',
     etherscanName: 'The Optimistic Explorer',
     etherscanUrl: 'https://optimistic.etherscan.io',
     testnet: false,
@@ -14,6 +15,7 @@ export const optimismNetworkConfig: NetworkConfig = {
         symbol: 'ETH',
         decimals: 18,
         iconUrl: 'https://optimistic.etherscan.io/images/svg/brands/optimism.svg?v=1.3',
+        minGasAmount: '0.0005',
     },
     wethAddress: '0x4200000000000000000000000000000000000006',
     wethAddressFormatted: '0x4200000000000000000000000000000000000006',
@@ -44,9 +46,11 @@ export const optimismNetworkConfig: NetworkConfig = {
     balancer: {
         vault: '0xba12222222228d8ba445958a75a0704d566bf2c8',
         batchRelayer: '0x03f1ab8b19bce21eb06c364aec9e40322572a1e9',
+        balToken: '0xfe8b128ba8c78aabc59d4c64cee7ff28e9379921',
         composableStableFactories: [
             '0xf145cafb67081895ee80eb7c04a30cf87f07b745',
             '0xe2e901ab09f37884ba31622df3ca7fc19aa443be',
+            '0x043a2dad730d585c44fb79d2614f295d2d625412',
         ],
         composableStableV1Factory: '0xf145cafb67081895ee80eb7c04a30cf87f07b745',
         weightedPoolV2PlusFactories: [
@@ -62,17 +66,24 @@ export const optimismNetworkConfig: NetworkConfig = {
             ],
         },
         linearRebalancers: {
-            '0xba7834bb3cd2db888e6a06fb45e82b4225cd0c71': '0xdc9d37d76e7a782460f94ffd811d4e0579f04756', //usdc
-            '0x9253d7e1b42fa01ede2c53f3a21b3b4d13239cd4': '0x1491b1bcb8e5b6608a984a3b56ad783bb4c5df49', //usdt
-            '0x888a6195d42a95e80d81e1c506172772a80b80bc': '0x4065e8da096917987d99bce9c8e78a74c6abc7f1', //dai
-            '0xdd89c7cd0613c1557b2daac6ae663282900204f1': '0x842afe129dcd4d2e1046a6491502e9495286d21e', //weth
-            '0xd0d334b6cfd77acc94bab28c7783982387856449': '0x9b5eaeacee3b2121afed32238015f37ea4dc6f7e', //bal
-            '0xa4e597c1bd01859b393b124ce18427aa4426a871': '0xfa0081569a9e5c80385f2ffb301db93288e53684', //op
-            '0xa1a77e5d7d769bfbb790a08ec976dc738bf795b9': '0x2bce16d9e5bbaa737be124f7da16a5a7bc699bcb', //wbtc
-            '0xc0d7013a05860271a1edb52415cf74bc85b2ace7': '0x87b57d325bc066890a400a5c88f34084a2454d91', //susd
-            '0x62ec8b26c08ffe504f22390a65e6e3c1e45e9877': '0x573f1fbde18ab2926a5e3fb80467ae50cf91d3f6', //soDAI
-            '0xb96c5bada4bf6a70e71795a3197ba94751dae2db': '0xbac75e5e03c68c3a9e0c200462d38440d8ffea45', //soUSDT
-            '0xedcfaf390906a8f91fb35b7bac23f3111dbaee1c': '0xe61b872d223362facb9fcbce359a56764bccfa36', //soUSDC
+            '0xba7834bb3cd2db888e6a06fb45e82b4225cd0c71': '0xdc9d37d76e7a782460f94ffd811d4e0579f04756', // usdc
+            '0x9253d7e1b42fa01ede2c53f3a21b3b4d13239cd4': '0x1491b1bcb8e5b6608a984a3b56ad783bb4c5df49', // usdt
+            '0x888a6195d42a95e80d81e1c506172772a80b80bc': '0x4065e8da096917987d99bce9c8e78a74c6abc7f1', // dai
+            '0xdd89c7cd0613c1557b2daac6ae663282900204f1': '0x842afe129dcd4d2e1046a6491502e9495286d21e', // weth
+            '0xd0d334b6cfd77acc94bab28c7783982387856449': '0x9b5eaeacee3b2121afed32238015f37ea4dc6f7e', // bal
+            '0xa4e597c1bd01859b393b124ce18427aa4426a871': '0xfa0081569a9e5c80385f2ffb301db93288e53684', // op
+            '0xa1a77e5d7d769bfbb790a08ec976dc738bf795b9': '0x2bce16d9e5bbaa737be124f7da16a5a7bc699bcb', // wbtc
+            '0xc0d7013a05860271a1edb52415cf74bc85b2ace7': '0x87b57d325bc066890a400a5c88f34084a2454d91', // susd
+            '0x62ec8b26c08ffe504f22390a65e6e3c1e45e9877': '0x573f1fbde18ab2926a5e3fb80467ae50cf91d3f6', // soDAI
+            '0xb96c5bada4bf6a70e71795a3197ba94751dae2db': '0xbac75e5e03c68c3a9e0c200462d38440d8ffea45', // soUSDT
+            '0xedcfaf390906a8f91fb35b7bac23f3111dbaee1c': '0xe61b872d223362facb9fcbce359a56764bccfa36', // soUSDC
+            '0xf970659221bb9d01b615321b63a26e857ffc030b': '0x42fe737ba23d172542d6c079952cafcd9b4a5256', // rfusdc multi strat
+            '0x20715545c15c76461861cb0d6ba96929766d05a5': '0xa9d40f2aa0121105ce763f13166fd19c4b964d3d', // rfusdt multi strat
+            '0xa5d4802b4ce6b745b0c9e1b4a79c093d197869c8': '0xed8f7907195e050411a6a7824bca6acc5c37806c', // rfdai multi strat
+            '0x2e2b8b82123789d895fd79913f6dfa51f5b5a0e6': '0x072c30dc3c2f7ce3b8f50600e6e57fb1e9bdf409', // rfweth multi strat
+            '0x48ace81c09382bfc08ed102e7eadd37e3b049752': '0xa20f3951d881b98ceb17149ba88ddb94ccd4cc16', // rfwsteth multi strat
+            '0x8025586ac5fb265a23b9492e7414beccc2059ec3': '0x6344dfaabe0635fc19aa599a772a3182878c32f4', // rfwbtc multi strat
+            '0x3e9cbffd270ae67abb09d28988e7e785498c7373': '0xee5e347e679ed3d86d8280a92b99bb6c09fbb374', // rfop multi strat
         },
         reaperManualRebalancer: '0xf070996cf89cd3d2582705fc269f2c800e9a6a21',
         sorQueries: '0x1814a3b3e4362caf4eb54cd85b82d39bd7b34e41',
@@ -120,11 +131,6 @@ export const optimismNetworkConfig: NetworkConfig = {
             url: 'https://pro.olympusdao.finance/#/bond',
         },
         {
-            title: 'Multichain Bridge',
-            subTitle: 'ETH / AVAX / BSC / MATIC',
-            url: 'https://app.multichain.org/#/router',
-        },
-        {
             title: 'AllBridge',
             subTitle: 'SOL / MATIC / CELO',
             url: 'https://app.allbridge.io/bridge?from=SOL&to=FTM&asset=SOL',
@@ -146,6 +152,10 @@ export const optimismNetworkConfig: NetworkConfig = {
     },
     gauge: {
         rewardHelperAddress: '0x299dcdf14350999496204c141a0c20a29d71af3e',
+        balancerPseudoMinterAddress: '0x4fb47126fa83a8734991e41b942ac29a3266c968',
+        veBALDelegationProxyAddress: '0x9da18982a33fd0c7051b19f0d7c76f2d5e7e017c',
+        workingBalanceHelperAddress: '0x9129e834e15ea19b6069e8f08a8ecfc13686b8dc',
+        checkpointHelper: '0xca4cdc9eed85d9ce0b8eef74457480364068af9e',
     },
     createPoolUrl: 'https://opv1.beets.fi/#/pool-create',
     warnings: {
@@ -193,7 +203,7 @@ export const optimismNetworkConfig: NetworkConfig = {
                 'To account for the USD+ and DAI+ deposit/withdraw fee, this pool will charge a fee on both invest and withdraw of up to 0.06%.',
         },
     },
-    boostedByTypes: {
+    poolBadgeTypes: {
         '0xde45f101250f2ca1c0f8adfc172576d10c12072d00000000000000000000003f': 'reaper-aave',
         '0x6222ae1d2a9f6894da50aa25cb7b303497f9bebd000000000000000000000046': 'reaper-aave',
         '0x1f131ec1175f023ee1534b16fa8ab237c00e238100000000000000000000004a': 'reaper-aave',
@@ -208,6 +218,17 @@ export const optimismNetworkConfig: NetworkConfig = {
         '0x23ca0306b21ea71552b148cf3c4db4fc85ae19290000000000000000000000ac': 'reaper-sonne',
         '0x3c74c4ed512050eb843d89fb9dcd5ebb4668eb6d0002000000000000000000cc': 'beefy-exactly',
         '0x098f32d98d0d64dba199fc1923d3bf4192e787190001000000000000000000d2': 'reaper-sonne',
+        '0x58910d5bd045a20a37de147f8acea75b2d881f610002000000000000000000d3': 'gyroscope',
+        '0x7ca75bdea9dede97f8b13c6641b768650cb837820002000000000000000000d5': 'gyroscope',
+        '0x2c4a83f98d1cdbeeec825fabacd09c46e2dd3c570002000000000000000000de': 'gyroscope',
+        '0x62cf35db540152e94936de63efc90d880d4e241b0000000000000000000000ef': 'reaper',
+        '0x7fe29a818438ed2759e30f65c2302295711d66fc0000000000000000000000e5': 'reaper', // to be deprecated soon
+    },
+    // manually added for now
+    auraStaking: {
+        '0x7ca75bdea9dede97f8b13c6641b768650cb837820002000000000000000000d5': 'https://app.aura.finance/#/10/pool/6',
+        '0x4fd63966879300cafafbb35d157dc5229278ed2300020000000000000000002b': 'https://app.aura.finance/#/10/pool/0',
+        '0x7b50775383d3d6f0215a8f290f2c9e2eebbeceb200020000000000000000008b': 'https://app.aura.finance/#/10/pool/4',
     },
     investDisabled: {
         '0x1f131ec1175f023ee1534b16fa8ab237c00e238100000000000000000000004a': true,
@@ -215,4 +236,5 @@ export const optimismNetworkConfig: NetworkConfig = {
     },
     maBeetsEnabled: false,
     claimAllRewardsEnabled: false,
+    layerZeroChainId: 111,
 };

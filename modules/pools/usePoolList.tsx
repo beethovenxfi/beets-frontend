@@ -9,6 +9,7 @@ import {
 import { useBoolean } from '@chakra-ui/hooks';
 import { eq } from 'lodash';
 import { createContext, ReactNode, useContext } from 'react';
+import { networkConfig } from '~/lib/config/network-config';
 
 interface PoolsQueryVariables extends GetPoolsQueryVariables {
     first: number;
@@ -22,7 +23,8 @@ export const DEFAULT_POOL_LIST_QUERY_VARS: PoolsQueryVariables = {
     orderDirection: 'desc',
     where: {
         categoryIn: ['INCENTIVIZED'],
-        poolTypeIn: ['WEIGHTED', 'STABLE', 'PHANTOM_STABLE', 'META_STABLE'],
+        poolTypeIn: ['WEIGHTED', 'STABLE', 'PHANTOM_STABLE', 'META_STABLE', 'GYRO', 'GYRO3', 'GYROE'],
+        chainIn: [networkConfig.chainName],
     },
     textSearch: null,
 };

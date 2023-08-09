@@ -22,6 +22,7 @@ import { useWithdrawState } from '~/modules/pool/withdraw/lib/useWithdrawState';
 import { usePool } from '~/modules/pool/lib/usePool';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 import { BeetsModalBody, BeetsModalContent, BeetsModalHeader } from '~/components/modal/BeetsModal';
+import { usePoolUserDepositBalance } from '../lib/usePoolUserDepositBalance';
 
 interface Props {
     activatorProps?: ButtonProps;
@@ -43,6 +44,7 @@ export function PoolWithdrawModal({
     const [withdrawComplete, setWithdrawComplete] = useState(false);
     const { clearWithdrawState } = useWithdrawState();
     const { warnings } = useNetworkConfig();
+    const { userPoolBalanceUSD, isLoading: isPoolUserDepositBalanceLoading } = usePoolUserDepositBalance();
 
     useEffect(() => {
         setModalState('start');
@@ -70,12 +72,18 @@ export function PoolWithdrawModal({
     return (
         <>
             {!noActivator && (
-                <Button onClick={onOpen} variant="secondary" width={{ base: 'full', md: '140px' }} {...activatorProps}>
+                <Button
+                    onClick={onOpen}
+                    width={{ base: 'full', md: '140px' }}
+                    variant="secondary"
+                    {...activatorProps}
+                    isLoading={isPoolUserDepositBalanceLoading}
+                >
                     Withdraw
                 </Button>
             )}
             <Modal isOpen={isOpen} onClose={onModalClose} size="lg" initialFocusRef={initialRef}>
-                <ModalOverlay bg='blackAlpha.900' />
+                <ModalOverlay bg="blackAlpha.900" />
                 <BeetsModalContent>
                     <ModalCloseButton />
                     {modalState !== 'start' ? (
@@ -133,7 +141,7 @@ export function PoolWithdrawModal({
                             </Heading>
                         ) : null}
                     </BeetsModalHeader>
-                    <BeetsModalBody className="bg" p='0'>
+                    <BeetsModalBody className="bg" p="0">
                         <FadeInBox isVisible={modalState === 'start'}>
                             {warnings.poolWithdraw[pool.id] && (
                                 <Alert status="warning" mb="4">

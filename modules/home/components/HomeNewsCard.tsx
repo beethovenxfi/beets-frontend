@@ -23,9 +23,9 @@ export function HomeNewsCard({ item }: Props) {
                         via {capitalize(source)}
                     </Link>
                 </Box>
-                {source === 'twitter' && <IconTwitter />}
-                {source === 'discord' && <IconDiscord />}
-                {source === 'medium' && <IconMedium />}
+                {source === 'twitter' && <IconTwitter color="#0090FF" />}
+                {source === 'discord' && <IconDiscord color="#7A91E3" />}
+                {source === 'medium' && <IconMedium color="white" />}
             </Flex>
             <Box whiteSpace="pre-line">{text}</Box>
             {discussionUrl && (

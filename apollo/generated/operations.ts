@@ -51,18 +51,58 @@ export const GqlPoolCardData = gql`
             totalShares
             apr {
                 hasRewardApr
-                thirdPartyApr
-                nativeRewardApr
+                thirdPartyApr {
+                    ... on GqlPoolAprTotal {
+                        total
+                    }
+                    ... on GqlPoolAprRange {
+                        min
+                        max
+                    }
+                }
+                nativeRewardApr {
+                    ... on GqlPoolAprTotal {
+                        total
+                    }
+                    ... on GqlPoolAprRange {
+                        min
+                        max
+                    }
+                }
                 swapApr
-                total
+                apr {
+                    ... on GqlPoolAprTotal {
+                        total
+                    }
+                    ... on GqlPoolAprRange {
+                        min
+                        max
+                    }
+                }
                 items {
                     id
                     title
-                    apr
+                    apr {
+                        ... on GqlPoolAprTotal {
+                            total
+                        }
+                        ... on GqlPoolAprRange {
+                            min
+                            max
+                        }
+                    }
                     subItems {
                         id
                         title
-                        apr
+                        apr {
+                            ... on GqlPoolAprTotal {
+                                total
+                            }
+                            ... on GqlPoolAprRange {
+                                min
+                                max
+                            }
+                        }
                     }
                 }
             }
@@ -133,18 +173,58 @@ export const GqlPoolLinear = gql`
             volume48h
             apr {
                 hasRewardApr
-                thirdPartyApr
-                nativeRewardApr
+                thirdPartyApr {
+                    ... on GqlPoolAprTotal {
+                        total
+                    }
+                    ... on GqlPoolAprRange {
+                        min
+                        max
+                    }
+                }
+                nativeRewardApr {
+                    ... on GqlPoolAprTotal {
+                        total
+                    }
+                    ... on GqlPoolAprRange {
+                        min
+                        max
+                    }
+                }
                 swapApr
-                total
+                apr {
+                    ... on GqlPoolAprTotal {
+                        total
+                    }
+                    ... on GqlPoolAprRange {
+                        min
+                        max
+                    }
+                }
                 items {
                     id
                     title
-                    apr
+                    apr {
+                        ... on GqlPoolAprTotal {
+                            total
+                        }
+                        ... on GqlPoolAprRange {
+                            min
+                            max
+                        }
+                    }
                     subItems {
                         id
                         title
-                        apr
+                        apr {
+                            ... on GqlPoolAprTotal {
+                                total
+                            }
+                            ... on GqlPoolAprRange {
+                                min
+                                max
+                            }
+                        }
                     }
                 }
             }
@@ -273,18 +353,58 @@ export const GqlPoolMinimal = gql`
             volume24h
             apr {
                 hasRewardApr
-                thirdPartyApr
-                nativeRewardApr
+                thirdPartyApr {
+                    ... on GqlPoolAprTotal {
+                        total
+                    }
+                    ... on GqlPoolAprRange {
+                        min
+                        max
+                    }
+                }
+                nativeRewardApr {
+                    ... on GqlPoolAprTotal {
+                        total
+                    }
+                    ... on GqlPoolAprRange {
+                        min
+                        max
+                    }
+                }
                 swapApr
-                total
+                apr {
+                    ... on GqlPoolAprTotal {
+                        total
+                    }
+                    ... on GqlPoolAprRange {
+                        min
+                        max
+                    }
+                }
                 items {
                     id
                     title
-                    apr
+                    apr {
+                        ... on GqlPoolAprTotal {
+                            total
+                        }
+                        ... on GqlPoolAprRange {
+                            min
+                            max
+                        }
+                    }
                     subItems {
                         id
                         title
-                        apr
+                        apr {
+                            ... on GqlPoolAprTotal {
+                                total
+                            }
+                            ... on GqlPoolAprRange {
+                                min
+                                max
+                            }
+                        }
                     }
                 }
             }
@@ -439,6 +559,7 @@ export const GetAppGlobalData = gql`
         beetsGetFbeetsRatio
         blocksGetBlocksPerDay
         blocksGetAverageBlockTime
+        veBALTotalSupply: veBalGetTotalSupply
     }
 `;
 export const GetAppGlobalPollingData = gql`
@@ -447,7 +568,7 @@ export const GetAppGlobalPollingData = gql`
             price
             address
         }
-        protocolMetrics {
+        protocolMetricsChain {
             totalLiquidity
             totalSwapVolume
             totalSwapFee
@@ -457,7 +578,7 @@ export const GetAppGlobalPollingData = gql`
         }
         blocksGetBlocksPerDay
         blocksGetAverageBlockTime
-        beetsGetBeetsPrice
+        tokenGetProtocolTokenPrice
     }
 `;
 export const GetTokens = gql`
@@ -510,7 +631,7 @@ export const GetFbeetsRatio = gql`
 `;
 export const GetProtocolData = gql`
     query GetProtocolData {
-        protocolData: protocolMetrics {
+        protocolData: protocolMetricsChain {
             totalLiquidity
             totalSwapVolume
             totalSwapFee
@@ -518,7 +639,7 @@ export const GetProtocolData = gql`
             swapFee24h
             swapVolume24h
         }
-        beetsPrice: beetsGetBeetsPrice
+        beetsPrice: tokenGetProtocolTokenPrice
     }
 `;
 export const GetBlocksPerDay = gql`
@@ -529,7 +650,7 @@ export const GetBlocksPerDay = gql`
 `;
 export const GetBeetsPrice = gql`
     query GetBeetsPrice {
-        beetsPrice: beetsGetBeetsPrice
+        beetsPrice: tokenGetProtocolTokenPrice
     }
 `;
 export const GetUserData = gql`
@@ -564,6 +685,19 @@ export const GetUserData = gql`
             gauge {
                 id
                 gaugeAddress
+                version
+                status
+                otherGauges {
+                    gaugeAddress
+                    version
+                    status
+                    id
+                    rewards {
+                        id
+                        tokenAddress
+                        rewardPerSecond
+                    }
+                }
                 rewards {
                     id
                     rewardPerSecond
@@ -571,6 +705,7 @@ export const GetUserData = gql`
                 }
             }
         }
+        veBALUserBalance: veBalGetUserBalance
     }
 `;
 export const UserSyncBalance = gql`
@@ -669,18 +804,58 @@ export const GetPool = gql`
                 fees24hAtlTimestamp
                 apr {
                     hasRewardApr
-                    thirdPartyApr
-                    nativeRewardApr
+                    thirdPartyApr {
+                        ... on GqlPoolAprTotal {
+                            total
+                        }
+                        ... on GqlPoolAprRange {
+                            min
+                            max
+                        }
+                    }
+                    nativeRewardApr {
+                        ... on GqlPoolAprTotal {
+                            total
+                        }
+                        ... on GqlPoolAprRange {
+                            min
+                            max
+                        }
+                    }
                     swapApr
-                    total
+                    apr {
+                        ... on GqlPoolAprTotal {
+                            total
+                        }
+                        ... on GqlPoolAprRange {
+                            min
+                            max
+                        }
+                    }
                     items {
                         id
                         title
-                        apr
+                        apr {
+                            ... on GqlPoolAprTotal {
+                                total
+                            }
+                            ... on GqlPoolAprRange {
+                                min
+                                max
+                            }
+                        }
                         subItems {
                             id
                             title
-                            apr
+                            apr {
+                                ... on GqlPoolAprTotal {
+                                    total
+                                }
+                                ... on GqlPoolAprRange {
+                                    min
+                                    max
+                                }
+                            }
                         }
                     }
                 }
@@ -725,6 +900,19 @@ export const GetPool = gql`
                 gauge {
                     id
                     gaugeAddress
+                    version
+                    status
+                    otherGauges {
+                        gaugeAddress
+                        version
+                        status
+                        id
+                        rewards {
+                            id
+                            tokenAddress
+                            rewardPerSecond
+                        }
+                    }
                     rewards {
                         id
                         rewardPerSecond
@@ -846,6 +1034,17 @@ export const GetPool = gql`
                     }
                     ... on GqlPoolTokenPhantomStable {
                         ...GqlPoolTokenPhantomStable
+                    }
+                }
+            }
+            ... on GqlPoolGyro {
+                alpha
+                beta
+                type
+                nestingType
+                tokens {
+                    ... on GqlPoolToken {
+                        ...GqlPoolToken
                     }
                 }
             }
@@ -996,7 +1195,7 @@ export const GetPoolFilters = gql`
 `;
 export const GetReliquaryFarmSnapshots = gql`
     query GetReliquaryFarmSnapshots($id: String!, $range: GqlPoolSnapshotDataRange!) {
-        snapshots: poolGetReliquaryFarmSnapshots(id: $id, range: $range) {
+        snapshots: beetsPoolGetReliquaryFarmSnapshots(id: $id, range: $range) {
             id
             farmId
             timestamp

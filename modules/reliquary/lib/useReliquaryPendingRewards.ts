@@ -17,6 +17,6 @@ export function useReliquaryPendingRewards() {
                 provider,
             });
         },
-        { enabled: !!userAddress },
+        { enabled: !!userAddress && !!networkConfig.fbeets.address },
     );
 }

@@ -13,6 +13,7 @@ import { useReliquaryGlobalStats } from '../../lib/useReliquaryGlobalStats';
 import { numberFormatUSDValue } from '~/lib/util/number-formats';
 import startOfWeek from 'date-fns/startOfWeek';
 import { useGetReliquaryFarmSnapshotsQuery } from '~/apollo/generated/graphql-codegen-generated';
+import { getApr } from '~/lib/util/apr-util';
 
 export default function ReliquaryOverallStats() {
     const { pool } = usePool();
@@ -23,12 +24,6 @@ export default function ReliquaryOverallStats() {
     });
 
     const data = pool.dynamicData;
-
-    const aprItems = data.apr.items;
-    const minAprArray = aprItems.filter((item) => item.title.includes('Min'));
-    const maxAprArray = aprItems.filter((item) => item.title.includes('Max'));
-
-    const [{ apr: swapApr }] = aprItems.filter((item) => item.title.includes('Swap'));
 
     const beetsPerDay = parseFloat(pool.staking?.reliquary?.beetsPerSecond || '0') * 86400;
     const incentivesDailyValue = beetsPerDay * priceFor(networkConfig.beets.address);
@@ -76,13 +71,7 @@ export default function ReliquaryOverallStats() {
                         APR
                     </Text>
                     <HStack>
-                        <div className="apr-stripes">
-                            {minAprArray.length > 0 && maxAprArray.length > 0
-                                ? `${numeral(minAprArray[0]?.apr).format('0.00%')} - ${numeral(
-                                      maxAprArray[0]?.apr,
-                                  ).format('0.00%')}`
-                                : numeral(swapApr).format('0.00%')}
-                        </div>
+                        <div className="apr-stripes">{getApr(data.apr.apr)}</div>
                         <AprTooltip onlySparkles data={data.apr} />
                     </HStack>
                 </VStack>

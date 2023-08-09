@@ -9,7 +9,9 @@ export type BeetsTransactionType =
     | 'WRAP'
     | 'UNWRAP'
     | 'LEVEL_UP'
-    | 'BURN';
+    | 'BURN'
+    | 'MIGRATE'
+    | 'CHECKPOINT';
 export type ToastTransactionStatus = 'PENDING' | 'CONFIRMED' | 'ERROR';
 
 export function toastGetTransactionStatusHeadline(type: BeetsTransactionType, status: ToastTransactionStatus) {
@@ -72,6 +74,15 @@ export function toastGetTransactionStatusHeadline(type: BeetsTransactionType, st
             case 'ERROR':
                 //return i18next.t('Toast - Headline - Trade error', 'Trade error');
                 return 'Stake error';
+        }
+    } else if (type === 'CHECKPOINT') {
+        switch (status) {
+            case 'PENDING':
+                return 'Checkpoint pending';
+            case 'CONFIRMED':
+                return 'Checkpoint confirmed';
+            case 'ERROR':
+                return 'Checkpoint error';
         }
     } else if (type === 'UNSTAKE') {
         switch (status) {

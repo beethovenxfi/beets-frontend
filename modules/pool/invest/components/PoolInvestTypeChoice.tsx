@@ -22,7 +22,7 @@ interface Props {
 }
 
 export function PoolInvestTypeChoice({ onShowProportional, onShowCustom }: Props) {
-    const { pool, poolService } = usePool();
+    const { pool, poolService, canCustomInvest } = usePool();
     const { formattedPrice } = useGetTokens();
     const { userPoolTokenBalances, investableAmount } = usePoolUserTokenBalancesInWallet();
     const { canInvestProportionally } = useInvest();
@@ -90,30 +90,30 @@ export function PoolInvestTypeChoice({ onShowProportional, onShowCustom }: Props
                                         {numberFormatUSDValue(totalValueProportionalAmounts || 0)}
                                     </Text>
                                     <Text fontSize="sm">Proportional investment</Text>
-                                    <Text fontSize="xs" color="beets.green">
+                                    <Text fontSize="xs" color={canCustomInvest ? 'buttonHighlight' : 'transparent'}>
                                         Recommended
                                     </Text>
                                 </VStack>
                             </Button>
                         </Box>
                     </BeetsTooltip>
-                    <Button
-                        _hover={{ borderColor: 'beets.green' }}
-                        borderWidth={1}
-                        borderColor="beets.transparent"
-                        height="140px"
-                        width="full"
-                        onClick={onShowCustom}
+                    <BeetsTooltip
+                        noImage
+                        label={canCustomInvest ? '' : 'This pool does not support a custom investment.'}
                     >
-                        <VStack spacing="1">
-                            <Image src={BeetSmart} height="48" alt="beets-smart" />
-                            <Text fontSize="lg">{numberFormatUSDValue(investableAmount)}</Text>
-                            <Text fontSize="sm">Custom investment</Text>
-                            <Text fontSize="xs" color="beets.green">
-                                &nbsp;
-                            </Text>
-                        </VStack>
-                    </Button>
+                        <Box width="full">
+                            <Button variant="image" onClick={onShowCustom} disabled={!canCustomInvest}>
+                                <VStack spacing="1">
+                                    <Image src={BeetSmart} height="48" alt="beets-smart" />
+                                    <Text fontSize="lg">{numberFormatUSDValue(investableAmount)}</Text>
+                                    <Text fontSize="sm">Custom investment</Text>
+                                    <Text fontSize="xs" color="buttonHighlight">
+                                        &nbsp;
+                                    </Text>
+                                </VStack>
+                            </Button>
+                        </Box>
+                    </BeetsTooltip>
                 </ChoiceOrientation>
             </VStack>
             <VStack width="full" p="4" backgroundColor="blackAlpha.500" alignItems="flex-start">

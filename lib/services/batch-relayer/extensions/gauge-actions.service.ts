@@ -13,4 +13,15 @@ export class GaugeActionsService {
             params.amount,
         ]);
     }
+
+    public encodeWithdraw(params: EncodeGaugeDepositInput): string {
+        const gaugeActionsLibrary = new Interface(GaugeActionsAbi);
+
+        return gaugeActionsLibrary.encodeFunctionData('gaugeWithdraw', [
+            params.gauge,
+            params.sender,
+            params.recipient,
+            params.amount,
+        ]);
+    }
 }

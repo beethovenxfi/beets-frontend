@@ -4,13 +4,49 @@ import { ChevronLeft, ChevronRight } from 'react-feather';
 import Pagination from 'rc-pagination';
 import { AnimatedBox } from '../animation/chakra';
 
+interface PageItemProps {
+    pageNumber: number;
+    type: string;
+    element: React.ReactNode;
+    currentPage: number | undefined;
+}
+
+function PageItem({ pageNumber, type, element, currentPage }: PageItemProps) {
+    if (type === 'prev') {
+        return (
+            <IconButton
+                aria-label="previous"
+                icon={<ChevronLeft />}
+                borderTopRightRadius={0}
+                borderBottomRightRadius={0}
+            />
+        );
+    } else if (type === 'next') {
+        return (
+            <IconButton aria-label="next" icon={<ChevronRight />} borderTopLeftRadius={0} borderBottomLeftRadius={0} />
+        );
+    } else if (type === 'jump-prev') {
+        return <Button borderRadius={0}>...</Button>;
+    } else if (type === 'jump-next') {
+        return <Button borderRadius={0}>...</Button>;
+    }
+
+    const selected = pageNumber === currentPage;
+
+    return (
+        <Button borderRadius={0} color={selected ? 'beets.highlight' : undefined}>
+            {element}
+        </Button>
+    );
+}
+
 interface Props<T> extends BoxProps {
     items: T[];
     currentPage?: number;
     pageSize?: number;
     count?: number;
     loading: boolean;
-    fetchingMore: boolean;
+    fetchingMore?: boolean;
     hidePageSizeChange?: boolean;
     onPageChange?: (page: number) => void;
     onPageSizeChange?: (pageSize: number) => void;
@@ -86,45 +122,18 @@ export function PaginatedTable({
                             </>
                         )}
                     </Flex>
-                    <Pagination
-                        onChange={onPageChange}
-                        defaultCurrent={1}
-                        total={count}
-                        pageSize={pageSize}
-                        itemRender={(pageNumber, type, element) => {
-                            if (type === 'prev') {
-                                return (
-                                    <IconButton
-                                        aria-label="previous"
-                                        icon={<ChevronLeft />}
-                                        borderTopRightRadius={0}
-                                        borderBottomRightRadius={0}
-                                    />
-                                );
-                            } else if (type === 'next') {
-                                return (
-                                    <IconButton
-                                        aria-label="next"
-                                        icon={<ChevronRight />}
-                                        borderTopLeftRadius={0}
-                                        borderBottomLeftRadius={0}
-                                    />
-                                );
-                            } else if (type === 'jump-prev') {
-                                return <Button borderRadius={0}>...</Button>;
-                            } else if (type === 'jump-next') {
-                                return <Button borderRadius={0}>...</Button>;
-                            }
-
-                            const selected = pageNumber === currentPage;
-
-                            return (
-                                <Button borderRadius={0} color={selected ? 'beets.highlight' : undefined}>
-                                    {element}
-                                </Button>
-                            );
-                        }}
-                    />
+                    {pageSize && (
+                        <Pagination
+                            onChange={onPageChange}
+                            defaultCurrent={1}
+                            total={count}
+                            pageSize={pageSize}
+                            itemRender={(pageNumber, type, element) => {
+                                const props = { pageNumber, type, element, currentPage };
+                                return <PageItem {...props} />;
+                            }}
+                        />
+                    )}
                 </Flex>
             )}
             {!isShort && isInfinite && (

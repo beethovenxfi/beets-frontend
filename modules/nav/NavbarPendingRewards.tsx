@@ -26,6 +26,9 @@ import { NavbarPendingRewardsReliquary } from './NavbarPendingRewardsReliquary';
 import { useReliquaryPendingRewards } from '../reliquary/lib/useReliquaryPendingRewards';
 import { sumBy } from 'lodash';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
+import useStakingMintableRewards from '~/lib/global/useStakingMintableRewards';
+import { AddressZero } from '@ethersproject/constants';
+import useStakingBoosts from '~/lib/global/useStakingBoosts';
 
 export function NavbarPendingRewards() {
     const {
@@ -34,6 +37,7 @@ export function NavbarPendingRewards() {
         staking,
         stakingType,
         isLoading: pendingRewardsLoading,
+        pendingBALUSD,
     } = useUserPendingRewards();
     const { stakedValueUSD, loading: userDataLoading } = useUserData();
     const { priceForAmount, getToken } = useGetTokens();
@@ -42,6 +46,9 @@ export function NavbarPendingRewards() {
     const farmIds = staking.map((stake) => stake?.farm?.id || '');
     const isMasterChefOrFreshBeets = stakingType === 'MASTER_CHEF' || stakingType === 'FRESH_BEETS';
     const networkConfig = useNetworkConfig();
+    const {
+        claimAll: { claimAllBAL, ...claimAllQuery },
+    } = useStakingMintableRewards(staking);
 
     const { data: pendingReliquaryRewards } = useReliquaryPendingRewards();
 
@@ -50,6 +57,7 @@ export function NavbarPendingRewards() {
     );
 
     const totalPendingRewardsUSD = pendingRewardsTotalUSD + pendingReliquaryRewardsTotalUSD;
+    const canClaimBAL = networkConfig.gauge.balancerPseudoMinterAddress !== AddressZero && pendingBALUSD > 0;
 
     return (
         <Popover>
@@ -86,6 +94,7 @@ export function NavbarPendingRewards() {
                 <PopoverHeader borderBottomWidth="0">Liquidity incentives</PopoverHeader>
                 <PopoverBody>
                     <Grid
+                        pb="1"
                         gap={networkConfig.maBeetsEnabled ? '4' : '0'}
                         templateColumns={{ base: '1fr', lg: `${networkConfig.maBeetsEnabled ? '1fr 1fr' : '1fr'}` }}
                         templateAreas={{
@@ -140,6 +149,17 @@ export function NavbarPendingRewards() {
                                             width="full"
                                         >
                                             Claim all pool rewards
+                                        </BeetsSubmitTransactionButton>
+                                    </Box>
+                                )}
+                                {canClaimBAL && (
+                                    <Box mt="4" justifySelf="flex-end">
+                                        <BeetsSubmitTransactionButton
+                                            {...claimAllQuery}
+                                            onClick={() => claimAllBAL()}
+                                            width="full"
+                                        >
+                                            Claim all pending BAL
                                         </BeetsSubmitTransactionButton>
                                     </Box>
                                 )}

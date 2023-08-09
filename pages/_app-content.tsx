@@ -8,11 +8,13 @@ import { Footer } from '~/modules/nav/Footer';
 import { NavbarMobile } from '~/modules/nav/NavbarMobile';
 import { GlobalRenderer } from '~/modules/global/GlobalRenderer';
 import { UserWarning } from '~/components/user-warning/UserWarning';
+import useGlobalWarnings from '~/lib/global/useGlobalWarnings';
 
 export function AppContent({ Component, pageProps }: AppProps) {
     const ref = useRef(null);
     const { scrollY } = useScroll({ container: ref });
     const theme = useTheme();
+    useGlobalWarnings();
 
     return (
         <Box

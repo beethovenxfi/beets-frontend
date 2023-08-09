@@ -42,18 +42,58 @@ query GetPool($id: String!) {
             fees24hAtlTimestamp
             apr {
                 hasRewardApr
-                thirdPartyApr
-                nativeRewardApr
+                thirdPartyApr {
+                    ... on GqlPoolAprTotal {
+                        total
+                    }
+                    ... on GqlPoolAprRange {
+                        min
+                        max
+                    }
+                }
+                nativeRewardApr {
+                    ... on GqlPoolAprTotal {
+                        total
+                    }
+                    ... on GqlPoolAprRange {
+                        min
+                        max
+                    }
+                }
                 swapApr
-                total
+                apr {
+                    ... on GqlPoolAprTotal {
+                        total
+                    }
+                    ... on GqlPoolAprRange {
+                        min
+                        max
+                    }
+                }
                 items {
                     id
                     title
-                    apr
+                    apr {
+                        ... on GqlPoolAprTotal {
+                            total
+                        }
+                        ... on GqlPoolAprRange {
+                            min
+                            max
+                        }
+                    }
                     subItems {
                         id
                         title
-                        apr
+                        apr {
+                            ... on GqlPoolAprTotal {
+                                total
+                            }
+                            ... on GqlPoolAprRange {
+                                min
+                                max
+                            }
+                        }
                     }
                 }
             }
@@ -98,6 +138,19 @@ query GetPool($id: String!) {
             gauge {
                 id
                 gaugeAddress
+                version
+                status
+                otherGauges {
+                    gaugeAddress
+                    version
+                    status
+                    id
+                    rewards {
+                        id
+                        tokenAddress
+                        rewardPerSecond
+                    }
+                }
                 rewards {
                     id
                     rewardPerSecond
@@ -219,6 +272,17 @@ query GetPool($id: String!) {
                 }
                 ... on GqlPoolTokenPhantomStable {
                     ...GqlPoolTokenPhantomStable
+                }
+            }
+        }
+        ... on GqlPoolGyro {
+            alpha
+            beta
+            type
+            nestingType
+            tokens {
+                ... on GqlPoolToken {
+                    ...GqlPoolToken
                 }
             }
         }
