@@ -7,6 +7,10 @@ import { BigNumber as EPBigNumber } from 'ethers';
 import BigNumber from 'bignumber.js';
 import { toNormalizedWeights } from '@balancer-labs/balancer-js';
 import { useGetTokens } from '~/lib/global/useToken';
+import { BytesLike, randomBytes, toUtf8Bytes } from 'ethers/lib/utils.js';
+import { generateSalt } from '~/lib/util/random';
+import { scale } from '~/lib/util/number-formats';
+import { AddressZero } from '@ethersproject/constants';
 
 export interface CreateWeightedPoolRequest {
     name: string;
@@ -44,17 +48,27 @@ export function usePoolCreate() {
     function create({ name, symbol, tokens, swapFee, swapFeeManager }: CreateWeightedPoolRequest) {
         const tokenAddresses = tokens.map((token: PoolCreationToken) => token.address);
         const scaledTokenWeights = scaleTokenWeights(tokens);
-        const swapFeeScaled = new BigNumber(swapFee).pow(new BigNumber(10).pow(new BigNumber(-18)));
+        const swapFeeScaled = scale(new BigNumber(swapFee), 18);
+        console.log('ding', [
+            name,
+            symbol,
+            tokenAddresses,
+            scaledTokenWeights,
+            [], // rate providers TODO VERIFY
+            swapFeeScaled.toString(),
+            swapFeeManager,
+            generateSalt(),
+        ]);
         return submit({
             args: [
                 name,
                 symbol,
                 tokenAddresses,
                 scaledTokenWeights,
-                [], // rate providers TODO VERIFY
+                tokens.map(_ => AddressZero), // rate providers TODO VERIFY
                 swapFeeScaled.toString(),
                 swapFeeManager,
-                // generateSalt(), // TODO VERIFY
+                generateSalt(), // TODO VERIFY
             ],
             toastText: `Create weighted pool ${name} - ${symbol}`,
             walletText: `Create weighted pool ${name} - ${symbol} `,
