@@ -106,7 +106,7 @@ function PoolHeader() {
                                 </Flex>
                             )}
                             <HStack spacing="1">
-                                <Text>{numeral(pool.dynamicData.swapFee).format('0.0[00]%')}</Text>
+                                <Text>{numeral(pool.dynamicData.swapFee).format('0.0[000]%')}</Text>
                                 <Text>{swapFeeType} Fee</Text>
                             </HStack>
                         </>
