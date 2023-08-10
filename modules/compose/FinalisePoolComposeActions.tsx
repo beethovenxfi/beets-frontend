@@ -1,4 +1,4 @@
-import { Box, Button } from '@chakra-ui/react';
+import { Box } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react';
 import { BeetsTransactionStepsSubmit, TransactionStep } from '~/components/button/BeetsTransactionStepsSubmit';
 import { useUserAllowances } from '~/lib/util/useUserAllowances';
@@ -6,11 +6,11 @@ import { useCompose } from './ComposeProvider';
 import { useGetTokens } from '~/lib/global/useToken';
 import { TokenBaseWithAmount } from '~/lib/services/token/token-types';
 import { networkConfig } from '~/lib/config/network-config';
-import { useUserSyncBalanceMutation } from '~/apollo/generated/graphql-codegen-generated';
 import { usePoolCreate } from './lib/usePoolCreate';
-import { usePoolJoinGetContractCallData } from '../pool/invest/lib/usePoolJoinGetContractCallData';
-import { useJoinPool } from '../pool/invest/lib/useJoinPool';
 import useGetComposePoolId from './lib/useGetComposePoolId';
+import { usePoolInitJoinGetContractCallData } from '../pool/invest/lib/usePoolInitJoinContractCallData';
+import { useInitJoinPool } from '../pool/invest/lib/useInitJoinPool';
+import { PoolJoinPoolContractCallData } from '~/lib/services/pool/pool-types';
 
 interface Props {}
 
@@ -28,9 +28,9 @@ export default function FinalisePoolComposeActions(props: Props) {
     const { hasApprovalForAmount } = useUserAllowances(tokenBases, networkConfig.balancer.vault);
     const { create, ...createQuery } = usePoolCreate();
     const { poolId, isLoading: isLoadingPoolId } = useGetComposePoolId(createQuery.txResponse?.hash || '');
-    // const { joinPool, ...joinQuery } = useJoinPool(, zapEnabled);
+    const { initJoinPool, ...joinQuery } = useInitJoinPool(poolId?.id);
     const { data: poolJoinContractCallData, isLoading: isLoadingPoolJoinContractCallData } =
-        usePoolJoinGetContractCallData(null, false, true);
+        usePoolInitJoinGetContractCallData(tokens);
 
     const requiredApprovals = tokenBases
         .filter((token) => parseFloat(token.amount) > 0)
@@ -45,6 +45,8 @@ export default function FinalisePoolComposeActions(props: Props) {
     console.log('req', {
         isLoadingPoolId,
         poolId,
+        requiredApprovals,
+        createQuery: createQuery.txResponse
     });
 
     function handleTransactionSubmit(txId: string) {
@@ -57,20 +59,26 @@ export default function FinalisePoolComposeActions(props: Props) {
                 swapFeeManager: feeManager || '',
             });
         }
+        if (txId === 'initialise-pool') {
+            const tokenMetadata = tokens.map((token) => getToken(token.address));
+            if (poolJoinContractCallData) {
+                initJoinPool(poolJoinContractCallData as PoolJoinPoolContractCallData, tokenBases, tokenMetadata);
+            }
+        }
     }
 
     function handleCreateActionConfirmed(txId: string) {
         if (txId === 'create-pool') {
-
         }
     }
 
     useEffect(() => {
         const _steps: TransactionStep[] = [
             { id: 'create-pool', tooltipText: '', type: 'other', buttonText: 'Create pool' },
-            { id: 'fund-pool', tooltipText: '', type: 'other', buttonText: 'Create pool' },
+            { id: 'initialise-pool', tooltipText: '', type: 'other', buttonText: 'Initialise pool' },
         ];
 
+        console.log('bstk', requiredApprovals);
         for (const requiredApproval of requiredApprovals) {
             _steps.unshift({
                 id: 'approve',

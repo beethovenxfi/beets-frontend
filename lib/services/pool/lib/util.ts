@@ -7,6 +7,7 @@ import {
     GqlPoolTokenLinear,
     GqlPoolTokenPhantomStable,
     GqlPoolWeighted,
+    GqlToken,
 } from '~/apollo/generated/graphql-codegen-generated';
 import { AmountHumanReadable, AmountScaledString, TokenAmountHumanReadable } from '~/lib/services/token/token-types';
 import {
@@ -56,8 +57,12 @@ export function oldBnumPoolScaleTokenAmounts(
 
 export function poolScaleTokenAmounts(
     tokenAmounts: TokenAmountHumanReadable[],
-    poolTokens: GqlPoolTokenBase[],
+    poolTokens: GqlPoolTokenBase[] | GqlToken[],
 ): BigNumber[] {
+    console.log({
+        poolTokens,
+        tokenAmounts
+    })
     return poolTokens.map((poolToken) => {
         const amount = tokenAmounts.find((amount) => amount.address === poolToken.address);
 

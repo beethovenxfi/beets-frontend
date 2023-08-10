@@ -35,6 +35,7 @@ export default function useGetComposePoolId(createHash: string) {
             const poolAddress = poolCreationEvent.args.pool;
 
             const pool = new Contract(poolAddress, weightedPoolFactoryInterface, provider);
+            console.log('o', pool);
             const poolId = await pool.getPoolId();
 
             return {
