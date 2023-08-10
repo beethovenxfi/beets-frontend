@@ -36,6 +36,7 @@ export interface PoolCreationToken {
     amount: string;
     isLocked: boolean;
     weight: number;
+    index: number;
 }
 
 export type ManagerOption = 'dao-managed' | 'other-manager';
@@ -55,8 +56,8 @@ function _useCompose() {
     const [progressValidatedTo, setProgressValidatedTo] = useState(-1);
 
     const [tokens, setTokens] = useState<PoolCreationToken[]>([
-        { address: networkConfig.beets.address, amount: '0.0', isLocked: false, weight: 50 },
-        { address: networkConfig.balancer.balToken, amount: '0.0', isLocked: false, weight: 50 },
+        { address: networkConfig.beets.address, amount: '0.0', isLocked: false, weight: 50, index: 0 },
+        { address: networkConfig.balancer.balToken, amount: '0.0', isLocked: false, weight: 50, index: 1 },
     ]);
 
     useEffect(() => {
@@ -110,19 +111,22 @@ function _useCompose() {
     }
 
     function addBlankToken() {
-        const newTokens = [...tokens, { address: '', amount: '0.0', weight: 0, isLocked: false }];
+        const index = tokens.length || 0;
+        const newTokens = [...tokens, { address: '', amount: '0.0', weight: 0, isLocked: false, index }];
         setTokens(newTokens);
         distributeTokenWeights(newTokens);
     }
 
     function removeTokenByIndex(index: number) {
-        const newTokens = tokens.filter((_, i) => i !== index);
+        const newTokens = tokens.filter((token) => token.index !== index).map((token, i) => ({ ...token, index: i }));
         setTokens(newTokens);
         distributeTokenWeights(newTokens);
     }
 
     function removeTokenByAddress(address: string) {
-        const newTokens = tokens.filter((token) => token.address !== address);
+        const newTokens = tokens
+            .filter((token) => token.address !== address)
+            .map((token, i) => ({ ...token, index: i }));
         setTokens(newTokens);
         distributeTokenWeights(newTokens);
     }
@@ -143,8 +147,8 @@ function _useCompose() {
     }
 
     function toggleLockTokenByIndex(index: number) {
-        const newTokens = tokens.map((token, i) => {
-            if (i === index) {
+        const newTokens = tokens.map((token) => {
+            if (token.index === index) {
                 return {
                     ...token,
                     isLocked: !token.isLocked,
@@ -204,7 +208,9 @@ function _useCompose() {
             };
         });
 
-        const updatedTokens = [...tokens.filter((token) => token.isLocked), ...updatedUnlockedTokens];
+        const updatedTokens = [...tokens.filter((token) => token.isLocked), ...updatedUnlockedTokens].sort(
+            (a, b) => a.index - b.index,
+        );
         setTokens(updatedTokens);
     }
 
