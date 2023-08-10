@@ -4,10 +4,13 @@ import { BeetsTransactionStepsSubmit, TransactionStep } from '~/components/butto
 import { useUserAllowances } from '~/lib/util/useUserAllowances';
 import { useCompose } from './ComposeProvider';
 import { useGetTokens } from '~/lib/global/useToken';
-import { TokenBase, TokenBaseWithAmount } from '~/lib/services/token/token-types';
+import { TokenBaseWithAmount } from '~/lib/services/token/token-types';
 import { networkConfig } from '~/lib/config/network-config';
 import { useUserSyncBalanceMutation } from '~/apollo/generated/graphql-codegen-generated';
 import { usePoolCreate } from './lib/usePoolCreate';
+import { usePoolJoinGetContractCallData } from '../pool/invest/lib/usePoolJoinGetContractCallData';
+import { useJoinPool } from '../pool/invest/lib/useJoinPool';
+import useGetComposePoolId from './lib/useGetComposePoolId';
 
 interface Props {}
 
@@ -15,7 +18,6 @@ export default function FinalisePoolComposeActions(props: Props) {
     const { tokens, poolName, getPoolSymbol, currentFee, feeManager } = useCompose();
     const [steps, setSteps] = useState<TransactionStep[]>([]);
     const { getToken } = useGetTokens();
-    const [userSyncBalance] = useUserSyncBalanceMutation();
     const tokenBases = tokens.map((token) => {
         const _token = getToken(token.address);
         return {
@@ -23,8 +25,12 @@ export default function FinalisePoolComposeActions(props: Props) {
             amount: token.amount,
         } as TokenBaseWithAmount;
     });
-    const { hasApprovalForAmount, ...rest } = useUserAllowances(tokenBases, networkConfig.balancer.vault);
+    const { hasApprovalForAmount } = useUserAllowances(tokenBases, networkConfig.balancer.vault);
     const { create, ...createQuery } = usePoolCreate();
+    const { poolId, isLoading: isLoadingPoolId } = useGetComposePoolId(createQuery.txResponse?.hash || '');
+    // const { joinPool, ...joinQuery } = useJoinPool(, zapEnabled);
+    const { data: poolJoinContractCallData, isLoading: isLoadingPoolJoinContractCallData } =
+        usePoolJoinGetContractCallData(null, false, true);
 
     const requiredApprovals = tokenBases
         .filter((token) => parseFloat(token.amount) > 0)
@@ -36,7 +42,10 @@ export default function FinalisePoolComposeActions(props: Props) {
         })
         .filter((token) => !token.isApproved);
 
-    console.log('req', requiredApprovals);
+    console.log('req', {
+        isLoadingPoolId,
+        poolId,
+    });
 
     function handleTransactionSubmit(txId: string) {
         if (txId === 'create-pool') {
@@ -50,9 +59,16 @@ export default function FinalisePoolComposeActions(props: Props) {
         }
     }
 
+    function handleCreateActionConfirmed(txId: string) {
+        if (txId === 'create-pool') {
+
+        }
+    }
+
     useEffect(() => {
         const _steps: TransactionStep[] = [
             { id: 'create-pool', tooltipText: '', type: 'other', buttonText: 'Create pool' },
+            { id: 'fund-pool', tooltipText: '', type: 'other', buttonText: 'Create pool' },
         ];
 
         for (const requiredApproval of requiredApprovals) {
@@ -65,13 +81,9 @@ export default function FinalisePoolComposeActions(props: Props) {
                 token: requiredApproval.token,
             });
         }
-
-        // if (hasLegacyBptStaked) {
-        //     _steps.unshift({ id: 'unstake', tooltipText: '', type: 'other', buttonText: 'Unstake' });
-        // }
         if (_steps.length < steps?.length) return;
         setSteps(_steps);
-    }, []);
+    }, [requiredApprovals.length]);
 
     return (
         <Box width="full">
@@ -84,10 +96,7 @@ export default function FinalisePoolComposeActions(props: Props) {
                 onSubmit={handleTransactionSubmit}
                 onConfirmed={async (id) => {}}
                 steps={steps}
-                queries={[
-                    { ...createQuery, id: 'create-pool' },
-                    // { ...depositQuery, id: 'deposit' },
-                ]}
+                queries={[{ ...createQuery, id: 'create-pool' }]}
                 isDisabled={false}
             />
         </Box>

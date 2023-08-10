@@ -24,6 +24,7 @@ type Props = {
     showBalance?: boolean;
     showPresets?: boolean;
     requiresApproval?: boolean;
+    placeholder?: string;
 };
 
 export const TokenInput = forwardRef(
@@ -37,6 +38,7 @@ export const TokenInput = forwardRef(
             requiresApproval,
             showBalance = true,
             showPresets,
+            placeholder,
         }: Props,
         ref,
     ) => {
@@ -71,7 +73,7 @@ export const TokenInput = forwardRef(
                         value={value || ''}
                         onChange={handleOnChange}
                         onKeyDown={tokenInputBlockInvalidCharacters}
-                        placeholder="0"
+                        placeholder={placeholder || '0'}
                         type="number"
                         label={label}
                         textAlign="right"
