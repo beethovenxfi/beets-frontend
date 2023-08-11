@@ -30,13 +30,13 @@ export default function PreviewPoolTokenSelections(props: Props) {
                                                 bg="beets.greenAlpha.50"
                                                 py="2"
                                                 px="4"
-                                                minWidth='92px'
-                                                display='flex'
-                                                justifyContent='center'
+                                                minWidth="92px"
+                                                display="flex"
+                                                justifyContent="center"
                                             >
                                                 <Text color="beets.green">{token.weight}%</Text>
                                             </BeetsBox>
-                                            <TokenRow address={token.address} amount={token.amount} />
+                                            <TokenRow address={token.address} amount={token.amount || '0'} />
                                         </HStack>
                                     </HStack>
                                 </BeetsBox>
