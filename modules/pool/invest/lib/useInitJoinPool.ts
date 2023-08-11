@@ -24,7 +24,6 @@ export function useInitJoinPool(poolId?: string) {
         tokenMetadata: GqlToken[],
     ) {
         const amountsString = tokenAmountsConcatenatedString(tokenAmountsIn, tokenMetadata);
-        console.log('esk', contractCallData);
         submit({
             args: [
                 poolId,
