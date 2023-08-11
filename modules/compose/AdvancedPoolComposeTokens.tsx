@@ -56,7 +56,7 @@ export default function AdvancedPoolComposeTokens(props: Props) {
     const isMaxTokens = tokens.length === MAX_TOKENS;
     const finalRefTokenIn = useRef(null);
     const isMobile = useBreakpointValue({ base: true, lg: false });
-    const { hasInvalidTokenWeights, areTokenSelectionsValid, invalidTotalWeight, hasMoreThanMaxTotalLiquidity } =
+    const { hasInvalidTokenWeights, areTokenSelectionsValid, invalidTotalWeight, hasMoreThanMaxTotalLiquidity, areTokenAmountsValid } =
         getTokenAndWeightValidations();
 
     const optimisedLiquidity = getOptimisedLiquidity();
@@ -163,8 +163,8 @@ export default function AdvancedPoolComposeTokens(props: Props) {
                                                 onChange={handleTokenAmountChangedForIndex(i)}
                                                 placeholder={
                                                     parseFloat(
-                                                        optimisedLiquidity[token.address].balanceRequired,
-                                                    ).toFixed(4) || '0'
+                                                        optimisedLiquidity[token.address]?.balanceRequired || '0',
+                                                    ).toFixed(4) || undefined
                                                 }
                                             />
                                             <VStack>
@@ -262,6 +262,11 @@ export default function AdvancedPoolComposeTokens(props: Props) {
                     <Alert status="error">
                         We enforce a max seed liquidity of $100 to protect you against significant slippage. After the
                         pool is created you can invest with as much liquidity as you wish.
+                    </Alert>
+                )}
+                {tokens.length > 0 && !areTokenAmountsValid && (
+                    <Alert status="error">
+                        All token selections must have a seed amount greater than 0.
                     </Alert>
                 )}
             </VStack>

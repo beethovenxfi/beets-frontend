@@ -234,8 +234,11 @@ function _useCompose() {
 
     function getOptimisedLiquidity(): Record<string, OptimisedLiquidity> {
         // need to filter out the empty tokens just in case
-        const validTokens = tokens.filter((t) => t.address !== '');
+        if (!tokens.length) return {};
+        const validTokens = tokens.filter((t) => t?.address !== '');
         const optimisedLiquidity: Record<string, OptimisedLiquidity> = {};
+        if (!validTokens.length) return {};
+
         // token with the lowest balance is the bottleneck
         let bottleneckToken = validTokens[0];
         // keeping track of the lowest amt
@@ -263,18 +266,23 @@ function _useCompose() {
         const totalTokenWeight = sumBy(tokens, (token) => token.weight);
         const areTokenSelectionsValid = tokens.every((token) => isAddress(token.address)) && tokens.length >= 2;
         const hasInvalidTokenWeights = tokens.some((token) => token.weight < 1);
-        const totalLiquidityUSD = sumBy(tokens, (token) => priceFor(token.address) * parseFloat(token.amount));
+        const totalLiquidityUSD = sumBy(tokens, (token) => priceFor(token.address) * parseFloat(token.amount || '0'));
+        const areTokenAmountsValid = tokens.every(
+            (token) => token.amount !== null && parseFloat(token.amount || '0') > 0,
+        );
         const hasMoreThanMaxTotalLiquidity = totalLiquidityUSD > 100;
         return {
             areTokenSelectionsValid,
             hasInvalidTokenWeights,
             invalidTotalWeight: totalTokenWeight !== 100,
             hasMoreThanMaxTotalLiquidity,
+            areTokenAmountsValid,
             isValid:
                 totalTokenWeight === 100 &&
                 areTokenSelectionsValid &&
                 !hasInvalidTokenWeights &&
-                !hasMoreThanMaxTotalLiquidity,
+                !hasMoreThanMaxTotalLiquidity &&
+                areTokenAmountsValid,
         };
     }
 

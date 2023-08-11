@@ -2,7 +2,7 @@ import { Box } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react';
 import { BeetsTransactionStepsSubmit, TransactionStep } from '~/components/button/BeetsTransactionStepsSubmit';
 import { useUserAllowances } from '~/lib/util/useUserAllowances';
-import { useCompose } from './ComposeProvider';
+import { PoolCreationToken, useCompose } from './ComposeProvider';
 import { useGetTokens } from '~/lib/global/useToken';
 import { TokenBaseWithAmount } from '~/lib/services/token/token-types';
 import { networkConfig } from '~/lib/config/network-config';
@@ -11,11 +11,20 @@ import useGetComposePoolId from './lib/useGetComposePoolId';
 import { usePoolInitJoinGetContractCallData } from '../pool/invest/lib/usePoolInitJoinContractCallData';
 import { useInitJoinPool } from '../pool/invest/lib/useInitJoinPool';
 import { PoolJoinPoolContractCallData } from '~/lib/services/pool/pool-types';
+import { GqlToken } from '~/apollo/generated/graphql-codegen-generated';
+import { useRouter } from 'next/router';
 
 interface Props {}
 
+function sortTokensByAddress(tokens: PoolCreationToken[]) {
+    return tokens.sort((tokenA, tokenB) => {
+        return tokenA.address.toLowerCase() > tokenB.address.toLowerCase() ? 1 : -1;
+    });
+}
+
 export default function FinalisePoolComposeActions(props: Props) {
     const { tokens, poolName, getPoolSymbol, currentFee, feeManager } = useCompose();
+    const router = useRouter();
     const [steps, setSteps] = useState<TransactionStep[]>([]);
     const { getToken } = useGetTokens();
     const tokenBases = tokens.map((token) => {
@@ -27,7 +36,11 @@ export default function FinalisePoolComposeActions(props: Props) {
     });
     const { hasApprovalForAmount } = useUserAllowances(tokenBases, networkConfig.balancer.vault);
     const { create, ...createQuery } = usePoolCreate();
-    const { poolId, isLoading: isLoadingPoolId } = useGetComposePoolId(createQuery.txResponse?.hash || '');
+    const {
+        poolId,
+        isLoading: isLoadingPoolId,
+        getCreatedPoolId,
+    } = useGetComposePoolId(createQuery.txResponse?.hash || '');
     const { initJoinPool, ...joinQuery } = useInitJoinPool(poolId?.id);
     const { data: poolJoinContractCallData, isLoading: isLoadingPoolJoinContractCallData } =
         usePoolInitJoinGetContractCallData(tokens);
@@ -42,19 +55,12 @@ export default function FinalisePoolComposeActions(props: Props) {
         })
         .filter((token) => !token.isApproved);
 
-    console.log('req', {
-        isLoadingPoolId,
-        poolId,
-        requiredApprovals,
-        createQuery: createQuery.txResponse
-    });
-
     function handleTransactionSubmit(txId: string) {
         if (txId === 'create-pool') {
             create({
                 name: poolName || getPoolSymbol(),
                 symbol: getPoolSymbol(),
-                tokens,
+                tokens: sortTokensByAddress(tokens),
                 swapFee: currentFee,
                 swapFeeManager: feeManager || '',
             });
@@ -62,14 +68,23 @@ export default function FinalisePoolComposeActions(props: Props) {
         if (txId === 'initialise-pool') {
             const tokenMetadata = tokens.map((token) => getToken(token.address));
             if (poolJoinContractCallData) {
-                initJoinPool(poolJoinContractCallData as PoolJoinPoolContractCallData, tokenBases, tokenMetadata);
+                initJoinPool(
+                    poolJoinContractCallData as PoolJoinPoolContractCallData,
+                    tokenBases,
+                    tokenMetadata.filter((token) => token !== null) as GqlToken[],
+                );
             }
         }
     }
 
     function handleCreateActionConfirmed(txId: string) {
         if (txId === 'create-pool') {
+            getCreatedPoolId();
         }
+    }
+
+    function navigateToPool() {
+        router.replace(`/pool/${poolId?.id}`);
     }
 
     useEffect(() => {
@@ -78,7 +93,6 @@ export default function FinalisePoolComposeActions(props: Props) {
             { id: 'initialise-pool', tooltipText: '', type: 'other', buttonText: 'Initialise pool' },
         ];
 
-        console.log('bstk', requiredApprovals);
         for (const requiredApproval of requiredApprovals) {
             _steps.unshift({
                 id: 'approve',
@@ -95,18 +109,23 @@ export default function FinalisePoolComposeActions(props: Props) {
 
     return (
         <Box width="full">
-            <BeetsTransactionStepsSubmit
-                buttonSize="lg"
-                isLoading={false}
-                loadingButtonText=""
-                completeButtonText="Create"
-                onCompleteButtonClick={() => false}
-                onSubmit={handleTransactionSubmit}
-                onConfirmed={async (id) => {}}
-                steps={steps}
-                queries={[{ ...createQuery, id: 'create-pool' }]}
-                isDisabled={false}
-            />
+            <Box width="full" pt="4">
+                <BeetsTransactionStepsSubmit
+                    buttonSize="lg"
+                    isLoading={isLoadingPoolId}
+                    loadingButtonText=""
+                    completeButtonText={`Go to ${poolName}`}
+                    onCompleteButtonClick={() => navigateToPool()}
+                    onSubmit={handleTransactionSubmit}
+                    onConfirmed={handleCreateActionConfirmed}
+                    steps={steps}
+                    queries={[
+                        { ...createQuery, id: 'create-pool' },
+                        { ...joinQuery, id: 'initialise-pool' },
+                    ]}
+                    isDisabled={false}
+                />
+            </Box>
         </Box>
     );
 }

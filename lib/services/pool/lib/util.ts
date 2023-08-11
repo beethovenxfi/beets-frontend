@@ -59,10 +59,6 @@ export function poolScaleTokenAmounts(
     tokenAmounts: TokenAmountHumanReadable[],
     poolTokens: GqlPoolTokenBase[] | GqlToken[],
 ): BigNumber[] {
-    console.log({
-        poolTokens,
-        tokenAmounts
-    })
     return poolTokens.map((poolToken) => {
         const amount = tokenAmounts.find((amount) => amount.address === poolToken.address);
 
