@@ -1,9 +1,11 @@
 import { bnum } from '@balancer-labs/sor';
+import BigNumber from 'bignumber.js';
 import { isAddress } from 'ethers/lib/utils.js';
 import { sum, sumBy } from 'lodash';
 import React, { ReactNode, useContext, useEffect, useState } from 'react';
 import { networkConfig } from '~/lib/config/network-config';
 import { useGetTokens } from '~/lib/global/useToken';
+import { useUserTokenBalances } from '~/lib/user/useUserTokenBalances';
 
 const POOL_TYPES = [
     {
@@ -33,7 +35,7 @@ export type ComposeStep = 'choose-tokens' | 'preview';
 export type PoolCreationExperience = 'simple' | 'advanced';
 export interface PoolCreationToken {
     address: string;
-    amount: string;
+    amount: string | null;
     isLocked: boolean;
     weight: number;
     index: number;
@@ -41,9 +43,14 @@ export interface PoolCreationToken {
 
 export type ManagerOption = 'dao-managed' | 'other-manager';
 export type OtherManagerOption = 'self-managed' | 'custom-eoa';
+export type OptimisedLiquidity = {
+    liquidityRequired: string;
+    balanceRequired: string;
+};
 
 function _useCompose() {
-    const { getToken } = useGetTokens();
+    const { getToken, priceFor } = useGetTokens();
+    const { getUserBalance } = useUserTokenBalances();
     const [step, setStep] = useState<ComposeStep>('choose-tokens');
     const [creationExperience, _setCreationExperience] = useState<PoolCreationExperience | null>(null);
     // recommended fee is 0.3%
@@ -54,10 +61,11 @@ function _useCompose() {
     const [poolName, setPoolName] = useState<string>();
     const [otherManagerOption, setOtherManagerOption] = useState<OtherManagerOption | undefined>();
     const [progressValidatedTo, setProgressValidatedTo] = useState(-1);
+    const [poolId, setPoolId] = useState<string | null>(null);
 
     const [tokens, setTokens] = useState<PoolCreationToken[]>([
-        { address: networkConfig.beets.address, amount: '0.0', isLocked: false, weight: 50, index: 0 },
-        { address: networkConfig.balancer.balToken, amount: '0.0', isLocked: false, weight: 50, index: 1 },
+        { address: networkConfig.beets.address, amount: null, isLocked: false, weight: 50, index: 0 },
+        { address: networkConfig.balancer.balToken, amount: null, isLocked: false, weight: 50, index: 1 },
     ]);
 
     useEffect(() => {
@@ -112,7 +120,7 @@ function _useCompose() {
 
     function addBlankToken() {
         const index = tokens.length || 0;
-        const newTokens = [...tokens, { address: '', amount: '0.0', weight: 0, isLocked: false, index }];
+        const newTokens = [...tokens, { address: '', amount: null, weight: 0, isLocked: false, index }];
         setTokens(newTokens);
         distributeTokenWeights(newTokens);
     }
@@ -214,15 +222,73 @@ function _useCompose() {
         setTokens(updatedTokens);
     }
 
+    function getTokensScaledByBIP(bip: BigNumber): Record<string, OptimisedLiquidity> {
+        const optimisedLiquidity: Record<string, OptimisedLiquidity> = {};
+        for (const token of tokens) {
+            // get the price for a single token
+            const tokenPrice = bnum(priceFor(token.address));
+            // the usd value needed for its weight
+            const liquidityRequired: BigNumber = bip.times(token.weight);
+            const balanceRequired: BigNumber = liquidityRequired.div(tokenPrice);
+            optimisedLiquidity[token.address] = {
+                liquidityRequired: liquidityRequired.toString(),
+                balanceRequired: balanceRequired.toString(),
+            };
+        }
+        return optimisedLiquidity;
+    }
+
+    function getOptimisedLiquidity(): Record<string, OptimisedLiquidity> {
+        // need to filter out the empty tokens just in case
+        if (!tokens.length) return {};
+        const validTokens = tokens.filter((t) => t?.address !== '');
+        const optimisedLiquidity: Record<string, OptimisedLiquidity> = {};
+        if (!validTokens.length) return {};
+
+        // token with the lowest balance is the bottleneck
+        let bottleneckToken = validTokens[0];
+        // keeping track of the lowest amt
+        let currentMin = bnum(getUserBalance(validTokens[0].address)).times(priceFor(validTokens[0].address));
+
+        // find the bottleneck token
+        for (const token of validTokens) {
+            const value = bnum(getUserBalance(token.address)).times(priceFor(token.address));
+            if (value.lt(currentMin)) {
+                currentMin = value;
+                bottleneckToken = token;
+            }
+        }
+        let bottleneckWeight = tokens.find((t) => t.address === bottleneckToken.address)?.weight || 0;
+        let bottleneckPrice = priceFor(bottleneckToken.address);
+
+        if (!bottleneckToken) return optimisedLiquidity;
+
+        const bip = bnum(bottleneckPrice).times(getUserBalance(bottleneckToken.address)).div(bottleneckWeight);
+
+        return getTokensScaledByBIP(bip);
+    }
+
     function getTokenAndWeightValidations() {
         const totalTokenWeight = sumBy(tokens, (token) => token.weight);
-        const areTokenSelectionsValid = tokens.every((token) => isAddress(token.address));
+        const areTokenSelectionsValid = tokens.every((token) => isAddress(token.address)) && tokens.length >= 2;
         const hasInvalidTokenWeights = tokens.some((token) => token.weight < 1);
+        const totalLiquidityUSD = sumBy(tokens, (token) => priceFor(token.address) * parseFloat(token.amount || '0'));
+        const areTokenAmountsValid = tokens.every(
+            (token) => token.amount !== null && parseFloat(token.amount || '0') > 0,
+        );
+        const hasMoreThanMaxTotalLiquidity = totalLiquidityUSD > 100;
         return {
             areTokenSelectionsValid,
             hasInvalidTokenWeights,
             invalidTotalWeight: totalTokenWeight !== 100,
-            isValid: totalTokenWeight === 100 && areTokenSelectionsValid && !hasInvalidTokenWeights,
+            hasMoreThanMaxTotalLiquidity,
+            areTokenAmountsValid,
+            isValid:
+                totalTokenWeight === 100 &&
+                areTokenSelectionsValid &&
+                !hasInvalidTokenWeights &&
+                !hasMoreThanMaxTotalLiquidity &&
+                areTokenAmountsValid,
         };
     }
 
@@ -260,6 +326,8 @@ function _useCompose() {
         otherManagerOption,
         poolName,
         progressValidatedTo,
+        poolId,
+        setPoolId,
         isFeeManagerValid,
         getTokenAndWeightValidations,
         isPoolNameValid,
@@ -281,5 +349,6 @@ function _useCompose() {
         toggleLockTokenByAddress,
         toggleLockTokenByIndex,
         getPoolSymbol,
+        getOptimisedLiquidity,
     };
 }

@@ -11,29 +11,23 @@ import {
     useDisclosure,
 } from '@chakra-ui/react';
 import React, { useRef, useState } from 'react';
-import { Swiper, SwiperSlide } from 'swiper/react';
 import { PoolCreationToken, useCompose } from './ComposeProvider';
 import { TokenInput } from '~/components/inputs/TokenInput';
-import TokenRow from '~/components/token/TokenRow';
 import Card from '~/components/card/Card';
 import { Lock, Plus, Unlock, X } from 'react-feather';
 import { BeetsBox } from '~/components/box/BeetsBox';
 import BeetsTooltip from '~/components/tooltip/BeetsTooltip';
-import { TokenSelectModal } from '~/components/token-select/TokenSelectModal';
 import { GenericTokenSelectModal } from '~/components/token-select/GenericTokenSelectModal';
 import { ToastType, useToast } from '~/components/toast/BeetsToast';
 import { BeetsInput } from '~/components/inputs/BeetsInput';
 import { useDebouncedCallback } from 'use-debounce';
-import { isNaN, update } from 'lodash';
-import Scales from '~/assets/icons/scales.svg';
-import Image from 'next/image';
-import BeetsCarousel, { BeetsCarouselItem } from '~/components/carousel/BeetsCarousel';
-import { Pagination } from 'swiper';
+import { isNaN } from 'lodash';
+import { useUserTokenBalances } from '~/lib/user/useUserTokenBalances';
 
 interface Props {}
 
 function AddTokenButton(_: any) {
-    const { addBlankToken, removeTokenByAddress, removeTokenByIndex } = useCompose();
+    const { addBlankToken } = useCompose();
     return (
         <Button onClick={addBlankToken} width="full">
             <Plus />
@@ -42,6 +36,7 @@ function AddTokenButton(_: any) {
 }
 
 export default function AdvancedPoolComposeTokens(props: Props) {
+    const { isLoading: isLoadingUserTokenBalances } = useUserTokenBalances();
     const {
         poolTypes,
         tokens,
@@ -53,6 +48,7 @@ export default function AdvancedPoolComposeTokens(props: Props) {
         setTokens,
         distributeTokenWeights,
         getTokenAndWeightValidations,
+        getOptimisedLiquidity,
     } = useCompose();
     const [activeTokenSelectIndex, setActiveTokenSelectIndex] = useState<number | null>(null);
     const tokenSelectDisclosure = useDisclosure();
@@ -60,7 +56,10 @@ export default function AdvancedPoolComposeTokens(props: Props) {
     const isMaxTokens = tokens.length === MAX_TOKENS;
     const finalRefTokenIn = useRef(null);
     const isMobile = useBreakpointValue({ base: true, lg: false });
-    const { hasInvalidTokenWeights, areTokenSelectionsValid, invalidTotalWeight } = getTokenAndWeightValidations();
+    const { hasInvalidTokenWeights, areTokenSelectionsValid, invalidTotalWeight, hasMoreThanMaxTotalLiquidity, areTokenAmountsValid } =
+        getTokenAndWeightValidations();
+
+    const optimisedLiquidity = getOptimisedLiquidity();
 
     const debouncedDistributeTokens = useDebouncedCallback((tokens: PoolCreationToken[]) => {
         distributeTokenWeights(tokens);
@@ -137,16 +136,18 @@ export default function AdvancedPoolComposeTokens(props: Props) {
             debouncedDistributeTokens(newTokens);
         };
     }
-
     return (
         <Card py="3" px="3" width="100%">
             <VStack spacing="2" width="full" alignItems="flex-start">
                 <VStack width="full" spacing="3">
                     <VStack spacing="1" width="full" alignItems="flex-start">
                         <Heading size="sm">1. Choose tokens</Heading>
-                        <Text lineHeight="1rem" fontSize="0.95rem">
+                        <Text lineHeight="1.25rem" fontSize="0.95rem">
                             Customize the weight of each pool token and the amount of liquidity you want to seed for
                             each. You can add up to 8 tokens.
+                            <br />
+                            Optimised token amounts are provided as a placeholder, which will get you the least slippage
+                            whilst creating the pool.
                         </Text>
                     </VStack>
                     <Grid width="full" templateColumns="1fr 1fr" columnGap="0.5rem" rowGap="0.5rem">
@@ -160,6 +161,11 @@ export default function AdvancedPoolComposeTokens(props: Props) {
                                                 address={token.address}
                                                 value={token.amount}
                                                 onChange={handleTokenAmountChangedForIndex(i)}
+                                                placeholder={
+                                                    parseFloat(
+                                                        optimisedLiquidity[token.address]?.balanceRequired || '0',
+                                                    ).toFixed(4) || undefined
+                                                }
                                             />
                                             <VStack>
                                                 <BeetsTooltip noImage label="Adjust this token's pool weight">
@@ -235,21 +241,32 @@ export default function AdvancedPoolComposeTokens(props: Props) {
                         </HStack>
                     </BeetsTooltip>
                 )}
-                {hasInvalidTokenWeights && (
+                {tokens.length > 0 && hasInvalidTokenWeights && (
                     <Alert status="error">
                         One or more of your token selections has an invalid weight. Tokens weights must be filled in and
                         greater than 1% for any one token.
                     </Alert>
                 )}
-                {!areTokenSelectionsValid && (
+                {tokens.length > 0 && !areTokenSelectionsValid && (
                     <Alert status="error">
-                        Please make sure all your pool tokens have a valid token selected. You can always remove a token
-                        you do not want by clicking the red cross.
+                        Please make sure all your pool tokens have a valid token selected. The minimum number of tokens
+                        is 2. You can always remove a token you do not want by clicking the red cross.
                     </Alert>
                 )}
-                {invalidTotalWeight && (
+                {tokens.length > 0 && invalidTotalWeight && (
                     <Alert status="error">
                         The sum of weights for all your token selections must equal exactly 100%.
+                    </Alert>
+                )}
+                {tokens.length > 0 && hasMoreThanMaxTotalLiquidity && (
+                    <Alert status="error">
+                        We enforce a max seed liquidity of $100 to protect you against significant slippage. After the
+                        pool is created you can invest with as much liquidity as you wish.
+                    </Alert>
+                )}
+                {tokens.length > 0 && !areTokenAmountsValid && (
+                    <Alert status="error">
+                        All token selections must have a seed amount greater than 0.
                     </Alert>
                 )}
             </VStack>
