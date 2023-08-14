@@ -31,8 +31,11 @@ export function AdvancedPoolComposeFees(props: Props) {
     }
 
     function handleCustomFeeChanged(event: { currentTarget: { value: string } }) {
+        const to2DP = event.currentTarget.value.match(/^(\d*\.{0,1}\d{0,2}$)/);
         setIsUsingCustomFee(true);
-        setCurrentFee((parseFloat(event.currentTarget.value) / 100).toString());
+        if (to2DP) {
+            setCurrentFee(event.currentTarget.value);
+        }
     }
 
     function getInputBorderColour() {
@@ -82,6 +85,7 @@ export function AdvancedPoolComposeFees(props: Props) {
                         onChange={handleCustomFeeChanged}
                         borderColor={getInputBorderColour()}
                         borderWidth={2}
+                        value={isUsingCustomFee ? currentFee : undefined}
                     >
                         <Box top="0" bottom="0" transform="translateY(20%)" right="12px" position="absolute">
                             <Text>%</Text>

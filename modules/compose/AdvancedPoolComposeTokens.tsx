@@ -51,13 +51,20 @@ export default function AdvancedPoolComposeTokens(props: Props) {
         getOptimisedLiquidity,
     } = useCompose();
     const [activeTokenSelectIndex, setActiveTokenSelectIndex] = useState<number | null>(null);
+    const [hasInteractedWithTokens, setHasInteractedWithTokens] = useState(false);
     const tokenSelectDisclosure = useDisclosure();
     const { showToast } = useToast();
     const isMaxTokens = tokens.length === MAX_TOKENS;
     const finalRefTokenIn = useRef(null);
     const isMobile = useBreakpointValue({ base: true, lg: false });
-    const { hasInvalidTokenWeights, areTokenSelectionsValid, invalidTotalWeight, hasMoreThanMaxTotalLiquidity, areTokenAmountsValid } =
-        getTokenAndWeightValidations();
+    const {
+        hasInvalidTokenWeights,
+        areTokenSelectionsValid,
+        invalidTotalWeight,
+        hasMoreThanMaxTotalLiquidity,
+        areTokenAmountsValid,
+        hasInsufficientBalances,
+    } = getTokenAndWeightValidations();
 
     const optimisedLiquidity = getOptimisedLiquidity();
 
@@ -117,6 +124,7 @@ export default function AdvancedPoolComposeTokens(props: Props) {
                 amount: event.currentTarget.value,
             };
             setTokens(newTokens);
+            setHasInteractedWithTokens(true);
         };
     }
 
@@ -264,10 +272,13 @@ export default function AdvancedPoolComposeTokens(props: Props) {
                         pool is created you can invest with as much liquidity as you wish.
                     </Alert>
                 )}
-                {tokens.length > 0 && !areTokenAmountsValid && (
+                {tokens.length > 0 && hasInsufficientBalances && (
                     <Alert status="error">
-                        All token selections must have a seed amount greater than 0.
+                        You do not have sufficient balance(s) for one or more tokens you have chosen.
                     </Alert>
+                )}
+                {hasInteractedWithTokens && tokens.length > 0 && !areTokenAmountsValid && (
+                    <Alert status="error">All token selections must have a seed amount greater than 0.</Alert>
                 )}
             </VStack>
             <GenericTokenSelectModal

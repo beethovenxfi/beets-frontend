@@ -51,7 +51,7 @@ function _useCompose() {
     const { getToken, priceFor } = useGetTokens();
     const { getUserBalance } = useUserTokenBalances();
     const [step, setStep] = useState<ComposeStep>('choose-tokens');
-    const [creationExperience, _setCreationExperience] = useState<PoolCreationExperience | null>(null);
+    const [creationExperience, _setCreationExperience] = useState<PoolCreationExperience | null>('advanced');
     // recommended fee is 0.3%
     const [currentFee, setCurrentFee] = useState(FEE_PRESETS[1]);
     const [isUsingCustomFee, setIsUsingCustomFee] = useState(false);
@@ -66,13 +66,6 @@ function _useCompose() {
         { address: networkConfig.beets.address, amount: null, isLocked: false, weight: 50 },
         { address: networkConfig.balancer.balToken, amount: null, isLocked: false, weight: 50 },
     ]);
-
-    useEffect(() => {
-        const cachedCreationExperience = localStorage.getItem(
-            'poolCreation.experience',
-        ) as PoolCreationExperience | null;
-        setCreationExperience(cachedCreationExperience);
-    }, []);
 
     useEffect(() => {
         setPoolName(getPoolSymbol());
@@ -270,6 +263,9 @@ function _useCompose() {
         const areTokenAmountsValid = tokens.every(
             (token) => token.amount !== null && parseFloat(token.amount || '0') > 0,
         );
+        const hasInsufficientBalances = tokens.some(
+            (token) => parseFloat(token.amount || '0') > parseFloat(getUserBalance(token.address)),
+        );
         const hasMoreThanMaxTotalLiquidity = totalLiquidityUSD > 100;
         return {
             areTokenSelectionsValid,
@@ -277,17 +273,22 @@ function _useCompose() {
             invalidTotalWeight: totalTokenWeight !== 100,
             hasMoreThanMaxTotalLiquidity,
             areTokenAmountsValid,
+            hasInsufficientBalances,
             isValid:
                 totalTokenWeight === 100 &&
                 areTokenSelectionsValid &&
                 !hasInvalidTokenWeights &&
                 !hasMoreThanMaxTotalLiquidity &&
+                !hasInsufficientBalances &&
                 areTokenAmountsValid,
         };
     }
 
     function getPoolFeeValidations() {
-        const isFeeValid = parseFloat(currentFee) < 0.1;
+        let isFeeValid = parseFloat(currentFee) < 0.1;
+        if (isUsingCustomFee) {
+            isFeeValid = parseFloat(currentFee) / 100 < 0.1;
+        }
         const isFeeEmpty = currentFee === null || currentFee === '' || isNaN(parseFloat(currentFee));
         const isFeeZero = parseFloat(currentFee) === 0;
         return {
