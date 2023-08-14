@@ -17,6 +17,7 @@ interface Props {
     handleTokenSelected: (tokenAddres: string) => void;
     title?: string;
     onlyWhitelistedTokens?: boolean;
+    excludeNativeToken?: boolean
 }
 
 export function GenericTokenSelectModal({
@@ -26,6 +27,7 @@ export function GenericTokenSelectModal({
     handleTokenSelected,
     title,
     onlyWhitelistedTokens = true,
+    excludeNativeToken = false
 }: Props) {
     const listHeight = 500;
     const [searchTerm, setSearchTerm] = useState('');
@@ -89,6 +91,7 @@ export function GenericTokenSelectModal({
                                     listHeight={listHeight}
                                     searchTerm={searchTerm}
                                     onTokenRowClick={(address) => onTokenRowClick(address)}
+                                    excludeNativeToken
                                 />
                             )}
                             {!onlyWhitelistedTokens && (

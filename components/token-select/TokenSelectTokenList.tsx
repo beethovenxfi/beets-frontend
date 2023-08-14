@@ -4,14 +4,16 @@ import VirtualList from 'react-tiny-virtual-list';
 import { useGetTokens } from '~/lib/global/useToken';
 import { useUserTokenBalances } from '~/lib/user/useUserTokenBalances';
 import { orderBy } from 'lodash';
+import { networkConfig } from '~/lib/config/network-config';
 
 interface Props {
     listHeight: number;
     searchTerm: string;
     onTokenRowClick: (address: string) => void;
+    excludeNativeToken?: boolean;
 }
 
-export function TokenSelectTokenList({ listHeight, searchTerm, onTokenRowClick }: Props) {
+export function TokenSelectTokenList({ listHeight, searchTerm, onTokenRowClick, excludeNativeToken = false }: Props) {
     const { tokens, priceForAmount } = useGetTokens();
     const { userBalances, isLoading: userBalancesLoading } = useUserTokenBalances();
 
@@ -36,6 +38,10 @@ export function TokenSelectTokenList({ listHeight, searchTerm, onTokenRowClick }
         ['desc', 'desc'],
     );
 
+    const propFilteredTokens = filteredTokensByPrice.filter(
+        (token) => token.address.toLowerCase() !== networkConfig.eth.address.toLowerCase(),
+    );
+
     return (
         <VirtualList
             className="token-select-list"
@@ -44,7 +50,7 @@ export function TokenSelectTokenList({ listHeight, searchTerm, onTokenRowClick }
             itemCount={filteredTokens.length}
             itemSize={56}
             renderItem={({ index, style }) => {
-                const token = filteredTokensByPrice[index];
+                const token = propFilteredTokens[index];
                 const userBalance = tokenFindTokenAmountForAddress(token.address, userBalances);
                 return (
                     <div style={style} key={index}>

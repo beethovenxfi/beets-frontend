@@ -34,7 +34,7 @@ export default function FinalisePoolComposeActions(props: Props) {
             amount: token.amount,
         } as TokenBaseWithAmount;
     });
-    const { hasApprovalForAmount } = useUserAllowances(tokenBases, networkConfig.balancer.vault);
+    const { hasApprovalForAmount, isLoading: isLoadingAllowances } = useUserAllowances(tokenBases, networkConfig.balancer.vault);
     const { create, ...createQuery } = usePoolCreate();
     const {
         poolId,
@@ -89,6 +89,9 @@ export default function FinalisePoolComposeActions(props: Props) {
     }
 
     useEffect(() => {
+        if (isLoadingAllowances) {
+            return;
+        }
         const _steps: TransactionStep[] = [
             { id: 'create-pool', tooltipText: '', type: 'other', buttonText: 'Create pool' },
             { id: 'initialise-pool', tooltipText: '', type: 'other', buttonText: 'Initialise pool' },
@@ -106,7 +109,7 @@ export default function FinalisePoolComposeActions(props: Props) {
         }
         if (_steps.length < steps?.length) return;
         setSteps(_steps);
-    }, [requiredApprovals.length]);
+    }, [requiredApprovals.length, isLoadingAllowances]);
 
     return (
         <Box width="full">

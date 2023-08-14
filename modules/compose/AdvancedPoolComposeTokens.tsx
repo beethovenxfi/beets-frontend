@@ -299,6 +299,7 @@ export default function AdvancedPoolComposeTokens(props: Props) {
                 onOpen={tokenSelectDisclosure.onOpen}
                 onClose={tokenSelectDisclosure.onClose}
                 handleTokenSelected={handleTokenSelectedForIndex(activeTokenSelectIndex)}
+                excludeNativeToken
                 title="Choose a token"
             />
         </Card>
