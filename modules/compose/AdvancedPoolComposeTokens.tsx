@@ -5,6 +5,7 @@ import {
     Grid,
     HStack,
     Heading,
+    Stack,
     Text,
     VStack,
     useBreakpointValue,
@@ -56,7 +57,7 @@ export default function AdvancedPoolComposeTokens(props: Props) {
     const { showToast } = useToast();
     const isMaxTokens = tokens.length === MAX_TOKENS;
     const finalRefTokenIn = useRef(null);
-    const isMobile = useBreakpointValue({ base: true, lg: false });
+    const isMobile = useBreakpointValue({ base: true, md: false });
     const {
         hasInvalidTokenWeights,
         areTokenSelectionsValid,
@@ -158,12 +159,22 @@ export default function AdvancedPoolComposeTokens(props: Props) {
                             whilst creating the pool.
                         </Text>
                     </VStack>
-                    <Grid width="full" templateColumns="1fr 1fr" columnGap="0.5rem" rowGap="0.5rem">
+                    <Grid
+                        width="full"
+                        templateColumns={{ base: '1fr', md: '1fr 1fr' }}
+                        columnGap="0.5rem"
+                        rowGap="0.5rem"
+                    >
                         {tokens.map((token, i) => (
                             <HStack key={`compose-token-select-${token}-${i}`}>
                                 <BeetsBox width="full" pl="2" pr="3" py="2" key={`${token.address}-${i}`}>
                                     <HStack width="full" spacing="4">
-                                        <HStack spacing="2" width="full">
+                                        <Stack
+                                            spacing="2"
+                                            width="full"
+                                            direction={{ base: 'column-reverse', md: 'row' }}
+                                            alignItems='center'
+                                        >
                                             <TokenInput
                                                 toggleTokenSelect={() => showTokenSelect(i)}
                                                 address={token.address}
@@ -181,14 +192,15 @@ export default function AdvancedPoolComposeTokens(props: Props) {
                                                         wrapperProps={{
                                                             height: '40px',
                                                             padding: 'none',
-                                                            width: '85px',
+                                                            width: isMobile ? '100%' : '85px',
                                                         }}
                                                         height="100%"
-                                                        width="85px"
+                                                        width={{ base: '100%', md: '85px' }}
                                                         py="0"
                                                         minHeight="none"
                                                         fontWeight="medium"
                                                         fontSize="1rem"
+                                                        textAlign={{ base: 'center', md: 'left' }}
                                                         px="2"
                                                         placeholder="50"
                                                         value={token.weight}
@@ -206,7 +218,7 @@ export default function AdvancedPoolComposeTokens(props: Props) {
                                                     </BeetsInput>
                                                 </BeetsTooltip>
                                             </VStack>
-                                        </HStack>
+                                        </Stack>
                                         <VStack>
                                             <BeetsTooltip noImage label="Lock this token's weight">
                                                 <Button

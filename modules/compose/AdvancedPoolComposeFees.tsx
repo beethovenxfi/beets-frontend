@@ -1,12 +1,13 @@
 import React from 'react';
 import { useCompose } from './ComposeProvider';
 import Card from '~/components/card/Card';
-import { Alert, Box, Button, HStack, Heading, Text, VStack } from '@chakra-ui/react';
+import { Alert, Box, Button, HStack, Heading, Stack, Text, VStack, useBreakpointValue } from '@chakra-ui/react';
 import { BeetsInput } from '~/components/inputs/BeetsInput';
 
 interface Props {}
 
 export function AdvancedPoolComposeFees(props: Props) {
+    const isMobile = useBreakpointValue({ base: true, md: false });
     const { FEE_PRESETS, setCurrentFee, currentFee, setIsUsingCustomFee, isUsingCustomFee, getPoolFeeValidations } =
         useCompose();
 
@@ -58,7 +59,11 @@ export function AdvancedPoolComposeFees(props: Props) {
                         You can also specify your own custom fee.
                     </Text>
                 </VStack>
-                <HStack height="40px">
+                <Stack
+                    width="full"
+                    height={{ base: 'fit-content', md: '40px' }}
+                    direction={{ base: 'column', md: 'row' }}
+                >
                     {FEE_PRESETS.map((preset) => (
                         <Button
                             onClick={() => handlePresetClicked(preset)}
@@ -66,22 +71,28 @@ export function AdvancedPoolComposeFees(props: Props) {
                             borderColor={isActivePreset(preset) ? 'beets.green' : 'transparent'}
                             borderWidth={2}
                             fontWeight="medium"
-                            width="75px"
+                            width={{ base: '100%', md: '75px' }}
                             key={`pool-fee-preset-${preset}`}
                         >
                             {parseFloat(preset) * 100}%
                         </Button>
                     ))}
                     <BeetsInput
-                        wrapperProps={{ height: '100%', padding: 'none', width: '100px' }}
+                        wrapperProps={{
+                            height: '100%',
+                            padding: 'none',
+                            width: isMobile ? '100%' : '100px',
+                            minHeight: '40px',
+                        }}
                         height="100%"
-                        width="100px"
+                        width={{ base: '100%', md: '100px' }}
                         py="0"
-                        minHeight="none"
+                        minHeight="40px"
                         fontWeight="medium"
                         fontSize="1rem"
                         px="2"
                         placeholder="0.1"
+                        textAlign={{ base: 'center', md: 'left' }}
                         onChange={handleCustomFeeChanged}
                         borderColor={getInputBorderColour()}
                         borderWidth={2}
@@ -91,7 +102,7 @@ export function AdvancedPoolComposeFees(props: Props) {
                             <Text>%</Text>
                         </Box>
                     </BeetsInput>
-                </HStack>
+                </Stack>
                 {isFeeEmpty && (
                     <Alert status="error">Please ensure that you have selected or filled in a pool fee.</Alert>
                 )}

@@ -8,7 +8,6 @@ import { AdvancedPoolComposeFees } from './AdvancedPoolComposeFees';
 import { AdvancedPoolComposeFeeManager } from './AdvancedPoolComposeFeeManager';
 import { AdvancedPoolComposeSubmit } from './AdvancedPoolComposeSubmit';
 import { AdvancedPoolComposeName } from './AdvancedPoolComposeName';
-import { ChevronDown } from 'react-feather';
 import AdvancedPoolComposeProgress from './AdvancedPoolComposeProgress';
 
 interface Props {}
@@ -16,7 +15,7 @@ interface Props {}
 export default function AdvancedPoolCreation(props: Props) {
     return (
         <VStack spacing="4" width="full" mb="10">
-            <VStack width="75%" alignItems="center">
+            <VStack width={{ base: '100%', md: '75%' }} alignItems="center">
                 <AdvancedPoolComposeTokens />
                 <AdvancedPoolComposeProgress step={0} />
                 <AdvancedPoolComposeFees />

@@ -23,7 +23,7 @@ function sortTokensByAddress(tokens: PoolCreationToken[]) {
 }
 
 export default function FinalisePoolComposeActions(props: Props) {
-    const { tokens, poolName, getPoolSymbol, currentFee, feeManager } = useCompose();
+    const { tokens, poolName, getPoolSymbol, currentFee, feeManager, resetPoolCreationState } = useCompose();
     const router = useRouter();
     const [steps, setSteps] = useState<TransactionStep[]>([]);
     const { getToken } = useGetTokens();
@@ -84,6 +84,7 @@ export default function FinalisePoolComposeActions(props: Props) {
     }
 
     function navigateToPool() {
+        resetPoolCreationState();
         router.replace(`/pool/${poolId?.id}`);
     }
 

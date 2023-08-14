@@ -22,7 +22,14 @@ export default function PreviewPoolTokenFees(props: Props) {
 
     return (
         <HStack spacing="4" width="full" justifyContent="flex-start">
-            <BeetsBox py="3" pl="4" pr="6" display="flex" justifyContent="flex-start">
+            <BeetsBox
+                py="3"
+                pl="4"
+                pr="6"
+                display="flex"
+                justifyContent="flex-start"
+                width={{ base: '100%', md: 'fit-content' }}
+            >
                 <VStack width="full" alignItems="flex-start">
                     {isDAOManager && (
                         <HStack>

@@ -16,6 +16,7 @@ import { useUserSyncBalanceMutation } from '~/apollo/generated/graphql-codegen-g
 import { useHasBatchRelayerApproval } from '~/lib/util/useHasBatchRelayerApproval';
 import { SubTransactionSubmittedContent } from '~/components/transaction/SubTransactionSubmittedContent';
 import { transactionMessageFromError } from '~/lib/util/transaction-util';
+import { useCompose } from '~/modules/compose/ComposeProvider';
 
 interface Props {
     onInvestComplete(): void;
@@ -24,6 +25,7 @@ interface Props {
 
 export function PoolInvestActions({ onInvestComplete, onClose }: Props) {
     const networkConfig = useNetworkConfig();
+    const { setIsCreationComplete } = useCompose();
     const { pool, requiresBatchRelayerOnJoin } = usePool();
     const { selectedInvestTokensWithAmounts, totalInvestValue, zapEnabled } = useInvest();
     const { joinPool, ...joinQuery } = useJoinPool(pool, zapEnabled);
@@ -142,6 +144,7 @@ export function PoolInvestActions({ onInvestComplete, onClose }: Props) {
                             refetchUserBptBalance();
                             userSyncBalance({ variables: { poolId: pool.id } });
                             onInvestComplete();
+                            setIsCreationComplete(true);
                         }
                     }}
                     queries={[{ ...joinQuery, id: 'invest' }]}

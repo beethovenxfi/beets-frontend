@@ -61,6 +61,7 @@ function _useCompose() {
     const [otherManagerOption, setOtherManagerOption] = useState<OtherManagerOption | undefined>();
     const [progressValidatedTo, setProgressValidatedTo] = useState(-1);
     const [poolId, setPoolId] = useState<string | null>(null);
+    const [isCreationComplete, setIsCreationComplete] = useState(false);
 
     const [tokens, setTokens] = useState<PoolCreationToken[]>([
         { address: networkConfig.beets.address, amount: null, isLocked: false, weight: 50 },
@@ -307,6 +308,23 @@ function _useCompose() {
         return poolName != '';
     }
 
+    function resetPoolCreationState() {
+        setStep('choose-tokens');
+        setCurrentFee(FEE_PRESETS[1]);
+        setIsUsingCustomFee(false);
+        setFeeManager(networkConfig.beetsPoolOwnerAddress);
+        setManagerOption('dao-managed');
+        setPoolName(undefined);
+        setOtherManagerOption(undefined);
+        setProgressValidatedTo(-1);
+        setPoolId(null);
+        setIsCreationComplete(false);
+        setTokens([
+            { address: networkConfig.beets.address, amount: null, isLocked: false, weight: 50 },
+            { address: networkConfig.balancer.balToken, amount: null, isLocked: false, weight: 50 },
+        ]);
+    }
+
     return {
         activeStep: step,
         creationExperience,
@@ -322,6 +340,9 @@ function _useCompose() {
         poolName,
         progressValidatedTo,
         poolId,
+        isCreationComplete,
+        resetPoolCreationState,
+        setIsCreationComplete,
         setPoolId,
         isFeeManagerValid,
         getTokenAndWeightValidations,

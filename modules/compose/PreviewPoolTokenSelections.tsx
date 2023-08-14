@@ -18,7 +18,12 @@ export default function PreviewPoolTokenSelections(props: Props) {
                     <VStack spacing="1" width="full" alignItems="flex-start">
                         <Heading size="sm">Pool Tokens</Heading>
                     </VStack>
-                    <Grid width="full" templateColumns="1fr 1fr" columnGap="0.5rem" rowGap="0.5rem">
+                    <Grid
+                        width="full"
+                        templateColumns={{ base: '1fr', md: '1fr 1fr' }}
+                        columnGap="0.5rem"
+                        rowGap="0.5rem"
+                    >
                         {tokens.map((token, i) => (
                             <HStack key={`compose-token-select-${token}-${i}`}>
                                 <BeetsBox width="full" pl="2" pr="3" py="2" key={`${token.address}-${i}`}>
