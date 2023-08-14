@@ -16,9 +16,17 @@ interface Props {
     finalFocusRef: RefObject<HTMLInputElement>;
     handleTokenSelected: (tokenAddres: string) => void;
     title?: string;
+    onlyWhitelistedTokens?: boolean;
 }
 
-export function GenericTokenSelectModal({ isOpen, onClose, finalFocusRef, handleTokenSelected, title }: Props) {
+export function GenericTokenSelectModal({
+    isOpen,
+    onClose,
+    finalFocusRef,
+    handleTokenSelected,
+    title,
+    onlyWhitelistedTokens = true,
+}: Props) {
     const listHeight = 500;
     const [searchTerm, setSearchTerm] = useState('');
     const { getTradableToken } = useGetTokens();
@@ -67,7 +75,7 @@ export function GenericTokenSelectModal({ isOpen, onClose, finalFocusRef, handle
                                     }}
                                 />
                             </Box>
-                            {tokenToImport ? (
+                            {!onlyWhitelistedTokens && tokenToImport ? (
                                 <Box height={`${listHeight}px`}>
                                     <TokenActionRow
                                         {...tokenToImport}
@@ -83,14 +91,16 @@ export function GenericTokenSelectModal({ isOpen, onClose, finalFocusRef, handle
                                     onTokenRowClick={(address) => onTokenRowClick(address)}
                                 />
                             )}
-                            <TokenImportAlertDialog
-                                isOpen={alertDisclosure.isOpen}
-                                onClose={alertDisclosure.onClose}
-                                onImport={() => {
-                                    importToken();
-                                    alertDisclosure.onClose();
-                                }}
-                            />
+                            {!onlyWhitelistedTokens && (
+                                <TokenImportAlertDialog
+                                    isOpen={alertDisclosure.isOpen}
+                                    onClose={alertDisclosure.onClose}
+                                    onImport={() => {
+                                        importToken();
+                                        alertDisclosure.onClose();
+                                    }}
+                                />
+                            )}
                             <Box height="20px" boxShadow="dark-lg" borderTopWidth={1} borderTopColor="beets.base.600" />
                         </ModalBody>
                     </Box>

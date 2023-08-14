@@ -65,7 +65,13 @@ function _useCompose() {
 
     const [tokens, setTokens] = useState<PoolCreationToken[]>([
         { address: networkConfig.beets.address, amount: null, isLocked: false, weight: 50 },
-        { address: networkConfig.balancer.balToken, amount: null, isLocked: false, weight: 50 },
+        {
+            address:
+                networkConfig.chainName === 'OPTIMISM' ? networkConfig.balancer.balToken : networkConfig.wethAddress,
+            amount: null,
+            isLocked: false,
+            weight: 50,
+        },
     ]);
 
     useEffect(() => {
