@@ -34,7 +34,10 @@ export default function FinalisePoolComposeActions(props: Props) {
             amount: token.amount,
         } as TokenBaseWithAmount;
     });
-    const { hasApprovalForAmount, isLoading: isLoadingAllowances } = useUserAllowances(tokenBases, networkConfig.balancer.vault);
+    const { hasApprovalForAmount, isLoading: isLoadingAllowances } = useUserAllowances(
+        tokenBases,
+        networkConfig.balancer.vault,
+    );
     const { create, ...createQuery } = usePoolCreate();
     const {
         poolId,
@@ -84,7 +87,6 @@ export default function FinalisePoolComposeActions(props: Props) {
     }
 
     function navigateToPool() {
-        resetPoolCreationState();
         router.replace(`/pool/${poolId?.id}`);
     }
 

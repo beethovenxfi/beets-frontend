@@ -35,7 +35,6 @@ function scaleTokenWeights(tokens: PoolCreationToken[]): string[] {
 
 export function usePoolCreate() {
     const networkConfig = useNetworkConfig();
-    const { userAddress } = useUserAccount();
     const { submit, submitAsync, ...rest } = useSubmitTransaction({
         config: {
             addressOrName: networkConfig.balancer.weightedPoolFactory,
@@ -49,16 +48,6 @@ export function usePoolCreate() {
         const tokenAddresses = tokens.map((token: PoolCreationToken) => token.address);
         const scaledTokenWeights = scaleTokenWeights(tokens);
         const swapFeeScaled = scale(new BigNumber(swapFee), 18);
-        console.log('ding', [
-            name,
-            symbol,
-            tokenAddresses,
-            scaledTokenWeights,
-            [], // rate providers TODO VERIFY
-            swapFeeScaled.toString(),
-            swapFeeManager,
-            generateSalt(),
-        ]);
         return submit({
             args: [
                 name,
