@@ -54,14 +54,16 @@ export function TokenSelectTokenList({ listHeight, searchTerm, onTokenRowClick, 
                 const userBalance = tokenFindTokenAmountForAddress(token?.address || '', userBalances);
                 return (
                     <div style={style} key={index}>
-                        <TokenRow
-                            {...token}
-                            onClick={() => onTokenRowClick(token.address)}
-                            key={token.address}
-                            userBalance={userBalance.amount}
-                            userBalanceUSD={priceForAmount(userBalance)}
-                            loading={userBalancesLoading}
-                        />
+                        {token && (
+                            <TokenRow
+                                {...token}
+                                onClick={() => onTokenRowClick(token.address)}
+                                key={token.address}
+                                userBalance={userBalance.amount}
+                                userBalanceUSD={priceForAmount(userBalance)}
+                                loading={userBalancesLoading}
+                            />
+                        )}
                     </div>
                 );
             }}
