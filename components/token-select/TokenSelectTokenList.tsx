@@ -51,7 +51,7 @@ export function TokenSelectTokenList({ listHeight, searchTerm, onTokenRowClick, 
             itemSize={56}
             renderItem={({ index, style }) => {
                 const token = propFilteredTokens[index];
-                const userBalance = tokenFindTokenAmountForAddress(token.address, userBalances);
+                const userBalance = tokenFindTokenAmountForAddress(token?.address || '', userBalances);
                 return (
                     <div style={style} key={index}>
                         <TokenRow
