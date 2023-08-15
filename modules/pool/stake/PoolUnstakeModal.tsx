@@ -28,6 +28,9 @@ import { usePool } from '~/modules/pool/lib/usePool';
 import { useUserSyncBalanceMutation } from '~/apollo/generated/graphql-codegen-generated';
 import { useGaugeUnstakeGetContractCallData } from './lib/useGaugeUnstakeGetContractCallData';
 import { useHasMinterApproval } from '~/lib/util/useHasMinterApproval';
+import { usePoolUserPendingRewards } from '../lib/usePoolUserPendingRewards';
+import useStakingMintableRewards from '~/lib/global/useStakingMintableRewards';
+import { useHasBatchRelayerApproval } from '~/lib/util/useHasBatchRelayerApproval';
 
 interface Props {
     isOpen: boolean;
@@ -56,11 +59,19 @@ export function PoolUnstakeModal({ isOpen, onOpen, onClose }: Props) {
     const { withdraw, ...unstakeQuery } = useStakingWithdraw(pool.staking);
     const [steps, setSteps] = useState<TransactionStep[] | null>(null);
     const { data: hasMinterApproval, isLoading: isLoadingHasMinterApproval } = useHasMinterApproval();
-    const loading = isLoadingBalances || isLoadingHasMinterApproval;
+    const { data: hasBatchRelayerApproval, isLoading: isLoadingBatchRelayerApproval } = useHasBatchRelayerApproval();
+    const loading = isLoadingBalances || isLoadingHasMinterApproval || isLoadingBatchRelayerApproval;
 
     const { data: contractCalls } = useGaugeUnstakeGetContractCallData(
         oldBnumToBnum(oldBnumScaleAmount(userStakedBptBalance).times(percent).div(100)),
     );
+
+    // TODO: remove when batch relayer supports bal minting
+    const { hasPendingBalRewards } = usePoolUserPendingRewards();
+    const {
+        claim: { claimBAL, ...claimQuery },
+        refetch: refetchClaimableBAL,
+    } = useStakingMintableRewards([pool.staking!]); // staking will exist here
 
     useEffect(() => {
         if (isOpen && userStakedBptBalance) {
@@ -71,13 +82,35 @@ export function PoolUnstakeModal({ isOpen, onOpen, onClose }: Props) {
     useEffect(() => {
         if (!loading) {
             setSteps([
-                ...(!hasMinterApproval
+                ...(!hasBatchRelayerApproval
                     ? [
                           {
-                              id: 'minter',
+                              id: 'batch-relayer',
                               type: 'other' as const,
-                              buttonText: 'Approve batch relayer for minting',
-                              tooltipText: 'Approve batch relayer for minting',
+                              buttonText: 'Approve Batch Relayer',
+                              tooltipText: 'This pool requires you to approve the batch relayer.',
+                          },
+                      ]
+                    : []),
+                // TODO: add when batch relayer v6 is released
+                // ...(!hasMinterApproval
+                //     ? [
+                //           {
+                //               id: 'minter',
+                //               type: 'other' as const,
+                //               buttonText: 'Approve batch relayer for minting',
+                //               tooltipText: 'Approve batch relayer for minting',
+                //           },
+                //       ]
+                //     : []),
+                // TODO: remove when batch relayer v6 is released
+                ...(hasPendingBalRewards
+                    ? [
+                          {
+                              id: 'bal-rewards',
+                              type: 'other' as const,
+                              buttonText: 'Claim BAL rewards',
+                              tooltipText: 'Claim BAL rewards',
                           },
                       ]
                     : []),
@@ -163,16 +196,28 @@ export function PoolUnstakeModal({ isOpen, onOpen, onClose }: Props) {
                         completeButtonText="Close"
                         onCompleteButtonClick={onCloseModal}
                         onSubmit={(id) => {
+                            // TODO: remove again when v6 relayer is released
+                            if (id === 'bal-rewards') {
+                                claimBAL(pool.staking?.gauge?.gaugeAddress || '');
+                            }
                             if (id === 'unstake' && contractCalls) {
                                 withdraw({ contractCalls });
                             }
                         }}
                         onConfirmed={async (id) => {
+                            // TODO: remove again when v6 relayer is released
+                            if (id === 'bal-rewards') {
+                                refetchClaimableBAL();
+                            }
                             refetchBptBalances();
                             userSyncBalance({ variables: { poolId: pool.id } });
                         }}
                         steps={steps || []}
-                        queries={[{ ...unstakeQuery, id: 'unstake' }]}
+                        queries={[
+                            { ...unstakeQuery, id: 'unstake' },
+                            // TODO: remove again when v6 relayer is released
+                            { ...claimQuery, id: 'bal-rewards' },
+                        ]}
                         isDisabled={!hasValue || !amountIsValid}
                     />
                 </ModalBody>

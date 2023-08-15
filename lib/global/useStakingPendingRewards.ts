@@ -37,7 +37,10 @@ export function useStakingPendingRewards(stakingItems: GqlPoolStaking[], hookNam
     const { tokens, priceForAmount } = useGetTokens();
     const stakingIds = stakingItems.map((staking) => staking.id);
     const isHardRefetch = useRef(false);
-    const { claimableBALForGauges, isLoading: isLoadingClaimableBAL } = useStakingMintableRewards(stakingItems);
+    const { claimableBALForGauges, isLoading: isLoadingClaimableBAL } = useStakingMintableRewards(
+        stakingItems,
+        hookName === 'usePoolUserPendingRewards',
+    );
 
     const query = useQuery(
         ['useStakingPendingRewards', hookName, userAddress, stakingIds, claimableBALForGauges],

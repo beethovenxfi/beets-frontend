@@ -35,8 +35,14 @@ export function useUserPendingRewards() {
 
     const pendingRewardsTotalUSD = sumBy(data?.pendingRewards || [], priceForAmount);
 
+    const pendingRewardsNonBALTotalUSD = sumBy(
+        data?.pendingRewards.filter((reward) => reward.address !== networkConfig.balancer.balToken) || [],
+        priceForAmount,
+    );
+
     return {
         pendingRewardsTotalUSD,
+        pendingRewardsNonBALTotalUSD,
         pendingRewards,
         pendingBALUSD,
         gauges: data?.gauges,

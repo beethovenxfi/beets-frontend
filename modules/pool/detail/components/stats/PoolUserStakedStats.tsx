@@ -14,6 +14,8 @@ import { useStakingClaimRewards } from '~/lib/global/useStakingClaimRewards';
 import { CardRow } from '~/components/card/CardRow';
 import { networkConfig } from '~/lib/config/network-config';
 import { InfoButton } from '~/components/info-button/InfoButton';
+import useStakingMintableRewards from '~/lib/global/useStakingMintableRewards';
+import { usePoolGaugeClaimRewardsGetContractCallData } from '~/modules/pool/lib/usePoolGaugeClaimRewardsGetContractCallData';
 
 interface Props {
     poolAddress: string;
@@ -29,6 +31,8 @@ export function PoolUserStakedStats({ poolAddress, staking, totalApr, userPoolBa
         pendingRewards,
         pendingRewardsTotalUSD,
         claimableBALForGauges,
+        hasPendingBalRewards,
+        hasPendingNonBALRewards,
         hardRefetch: refetchPendingRewards,
         isLoading: isLoadingPendingRewards,
     } = usePoolUserPendingRewards();
@@ -42,7 +46,13 @@ export function PoolUserStakedStats({ poolAddress, staking, totalApr, userPoolBa
     const dailyYieldUSD = userPoolBalanceUSD * dailyYield;
     const beetsPerDay = parseFloat(staking.farm?.beetsPerBlock || '0') * (blocksData?.blocksPerDay || 0) * userShare;
 
-    console.log({ claimableBALForGauges });
+    // TODO: remove again when v6 relayer is released
+    const {
+        claim: { claimBAL, ...claimQuery },
+        refetch: refetchClaimableBAL,
+    } = useStakingMintableRewards([staking]);
+    const showClaimBALButton = staking.gauge?.gaugeAddress && staking.gauge.version === 2;
+    const { data: contractCalls } = usePoolGaugeClaimRewardsGetContractCallData();
 
     return (
         <>
@@ -158,8 +168,9 @@ export function PoolUserStakedStats({ poolAddress, staking, totalApr, userPoolBa
                 <Box width="full">
                     <BeetsSubmitTransactionButton
                         {...harvestQuery}
-                        isDisabled={!hasPendingRewards || Object.values(claimableBALForGauges || {})[0] !== '0.0'}
-                        onClick={() => claim()}
+                        //isDisabled={!hasPendingRewards || Object.values(claimableBALForGauges || {})[0] !== '0.0'}
+                        isDisabled={!hasPendingNonBALRewards}
+                        onClick={() => (contractCalls ? claim(contractCalls) : claim())}
                         onConfirmed={() => {
                             refetchPendingRewards();
                             refetchUserTokenBalances();
@@ -168,6 +179,24 @@ export function PoolUserStakedStats({ poolAddress, staking, totalApr, userPoolBa
                     >
                         Claim rewards
                     </BeetsSubmitTransactionButton>
+                </Box>
+                {/* TODO: remove again when v6 relayer is released */}
+                <Box width="full">
+                    {showClaimBALButton && (
+                        <BeetsSubmitTransactionButton
+                            {...claimQuery}
+                            isDisabled={!hasPendingBalRewards}
+                            onClick={() => claimBAL(staking.gauge?.gaugeAddress || '')}
+                            onConfirmed={() => {
+                                refetchPendingRewards();
+                                refetchUserTokenBalances();
+                                refetchClaimableBAL();
+                            }}
+                            width="full"
+                        >
+                            Claim BAL rewards
+                        </BeetsSubmitTransactionButton>
+                    )}
                 </Box>
             </VStack>
         </>

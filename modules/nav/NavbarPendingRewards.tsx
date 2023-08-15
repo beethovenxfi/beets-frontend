@@ -28,11 +28,14 @@ import { sumBy } from 'lodash';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 import { useGaugeClaimGetContractCallData } from './lib/useGaugeClaimGetContractCallData';
 import { useUserGaugeClaimAllOtherPendingRewards } from './lib/useUserGaugeClaimAllOtherPendingRewards';
+import { AddressZero } from '@ethersproject/constants';
+import useStakingMintableRewards from '~/lib/global/useStakingMintableRewards';
 
 export function NavbarPendingRewards() {
     const {
         pendingRewards,
         pendingRewardsTotalUSD,
+        pendingRewardsNonBALTotalUSD,
         staking,
         stakingType,
         isLoading: pendingRewardsLoading,
@@ -61,6 +64,12 @@ export function NavbarPendingRewards() {
         gauges || [],
     );
     const { claimAll } = useUserGaugeClaimAllOtherPendingRewards();
+
+    // TODO: can remove again when relayer v6 is released
+    const canClaimBAL = networkConfig.gauge.balancerPseudoMinterAddress !== AddressZero && pendingBALUSD > 0;
+    const {
+        claimAll: { claimAllBAL, ...claimAllQuery },
+    } = useStakingMintableRewards(staking);
 
     return (
         <Popover>
@@ -158,7 +167,8 @@ export function NavbarPendingRewards() {
                                     <Box mt="4" justifySelf="flex-end">
                                         <BeetsSubmitTransactionButton
                                             {...harvestQuery}
-                                            isDisabled={pendingRewardsTotalUSD < 0.01 || pendingBALUSD < 0.01}
+                                            // TODO: when v6 is released, remove below and put this back: isDisabled={pendingRewardsNonBALTotalUSD < 0.01 && pendingBALUSD < 0.01}
+                                            isDisabled={pendingRewardsNonBALTotalUSD < 0.01}
                                             onClick={() => {
                                                 if (contractCalls) {
                                                     claimAll(contractCalls);
@@ -170,6 +180,20 @@ export function NavbarPendingRewards() {
                                         </BeetsSubmitTransactionButton>
                                     </Box>
                                 )}
+                                {
+                                    // TODO: remove again when v6 relayer is released
+                                    canClaimBAL && (
+                                        <Box mt="4" justifySelf="flex-end">
+                                            <BeetsSubmitTransactionButton
+                                                {...claimAllQuery}
+                                                onClick={() => claimAllBAL()}
+                                                width="full"
+                                            >
+                                                Claim all pending BAL
+                                            </BeetsSubmitTransactionButton>
+                                        </Box>
+                                    )
+                                }
                             </VStack>
                         </GridItem>
                     </Grid>
