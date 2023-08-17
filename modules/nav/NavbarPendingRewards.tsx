@@ -186,6 +186,7 @@ export function NavbarPendingRewards() {
                                         <Box mt="4" justifySelf="flex-end">
                                             <BeetsSubmitTransactionButton
                                                 {...claimAllQuery}
+                                                isDisabled={pendingBALUSD < 0.01}
                                                 onClick={() => claimAllBAL()}
                                                 width="full"
                                             >

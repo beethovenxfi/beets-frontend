@@ -27,12 +27,11 @@ interface Props {
 export function PoolUserStakedStats({ poolAddress, staking, totalApr, userPoolBalanceUSD }: Props) {
     const { data: blocksData } = useGetBlocksPerDayQuery({ fetchPolicy: 'cache-first' });
     const {
-        hasPendingRewards,
         pendingRewards,
         pendingRewardsTotalUSD,
-        claimableBALForGauges,
         hasPendingBalRewards,
         hasPendingNonBALRewards,
+        pendingBALUSD,
         hardRefetch: refetchPendingRewards,
         isLoading: isLoadingPendingRewards,
     } = usePoolUserPendingRewards();
@@ -185,7 +184,7 @@ export function PoolUserStakedStats({ poolAddress, staking, totalApr, userPoolBa
                     {showClaimBALButton && (
                         <BeetsSubmitTransactionButton
                             {...claimQuery}
-                            isDisabled={!hasPendingBalRewards}
+                            isDisabled={!hasPendingBalRewards || pendingBALUSD < 0.01}
                             onClick={() => claimBAL(staking.gauge?.gaugeAddress || '')}
                             onConfirmed={() => {
                                 refetchPendingRewards();

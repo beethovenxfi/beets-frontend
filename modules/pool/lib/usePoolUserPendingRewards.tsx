@@ -45,19 +45,22 @@ export function _usePoolUserPendingRewards() {
 
     const hasPendingRewards = pendingRewards.filter((item) => parseFloat(item.amount) > 0).length > 0;
 
-    console.log({
-        amount: pendingRewards.find((reward) => reward.address === networkConfig.balancer.balToken)?.amount,
-    });
-
-    const hasPendingBalRewards =
-        parseFloat(pendingRewards.find((reward) => reward.address === networkConfig.balancer.balToken)?.amount || '0') >
-        0;
+    const claimableAmountBal = pendingRewards.find(
+        (reward) => reward.address === networkConfig.balancer.balToken,
+    )?.amount;
+    const hasPendingBalRewards = parseFloat(claimableAmountBal || '0') > 0;
     const nonBALRewards = pendingRewards.filter((p) => p.address !== networkConfig.balancer.balToken);
     const hasPendingNonBALRewards = sumBy(nonBALRewards, (r) => parseFloat(r.amount)) > 0;
+
+    const pendingBALUSD = priceForAmount({
+        address: networkConfig.balancer.balToken,
+        amount: claimableAmountBal || '0',
+    });
 
     return {
         pendingRewards,
         pendingRewardsTotalUSD,
+        pendingBALUSD,
         hasPendingRewards,
         hasPendingBalRewards,
         hasPendingNonBALRewards,
