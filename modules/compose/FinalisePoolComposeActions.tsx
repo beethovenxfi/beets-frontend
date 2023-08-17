@@ -7,12 +7,13 @@ import { useGetTokens } from '~/lib/global/useToken';
 import { TokenBaseWithAmount } from '~/lib/services/token/token-types';
 import { networkConfig } from '~/lib/config/network-config';
 import { usePoolCreate } from './lib/usePoolCreate';
-import useGetComposePoolId from './lib/useGetComposePoolId';
 import { usePoolInitJoinGetContractCallData } from '../pool/invest/lib/usePoolInitJoinContractCallData';
 import { useInitJoinPool } from '../pool/invest/lib/useInitJoinPool';
 import { PoolJoinPoolContractCallData } from '~/lib/services/pool/pool-types';
 import { GqlToken } from '~/apollo/generated/graphql-codegen-generated';
 import { useRouter } from 'next/router';
+
+const POOL_REGISTERED_LOG_TOPIC = '0x3c13bc30b8e878c53fd2a36b679409c073afd75950be43d8858768e956fbc20e';
 
 interface Props {}
 
@@ -23,7 +24,7 @@ function sortTokensByAddress(tokens: PoolCreationToken[]) {
 }
 
 export default function FinalisePoolComposeActions(props: Props) {
-    const { tokens, poolName, getPoolSymbol, currentFee, feeManager, resetPoolCreationState } = useCompose();
+    const { tokens, poolName, getPoolSymbol, currentFee, feeManager, setPoolId } = useCompose();
     const router = useRouter();
     const [steps, setSteps] = useState<TransactionStep[]>([]);
     const { getToken } = useGetTokens();
@@ -39,11 +40,6 @@ export default function FinalisePoolComposeActions(props: Props) {
         networkConfig.balancer.vault,
     );
     const { create, ...createQuery } = usePoolCreate();
-    const {
-        poolId,
-        isLoading: isLoadingPoolId,
-        getCreatedPoolId,
-    } = useGetComposePoolId(createQuery.txResponse?.hash || '');
     const { initJoinPool, ...joinQuery } = useInitJoinPool(poolId?.id);
     const { data: poolJoinContractCallData, isLoading: isLoadingPoolJoinContractCallData } =
         usePoolInitJoinGetContractCallData(tokens);
@@ -81,8 +77,11 @@ export default function FinalisePoolComposeActions(props: Props) {
     }
 
     function handleCreateActionConfirmed(txId: string) {
-        if (txId === 'create-pool') {
-            getCreatedPoolId();
+        if (txId === 'create-pool' && createQuery.txReceipt) {
+            const poolId = createQuery.txReceipt.logs.find(
+                (log) => log.topics[0] === POOL_REGISTERED_LOG_TOPIC, // PoolRegistered event
+            )?.topics[1];
+            poolId && setPoolId(poolId);
         }
     }
 
