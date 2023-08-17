@@ -24,7 +24,7 @@ function sortTokensByAddress(tokens: PoolCreationToken[]) {
 }
 
 export default function FinalisePoolComposeActions(props: Props) {
-    const { tokens, poolName, getPoolSymbol, currentFee, feeManager, setPoolId } = useCompose();
+    const { tokens, poolName, getPoolSymbol, currentFee, feeManager, setPoolId, poolId } = useCompose();
     const router = useRouter();
     const [steps, setSteps] = useState<TransactionStep[]>([]);
     const { getToken } = useGetTokens();
@@ -40,7 +40,7 @@ export default function FinalisePoolComposeActions(props: Props) {
         networkConfig.balancer.vault,
     );
     const { create, ...createQuery } = usePoolCreate();
-    const { initJoinPool, ...joinQuery } = useInitJoinPool(poolId?.id);
+    const { initJoinPool, ...joinQuery } = useInitJoinPool(poolId || '');
     const { data: poolJoinContractCallData, isLoading: isLoadingPoolJoinContractCallData } =
         usePoolInitJoinGetContractCallData(tokens);
 
@@ -86,7 +86,7 @@ export default function FinalisePoolComposeActions(props: Props) {
     }
 
     function navigateToPool() {
-        router.replace(`/pool/${poolId?.id}`);
+        router.replace(`/pool/${poolId}`);
     }
 
     useEffect(() => {
@@ -117,7 +117,7 @@ export default function FinalisePoolComposeActions(props: Props) {
             <Box width="full" pt="4">
                 <BeetsTransactionStepsSubmit
                     buttonSize="lg"
-                    isLoading={isLoadingPoolId}
+                    isLoading={createQuery.isPending}
                     loadingButtonText=""
                     completeButtonText={`Go to ${poolName}`}
                     onCompleteButtonClick={() => navigateToPool()}
