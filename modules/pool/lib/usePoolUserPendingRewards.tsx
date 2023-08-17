@@ -45,6 +45,10 @@ export function _usePoolUserPendingRewards() {
 
     const hasPendingRewards = pendingRewards.filter((item) => parseFloat(item.amount) > 0).length > 0;
 
+    console.log({
+        amount: pendingRewards.find((reward) => reward.address === networkConfig.balancer.balToken)?.amount,
+    });
+
     const hasPendingBalRewards =
         parseFloat(pendingRewards.find((reward) => reward.address === networkConfig.balancer.balToken)?.amount || '0') >
         0;

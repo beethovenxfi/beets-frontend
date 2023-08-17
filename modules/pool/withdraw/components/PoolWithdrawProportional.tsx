@@ -24,7 +24,6 @@ import { usePool } from '~/modules/pool/lib/usePool';
 import { numberFormatUSDValue } from '~/lib/util/number-formats';
 import TokenRow from '~/components/token/TokenRow';
 import { sumBy } from 'lodash';
-import { PoolWithdrawRewardsCheck } from './PoolWithdrawRewardsCheck';
 
 interface Props extends BoxProps {
     onShowPreview: () => void;
@@ -128,7 +127,6 @@ export function PoolWithdrawProportional({ onShowPreview, ...rest }: Props) {
 
             <VStack spacing="4" px="4" mb="4">
                 <PoolWithdrawSettings />
-                <PoolWithdrawRewardsCheck show={pool.staking?.type === 'GAUGE' && proportionalPercent === 100} />
                 <Button
                     variant="primary"
                     width="full"
