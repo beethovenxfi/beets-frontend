@@ -1,4 +1,4 @@
-import { Box } from '@chakra-ui/react';
+import { Alert, Box } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react';
 import { BeetsTransactionStepsSubmit, TransactionStep } from '~/components/button/BeetsTransactionStepsSubmit';
 import { useUserAllowances } from '~/lib/util/useUserAllowances';
@@ -26,6 +26,7 @@ function sortTokensByAddress(tokens: PoolCreationToken[]) {
 export default function FinalisePoolComposeActions(props: Props) {
     const { tokens, poolName, getPoolSymbol, currentFee, feeManager, setPoolId, poolId } = useCompose();
     const router = useRouter();
+    const isRabby = (window as any).web3.currentProvider.isRabby;
     const [steps, setSteps] = useState<TransactionStep[]>([]);
     const { getToken } = useGetTokens();
     const tokenBases = tokens.map((token) => {
@@ -114,6 +115,11 @@ export default function FinalisePoolComposeActions(props: Props) {
 
     return (
         <Box width="full">
+            {isRabby && networkConfig.chainName === 'FANTOM' && (
+                <Alert status="warning">
+                    {`We've recognised that you are using Rabby. Due to an issue with Rabby's gas estimation, you will need to adjust the gas limit to be 1x instead of the default of 2x that Rabby assigns to the create transaction.`}
+                </Alert>
+            )}
             <Box width="full" pt="4">
                 <BeetsTransactionStepsSubmit
                     buttonSize="lg"
