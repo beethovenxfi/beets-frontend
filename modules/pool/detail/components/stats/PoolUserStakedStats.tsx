@@ -167,7 +167,8 @@ export function PoolUserStakedStats({ poolAddress, staking, totalApr, userPoolBa
                 <Box width="full">
                     <BeetsSubmitTransactionButton
                         {...harvestQuery}
-                        //isDisabled={!hasPendingRewards || Object.values(claimableBALForGauges || {})[0] !== '0.0'}
+                        // TODO: switch 'isDisabled' when relayer v6 is released
+                        //isDisabled={pendingRewardsTotalUSD < 0.01}
                         isDisabled={!hasPendingNonBALRewards}
                         onClick={() => (contractCalls ? claim(contractCalls) : claim())}
                         onConfirmed={() => {

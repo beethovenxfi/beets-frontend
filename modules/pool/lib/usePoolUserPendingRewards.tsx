@@ -52,6 +52,7 @@ export function _usePoolUserPendingRewards() {
     const nonBALRewards = pendingRewards.filter((p) => p.address !== networkConfig.balancer.balToken);
     const hasPendingNonBALRewards = sumBy(nonBALRewards, (r) => parseFloat(r.amount)) > 0;
 
+    // TODO: check if this can be removed when relayer v6 is released
     const pendingBALUSD = priceForAmount({
         address: networkConfig.balancer.balToken,
         amount: claimableAmountBal || '0',
