@@ -49,7 +49,7 @@ export default function AdvancedPoolComposeTokens(props: Props) {
         setTokens,
         distributeTokenWeights,
         getTokenAndWeightValidations,
-        getOptimisedLiquidity,
+        getOptimizedLiquidity,
     } = useCompose();
     const [activeTokenSelectIndex, setActiveTokenSelectIndex] = useState<number | null>(null);
     const [hasInteractedWithTokens, setHasInteractedWithTokens] = useState(false);
@@ -67,7 +67,7 @@ export default function AdvancedPoolComposeTokens(props: Props) {
         hasInsufficientBalances,
     } = getTokenAndWeightValidations();
 
-    const optimisedLiquidity = getOptimisedLiquidity();
+    const optimizedLiquidity = getOptimizedLiquidity();
 
     const debouncedDistributeTokens = useDebouncedCallback((tokens: PoolCreationToken[]) => {
         distributeTokenWeights(tokens);
@@ -155,7 +155,7 @@ export default function AdvancedPoolComposeTokens(props: Props) {
                             Customize the weight of each pool token and the amount of liquidity you want to seed for
                             each. You can add up to 8 tokens.
                             <br />
-                            Optimised token amounts are provided as a placeholder, which will get you the least slippage
+                            Optimized token amounts are provided as a placeholder, which will get you the least slippage
                             whilst creating the pool.
                         </Text>
                     </VStack>
@@ -182,7 +182,7 @@ export default function AdvancedPoolComposeTokens(props: Props) {
                                                 onChange={handleTokenAmountChangedForIndex(i)}
                                                 placeholder={
                                                     parseFloat(
-                                                        optimisedLiquidity[token.address]?.balanceRequired || '0',
+                                                        optimizedLiquidity[token.address]?.balanceRequired || '0',
                                                     ).toFixed(4) || undefined
                                                 }
                                             />

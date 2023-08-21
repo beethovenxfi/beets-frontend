@@ -24,7 +24,8 @@ function sortTokensByAddress(tokens: PoolCreationToken[]) {
 }
 
 export default function FinalisePoolComposeActions(props: Props) {
-    const { tokens, poolName, getPoolSymbol, currentFee, feeManager, setPoolId, poolId } = useCompose();
+    const { tokens, poolName, getPoolSymbol, currentFee, feeManager, setPoolId, poolId, isUsingCustomFee } =
+        useCompose();
     const router = useRouter();
     const isRabby = (window as any).web3.currentProvider.isRabby;
     const [steps, setSteps] = useState<TransactionStep[]>([]);
@@ -56,6 +57,7 @@ export default function FinalisePoolComposeActions(props: Props) {
         .filter((token) => !token.isApproved);
 
     function handleTransactionSubmit(txId: string) {
+        const formattedFee = isUsingCustomFee ? parseFloat(currentFee) / 100 : currentFee;
         if (txId === 'create-pool') {
             create({
                 name: poolName || getPoolSymbol(),

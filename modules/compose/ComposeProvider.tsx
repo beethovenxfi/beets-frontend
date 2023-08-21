@@ -217,26 +217,26 @@ function _useCompose() {
     }
 
     function getTokensScaledByBIP(bip: BigNumber): Record<string, OptimisedLiquidity> {
-        const optimisedLiquidity: Record<string, OptimisedLiquidity> = {};
+        const optimizedLiquidity: Record<string, OptimisedLiquidity> = {};
         for (const token of tokens) {
             // get the price for a single token
             const tokenPrice = bnum(priceFor(token.address));
             // the usd value needed for its weight
             const liquidityRequired: BigNumber = bip.times(token.weight);
             const balanceRequired: BigNumber = liquidityRequired.div(tokenPrice);
-            optimisedLiquidity[token.address] = {
+            optimizedLiquidity[token.address] = {
                 liquidityRequired: liquidityRequired.toString(),
                 balanceRequired: balanceRequired.toString(),
             };
         }
-        return optimisedLiquidity;
+        return optimizedLiquidity;
     }
 
-    function getOptimisedLiquidity(): Record<string, OptimisedLiquidity> {
+    function getOptimizedLiquidity(): Record<string, OptimisedLiquidity> {
         // need to filter out the empty tokens just in case
         if (!tokens.length) return {};
         const validTokens = tokens.filter((t) => t?.address !== '');
-        const optimisedLiquidity: Record<string, OptimisedLiquidity> = {};
+        const optimizedLiquidity: Record<string, OptimisedLiquidity> = {};
         if (!validTokens.length) return {};
 
         // token with the lowest balance is the bottleneck
@@ -255,7 +255,7 @@ function _useCompose() {
         let bottleneckWeight = tokens.find((t) => t.address === bottleneckToken.address)?.weight || 0;
         let bottleneckPrice = priceFor(bottleneckToken.address);
 
-        if (!bottleneckToken) return optimisedLiquidity;
+        if (!bottleneckToken) return optimizedLiquidity;
 
         const bip = bnum(bottleneckPrice).times(getUserBalance(bottleneckToken.address)).div(bottleneckWeight);
 
@@ -371,6 +371,6 @@ function _useCompose() {
         toggleLockTokenByAddress,
         toggleLockTokenByIndex,
         getPoolSymbol,
-        getOptimisedLiquidity,
+        getOptimizedLiquidity,
     };
 }

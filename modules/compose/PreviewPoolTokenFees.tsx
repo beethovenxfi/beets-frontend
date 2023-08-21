@@ -19,7 +19,7 @@ export default function PreviewPoolTokenFees(props: Props) {
 
     const isDAOManager = beetsPoolOwnerAddress === feeManager;
     const isSelfManager = userAddress === feeManager;
-
+    const formattedFee = isUsingCustomFee ? currentFee : parseFloat(currentFee) * 100;
     return (
         <HStack spacing="4" width="full" justifyContent="flex-start">
             <BeetsBox
@@ -39,7 +39,7 @@ export default function PreviewPoolTokenFees(props: Props) {
                             <VStack alignItems="flex-start" spacing="0.5">
                                 <Heading size="sm">
                                     <HStack spacing="0">
-                                        <Text color="beets.highlight">{parseFloat(currentFee) * 100}%&nbsp;</Text>
+                                        <Text color="beets.highlight">{formattedFee}%&nbsp;</Text>
                                         <Text>swap fee managed by</Text>
                                     </HStack>
                                 </Heading>
@@ -55,7 +55,7 @@ export default function PreviewPoolTokenFees(props: Props) {
                             <VStack alignItems="flex-start" spacing="0">
                                 <Heading size="sm">
                                     <HStack spacing="0">
-                                        <Text color="beets.highlight">{parseFloat(currentFee) * 100}%&nbsp;</Text>
+                                        <Text color="beets.highlight">{formattedFee}%&nbsp;</Text>
                                         <Text>swap fee managed by</Text>
                                     </HStack>
                                 </Heading>
@@ -71,7 +71,7 @@ export default function PreviewPoolTokenFees(props: Props) {
                             <VStack alignItems="flex-start" spacing="0.5">
                                 <Heading size="sm">
                                     <HStack spacing="0">
-                                        <Text color="beets.highlight">{parseFloat(currentFee) * 100}%&nbsp;</Text>
+                                        <Text color="beets.highlight">{formattedFee}%&nbsp;</Text>
                                         <Text>swap fee managed by</Text>
                                     </HStack>
                                 </Heading>
