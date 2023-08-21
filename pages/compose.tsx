@@ -14,8 +14,7 @@ function Compose() {
     const { chainId } = useNetworkConfig();
 
     const TITLE = 'Beethoven X | Create a pool';
-    // TODO update description
-    const DESCRIPTION = 'XXX Needs content XXX';
+    const DESCRIPTION = 'Unbound composability made simple. Build your own weighted pools with up to 8 tokens.';
 
     return (
         <>
