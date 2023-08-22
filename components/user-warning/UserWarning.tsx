@@ -1,7 +1,7 @@
 import { useUserData } from '~/lib/user/useUserData';
 import { ToastType, useToast } from '~/components/toast/BeetsToast';
 import { useEffect } from 'react';
-import { Box, HStack } from '@chakra-ui/react';
+import { Box, HStack, Link } from '@chakra-ui/react';
 import { networkConfig } from '~/lib/config/network-config';
 
 export function UserWarning() {
@@ -22,6 +22,9 @@ export function UserWarning() {
                             You are invested in a pool with a known vulnerability. Please remove liquidity from the
                             affected pool(s) immediately.
                         </Box>
+                        <Link href="https://twitter.com/Balancer/status/1694014645378724280" target="_blank">
+                            Read more
+                        </Link>
                     </HStack>
                 ),
             });
