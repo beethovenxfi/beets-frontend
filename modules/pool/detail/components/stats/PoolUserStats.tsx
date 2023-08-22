@@ -13,7 +13,7 @@ import useStakingBoosts from '~/lib/global/useStakingBoosts';
 export default function PoolUserStats() {
     const { pool, totalApr } = usePool();
     const { userPoolBalanceUSD, isLoading } = usePoolUserDepositBalance();
-    const { poolBadgeTypes } = useNetworkConfig();
+    const { poolBadgeTypes, investDisabled } = useNetworkConfig();
     const { boost } = useStakingBoosts();
 
     const boostedApr = pool.dynamicData.apr.items.reduce((acc, curr) => {
@@ -31,6 +31,8 @@ export default function PoolUserStats() {
             ? boostedApr
             : totalApr;
 
+    const showZeroApr = pool && Object.keys(investDisabled).includes(pool.id);
+
     return (
         <Flex width="full" alignItems="flex-start" flex={1} flexDirection="column">
             <VStack spacing="0" alignItems="flex-start" mb="4" px="2">
@@ -38,8 +40,16 @@ export default function PoolUserStats() {
                     My APR
                 </Text>
                 <HStack>
-                    <div className="apr-stripes">{numeral(myApr).format('0.00%')}</div>
-                    <AprTooltip onlySparkles data={pool.dynamicData.apr} />
+                    {showZeroApr ? (
+                        <Text fontSize="1.75rem" fontWeight="semibold">
+                            0.00%
+                        </Text>
+                    ) : (
+                        <>
+                            <div className="apr-stripes">{numeral(myApr).format('0.00%')}</div>
+                            <AprTooltip onlySparkles data={pool.dynamicData.apr} />
+                        </>
+                    )}
                 </HStack>
                 {poolBadgeTypes[pool.id] && <PoolBadgeSmall poolBadge={poolBadgeTypes[pool.id]} />}
             </VStack>

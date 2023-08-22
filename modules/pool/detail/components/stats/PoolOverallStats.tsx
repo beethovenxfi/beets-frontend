@@ -18,7 +18,7 @@ import { getApr } from '~/lib/util/apr-util';
 
 export default function PoolOverallStats() {
     const { pool, formattedTypeName } = usePool();
-    const { poolBadgeTypes } = useNetworkConfig();
+    const { poolBadgeTypes, investDisabled } = useNetworkConfig();
     const { priceFor } = useGetTokens();
     const { data: blocksData } = useGetBlocksPerDayQuery({ fetchPolicy: 'cache-first' });
     const data = pool.dynamicData;
@@ -47,6 +47,8 @@ export default function PoolOverallStats() {
             (rewarder) => priceFor(rewarder.tokenAddress) * parseFloat(rewarder.rewardPerSecond) * 86400,
         );
 
+    const showZeroApr = pool && Object.keys(investDisabled).includes(pool.id);
+
     return (
         <VStack spacing="4" width="full" alignItems="flex-start" px="2">
             <VStack spacing="0" alignItems="flex-start">
@@ -54,8 +56,16 @@ export default function PoolOverallStats() {
                     Pool APR
                 </Text>
                 <HStack>
-                    <div className="apr-stripes">{getApr(pool.dynamicData.apr.apr)}</div>
-                    <AprTooltip onlySparkles data={data.apr} />
+                    {showZeroApr ? (
+                        <Text fontSize="1.75rem" fontWeight="semibold">
+                            0.00%
+                        </Text>
+                    ) : (
+                        <>
+                            <div className="apr-stripes">{getApr(pool.dynamicData.apr.apr)}</div>
+                            <AprTooltip onlySparkles data={data.apr} poolId={pool.id} />
+                        </>
+                    )}
                 </HStack>
                 {poolBadgeTypes[pool.id] && <PoolBadgeSmall poolBadge={poolBadgeTypes[pool.id]} />}
             </VStack>

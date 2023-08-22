@@ -39,7 +39,16 @@ export interface GqlBalancePoolAprSubItem {
     title: Scalars['String'];
 }
 
-export type GqlChain = 'ARBITRUM' | 'AVALANCHE' | 'FANTOM' | 'GNOSIS' | 'MAINNET' | 'OPTIMISM' | 'POLYGON' | 'ZKEVM';
+export type GqlChain =
+    | 'ARBITRUM'
+    | 'AVALANCHE'
+    | 'BASE'
+    | 'FANTOM'
+    | 'GNOSIS'
+    | 'MAINNET'
+    | 'OPTIMISM'
+    | 'POLYGON'
+    | 'ZKEVM';
 
 export interface GqlContentNewsItem {
     __typename: 'GqlContentNewsItem';
@@ -1102,6 +1111,33 @@ export interface GqlUserSwapVolumeFilter {
     tokenOutIn?: InputMaybe<Array<Scalars['String']>>;
 }
 
+export interface GqlVotingGauge {
+    __typename: 'GqlVotingGauge';
+    addedTimestamp?: Maybe<Scalars['Int']>;
+    address: Scalars['Bytes'];
+    isKilled: Scalars['Boolean'];
+    relativeWeightCap?: Maybe<Scalars['String']>;
+}
+
+export interface GqlVotingGaugeToken {
+    __typename: 'GqlVotingGaugeToken';
+    address: Scalars['String'];
+    logoURI: Scalars['String'];
+    symbol: Scalars['String'];
+    weight?: Maybe<Scalars['String']>;
+}
+
+export interface GqlVotingPool {
+    __typename: 'GqlVotingPool';
+    address: Scalars['Bytes'];
+    chain: GqlChain;
+    gauge: GqlVotingGauge;
+    id: Scalars['ID'];
+    symbol: Scalars['String'];
+    tokens: Array<GqlVotingGaugeToken>;
+    type: GqlPoolMinimalType;
+}
+
 export interface Mutation {
     __typename: 'Mutation';
     beetsPoolLoadReliquarySnapshotsForAllFarms: Scalars['String'];
@@ -1110,6 +1146,7 @@ export interface Mutation {
     poolBlackListAddPool: Scalars['String'];
     poolBlackListRemovePool: Scalars['String'];
     poolDeletePool: Scalars['String'];
+    poolInitOnChainDataForAllPools: Scalars['String'];
     poolInitializeSnapshotsForPool: Scalars['String'];
     poolLoadOnChainDataForAllPools: Scalars['String'];
     poolLoadOnChainDataForPoolsWithActiveUpdates: Scalars['String'];
@@ -1270,6 +1307,7 @@ export interface Query {
     userGetSwaps: Array<GqlPoolSwap>;
     veBalGetTotalSupply: Scalars['AmountHumanReadable'];
     veBalGetUserBalance: Scalars['AmountHumanReadable'];
+    veBalGetVotingList: Array<GqlVotingPool>;
 }
 
 export interface QueryBeetsPoolGetReliquaryFarmSnapshotsArgs {

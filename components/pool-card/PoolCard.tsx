@@ -4,6 +4,7 @@ import TokenAvatarSet from '~/components/token/TokenAvatarSet';
 import { GqlPoolCardDataFragment } from '~/apollo/generated/graphql-codegen-generated';
 import numeral from 'numeral';
 import { NextLinkOverlay } from '~/components/link/NextLink';
+import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 
 interface Props extends BoxProps {
     pool: GqlPoolCardDataFragment;
@@ -13,6 +14,9 @@ export function PoolCard({ pool, ...rest }: Props) {
     const dynamicDataApr = pool.dynamicData.apr.apr;
     const totalApr = dynamicDataApr.__typename === 'GqlPoolAprRange' ? dynamicDataApr.max : dynamicDataApr.total;
     const dailyApr = parseFloat(totalApr) / 365;
+    const { investDisabled } = useNetworkConfig();
+
+    const showDailyApr = pool && !Object.keys(investDisabled).includes(pool.id);
 
     return (
         <LinkBox as="article" flex="1" {...rest}>
@@ -36,8 +40,9 @@ export function PoolCard({ pool, ...rest }: Props) {
                         textProps={{ fontSize: '2xl', fontWeight: 'normal', mr: '0', lineHeight: '26px' }}
                         data={pool.dynamicData.apr}
                         placement="left"
+                        poolId={pool.id}
                     />
-                    <Text color="gray.200">{numeral(dailyApr).format('0.00[0]%')} Daily</Text>
+                    <Text color="gray.200">{showDailyApr ? numeral(dailyApr).format('0.00[0]%') : '0.00%'} Daily</Text>
                 </Box>
             </Flex>
         </LinkBox>

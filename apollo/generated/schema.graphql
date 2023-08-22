@@ -26,6 +26,7 @@ scalar GqlBigNumber
 enum GqlChain {
     ARBITRUM
     AVALANCHE
+    BASE
     FANTOM
     GNOSIS
     MAINNET
@@ -1069,6 +1070,30 @@ input GqlUserSwapVolumeFilter {
     tokenOutIn: [String!]
 }
 
+type GqlVotingGauge {
+    addedTimestamp: Int
+    address: Bytes!
+    isKilled: Boolean!
+    relativeWeightCap: String
+}
+
+type GqlVotingGaugeToken {
+    address: String!
+    logoURI: String!
+    symbol: String!
+    weight: String
+}
+
+type GqlVotingPool {
+    address: Bytes!
+    chain: GqlChain!
+    gauge: GqlVotingGauge!
+    id: ID!
+    symbol: String!
+    tokens: [GqlVotingGaugeToken!]!
+    type: GqlPoolMinimalType!
+}
+
 """
 The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
 """
@@ -1081,6 +1106,7 @@ type Mutation {
     poolBlackListAddPool(poolId: String!): String!
     poolBlackListRemovePool(poolId: String!): String!
     poolDeletePool(poolId: String!): String!
+    poolInitOnChainDataForAllPools: String!
     poolInitializeSnapshotsForPool(poolId: String!): String!
     poolLoadOnChainDataForAllPools: String!
     poolLoadOnChainDataForPoolsWithActiveUpdates: String!
@@ -1201,4 +1227,5 @@ type Query {
     userGetSwaps(first: Int = 10, poolId: String!, skip: Int = 0): [GqlPoolSwap!]!
     veBalGetTotalSupply: AmountHumanReadable!
     veBalGetUserBalance: AmountHumanReadable!
+    veBalGetVotingList: [GqlVotingPool!]!
 }

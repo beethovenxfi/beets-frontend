@@ -167,6 +167,7 @@ export function PoolListItem({
                             <MemoizedAprTooltip
                                 data={pool.dynamicData.apr}
                                 textProps={{ fontWeight: 'normal', fontSize: { base: 'xl', lg: 'md' } }}
+                                poolId={pool.id}
                             />
                         </StatGridItem>
                         <StatGridItem area="fees" display={{ base: 'block', lg: 'none' }}>
