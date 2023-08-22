@@ -32,7 +32,7 @@ interface Props {
 function AprTooltip({ data, textProps, onlySparkles, placement, aprLabel, sparklesSize, poolId, apr }: Props) {
     // temp fix: https://github.com/chakra-ui/chakra-ui/issues/5896#issuecomment-1104085557
     const PopoverTrigger: React.FC<{ children: React.ReactNode }> = OrigPopoverTrigger;
-    const showZeroApr = poolId && Object.keys(networkConfig.investDisabled).includes(poolId);
+    const showZeroApr = poolId && Object.keys(networkConfig.warnings.poolList).includes(poolId);
     const aprToShow = apr || getApr(data.apr);
 
     return !showZeroApr ? (
