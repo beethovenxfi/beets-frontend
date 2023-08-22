@@ -211,26 +211,6 @@ export const optimismNetworkConfig: NetworkConfig = {
             '0xd1af4974fcc995cf36ba40b189caa92964a9126d0000000000000000000000f1': poolListWarningString,
         },
         poolDetail: {
-            '0x1f131ec1175f023ee1534b16fa8ab237c00e238100000000000000000000004a': {
-                id: 'composable-nested-vulnerability',
-                message:
-                    'A vulnerability has been discovered that effects this pool. Existing liquidity providers should remove liquidity immediately, and no new deposits should be made.',
-                type: 'warning',
-                link: {
-                    url: 'https://twitter.com/beethoven_x/status/1611363903744937985?s=20&t=tiOYA-4RINQzF4eMbR4HgA',
-                    text: 'Read more',
-                },
-            },
-            '0x479a7d1fcdd71ce0c2ed3184bfbe9d23b92e8337000000000000000000000049': {
-                id: 'composable-nested-vulnerability',
-                message:
-                    'A vulnerability has been discovered that effects this pool. Existing liquidity providers should remove liquidity immediately, and no new deposits should be made.',
-                type: 'warning',
-                link: {
-                    url: 'https://twitter.com/beethoven_x/status/1611363903744937985?s=20&t=tiOYA-4RINQzF4eMbR4HgA',
-                    text: 'Read more',
-                },
-            },
             '0x23ca0306b21ea71552b148cf3c4db4fc85ae19290000000000000000000000ac': PoolDetailWarningObject,
             '0x43da214fab3315aa6c02e0b8f2bfb7ef2e3c60a50000000000000000000000ae': PoolDetailWarningObject,
             '0x62cf35db540152e94936de63efc90d880d4e241b0000000000000000000000ef': PoolDetailWarningObject,
@@ -264,6 +244,8 @@ export const optimismNetworkConfig: NetworkConfig = {
             '0x96a78983932b8739d1117b16d30c15607926b0c500000000000000000000006d': PoolDetailWarningObject,
             '0x593acbfb1eaf3b6ec86fa60325d816996fdcbc0d000000000000000000000038': PoolDetailWarningObject,
             '0xd1af4974fcc995cf36ba40b189caa92964a9126d0000000000000000000000f1': PoolDetailWarningObject,
+            '0x1f131ec1175f023ee1534b16fa8ab237c00e238100000000000000000000004a': PoolDetailWarningObject,
+            '0x479a7d1fcdd71ce0c2ed3184bfbe9d23b92e8337000000000000000000000049': PoolDetailWarningObject,
         },
         poolInvest: {
             '0xb1c9ac57594e9b1ec0f3787d9f6744ef4cb0a02400000000000000000000006e':
