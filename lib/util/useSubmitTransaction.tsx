@@ -27,6 +27,7 @@ interface Props {
         contractInterface: any;
         functionName: string;
         onSuccess?: (data: SendTransactionResult) => void;
+        onSettled?: () => void;
     };
     transactionType: BeetsTransactionType;
 }
@@ -118,6 +119,10 @@ export function useSubmitTransaction({ config, transactionType }: Props): Submit
                 auto: true,
             });
             txPendingVar(false);
+
+            if (config?.onSettled) {
+                return config.onSettled();
+            }
         },
     });
 
