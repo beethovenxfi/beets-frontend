@@ -9,17 +9,17 @@ import { useUserAccount } from '~/lib/user/useUserAccount';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 
 function getGaugeABI(gaugeVersion: number | undefined) {
-    if (gaugeVersion === 2) {
-        return LiquidityGaugeV6;
+    if (gaugeVersion === 1) {
+        return LiquidityGaugeV5;
     }
-    return LiquidityGaugeV5;
+    return LiquidityGaugeV6;
 }
 
 function getGaugeFunctionCall(gaugeVersion: number | undefined) {
-    if (gaugeVersion === 2) {
-        return 'withdraw(uint256)';
+    if (gaugeVersion === 1) {
+        return 'withdraw(uint256,bool)';
     }
-    return 'withdraw(uint256,bool)';
+    return 'withdraw(uint256)';
 }
 
 export function useStakingWithdraw(staking?: GqlPoolStaking | null, customWithdrawalGauge?: GqlPoolStakingOtherGauge) {
@@ -48,8 +48,7 @@ export function useStakingWithdraw(staking?: GqlPoolStaking | null, customWithdr
                             args: [parseUnits(amount, 18), true],
                             toastText: 'Withdraw',
                         });
-                    }
-                    if (gaugeVersion === 2) {
+                    } else {
                         return submit({
                             args: [parseUnits(amount, 18)],
                             toastText: 'Withdraw',

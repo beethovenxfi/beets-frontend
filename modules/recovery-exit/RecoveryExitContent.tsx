@@ -13,6 +13,7 @@ import { RecoveryExitWithdrawListItem } from '~/modules/recovery-exit/components
 import { RecoveryExitWithdrawTableHeader } from '~/modules/recovery-exit/components/RecoveryExitWithdrawTableHeader';
 import { useUserBalances } from '~/lib/user/useUserBalances';
 import { useGetRecoveryPoolTokens } from '~/modules/recovery-exit/lib/useGetRecoveryPoolTokens';
+import { useGetUserGaugeStakedBalances } from './lib/useGetUserGaugeStakedBalances';
 
 const RECOVERY_POOL_IDS = [
     '0x62cf35db540152e94936de63efc90d880d4e241b0000000000000000000000ef',
@@ -45,6 +46,18 @@ export function RecoveryExitContent() {
     const bpts = pools.map((pool) => ({ ...pool, decimals: 18 }));
     const count = data?.count || 0;
 
+    const poolStakingMap: { [key: string]: string }[] = pools
+        .filter((pool) => pool.staking)
+        .map((pool) => ({ [pool.address]: pool.staking!.address }));
+    const stakingAddresses = poolStakingMap.map((entry) => Object.entries(entry)[0][1]);
+
+    const {
+        data: userGaugeStakedBalances,
+        isLoading: isLoadingStakedBalances,
+        refetch: refetchGaugeBalances,
+        isRefetching: isRefetchingGaugeBalances,
+    } = useGetUserGaugeStakedBalances(stakingAddresses);
+
     const {
         userBalances,
         getUserBalance,
@@ -53,7 +66,14 @@ export function RecoveryExitContent() {
         isLoading,
     } = useUserBalances(RECOVERY_POOL_ADDRESSES, bpts);
 
-    const filteredPools = pools.filter((pool) => parseFloat(getUserBalance(pool.address)) !== 0);
+    const filteredPools = pools.filter(
+        (pool) =>
+            parseFloat(getUserBalance(pool.address)) !== 0 ||
+            (pool.staking &&
+                userGaugeStakedBalances &&
+                typeof userGaugeStakedBalances !== 'string' &&
+                userGaugeStakedBalances.find((gauge) => gauge.address === pool.staking?.address)?.amount !== '0.0'),
+    );
 
     return (
         <Box>
@@ -62,11 +82,10 @@ export function RecoveryExitContent() {
                 currentPage={1}
                 pageSize={100}
                 count={count}
-                loading={loading || isRefetching || isLoading}
+                loading={loading || isRefetching || isLoading || isLoadingStakedBalances || isRefetchingGaugeBalances}
                 fetchingMore={false}
                 renderTableHeader={() => <RecoveryExitWithdrawTableHeader />}
                 renderTableRow={(item: GqlPoolMinimalFragment, index) => {
-                    const userBalance = getUserBalance(item.address);
                     return (
                         <RecoveryExitWithdrawListItem
                             key={index}
@@ -82,9 +101,16 @@ export function RecoveryExitContent() {
                                     logoURI: getToken(nestedToken.address)?.logoURI || undefined,
                                 })),
                             }))}
-                            userBalance={userBalance}
+                            userBalance={getUserBalance(item.address)}
+                            gaugeBalance={
+                                typeof userGaugeStakedBalances === 'string'
+                                    ? userGaugeStakedBalances
+                                    : userGaugeStakedBalances?.find((gauge) => gauge.address === item.staking?.address)
+                                          ?.amount || '0'
+                            }
+                            refetchGaugeBalances={refetchGaugeBalances}
                             userBalanceValue={
-                                (parseFloat(userBalance) / parseFloat(item.dynamicData.totalShares)) *
+                                (parseFloat(getUserBalance(item.address)) / parseFloat(item.dynamicData.totalShares)) *
                                 parseFloat(item.dynamicData.totalLiquidity)
                             }
                             onSettled={() => {
