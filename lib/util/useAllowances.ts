@@ -26,7 +26,7 @@ export function useAllowances(
             functionName: 'allowance',
             args: [account || AddressZero, contract],
         })),
-        enabled: account !== null,
+        enabled: account !== null && !!contract,
         cacheTimeMs: ALLOWANCES_CACHE_TIME_MS,
     });
 

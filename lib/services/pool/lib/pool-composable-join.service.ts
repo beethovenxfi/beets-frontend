@@ -16,7 +16,7 @@ import { sortBy } from 'lodash';
 import { Zero } from '@ethersproject/constants';
 import { BatchRelayerService } from '~/lib/services/batch-relayer/batch-relayer.service';
 import { parseUnits } from 'ethers/lib/utils';
-import { StablePoolEncoder, SwapV2 } from '@balancer-labs/sdk';
+import { StablePoolEncoder, SwapV2, isSameAddress } from '@balancer-labs/sdk';
 import { oldBnum, oldBnumSubtractSlippage } from '~/lib/services/pool/lib/old-big-number';
 import {
     poolBatchSwaps,
@@ -35,6 +35,7 @@ import { BaseProvider } from '@ethersproject/providers';
 import { formatFixed, parseFixed } from '@ethersproject/bignumber';
 import { SwapTypes } from '@balancer-labs/sor';
 import { BigNumber } from 'ethers';
+import { AddressZero } from '@ethersproject/constants';
 
 export class PoolComposableJoinService {
     constructor(
@@ -394,6 +395,8 @@ export class PoolComposableJoinService {
             return parseUnits(tokenAmountIn?.amount || '0', token.decimals).toString();
         });
 
+        const joinAssets = tokensWithPhantomBpt.map((token) => token.address);
+
         return this.batchRelayerService.vaultEncodeJoinPool({
             poolId: pool.id,
             poolKind: 0,
@@ -401,7 +404,9 @@ export class PoolComposableJoinService {
             //recipient: isNestedJoin ? batchRelayerService.batchRelayerAddress : userAddress,
             recipient: userAddress,
             joinPoolRequest: {
-                assets: tokensWithPhantomBpt.map((token) => token.address),
+                assets: joinHasNativeAsset
+                    ? joinAssets.map((address) => (isSameAddress(address, this.wethAddress) ? AddressZero : address))
+                    : joinAssets,
                 maxAmountsIn: amountsIn,
                 userData: StablePoolEncoder.joinExactTokensInForBPTOut(
                     //required that that bpt idx is not included here

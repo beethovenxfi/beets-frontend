@@ -110,7 +110,6 @@ export interface NetworkConfig {
         checkpointHelper: string;
     };
     createPoolUrl: string;
-    launchUrl?: string;
     stakeUrl?: string;
     warnings: {
         poolDetail: { [poolId: string]: PoolDetailWarning };
@@ -122,6 +121,7 @@ export interface NetworkConfig {
     poolBadgeTypes: {
         [poolId: string]: PoolBadgeType;
     };
+    auraStaking: { [poolId: string]: string };
     maBeetsEnabled: boolean;
     claimAllRewardsEnabled: boolean;
     layerZeroChainId: number;

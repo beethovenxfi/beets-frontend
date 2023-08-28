@@ -39,7 +39,16 @@ export interface GqlBalancePoolAprSubItem {
     title: Scalars['String'];
 }
 
-export type GqlChain = 'ARBITRUM' | 'AVALANCHE' | 'FANTOM' | 'GNOSIS' | 'MAINNET' | 'OPTIMISM' | 'POLYGON' | 'ZKEVM';
+export type GqlChain =
+    | 'ARBITRUM'
+    | 'AVALANCHE'
+    | 'BASE'
+    | 'FANTOM'
+    | 'GNOSIS'
+    | 'MAINNET'
+    | 'OPTIMISM'
+    | 'POLYGON'
+    | 'ZKEVM';
 
 export interface GqlContentNewsItem {
     __typename: 'GqlContentNewsItem';
@@ -1137,6 +1146,7 @@ export interface Mutation {
     poolBlackListAddPool: Scalars['String'];
     poolBlackListRemovePool: Scalars['String'];
     poolDeletePool: Scalars['String'];
+    poolInitOnChainDataForAllPools: Scalars['String'];
     poolInitializeSnapshotsForPool: Scalars['String'];
     poolLoadOnChainDataForAllPools: Scalars['String'];
     poolLoadOnChainDataForPoolsWithActiveUpdates: Scalars['String'];

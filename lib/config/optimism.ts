@@ -1,4 +1,18 @@
-import { NetworkConfig } from '~/lib/config/network-config-type';
+import { NetworkConfig, PoolDetailWarning } from '~/lib/config/network-config-type';
+
+// warnings
+const poolListWarningString =
+    'A vulnerability has been discovered that effects this pool. Existing liquidity providers should remove liquidity immediately, and no new deposits should be made.';
+const PoolDetailWarningObject: PoolDetailWarning = {
+    id: 'composable-nested-vulnerability',
+    message:
+        'A vulnerability has been discovered that effects this pool. Existing liquidity providers should remove liquidity immediately, and no new deposits should be made.',
+    type: 'warning',
+    link: {
+        url: 'https://twitter.com/Balancer/status/1694014645378724280',
+        text: 'Read more',
+    },
+};
 
 export const optimismNetworkConfig: NetworkConfig = {
     appName: 'Beethoven X',
@@ -50,6 +64,7 @@ export const optimismNetworkConfig: NetworkConfig = {
         composableStableFactories: [
             '0xf145cafb67081895ee80eb7c04a30cf87f07b745',
             '0xe2e901ab09f37884ba31622df3ca7fc19aa443be',
+            '0x043a2dad730d585c44fb79d2614f295d2d625412',
         ],
         composableStableV1Factory: '0xf145cafb67081895ee80eb7c04a30cf87f07b745',
         weightedPoolV2PlusFactories: [
@@ -77,13 +92,13 @@ export const optimismNetworkConfig: NetworkConfig = {
             '0x62ec8b26c08ffe504f22390a65e6e3c1e45e9877': '0x573f1fbde18ab2926a5e3fb80467ae50cf91d3f6', // soDAI
             '0xb96c5bada4bf6a70e71795a3197ba94751dae2db': '0xbac75e5e03c68c3a9e0c200462d38440d8ffea45', // soUSDT
             '0xedcfaf390906a8f91fb35b7bac23f3111dbaee1c': '0xe61b872d223362facb9fcbce359a56764bccfa36', // soUSDC
-            '0xdc2007d9e9a33f50630f26069faab69c25f7758c': '0xd01e860e811a2942c1222586971a71d764bdd8c1', // rfUSDC
-            '0xbef1ccaada458a570c37b11a8872988ba1e4fdb9': '0xcb1ab294279078c5cf65406dd32083100c015325', // rfUSDT
-            '0x8fe33d737484ca194dedf64aafa8485327fc5372': '0xe243be0c0ec53f74ed0ee2171fd070e656f4b48f', // rfDAI
-            '0x8003eec4add35c6d23eb1ef61b4fa6bbbb23a41a': '0xc2bf5c38ebbcb9a710822f1ba2235e88ce51bc3a', // rfWETH
-            '0xb85245929dc65b5eddb56c4b4e84b20bce69db35': '0x46a76217415fd83ebb9e1f0ddf6b4f4f18fc5518', // rfWSETH
-            '0xd32f78f5ae235269c6d2cabbd26a57ff9fd62967': '0xa15abbf609133662a6794efaf12fbb0fdad647ac', // rfWBTC
-            '0x55b1f937b1335be355c82e207fd437182c986ba1': '0xa832e597273cf056d71490f6ea6f17218ba285df', // rfOP
+            '0xf970659221bb9d01b615321b63a26e857ffc030b': '0x42fe737ba23d172542d6c079952cafcd9b4a5256', // rfusdc multi strat
+            '0x20715545c15c76461861cb0d6ba96929766d05a5': '0xa9d40f2aa0121105ce763f13166fd19c4b964d3d', // rfusdt multi strat
+            '0xa5d4802b4ce6b745b0c9e1b4a79c093d197869c8': '0xed8f7907195e050411a6a7824bca6acc5c37806c', // rfdai multi strat
+            '0x2e2b8b82123789d895fd79913f6dfa51f5b5a0e6': '0x072c30dc3c2f7ce3b8f50600e6e57fb1e9bdf409', // rfweth multi strat
+            '0x48ace81c09382bfc08ed102e7eadd37e3b049752': '0xa20f3951d881b98ceb17149ba88ddb94ccd4cc16', // rfwsteth multi strat
+            '0x8025586ac5fb265a23b9492e7414beccc2059ec3': '0x6344dfaabe0635fc19aa599a772a3182878c32f4', // rfwbtc multi strat
+            '0x3e9cbffd270ae67abb09d28988e7e785498c7373': '0xee5e347e679ed3d86d8280a92b99bb6c09fbb374', // rfop multi strat
         },
         reaperManualRebalancer: '0xf070996cf89cd3d2582705fc269f2c800e9a6a21',
         sorQueries: '0x1814a3b3e4362caf4eb54cd85b82d39bd7b34e41',
@@ -131,11 +146,6 @@ export const optimismNetworkConfig: NetworkConfig = {
             url: 'https://pro.olympusdao.finance/#/bond',
         },
         {
-            title: 'Multichain Bridge',
-            subTitle: 'ETH / AVAX / BSC / MATIC',
-            url: 'https://app.multichain.org/#/router',
-        },
-        {
             title: 'AllBridge',
             subTitle: 'SOL / MATIC / CELO',
             url: 'https://app.allbridge.io/bridge?from=SOL&to=FTM&asset=SOL',
@@ -165,32 +175,78 @@ export const optimismNetworkConfig: NetworkConfig = {
     createPoolUrl: 'https://opv1.beets.fi/#/pool-create',
     warnings: {
         poolList: {
-            '0x1f131ec1175f023ee1534b16fa8ab237c00e238100000000000000000000004a':
-                'A vulnerability has been discovered that effects this pool. Existing liquidity providers should remove liquidity immediately, and no new deposits should be made.',
-            '0x479a7d1fcdd71ce0c2ed3184bfbe9d23b92e8337000000000000000000000049':
-                'A vulnerability has been discovered that effects this pool. Existing liquidity providers should remove liquidity immediately, and no new deposits should be made.',
+            '0x1f131ec1175f023ee1534b16fa8ab237c00e238100000000000000000000004a': poolListWarningString,
+            '0x479a7d1fcdd71ce0c2ed3184bfbe9d23b92e8337000000000000000000000049': poolListWarningString,
+            '0x23ca0306b21ea71552b148cf3c4db4fc85ae19290000000000000000000000ac': poolListWarningString,
+            '0x43da214fab3315aa6c02e0b8f2bfb7ef2e3c60a50000000000000000000000ae': poolListWarningString,
+            '0x62cf35db540152e94936de63efc90d880d4e241b0000000000000000000000ef': poolListWarningString,
+            '0x098f32d98d0d64dba199fc1923d3bf4192e787190001000000000000000000d2': poolListWarningString,
+            '0xb1c9ac57594e9b1ec0f3787d9f6744ef4cb0a02400000000000000000000006e': poolListWarningString,
+            '0x05e7732bf9ae5592e6aa05afe8cd80f7ab0a7bea00020000000000000000005a': poolListWarningString,
+            '0xde45f101250f2ca1c0f8adfc172576d10c12072d00000000000000000000003f': poolListWarningString,
+            '0x981fb05b738e981ac532a99e77170ecb4bc27aef00010000000000000000004b': poolListWarningString,
+            '0x6222ae1d2a9f6894da50aa25cb7b303497f9bebd000000000000000000000046': poolListWarningString,
+            '0x3c74c4ed512050eb843d89fb9dcd5ebb4668eb6d0002000000000000000000cc': poolListWarningString,
+            '0x7fe29a818438ed2759e30f65c2302295711d66fc0000000000000000000000e5': poolListWarningString,
+            '0xb0de49429fbb80c635432bbad0b3965b2856017700010000000000000000004e': poolListWarningString,
+            '0x428e1cc3099cf461b87d124957a0d48273f334b100000000000000000000007f': poolListWarningString,
+            '0x359ea8618c405023fc4b98dab1b01f373792a12600010000000000000000004f': poolListWarningString,
+            '0x62de5ca16a618e22f6dfe5315ebd31acb10c44b6000000000000000000000037': poolListWarningString,
+            '0x7d6bff131b359da66d92f215fd4e186003bfaa42000000000000000000000058': poolListWarningString,
+            '0x9964b1bd3cc530e5c58ba564e45d45290f677be2000000000000000000000036': poolListWarningString,
+            '0x2c4a83f98d1cdbeeec825fabacd09c46e2dd3c570002000000000000000000de': poolListWarningString,
+            '0x8b6d3aa69c1cf47677281691b1abf3831ba1329d0001000000000000000000d0': poolListWarningString,
+            '0x64cee2338369aa9b36fc756ea231eb9bc242926f0000000000000000000000df': poolListWarningString,
+            '0xe0b50b0635b90f7021d2618f76ab9a31b92d009400010000000000000000003a': poolListWarningString,
+            '0x8a2872fd28f42bd9f6559907235e83fbf4167f480001000000000000000000f2': poolListWarningString,
+            '0x362715c164d606682c4ea7e479633e419d9345eb0001000000000000000000e7': poolListWarningString,
+            '0xcd7b2232b7435595bbc7fd7962f1f352fc2cc61a0000000000000000000000f0': poolListWarningString,
+            '0xf572649606db4743d217a2fa6e8b8eb79742c24a000000000000000000000039': poolListWarningString,
+            '0xbec621c9ab4ceddcc2a157ca9b5c475fab65f6a40000000000000000000000f3': poolListWarningString,
+            '0x5470f064a19c65263b3033da3a6124fdf0a9bab80000000000000000000000e6': poolListWarningString,
+            '0xcb89e89d798a4563d1599ea5508282e13b225b520000000000000000000000e4': poolListWarningString,
+            '0xe94c45de980f914904fdcfa9fbbe7c4a0ffe6ac70000000000000000000000e0': poolListWarningString,
+            '0x435272180a4125f3b47c92826f482fc6cc165958000200000000000000000059': poolListWarningString,
+            '0x96a78983932b8739d1117b16d30c15607926b0c500000000000000000000006d': poolListWarningString,
+            '0x593acbfb1eaf3b6ec86fa60325d816996fdcbc0d000000000000000000000038': poolListWarningString,
+            '0xd1af4974fcc995cf36ba40b189caa92964a9126d0000000000000000000000f1': poolListWarningString,
         },
         poolDetail: {
-            '0x1f131ec1175f023ee1534b16fa8ab237c00e238100000000000000000000004a': {
-                id: 'composable-nested-vulnerability',
-                message:
-                    'A vulnerability has been discovered that effects this pool. Existing liquidity providers should remove liquidity immediately, and no new deposits should be made.',
-                type: 'warning',
-                link: {
-                    url: 'https://twitter.com/beethoven_x/status/1611363903744937985?s=20&t=tiOYA-4RINQzF4eMbR4HgA',
-                    text: 'Read more',
-                },
-            },
-            '0x479a7d1fcdd71ce0c2ed3184bfbe9d23b92e8337000000000000000000000049': {
-                id: 'composable-nested-vulnerability',
-                message:
-                    'A vulnerability has been discovered that effects this pool. Existing liquidity providers should remove liquidity immediately, and no new deposits should be made.',
-                type: 'warning',
-                link: {
-                    url: 'https://twitter.com/beethoven_x/status/1611363903744937985?s=20&t=tiOYA-4RINQzF4eMbR4HgA',
-                    text: 'Read more',
-                },
-            },
+            '0x23ca0306b21ea71552b148cf3c4db4fc85ae19290000000000000000000000ac': PoolDetailWarningObject,
+            '0x43da214fab3315aa6c02e0b8f2bfb7ef2e3c60a50000000000000000000000ae': PoolDetailWarningObject,
+            '0x62cf35db540152e94936de63efc90d880d4e241b0000000000000000000000ef': PoolDetailWarningObject,
+            '0x098f32d98d0d64dba199fc1923d3bf4192e787190001000000000000000000d2': PoolDetailWarningObject,
+            '0xb1c9ac57594e9b1ec0f3787d9f6744ef4cb0a02400000000000000000000006e': PoolDetailWarningObject,
+            '0x05e7732bf9ae5592e6aa05afe8cd80f7ab0a7bea00020000000000000000005a': PoolDetailWarningObject,
+            '0xde45f101250f2ca1c0f8adfc172576d10c12072d00000000000000000000003f': PoolDetailWarningObject,
+            '0x981fb05b738e981ac532a99e77170ecb4bc27aef00010000000000000000004b': PoolDetailWarningObject,
+            '0x6222ae1d2a9f6894da50aa25cb7b303497f9bebd000000000000000000000046': PoolDetailWarningObject,
+            '0x3c74c4ed512050eb843d89fb9dcd5ebb4668eb6d0002000000000000000000cc': PoolDetailWarningObject,
+            '0x7fe29a818438ed2759e30f65c2302295711d66fc0000000000000000000000e5': PoolDetailWarningObject,
+            '0xb0de49429fbb80c635432bbad0b3965b2856017700010000000000000000004e': PoolDetailWarningObject,
+            '0x428e1cc3099cf461b87d124957a0d48273f334b100000000000000000000007f': PoolDetailWarningObject,
+            '0x359ea8618c405023fc4b98dab1b01f373792a12600010000000000000000004f': PoolDetailWarningObject,
+            '0x62de5ca16a618e22f6dfe5315ebd31acb10c44b6000000000000000000000037': PoolDetailWarningObject,
+            '0x7d6bff131b359da66d92f215fd4e186003bfaa42000000000000000000000058': PoolDetailWarningObject,
+            '0x9964b1bd3cc530e5c58ba564e45d45290f677be2000000000000000000000036': PoolDetailWarningObject,
+            '0x2c4a83f98d1cdbeeec825fabacd09c46e2dd3c570002000000000000000000de': PoolDetailWarningObject,
+            '0x8b6d3aa69c1cf47677281691b1abf3831ba1329d0001000000000000000000d0': PoolDetailWarningObject,
+            '0x64cee2338369aa9b36fc756ea231eb9bc242926f0000000000000000000000df': PoolDetailWarningObject,
+            '0xe0b50b0635b90f7021d2618f76ab9a31b92d009400010000000000000000003a': PoolDetailWarningObject,
+            '0x8a2872fd28f42bd9f6559907235e83fbf4167f480001000000000000000000f2': PoolDetailWarningObject,
+            '0x362715c164d606682c4ea7e479633e419d9345eb0001000000000000000000e7': PoolDetailWarningObject,
+            '0xcd7b2232b7435595bbc7fd7962f1f352fc2cc61a0000000000000000000000f0': PoolDetailWarningObject,
+            '0xf572649606db4743d217a2fa6e8b8eb79742c24a000000000000000000000039': PoolDetailWarningObject,
+            '0xbec621c9ab4ceddcc2a157ca9b5c475fab65f6a40000000000000000000000f3': PoolDetailWarningObject,
+            '0x5470f064a19c65263b3033da3a6124fdf0a9bab80000000000000000000000e6': PoolDetailWarningObject,
+            '0xcb89e89d798a4563d1599ea5508282e13b225b520000000000000000000000e4': PoolDetailWarningObject,
+            '0xe94c45de980f914904fdcfa9fbbe7c4a0ffe6ac70000000000000000000000e0': PoolDetailWarningObject,
+            '0x435272180a4125f3b47c92826f482fc6cc165958000200000000000000000059': PoolDetailWarningObject,
+            '0x96a78983932b8739d1117b16d30c15607926b0c500000000000000000000006d': PoolDetailWarningObject,
+            '0x593acbfb1eaf3b6ec86fa60325d816996fdcbc0d000000000000000000000038': PoolDetailWarningObject,
+            '0xd1af4974fcc995cf36ba40b189caa92964a9126d0000000000000000000000f1': PoolDetailWarningObject,
+            '0x1f131ec1175f023ee1534b16fa8ab237c00e238100000000000000000000004a': PoolDetailWarningObject,
+            '0x479a7d1fcdd71ce0c2ed3184bfbe9d23b92e8337000000000000000000000049': PoolDetailWarningObject,
         },
         poolInvest: {
             '0xb1c9ac57594e9b1ec0f3787d9f6744ef4cb0a02400000000000000000000006e':
@@ -226,10 +282,51 @@ export const optimismNetworkConfig: NetworkConfig = {
         '0x58910d5bd045a20a37de147f8acea75b2d881f610002000000000000000000d3': 'gyroscope',
         '0x7ca75bdea9dede97f8b13c6641b768650cb837820002000000000000000000d5': 'gyroscope',
         '0x2c4a83f98d1cdbeeec825fabacd09c46e2dd3c570002000000000000000000de': 'gyroscope',
+        '0x62cf35db540152e94936de63efc90d880d4e241b0000000000000000000000ef': 'reaper',
+        '0x7fe29a818438ed2759e30f65c2302295711d66fc0000000000000000000000e5': 'reaper', // to be deprecated soon
+    },
+    // manually added for now
+    auraStaking: {
+        '0x7ca75bdea9dede97f8b13c6641b768650cb837820002000000000000000000d5': 'https://app.aura.finance/#/10/pool/6',
+        '0x4fd63966879300cafafbb35d157dc5229278ed2300020000000000000000002b': 'https://app.aura.finance/#/10/pool/0',
+        '0x7b50775383d3d6f0215a8f290f2c9e2eebbeceb200020000000000000000008b': 'https://app.aura.finance/#/10/pool/4',
     },
     investDisabled: {
         '0x1f131ec1175f023ee1534b16fa8ab237c00e238100000000000000000000004a': true,
         '0x479a7d1fcdd71ce0c2ed3184bfbe9d23b92e8337000000000000000000000049': true,
+        '0x23ca0306b21ea71552b148cf3c4db4fc85ae19290000000000000000000000ac': true,
+        '0x43da214fab3315aa6c02e0b8f2bfb7ef2e3c60a50000000000000000000000ae': true,
+        '0x62cf35db540152e94936de63efc90d880d4e241b0000000000000000000000ef': true,
+        '0x098f32d98d0d64dba199fc1923d3bf4192e787190001000000000000000000d2': true,
+        '0xb1c9ac57594e9b1ec0f3787d9f6744ef4cb0a02400000000000000000000006e': true,
+        '0x05e7732bf9ae5592e6aa05afe8cd80f7ab0a7bea00020000000000000000005a': true,
+        '0xde45f101250f2ca1c0f8adfc172576d10c12072d00000000000000000000003f': true,
+        '0x981fb05b738e981ac532a99e77170ecb4bc27aef00010000000000000000004b': true,
+        '0x6222ae1d2a9f6894da50aa25cb7b303497f9bebd000000000000000000000046': true,
+        '0x3c74c4ed512050eb843d89fb9dcd5ebb4668eb6d0002000000000000000000cc': true,
+        '0x7fe29a818438ed2759e30f65c2302295711d66fc0000000000000000000000e5': true,
+        '0xb0de49429fbb80c635432bbad0b3965b2856017700010000000000000000004e': true,
+        '0x428e1cc3099cf461b87d124957a0d48273f334b100000000000000000000007f': true,
+        '0x359ea8618c405023fc4b98dab1b01f373792a12600010000000000000000004f': true,
+        '0x62de5ca16a618e22f6dfe5315ebd31acb10c44b6000000000000000000000037': true,
+        '0x7d6bff131b359da66d92f215fd4e186003bfaa42000000000000000000000058': true,
+        '0x9964b1bd3cc530e5c58ba564e45d45290f677be2000000000000000000000036': true,
+        '0x2c4a83f98d1cdbeeec825fabacd09c46e2dd3c570002000000000000000000de': true,
+        '0x8b6d3aa69c1cf47677281691b1abf3831ba1329d0001000000000000000000d0': true,
+        '0x64cee2338369aa9b36fc756ea231eb9bc242926f0000000000000000000000df': true,
+        '0xe0b50b0635b90f7021d2618f76ab9a31b92d009400010000000000000000003a': true,
+        '0x8a2872fd28f42bd9f6559907235e83fbf4167f480001000000000000000000f2': true,
+        '0x362715c164d606682c4ea7e479633e419d9345eb0001000000000000000000e7': true,
+        '0xcd7b2232b7435595bbc7fd7962f1f352fc2cc61a0000000000000000000000f0': true,
+        '0xf572649606db4743d217a2fa6e8b8eb79742c24a000000000000000000000039': true,
+        '0xbec621c9ab4ceddcc2a157ca9b5c475fab65f6a40000000000000000000000f3': true,
+        '0x5470f064a19c65263b3033da3a6124fdf0a9bab80000000000000000000000e6': true,
+        '0xcb89e89d798a4563d1599ea5508282e13b225b520000000000000000000000e4': true,
+        '0xe94c45de980f914904fdcfa9fbbe7c4a0ffe6ac70000000000000000000000e0': true,
+        '0x435272180a4125f3b47c92826f482fc6cc165958000200000000000000000059': true,
+        '0x96a78983932b8739d1117b16d30c15607926b0c500000000000000000000006d': true,
+        '0x593acbfb1eaf3b6ec86fa60325d816996fdcbc0d000000000000000000000038': true,
+        '0xd1af4974fcc995cf36ba40b189caa92964a9126d0000000000000000000000f1': true,
     },
     maBeetsEnabled: false,
     claimAllRewardsEnabled: false,

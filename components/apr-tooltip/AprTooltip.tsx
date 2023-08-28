@@ -16,6 +16,7 @@ import StarsIcon from '~/components/apr-tooltip/StarsIcon';
 import { AprText } from '~/components/apr-tooltip/AprText';
 import { Info } from 'react-feather';
 import { getApr } from '~/lib/util/apr-util';
+import { networkConfig } from '~/lib/config/network-config';
 
 interface Props {
     data: GqlPoolApr;
@@ -24,18 +25,22 @@ interface Props {
     placement?: PlacementWithLogical;
     aprLabel?: boolean;
     sparklesSize?: 'sm' | 'md';
+    poolId?: string;
+    apr?: string;
 }
 
-function AprTooltip({ data, textProps, onlySparkles, placement, aprLabel, sparklesSize }: Props) {
+function AprTooltip({ data, textProps, onlySparkles, placement, aprLabel, sparklesSize, poolId, apr }: Props) {
     // temp fix: https://github.com/chakra-ui/chakra-ui/issues/5896#issuecomment-1104085557
     const PopoverTrigger: React.FC<{ children: React.ReactNode }> = OrigPopoverTrigger;
+    const showZeroApr = poolId && Object.keys(networkConfig.warnings.poolList).includes(poolId);
+    const aprToShow = apr || getApr(data.apr);
 
-    return (
+    return !showZeroApr ? (
         <Popover trigger="hover" placement={placement}>
             <HStack align="center">
                 {!onlySparkles && (
                     <Text fontSize="1rem" fontWeight="semibold" mr="1" {...textProps}>
-                        {getApr(data.apr)}
+                        {aprToShow}
                         {aprLabel ? ' APR' : ''}
                     </Text>
                 )}
@@ -60,7 +65,6 @@ function AprTooltip({ data, textProps, onlySparkles, placement, aprLabel, sparkl
                     </Button>
                 </PopoverTrigger>
             </HStack>
-
             <PopoverContent w="fit-content" bgColor="beets.base.800" shadow="2xl">
                 <PopoverHeader bgColor="whiteAlpha.100">
                     <Text textAlign="left">
@@ -113,6 +117,10 @@ function AprTooltip({ data, textProps, onlySparkles, placement, aprLabel, sparkl
                 </Box>
             </PopoverContent>
         </Popover>
+    ) : (
+        <HStack align="center">
+            <Text {...textProps}>0.00%</Text>
+        </HStack>
     );
 }
 

@@ -33,7 +33,11 @@ function PoolHeaderStats({ pool }: Props) {
                     <Text color="gray.400" mb={1}>
                         APR (24h)
                     </Text>
-                    <AprTooltip data={pool.dynamicData.apr} textProps={{ fontSize: '2xl', fontWeight: 'normal' }} />
+                    <AprTooltip
+                        data={pool.dynamicData.apr}
+                        textProps={{ fontSize: '2xl', fontWeight: 'normal' }}
+                        poolId={pool.id}
+                    />
                 </Box>
             </Flex>
         </>

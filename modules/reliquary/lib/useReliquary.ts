@@ -54,7 +54,7 @@ export default function useReliquary() {
             return positions;
         },
         {
-            enabled: !!userAddress,
+            enabled: !!userAddress && !!networkConfig.fbeets.address,
         },
     );
 

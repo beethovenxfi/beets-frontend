@@ -42,7 +42,7 @@ a {
     /*background-size: 1em 1em;
     background-repeat: repeat;*/
     color: #00f89c;
-    font-size: 2.5rem;
+    font-size: 1.75rem;
     font-weight: 900;
     /*background-clip: text;*/
 
@@ -358,7 +358,7 @@ a {
 
 .beets-glow::after {
     position: absolute;
-    background-color: rgba(0,248,156, 0.6);
+    background-color: rgba(0, 248, 156, 0.6);
     content: '';
     filter: blur(15px);
     width: 100%;
@@ -375,7 +375,7 @@ a {
 
 .relic-glow::after {
     position: absolute;
-    background-color: rgba(0,248,156, 0.6);
+    background-color: rgba(0, 248, 156, 0.6);
     content: '';
     filter: blur(50px);
     width: 100%;
@@ -389,18 +389,15 @@ a {
 
 @keyframes spin {
     0% {
-      rotate: 0deg;
-      opacity: 0.55;
+        rotate: 0deg;
+        opacity: 0.55;
     }
     50% {
         opacity: 0.35;
         rotate: 180deg;
-
     }
     100% {
         rotate: 360deg;
         opacity: 0.55;
-
     }
-  }
-  
+}

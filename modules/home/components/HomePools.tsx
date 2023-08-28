@@ -3,12 +3,10 @@ import { PoolCard } from '~/components/pool-card/PoolCard';
 import { BeetsHeadline } from '~/components/typography/BeetsHeadline';
 import { BeetsSubHeadline } from '~/components/typography/BeetsSubHeadline';
 import { PoolCardCarousel } from '~/components/carousel/PoolCardCarousel';
-
 import { useUserData } from '~/lib/user/useUserData';
 import { useGetHomeFeaturedPoolsQuery, useGetPoolsLazyQuery } from '~/apollo/generated/graphql-codegen-generated';
 import { numberFormatUSDValue } from '~/lib/util/number-formats';
 import { useEffect } from 'react';
-
 import { PoolCardUser } from '~/components/pool-card/PoolCardUser';
 import { orderBy } from 'lodash';
 

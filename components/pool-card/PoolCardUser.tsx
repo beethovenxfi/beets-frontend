@@ -6,6 +6,7 @@ import numeral from 'numeral';
 import { numberFormatUSDValue } from '~/lib/util/number-formats';
 import { tokenFormatAmount } from '~/lib/services/token/token-util';
 import { NextLinkOverlay } from '~/components/link/NextLink';
+import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 
 interface Props extends BoxProps {
     pool: GqlPoolCardDataFragment;
@@ -16,6 +17,9 @@ interface Props extends BoxProps {
 
 export function PoolCardUser({ pool, balance, balanceUSD, totalApr, ...rest }: Props) {
     const dailyApr = totalApr / 365;
+    const { investDisabled } = useNetworkConfig();
+
+    const showDailyApr = pool && !Object.keys(investDisabled).includes(pool.id);
 
     return (
         <LinkBox as="article" flex="1" {...rest}>
@@ -48,8 +52,9 @@ export function PoolCardUser({ pool, balance, balanceUSD, totalApr, ...rest }: P
                         data={pool.dynamicData.apr}
                         placement="left"
                         aprLabel={true}
+                        poolId={pool.id}
                     />
-                    <Text color="gray.200">{numeral(dailyApr).format('0.00[0]%')} Daily</Text>
+                    <Text color="gray.200">{showDailyApr ? numeral(dailyApr).format('0.00[0]%') : '0.00%'} Daily</Text>
                 </Box>
             </Flex>
         </LinkBox>

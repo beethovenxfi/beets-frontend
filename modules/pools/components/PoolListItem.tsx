@@ -11,6 +11,10 @@ import { memo } from 'react';
 import { PoolBadgeType } from '~/lib/config/network-config-type';
 import { PoolListItemWarning } from '~/modules/pools/components/PoolListItemWarning';
 import { PoolBadgeSmall } from '~/components/pool-badge/PoolBadgeSmall';
+import BeetsTooltip from '~/components/tooltip/BeetsTooltip';
+import AuraLogo from '~/assets/logo/aura_iso_colors.png';
+import Image from 'next/image';
+import { networkConfig } from '~/lib/config/network-config';
 
 interface Props extends BoxProps {
     pool: GqlPoolMinimalFragment;
@@ -35,6 +39,8 @@ export function PoolListItem({
     warningMessage,
     ...rest
 }: Props) {
+    const hasAuraStaking = Object.keys(networkConfig.auraStaking).includes(pool.id);
+
     return (
         <Box
             mb={{ base: '4', lg: '0' }}
@@ -49,7 +55,7 @@ export function PoolListItem({
                         py={{ base: '4', lg: '0' }}
                         height={{ lg: '63.5px' }}
                         templateColumns={{
-                            base: '1fr 1fr',
+                            base: '1.75fr 1fr',
                             lg: showUserBalance ? '90px 1fr 150px 200px 0px 200px' : '90px 1fr 100px 146px 200px 200px',
                             xl: showUserBalance
                                 ? '90px 1fr 150px 200px 200px 200px'
@@ -67,7 +73,8 @@ export function PoolListItem({
                                       lg: `"icons name userBalance tvl volume apr"`,
                                   }
                                 : {
-                                      base: `"name badge"
+                                      base: `"name name"
+                                             "badge badge"
                                              "apr tvl"
                                              "fees volume"
                                              "icons icons"`,
@@ -84,9 +91,19 @@ export function PoolListItem({
                             />
                         </GridItem>
                         <GridItem area="name" mb={{ base: '4', lg: '0' }} alignItems="center" display="flex">
-                            <Text fontSize={{ base: 'xl', lg: 'md' }} fontWeight={{ base: 'bold', lg: 'normal' }}>
+                            <Text fontSize={{ base: 'lg', lg: 'md' }} fontWeight={{ base: 'bold', lg: 'normal' }}>
                                 {pool.name}
                             </Text>
+                            {hasAuraStaking && (
+                                <BeetsTooltip
+                                    label="For this pool you can deposit & stake your BPT on Aura Finance for extra boosted rewards"
+                                    noImage
+                                >
+                                    <Box ml="2" mt="1">
+                                        <Image src={AuraLogo} alt="Aura Finance" height="24px" width="24px" />
+                                    </Box>
+                                </BeetsTooltip>
+                            )}
                             {warningMessage && <PoolListItemWarning ml="2" message={warningMessage} />}
                         </GridItem>
                         {showUserBalance && (
@@ -104,14 +121,16 @@ export function PoolListItem({
                                 </Text>
                             </GridItem>
                         )}
-                        <GridItem
-                            area="badge"
-                            alignItems="center"
-                            display={showUserBalance ? 'none' : 'flex'}
-                            mb={{ base: '4', lg: '0' }}
-                        >
-                            {poolBadge && <PoolBadgeSmall poolBadge={poolBadge} />}
-                        </GridItem>
+                        {poolBadge && (
+                            <GridItem
+                                area="badge"
+                                alignItems="center"
+                                display={showUserBalance ? 'none' : 'flex'}
+                                mb={{ base: '4', lg: '0' }}
+                            >
+                                <PoolBadgeSmall poolBadge={poolBadge} />
+                            </GridItem>
+                        )}
                         <StatGridItem
                             area="tvl"
                             display={{ base: 'block', lg: 'flex' }}
@@ -148,6 +167,7 @@ export function PoolListItem({
                             <MemoizedAprTooltip
                                 data={pool.dynamicData.apr}
                                 textProps={{ fontWeight: 'normal', fontSize: { base: 'xl', lg: 'md' } }}
+                                poolId={pool.id}
                             />
                         </StatGridItem>
                         <StatGridItem area="fees" display={{ base: 'block', lg: 'none' }}>
