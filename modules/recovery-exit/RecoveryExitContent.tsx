@@ -13,16 +13,9 @@ import { RecoveryExitWithdrawListItem } from '~/modules/recovery-exit/components
 import { RecoveryExitWithdrawTableHeader } from '~/modules/recovery-exit/components/RecoveryExitWithdrawTableHeader';
 import { useUserBalances } from '~/lib/user/useUserBalances';
 import { useGetRecoveryPoolTokens } from '~/modules/recovery-exit/lib/useGetRecoveryPoolTokens';
+import { networkConfig } from '~/lib/config/network-config';
 
-const RECOVERY_POOL_IDS = [
-    '0x62cf35db540152e94936de63efc90d880d4e241b0000000000000000000000ef',
-    '0x20715545c15c76461861cb0d6ba96929766d05a50000000000000000000000e8',
-    '0xf970659221bb9d01b615321b63a26e857ffc030b0000000000000000000000e9',
-    '0x23ca0306b21ea71552b148cf3c4db4fc85ae19290000000000000000000000ac',
-    '0x62ec8b26c08ffe504f22390a65e6e3c1e45e987700000000000000000000007e',
-    '0xb96c5bada4bf6a70e71795a3197ba94751dae2db00000000000000000000007d',
-    '0xedcfaf390906a8f91fb35b7bac23f3111dbaee1c00000000000000000000007c',
-];
+const RECOVERY_POOL_IDS = networkConfig.recoveryPools;
 const RECOVERY_POOL_ADDRESSES = RECOVERY_POOL_IDS.map((id) => id.slice(0, 42));
 
 export function RecoveryExitContent() {
