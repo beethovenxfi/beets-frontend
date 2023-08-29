@@ -68,6 +68,7 @@ export const fantomNetworkConfig: NetworkConfig = {
             '0x23f03a4fb344d8b98833d2ace093cc305e03474f',
         ],
         composableStableV1Factory: '',
+        weightedPoolFactory: '0xb841Df73861E65E6D61a80F503F095a91ce75e15',
         weightedPoolV2PlusFactories: [
             '0x8ea1c497c16726e097f62c8c9fbd944143f27090',
             '0xb841df73861e65e6d61a80f503f095a91ce75e15',

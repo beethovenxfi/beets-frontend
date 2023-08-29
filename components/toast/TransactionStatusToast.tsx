@@ -1,6 +1,6 @@
 import { Box, CloseButton, HStack, Link, Progress, Text } from '@chakra-ui/react';
 import {
-    toastGetTransactionStatusHeadline,
+    getToastTransactionHeadline,
     ToastTransactionStatus,
     BeetsTransactionType,
 } from '~/components/toast/toast-util';
@@ -40,7 +40,7 @@ export function TransactionStatusToast({ type, status, text, onClose, txHash }: 
             <Box p="2" borderBottomLeftRadius="sm" borderBottomRightRadius="sm" className="bg">
                 <HStack mb="1">
                     <Text fontSize="md" color="white">
-                        {toastGetTransactionStatusHeadline(type, status)}
+                        {getToastTransactionHeadline(type, status)}
                     </Text>
                     <Link userSelect="none" color="gray.100" href={etherscanGetTxUrl(txHash)} target="_blank">
                         <ExternalLink size={16} />

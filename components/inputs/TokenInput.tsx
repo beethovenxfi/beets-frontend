@@ -24,6 +24,7 @@ type Props = {
     showBalance?: boolean;
     showPresets?: boolean;
     requiresApproval?: boolean;
+    placeholder?: string;
 };
 
 export const TokenInput = forwardRef(
@@ -37,6 +38,7 @@ export const TokenInput = forwardRef(
             requiresApproval,
             showBalance = true,
             showPresets,
+            placeholder,
         }: Props,
         ref,
     ) => {
@@ -71,7 +73,7 @@ export const TokenInput = forwardRef(
                         value={value || ''}
                         onChange={handleOnChange}
                         onKeyDown={tokenInputBlockInvalidCharacters}
-                        placeholder="0"
+                        placeholder={placeholder || '0'}
                         type="number"
                         label={label}
                         textAlign="right"
@@ -104,7 +106,8 @@ export const TokenInput = forwardRef(
                                 <HStack spacing="none">
                                     <TokenAvatar size="xs" address={address || ''} />
                                     <Text fontSize="lg" paddingLeft="2">
-                                        {token?.symbol}
+                                        {!(token?.address && token.symbol) && 'Choose a token'}
+                                        {token?.address && token.symbol && token?.symbol}
                                     </Text>
                                     <Box marginLeft="1">
                                         <ChevronDown size={16} />
