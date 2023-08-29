@@ -25,7 +25,7 @@ interface Props {
 
 export function PoolInvestActions({ onInvestComplete, onClose }: Props) {
     const networkConfig = useNetworkConfig();
-    const { setIsCreationComplete } = useCompose();
+    const composeProvider = useCompose();
     const { pool, requiresBatchRelayerOnJoin } = usePool();
     const { selectedInvestTokensWithAmounts, totalInvestValue, zapEnabled } = useInvest();
     const { joinPool, ...joinQuery } = useJoinPool(pool, zapEnabled);
@@ -144,7 +144,7 @@ export function PoolInvestActions({ onInvestComplete, onClose }: Props) {
                             refetchUserBptBalance();
                             userSyncBalance({ variables: { poolId: pool.id } });
                             onInvestComplete();
-                            setIsCreationComplete(true);
+                            composeProvider && composeProvider.setIsCreationComplete(true);
                         }
                     }}
                     queries={[{ ...joinQuery, id: 'invest' }]}
