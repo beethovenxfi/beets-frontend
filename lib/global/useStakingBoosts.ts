@@ -4,14 +4,11 @@ import { useQuery } from 'react-query';
 import { gaugeStakingService } from '../services/staking/gauge-staking.service';
 import { useProvider } from 'wagmi';
 
-function calculateBoostFromGauge(workingBalance: number, workingSupply: number, userBalance: number) {
-    let boost = 0.0;
+function calculateBoostFromGauge(workingBalance: number, userBalance: number) {
+    let boost = 1.0;
 
     if (workingBalance) {
-        boost =
-            workingBalance /
-            workingSupply /
-            ((0.4 * userBalance) / (0.4 * userBalance + workingSupply - workingBalance));
+        boost = workingBalance / (0.4 * userBalance);
     }
 
     return boost.toString();
@@ -63,11 +60,7 @@ export default function useStakingBoosts() {
 
     const isLoading = isLoadingStakedBalance || isLoadingWorkingSupply || isLoadingWorkingBalance;
 
-    let boost = calculateBoostFromGauge(
-        parseFloat(workingBalance || ''),
-        parseFloat(workingSupply || ''),
-        parseFloat(stakedBalance || ''),
-    );
+    let boost = calculateBoostFromGauge(parseFloat(workingBalance || ''), parseFloat(stakedBalance || ''));
 
     return {
         isLoading,
