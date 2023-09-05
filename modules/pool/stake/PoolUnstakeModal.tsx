@@ -20,7 +20,12 @@ import { tokenFormatAmount } from '~/lib/services/token/token-util';
 import { BeetsTransactionStepsSubmit, TransactionStep } from '~/components/button/BeetsTransactionStepsSubmit';
 import { BeetsBox } from '~/components/box/BeetsBox';
 import { usePoolUserDepositBalance } from '~/modules/pool/lib/usePoolUserDepositBalance';
-import { oldBnumScaleAmount, oldBnumToBnum, oldBnumToHumanReadable } from '~/lib/services/pool/lib/old-big-number';
+import {
+    oldBnum,
+    oldBnumScaleAmount,
+    oldBnumToBnum,
+    oldBnumToHumanReadable,
+} from '~/lib/services/pool/lib/old-big-number';
 import { useStakingWithdraw } from '~/lib/global/useStakingWithdraw';
 import { CardRow } from '~/components/card/CardRow';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
@@ -63,7 +68,7 @@ export function PoolUnstakeModal({ isOpen, onOpen, onClose }: Props) {
     const loading = isLoadingBalances || isLoadingHasMinterApproval || isLoadingBatchRelayerApproval;
 
     const { data: contractCalls } = useGaugeUnstakeGetContractCallData(
-        oldBnumToBnum(oldBnumScaleAmount(userStakedBptBalance).times(percent).div(100)),
+        oldBnumToBnum(oldBnum(oldBnumScaleAmount(userStakedBptBalance).times(percent).div(100).toFixed(0))),
     );
 
     // TODO: remove when batch relayer supports bal minting
