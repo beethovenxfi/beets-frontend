@@ -35,17 +35,6 @@ export default function useStakingBoosts() {
         },
     );
 
-    const { data: workingSupply, isLoading: isLoadingWorkingSupply } = useQuery(
-        ['gaugeWorkingSupply', gaugeAddress],
-        async () => {
-            const workingSupply = gaugeStakingService.getGaugeWorkingSupply({
-                gaugeAddress,
-                provider,
-            });
-            return workingSupply;
-        },
-    );
-
     const { data: workingBalance, isLoading: isLoadingWorkingBalance } = useQuery(
         ['gaugeWorkingBalance', userAddress, gaugeAddress],
         async () => {
@@ -58,7 +47,7 @@ export default function useStakingBoosts() {
         },
     );
 
-    const isLoading = isLoadingStakedBalance || isLoadingWorkingSupply || isLoadingWorkingBalance;
+    const isLoading = isLoadingStakedBalance || isLoadingWorkingBalance;
 
     let boost = calculateBoostFromGauge(parseFloat(workingBalance || ''), parseFloat(stakedBalance || ''));
 
