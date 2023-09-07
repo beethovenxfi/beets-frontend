@@ -13,7 +13,7 @@ export function useGaugeUnstakeGetContractCallData(
 ) {
     const { userAddress } = useUserAccount();
     const { pool } = usePool();
-    const { hasPendingBalRewards, hasPendingNonBALRewards } = usePoolUserPendingRewards();
+    const { hasPendingBalRewards, hasPendingNonBALRewards, isLoading } = usePoolUserPendingRewards();
 
     const data = {
         hasPendingNonBALRewards,
@@ -25,8 +25,12 @@ export function useGaugeUnstakeGetContractCallData(
         outputReference: Zero,
     };
 
-    return useQuery(['unstakeGetContractCallData', data], () => {
-        const contractCallData = gaugeService.getGaugeClaimRewardsAndWithdrawContractCallData(data);
-        return contractCallData;
-    });
+    return useQuery(
+        ['unstakeGetContractCallData', data],
+        () => {
+            const contractCallData = gaugeService.getGaugeClaimRewardsAndWithdrawContractCallData(data);
+            return contractCallData;
+        },
+        { enabled: !isLoading && amount.toString() !== '0' },
+    );
 }
