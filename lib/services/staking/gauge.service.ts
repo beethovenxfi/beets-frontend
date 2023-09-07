@@ -35,7 +35,7 @@ export class GaugeService {
             outputReference,
         });
 
-        if (!rewardsCalls.length) {
+        if (rewardsCalls.length) {
             calls.push(...rewardsCalls);
         }
 
