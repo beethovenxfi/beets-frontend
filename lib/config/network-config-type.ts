@@ -81,6 +81,7 @@ export interface NetworkConfig {
         unwrapExceptions: {
             reaper: string[];
         };
+        minimumBoost: number;
     };
     beetsPoolOwnerAddress: string;
     masterChefContractAddress: string;

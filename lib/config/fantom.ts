@@ -98,6 +98,7 @@ export const fantomNetworkConfig: NetworkConfig = {
                 '0x442988091cdc18acb8912cd3fe062cda9233f9dc',
             ],
         },
+        minimumBoost: 1.0,
     },
     beetsPoolOwnerAddress: '0xcd983793adb846dce4830c22f30c7ef0c864a776',
     masterChefContractAddress: '0x8166994d9ebBe5829EC86Bd81258149B87faCfd3',
