@@ -3,9 +3,10 @@ import { useUserAccount } from '../user/useUserAccount';
 import { useQuery } from 'react-query';
 import { gaugeStakingService } from '../services/staking/gauge-staking.service';
 import { useProvider } from 'wagmi';
+import { networkConfig } from '~/lib/config/network-config';
 
 function calculateBoostFromGauge(workingBalance: number, userBalance: number) {
-    let boost = 1.0;
+    let boost = networkConfig.balancer.minimumBoost;
 
     if (workingBalance) {
         boost = workingBalance / (0.4 * userBalance);
