@@ -20,7 +20,9 @@ export function useGaugeClaimGetContractCallData(
             return contractCallData;
         },
         {
-            enabled: gauges && !gauges.length && !hasPendingNonBALRewards && !hasPendingBalRewards,
+            // put back when batch relayer v6 is released
+            // enabled: gauges && !!gauges.length && (hasPendingNonBALRewards || hasPendingBalRewards),
+            enabled: gauges && !!gauges.length && hasPendingNonBALRewards,
             staleTime: 0,
             cacheTime: 0,
         },
