@@ -37,7 +37,10 @@ export function useStakingPendingRewards(stakingItems: GqlPoolStaking[], hookNam
     const { tokens, priceForAmount } = useGetTokens();
     const stakingIds = stakingItems.map((staking) => staking.id);
     const isHardRefetch = useRef(false);
-    const { claimableBALForGauges, isLoading: isLoadingClaimableBAL } = useStakingMintableRewards(stakingItems);
+    const { claimableBALForGauges, isLoading: isLoadingClaimableBAL } = useStakingMintableRewards(
+        stakingItems,
+        hookName === 'usePoolUserPendingRewards',
+    );
 
     const query = useQuery(
         ['useStakingPendingRewards', hookName, userAddress, stakingIds, claimableBALForGauges],
@@ -83,7 +86,10 @@ export function useStakingPendingRewards(stakingItems: GqlPoolStaking[], hookNam
                 },
             ];
 
-            return pendingRewards.filter((pendingReward) => parseFloat(pendingReward.amount) > 0);
+            return {
+                pendingRewards: pendingRewards.filter((pendingReward) => parseFloat(pendingReward.amount) > 0),
+                gauges: gauges.map((gauge) => gauge.gaugeAddress),
+            };
         },
         { enabled: !!userAddress && stakingItems.length > 0, refetchInterval: 15000 },
     );

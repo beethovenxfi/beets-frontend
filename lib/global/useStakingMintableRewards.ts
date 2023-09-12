@@ -8,21 +8,23 @@ import { useNetworkConfig } from './useNetworkConfig';
 import BalancerPseudoMinterAbi from '~/lib/abi/BalancerPseudoMinter.json';
 import { AddressZero } from '@ethersproject/constants';
 
-export default function useStakingMintableRewards(staking: GqlPoolStaking[]) {
+export default function useStakingMintableRewards(staking: GqlPoolStaking[], getForOnePool = false) {
     const { userAddress } = useUserAccount();
     const networkConfig = useNetworkConfig();
     const provider = useProvider();
 
     // temporary work around to claim all BAL from all boosted gauges (hardcoded below), even when user unstaked but forgot to claim them
+    // or claim for just one pool on the detail page
     // this workaround will be removed when v6 of the batch relayer is released
-    // const mintableGaugeAddresses = staking
-    //     .filter((staking) => staking.type === 'GAUGE' && staking.gauge?.version === 2)
-    //     .map((gauge) => gauge.address);
-    const mintableGaugeAddresses = [
-        '0xf27d53f21d024643d50de50183932f17638229f6', // rocket fuel
-        '0x9f9f8d58496691d541c40dbc2b1b20f8c43e8d8c', // gyro eclp wsteth/weth
-        '0xa30992b40a0cb4b2da081ddbd843f9cce25c2fe3', // shanghai shakedown
-    ];
+    const mintableGaugeAddresses = getForOnePool
+        ? staking
+              .filter((staking) => staking.type === 'GAUGE' && staking.gauge?.version === 2)
+              .map((gauge) => gauge.address)
+        : [
+              '0xf27d53f21d024643d50de50183932f17638229f6', // rocket fuel
+              '0x9f9f8d58496691d541c40dbc2b1b20f8c43e8d8c', // gyro eclp wsteth/weth
+              '0xa30992b40a0cb4b2da081ddbd843f9cce25c2fe3', // shanghai shakedown
+          ];
 
     const {
         submit: submitClaimBAL,

@@ -14,9 +14,8 @@ import { useStakingClaimRewards } from '~/lib/global/useStakingClaimRewards';
 import { CardRow } from '~/components/card/CardRow';
 import { networkConfig } from '~/lib/config/network-config';
 import { InfoButton } from '~/components/info-button/InfoButton';
-import BeetsTooltip from '~/components/tooltip/BeetsTooltip';
 import useStakingMintableRewards from '~/lib/global/useStakingMintableRewards';
-import { sumBy } from 'lodash';
+import { usePoolGaugeClaimRewardsGetContractCallData } from '~/modules/pool/lib/usePoolGaugeClaimRewardsGetContractCallData';
 
 interface Props {
     poolAddress: string;
@@ -30,15 +29,13 @@ export function PoolUserStakedStats({ poolAddress, staking, totalApr, userPoolBa
     const {
         pendingRewards,
         pendingRewardsTotalUSD,
-        hasPendingRewards,
+        hasPendingBalRewards,
+        hasPendingNonBALRewards,
+        pendingBALUSD,
         hardRefetch: refetchPendingRewards,
         isLoading: isLoadingPendingRewards,
     } = usePoolUserPendingRewards();
     const { claim, ...harvestQuery } = useStakingClaimRewards(staking);
-    const {
-        claim: { claimBAL, ...claimQuery },
-        refetch: refetchClaimableBAL,
-    } = useStakingMintableRewards([staking]);
     const { data, isLoading: isLoadingTotalStakedBalance } = useStakingTotalStakedBalance(poolAddress, staking);
     const { userStakedBptBalance, isLoading: isLoadingUserBptBalance } = usePoolUserBptBalance();
     const { refetch: refetchUserTokenBalances } = usePoolUserTokenBalancesInWallet();
@@ -47,13 +44,14 @@ export function PoolUserStakedStats({ poolAddress, staking, totalApr, userPoolBa
     const dailyYield = totalApr / 365;
     const dailyYieldUSD = userPoolBalanceUSD * dailyYield;
     const beetsPerDay = parseFloat(staking.farm?.beetsPerBlock || '0') * (blocksData?.blocksPerDay || 0) * userShare;
-    const showClaimBALButton = staking.gauge?.gaugeAddress && staking.gauge.version === 2;
-    const hasPendingBalRewards =
-        parseFloat(pendingRewards.find((reward) => reward.address === networkConfig.balancer.balToken)?.amount || '0') >
-        0;
 
-    const nonBALRewards = pendingRewards.filter((p) => p.address !== networkConfig.balancer.balToken);
-    const hasPendingNonBALRewards = sumBy(nonBALRewards, (r) => parseFloat(r.amount)) > 0;
+    // TODO: remove again when v6 relayer is released
+    const {
+        claim: { claimBAL, ...claimQuery },
+        refetch: refetchClaimableBAL,
+    } = useStakingMintableRewards([staking]);
+    const showClaimBALButton = staking.gauge?.gaugeAddress && staking.gauge.version === 2;
+    const { data: contractCalls } = usePoolGaugeClaimRewardsGetContractCallData();
 
     return (
         <>
@@ -169,8 +167,10 @@ export function PoolUserStakedStats({ poolAddress, staking, totalApr, userPoolBa
                 <Box width="full">
                     <BeetsSubmitTransactionButton
                         {...harvestQuery}
+                        // TODO: switch 'isDisabled' when relayer v6 is released
+                        //isDisabled={pendingRewardsTotalUSD < 0.01}
                         isDisabled={!hasPendingNonBALRewards}
-                        onClick={() => claim()}
+                        onClick={() => (contractCalls ? claim(contractCalls) : claim())}
                         onConfirmed={() => {
                             refetchPendingRewards();
                             refetchUserTokenBalances();
@@ -180,11 +180,12 @@ export function PoolUserStakedStats({ poolAddress, staking, totalApr, userPoolBa
                         Claim rewards
                     </BeetsSubmitTransactionButton>
                 </Box>
+                {/* TODO: remove again when v6 relayer is released */}
                 <Box width="full">
                     {showClaimBALButton && (
                         <BeetsSubmitTransactionButton
                             {...claimQuery}
-                            isDisabled={!hasPendingBalRewards}
+                            isDisabled={!hasPendingBalRewards || pendingBALUSD < 0.01}
                             onClick={() => claimBAL(staking.gauge?.gaugeAddress || '')}
                             onConfirmed={() => {
                                 refetchPendingRewards();
