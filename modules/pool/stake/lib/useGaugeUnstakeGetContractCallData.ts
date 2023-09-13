@@ -6,6 +6,7 @@ import { BigNumberish } from '@ethersproject/bignumber';
 import { usePoolUserPendingRewards } from '../../lib/usePoolUserPendingRewards';
 import { GqlPoolStakingOtherGauge } from '~/apollo/generated/graphql-codegen-generated';
 import { Zero } from '@ethersproject/constants';
+import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 
 export function useGaugeUnstakeGetContractCallData(
     amount: BigNumberish,
@@ -14,6 +15,7 @@ export function useGaugeUnstakeGetContractCallData(
     const { userAddress } = useUserAccount();
     const { pool } = usePool();
     const { hasPendingBalRewards, hasPendingNonBALRewards, isLoading } = usePoolUserPendingRewards();
+    const networkConfig = useNetworkConfig();
 
     const data = {
         hasPendingNonBALRewards,
@@ -31,6 +33,6 @@ export function useGaugeUnstakeGetContractCallData(
             const contractCallData = gaugeService.getGaugeClaimRewardsAndWithdrawContractCallData(data);
             return contractCallData;
         },
-        { enabled: !isLoading && amount.toString() !== '0' },
+        { enabled: networkConfig.gaugeEnabled && !isLoading && amount.toString() !== '0' },
     );
 }
