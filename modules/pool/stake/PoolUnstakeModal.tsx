@@ -63,9 +63,11 @@ export function PoolUnstakeModal({ isOpen, onOpen, onClose }: Props) {
     const { pool } = usePool();
     const { withdraw, ...unstakeQuery } = useStakingWithdraw(pool.staking);
     const [steps, setSteps] = useState<TransactionStep[] | null>(null);
-    const { data: hasMinterApproval, isLoading: isLoadingHasMinterApproval } = useHasMinterApproval();
+    // TODO: fix comments below when relayer v6 is released
+    //const { data: hasMinterApproval, isLoading: isLoadingHasMinterApproval } = useHasMinterApproval();
+    //const loading = isLoadingBalances || isLoadingHasMinterApproval || isLoadingBatchRelayerApproval;
     const { data: hasBatchRelayerApproval, isLoading: isLoadingBatchRelayerApproval } = useHasBatchRelayerApproval();
-    const loading = isLoadingBalances || isLoadingHasMinterApproval || isLoadingBatchRelayerApproval;
+    const loading = isLoadingBalances || isLoadingBatchRelayerApproval;
 
     const { data: contractCalls } = useGaugeUnstakeGetContractCallData(
         oldBnumToBnum(oldBnum(oldBnumScaleAmount(userStakedBptBalance).times(percent).div(100).toFixed(0))),
@@ -205,8 +207,8 @@ export function PoolUnstakeModal({ isOpen, onOpen, onClose }: Props) {
                             if (id === 'bal-rewards') {
                                 claimBAL(pool.staking?.gauge?.gaugeAddress || '');
                             }
-                            if (id === 'unstake' && contractCalls) {
-                                withdraw({ contractCalls });
+                            if (id === 'unstake') {
+                                withdraw(contractCalls ? { contractCalls } : { amount });
                             }
                         }}
                         onConfirmed={async (id) => {
