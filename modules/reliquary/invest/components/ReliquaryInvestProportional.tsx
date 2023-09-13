@@ -14,7 +14,8 @@ import { useReliquaryInvestState } from '~/modules/reliquary/invest/lib/useReliq
 import { replaceEthWithWeth, replaceWethWithEth, tokenGetAmountForAddress } from '~/lib/services/token/token-util';
 import { ReliquaryInvestSettings } from '~/modules/reliquary/invest/components/ReliquaryInvestSettings';
 import { BeetsBox } from '~/components/box/BeetsBox';
-import { ReliquaryInvestSummary } from '~/modules/reliquary/invest/components/ReliquaryInvestSummary';
+//import { ReliquaryInvestSummary } from '~/modules/reliquary/invest/components/ReliquaryInvestSummary';
+import { PoolInvestSummary } from '~/modules/pool/invest/components/PoolInvestSummary';
 import React from 'react';
 import { keyBy, mapValues } from 'lodash';
 import { oldBnumScale, oldBnumToHumanReadable } from '~/lib/services/pool/lib/old-big-number';
@@ -35,7 +36,7 @@ export function ReliquaryInvestProportional({ onShowPreview }: Props) {
     const investOptions = pool.investConfig.options;
     const { setSelectedOption, selectedOptions, setInputAmounts, inputAmounts } = useReliquaryInvestState();
     const { tokenProportionalAmounts } = useReliquaryJoinGetProportionalInvestmentAmount();
-    const { selectedInvestTokens, isInvestingWithEth } = useReliquaryInvest();
+    const { selectedInvestTokens, isInvestingWithEth, totalInvestValue } = useReliquaryInvest();
 
     const { userPoolTokenBalances } = usePoolUserTokenBalancesInWallet();
 
@@ -78,7 +79,7 @@ export function ReliquaryInvestProportional({ onShowPreview }: Props) {
     return (
         <Box>
             <VStack p="4" spacing="4">
-                <ReliquaryInvestSummary />
+                <PoolInvestSummary totalInvestValue={totalInvestValue} />
                 <BeetsBox py="2" px="4">
                     <Slider
                         mt="8"
@@ -152,7 +153,6 @@ export function ReliquaryInvestProportional({ onShowPreview }: Props) {
                         })}
                     </VStack>
                 </BeetsBox>
-
                 <ReliquaryInvestSettings mt="8" />
                 <Button
                     variant="primary"

@@ -14,6 +14,7 @@ import { useReliquaryZap } from '~/modules/reliquary/lib/useReliquaryZap';
 import useReliquary from '~/modules/reliquary/lib/useReliquary';
 import { useBatchRelayerHasApprovedForAll } from '~/modules/reliquary/lib/useBatchRelayerHasApprovedForAll';
 import { ReliquaryTransactionStepsSubmit, TransactionStep } from '../../components/ReliquaryTransactionStepsSubmit';
+import { useInvest } from '~/modules/pool/invest/lib/useInvest';
 
 interface Props {
     onInvestComplete(): void;
@@ -23,7 +24,7 @@ interface Props {
 export function ReliquaryInvestActions({ onInvestComplete, onClose }: Props) {
     const networkConfig = useNetworkConfig();
     const { pool } = usePool();
-    const { selectedInvestTokensWithAmounts, totalInvestValue } = useReliquaryInvest();
+    const { selectedInvestTokensWithAmounts, totalInvestValue } = useInvest();
     const allInvestTokens = pool.investConfig.options.map((option) => option.tokenOptions).flat();
     const {
         hasApprovalForAmount,

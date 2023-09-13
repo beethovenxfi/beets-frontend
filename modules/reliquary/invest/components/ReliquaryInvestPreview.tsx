@@ -1,7 +1,5 @@
-import { Box, StackDivider, VStack } from '@chakra-ui/react';
+import { StackDivider, VStack } from '@chakra-ui/react';
 import { BeetsBox } from '~/components/box/BeetsBox';
-import { useReliquaryInvest } from '~/modules/reliquary/invest/lib/useReliquaryInvest';
-import { ReliquaryInvestSummary } from '~/modules/reliquary/invest/components/ReliquaryInvestSummary';
 import { ReliquaryInvestActions } from '~/modules/reliquary/invest/components/ReliquaryInvestActions';
 import TokenRow from '~/components/token/TokenRow';
 import React from 'react';
@@ -10,16 +8,23 @@ import { ReliquaryInvestDepositImpact } from './ReliquaryInvestDepositImpact';
 import { ReliquaryInvestImage } from './ReliquaryInvestImage';
 import { CurrentStepProvider } from '~/modules/reliquary/lib/useReliquaryCurrentStep';
 import { ReliquaryInvestTitle } from './ReliquaryInvestTitle';
+import { PoolInvestSummary } from '~/modules/pool/invest/components/PoolInvestSummary';
+import { GqlPoolToken } from '~/apollo/generated/graphql-codegen-generated';
 
 interface Props {
     onInvestComplete(): void;
     onClose(): void;
+    totalInvestValue: number;
+    selectedInvestTokensWithAmounts: (GqlPoolToken & { amount: string })[];
 }
 
-export function ReliquaryInvestPreview({ onInvestComplete, onClose }: Props) {
-    const { selectedInvestTokensWithAmounts } = useReliquaryInvest();
+export function ReliquaryInvestPreview({
+    onInvestComplete,
+    onClose,
+    totalInvestValue,
+    selectedInvestTokensWithAmounts,
+}: Props) {
     const { selectedRelic, createRelic } = useReliquary();
-    const { totalInvestValue } = useReliquaryInvest();
 
     return (
         <CurrentStepProvider>
@@ -27,7 +32,7 @@ export function ReliquaryInvestPreview({ onInvestComplete, onClose }: Props) {
                 <VStack px="4" width="full" spacing="0">
                     <ReliquaryInvestImage />
                     <ReliquaryInvestTitle investTypeText="maBEETS" />
-                    <ReliquaryInvestSummary />
+                    <PoolInvestSummary totalInvestValue={totalInvestValue} />
                     {!createRelic && selectedRelic && (
                         <ReliquaryInvestDepositImpact
                             totalInvestValue={totalInvestValue}
@@ -36,9 +41,12 @@ export function ReliquaryInvestPreview({ onInvestComplete, onClose }: Props) {
                     )}
                     <BeetsBox width="full">
                         <VStack width="full" divider={<StackDivider borderColor="whiteAlpha.200" />} p="2">
-                            {selectedInvestTokensWithAmounts.map((token, index) => {
-                                return <TokenRow key={token.address} address={token.address} amount={token.amount} />;
-                            })}
+                            {selectedInvestTokensWithAmounts &&
+                                selectedInvestTokensWithAmounts.map((token: any) => {
+                                    return (
+                                        <TokenRow key={token.address} address={token.address} amount={token.amount} />
+                                    );
+                                })}
                         </VStack>
                     </BeetsBox>
                 </VStack>

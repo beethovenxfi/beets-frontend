@@ -5,11 +5,16 @@ import { useSlippage } from '~/lib/global/useSlippage';
 import numeral from 'numeral';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 import { usePool } from '~/modules/pool/lib/usePool';
+import { AmountHumanReadableMap } from '~/lib/services/token/token-types';
 
-export function usePoolJoinGetBptOutAndPriceImpactForTokensIn() {
+interface Props {
+    selectedOptions: { [poolTokenIndex: string]: string } | undefined;
+    inputAmounts: AmountHumanReadableMap | undefined;
+}
+
+export function usePoolJoinGetBptOutAndPriceImpactForTokensIn({ selectedOptions, inputAmounts }: Props) {
     const networkConfig = useNetworkConfig();
     const { poolService, pool } = usePool();
-    const { inputAmounts, selectedOptions } = useInvestState();
     const { slippage } = useSlippage();
     //map the input amounts to the token being invested
     const tokenAmountsIn =

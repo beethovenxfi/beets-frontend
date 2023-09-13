@@ -22,6 +22,9 @@ import { ReliquaryInvestCustom } from './components/ReliquaryInvestCustom';
 import { ReliquaryInvestProportional } from './components/ReliquaryInvestProportional';
 import { useReliquaryInvestState } from './lib/useReliquaryInvestState';
 import { FadeInBox } from '~/components/animation/FadeInBox';
+import { PoolInvestTypeChoice } from '~/modules/pool/invest/components/PoolInvestTypeChoice';
+import { PoolInvestProportional } from '~/modules/pool/invest/components/PoolInvestProportional';
+import { PoolInvestCustom } from '~/modules/pool/invest/components/PoolInvestCustom';
 
 interface Props {
     createRelic?: boolean;
@@ -64,7 +67,7 @@ export function ReliquaryInvestModal({
 
     function onModalOpen() {
         if (createRelic) {
-            setCreateRelic(true);
+            setCreateRelic && setCreateRelic(true);
         } else {
             setCreateRelic(false);
         }
@@ -223,7 +226,7 @@ export function ReliquaryInvestModal({
                                         </Alert>
                                     </Box>
                                 )}
-                                <ReliquaryInvestTypeChoice
+                                <PoolInvestTypeChoice
                                     onShowProportional={() => {
                                         setInvestType('proportional');
                                         setModalState('proportional');
@@ -237,7 +240,7 @@ export function ReliquaryInvestModal({
                                 />
                             </FadeInBox>
                             <FadeInBox isVisible={modalState === 'proportional'}>
-                                <ReliquaryInvestProportional
+                                <PoolInvestProportional
                                     onShowPreview={() => {
                                         setInvestType('proportional');
                                         setModalState('preview');
@@ -245,7 +248,7 @@ export function ReliquaryInvestModal({
                                 />
                             </FadeInBox>
                             <FadeInBox isVisible={modalState === 'custom'}>
-                                <ReliquaryInvestCustom
+                                <PoolInvestCustom
                                     onShowPreview={() => {
                                         setInvestType('custom');
                                         setModalState('preview');

@@ -8,7 +8,6 @@ import { BeetsTokenInputWithSlider } from '~/components/inputs/BeetsTokenInputWi
 import { usePoolJoinGetBptOutAndPriceImpactForTokensIn } from '~/modules/pool/invest/lib/usePoolJoinGetBptOutAndPriceImpactForTokensIn';
 import { usePool } from '~/modules/pool/lib/usePool';
 import React from 'react';
-import { PoolInvestPriceImpact } from '~/modules/pool/invest/components/PoolInvestPriceImpact';
 
 interface Props {
     onShowPreview(): void;
@@ -16,17 +15,20 @@ interface Props {
 
 export function PoolInvestCustom({ onShowPreview }: Props) {
     const { pool } = usePool();
-    const { customInputAmounts: inputAmounts, setInputAmount, setSelectedOption } = useInvestState();
-    const { selectedInvestTokens, hasValidUserInput } = useInvest();
+    const { customInputAmounts: inputAmounts, setInputAmount, setSelectedOption, selectedOptions } = useInvestState();
+    const { selectedInvestTokens, hasValidUserInput, totalInvestValue } = useInvest();
     const { userPoolTokenBalances } = usePoolUserTokenBalancesInWallet();
-    const { hasHighPriceImpact, formattedPriceImpact } = usePoolJoinGetBptOutAndPriceImpactForTokensIn();
+    const { hasHighPriceImpact, formattedPriceImpact } = usePoolJoinGetBptOutAndPriceImpactForTokensIn({
+        inputAmounts,
+        selectedOptions,
+    });
     const [acknowledgeHighPriceImpact, { toggle: toggleAcknowledgeHighPriceImpact }] = useBoolean(false);
 
     return (
         <Box>
             <Box p="4">
                 <Box mb="4">
-                    <PoolInvestSummary />
+                    <PoolInvestSummary totalInvestValue={totalInvestValue} />
                 </Box>
                 {pool.investConfig.options.map((option, index) => {
                     return (
@@ -73,7 +75,6 @@ export function PoolInvestCustom({ onShowPreview }: Props) {
                     Preview
                 </Button>
             </Box>
-            <PoolInvestPriceImpact />
         </Box>
     );
 }

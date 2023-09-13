@@ -12,12 +12,12 @@ interface Props {
 }
 
 export function PoolInvestPreview({ onInvestComplete, onClose }: Props) {
-    const { selectedInvestTokensWithAmounts } = useInvest();
+    const { selectedInvestTokensWithAmounts, totalInvestValue } = useInvest();
 
     return (
         <VStack spacing="4" width="full">
             <Box px="4" width="full">
-                <PoolInvestSummary mt="6" />
+                <PoolInvestSummary totalInvestValue={totalInvestValue} mt="6" />
                 <BeetsBox>
                     <VStack width="full" divider={<StackDivider borderColor="whiteAlpha.200" />} mt="4" p="2">
                         {selectedInvestTokensWithAmounts.map((token) => {

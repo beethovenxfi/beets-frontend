@@ -1,15 +1,15 @@
 import { Box, BoxProps, Heading, HStack, VStack } from '@chakra-ui/react';
 import AprTooltip from '~/components/apr-tooltip/AprTooltip';
 import { numberFormatUSDValue } from '~/lib/util/number-formats';
-import { useInvest } from '~/modules/pool/invest/lib/useInvest';
 import { usePool } from '~/modules/pool/lib/usePool';
 import React from 'react';
 
-interface Props extends BoxProps {}
+interface Props extends BoxProps {
+    totalInvestValue: number;
+}
 
-export function PoolInvestSummary({ ...rest }: Props) {
+export function PoolInvestSummary({ totalInvestValue, ...rest }: Props) {
     const { pool, totalApr } = usePool();
-    const { totalInvestValue } = useInvest();
     const weeklyYield = (totalInvestValue * totalApr) / 52;
 
     return (

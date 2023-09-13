@@ -25,7 +25,6 @@ import TokenRow from '~/components/token/TokenRow';
 import { usePoolUserTokenBalancesInWallet } from '../../lib/usePoolUserTokenBalancesInWallet';
 import { GqlPoolToken } from '~/apollo/generated/graphql-codegen-generated';
 import { tokenInputTruncateDecimalPlaces } from '~/lib/util/input-util';
-import { PoolInvestPriceImpact } from '~/modules/pool/invest/components/PoolInvestPriceImpact';
 
 interface Props {
     onShowPreview(): void;
@@ -41,7 +40,7 @@ export function PoolInvestProportional({ onShowPreview }: Props) {
         proportionalInputAmounts: inputAmounts,
     } = useInvestState();
     const { tokenProportionalAmounts } = usePoolJoinGetProportionalInvestmentAmount();
-    const { selectedInvestTokens, isInvestingWithEth, firstTokenOption } = useInvest();
+    const { selectedInvestTokens, isInvestingWithEth, firstTokenOption, totalInvestValue } = useInvest();
 
     const { userPoolTokenBalances } = usePoolUserTokenBalancesInWallet();
 
@@ -87,7 +86,7 @@ export function PoolInvestProportional({ onShowPreview }: Props) {
     return (
         <Box>
             <VStack p="4" spacing="4">
-                <PoolInvestSummary />
+                <PoolInvestSummary totalInvestValue={totalInvestValue} />
                 <BeetsBox py="2" px="4">
                     <Slider
                         mt="8"
@@ -173,7 +172,6 @@ export function PoolInvestProportional({ onShowPreview }: Props) {
                     Preview
                 </Button>
             </VStack>
-            <PoolInvestPriceImpact />
         </Box>
     );
 }

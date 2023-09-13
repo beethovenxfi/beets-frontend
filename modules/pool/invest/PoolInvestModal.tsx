@@ -22,6 +22,10 @@ import { usePool } from '~/modules/pool/lib/usePool';
 import { BeetsModalBody, BeetsModalContent, BeetsModalHeader } from '~/components/modal/BeetsModal';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 import { useInvestState } from './lib/useInvestState';
+import { FadeInBox } from '~/components/animation/FadeInBox';
+import { ReliquaryFarmPosition } from '~/lib/services/staking/reliquary.service';
+import { ReliquaryInvestPreview } from '~/modules/reliquary/invest/components/ReliquaryInvestPreview';
+import { useInvest } from './lib/useInvest';
 
 interface Props {
     activatorLabel?: string;
@@ -29,6 +33,11 @@ interface Props {
     noActivator?: boolean;
     isVisible?: boolean;
     onClose?: () => void;
+    isConnected?: boolean;
+    createRelic?: boolean;
+    selectedRelic?: ReliquaryFarmPosition | null;
+    setCreateRelic?: (value: boolean) => void;
+    isReliquary?: boolean;
 }
 
 function getInvertedTransform(startBounds: DOMRect, endBounds: DOMRect) {
@@ -46,6 +55,11 @@ export function PoolInvestModal({
     noActivator,
     onClose: _onClose,
     isVisible = false,
+    isConnected = true,
+    createRelic = false,
+    selectedRelic,
+    setCreateRelic,
+    isReliquary = false,
 }: Props) {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const { pool, formattedTypeName } = usePool();
@@ -58,12 +72,14 @@ export function PoolInvestModal({
     const modalContainerRef = useRef<HTMLDivElement | null>(null);
     const lastModalBounds = useRef<DOMRect | null>(null);
     const { setInitialInvestState, clearInvestState, setInputAmountsForType } = useInvestState();
+    const { totalInvestValue, selectedInvestTokensWithAmounts } = useInvest();
 
     function onModalClose() {
         if (investComplete) {
             setModalState('start');
             setInvestType(null);
             setInvestComplete(false);
+            setCreateRelic && setCreateRelic(false);
             clearInvestState();
         }
         onClose();
@@ -71,6 +87,11 @@ export function PoolInvestModal({
     }
 
     function onModalOpen() {
+        if (createRelic) {
+            setCreateRelic && setCreateRelic(true);
+        } else {
+            setCreateRelic && setCreateRelic(false);
+        }
         setInitialInvestState();
         onOpen();
     }
@@ -128,12 +149,13 @@ export function PoolInvestModal({
     }, [modalState]);
 
     return (
-        <Box width={{ base: 'full', md: 'fit-content' }}>
+        <Box width={{ base: 'full', md: isReliquary ? 'full' : 'fit-content' }}>
             {!noActivator && (
                 <Button
                     variant="primary"
                     onClick={onModalOpen}
-                    width={{ base: 'full', md: '140px' }}
+                    width={{ base: 'full', md: isReliquary ? 'full' : '140px' }}
+                    disabled={!isConnected}
                     {...activatorProps}
                 >
                     {activatorLabel || 'Invest'}
@@ -142,7 +164,7 @@ export function PoolInvestModal({
             <Modal motionPreset="none" isOpen={isOpen} onClose={onModalClose} size="lg" initialFocusRef={initialRef}>
                 <ModalOverlay bg="blackAlpha.900" />
                 <AnimatePresence exitBeforeEnter>
-                    <BeetsModalContent position="relative" isTransparent={true}>
+                    <BeetsModalContent position="relative" isTransparent>
                         <Box
                             as={motion.div}
                             width="full"
@@ -192,10 +214,16 @@ export function PoolInvestModal({
                             {modalState === 'start' ? (
                                 <>
                                     <Heading size="md" noOfLines={1}>
-                                        Invest into {pool.name}
+                                        {`Invest into ${
+                                            isReliquary
+                                                ? `${createRelic ? 'a new  ' : 'an existing '}relic `
+                                                : `${pool.name}`
+                                        }`}
                                     </Heading>
                                     <Text color="gray.200" fontSize="md">
-                                        {formattedTypeName}
+                                        {isReliquary
+                                            ? 'Deposit into the fresh BEETS farm to get maBEETS.'
+                                            : formattedTypeName}
                                     </Text>
                                 </>
                             ) : null}
@@ -207,75 +235,71 @@ export function PoolInvestModal({
                             ) : null}
                         </BeetsModalHeader>
                         <BeetsModalBody p="0">
-                            {modalState === 'start' ? (
-                                <motion.div
-                                    style={{ minHeight: '200px' }}
-                                    initial={{ opacity: 0 }}
-                                    animate={{ opacity: 1, transition: { delay: 0.25 } }}
-                                    exit={{ opacity: 0 }}
-                                >
-                                    {warnings.poolInvest[pool.id] && (
-                                        <Box px="4">
-                                            <Alert status="warning" mb="4">
-                                                <AlertIcon />
-                                                {warnings.poolInvest[pool.id]}
-                                            </Alert>
-                                        </Box>
-                                    )}
-                                    <PoolInvestTypeChoice
-                                        onShowProportional={() => {
-                                            setInvestType('proportional');
-                                            setModalState('proportional');
-                                            setInputAmountsForType('proportional');
+                            <FadeInBox isVisible={modalState === 'start'}>
+                                {warnings.poolInvest[pool.id] && (
+                                    <Box px="4">
+                                        <Alert status="warning" mb="4">
+                                            <AlertIcon />
+                                            {warnings.poolInvest[pool.id]}
+                                        </Alert>
+                                    </Box>
+                                )}
+                                {!createRelic && selectedRelic && (
+                                    <Box px="4">
+                                        <Alert status="warning" mb="4">
+                                            <AlertIcon />
+                                            Investing more funds into your relic will affect your level up progress.
+                                        </Alert>
+                                    </Box>
+                                )}
+                                <PoolInvestTypeChoice
+                                    onShowProportional={() => {
+                                        setInvestType('proportional');
+                                        setModalState('proportional');
+                                        setInputAmountsForType('proportional');
+                                    }}
+                                    onShowCustom={() => {
+                                        setInvestType('custom');
+                                        setModalState('custom');
+                                        setInputAmountsForType('custom');
+                                    }}
+                                />
+                            </FadeInBox>
+                            <FadeInBox isVisible={modalState === 'proportional'}>
+                                <PoolInvestProportional
+                                    onShowPreview={() => {
+                                        setInvestType('proportional');
+                                        setModalState('preview');
+                                    }}
+                                />
+                            </FadeInBox>
+                            <FadeInBox isVisible={modalState === 'custom'}>
+                                <PoolInvestCustom
+                                    onShowPreview={() => {
+                                        setInvestType('custom');
+                                        setModalState('preview');
+                                    }}
+                                />
+                            </FadeInBox>
+                            <FadeInBox isVisible={modalState === 'preview'}>
+                                {isReliquary ? (
+                                    <ReliquaryInvestPreview
+                                        totalInvestValue={totalInvestValue}
+                                        selectedInvestTokensWithAmounts={selectedInvestTokensWithAmounts}
+                                        onInvestComplete={() => {
+                                            setInvestComplete(true);
                                         }}
-                                        onShowCustom={() => {
-                                            setInvestType('custom');
-                                            setModalState('custom');
-                                            setInputAmountsForType('custom');
-                                        }}
+                                        onClose={onModalClose}
                                     />
-                                </motion.div>
-                            ) : null}
-
-                            {modalState === 'proportional' ? (
-                                <motion.div
-                                    style={{ minHeight: '620px' }}
-                                    initial={{ opacity: 0 }}
-                                    animate={{ opacity: 1, transition: { delay: 0.25 } }}
-                                    exit={{ opacity: 0 }}
-                                >
-                                    <PoolInvestProportional
-                                        onShowPreview={() => {
-                                            setInvestType('proportional');
-                                            setModalState('preview');
-                                        }}
-                                    />
-                                </motion.div>
-                            ) : null}
-                            {modalState === 'custom' ? (
-                                <motion.div
-                                    initial={{ opacity: 0 }}
-                                    animate={{ opacity: 1, transition: { delay: 0.25 } }}
-                                    exit={{ opacity: 0 }}
-                                >
-                                    <PoolInvestCustom
-                                        onShowPreview={() => {
-                                            setInvestType('custom');
-                                            setModalState('preview');
-                                        }}
-                                    />
-                                </motion.div>
-                            ) : null}
-                            {modalState === 'preview' ? (
-                                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                                ) : (
                                     <PoolInvestPreview
                                         onInvestComplete={() => {
                                             setInvestComplete(true);
                                         }}
                                         onClose={onModalClose}
                                     />
-                                </motion.div>
-                            ) : null}
+                                )}
+                            </FadeInBox>
                         </BeetsModalBody>
                     </BeetsModalContent>
                 </AnimatePresence>

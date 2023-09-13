@@ -17,6 +17,7 @@ import { useHasBatchRelayerApproval } from '~/lib/util/useHasBatchRelayerApprova
 import { SubTransactionSubmittedContent } from '~/components/transaction/SubTransactionSubmittedContent';
 import { transactionMessageFromError } from '~/lib/util/transaction-util';
 import { useCompose } from '~/modules/compose/ComposeProvider';
+import { useInvestState } from '../lib/useInvestState';
 
 interface Props {
     onInvestComplete(): void;
@@ -28,6 +29,7 @@ export function PoolInvestActions({ onInvestComplete, onClose }: Props) {
     const composeProvider = useCompose();
     const { pool, requiresBatchRelayerOnJoin } = usePool();
     const { selectedInvestTokensWithAmounts, totalInvestValue, zapEnabled } = useInvest();
+    const { inputAmounts, selectedOptions } = useInvestState();
     const { joinPool, ...joinQuery } = useJoinPool(pool, zapEnabled);
     const allInvestTokens = pool.investConfig.options.map((option) => option.tokenOptions).flat();
     const {
@@ -42,7 +44,7 @@ export function PoolInvestActions({ onInvestComplete, onClose }: Props) {
         refetch: refetchBatchRelayerApproval,
     } = useHasBatchRelayerApproval();
 
-    const { bptOutAndPriceImpact } = usePoolJoinGetBptOutAndPriceImpactForTokensIn();
+    const { bptOutAndPriceImpact } = usePoolJoinGetBptOutAndPriceImpactForTokensIn({ inputAmounts, selectedOptions });
     const { data: contractCallData, isLoading: isLoadingContractCallData } = usePoolJoinGetContractCallData(
         bptOutAndPriceImpact?.minBptReceived || null,
         zapEnabled,

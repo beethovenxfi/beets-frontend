@@ -31,10 +31,10 @@ import { PoolProvider, usePool } from '../pool/lib/usePool';
 import ReliquaryMigrateModal from './components/ReliquaryMigrateModal';
 import { useLegacyFBeetsBalance } from './lib/useLegacyFbeetsBalance';
 import { CurrentStepProvider } from './lib/useReliquaryCurrentStep';
-import Compose, { ProviderWithProps } from '~/components/providers/Compose';
 import useReliquary from './lib/useReliquary';
 import BeetsTooltip from '~/components/tooltip/BeetsTooltip';
 import numeral from 'numeral';
+import { PoolInvestModal } from '../pool/invest/PoolInvestModal';
 
 const infoButtonLabelProps = {
     lineHeight: '1rem',
@@ -68,7 +68,7 @@ export default function ReliquaryLanding() {
     const { pool } = usePool();
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [buttonEnabled, setButtonEnabled] = useState(true);
-    const { totalMaBeetsVP, isLoading } = useReliquary();
+    const { totalMaBeetsVP, isLoading, selectedRelic, setCreateRelic } = useReliquary();
 
     useEffect(() => {
         if (!isConnecting) {
@@ -120,8 +120,15 @@ export default function ReliquaryLanding() {
                             <ListItem>Access evolving Ludwig fNFTs</ListItem>
                         </UnorderedList>
                         <Spacer />
-                        <HStack w={{ base: 'full', xl: '90%' }}>
-                            <ReliquaryInvestModal createRelic isConnected={buttonEnabled} />
+                        <HStack w={{ base: 'full', xl: '75%' }}>
+                            <PoolInvestModal
+                                isReliquary
+                                createRelic
+                                isConnected={buttonEnabled}
+                                activatorLabel="Get maBEETS"
+                                selectedRelic={selectedRelic}
+                                setCreateRelic={setCreateRelic}
+                            />
                             <Button
                                 variant="secondary"
                                 w="full"

@@ -6,6 +6,7 @@ import useReliquary from '../lib/useReliquary';
 import { ReliquaryInvestModal } from '~/modules/reliquary/invest/ReliquaryInvestModal';
 import RelicSlide from './RelicSlide';
 import { ReliquaryWithdrawModal } from '~/modules/reliquary/withdraw/ReliquaryWithdrawModal';
+import { PoolInvestModal } from '~/modules/pool/invest/PoolInvestModal';
 
 interface Props extends BoxProps {
     loading?: boolean;
@@ -104,7 +105,9 @@ export function RelicCarousel({ loading, ...rest }: Props) {
                     )} */}
                 </Swiper>
             </Box>
-            <ReliquaryInvestModal
+            <PoolInvestModal
+                isReliquary
+                selectedRelic={selectedRelic}
                 onClose={() => setIsInvestModalVisible(false)}
                 isVisible={isInvestModalVisible}
                 noActivator
