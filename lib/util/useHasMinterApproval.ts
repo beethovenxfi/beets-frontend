@@ -9,7 +9,7 @@ export function useHasMinterApproval() {
 
     const { data, ...rest } = useMultiCall({
         abi: BalancerPseudoMinterAbi,
-        enabled: !!userAddress,
+        enabled: !!userAddress && networkConfig.gaugeEnabled,
         calls: [
             {
                 address: networkConfig.gauge.balancerPseudoMinterAddress,
