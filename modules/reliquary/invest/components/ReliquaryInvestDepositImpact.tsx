@@ -3,16 +3,29 @@ import { formatDistanceToNowStrict } from 'date-fns';
 import React, { useEffect } from 'react';
 import { numberFormatUSDValue } from '~/lib/util/number-formats';
 import { useReliquaryDepositImpact } from '../../lib/useReliquaryDepositImpact';
-import { useReliquaryJoinGetBptOutAndPriceImpactForTokensIn } from '../lib/useReliquaryJoinGetBptOutAndPriceImpactForTokensIn';
+import { AmountHumanReadableMap } from '~/lib/services/token/token-types';
+import { usePoolJoinGetBptOutAndPriceImpactForTokensIn } from '~/modules/pool/invest/lib/usePoolJoinGetBptOutAndPriceImpactForTokensIn';
 
 interface Props {
     bptIn?: string;
     totalInvestValue?: number;
     relicId?: string;
+    inputAmounts?: AmountHumanReadableMap | undefined;
+    selectedOptions?:
+        | {
+              [poolTokenIndex: string]: string;
+          }
+        | undefined;
 }
 
-export function ReliquaryInvestDepositImpact({ bptIn, totalInvestValue = 0, relicId }: Props) {
-    const { bptOutAndPriceImpact } = useReliquaryJoinGetBptOutAndPriceImpactForTokensIn();
+export function ReliquaryInvestDepositImpact({
+    bptIn,
+    totalInvestValue = 0,
+    relicId,
+    inputAmounts,
+    selectedOptions,
+}: Props) {
+    const { bptOutAndPriceImpact } = usePoolJoinGetBptOutAndPriceImpactForTokensIn({ inputAmounts, selectedOptions });
 
     const {
         data: depositImpact,

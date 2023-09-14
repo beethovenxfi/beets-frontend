@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { useUserAllowances } from '~/lib/util/useUserAllowances';
-import { useReliquaryInvest } from '~/modules/reliquary/invest/lib/useReliquaryInvest';
 import { Alert, AlertIcon, Box, VStack } from '@chakra-ui/react';
 import { FadeInBox } from '~/components/animation/FadeInBox';
 import { numberFormatUSDValue } from '~/lib/util/number-formats';
@@ -13,8 +12,8 @@ import { useReliquaryDepositContractCallData } from '~/modules/reliquary/lib/use
 import { useReliquaryZap } from '~/modules/reliquary/lib/useReliquaryZap';
 import useReliquary from '~/modules/reliquary/lib/useReliquary';
 import { useBatchRelayerHasApprovedForAll } from '~/modules/reliquary/lib/useBatchRelayerHasApprovedForAll';
-import { ReliquaryTransactionStepsSubmit, TransactionStep } from '../../components/ReliquaryTransactionStepsSubmit';
 import { useInvest } from '~/modules/pool/invest/lib/useInvest';
+import { BeetsTransactionStepsSubmit, TransactionStep } from '~/components/button/BeetsTransactionStepsSubmit';
 
 interface Props {
     onInvestComplete(): void;
@@ -135,7 +134,7 @@ export function ReliquaryInvestActions({ onInvestComplete, onClose }: Props) {
                         : '4'
                 }
             >
-                <ReliquaryTransactionStepsSubmit
+                <BeetsTransactionStepsSubmit
                     isLoading={
                         steps === null || isLoadingBatchRelayerApproval || isLoadingBatchRelayerHasApprovedForAll
                     }

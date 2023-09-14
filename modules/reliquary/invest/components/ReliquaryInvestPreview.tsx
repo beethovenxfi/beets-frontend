@@ -10,12 +10,19 @@ import { CurrentStepProvider } from '~/modules/reliquary/lib/useReliquaryCurrent
 import { ReliquaryInvestTitle } from './ReliquaryInvestTitle';
 import { PoolInvestSummary } from '~/modules/pool/invest/components/PoolInvestSummary';
 import { GqlPoolToken } from '~/apollo/generated/graphql-codegen-generated';
+import { AmountHumanReadableMap } from '~/lib/services/token/token-types';
 
 interface Props {
     onInvestComplete(): void;
     onClose(): void;
     totalInvestValue: number;
     selectedInvestTokensWithAmounts: (GqlPoolToken & { amount: string })[];
+    inputAmounts: AmountHumanReadableMap | undefined;
+    selectedOptions:
+        | {
+              [poolTokenIndex: string]: string;
+          }
+        | undefined;
 }
 
 export function ReliquaryInvestPreview({
@@ -23,6 +30,8 @@ export function ReliquaryInvestPreview({
     onClose,
     totalInvestValue,
     selectedInvestTokensWithAmounts,
+    inputAmounts,
+    selectedOptions,
 }: Props) {
     const { selectedRelic, createRelic } = useReliquary();
 
@@ -37,6 +46,8 @@ export function ReliquaryInvestPreview({
                         <ReliquaryInvestDepositImpact
                             totalInvestValue={totalInvestValue}
                             relicId={selectedRelic.relicId}
+                            inputAmounts={inputAmounts}
+                            selectedOptions={selectedOptions}
                         />
                     )}
                     <BeetsBox width="full">

@@ -30,7 +30,7 @@ import { ReliquaryInvestDepositImpact } from '../invest/components/ReliquaryInve
 import { ReliquaryInvestImage } from '../invest/components/ReliquaryInvestImage';
 import { useCurrentStep } from '../lib/useReliquaryCurrentStep';
 import { ReliquaryInvestTitle } from '../invest/components/ReliquaryInvestTitle';
-import { ReliquaryTransactionStepsSubmit, TransactionStep } from './ReliquaryTransactionStepsSubmit';
+import { BeetsTransactionStepsSubmit, TransactionStep } from '~/components/button/BeetsTransactionStepsSubmit';
 
 interface Props {
     isOpen: boolean;
@@ -241,7 +241,7 @@ export default function ReliquaryMigrateModal({ isOpen, onClose }: Props) {
                                     />
                                 )}
                                 <Box width="full">
-                                    <ReliquaryTransactionStepsSubmit
+                                    <BeetsTransactionStepsSubmit
                                         // TODO implement hide hide modal
                                         onCompleteButtonClick={handleOnClose}
                                         onComplete={handleCompleteMigrate}

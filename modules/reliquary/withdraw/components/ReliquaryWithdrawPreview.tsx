@@ -17,8 +17,8 @@ import { transactionMessageFromError } from '~/lib/util/transaction-util';
 import { SubTransactionSubmittedContent } from '~/components/transaction/SubTransactionSubmittedContent';
 import TokenRow from '~/components/token/TokenRow';
 import { CurrentStepProvider } from '../../lib/useReliquaryCurrentStep';
-import { ReliquaryTransactionStepsSubmit, TransactionStep } from '../../components/ReliquaryTransactionStepsSubmit';
 import { useHasBatchRelayerApproval } from '~/lib/util/useHasBatchRelayerApproval';
+import { BeetsTransactionStepsSubmit, TransactionStep } from '~/components/button/BeetsTransactionStepsSubmit';
 
 interface Props {
     onWithdrawComplete(): void;
@@ -122,7 +122,7 @@ export function ReliquaryWithdrawPreview({ onWithdrawComplete, onClose }: Props)
                                     : '4'
                             }
                         >
-                            <ReliquaryTransactionStepsSubmit
+                            <BeetsTransactionStepsSubmit
                                 isLoading={isLoadingReliquaryContractCallData}
                                 loadingButtonText=""
                                 completeButtonText="Return to maBEETS"

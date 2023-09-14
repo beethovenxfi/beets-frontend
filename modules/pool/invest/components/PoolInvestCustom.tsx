@@ -8,6 +8,7 @@ import { BeetsTokenInputWithSlider } from '~/components/inputs/BeetsTokenInputWi
 import { usePoolJoinGetBptOutAndPriceImpactForTokensIn } from '~/modules/pool/invest/lib/usePoolJoinGetBptOutAndPriceImpactForTokensIn';
 import { usePool } from '~/modules/pool/lib/usePool';
 import React from 'react';
+import { PoolInvestPriceImpact } from './PoolInvestPriceImpact';
 
 interface Props {
     onShowPreview(): void;
@@ -75,6 +76,7 @@ export function PoolInvestCustom({ onShowPreview }: Props) {
                     Preview
                 </Button>
             </Box>
+            <PoolInvestPriceImpact inputAmounts={inputAmounts} selectedOptions={selectedOptions} />
         </Box>
     );
 }

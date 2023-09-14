@@ -14,7 +14,6 @@ import { PoolUserTokenBalancesInWalletProvider } from '~/modules/pool/lib/usePoo
 import { PoolComposableUserPoolTokenBalanceProvider } from '~/modules/pool/lib/usePoolComposableUserPoolTokenBalances';
 import { RelicDepositBalanceProvider } from '~/modules/reliquary/lib/useRelicDepositBalance';
 import { networkConfig } from '~/lib/config/network-config';
-import { ReliquaryPool } from '~/modules/reliquary/detail/ReliquaryPool';
 import Compose, { ProviderWithProps } from '~/components/providers/Compose';
 
 interface Props {
@@ -48,13 +47,7 @@ const PoolPage = ({ pool }: Props) => {
                 <meta property="twitter:title" content={`Beethoven X | ${pool.name}`} />
             </Head>
             <Compose providers={PoolProviders}>
-                {isReliquaryPool ? (
-                    <RelicDepositBalanceProvider>
-                        <ReliquaryPool />
-                    </RelicDepositBalanceProvider>
-                ) : (
-                    <Pool />
-                )}
+                <Pool isReliquaryPool={isReliquaryPool} />
             </Compose>
         </>
     );

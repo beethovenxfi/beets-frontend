@@ -25,6 +25,7 @@ import TokenRow from '~/components/token/TokenRow';
 import { usePoolUserTokenBalancesInWallet } from '../../lib/usePoolUserTokenBalancesInWallet';
 import { GqlPoolToken } from '~/apollo/generated/graphql-codegen-generated';
 import { tokenInputTruncateDecimalPlaces } from '~/lib/util/input-util';
+import { PoolInvestPriceImpact } from './PoolInvestPriceImpact';
 
 interface Props {
     onShowPreview(): void;
@@ -172,6 +173,7 @@ export function PoolInvestProportional({ onShowPreview }: Props) {
                     Preview
                 </Button>
             </VStack>
+            <PoolInvestPriceImpact inputAmounts={inputAmounts} selectedOptions={selectedOptions} />
         </Box>
     );
 }

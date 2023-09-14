@@ -7,7 +7,11 @@ import BeetsTab from '~/components/tabs/BeetsTab';
 import { useState } from 'react';
 import { usePoolUserBptBalance } from '~/modules/pool/lib/usePoolUserBptBalance';
 
-export default function PoolStats() {
+interface Props {
+    isReliquaryPool: boolean;
+}
+
+export default function PoolStats({ isReliquaryPool }: Props) {
     const { hasBpt } = usePoolUserBptBalance();
     const [activeTab, setActiveTab] = useState(0);
 
@@ -17,7 +21,7 @@ export default function PoolStats() {
     return (
         <Card px="2" py="4" height="full">
             <VStack height="full" spacing="4">
-                {hasBpt && (
+                {hasBpt && !isReliquaryPool && (
                     <Tabs width="full" variant="soft-rounded" display="flex" onChange={handleTabChanged} px="2">
                         <TabList>
                             <HStack spacing="2">
@@ -31,8 +35,8 @@ export default function PoolStats() {
                         </TabList>
                     </Tabs>
                 )}
-                {hasBpt && activeTab === 0 && <PoolUserStats />}
-                {(!hasBpt || activeTab === 1) && <PoolOverallStats />}
+                {hasBpt && !isReliquaryPool && activeTab === 0 && <PoolUserStats />}
+                {(!hasBpt || activeTab === 1 || isReliquaryPool) && <PoolOverallStats />}
             </VStack>
         </Card>
     );

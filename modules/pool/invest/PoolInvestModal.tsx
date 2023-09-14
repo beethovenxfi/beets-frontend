@@ -71,7 +71,8 @@ export function PoolInvestModal({
     const containerControls = useAnimation();
     const modalContainerRef = useRef<HTMLDivElement | null>(null);
     const lastModalBounds = useRef<DOMRect | null>(null);
-    const { setInitialInvestState, clearInvestState, setInputAmountsForType } = useInvestState();
+    const { setInitialInvestState, clearInvestState, setInputAmountsForType, inputAmounts, selectedOptions } =
+        useInvestState();
     const { totalInvestValue, selectedInvestTokensWithAmounts } = useInvest();
 
     function onModalClose() {
@@ -290,6 +291,8 @@ export function PoolInvestModal({
                                             setInvestComplete(true);
                                         }}
                                         onClose={onModalClose}
+                                        inputAmounts={inputAmounts}
+                                        selectedOptions={selectedOptions}
                                     />
                                 ) : (
                                     <PoolInvestPreview

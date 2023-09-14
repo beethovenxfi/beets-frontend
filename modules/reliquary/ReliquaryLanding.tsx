@@ -10,7 +10,6 @@ import {
     Box,
     Spacer,
     useDisclosure,
-    Flex,
     Badge,
 } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react';
@@ -20,7 +19,6 @@ import Rq1Image from '~/assets/images/rq-1.png';
 import Rq2Image from '~/assets/images/rq-2.png';
 import Rq3Image from '~/assets/images/rq-3.png';
 import Image from 'next/image';
-import { ReliquaryInvestModal } from './invest/ReliquaryInvestModal';
 import ReliquaryGlobalStats from './components/stats/ReliquaryGlobalStats';
 import { motion } from 'framer-motion';
 import { useUserAccount } from '~/lib/user/useUserAccount';

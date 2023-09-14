@@ -3,7 +3,6 @@ import { useEffect, useState } from 'react';
 import { Pagination } from 'swiper';
 import { Box, BoxProps, Heading, VStack, Flex, useBreakpointValue } from '@chakra-ui/react';
 import useReliquary from '../lib/useReliquary';
-import { ReliquaryInvestModal } from '~/modules/reliquary/invest/ReliquaryInvestModal';
 import RelicSlide from './RelicSlide';
 import { ReliquaryWithdrawModal } from '~/modules/reliquary/withdraw/ReliquaryWithdrawModal';
 import { PoolInvestModal } from '~/modules/pool/invest/PoolInvestModal';
@@ -34,10 +33,7 @@ export function RelicCarousel({ loading, ...rest }: Props) {
                     <VStack spacing="4" alignItems="center" height="full" justifyContent="center">
                         <Heading size="md">Get started by minting your own relic</Heading>
                         <Box>
-                            <ReliquaryInvestModal
-                                createRelic
-                                activatorProps={{ size: 'lg', width: '200px', mx: 'auto' }}
-                            />
+                            <PoolInvestModal createRelic activatorProps={{ size: 'lg', width: '200px', mx: 'auto' }} />
                         </Box>
                     </VStack>
                 </Flex>
