@@ -410,4 +410,5 @@ export const fantomNetworkConfig: NetworkConfig = {
     maBeetsEnabled: true,
     claimAllRewardsEnabled: true,
     layerZeroChainId: -1,
+    gaugeEnabled: false,
 };

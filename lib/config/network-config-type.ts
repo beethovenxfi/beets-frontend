@@ -126,4 +126,5 @@ export interface NetworkConfig {
     maBeetsEnabled: boolean;
     claimAllRewardsEnabled: boolean;
     layerZeroChainId: number;
+    gaugeEnabled: boolean;
 }
