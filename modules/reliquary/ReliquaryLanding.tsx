@@ -120,7 +120,7 @@ export default function ReliquaryLanding() {
                             <ListItem>Access evolving Ludwig fNFTs</ListItem>
                         </UnorderedList>
                         <Spacer />
-                        <HStack w={{ base: 'full', xl: '75%' }}>
+                        <HStack w={{ base: 'full', xl: '90%' }}>
                             <PoolInvestModal
                                 isReliquary
                                 createRelic
