@@ -36,6 +36,7 @@ const PoolPage = ({ pool }: Props) => {
         [PoolUserPendingRewardsProvider, {}],
         [PoolUserTokenBalancesInWalletProvider, {}],
         [PoolComposableUserPoolTokenBalanceProvider, {}],
+        [RelicDepositBalanceProvider, {}],
     ];
 
     return (
