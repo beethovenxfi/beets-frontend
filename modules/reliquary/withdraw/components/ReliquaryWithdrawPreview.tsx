@@ -1,9 +1,7 @@
-import { Alert, AlertIcon, Box, StackDivider, VStack } from '@chakra-ui/react';
+import { Alert, AlertIcon, Box, StackDivider, VStack, Text } from '@chakra-ui/react';
 import { numberFormatUSDValue } from '~/lib/util/number-formats';
 import { BeetsBox } from '~/components/box/BeetsBox';
 import { useGetTokens } from '~/lib/global/useToken';
-import { useReliquaryWithdrawState } from '~/modules/reliquary/withdraw/lib/useReliquaryWithdrawState';
-import { ReliquaryWithdrawSummary } from '~/modules/reliquary/withdraw/components/ReliquaryWithdrawSummary';
 import { FadeInBox } from '~/components/animation/FadeInBox';
 import { sum } from 'lodash';
 import { usePool } from '~/modules/pool/lib/usePool';
@@ -16,9 +14,10 @@ import { useBatchRelayerHasApprovedForAll } from '../../lib/useBatchRelayerHasAp
 import { transactionMessageFromError } from '~/lib/util/transaction-util';
 import { SubTransactionSubmittedContent } from '~/components/transaction/SubTransactionSubmittedContent';
 import TokenRow from '~/components/token/TokenRow';
-import { CurrentStepProvider } from '../../lib/useReliquaryCurrentStep';
+import { useCurrentStep } from '../../lib/useReliquaryCurrentStep';
 import { useHasBatchRelayerApproval } from '~/lib/util/useHasBatchRelayerApproval';
 import { BeetsTransactionStepsSubmit, TransactionStep } from '~/components/button/BeetsTransactionStepsSubmit';
+import { useWithdrawState } from '~/modules/pool/withdraw/lib/useWithdrawState';
 
 interface Props {
     onWithdrawComplete(): void;
@@ -27,8 +26,7 @@ interface Props {
 
 export function ReliquaryWithdrawPreview({ onWithdrawComplete, onClose }: Props) {
     const { pool } = usePool();
-    const { selectedWithdrawType, singleAssetWithdraw, proportionalAmounts, proportionalPercent } =
-        useReliquaryWithdrawState();
+    const { selectedWithdrawType, singleAssetWithdraw, proportionalAmounts, proportionalPercent } = useWithdrawState();
     const { priceForAmount } = useGetTokens();
     const [steps, setSteps] = useState<TransactionStep[] | null>(null);
 
@@ -45,6 +43,7 @@ export function ReliquaryWithdrawPreview({ onWithdrawComplete, onClose }: Props)
     const { data: batchRelayerHasApprovedForAll } = useBatchRelayerHasApprovedForAll();
     const { reliquaryZap, ...reliquaryZapQuery } = useReliquaryZap('WITHDRAW');
     const { data: hasBatchRelayerApproval } = useHasBatchRelayerApproval();
+    const { updateCurrentStep } = useCurrentStep();
 
     const withdrawAmounts =
         selectedWithdrawType === 'SINGLE_ASSET' && singleAssetWithdraw
@@ -80,79 +79,78 @@ export function ReliquaryWithdrawPreview({ onWithdrawComplete, onClose }: Props)
     }, []);
 
     return (
-        <CurrentStepProvider>
-            <VStack spacing="4" width="full">
-                <Box px="4" width="full">
-                    <BeetsBox width="full" mb="4">
-                        <VStack width="full" divider={<StackDivider borderColor="whiteAlpha.200" />} mt="4" p="2">
-                            {withdrawAmounts.map((token, index) => {
-                                return <TokenRow key={token.address} address={token.address} amount={token.amount} />;
-                            })}
-                        </VStack>
-                    </BeetsBox>
-                    <ReliquaryWithdrawSummary totalWithdrawValue={totalWithdrawValue} width="full" mb="4" />
-                    <VStack width="full" spacing="4">
-                        {reliquaryZapQuery.error && (
-                            <Box width="full">
-                                <Alert width="full" status="error">
-                                    <AlertIcon />
-                                    {transactionMessageFromError(reliquaryZapQuery.error)}
-                                </Alert>
-                            </Box>
-                        )}
-                        {reliquaryZapQuery.isConfirmed && (
-                            <Box width="full">
-                                <FadeInBox isVisible={reliquaryZapQuery.isConfirmed}>
-                                    <Alert status="success" borderRadius="md">
-                                        <AlertIcon />
-                                        {`You've successfully withdrawn ${numberFormatUSDValue(
-                                            totalWithdrawValue,
-                                        )} from the relic.`}
-                                    </Alert>
-                                </FadeInBox>
-                            </Box>
-                        )}
-                        <Box
-                            width="full"
-                            pb={
-                                reliquaryZapQuery.isConfirmed ||
-                                reliquaryZapQuery.isFailed ||
-                                reliquaryZapQuery.isPending
-                                    ? '0'
-                                    : '4'
-                            }
-                        >
-                            <BeetsTransactionStepsSubmit
-                                isLoading={isLoadingReliquaryContractCallData}
-                                loadingButtonText=""
-                                completeButtonText="Return to maBEETS"
-                                onCompleteButtonClick={onClose}
-                                onSubmit={() => {
-                                    if (reliquaryContractCalls) {
-                                        reliquaryZap(reliquaryContractCalls);
-                                    }
-                                }}
-                                onConfirmed={async (id) => {
-                                    if (id === 'exit') {
-                                        onWithdrawComplete();
-                                        refetchRelicPositions();
-                                    }
-                                }}
-                                steps={steps || []}
-                                queries={[{ ...reliquaryZapQuery, id: 'exit' }]}
-                            />
-                        </Box>
-                    </VStack>
-                </Box>
-                <FadeInBox
-                    width="full"
-                    isVisible={
-                        reliquaryZapQuery.isConfirmed || reliquaryZapQuery.isPending || reliquaryZapQuery.isFailed
-                    }
-                >
-                    <SubTransactionSubmittedContent query={reliquaryZapQuery} />
-                </FadeInBox>
+        <VStack spacing="4" width="full">
+            <VStack spacing="0" width="full">
+                <Text fontSize="3rem" fontWeight="semibold">
+                    {numberFormatUSDValue(totalWithdrawValue)}
+                </Text>
             </VStack>
-        </CurrentStepProvider>
+            <Box px="4" width="full">
+                <BeetsBox width="full" mb="4">
+                    <VStack width="full" divider={<StackDivider borderColor="whiteAlpha.200" />} mt="4" p="2">
+                        {withdrawAmounts.map((token) => {
+                            return <TokenRow key={token.address} address={token.address} amount={token.amount} />;
+                        })}
+                    </VStack>
+                </BeetsBox>
+                <VStack width="full" spacing="4">
+                    {reliquaryZapQuery.error && (
+                        <Box width="full">
+                            <Alert width="full" status="error">
+                                <AlertIcon />
+                                {transactionMessageFromError(reliquaryZapQuery.error)}
+                            </Alert>
+                        </Box>
+                    )}
+                    {reliquaryZapQuery.isConfirmed && (
+                        <Box width="full">
+                            <FadeInBox isVisible={reliquaryZapQuery.isConfirmed}>
+                                <Alert status="success" borderRadius="md">
+                                    <AlertIcon />
+                                    {`You've successfully withdrawn ${numberFormatUSDValue(
+                                        totalWithdrawValue,
+                                    )} from the relic.`}
+                                </Alert>
+                            </FadeInBox>
+                        </Box>
+                    )}
+                    <Box
+                        width="full"
+                        pb={
+                            reliquaryZapQuery.isConfirmed || reliquaryZapQuery.isFailed || reliquaryZapQuery.isPending
+                                ? '0'
+                                : '4'
+                        }
+                    >
+                        <BeetsTransactionStepsSubmit
+                            isLoading={isLoadingReliquaryContractCallData}
+                            loadingButtonText=""
+                            completeButtonText="Return to maBEETS"
+                            onCompleteButtonClick={onClose}
+                            onSubmit={() => {
+                                if (reliquaryContractCalls) {
+                                    reliquaryZap(reliquaryContractCalls);
+                                }
+                            }}
+                            onConfirmed={async (id) => {
+                                if (id === 'exit') {
+                                    onWithdrawComplete();
+                                    refetchRelicPositions();
+                                }
+                            }}
+                            steps={steps || []}
+                            queries={[{ ...reliquaryZapQuery, id: 'exit' }]}
+                            updateCurrentStep={updateCurrentStep}
+                        />
+                    </Box>
+                </VStack>
+            </Box>
+            <FadeInBox
+                width="full"
+                isVisible={reliquaryZapQuery.isConfirmed || reliquaryZapQuery.isPending || reliquaryZapQuery.isFailed}
+            >
+                <SubTransactionSubmittedContent query={reliquaryZapQuery} />
+            </FadeInBox>
+        </VStack>
     );
 }

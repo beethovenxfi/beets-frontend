@@ -1,4 +1,4 @@
-import { Modal, ModalBody, ModalCloseButton, ModalContent } from '@chakra-ui/modal';
+import { Modal, ModalCloseButton } from '@chakra-ui/modal';
 import {
     Alert,
     AlertIcon,
@@ -6,7 +6,6 @@ import {
     ButtonProps,
     Heading,
     IconButton,
-    ModalHeader,
     ModalOverlay,
     Text,
     useDisclosure,
@@ -23,18 +22,23 @@ import { usePool } from '~/modules/pool/lib/usePool';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 import { BeetsModalBody, BeetsModalContent, BeetsModalHeader } from '~/components/modal/BeetsModal';
 import { usePoolUserDepositBalance } from '../lib/usePoolUserDepositBalance';
+import { ReliquaryWithdrawPreview } from '~/modules/reliquary/withdraw/components/ReliquaryWithdrawPreview';
+import { CurrentStepProvider } from '~/modules/reliquary/lib/useReliquaryCurrentStep';
+import useReliquary from '~/modules/reliquary/lib/useReliquary';
 
 interface Props {
     activatorProps?: ButtonProps;
     noActivator?: boolean;
     isVisible?: boolean;
     onClose?: () => void;
+    isReliquary?: boolean;
 }
 export function PoolWithdrawModal({
     activatorProps = {},
     noActivator = false,
     onClose: _onClose,
     isVisible = false,
+    isReliquary = false,
 }: Props) {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const { pool, formattedTypeName } = usePool();
@@ -45,6 +49,7 @@ export function PoolWithdrawModal({
     const { clearWithdrawState } = useWithdrawState();
     const { warnings } = useNetworkConfig();
     const { userPoolBalanceUSD, isLoading: isPoolUserDepositBalanceLoading } = usePoolUserDepositBalance();
+    const { selectedRelicId } = useReliquary();
 
     useEffect(() => {
         setModalState('start');
@@ -115,11 +120,13 @@ export function PoolWithdrawModal({
                         {modalState === 'start' ? (
                             <>
                                 <Heading size="md" noOfLines={1}>
-                                    Withdraw from {pool.name}
+                                    Withdraw from {isReliquary ? 'Reliquary' : pool.name}
                                 </Heading>
-                                <Text color="gray.200" fontSize="md">
-                                    {formattedTypeName}
-                                </Text>
+                                {!isReliquary && (
+                                    <Text color="gray.200" fontSize="md">
+                                        {formattedTypeName}
+                                    </Text>
+                                )}
                             </>
                         ) : null}
 
@@ -158,6 +165,8 @@ export function PoolWithdrawModal({
                                     setInvestType('single-asset');
                                     setModalState('single-asset');
                                 }}
+                                isReliquary={isReliquary}
+                                relicId={selectedRelicId}
                             />
                         </FadeInBox>
                         <FadeInBox isVisible={modalState === 'proportional'}>
@@ -177,12 +186,23 @@ export function PoolWithdrawModal({
                             />
                         </FadeInBox>
                         <FadeInBox isVisible={modalState === 'preview'}>
-                            <PoolWithdrawPreview
-                                onWithdrawComplete={() => {
-                                    setWithdrawComplete(true);
-                                }}
-                                onClose={onModalClose}
-                            />
+                            {isReliquary ? (
+                                <CurrentStepProvider>
+                                    <ReliquaryWithdrawPreview
+                                        onWithdrawComplete={() => {
+                                            setWithdrawComplete(true);
+                                        }}
+                                        onClose={onModalClose}
+                                    />
+                                </CurrentStepProvider>
+                            ) : (
+                                <PoolWithdrawPreview
+                                    onWithdrawComplete={() => {
+                                        setWithdrawComplete(true);
+                                    }}
+                                    onClose={onModalClose}
+                                />
+                            )}
                         </FadeInBox>
                     </BeetsModalBody>
                 </BeetsModalContent>

@@ -26,38 +26,51 @@ import BeetsTooltip from '~/components/tooltip/BeetsTooltip';
 import Scales from '~/assets/icons/scales.svg';
 import Image from 'next/image';
 import BeetSmart from '~/assets/icons/beetx-smarts.svg';
+import { useRelicDepositBalance } from '~/modules/reliquary/lib/useRelicDepositBalance';
 
 interface Props {
     onShowProportional(): void;
     onShowSingleAsset(): void;
+    isReliquary?: boolean;
+    relicId?: string;
 }
 
-export function PoolWithdrawTypeChoice({ onShowProportional, onShowSingleAsset }: Props) {
+export function PoolWithdrawTypeChoice({ onShowProportional, onShowSingleAsset, isReliquary, relicId }: Props) {
     const unstakeDisclosure = useDisclosure();
     const { pool, canCustomInvest, isStablePool } = usePool();
     const isMobile = useBreakpointValue({ base: true, md: false });
     const { formattedPrice } = useGetTokens();
-    const { userPoolBalanceUSD, data, isLoading: isPoolUserDepositBalanceLoading } = usePoolUserDepositBalance();
+    const {
+        userPoolBalanceUSD,
+        data: userPoolBalances,
+        isLoading: isPoolUserDepositBalanceLoading,
+    } = usePoolUserDepositBalance();
     const { userTotalBptBalance, userWalletBptBalance, userStakedBptBalance, hasBptInWallet, hasBptStaked } =
         usePoolUserBptBalance();
     const valueStaked = (parseFloat(userStakedBptBalance) / parseFloat(userTotalBptBalance)) * userPoolBalanceUSD;
     const valueInWallet = (parseFloat(userWalletBptBalance) / parseFloat(userTotalBptBalance)) * userPoolBalanceUSD;
     const { selectedWithdrawTokenAddresses } = useWithdraw();
+    const {
+        data: relicTokenBalances,
+        relicBalanceUSD,
+        isLoading: isRelicDepositBalanceLoading,
+    } = useRelicDepositBalance();
 
     const ChoiceOrientation = isMobile ? VStack : HStack;
+    const balances = isReliquary ? relicTokenBalances : userPoolBalances;
 
     return (
         <VStack width="full" spacing="4">
             <VStack spacing="0">
                 <VStack spacing="0">
-                    <Text>Your withdrawable balance</Text>
-                    <Skeleton isLoaded={!isPoolUserDepositBalanceLoading}>
+                    <Text>Your withdrawable balance{isReliquary && ` for #${relicId}`}</Text>
+                    <Skeleton isLoaded={!isPoolUserDepositBalanceLoading || !isRelicDepositBalanceLoading}>
                         <Text fontSize="3rem" fontWeight="semibold">
-                            {numberFormatUSDValue(userPoolBalanceUSD)}
+                            {numberFormatUSDValue(isReliquary ? relicBalanceUSD : userPoolBalanceUSD)}
                         </Text>
                     </Skeleton>
                 </VStack>
-                {pool.staking && (
+                {pool.staking && !isReliquary && (
                     <HStack>
                         <Box bg="whiteAlpha.200" rounded="md" p="2">
                             <Skeleton isLoaded={!isPoolUserDepositBalanceLoading}>
@@ -72,31 +85,6 @@ export function PoolWithdrawTypeChoice({ onShowProportional, onShowSingleAsset }
                     </HStack>
                 )}
             </VStack>
-            {/* <HStack
-                spacing="4"
-                alignItems="center"
-                justifyContent="center"
-                width="full"
-                bg="blackAlpha.500"
-                p="2"
-                px="4"
-            >
-                <HStack>
-                    <Text color="whiteAlpha.800">Withdraw staked balance? ({numberFormatUSDValue(valueStaked)})</Text>
-                    <BeetsTooltip
-                        label={`You have ~${numberFormatUSDValue(
-                            valueStaked,
-                        )} worth of BPT staked. Enable the toggle below
-                            to withdraw your staked balance as well.`}
-                    >
-                        <Flex alignItems="center" justifyContent="center" width="24px">
-                            <Image src={BeetsThinking} width="24px" height="24px" alt="beets-balanced" />
-                        </Flex>
-                    </BeetsTooltip>
-                </HStack>
-                <Switch />
-            </HStack> */}
-
             {valueStaked > 0 && (
                 <Box px="4">
                     <BeetsBox p="2">
@@ -138,60 +126,38 @@ export function PoolWithdrawTypeChoice({ onShowProportional, onShowSingleAsset }
                         </VStack>
                     </Button>
                 </Box>
-                <BeetsTooltip
-                    label={
-                        isStablePool
-                            ? 'As this is a stable pool, you can withdraw either asset without any impact.'
-                            : canCustomInvest
-                            ? ''
-                            : 'This pool does not support a single asset withdraw.'
-                    }
-                >
-                    <Box w="full">
+                <Box w="full">
+                    <BeetsTooltip
+                        label={
+                            isStablePool
+                                ? 'As this is a stable pool, you can withdraw either asset without any impact.'
+                                : canCustomInvest && !isReliquary
+                                ? ''
+                                : 'This pool does not support a single asset withdraw.'
+                        }
+                    >
                         <Button
+                            _hover={{ borderColor: 'beets.green' }}
+                            borderWidth={1}
+                            borderColor="beets.transparent"
+                            height="140px"
+                            width="full"
                             variant="image"
                             onClick={onShowSingleAsset}
-                            disabled={parseFloat(userWalletBptBalance) === 0 || !canCustomInvest}
+                            disabled={parseFloat(userWalletBptBalance) === 0 || !canCustomInvest || isReliquary}
                         >
                             <VStack spacing="1">
                                 <Image src={BeetSmart} height="48" alt="beets-smart" />
-                                {/* <Text fontSize="lg">{numberFormatUSDValue(investableAmount)}</Text> */}
                                 <Text fontSize="sm">Single asset withdraw</Text>
                                 <Text fontSize="xs" color={isStablePool ? 'beets.green' : 'transparent'}>
                                     Minimal price impact
                                 </Text>
                             </VStack>
                         </Button>
-                    </Box>
-                </BeetsTooltip>
-                <PoolUnstakeModal {...unstakeDisclosure} />
+                    </BeetsTooltip>
+                </Box>
+                {isReliquary ? null : <PoolUnstakeModal {...unstakeDisclosure} />}
             </ChoiceOrientation>
-            {/* <Box p="2" px="4">
-                {hasBptStaked && !isFbeetsPool && (
-                    <Alert status="warning" borderRadius="md">
-                        <AlertIcon />
-                        <Box flex="1" mr="4">
-                            
-                        </Box>
-                    </Alert>
-                )}
-            </Box> */}
-            {/* <Box>
-                <Button variant="primary" width="full" isDisabled={!hasBptInWallet} onClick={onShowProportional}>
-                    Withdraw proportionally
-                </Button>
-                <Button
-                    variant="secondary"
-                    width="full"
-                    mt="2"
-                    isDisabled={!hasBptInWallet}
-                    onClick={onShowSingleAsset}
-                >
-                    Single asset withdraw
-                </Button>
-
-                
-            </Box> */}
             <VStack width="full" p="4" backgroundColor="blackAlpha.500" alignItems="flex-start">
                 <Text fontSize="md" fontWeight="semibold">
                     Deposited token breakdown
@@ -213,13 +179,12 @@ export function PoolWithdrawTypeChoice({ onShowProportional, onShowSingleAsset }
                                     alignItems="flex-start"
                                 >
                                     {option.tokenOptions.map((tokenOption, tokenIndex) => {
-                                        const hasOptions = option.tokenOptions.length > 1;
                                         const token =
                                             option.tokenOptions.find((tokenOption) =>
                                                 selectedWithdrawTokenAddresses.includes(tokenOption.address),
                                             ) || option.tokenOptions[0];
                                         const balance =
-                                            data?.find((item) => item.address === token.address)?.amount || '0';
+                                            balances?.find((item) => item.address === token.address)?.amount || '0';
                                         const tokenPrecision = Math.min(tokenOption?.decimals || 18, 12);
 
                                         return (

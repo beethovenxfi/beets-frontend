@@ -18,9 +18,10 @@ import { BeetsTransactionStepsSubmit, TransactionStep } from '~/components/butto
 interface Props {
     onInvestComplete(): void;
     onClose(): void;
+    updateCurrentStep: (value: string) => void;
 }
 
-export function ReliquaryInvestActions({ onInvestComplete, onClose }: Props) {
+export function ReliquaryInvestActions({ onInvestComplete, onClose, updateCurrentStep }: Props) {
     const networkConfig = useNetworkConfig();
     const { pool } = usePool();
     const { selectedInvestTokensWithAmounts, totalInvestValue } = useInvest();
@@ -157,6 +158,7 @@ export function ReliquaryInvestActions({ onInvestComplete, onClose }: Props) {
                     }}
                     queries={[{ ...reliquaryJoinQuery, id: 'reliquary-invest' }]}
                     showToS={createRelic}
+                    updateCurrentStep={updateCurrentStep}
                 />
             </Box>
             <FadeInBox

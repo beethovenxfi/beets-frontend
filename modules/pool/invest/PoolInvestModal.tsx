@@ -26,6 +26,7 @@ import { FadeInBox } from '~/components/animation/FadeInBox';
 import { ReliquaryFarmPosition } from '~/lib/services/staking/reliquary.service';
 import { ReliquaryInvestPreview } from '~/modules/reliquary/invest/components/ReliquaryInvestPreview';
 import { useInvest } from './lib/useInvest';
+import { CurrentStepProvider } from '~/modules/reliquary/lib/useReliquaryCurrentStep';
 
 interface Props {
     activatorLabel?: string;
@@ -284,16 +285,18 @@ export function PoolInvestModal({
                             </FadeInBox>
                             <FadeInBox isVisible={modalState === 'preview'}>
                                 {isReliquary ? (
-                                    <ReliquaryInvestPreview
-                                        totalInvestValue={totalInvestValue}
-                                        selectedInvestTokensWithAmounts={selectedInvestTokensWithAmounts}
-                                        onInvestComplete={() => {
-                                            setInvestComplete(true);
-                                        }}
-                                        onClose={onModalClose}
-                                        inputAmounts={inputAmounts}
-                                        selectedOptions={selectedOptions}
-                                    />
+                                    <CurrentStepProvider>
+                                        <ReliquaryInvestPreview
+                                            totalInvestValue={totalInvestValue}
+                                            selectedInvestTokensWithAmounts={selectedInvestTokensWithAmounts}
+                                            onInvestComplete={() => {
+                                                setInvestComplete(true);
+                                            }}
+                                            onClose={onModalClose}
+                                            inputAmounts={inputAmounts}
+                                            selectedOptions={selectedOptions}
+                                        />
+                                    </CurrentStepProvider>
                                 ) : (
                                     <PoolInvestPreview
                                         onInvestComplete={() => {

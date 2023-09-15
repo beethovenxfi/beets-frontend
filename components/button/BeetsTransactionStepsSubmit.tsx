@@ -46,6 +46,7 @@ interface Props {
     buttonSize?: string;
     onComplete?: () => void;
     showToS?: boolean;
+    updateCurrentStep?: (value: string) => void;
 }
 
 export function BeetsTransactionStepsSubmit({
@@ -61,6 +62,7 @@ export function BeetsTransactionStepsSubmit({
     isDisabled,
     buttonSize = 'lg',
     showToS = false,
+    updateCurrentStep,
 }: Props) {
     const [currentStepIdx, setCurrentStepIdx] = useState<number>(0);
     const [stepStatuses, setStepStatuses] = useState<{ [id: string]: StepStatus }>({});
@@ -72,7 +74,6 @@ export function BeetsTransactionStepsSubmit({
 
     // reliquary
     const { refetch: refetchBatchRelayerHasApprovedForAll } = useBatchRelayerHasApprovedForAll();
-    const { updateCurrentStep } = useCurrentStep();
     const [checked, setChecked] = useState(false);
 
     function setStepStatus(id: string, status: StepStatus) {
@@ -113,7 +114,7 @@ export function BeetsTransactionStepsSubmit({
 
     useEffect(() => {
         if (steps.length > 0) {
-            updateCurrentStep(steps[currentStepIdx].id);
+            updateCurrentStep && updateCurrentStep(steps[currentStepIdx].id);
         }
     }, [currentStepIdx, steps]);
 

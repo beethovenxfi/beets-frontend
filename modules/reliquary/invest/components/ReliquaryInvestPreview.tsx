@@ -6,7 +6,7 @@ import React from 'react';
 import useReliquary from '~/modules/reliquary/lib/useReliquary';
 import { ReliquaryInvestDepositImpact } from './ReliquaryInvestDepositImpact';
 import { ReliquaryInvestImage } from './ReliquaryInvestImage';
-import { CurrentStepProvider } from '~/modules/reliquary/lib/useReliquaryCurrentStep';
+import { useCurrentStep } from '~/modules/reliquary/lib/useReliquaryCurrentStep';
 import { ReliquaryInvestTitle } from './ReliquaryInvestTitle';
 import { PoolInvestSummary } from '~/modules/pool/invest/components/PoolInvestSummary';
 import { GqlPoolToken } from '~/apollo/generated/graphql-codegen-generated';
@@ -34,35 +34,36 @@ export function ReliquaryInvestPreview({
     selectedOptions,
 }: Props) {
     const { selectedRelic, createRelic } = useReliquary();
+    const { updateCurrentStep } = useCurrentStep();
 
     return (
-        <CurrentStepProvider>
-            <VStack spacing="4" width="full">
-                <VStack px="4" width="full" spacing="0">
-                    <ReliquaryInvestImage />
-                    <ReliquaryInvestTitle investTypeText="maBEETS" />
-                    <PoolInvestSummary totalInvestValue={totalInvestValue} />
-                    {!createRelic && selectedRelic && (
-                        <ReliquaryInvestDepositImpact
-                            totalInvestValue={totalInvestValue}
-                            relicId={selectedRelic.relicId}
-                            inputAmounts={inputAmounts}
-                            selectedOptions={selectedOptions}
-                        />
-                    )}
-                    <BeetsBox width="full">
-                        <VStack width="full" divider={<StackDivider borderColor="whiteAlpha.200" />} p="2">
-                            {selectedInvestTokensWithAmounts &&
-                                selectedInvestTokensWithAmounts.map((token: any) => {
-                                    return (
-                                        <TokenRow key={token.address} address={token.address} amount={token.amount} />
-                                    );
-                                })}
-                        </VStack>
-                    </BeetsBox>
-                </VStack>
-                <ReliquaryInvestActions onInvestComplete={onInvestComplete} onClose={onClose} />
+        <VStack spacing="4" width="full">
+            <VStack px="4" width="full" spacing="0">
+                <ReliquaryInvestImage />
+                <ReliquaryInvestTitle investTypeText="maBEETS" />
+                <PoolInvestSummary totalInvestValue={totalInvestValue} />
+                {!createRelic && selectedRelic && (
+                    <ReliquaryInvestDepositImpact
+                        totalInvestValue={totalInvestValue}
+                        relicId={selectedRelic.relicId}
+                        inputAmounts={inputAmounts}
+                        selectedOptions={selectedOptions}
+                    />
+                )}
+                <BeetsBox width="full">
+                    <VStack width="full" divider={<StackDivider borderColor="whiteAlpha.200" />} p="2">
+                        {selectedInvestTokensWithAmounts &&
+                            selectedInvestTokensWithAmounts.map((token: any) => {
+                                return <TokenRow key={token.address} address={token.address} amount={token.amount} />;
+                            })}
+                    </VStack>
+                </BeetsBox>
             </VStack>
-        </CurrentStepProvider>
+            <ReliquaryInvestActions
+                onInvestComplete={onInvestComplete}
+                onClose={onClose}
+                updateCurrentStep={updateCurrentStep}
+            />
+        </VStack>
     );
 }
