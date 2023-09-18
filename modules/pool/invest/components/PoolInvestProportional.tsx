@@ -25,7 +25,7 @@ import TokenRow from '~/components/token/TokenRow';
 import { usePoolUserTokenBalancesInWallet } from '../../lib/usePoolUserTokenBalancesInWallet';
 import { GqlPoolToken } from '~/apollo/generated/graphql-codegen-generated';
 import { tokenInputTruncateDecimalPlaces } from '~/lib/util/input-util';
-import { PoolInvestPriceImpact } from './PoolInvestPriceImpact';
+import { PoolInvestPriceImpact } from '~/modules/pool/invest/components/PoolInvestPriceImpact';
 
 interface Props {
     onShowPreview(): void;
