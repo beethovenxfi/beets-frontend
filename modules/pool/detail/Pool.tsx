@@ -26,8 +26,9 @@ export function Pool({ isReliquaryPool }: Props) {
         <Box marginBottom="8">
             <PoolHeader />
             <VStack width="full" spacing="4">
-                {isReliquaryPool ? (
-                    <HStack width="full" justifyContent="flex-end">
+                <PoolWarnings />
+                <HStack width="full" justifyContent="flex-end">
+                    {isReliquaryPool ? (
                         <NextLink href="/mabeets" chakraProps={{ _hover: { textDecoration: 'none' } }}>
                             <BeetsTooltip label="Please go to the maBEETS page to invest or manage your liquidity for this pool.">
                                 <Button variant="primary" width={{ base: '130px', lg: '160px' }}>
@@ -35,17 +36,13 @@ export function Pool({ isReliquaryPool }: Props) {
                                 </Button>
                             </BeetsTooltip>
                         </NextLink>
-                    </HStack>
-                ) : (
-                    <>
-                        <PoolWarnings />
-                        <HStack width="full" justifyContent="flex-end">
+                    ) : (
+                        <>
                             {!investDisabled[pool.id] && <PoolInvestModal />}
                             <PoolWithdrawModal activatorProps={{ disabled: isFbeetsPool && total > 0 }} />
-                        </HStack>
-                    </>
-                )}
-
+                        </>
+                    )}
+                </HStack>
                 <Grid gap="4" templateColumns={{ base: '1fr', lg: '300px 1fr' }} width="full">
                     <GridItem>
                         <PoolStats isReliquaryPool={isReliquaryPool} />
