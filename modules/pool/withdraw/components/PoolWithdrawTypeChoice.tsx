@@ -137,9 +137,6 @@ export function PoolWithdrawTypeChoice({ onShowProportional, onShowSingleAsset, 
                         }
                     >
                         <Button
-                            _hover={{ borderColor: 'beets.green' }}
-                            borderWidth={1}
-                            borderColor="beets.transparent"
                             height="140px"
                             width="full"
                             variant="image"
