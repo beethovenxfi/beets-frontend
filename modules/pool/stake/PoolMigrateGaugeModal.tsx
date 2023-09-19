@@ -12,8 +12,8 @@ import { usePool } from '../lib/usePool';
 import { useStakingDeposit } from '~/lib/global/useStakingDeposit';
 import { useUserAllowances } from '~/lib/util/useUserAllowances';
 import { TokenBase } from '~/lib/services/token/token-types';
-import { omit } from 'lodash';
 import { useGaugeUnstakeGetContractCallData } from './lib/useGaugeUnstakeGetContractCallData';
+import { useHasBatchRelayerApproval } from '~/lib/util/useHasBatchRelayerApproval';
 
 interface Props {
     activatorProps?: ButtonProps;
@@ -33,12 +33,8 @@ export function PoolGaugeMigrateModal({
     const { pool } = usePool();
     const [modalState, setModalState] = useState<'start' | 'proportional' | 'single-asset' | 'preview'>('start');
     const {
-        userStakedBptBalance,
         userLegacyGaugeStakedBptBalance,
-        userWalletBptBalance,
         userLegacyGaugeStakedGaugeAddress,
-        isLoading: isLoadingBalances,
-        isRefetching: isRefetchingBalances,
         refetch: refetchBptBalances,
     } = usePoolUserBptBalance();
 
@@ -68,6 +64,8 @@ export function PoolGaugeMigrateModal({
         decimals: 18,
     });
 
+    const { data: hasBatchRelayerApproval, isLoading: isLoadingBatchRelayerApproval } = useHasBatchRelayerApproval();
+
     useEffect(() => {
         const _steps: TransactionStep[] = [{ id: 'deposit', tooltipText: '', type: 'other', buttonText: 'Stake' }];
         if (!hasApprovalForDeposit && bpt) {
@@ -86,9 +84,17 @@ export function PoolGaugeMigrateModal({
         if (hasLegacyBptStaked) {
             _steps.unshift({ id: 'unstake', tooltipText: '', type: 'other', buttonText: 'Unstake' });
         }
+        if (!hasBatchRelayerApproval && !isLoadingBatchRelayerApproval) {
+            _steps.unshift({
+                id: 'batch-relayer',
+                type: 'other',
+                buttonText: 'Approve Batch Relayer',
+                tooltipText: 'This pool requires you to approve the batch relayer.',
+            });
+        }
         if (_steps.length < steps?.length) return;
         setSteps(_steps);
-    }, [hasLegacyBptStaked, depositAmount]);
+    }, [hasLegacyBptStaked, depositAmount, hasBatchRelayerApproval]);
 
     useEffect(() => {
         setModalState('start');
