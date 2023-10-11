@@ -1,8 +1,10 @@
-import { Button, HStack, Text } from '@chakra-ui/react';
+import { Box, HStack, Text } from '@chakra-ui/react';
 import { useState } from 'react';
-import { BeetsSubmitTransactionButton } from '~/components/button/BeetsSubmitTransactionButton';
 import { BeetsTokenApprovalButton } from '~/components/button/BeetsTokenApprovalButton';
 import { TokenBase } from '~/lib/services/token/token-types';
+import { networkConfig } from '~/lib/config/network-config';
+import { BeetsMigrationButton } from './BeetsMigrationButton';
+import { useUserAllowances } from '~/lib/util/useUserAllowances';
 
 interface Props {
     beetsBalance: string;
@@ -11,26 +13,42 @@ interface Props {
 
 export function BeetsMigration({ beetsBalance, tokenData }: Props) {
     const [isConfirmed, setIsConfirmed] = useState(false);
-    const [isApproved, setIsApproved] = useState(false);
+
+    const {
+        hasApprovalForAmount,
+        isLoading: isLoadingAllowances,
+        refetch: refetchAllowances,
+    } = useUserAllowances([tokenData], networkConfig.beets.migration);
 
     return (
         <HStack>
             {isConfirmed ? (
-                <Text>You have successfully swapped BEETS for multiBEETS!</Text>
+                <Text>You have successfully migrated multiBEETS to (lz)BEETS!</Text>
             ) : (
                 <>
-                    <Text>You have {beetsBalance} multiBEETS that you can swap 1:1 for BEETS.</Text>
-                    {isApproved ? (
-                        <Button>Swap</Button>
+                    <Text>You have {beetsBalance} multiBEETS that you can migrate 1:1 to (lz)BEETS.</Text>
+                    {!isLoadingAllowances && hasApprovalForAmount(tokenData?.address || '', beetsBalance) ? (
+                        <BeetsMigrationButton
+                            amount={beetsBalance}
+                            onConfirmed={() => {
+                                setIsConfirmed(true);
+                            }}
+                            inline
+                            size="lg"
+                        />
                     ) : (
                         tokenData && (
-                            <BeetsTokenApprovalButton
-                                tokenWithAmount={{ ...tokenData, amount: beetsBalance }}
-                                onConfirmed={() => {
-                                    setIsApproved(true);
-                                }}
-                                size="lg"
-                            />
+                            <Box w="200px">
+                                <BeetsTokenApprovalButton
+                                    contractToApprove={networkConfig.beets.migration}
+                                    tokenWithAmount={{ ...tokenData, amount: beetsBalance }}
+                                    onConfirmed={() => {
+                                        refetchAllowances();
+                                    }}
+                                    inline
+                                    size="lg"
+                                />
+                            </Box>
                         )
                     )}
                 </>
