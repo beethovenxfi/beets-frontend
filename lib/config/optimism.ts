@@ -292,6 +292,7 @@ export const optimismNetworkConfig: NetworkConfig = {
         '0x4fd63966879300cafafbb35d157dc5229278ed2300020000000000000000002b': 'https://app.aura.finance/#/10/pool/0', // Rocket Fuel
         //'0x7b50775383d3d6f0215a8f290f2c9e2eebbeceb200020000000000000000008b': 'https://app.aura.finance/#/10/pool/4', // shanghai shakedown
         '0xacfe9b4782910a853b68abba60f3fd8049ffe6380000000000000000000000ff': 'https://app.aura.finance/#/10/pool/9', // sonata for two
+        '0x9da11ff60bfc5af527f58fd61679c3ac98d040d9000000000000000000000100': 'https://app.aura.finance/#/10/pool/10', // native stable beets
     },
     investDisabled: {
         '0x1f131ec1175f023ee1534b16fa8ab237c00e238100000000000000000000004a': true,
