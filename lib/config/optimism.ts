@@ -37,10 +37,11 @@ export const optimismNetworkConfig: NetworkConfig = {
         nativeAssetId: 'optimism',
         platformId: 'optimism',
     },
-    rpcUrl: 'https://rpc.ankr.com/optimism',
+    rpcUrl: 'https://rpc.tenderly.co/fork/16f4dd09-df03-4557-9fb8-eb57a31554d2',
     multicall: '0x2dc0e2aa608532da689e89e237df582b783e552c',
     beets: {
         address: '0x97513e975a7fa9072c72c92d8000b0db90b163c5',
+        migration: '0x9300c7eb7e3e16ba916a7d6aafee3891236ac5fc',
     },
     fbeets: {
         address: '',
@@ -331,4 +332,5 @@ export const optimismNetworkConfig: NetworkConfig = {
     maBeetsEnabled: false,
     claimAllRewardsEnabled: false,
     layerZeroChainId: 111,
+    beetsMigrationEnabled: true,
 };

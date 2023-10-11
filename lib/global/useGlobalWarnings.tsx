@@ -79,9 +79,9 @@ export default function useGlobalWarnings() {
 
     // check for BEETS migration on OP
     useEffect(() => {
-        if (parseFloat(beetsBalance) > 0 && networkConfig.chainId === '10') {
+        if (parseFloat(beetsBalance) > 0 && networkConfig.beetsMigrationEnabled) {
             showToast({
-                id: 'optimism-beets-migration',
+                id: 'beets-migration',
                 content: <BeetsMigration beetsBalance={beetsBalance} tokenData={tokenData} />,
                 type: ToastType.Warn,
             });
