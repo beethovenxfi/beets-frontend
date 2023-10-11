@@ -12,6 +12,7 @@ interface Props {
     onCanceled?: () => void;
     isDisabled?: boolean;
     size?: string;
+    inline?: boolean;
 }
 
 export function BeetsTokenApprovalButton({
