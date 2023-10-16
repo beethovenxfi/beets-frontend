@@ -128,6 +128,8 @@ export interface GqlPoolBase {
     owner?: Maybe<Scalars['Bytes']>;
     staking?: Maybe<GqlPoolStaking>;
     symbol: Scalars['String'];
+    type: Scalars['String'];
+    version: Scalars['Int'];
     withdrawConfig: GqlPoolWithdrawConfig;
 }
 
@@ -224,7 +226,9 @@ export interface GqlPoolElement extends GqlPoolBase {
     staking?: Maybe<GqlPoolStaking>;
     symbol: Scalars['String'];
     tokens: Array<GqlPoolToken>;
+    type: Scalars['String'];
     unitSeconds: Scalars['BigInt'];
+    version: Scalars['Int'];
     withdrawConfig: GqlPoolWithdrawConfig;
 }
 
@@ -243,6 +247,7 @@ export interface GqlPoolFilter {
     categoryNotIn?: InputMaybe<Array<GqlPoolFilterCategory>>;
     chainIn?: InputMaybe<Array<GqlChain>>;
     chainNotIn?: InputMaybe<Array<GqlChain>>;
+    createTime?: InputMaybe<GqlPoolTimePeriod>;
     filterIn?: InputMaybe<Array<Scalars['String']>>;
     filterNotIn?: InputMaybe<Array<Scalars['String']>>;
     idIn?: InputMaybe<Array<Scalars['String']>>;
@@ -296,6 +301,7 @@ export interface GqlPoolGyro extends GqlPoolBase {
     symbol: Scalars['String'];
     tokens: Array<GqlPoolTokenUnion>;
     type: Scalars['String'];
+    version: Scalars['Int'];
     withdrawConfig: GqlPoolWithdrawConfig;
 }
 
@@ -357,7 +363,9 @@ export interface GqlPoolLinear extends GqlPoolBase {
     staking?: Maybe<GqlPoolStaking>;
     symbol: Scalars['String'];
     tokens: Array<GqlPoolToken>;
+    type: Scalars['String'];
     upperTarget: Scalars['BigInt'];
+    version: Scalars['Int'];
     withdrawConfig: GqlPoolWithdrawConfig;
     wrappedIndex: Scalars['Int'];
 }
@@ -437,6 +445,8 @@ export interface GqlPoolLiquidityBootstrapping extends GqlPoolBase {
     staking?: Maybe<GqlPoolStaking>;
     symbol: Scalars['String'];
     tokens: Array<GqlPoolTokenUnion>;
+    type: Scalars['String'];
+    version: Scalars['Int'];
     withdrawConfig: GqlPoolWithdrawConfig;
 }
 
@@ -458,6 +468,8 @@ export interface GqlPoolMetaStable extends GqlPoolBase {
     staking?: Maybe<GqlPoolStaking>;
     symbol: Scalars['String'];
     tokens: Array<GqlPoolToken>;
+    type: Scalars['String'];
+    version: Scalars['Int'];
     withdrawConfig: GqlPoolWithdrawConfig;
 }
 
@@ -482,6 +494,7 @@ export interface GqlPoolMinimal {
 
 export type GqlPoolMinimalType =
     | 'ELEMENT'
+    | 'FX'
     | 'GYRO'
     | 'GYRO3'
     | 'GYROE'
@@ -522,6 +535,8 @@ export interface GqlPoolPhantomStable extends GqlPoolBase {
     staking?: Maybe<GqlPoolStaking>;
     symbol: Scalars['String'];
     tokens: Array<GqlPoolTokenUnion>;
+    type: Scalars['String'];
+    version: Scalars['Int'];
     withdrawConfig: GqlPoolWithdrawConfig;
 }
 
@@ -585,6 +600,8 @@ export interface GqlPoolStable extends GqlPoolBase {
     staking?: Maybe<GqlPoolStaking>;
     symbol: Scalars['String'];
     tokens: Array<GqlPoolToken>;
+    type: Scalars['String'];
+    version: Scalars['Int'];
     withdrawConfig: GqlPoolWithdrawConfig;
 }
 
@@ -624,6 +641,7 @@ export interface GqlPoolStakingGauge {
     rewards: Array<GqlPoolStakingGaugeReward>;
     status: GqlPoolStakingGaugeStatus;
     version: Scalars['Int'];
+    workingSupply: Scalars['String'];
 }
 
 export interface GqlPoolStakingGaugeReward {
@@ -690,6 +708,11 @@ export interface GqlPoolSwapFilter {
     poolIdIn?: InputMaybe<Array<Scalars['String']>>;
     tokenInIn?: InputMaybe<Array<Scalars['String']>>;
     tokenOutIn?: InputMaybe<Array<Scalars['String']>>;
+}
+
+export interface GqlPoolTimePeriod {
+    gt?: InputMaybe<Scalars['Int']>;
+    lt?: InputMaybe<Scalars['Int']>;
 }
 
 export interface GqlPoolToken extends GqlPoolTokenBase {
@@ -813,6 +836,8 @@ export interface GqlPoolWeighted extends GqlPoolBase {
     staking?: Maybe<GqlPoolStaking>;
     symbol: Scalars['String'];
     tokens: Array<GqlPoolTokenUnion>;
+    type: Scalars['String'];
+    version: Scalars['Int'];
     withdrawConfig: GqlPoolWithdrawConfig;
 }
 
@@ -1000,7 +1025,7 @@ export interface GqlTokenCandlestickChartDataItem {
     timestamp: Scalars['Int'];
 }
 
-export type GqlTokenChartDataRange = 'SEVEN_DAY' | 'THIRTY_DAY';
+export type GqlTokenChartDataRange = 'NINETY_DAY' | 'SEVEN_DAY' | 'THIRTY_DAY';
 
 export interface GqlTokenData {
     __typename: 'GqlTokenData';
@@ -1111,10 +1136,17 @@ export interface GqlUserSwapVolumeFilter {
     tokenOutIn?: InputMaybe<Array<Scalars['String']>>;
 }
 
+export interface GqlVeBalUserData {
+    __typename: 'GqlVeBalUserData';
+    balance: Scalars['AmountHumanReadable'];
+    rank?: Maybe<Scalars['Int']>;
+}
+
 export interface GqlVotingGauge {
     __typename: 'GqlVotingGauge';
     addedTimestamp?: Maybe<Scalars['Int']>;
     address: Scalars['Bytes'];
+    childGaugeAddress?: Maybe<Scalars['Bytes']>;
     isKilled: Scalars['Boolean'];
     relativeWeightCap?: Maybe<Scalars['String']>;
 }
@@ -1306,6 +1338,7 @@ export interface Query {
     userGetStaking: Array<GqlPoolStaking>;
     userGetSwaps: Array<GqlPoolSwap>;
     veBalGetTotalSupply: Scalars['AmountHumanReadable'];
+    veBalGetUser: GqlVeBalUserData;
     veBalGetUserBalance: Scalars['AmountHumanReadable'];
     veBalGetVotingList: Array<GqlVotingPool>;
 }
@@ -1723,6 +1756,7 @@ export type GetUserDataQuery = {
             gaugeAddress: string;
             version: number;
             status: GqlPoolStakingGaugeStatus;
+            workingSupply: string;
             otherGauges?: Array<{
                 __typename: 'GqlPoolStakingOtherGauge';
                 gaugeAddress: string;
@@ -2394,6 +2428,7 @@ export type GetPoolQuery = {
                       gaugeAddress: string;
                       version: number;
                       status: GqlPoolStakingGaugeStatus;
+                      workingSupply: string;
                       otherGauges?: Array<{
                           __typename: 'GqlPoolStakingOtherGauge';
                           gaugeAddress: string;
@@ -2618,6 +2653,7 @@ export type GetPoolQuery = {
                       gaugeAddress: string;
                       version: number;
                       status: GqlPoolStakingGaugeStatus;
+                      workingSupply: string;
                       otherGauges?: Array<{
                           __typename: 'GqlPoolStakingOtherGauge';
                           gaugeAddress: string;
@@ -2838,6 +2874,7 @@ export type GetPoolQuery = {
                       gaugeAddress: string;
                       version: number;
                       status: GqlPoolStakingGaugeStatus;
+                      workingSupply: string;
                       otherGauges?: Array<{
                           __typename: 'GqlPoolStakingOtherGauge';
                           gaugeAddress: string;
@@ -3192,6 +3229,7 @@ export type GetPoolQuery = {
                       gaugeAddress: string;
                       version: number;
                       status: GqlPoolStakingGaugeStatus;
+                      workingSupply: string;
                       otherGauges?: Array<{
                           __typename: 'GqlPoolStakingOtherGauge';
                           gaugeAddress: string;
@@ -3409,6 +3447,7 @@ export type GetPoolQuery = {
                       gaugeAddress: string;
                       version: number;
                       status: GqlPoolStakingGaugeStatus;
+                      workingSupply: string;
                       otherGauges?: Array<{
                           __typename: 'GqlPoolStakingOtherGauge';
                           gaugeAddress: string;
@@ -3764,6 +3803,7 @@ export type GetPoolQuery = {
                       gaugeAddress: string;
                       version: number;
                       status: GqlPoolStakingGaugeStatus;
+                      workingSupply: string;
                       otherGauges?: Array<{
                           __typename: 'GqlPoolStakingOtherGauge';
                           gaugeAddress: string;
@@ -3981,6 +4021,7 @@ export type GetPoolQuery = {
                       gaugeAddress: string;
                       version: number;
                       status: GqlPoolStakingGaugeStatus;
+                      workingSupply: string;
                       otherGauges?: Array<{
                           __typename: 'GqlPoolStakingOtherGauge';
                           gaugeAddress: string;
@@ -4335,6 +4376,7 @@ export type GetPoolQuery = {
                       gaugeAddress: string;
                       version: number;
                       status: GqlPoolStakingGaugeStatus;
+                      workingSupply: string;
                       otherGauges?: Array<{
                           __typename: 'GqlPoolStakingOtherGauge';
                           gaugeAddress: string;
@@ -6265,6 +6307,7 @@ export const GetUserDataDocument = gql`
                     rewardPerSecond
                     tokenAddress
                 }
+                workingSupply
             }
         }
         veBALUserBalance: veBalGetUserBalance
@@ -6684,6 +6727,7 @@ export const GetPoolDocument = gql`
                         rewardPerSecond
                         tokenAddress
                     }
+                    workingSupply
                 }
                 reliquary {
                     levels {
