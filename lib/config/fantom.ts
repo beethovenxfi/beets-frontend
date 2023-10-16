@@ -10,7 +10,7 @@ const PoolDetailWarningObject: PoolDetailWarning = {
         'A vulnerability has been discovered that effects this pool. Existing liquidity providers should remove liquidity immediately, and no new deposits should be made.',
     type: 'warning',
     link: {
-        url: 'https://twitter.com/Balancer/status/1694014645378724280',
+        url: 'https://x.com/beethoven_x/status/1694015080717787244',
         text: 'Read more',
     },
 };
