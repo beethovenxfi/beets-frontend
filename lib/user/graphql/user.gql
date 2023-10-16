@@ -47,6 +47,7 @@ query GetUserData {
                 rewardPerSecond
                 tokenAddress
             }
+            workingSupply
         }
     }
     veBALUserBalance: veBalGetUserBalance

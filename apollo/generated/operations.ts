@@ -703,6 +703,7 @@ export const GetUserData = gql`
                     rewardPerSecond
                     tokenAddress
                 }
+                workingSupply
             }
         }
         veBALUserBalance: veBalGetUserBalance
@@ -918,6 +919,7 @@ export const GetPool = gql`
                         rewardPerSecond
                         tokenAddress
                     }
+                    workingSupply
                 }
                 reliquary {
                     levels {
