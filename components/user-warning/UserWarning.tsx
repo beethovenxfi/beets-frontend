@@ -23,7 +23,7 @@ export function UserWarning() {
                             affected pool(s) immediately.
                         </Box>
                         <Link
-                            href="https://twitter.com/Balancer/status/1694014645378724280"
+                            href="https://x.com/beethoven_x/status/1694015080717787244"
                             target="_blank"
                             textDecoration="underline"
                             color="inherit"
