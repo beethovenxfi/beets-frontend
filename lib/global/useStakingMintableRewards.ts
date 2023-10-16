@@ -24,8 +24,8 @@ export default function useStakingMintableRewards(staking: GqlPoolStaking[], get
               '0xf27d53f21d024643d50de50183932f17638229f6', // rocket fuel
               '0x9f9f8d58496691d541c40dbc2b1b20f8c43e8d8c', // gyro eclp wsteth/weth
               //'0xa30992b40a0cb4b2da081ddbd843f9cce25c2fe3', // shanghai shakedown
-              '0xacfe9b4782910a853b68abba60f3fd8049ffe6380000000000000000000000ff', // sonata for two
-              '0x9da11ff60bfc5af527f58fd61679c3ac98d040d9000000000000000000000100', // native stable beets
+              '0xca64d546125852c00cb27eae3e1efe03d2439f03', // sonata for two
+              '0xcc2e1cb5d8dea77f08d19f875f381f34f997d96c', // native stable beets
           ];
 
     const {
