@@ -1,7 +1,5 @@
-import { AmountHumanReadable, TokenBaseWithAmount } from '~/lib/services/token/token-types';
-import { useApproveToken } from '~/lib/util/useApproveToken';
+import { AmountHumanReadable } from '~/lib/services/token/token-types';
 import { BeetsSubmitTransactionButton } from '~/components/button/BeetsSubmitTransactionButton';
-import { networkConfig } from '~/lib/config/network-config';
 import { useMigrateBeets } from './lib/useMigrateBeets';
 
 interface Props {
@@ -13,6 +11,7 @@ interface Props {
     isDisabled?: boolean;
     size?: string;
     inline?: boolean;
+    isLoading?: boolean;
 }
 
 export function BeetsMigrationButton({ amount, ...rest }: Props) {

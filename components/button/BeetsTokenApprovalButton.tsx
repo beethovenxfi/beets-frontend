@@ -13,6 +13,7 @@ interface Props {
     isDisabled?: boolean;
     size?: string;
     inline?: boolean;
+    isLoading?: boolean;
 }
 
 export function BeetsTokenApprovalButton({
