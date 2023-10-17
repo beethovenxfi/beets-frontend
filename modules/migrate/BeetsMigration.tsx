@@ -1,17 +1,18 @@
 import { Box, HStack, Text } from '@chakra-ui/react';
 import { useState } from 'react';
 import { BeetsTokenApprovalButton } from '~/components/button/BeetsTokenApprovalButton';
-import { TokenBase } from '~/lib/services/token/token-types';
 import { networkConfig } from '~/lib/config/network-config';
 import { BeetsMigrationButton } from './BeetsMigrationButton';
 import { useUserAllowances } from '~/lib/util/useUserAllowances';
+import { useGetTokens } from '~/lib/global/useToken';
 
 interface Props {
     beetsBalance: string;
-    tokenData: TokenBase | null;
 }
 
-export function BeetsMigration({ beetsBalance, tokenData }: Props) {
+export function BeetsMigration({ beetsBalance }: Props) {
+    const { getToken } = useGetTokens();
+    const tokenData = getToken(networkConfig.beets.address);
     const [isConfirmed, setIsConfirmed] = useState(false);
 
     const {

@@ -8,7 +8,6 @@ import useVeMigrationTrigger from '~/modules/pool/stake/lib/useVeMigrationTrigge
 import { useBeetsBalance } from './useBeetsBalance';
 import { BeetsMigration } from '~/modules/migrate/BeetsMigration';
 import { networkConfig } from '~/lib/config/network-config';
-import { useGetTokens } from './useToken';
 
 export default function useGlobalWarnings() {
     const { isLoading: isLoadingMigrationData, shouldShowMigrationTrigger } = useVeMigrationTrigger();
@@ -16,8 +15,6 @@ export default function useGlobalWarnings() {
     const { checkpoint, ...checkpointMutation } = useGaugeCheckpoint();
     const { showToast, removeToast } = useToast();
     const { isLoading: isLoadingBeetsBalance, balance: beetsBalance } = useBeetsBalance();
-    const { getToken } = useGetTokens();
-    const tokenData = getToken(networkConfig.beets.address);
 
     // sync veBAL warning
     useEffect(() => {
@@ -82,7 +79,7 @@ export default function useGlobalWarnings() {
         if (parseFloat(beetsBalance) > 0 && networkConfig.beetsMigrationEnabled) {
             showToast({
                 id: 'beets-migration',
-                content: <BeetsMigration beetsBalance={beetsBalance} tokenData={tokenData} />,
+                content: <BeetsMigration beetsBalance={beetsBalance} />,
                 type: ToastType.Warn,
             });
         }
