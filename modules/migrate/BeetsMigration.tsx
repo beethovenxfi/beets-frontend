@@ -24,10 +24,10 @@ export function BeetsMigration({ beetsBalance }: Props) {
     return (
         <HStack>
             {isConfirmed ? (
-                <Text>You have successfully migrated multiBEETS to (lz)BEETS!</Text>
+                <Text>You have successfully migrated (multi)BEETS to (lz)BEETS!</Text>
             ) : (
                 <>
-                    <Text>You have {beetsBalance} multiBEETS that you can migrate 1:1 to (lz)BEETS.</Text>
+                    <Text>You have {beetsBalance} (multi)BEETS that you can migrate 1:1 to (lz)BEETS.</Text>
                     {!isLoadingAllowances && hasApprovalForAmount(tokenData?.address || '', beetsBalance) ? (
                         <BeetsMigrationButton
                             amount={beetsBalance}
