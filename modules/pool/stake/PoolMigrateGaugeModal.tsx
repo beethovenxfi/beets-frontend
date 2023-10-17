@@ -7,12 +7,13 @@ import { GqlPoolStaking, useUserSyncBalanceMutation } from '~/apollo/generated/g
 import { useStakingWithdraw } from '~/lib/global/useStakingWithdraw';
 import { BeetsTransactionStepsSubmit, TransactionStep } from '~/components/button/BeetsTransactionStepsSubmit';
 import { _usePoolUserBptBalance, usePoolUserBptBalance } from '../lib/usePoolUserBptBalance';
-import { oldBnumScaleAmount, oldBnumToHumanReadable } from '~/lib/services/pool/lib/old-big-number';
+import { oldBnumScaleAmount, oldBnumToBnum, oldBnumToHumanReadable } from '~/lib/services/pool/lib/old-big-number';
 import { usePool } from '../lib/usePool';
 import { useStakingDeposit } from '~/lib/global/useStakingDeposit';
 import { useUserAllowances } from '~/lib/util/useUserAllowances';
 import { TokenBase } from '~/lib/services/token/token-types';
-import { omit } from 'lodash';
+import { useGaugeUnstakeGetContractCallData } from './lib/useGaugeUnstakeGetContractCallData';
+import { useHasBatchRelayerApproval } from '~/lib/util/useHasBatchRelayerApproval';
 
 interface Props {
     activatorProps?: ButtonProps;
@@ -32,19 +33,20 @@ export function PoolGaugeMigrateModal({
     const { pool } = usePool();
     const [modalState, setModalState] = useState<'start' | 'proportional' | 'single-asset' | 'preview'>('start');
     const {
-        userStakedBptBalance,
         userLegacyGaugeStakedBptBalance,
-        userWalletBptBalance,
         userLegacyGaugeStakedGaugeAddress,
-        isLoading: isLoadingBalances,
-        isRefetching: isRefetchingBalances,
         refetch: refetchBptBalances,
     } = usePoolUserBptBalance();
 
     const legacyGqlPoolStaking = (pool.staking?.gauge?.otherGauges || []).find(
         (g) => g.gaugeAddress === userLegacyGaugeStakedGaugeAddress,
     );
-    const { withdraw, ...unstakeQuery } = useStakingWithdraw(pool.staking, legacyGqlPoolStaking);
+    const { data: contractCalls } = useGaugeUnstakeGetContractCallData(
+        oldBnumToBnum(oldBnumScaleAmount(userLegacyGaugeStakedBptBalance)),
+        legacyGqlPoolStaking,
+    );
+
+    const { withdraw, ...unstakeQuery } = useStakingWithdraw(pool.staking);
     const { stake, ...depositQuery } = useStakingDeposit(pool.staking as GqlPoolStaking);
 
     const stakedAmount = oldBnumToHumanReadable(oldBnumScaleAmount(userLegacyGaugeStakedBptBalance));
@@ -61,6 +63,8 @@ export function PoolGaugeMigrateModal({
         name: 'BPT',
         decimals: 18,
     });
+
+    const { data: hasBatchRelayerApproval, isLoading: isLoadingBatchRelayerApproval } = useHasBatchRelayerApproval();
 
     useEffect(() => {
         const _steps: TransactionStep[] = [{ id: 'deposit', tooltipText: '', type: 'other', buttonText: 'Stake' }];
@@ -80,9 +84,17 @@ export function PoolGaugeMigrateModal({
         if (hasLegacyBptStaked) {
             _steps.unshift({ id: 'unstake', tooltipText: '', type: 'other', buttonText: 'Unstake' });
         }
+        if (!hasBatchRelayerApproval && !isLoadingBatchRelayerApproval) {
+            _steps.unshift({
+                id: 'batch-relayer',
+                type: 'other',
+                buttonText: 'Approve Batch Relayer',
+                tooltipText: 'This pool requires you to approve the batch relayer.',
+            });
+        }
         if (_steps.length < steps?.length) return;
         setSteps(_steps);
-    }, [hasLegacyBptStaked, depositAmount]);
+    }, [hasLegacyBptStaked, depositAmount, hasBatchRelayerApproval]);
 
     useEffect(() => {
         setModalState('start');
@@ -103,7 +115,7 @@ export function PoolGaugeMigrateModal({
 
     function handleTransactionSubmit(txId: string) {
         if (txId === 'unstake') {
-            withdraw(stakedAmount);
+            withdraw({ contractCalls });
             setDepositAmount(stakedAmount);
         }
         if (txId === 'deposit') {

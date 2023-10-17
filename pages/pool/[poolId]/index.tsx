@@ -71,7 +71,7 @@ export async function getStaticProps({ params }: { params: { poolId: string } })
     const client = initializeApolloClient();
     const { data } = await client.query<GetPoolQuery, GetPoolQueryVariables>({
         query: GetPool,
-        variables: { id: params.poolId },
+        variables: { id: params.poolId.toLowerCase() },
     });
 
     //pre-load the fbeets ratio for fidelio duetto

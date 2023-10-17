@@ -156,6 +156,7 @@ query GetPool($id: String!) {
                     rewardPerSecond
                     tokenAddress
                 }
+                workingSupply
             }
             reliquary {
                 levels {

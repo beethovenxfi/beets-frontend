@@ -13,7 +13,7 @@ export function useUserPendingRewards() {
     const { priceForAmount } = useGetTokens();
     const { data, isLoading, ...rest } = useStakingPendingRewards(staking, 'useUserPendingRewards');
     const { claimableBALForGauges, isLoading: isLoadingClaimableBAL } = useStakingMintableRewards(staking);
-    const grouped = groupBy(data || [], 'address');
+    const grouped = groupBy(data?.pendingRewards || [], 'address');
 
     // claimable BAL will also suffer from precision errors
     const totalClaimableBAL = sumBy(Object.values(claimableBALForGauges || {}), (claimableBAL) =>
@@ -33,12 +33,19 @@ export function useUserPendingRewards() {
         }),
     ].filter((reward) => parseFloat(reward.amount) > 0);
 
-    const pendingRewardsTotalUSD = sumBy(data || [], priceForAmount);
+    const pendingRewardsTotalUSD = sumBy(data?.pendingRewards || [], priceForAmount);
+
+    const pendingRewardsNonBALTotalUSD = sumBy(
+        data?.pendingRewards.filter((reward) => reward.address !== networkConfig.balancer.balToken) || [],
+        priceForAmount,
+    );
 
     return {
         pendingRewardsTotalUSD,
+        pendingRewardsNonBALTotalUSD,
         pendingRewards,
         pendingBALUSD,
+        gauges: data?.gauges,
         ...rest,
         isLoading: isLoading || userPoolBalancesQuery.loading || isLoadingClaimableBAL,
         staking,

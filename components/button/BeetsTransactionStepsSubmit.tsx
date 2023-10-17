@@ -8,6 +8,8 @@ import { SubmitTransactionQuery } from '~/lib/util/useSubmitTransaction';
 import { transactionMessageFromError } from '~/lib/util/transaction-util';
 import { BeetsBatchRelayerApprovalButton } from './BeetsBatchRelayerApprovalButton';
 import { useHasBatchRelayerApproval } from '~/lib/util/useHasBatchRelayerApproval';
+import { BeetsMinterApprovalButton } from './BeetsMinterApprovalButton';
+import { useHasMinterApproval } from '~/lib/util/useHasMinterApproval';
 
 export type TransactionStep = TransactionTokenApprovalStep | TransactionOtherStep;
 
@@ -62,6 +64,7 @@ export function BeetsTransactionStepsSubmit({
     const currentQuery = queries.find((query) => query.id === currentStep?.id);
     const [complete, setComplete] = useState(false);
     const { refetch: refetchBatchRelayerApproval, data: hasBatchRelayerApproval } = useHasBatchRelayerApproval();
+    const { refetch: refetchMinterApproval } = useHasMinterApproval();
 
     function setStepStatus(id: string, status: StepStatus) {
         setStepStatuses({ ...stepStatuses, [id]: status });
@@ -132,6 +135,18 @@ export function BeetsTransactionStepsSubmit({
                     onCanceled={() => setStepStatus(currentStep.id, 'current')}
                     onConfirmed={() => {
                         refetchBatchRelayerApproval();
+                        internalOnConfirmed();
+                    }}
+                    buttonText={currentStep.buttonText}
+                />
+            ) : null}
+            {steps && currentStep && currentStep.id === 'minter' && !complete ? (
+                <BeetsMinterApprovalButton
+                    onSubmitting={() => setStepStatus(currentStep.id, 'submitting')}
+                    onPending={() => setStepStatus(currentStep.id, 'pending')}
+                    onCanceled={() => setStepStatus(currentStep.id, 'current')}
+                    onConfirmed={() => {
+                        refetchMinterApproval();
                         internalOnConfirmed();
                     }}
                     buttonText={currentStep.buttonText}

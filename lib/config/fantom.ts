@@ -10,7 +10,7 @@ const PoolDetailWarningObject: PoolDetailWarning = {
         'A vulnerability has been discovered that effects this pool. Existing liquidity providers should remove liquidity immediately, and no new deposits should be made.',
     type: 'warning',
     link: {
-        url: 'https://twitter.com/Balancer/status/1694014645378724280',
+        url: 'https://x.com/beethoven_x/status/1694015080717787244',
         text: 'Read more',
     },
 };
@@ -99,6 +99,7 @@ export const fantomNetworkConfig: NetworkConfig = {
                 '0x442988091cdc18acb8912cd3fe062cda9233f9dc',
             ],
         },
+        minimumBoost: 1.0,
     },
     beetsPoolOwnerAddress: '0xcd983793adb846dce4830c22f30c7ef0c864a776',
     masterChefContractAddress: '0x8166994d9ebBe5829EC86Bd81258149B87faCfd3',
@@ -411,4 +412,5 @@ export const fantomNetworkConfig: NetworkConfig = {
     claimAllRewardsEnabled: true,
     layerZeroChainId: -1,
     beetsMigrationEnabled: false,
+    gaugeEnabled: false,
 };

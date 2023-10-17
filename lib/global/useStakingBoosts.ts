@@ -3,15 +3,13 @@ import { useUserAccount } from '../user/useUserAccount';
 import { useQuery } from 'react-query';
 import { gaugeStakingService } from '../services/staking/gauge-staking.service';
 import { useProvider } from 'wagmi';
+import { networkConfig } from '~/lib/config/network-config';
 
-function calculateBoostFromGauge(workingBalance: number, workingSupply: number, userBalance: number) {
-    let boost = 0.0;
+function calculateBoostFromGauge(workingBalance: number, userBalance: number) {
+    let boost = networkConfig.balancer.minimumBoost;
 
     if (workingBalance) {
-        boost =
-            workingBalance /
-            workingSupply /
-            ((0.4 * userBalance) / (0.4 * userBalance + workingSupply - workingBalance));
+        boost = workingBalance / (0.4 * userBalance);
     }
 
     return boost.toString();
@@ -38,17 +36,6 @@ export default function useStakingBoosts() {
         },
     );
 
-    const { data: workingSupply, isLoading: isLoadingWorkingSupply } = useQuery(
-        ['gaugeWorkingSupply', gaugeAddress],
-        async () => {
-            const workingSupply = gaugeStakingService.getGaugeWorkingSupply({
-                gaugeAddress,
-                provider,
-            });
-            return workingSupply;
-        },
-    );
-
     const { data: workingBalance, isLoading: isLoadingWorkingBalance } = useQuery(
         ['gaugeWorkingBalance', userAddress, gaugeAddress],
         async () => {
@@ -61,13 +48,9 @@ export default function useStakingBoosts() {
         },
     );
 
-    const isLoading = isLoadingStakedBalance || isLoadingWorkingSupply || isLoadingWorkingBalance;
+    const isLoading = isLoadingStakedBalance || isLoadingWorkingBalance;
 
-    let boost = calculateBoostFromGauge(
-        parseFloat(workingBalance || ''),
-        parseFloat(workingSupply || ''),
-        parseFloat(stakedBalance || ''),
-    );
+    let boost = calculateBoostFromGauge(parseFloat(workingBalance || ''), parseFloat(stakedBalance || ''));
 
     return {
         isLoading,

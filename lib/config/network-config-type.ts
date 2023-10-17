@@ -82,6 +82,7 @@ export interface NetworkConfig {
         unwrapExceptions: {
             reaper: string[];
         };
+        minimumBoost: number;
     };
     beetsPoolOwnerAddress: string;
     masterChefContractAddress: string;
@@ -127,4 +128,5 @@ export interface NetworkConfig {
     claimAllRewardsEnabled: boolean;
     layerZeroChainId: number;
     beetsMigrationEnabled: boolean;
+    gaugeEnabled: boolean;
 }

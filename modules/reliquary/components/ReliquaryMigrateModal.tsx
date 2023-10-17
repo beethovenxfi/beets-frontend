@@ -249,7 +249,7 @@ export default function ReliquaryMigrateModal({ isOpen, onClose }: Props) {
                                         completeButtonText="Return"
                                         onSubmit={(id) => {
                                             if (id === 'unstake') {
-                                                withdraw(staked.toString());
+                                                withdraw({ amount: staked.toString() });
                                             }
                                             if (id === 'reliquary-migrate' && reliquaryContractCalls) {
                                                 reliquaryZap(reliquaryContractCalls);
