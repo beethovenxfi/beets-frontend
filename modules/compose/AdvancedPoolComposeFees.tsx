@@ -74,7 +74,7 @@ export function AdvancedPoolComposeFees(props: Props) {
                             width={{ base: '100%', md: '75px' }}
                             key={`pool-fee-preset-${preset}`}
                         >
-                            {parseFloat(preset) * 100}%
+                            {preset}%
                         </Button>
                     ))}
                     <BeetsInput

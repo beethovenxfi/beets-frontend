@@ -16,7 +16,7 @@ const POOL_TYPES = [
 ];
 
 const MAX_TOKENS = 8;
-const FEE_PRESETS = ['0.001', '0.003', '0.01'];
+const FEE_PRESETS = ['0.1', '0.3', '1'];
 
 const ComposeProviderContext = React.createContext<ReturnType<typeof _useCompose> | null>(null);
 export const useCompose: () => ReturnType<typeof _useCompose> = () => {
@@ -292,9 +292,9 @@ function _useCompose() {
     }
 
     function getPoolFeeValidations() {
-        let isFeeValid = parseFloat(currentFee) < 0.1;
+        let isFeeValid = parseFloat(currentFee) <= 1;
         if (isUsingCustomFee) {
-            isFeeValid = parseFloat(currentFee) / 100 < 0.1;
+            isFeeValid = parseFloat(currentFee) / 100 < 0.95;
         }
         const isFeeEmpty = currentFee === null || currentFee === '' || isNaN(parseFloat(currentFee));
         const isFeeZero = parseFloat(currentFee) === 0;
