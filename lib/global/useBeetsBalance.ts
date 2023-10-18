@@ -4,11 +4,9 @@ import { keyBy } from 'lodash';
 
 export function useBeetsBalance() {
     const networkConfig = useNetworkConfig();
-    const {
-        userBalances: balances = [],
-        isLoading: isLoadingBalances,
-        refetch: refetchFbeetsBalance,
-    } = useUserBalances([networkConfig.beets.address]);
+    const { userBalances: balances = [], isLoading: isLoadingBalances } = useUserBalances([
+        networkConfig.beets.address,
+    ]);
 
     const userBalancesMap = keyBy(balances, 'address');
     const beetsBalance = userBalancesMap[networkConfig.beets.address]?.amount || '0';
@@ -16,6 +14,5 @@ export function useBeetsBalance() {
     return {
         balance: beetsBalance,
         isLoading: isLoadingBalances,
-        refetchFbeetsBalance,
     };
 }
