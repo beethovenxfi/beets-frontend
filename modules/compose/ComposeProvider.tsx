@@ -294,7 +294,7 @@ function _useCompose() {
     function getPoolFeeValidations() {
         let isFeeValid = parseFloat(currentFee) <= 1;
         if (isUsingCustomFee) {
-            isFeeValid = parseFloat(currentFee) / 100 < 0.95;
+            isFeeValid = parseFloat(currentFee) <= 10;
         }
         const isFeeEmpty = currentFee === null || currentFee === '' || isNaN(parseFloat(currentFee));
         const isFeeZero = parseFloat(currentFee) === 0;
