@@ -63,7 +63,7 @@ export default function FinalisePoolComposeActions(props: Props) {
                 name: poolName || getPoolSymbol(),
                 symbol: getPoolSymbol(),
                 tokens: sortTokensByAddress(tokens),
-                swapFee: currentFee,
+                swapFee: (parseFloat(currentFee) / 100).toString(),
                 swapFeeManager: feeManager || '',
             });
         }
