@@ -34,6 +34,7 @@ function AprTooltip({ data, textProps, onlySparkles, placement, aprLabel, sparkl
     const PopoverTrigger: React.FC<{ children: React.ReactNode }> = OrigPopoverTrigger;
     const showZeroApr = poolId && Object.keys(networkConfig.warnings.poolList).includes(poolId);
     const aprToShow = apr || getApr(data.apr);
+    const hasMaBEETSVotingApr = data.items.find((item) => item.title === 'Voting APR*');
 
     return !showZeroApr ? (
         <Popover trigger="hover" placement={placement}>
@@ -114,7 +115,7 @@ function AprTooltip({ data, textProps, onlySparkles, placement, aprLabel, sparkl
                             </Box>
                         );
                     })}
-                    {data.items.find((item) => item.title === 'Voting APR*') && (
+                    {hasMaBEETSVotingApr && (
                         <Text color="gray.200" fontSize="sm" maxW="300px" pt="2" textAlign="left">
                             * To receive Voting APR you must vote for incentivized pools in the bi-weekly gauge vote.
                             APR is dependent on your vote distribution.
