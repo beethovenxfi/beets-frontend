@@ -19,7 +19,7 @@ export function PoolListSearch() {
     }, [searchText]);
 
     return (
-        <InputGroup size="md">
+        <InputGroup size="md" w="128" ml="4">
             <Input
                 type="text"
                 placeholder="Search..."
