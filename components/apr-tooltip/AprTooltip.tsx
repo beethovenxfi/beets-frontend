@@ -114,6 +114,12 @@ function AprTooltip({ data, textProps, onlySparkles, placement, aprLabel, sparkl
                             </Box>
                         );
                     })}
+                    {data.items.find((item) => item.title === 'Voting APR*') && (
+                        <Text color="gray.200" fontSize="sm" maxW="300px" pt="2" textAlign="left">
+                            * To receive Voting APR you must vote for incentivized pools in the bi-weekly gauge vote.
+                            APR is dependent on your vote distribution.
+                        </Text>
+                    )}
                 </Box>
             </PopoverContent>
         </Popover>
