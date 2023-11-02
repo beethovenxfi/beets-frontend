@@ -1,4 +1,4 @@
-import { Box, Circle, Flex, Grid, GridItem, IconButton } from '@chakra-ui/react';
+import { Box, Button, Circle, Flex, Grid, GridItem, HStack, IconButton, Link } from '@chakra-ui/react';
 import { PoolListTabs } from '~/modules/pools/components/PoolListTabs';
 import { PoolListSearch } from '~/modules/pools/components/PoolListSearch';
 import { Filter } from 'react-feather';
@@ -13,28 +13,29 @@ export function PoolListTop() {
 
     return (
         <Box display={{ base: 'none', lg: 'block' }}>
-            <Flex pb={4}>
-                <Flex flex={1}>
+            <HStack pb="4" justifyContent="space-between">
+                <HStack>
                     <PoolListTabs />
                     <Box position="relative">
                         <IconButton
                             aria-label="filter-button"
                             icon={<Filter />}
-                            ml={4}
+                            ml="2"
                             onClick={toggleFilterVisibility}
                             color={showFilters ? 'gray.100' : 'white'}
                             bgColor={showFilters ? 'beets.base.300' : 'beets.lightAlpha.300'}
                             _hover={{ bgColor: 'beets.light' }}
                         />
-                        {hasFiltersSelected ? (
+                        {hasFiltersSelected && (
                             <Circle size="3" bg="red.500" opacity="0.85" position="absolute" top="-4px" right="-4px" />
-                        ) : null}
+                        )}
                     </Box>
-                </Flex>
-                <Box>
                     <PoolListSearch />
-                </Box>
-            </Flex>
+                </HStack>
+                <Link href="/compose">
+                    <Button variant="primary">Create a pool</Button>
+                </Link>
+            </HStack>
             <FadeInOutBox isVisible={showFilters}>
                 <Grid
                     templateColumns={{ base: 'repeat(1, 1fr)', md: '1fr 1fr 0px', lg: '1fr 1fr 1fr' }}
