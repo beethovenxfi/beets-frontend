@@ -107,6 +107,7 @@ export const optimismNetworkConfig: NetworkConfig = {
             reaper: [],
         },
         minimumBoost: 1.0,
+        protocolFeePercentagesProvider: '',
     },
     beetsPoolOwnerAddress: '0xd9e2889ac8c6fff8e94c7c1beeade1352df1a513',
     masterChefContractAddress: '',

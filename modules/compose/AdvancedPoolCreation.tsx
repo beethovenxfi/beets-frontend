@@ -9,10 +9,14 @@ import { AdvancedPoolComposeFeeManager } from './AdvancedPoolComposeFeeManager';
 import { AdvancedPoolComposeSubmit } from './AdvancedPoolComposeSubmit';
 import { AdvancedPoolComposeName } from './AdvancedPoolComposeName';
 import AdvancedPoolComposeProgress from './AdvancedPoolComposeProgress';
+import { useVerifyPool } from './lib/useVerifyPool';
 
 interface Props {}
 
 export default function AdvancedPoolCreation(props: Props) {
+    const { data, isLoading } = useVerifyPool();
+
+    console.log({ data });
     return (
         <VStack spacing="4" width="full" mb="10">
             <VStack width={{ base: '100%', md: '75%' }} alignItems="center">

@@ -82,6 +82,7 @@ export interface NetworkConfig {
             reaper: string[];
         };
         minimumBoost: number;
+        protocolFeePercentagesProvider: string;
     };
     beetsPoolOwnerAddress: string;
     masterChefContractAddress: string;
