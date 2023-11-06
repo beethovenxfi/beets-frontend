@@ -27,22 +27,20 @@ export function PoolInvestSettings({ ...rest }: BoxProps) {
             <BeetsBox p="2" width="full">
                 <VStack width="full">
                     {supportsZap && (
-                        <>
-                            <Flex width="full">
-                                <Box flex="1">
-                                    <InfoButton
-                                        label={`Zap into ${networkConfig.farmTypeName}`}
-                                        infoText={`With ZAP enabled, your investment BPTs are automatically deposited to the ${networkConfig.farmTypeName}, saving time & maximizing yield.`}
-                                    />
-                                </Box>
-                                <Switch
-                                    id="zap-into-farm"
-                                    colorScheme="green"
-                                    isChecked={zapEnabled}
-                                    onChange={toggleZapEnabled}
+                        <Flex width="full">
+                            <Box flex="1">
+                                <InfoButton
+                                    label={`Zap into ${networkConfig.farmTypeName}`}
+                                    infoText={`With ZAP enabled, your investment BPTs are automatically deposited to the ${networkConfig.farmTypeName}, saving time & maximizing yield.`}
                                 />
-                            </Flex>
-                        </>
+                            </Box>
+                            <Switch
+                                id="zap-into-farm"
+                                colorScheme="green"
+                                isChecked={zapEnabled}
+                                onChange={toggleZapEnabled}
+                            />
+                        </Flex>
                     )}
                     <HStack justifyContent="space-between" width="full">
                         <Box flex="1">
