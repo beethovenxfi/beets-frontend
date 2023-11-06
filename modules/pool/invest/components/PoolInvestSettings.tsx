@@ -9,13 +9,15 @@ import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 
 export function PoolInvestSettings({ ...rest }: BoxProps) {
     const { zapEnabled, toggleZapEnabled } = useInvestState();
-    const { supportsZap } = usePool();
+    const { pool, supportsZap } = usePool();
     const networkConfig = useNetworkConfig();
+    const isAuraPool = Object.keys(networkConfig.auraStaking).includes(pool.id);
 
+    // set zap default to false for aura pools
     useEffect(() => {
-        if (!supportsZap && zapEnabled) {
+        if ((!supportsZap || isAuraPool) && zapEnabled) {
             toggleZapEnabled();
-        } else if (supportsZap && !zapEnabled) {
+        } else if (supportsZap && !isAuraPool && !zapEnabled) {
             toggleZapEnabled();
         }
     }, [supportsZap]);
