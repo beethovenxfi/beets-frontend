@@ -10,11 +10,22 @@ import { AdvancedPoolComposeSubmit } from './AdvancedPoolComposeSubmit';
 import { AdvancedPoolComposeName } from './AdvancedPoolComposeName';
 import AdvancedPoolComposeProgress from './AdvancedPoolComposeProgress';
 import { useVerifyPool } from './lib/useVerifyPool';
+import { useGetContructorArgs } from './lib/useGetConstructorArgs';
 
 interface Props {}
 
 export default function AdvancedPoolCreation(props: Props) {
-    const { data, isLoading } = useVerifyPool();
+    const apiUrl = process.env.NEXT_PUBLIC_ETHERSCAN_API_URL;
+    const apiKey = process.env.NEXT_PUBLIC_ETHERSCAN_API_KEY;
+
+    const { data: constructorArguements } = useGetContructorArgs('0x607319a87618bbc52a3afaef45febeb67888c62d');
+
+    const { data, isLoading } = useVerifyPool(
+        apiUrl || '',
+        apiKey || '',
+        constructorArguements || '',
+        '0x607319a87618bbc52a3afaef45febeb67888c62d',
+    );
 
     console.log({ data });
     return (

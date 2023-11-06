@@ -1,36 +1,100 @@
 import { useQuery } from 'react-query';
-import { useGetContructorArgs } from './useGetConstructorArgs';
-import { Etherscan } from 'etherscan-ts';
 import sourceCode from './weighted_pool_v4.json';
+import axios from 'axios';
 
-export function useVerifyPool(poolAddress = '0x10BCbF32D59c416323f9A3C40634C3c5A0dAf925') {
-    const etherscan = new Etherscan(
-        process.env.NEXT_PUBLIC_ETHERSCAN_API_KEY || '',
-        process.env.NEXT_PUBLIC_ETHERSCAN_API_URL,
-    );
+export interface EtherscanRequest {
+    apikey: string;
+    module: string;
+    action: string;
+}
 
-    console.log({ etherscan });
+export interface EtherscanVerifyRequest extends EtherscanRequest {
+    contractaddress: string;
+    sourceCode: string;
+    codeformat: string;
+    contractname: string;
+    compilerversion: string;
+    // This is misspelt in Etherscan's actual API parameters.
+    // See: https://etherscan.io/apis#contracts
+    constructorArguements: string;
+}
 
-    const { data: constructorArguements, isLoading } = useGetContructorArgs(poolAddress);
+interface Response {
+    status: string;
+    message: string;
+    result: any;
+}
 
-    console.log({ constructorArguements });
+/* Wrap */
+async function wrapPost(url: string, req: EtherscanVerifyRequest): Promise<Response> {
+    const parameters = new URLSearchParams();
+    const reqKeys = Object.keys(req);
+    const reqValues = Object.values(req);
+    reqKeys.forEach((key, index) => parameters.append(key, reqValues[index]));
+    try {
+        const res = await axios.post(url, parameters);
+        const json = await res.data;
+        console.log({ json });
+        if (json.status !== '1') {
+            throw new Error(`Response status must be '1'`);
+        }
+        return json;
+    } catch (error: any) {
+        throw new Error(`Failed to fetch: ${error.message}`);
+    }
+}
 
+async function postVerifySourceCode(
+    url: string,
+    apikey: string,
+    contractaddress: string,
+    sourceCode: string,
+    codeformat: string,
+    contractname: string,
+    compilerversion: string,
+    constructorArguements: string,
+    licenseType: number,
+): Promise<Response> {
+    try {
+        const params = {
+            apikey,
+            module: 'contract',
+            action: 'verifysourcecode',
+            contractaddress,
+            sourceCode,
+            codeformat,
+            contractname,
+            compilerversion,
+            constructorArguements,
+            licenseType,
+        };
+
+        return wrapPost(url, params);
+    } catch (error: any) {
+        throw new Error(`postVerifySourceCode Error: ${error.message}`);
+    }
+}
+
+export function useVerifyPool(apiUrl: string, apiKey: string, constructorArguements: string, poolAddress: string) {
     return useQuery(
-        ['verifyPool', poolAddress],
+        ['verifyPool', poolAddress, constructorArguements],
         async () => {
-            const result = await etherscan.postVerifySourceCode(
+            const result = await postVerifySourceCode(
+                apiUrl,
+                apiKey,
                 poolAddress,
                 JSON.stringify(sourceCode),
                 'solidity-standard-json-input',
-                'WeightedPool',
+                'contracts/WeightedPool.sol:WeightedPool',
                 'v0.7.1+commit.f4a555be',
-                '',
-                constructorArguements || '',
+                constructorArguements,
                 5,
             );
 
+            console.log({ result });
+
             return result;
         },
-        { enabled: poolAddress !== '' },
+        { enabled: poolAddress !== '' && apiKey !== '' && apiUrl !== '' && constructorArguements !== '' },
     );
 }
