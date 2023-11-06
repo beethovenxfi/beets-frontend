@@ -6156,16 +6156,10 @@ ethers@^5.5.4, ethers@^5.7.2:
     "@ethersproject/web" "5.7.1"
     "@ethersproject/wordlists" "5.7.0"
 
-etherscan-ts@../etherscan-ts:
-  version "1.0.4"
-  dependencies:
-    axios "^1.4.0"
-    dotenv "^16.3.1"
-    tslib "^2.6.1"
-
-etherscan-ts@../etherscan-ts/package.tgz:
-  version "1.0.4"
-  resolved "../etherscan-ts/package.tgz#0d4635b468a9e91a20be1cbf81ae43121ea01358"
+etherscan-ts@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/etherscan-ts/-/etherscan-ts-1.1.0.tgz#9801d53f029c5a8b04b0a47ff970f536829630e1"
+  integrity sha512-Q7Rk7j45p8E3SF4tBtqnCe0CC8ejLJsMyHuTumHnQHZVxlnZ/P+XR7LB4yLNoaEDxqDWHUXeKqcZ/Ftbq1jK0Q==
   dependencies:
     axios "^1.4.0"
     dotenv "^16.3.1"
