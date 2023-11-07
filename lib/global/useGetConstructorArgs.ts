@@ -46,23 +46,25 @@ async function getTransactionsByAddress(address: string) {
     return list;
 }
 
-export function useGetContructorArgs(poolAddress: string) {
+export function useGetContructorArgs(contractAddress: string) {
     const networkConfig = useNetworkConfig();
     const web3 = new Web3(new Web3.providers.HttpProvider(networkConfig.rpcUrl));
     const decoder = new InputDataDecoder(WeightedPoolFactoryV4);
 
     return useQuery(
-        ['constructorArgs', poolAddress],
+        ['constructorArgs', contractAddress],
         async () => {
             const txnsFactory = await getTransactionsByAddress(networkConfig.balancer.weightedPoolFactory);
             const stampFactory = txnsFactory.result[0].timeStamp;
-            const txnsPool = await getTransactionsByAddress(poolAddress);
+            const txnsPool = await getTransactionsByAddress(contractAddress);
             const stampPool = txnsPool.result[0].timeStamp;
             const inputData = (await web3.eth.getTransaction(txnsPool.result[0].hash)).input;
             const decoded = decoder.decodeData(inputData);
             decoded.names.forEach((el, index) => {
                 decodedPoolData[el as DecodedPoolDataKey] = decoded.inputs[index];
             });
+
+            console.log({ decoded });
 
             // times for pause/buffer
             const daysToSec = 24 * 60 * 60; // hr * min * sec
@@ -106,6 +108,6 @@ export function useGetContructorArgs(poolAddress: string) {
 
             return encodedPoolData;
         },
-        { enabled: poolAddress !== '' },
+        { enabled: contractAddress !== '' },
     );
 }

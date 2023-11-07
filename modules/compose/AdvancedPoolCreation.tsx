@@ -9,22 +9,19 @@ import { AdvancedPoolComposeFeeManager } from './AdvancedPoolComposeFeeManager';
 import { AdvancedPoolComposeSubmit } from './AdvancedPoolComposeSubmit';
 import { AdvancedPoolComposeName } from './AdvancedPoolComposeName';
 import AdvancedPoolComposeProgress from './AdvancedPoolComposeProgress';
-import { useVerifyPool } from './lib/useVerifyPool';
-import { useGetContructorArgs } from './lib/useGetConstructorArgs';
+import { useVerifyContract } from '~/lib/global/useVerifyContract';
+import { useGetContructorArgs } from '~/lib/global/useGetConstructorArgs';
 
 interface Props {}
 
 export default function AdvancedPoolCreation(props: Props) {
-    const apiUrl = process.env.NEXT_PUBLIC_ETHERSCAN_API_URL;
-    const apiKey = process.env.NEXT_PUBLIC_ETHERSCAN_API_KEY;
-
     const { data: constructorArguements } = useGetContructorArgs('0x607319a87618bbc52a3afaef45febeb67888c62d');
 
-    const { data, isLoading } = useVerifyPool(
-        apiUrl || '',
-        apiKey || '',
-        constructorArguements || '',
+    console.log({ constructorArguements });
+
+    const { data, isLoading } = useVerifyContract(
         '0x607319a87618bbc52a3afaef45febeb67888c62d',
+        constructorArguements || '',
     );
 
     console.log({ data });
