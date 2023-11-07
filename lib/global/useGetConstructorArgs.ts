@@ -18,7 +18,7 @@ interface DecodedPoolData {
     salt: string;
 }
 
-// manually added for now
+// defaults to be used for WeightedPool
 const ID = '20230320-weighted-pool-v4';
 const NAME = 'WeightedPool';
 const VERSION = `{"name":"${NAME}","version":${ID.slice(-1)},"deployment":"${ID}"}`;
@@ -63,8 +63,6 @@ export function useGetContructorArgs(contractAddress: string) {
             decoded.names.forEach((el, index) => {
                 decodedPoolData[el as DecodedPoolDataKey] = decoded.inputs[index];
             });
-
-            console.log({ decoded });
 
             // times for pause/buffer
             const daysToSec = 24 * 60 * 60; // hr * min * sec
