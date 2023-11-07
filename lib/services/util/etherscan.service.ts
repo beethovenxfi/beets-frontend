@@ -14,6 +14,8 @@ export interface EtherscanVerificationStatusInput {
 
 export interface EtherscanVerifyInputBase {
     contractaddress: string;
+    // This is misspelt in Etherscan's actual API parameters.
+    // See: https://etherscan.io/apis#contracts
     constructorArguements: string;
 }
 
@@ -22,8 +24,6 @@ export interface EtherscanVerifyInput extends EtherscanVerifyInputBase {
     codeformat: string;
     compilerversion: string;
     contractname: string;
-    // This is misspelt in Etherscan's actual API parameters.
-    // See: https://etherscan.io/apis#contracts
     licenseType: number;
 }
 
