@@ -10,9 +10,9 @@ export function useVerifyContract(contractaddress: string, constructorArguements
                 constructorArguements,
             });
 
-            console.log({ result });
+            const status = await etherscanService.checkVerifyStatus({ guid: result.result });
 
-            return result;
+            return status;
         },
         { enabled: contractaddress !== '' && constructorArguements !== '' },
     );

@@ -12,6 +12,8 @@ import { useInitJoinPool } from '../pool/invest/lib/useInitJoinPool';
 import { PoolJoinPoolContractCallData } from '~/lib/services/pool/pool-types';
 import { GqlToken } from '~/apollo/generated/graphql-codegen-generated';
 import { useRouter } from 'next/router';
+import { ToastType, useToast } from '~/components/toast/BeetsToast';
+import { PoolVerification } from './PoolVerificationToast';
 
 const POOL_REGISTERED_LOG_TOPIC = '0x3c13bc30b8e878c53fd2a36b679409c073afd75950be43d8858768e956fbc20e';
 
@@ -27,8 +29,11 @@ export default function FinalisePoolComposeActions(props: Props) {
     const { tokens, poolName, getPoolSymbol, currentFee, feeManager, setPoolId, poolId, isUsingCustomFee } =
         useCompose();
     const router = useRouter();
+    const { showToast, removeToast } = useToast();
     const isRabby = (window as any).web3.currentProvider.isRabby;
     const [steps, setSteps] = useState<TransactionStep[]>([]);
+    const [isVerifying, setIsVerifying] = useState(false);
+
     const { getToken } = useGetTokens();
     const tokenBases = tokens.map((token) => {
         const _token = getToken(token.address);
@@ -92,6 +97,10 @@ export default function FinalisePoolComposeActions(props: Props) {
         router.replace(`/pool/${poolId}`);
     }
 
+    const updateIsVerifying = (newValue: boolean) => {
+        setIsVerifying(newValue);
+    };
+
     useEffect(() => {
         if (isLoadingAllowances) {
             return;
@@ -115,6 +124,16 @@ export default function FinalisePoolComposeActions(props: Props) {
         setSteps(_steps);
     }, [requiredApprovals.length, isLoadingAllowances]);
 
+    useEffect(() => {
+        if (joinQuery.isConfirmed && poolId) {
+            showToast({
+                id: 'verify-pool',
+                content: <PoolVerification poolAddress={poolId.slice(32)} updateIsVerifying={updateIsVerifying} />,
+                type: ToastType.Warn,
+            });
+        }
+    }, [JSON.stringify(joinQuery)]);
+
     return (
         <Box width="full">
             {isRabby && networkConfig.chainName === 'FANTOM' && (
@@ -136,7 +155,7 @@ export default function FinalisePoolComposeActions(props: Props) {
                         { ...createQuery, id: 'create-pool' },
                         { ...joinQuery, id: 'initialise-pool' },
                     ]}
-                    isDisabled={false}
+                    isDisabled={isVerifying}
                 />
             </Box>
         </Box>

@@ -9,22 +9,10 @@ import { AdvancedPoolComposeFeeManager } from './AdvancedPoolComposeFeeManager';
 import { AdvancedPoolComposeSubmit } from './AdvancedPoolComposeSubmit';
 import { AdvancedPoolComposeName } from './AdvancedPoolComposeName';
 import AdvancedPoolComposeProgress from './AdvancedPoolComposeProgress';
-import { useVerifyContract } from '~/lib/global/useVerifyContract';
-import { useGetContructorArgs } from '~/lib/global/useGetConstructorArgs';
 
 interface Props {}
 
 export default function AdvancedPoolCreation(props: Props) {
-    const { data: constructorArguements } = useGetContructorArgs('0x607319a87618bbc52a3afaef45febeb67888c62d');
-
-    console.log({ constructorArguements });
-
-    const { data, isLoading } = useVerifyContract(
-        '0x607319a87618bbc52a3afaef45febeb67888c62d',
-        constructorArguements || '',
-    );
-
-    console.log({ data });
     return (
         <VStack spacing="4" width="full" mb="10">
             <VStack width={{ base: '100%', md: '75%' }} alignItems="center">

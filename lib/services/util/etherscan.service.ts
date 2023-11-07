@@ -98,7 +98,7 @@ export class EtherscanService {
             const params = {
                 apikey: this.apikey,
                 module: 'contract',
-                action: 'verifysourcecode',
+                action: 'checkverifystatus',
                 ...verifyStatusInputParams,
             };
 
