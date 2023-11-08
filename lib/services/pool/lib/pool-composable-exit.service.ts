@@ -745,7 +745,7 @@ export class PoolComposableExitService {
 
         // this is for all other pool types: apply some slippage so we stay below the limits
         const minAmountsOut = exitAmounts.map((exitAmount) => {
-            const token = this.pool.tokens.find((token) => token.address === exitAmount.address);
+            const token = pool.tokens.find((token) => token.address === exitAmount.address);
             const amountScaled = oldBnumScaleAmount(exitAmount.amount, token?.decimals);
 
             return amountScaled.minus(amountScaled.times(slippage)).toFixed(0);
