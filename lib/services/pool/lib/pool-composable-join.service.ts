@@ -366,10 +366,14 @@ export class PoolComposableJoinService {
     }): string {
         const pool = step.pool;
         const joinHasNativeAsset = wethIsEth && pool.tokens.find((token) => token.address === this.wethAddress);
+        const tokensWithoutPhantomBpt = pool.tokens.filter((token) => token.address !== pool.address);
         const tokensWithPhantomBpt =
             pool.__typename === 'GqlPoolWeighted'
                 ? sortBy(pool.tokens, 'index')
-                : sortBy([...pool.tokens, { address: pool.address, decimals: 18, __typename: 'pool' }], 'address');
+                : sortBy(
+                      [...tokensWithoutPhantomBpt, { address: pool.address, decimals: 18, __typename: 'pool' }],
+                      'address',
+                  );
         const bptIdx = tokensWithPhantomBpt.findIndex((token) => token.address === pool.address);
 
         const amountsIn = tokensWithPhantomBpt.map((token) => {

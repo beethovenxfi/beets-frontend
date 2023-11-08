@@ -165,11 +165,13 @@ export function poolStableExactTokensInForBPTOut(
     tokenAmounts: TokenAmountHumanReadable[],
     pool: GqlPoolPhantomStable | GqlPoolPhantomStableNested,
 ): OldBigNumber {
+    // filter out a nested bpt
+    const tokens = pool.tokens.filter((token) => token.address !== pool.address);
     try {
         return SDK.StableMath._calcBptOutGivenExactTokensIn(
             oldBnumFromBnum(poolScaleAmp(pool.amp)),
-            pool.tokens.map((token) => scaleTo18AndApplyPriceRate(token.totalBalance, token)),
-            pool.tokens.map((poolToken) => {
+            tokens.map((token) => scaleTo18AndApplyPriceRate(token.totalBalance, token)),
+            tokens.map((poolToken) => {
                 const tokenAmount = tokenAmounts.find((amount) => amount.address === poolToken.address);
 
                 return tokenAmount ? scaleTo18AndApplyPriceRate(tokenAmount.amount, poolToken) : oldBnumZero();
