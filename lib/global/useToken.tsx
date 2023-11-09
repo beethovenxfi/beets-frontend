@@ -44,6 +44,7 @@ export function _useGetTokens() {
                 name: 'Missing',
                 decimals: 18,
                 address,
+                chain: networkConfig.chainName,
                 chainId: parseInt(networkConfig.chainId),
                 priority: 0,
                 tradable: false,

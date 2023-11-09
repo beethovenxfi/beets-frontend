@@ -588,6 +588,7 @@ export const GetTokens = gql`
             name
             symbol
             decimals
+            chain
             chainId
             logoURI
             priority

@@ -5,10 +5,11 @@ import { isAddress } from 'ethers/lib/utils';
 import { useMultiCall } from '~/lib/util/useMultiCall';
 import ERC20Abi from '~/lib/abi/ERC20.json';
 import { AddressZero } from '@ethersproject/constants';
-import { GqlToken } from '~/apollo/generated/graphql-codegen-generated';
+import { GqlChain, GqlToken } from '~/apollo/generated/graphql-codegen-generated';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 
 interface TokenBaseWithChainId extends TokenBase {
+    chain: GqlChain;
     chainId: number;
 }
 
@@ -70,7 +71,7 @@ export function useUserImportedTokens() {
         if (tokenToImport && !getImportedToken(tokenToImport.address)) {
             const updated = [
                 ...userImportedTokensVar(),
-                { ...tokenToImport, chainId: parseInt(networkConfig.chainId) },
+                { ...tokenToImport, chainId: parseInt(networkConfig.chainId), chain: networkConfig.chainName },
             ];
             userImportedTokensVar(updated);
             localStorage.setItem(USER_IMPORTED_CACHE_KEY, JSON.stringify(updated));

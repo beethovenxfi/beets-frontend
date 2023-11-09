@@ -1661,6 +1661,7 @@ export type GetTokensQuery = {
         name: string;
         symbol: string;
         decimals: number;
+        chain: GqlChain;
         chainId: number;
         logoURI?: string | null;
         priority: number;
@@ -5976,6 +5977,7 @@ export const GetTokensDocument = gql`
             name
             symbol
             decimals
+            chain
             chainId
             logoURI
             priority

@@ -43,6 +43,7 @@ query GetTokens {
         name
         symbol
         decimals
+        chain
         chainId
         logoURI
         priority
