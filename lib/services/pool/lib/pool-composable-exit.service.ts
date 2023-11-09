@@ -727,10 +727,14 @@ export class PoolComposableExitService {
             inputReference !== null
                 ? this.batchRelayerService.toChainedReference(inputReference).toString()
                 : parseUnits(bptIn, 18).toString();
+        const tokensWithoutPhantomBpt = pool.tokens.filter((token) => token.address !== pool.address);
         const tokensWithPhantomBpt =
             pool.__typename === 'GqlPoolWeighted'
                 ? sortBy(pool.tokens, 'index')
-                : sortBy([...pool.tokens, { address: pool.address, decimals: 18, __typename: 'pool' }], 'address');
+                : sortBy(
+                      [...tokensWithoutPhantomBpt, { address: pool.address, decimals: 18, __typename: 'pool' }],
+                      'address',
+                  );
 
         // only for Composable V1: this approach is not entirely ideal, as it will leave the user with dust in their wallet when they fully exit,
         const amountsOutScaled = sortBy(pool.tokens, 'index').map((poolToken) => {
@@ -741,7 +745,7 @@ export class PoolComposableExitService {
 
         // this is for all other pool types: apply some slippage so we stay below the limits
         const minAmountsOut = exitAmounts.map((exitAmount) => {
-            const token = this.pool.tokens.find((token) => token.address === exitAmount.address);
+            const token = pool.tokens.find((token) => token.address === exitAmount.address);
             const amountScaled = oldBnumScaleAmount(exitAmount.amount, token?.decimals);
 
             return amountScaled.minus(amountScaled.times(slippage)).toFixed(0);
