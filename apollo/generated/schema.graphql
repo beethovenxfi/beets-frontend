@@ -956,6 +956,7 @@ enum GqlSorSwapType {
 
 type GqlToken {
     address: String!
+    chain: GqlChain!
     chainId: Int!
     decimals: Int!
     description: String
@@ -1020,6 +1021,7 @@ type GqlTokenDynamicData {
 
 type GqlTokenPrice {
     address: String!
+    chain: GqlChain!
     price: Float!
 }
 
@@ -1044,6 +1046,7 @@ type GqlUserFbeetsBalance {
 }
 
 type GqlUserPoolBalance {
+    chain: GqlChain!
     poolId: String!
     stakedBalance: AmountHumanReadable!
     tokenAddress: String!
@@ -1235,7 +1238,7 @@ type Query {
         tokenOut: String!
     ): GqlSorGetSwapsResponse!
     tokenGetCandlestickChartData(address: String!, range: GqlTokenChartDataRange!): [GqlTokenCandlestickChartDataItem!]!
-    tokenGetCurrentPrices: [GqlTokenPrice!]!
+    tokenGetCurrentPrices(chains: [GqlChain!]): [GqlTokenPrice!]!
     tokenGetHistoricalPrices(addresses: [String!]!): [GqlHistoricalTokenPrice!]!
     tokenGetPriceChartData(address: String!, range: GqlTokenChartDataRange!): [GqlTokenPriceChartDataItem!]!
     tokenGetProtocolTokenPrice: AmountHumanReadable!
@@ -1246,11 +1249,11 @@ type Query {
     ): [GqlTokenPriceChartDataItem!]!
     tokenGetTokenData(address: String!): GqlTokenData
     tokenGetTokenDynamicData(address: String!): GqlTokenDynamicData
-    tokenGetTokens: [GqlToken!]!
+    tokenGetTokens(chains: [GqlChain!]): [GqlToken!]!
     tokenGetTokensData(addresses: [String!]!): [GqlTokenData!]!
     tokenGetTokensDynamicData(addresses: [String!]!): [GqlTokenDynamicData!]!
     userGetFbeetsBalance: GqlUserFbeetsBalance!
-    userGetPoolBalances: [GqlUserPoolBalance!]!
+    userGetPoolBalances(address: String, chains: [GqlChain!]): [GqlUserPoolBalance!]!
     userGetPoolJoinExits(first: Int = 10, poolId: String!, skip: Int = 0): [GqlPoolJoinExit!]!
     userGetPoolSnapshots(poolId: String!, range: GqlUserSnapshotDataRange!): [GqlUserPoolSnapshot!]!
     userGetPortfolioSnapshots(days: Int!): [GqlUserPortfolioSnapshot!]!
