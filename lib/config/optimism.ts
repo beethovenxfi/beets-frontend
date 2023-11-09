@@ -295,6 +295,7 @@ export const optimismNetworkConfig: NetworkConfig = {
         '0x9da11ff60bfc5af527f58fd61679c3ac98d040d9000000000000000000000100': 'https://app.aura.finance/#/10/pool/10', // Native Stable Beets
         '0x004700ba0a4f5f22e1e78a277fca55e36f47e09c000000000000000000000104': 'https://app.aura.finance/#/10/pool/13', // Ankr's Galactic Harmony
         '0x00b82bc5edea6e5e6c77635e31a1a25aad99f881000200000000000000000105': 'https://app.aura.finance/#/10/pool/11', // Overnight Opening Ensemble
+        '0x5f8893506ddc4c271837187d14a9c87964a074dc000000000000000000000106': 'https://app.aura.finance/#/10/pool/14', // Ethereum Triplets
     },
     investDisabled: {
         '0x1f131ec1175f023ee1534b16fa8ab237c00e238100000000000000000000004a': true,
