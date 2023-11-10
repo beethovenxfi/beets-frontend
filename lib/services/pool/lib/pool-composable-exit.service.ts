@@ -384,18 +384,22 @@ export class PoolComposableExitService {
                 this.isComposableV1(nestedStablePool)
                     ? oldBnumSubtractSlippage(bptAmount.amount, 18, slippage)
                     : bptAmount.amount,
-                nestedStablePool.tokens,
+                // workaround to filter out nested bpt again
+                nestedStablePool.tokens.filter((token) => token.address !== nestedStablePool.address),
                 poolGetTotalShares(nestedStablePool),
                 true,
             );
 
             const firstIdx = references[references.length - 1].refIdx + 1;
-            const outputReferences = nestedStablePool.tokens.map((token, index) => ({
-                index: token.index,
-                key: this.batchRelayerService.toChainedReference(firstIdx + index),
-                address: token.address,
-                refIdx: firstIdx + index,
-            }));
+            const outputReferences = nestedStablePool.tokens
+                // workaround to filter out nested bpt again
+                .filter((token) => token.address !== nestedStablePool.address)
+                .map((token, index) => ({
+                    index: token.index,
+                    key: this.batchRelayerService.toChainedReference(firstIdx + index),
+                    address: token.address,
+                    refIdx: firstIdx + index,
+                }));
 
             calls.push(
                 this.batchRelayerService.vaultEncodeExitPool({
