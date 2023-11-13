@@ -15,17 +15,14 @@ import { useRouter } from 'next/router';
 
 const POOL_REGISTERED_LOG_TOPIC = '0x3c13bc30b8e878c53fd2a36b679409c073afd75950be43d8858768e956fbc20e';
 
-interface Props {}
-
 function sortTokensByAddress(tokens: PoolCreationToken[]) {
     return tokens.sort((tokenA, tokenB) => {
         return tokenA.address.toLowerCase() > tokenB.address.toLowerCase() ? 1 : -1;
     });
 }
 
-export default function FinalisePoolComposeActions(props: Props) {
-    const { tokens, poolName, getPoolSymbol, currentFee, feeManager, setPoolId, poolId, isUsingCustomFee } =
-        useCompose();
+export default function FinalisePoolComposeActions() {
+    const { tokens, poolName, getPoolSymbol, currentFee, feeManager, setPoolId, poolId } = useCompose();
     const router = useRouter();
     const isRabby = (window as any).web3.currentProvider.isRabby;
     const [steps, setSteps] = useState<TransactionStep[]>([]);
@@ -57,7 +54,6 @@ export default function FinalisePoolComposeActions(props: Props) {
         .filter((token) => !token.isApproved);
 
     function handleTransactionSubmit(txId: string) {
-        const formattedFee = isUsingCustomFee ? parseFloat(currentFee) / 100 : currentFee;
         if (txId === 'create-pool') {
             create({
                 name: poolName || getPoolSymbol(),
