@@ -1,7 +1,7 @@
 import { useQuery } from 'react-query';
 import { etherscanService } from '~/lib/services/util/etherscan.service';
 
-export function useVerifyContract(contractaddress: string, constructorArguements: string) {
+export function useVerifySourceCode(contractaddress: string, constructorArguements: string) {
     return useQuery(
         ['verifyContract', contractaddress, constructorArguements],
         async () => {
@@ -10,9 +10,7 @@ export function useVerifyContract(contractaddress: string, constructorArguements
                 constructorArguements,
             });
 
-            const status = await etherscanService.checkVerifyStatus({ guid: result.result });
-
-            return status;
+            return result.result;
         },
         { enabled: contractaddress !== '' && constructorArguements !== '' },
     );
