@@ -1,6 +1,5 @@
 import axios from 'axios';
-import { type } from 'os';
-import sourceCode from '~/lib/sourceCode/weighted_pool_v4.json';
+import sourceCode from '~/lib/source-code/weighted_pool_v4.json';
 
 export interface EtherscanRequestBase {
     apikey: string;
