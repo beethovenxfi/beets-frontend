@@ -1,7 +1,8 @@
 import { Text } from '@chakra-ui/react';
-import { useVerifyContract } from '~/lib/global/useVerifyContract';
 import { useGetContructorArgs } from '~/lib/global/useGetConstructorArgs';
 import { useEffect } from 'react';
+import { useVerifySourceCode } from '~/lib/global/useVerifySourceCode';
+import { useCheckVerifyStatus } from '~/lib/global/useCheckVerifyStatus';
 
 interface Props {
     poolAddress: string;
@@ -10,15 +11,26 @@ interface Props {
 
 export function PoolVerification({ poolAddress, updateIsVerifying }: Props) {
     const { data: constructorArguements } = useGetContructorArgs(poolAddress);
-    const { data, isLoading } = useVerifyContract(poolAddress, constructorArguements || '');
+    const { data: guid, isLoading: isLoadingVerifySourceCode } = useVerifySourceCode(
+        poolAddress,
+        constructorArguements || '',
+    );
+    const {
+        data: result,
+        isLoading: isLoadingCheckVerifyStatus,
+        isRefetching: isRefetchingCheckVerifyStatus,
+        refetch,
+    } = useCheckVerifyStatus(guid);
+    const isLoading = isLoadingVerifySourceCode || isLoadingCheckVerifyStatus || isRefetchingCheckVerifyStatus;
 
     useEffect(() => {
-        if (!data && isLoading) {
+        if (!result || result?.message === 'NOTOK' || isLoading) {
             updateIsVerifying(true);
-        } else if (data && !isLoading) {
+            refetch();
+        } else {
             updateIsVerifying(false);
         }
-    }, [data, isLoading]);
+    }, [result, isLoading]);
 
-    return <Text>{isLoading ? 'Verifying...' : 'Verified!'}</Text>;
+    return <Text>{isLoading || result?.message === 'NOTOK' ? 'Verifying...' : 'Verified!'}</Text>;
 }
