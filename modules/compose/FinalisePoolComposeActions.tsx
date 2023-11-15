@@ -32,6 +32,7 @@ export default function FinalisePoolComposeActions(props: Props) {
     const { showToast, removeToast } = useToast();
     const isRabby = (window as any).web3.currentProvider.isRabby;
     const [steps, setSteps] = useState<TransactionStep[]>([]);
+    const [poolAddress, setPoolAddress] = useState('');
     const [isVerifying, setIsVerifying] = useState(false);
 
     const { getToken } = useGetTokens();
@@ -90,6 +91,10 @@ export default function FinalisePoolComposeActions(props: Props) {
                 (log) => log.topics[0] === POOL_REGISTERED_LOG_TOPIC, // PoolRegistered event
             )?.topics[1];
             poolId && setPoolId(poolId);
+            const poolAddress = createQuery.txReceipt.logs.find(
+                (log) => log.topics[0] === POOL_REGISTERED_LOG_TOPIC, // PoolRegistered event
+            )?.topics[2];
+            poolAddress && setPoolAddress(`0x${poolAddress.slice(26)}`);
         }
     }
 
@@ -125,10 +130,10 @@ export default function FinalisePoolComposeActions(props: Props) {
     }, [requiredApprovals.length, isLoadingAllowances]);
 
     useEffect(() => {
-        if (joinQuery.isConfirmed && poolId) {
+        if (joinQuery.isConfirmed && poolAddress) {
             showToast({
                 id: 'verify-pool',
-                content: <PoolVerification poolAddress={poolId.slice(32)} updateIsVerifying={updateIsVerifying} />,
+                content: <PoolVerification poolAddress={poolAddress} updateIsVerifying={updateIsVerifying} />,
                 type: ToastType.Warn,
             });
         }
