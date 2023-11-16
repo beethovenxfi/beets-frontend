@@ -13,7 +13,7 @@ export function PoolListTabs() {
         const categoryNotIn: any = [
             ...DEFAULT_POOL_LIST_QUERY_VARS.where!.categoryNotIn!,
             tab.id === 'community' ? 'INCENTIVIZED' : null,
-        ];
+        ].filter(Boolean);
         const categoryIn: any = tab.id === 'incentivized' ? ['INCENTIVIZED'] : null;
 
         if (['incentivized', 'community'].includes(tab.id)) {
