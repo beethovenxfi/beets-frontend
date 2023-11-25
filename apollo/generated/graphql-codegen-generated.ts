@@ -135,6 +135,7 @@ export interface GqlPoolBase {
 
 export interface GqlPoolBatchSwap {
     __typename: 'GqlPoolBatchSwap';
+    chain: GqlChain;
     id: Scalars['ID'];
     swaps: Array<GqlPoolBatchSwapSwap>;
     timestamp: Scalars['Int'];
@@ -256,6 +257,7 @@ export interface GqlPoolFilter {
     poolTypeNotIn?: InputMaybe<Array<GqlPoolFilterType>>;
     tokensIn?: InputMaybe<Array<Scalars['String']>>;
     tokensNotIn?: InputMaybe<Array<Scalars['String']>>;
+    userAddress?: InputMaybe<Scalars['String']>;
 }
 
 export type GqlPoolFilterCategory = 'BLACK_LISTED' | 'INCENTIVIZED';
@@ -322,6 +324,7 @@ export interface GqlPoolInvestOption {
 export interface GqlPoolJoinExit {
     __typename: 'GqlPoolJoinExit';
     amounts: Array<GqlPoolJoinExitAmount>;
+    chain: GqlChain;
     id: Scalars['ID'];
     poolId: Scalars['String'];
     sender: Scalars['String'];
@@ -338,6 +341,7 @@ export interface GqlPoolJoinExitAmount {
 }
 
 export interface GqlPoolJoinExitFilter {
+    chainIn?: InputMaybe<Array<GqlChain>>;
     poolIdIn?: InputMaybe<Array<Scalars['String']>>;
 }
 
@@ -385,7 +389,9 @@ export interface GqlPoolLinearNested {
     tokens: Array<GqlPoolToken>;
     totalLiquidity: Scalars['BigDecimal'];
     totalShares: Scalars['BigDecimal'];
+    type: Scalars['String'];
     upperTarget: Scalars['BigInt'];
+    version: Scalars['Int'];
     wrappedIndex: Scalars['Int'];
 }
 
@@ -556,11 +562,14 @@ export interface GqlPoolPhantomStableNested {
     tokens: Array<GqlPoolTokenPhantomStableNestedUnion>;
     totalLiquidity: Scalars['BigDecimal'];
     totalShares: Scalars['BigDecimal'];
+    type: Scalars['String'];
+    version: Scalars['Int'];
 }
 
 export interface GqlPoolSnapshot {
     __typename: 'GqlPoolSnapshot';
     amounts: Array<Scalars['String']>;
+    chain: GqlChain;
     fees24h: Scalars['String'];
     holdersCount: Scalars['String'];
     id: Scalars['ID'];
@@ -618,6 +627,7 @@ export interface GqlPoolStablePhantomPoolData {
 export interface GqlPoolStaking {
     __typename: 'GqlPoolStaking';
     address: Scalars['String'];
+    chain: GqlChain;
     farm?: Maybe<GqlPoolStakingMasterChefFarm>;
     gauge?: Maybe<GqlPoolStakingGauge>;
     id: Scalars['ID'];
@@ -692,6 +702,7 @@ export type GqlPoolStakingType = 'FRESH_BEETS' | 'GAUGE' | 'MASTER_CHEF' | 'RELI
 
 export interface GqlPoolSwap {
     __typename: 'GqlPoolSwap';
+    chain: GqlChain;
     id: Scalars['ID'];
     poolId: Scalars['String'];
     timestamp: Scalars['Int'];
@@ -705,6 +716,7 @@ export interface GqlPoolSwap {
 }
 
 export interface GqlPoolSwapFilter {
+    chainIn?: InputMaybe<Array<GqlChain>>;
     poolIdIn?: InputMaybe<Array<Scalars['String']>>;
     tokenInIn?: InputMaybe<Array<Scalars['String']>>;
     tokenOutIn?: InputMaybe<Array<Scalars['String']>>;
@@ -1311,12 +1323,10 @@ export interface Query {
     poolGetJoinExits: Array<GqlPoolJoinExit>;
     poolGetLinearPools: Array<GqlPoolLinear>;
     poolGetPool: GqlPoolBase;
-    poolGetPoolFilters: Array<GqlPoolFilterDefinition>;
     poolGetPools: Array<GqlPoolMinimal>;
     poolGetPoolsCount: Scalars['Int'];
     poolGetSnapshots: Array<GqlPoolSnapshot>;
     poolGetSwaps: Array<GqlPoolSwap>;
-    poolGetUserSwapVolume: Array<GqlPoolUserSwapVolume>;
     protocolMetricsAggregated: GqlProtocolMetricsAggregated;
     protocolMetricsChain: GqlProtocolMetricsChain;
     sorGetBatchSwapForTokensIn: GqlSorGetBatchSwapForTokensInResponse;
@@ -1352,6 +1362,7 @@ export interface QueryBeetsPoolGetReliquaryFarmSnapshotsArgs {
 }
 
 export interface QueryPoolGetAllPoolsSnapshotsArgs {
+    chains?: InputMaybe<Array<GqlChain>>;
     range: GqlPoolSnapshotDataRange;
 }
 
@@ -1367,7 +1378,12 @@ export interface QueryPoolGetJoinExitsArgs {
     where?: InputMaybe<GqlPoolJoinExitFilter>;
 }
 
+export interface QueryPoolGetLinearPoolsArgs {
+    chains?: InputMaybe<Array<GqlChain>>;
+}
+
 export interface QueryPoolGetPoolArgs {
+    chain?: InputMaybe<GqlChain>;
     id: Scalars['String'];
 }
 
@@ -1390,6 +1406,7 @@ export interface QueryPoolGetPoolsCountArgs {
 }
 
 export interface QueryPoolGetSnapshotsArgs {
+    chain?: InputMaybe<GqlChain>;
     id: Scalars['String'];
     range: GqlPoolSnapshotDataRange;
 }
@@ -1398,12 +1415,6 @@ export interface QueryPoolGetSwapsArgs {
     first?: InputMaybe<Scalars['Int']>;
     skip?: InputMaybe<Scalars['Int']>;
     where?: InputMaybe<GqlPoolSwapFilter>;
-}
-
-export interface QueryPoolGetUserSwapVolumeArgs {
-    first?: InputMaybe<Scalars['Int']>;
-    skip?: InputMaybe<Scalars['Int']>;
-    where?: InputMaybe<GqlUserSwapVolumeFilter>;
 }
 
 export interface QueryProtocolMetricsAggregatedArgs {
@@ -1474,12 +1485,15 @@ export interface QueryUserGetPoolBalancesArgs {
 }
 
 export interface QueryUserGetPoolJoinExitsArgs {
+    address?: InputMaybe<Scalars['String']>;
+    chain?: InputMaybe<GqlChain>;
     first?: InputMaybe<Scalars['Int']>;
     poolId: Scalars['String'];
     skip?: InputMaybe<Scalars['Int']>;
 }
 
 export interface QueryUserGetPoolSnapshotsArgs {
+    chain: GqlChain;
     poolId: Scalars['String'];
     range: GqlUserSnapshotDataRange;
 }
@@ -1493,7 +1507,14 @@ export interface QueryUserGetRelicSnapshotsArgs {
     range: GqlUserSnapshotDataRange;
 }
 
+export interface QueryUserGetStakingArgs {
+    address?: InputMaybe<Scalars['String']>;
+    chains?: InputMaybe<Array<GqlChain>>;
+}
+
 export interface QueryUserGetSwapsArgs {
+    address?: InputMaybe<Scalars['String']>;
+    chain?: InputMaybe<GqlChain>;
     first?: InputMaybe<Scalars['Int']>;
     poolId: Scalars['String'];
     skip?: InputMaybe<Scalars['Int']>;
@@ -1753,6 +1774,7 @@ export type GetUserDataQuery = {
     staking: Array<{
         __typename: 'GqlPoolStaking';
         id: string;
+        chain: GqlChain;
         type: GqlPoolStakingType;
         address: string;
         farm?: {
@@ -6285,6 +6307,7 @@ export const GetUserDataDocument = gql`
         }
         staking: userGetStaking {
             id
+            chain
             type
             address
             farm {

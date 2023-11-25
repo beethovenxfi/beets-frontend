@@ -671,6 +671,7 @@ export const GetUserData = gql`
         }
         staking: userGetStaking {
             id
+            chain
             type
             address
             farm {
