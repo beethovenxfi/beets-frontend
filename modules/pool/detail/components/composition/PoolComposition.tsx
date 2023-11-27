@@ -266,38 +266,45 @@ export function PoolComposition() {
         tokens: GqlPoolTokenUnion[],
         containingPool: GqlPoolUnion | GqlPoolLinearNested | GqlPoolPhantomStableNested,
     ): TableData[] {
-        return tokens.map((token) => {
-            const tokenPrice = priceFor(token.address);
-            const totalTokenValue = parseFloat(token.balance) * tokenPrice;
-            const calculatedWeight = totalTokenValue / parseFloat(pool.dynamicData.totalLiquidity);
-            const userBalance = isComposablePool
-                ? getUserPoolTokenBalance(token.address)
-                : hasNestedTokens && 'pool' in token
-                ? (((calculatedWeight * userPoolBalanceUSD) / totalTokenValue) * parseFloat(token.balance)).toString()
-                : getUserInvestedBalance(token.address);
+        return tokens
+            .filter((token) => token.address !== containingPool.address)
+            .map((token) => {
+                const tokenPrice = priceFor(token.address);
+                const totalTokenValue = parseFloat(token.balance) * tokenPrice;
+                const calculatedWeight = totalTokenValue / parseFloat(pool.dynamicData.totalLiquidity);
+                const userBalance = isComposablePool
+                    ? getUserPoolTokenBalance(token.address)
+                    : hasNestedTokens && 'pool' in token
+                    ? (
+                          ((calculatedWeight * userPoolBalanceUSD) / totalTokenValue) *
+                          parseFloat(token.balance)
+                      ).toString()
+                    : getUserInvestedBalance(token.address);
 
-            const smallWrappedBalanceIn18Decimals = hasSmallWrappedBalancedIn18Decimals(containingPool);
-            const linearPoolMainToken = getLinearPoolMainToken(containingPool);
-            const decimalDiff = 18 - (linearPoolMainToken?.decimals || 18);
+                const smallWrappedBalanceIn18Decimals = hasSmallWrappedBalancedIn18Decimals(containingPool);
+                const linearPoolMainToken = getLinearPoolMainToken(containingPool);
+                const decimalDiff = 18 - (linearPoolMainToken?.decimals || 18);
 
-            return {
-                symbol: `${token.symbol}--${token.address}`,
-                name: token.name,
-                weight: token.weight ?? calculatedWeight,
-                myBalance: `${hasNestedTokens && 'pool' in token && !isComposablePool ? '~' : ''}${tokenFormatAmount(
-                    userBalance,
-                )}`,
-                myValue: numeral(parseFloat(userBalance) * tokenPrice).format('$0,0.00a'),
-                balance:
-                    smallWrappedBalanceIn18Decimals &&
-                    linearPoolMainToken &&
-                    token.address !== linearPoolMainToken.address
-                        ? `${tokenFormatAmount(oldBnumScale(token.balance, decimalDiff).toString())}e-${decimalDiff}`
-                        : tokenFormatAmount(token.balance),
-                value: numeral(totalTokenValue).format('$0,0.00a'),
-                ...(hasNestedTokens && 'pool' in token && { subRows: getTokenData(token.pool.tokens, token.pool) }),
-            };
-        });
+                return {
+                    symbol: `${token.symbol}--${token.address}`,
+                    name: token.name,
+                    weight: token.weight ?? calculatedWeight,
+                    myBalance: `${
+                        hasNestedTokens && 'pool' in token && !isComposablePool ? '~' : ''
+                    }${tokenFormatAmount(userBalance)}`,
+                    myValue: numeral(parseFloat(userBalance) * tokenPrice).format('$0,0.00a'),
+                    balance:
+                        smallWrappedBalanceIn18Decimals &&
+                        linearPoolMainToken &&
+                        token.address !== linearPoolMainToken.address
+                            ? `${tokenFormatAmount(
+                                  oldBnumScale(token.balance, decimalDiff).toString(),
+                              )}e-${decimalDiff}`
+                            : tokenFormatAmount(token.balance),
+                    value: numeral(totalTokenValue).format('$0,0.00a'),
+                    ...(hasNestedTokens && 'pool' in token && { subRows: getTokenData(token.pool.tokens, token.pool) }),
+                };
+            });
     }
 
     const data = React.useMemo(
