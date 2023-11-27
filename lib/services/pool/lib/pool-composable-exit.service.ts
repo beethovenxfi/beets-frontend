@@ -384,18 +384,22 @@ export class PoolComposableExitService {
                 this.isComposableV1(nestedStablePool)
                     ? oldBnumSubtractSlippage(bptAmount.amount, 18, slippage)
                     : bptAmount.amount,
-                nestedStablePool.tokens,
+                // workaround to filter out nested bpt again
+                nestedStablePool.tokens.filter((token) => token.address !== nestedStablePool.address),
                 poolGetTotalShares(nestedStablePool),
                 true,
             );
 
             const firstIdx = references[references.length - 1].refIdx + 1;
-            const outputReferences = nestedStablePool.tokens.map((token, index) => ({
-                index: token.index,
-                key: this.batchRelayerService.toChainedReference(firstIdx + index),
-                address: token.address,
-                refIdx: firstIdx + index,
-            }));
+            const outputReferences = nestedStablePool.tokens
+                // workaround to filter out nested bpt again
+                .filter((token) => token.address !== nestedStablePool.address)
+                .map((token, index) => ({
+                    index: token.index,
+                    key: this.batchRelayerService.toChainedReference(firstIdx + index),
+                    address: token.address,
+                    refIdx: firstIdx + index,
+                }));
 
             calls.push(
                 this.batchRelayerService.vaultEncodeExitPool({
@@ -727,10 +731,14 @@ export class PoolComposableExitService {
             inputReference !== null
                 ? this.batchRelayerService.toChainedReference(inputReference).toString()
                 : parseUnits(bptIn, 18).toString();
+        const tokensWithoutPhantomBpt = pool.tokens.filter((token) => token.address !== pool.address);
         const tokensWithPhantomBpt =
             pool.__typename === 'GqlPoolWeighted'
                 ? sortBy(pool.tokens, 'index')
-                : sortBy([...pool.tokens, { address: pool.address, decimals: 18, __typename: 'pool' }], 'address');
+                : sortBy(
+                      [...tokensWithoutPhantomBpt, { address: pool.address, decimals: 18, __typename: 'pool' }],
+                      'address',
+                  );
 
         // only for Composable V1: this approach is not entirely ideal, as it will leave the user with dust in their wallet when they fully exit,
         const amountsOutScaled = sortBy(pool.tokens, 'index').map((poolToken) => {
@@ -741,7 +749,7 @@ export class PoolComposableExitService {
 
         // this is for all other pool types: apply some slippage so we stay below the limits
         const minAmountsOut = exitAmounts.map((exitAmount) => {
-            const token = this.pool.tokens.find((token) => token.address === exitAmount.address);
+            const token = pool.tokens.find((token) => token.address === exitAmount.address);
             const amountScaled = oldBnumScaleAmount(exitAmount.amount, token?.decimals);
 
             return amountScaled.minus(amountScaled.times(slippage)).toFixed(0);

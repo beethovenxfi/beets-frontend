@@ -14,7 +14,6 @@ import {
 import { usePoolList } from '~/modules/pools/usePoolList';
 import { TextButtonPopupMenu } from '~/components/popup-menu/TextButtonPopupMenu';
 import { PoolListTokenMultiSelect } from '~/modules/pools/components/PoolListTokenMultiSelect';
-import { PoolListFilterMultiSelect } from '~/modules/pools/components/PoolListFilterMultiSelect';
 import { PoolListSearch } from '~/modules/pools/components/PoolListSearch';
 
 export function PoolListMobileHeader() {
@@ -27,8 +26,7 @@ export function PoolListMobileHeader() {
         setShowMyInvestments,
         searchText,
     } = usePoolList();
-    const hasFiltersSelected =
-        (state.where?.filterIn || []).length > 0 || (state.where?.tokensIn || []).length > 0 || searchText !== '';
+    const hasFiltersSelected = (state.where?.tokensIn || []).length > 0 || searchText !== '';
 
     return (
         <Flex display={{ base: 'flex', lg: 'none' }} alignItems="center" mb="4">
@@ -126,10 +124,6 @@ export function PoolListMobileHeader() {
                         <Box mb="6">
                             <Box mb="1">Tokens:</Box>
                             <PoolListTokenMultiSelect />
-                        </Box>
-                        <Box mb="8">
-                            <Box mb="1">Categories:</Box>
-                            <PoolListFilterMultiSelect />
                         </Box>
                         <Box mb="8">
                             <Box mb="1">Search:</Box>

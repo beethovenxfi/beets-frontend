@@ -26,13 +26,6 @@ query GetPools(
     )
 }
 
-query GetPoolFilters {
-    filters: poolGetPoolFilters {
-        id
-        title
-    }
-}
-
 #not sure why, but can't expand the fragment in the query above, probably has to do with the interface type
 fragment GqlPoolMinimal on GqlPoolMinimal {
     id

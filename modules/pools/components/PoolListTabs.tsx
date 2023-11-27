@@ -1,5 +1,5 @@
 import { Box, HStack, TabList, Tabs } from '@chakra-ui/react';
-import { usePoolList } from '~/modules/pools/usePoolList';
+import { DEFAULT_POOL_LIST_QUERY_VARS, usePoolList } from '~/modules/pools/usePoolList';
 import BeetsTab from '~/components/tabs/BeetsTab';
 import { useUserAccount } from '~/lib/user/useUserAccount';
 
@@ -10,7 +10,10 @@ export function PoolListTabs() {
 
     const handleTabChanged = (index: number) => {
         const tab = TABS[index];
-        const categoryNotIn: any = tab.id === 'community' ? ['INCENTIVIZED'] : null;
+        const categoryNotIn: any = [
+            ...DEFAULT_POOL_LIST_QUERY_VARS.where!.categoryNotIn!,
+            tab.id === 'community' ? 'INCENTIVIZED' : null,
+        ].filter(Boolean);
         const categoryIn: any = tab.id === 'incentivized' ? ['INCENTIVIZED'] : null;
 
         if (['incentivized', 'community'].includes(tab.id)) {

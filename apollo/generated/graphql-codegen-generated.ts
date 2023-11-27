@@ -996,6 +996,7 @@ export type GqlSorSwapType = 'EXACT_IN' | 'EXACT_OUT';
 export interface GqlToken {
     __typename: 'GqlToken';
     address: Scalars['String'];
+    chain: GqlChain;
     chainId: Scalars['Int'];
     decimals: Scalars['Int'];
     description?: Maybe<Scalars['String']>;
@@ -1060,6 +1061,7 @@ export interface GqlTokenDynamicData {
 export interface GqlTokenPrice {
     __typename: 'GqlTokenPrice';
     address: Scalars['String'];
+    chain: GqlChain;
     price: Scalars['Float'];
 }
 
@@ -1082,6 +1084,7 @@ export interface GqlUserFbeetsBalance {
 
 export interface GqlUserPoolBalance {
     __typename: 'GqlUserPoolBalance';
+    chain: GqlChain;
     poolId: Scalars['String'];
     stakedBalance: Scalars['AmountHumanReadable'];
     tokenAddress: Scalars['String'];
@@ -1426,6 +1429,10 @@ export interface QueryTokenGetCandlestickChartDataArgs {
     range: GqlTokenChartDataRange;
 }
 
+export interface QueryTokenGetCurrentPricesArgs {
+    chains?: InputMaybe<Array<GqlChain>>;
+}
+
 export interface QueryTokenGetHistoricalPricesArgs {
     addresses: Array<Scalars['String']>;
 }
@@ -1449,12 +1456,21 @@ export interface QueryTokenGetTokenDynamicDataArgs {
     address: Scalars['String'];
 }
 
+export interface QueryTokenGetTokensArgs {
+    chains?: InputMaybe<Array<GqlChain>>;
+}
+
 export interface QueryTokenGetTokensDataArgs {
     addresses: Array<Scalars['String']>;
 }
 
 export interface QueryTokenGetTokensDynamicDataArgs {
     addresses: Array<Scalars['String']>;
+}
+
+export interface QueryUserGetPoolBalancesArgs {
+    address?: InputMaybe<Scalars['String']>;
+    chains?: InputMaybe<Array<GqlChain>>;
 }
 
 export interface QueryUserGetPoolJoinExitsArgs {
@@ -1645,6 +1661,7 @@ export type GetTokensQuery = {
         name: string;
         symbol: string;
         decimals: number;
+        chain: GqlChain;
         chainId: number;
         logoURI?: string | null;
         priority: number;
@@ -4861,13 +4878,6 @@ export type GetPoolsQuery = {
     }>;
 };
 
-export type GetPoolFiltersQueryVariables = Exact<{ [key: string]: never }>;
-
-export type GetPoolFiltersQuery = {
-    __typename: 'Query';
-    filters: Array<{ __typename: 'GqlPoolFilterDefinition'; id: string; title: string }>;
-};
-
 export type GqlPoolMinimalFragment = {
     __typename: 'GqlPoolMinimal';
     id: string;
@@ -5967,6 +5977,7 @@ export const GetTokensDocument = gql`
             name
             symbol
             decimals
+            chain
             chainId
             logoURI
             priority
@@ -7323,45 +7334,6 @@ export function useGetPoolsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<G
 export type GetPoolsQueryHookResult = ReturnType<typeof useGetPoolsQuery>;
 export type GetPoolsLazyQueryHookResult = ReturnType<typeof useGetPoolsLazyQuery>;
 export type GetPoolsQueryResult = Apollo.QueryResult<GetPoolsQuery, GetPoolsQueryVariables>;
-export const GetPoolFiltersDocument = gql`
-    query GetPoolFilters {
-        filters: poolGetPoolFilters {
-            id
-            title
-        }
-    }
-`;
-
-/**
- * __useGetPoolFiltersQuery__
- *
- * To run a query within a React component, call `useGetPoolFiltersQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetPoolFiltersQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetPoolFiltersQuery({
- *   variables: {
- *   },
- * });
- */
-export function useGetPoolFiltersQuery(
-    baseOptions?: Apollo.QueryHookOptions<GetPoolFiltersQuery, GetPoolFiltersQueryVariables>,
-) {
-    const options = { ...defaultOptions, ...baseOptions };
-    return Apollo.useQuery<GetPoolFiltersQuery, GetPoolFiltersQueryVariables>(GetPoolFiltersDocument, options);
-}
-export function useGetPoolFiltersLazyQuery(
-    baseOptions?: Apollo.LazyQueryHookOptions<GetPoolFiltersQuery, GetPoolFiltersQueryVariables>,
-) {
-    const options = { ...defaultOptions, ...baseOptions };
-    return Apollo.useLazyQuery<GetPoolFiltersQuery, GetPoolFiltersQueryVariables>(GetPoolFiltersDocument, options);
-}
-export type GetPoolFiltersQueryHookResult = ReturnType<typeof useGetPoolFiltersQuery>;
-export type GetPoolFiltersLazyQueryHookResult = ReturnType<typeof useGetPoolFiltersLazyQuery>;
-export type GetPoolFiltersQueryResult = Apollo.QueryResult<GetPoolFiltersQuery, GetPoolFiltersQueryVariables>;
 export const GetReliquaryFarmSnapshotsDocument = gql`
     query GetReliquaryFarmSnapshots($id: String!, $range: GqlPoolSnapshotDataRange!) {
         snapshots: beetsPoolGetReliquaryFarmSnapshots(id: $id, range: $range) {

@@ -43,6 +43,7 @@ export const fantomNetworkConfig: NetworkConfig = {
     multicall: '0x66335d7ad8011f6aa3f48aadcb523b62b38ed961',
     beets: {
         address: '0xf24bcf4d1e507740041c9cfd2dddb29585adce1e',
+        migration: AddressZero,
     },
     fbeets: {
         address: '0xfcef8a994209d6916eb2c86cdd2afd60aa6f54b1',
@@ -411,5 +412,6 @@ export const fantomNetworkConfig: NetworkConfig = {
     maBeetsEnabled: true,
     claimAllRewardsEnabled: true,
     layerZeroChainId: -1,
+    beetsMigrationEnabled: false,
     gaugeEnabled: false,
 };

@@ -46,6 +46,7 @@ export interface NetworkConfig {
     multicall: string;
     beets: {
         address: string;
+        migration: string;
     };
     fbeets: {
         address: string;
@@ -127,5 +128,6 @@ export interface NetworkConfig {
     maBeetsEnabled: boolean;
     claimAllRewardsEnabled: boolean;
     layerZeroChainId: number;
+    beetsMigrationEnabled: boolean;
     gaugeEnabled: boolean;
 }

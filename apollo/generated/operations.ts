@@ -588,6 +588,7 @@ export const GetTokens = gql`
             name
             symbol
             decimals
+            chain
             chainId
             logoURI
             priority
@@ -1186,14 +1187,6 @@ export const GetPools = gql`
         )
     }
     ${GqlPoolMinimal}
-`;
-export const GetPoolFilters = gql`
-    query GetPoolFilters {
-        filters: poolGetPoolFilters {
-            id
-            title
-        }
-    }
 `;
 export const GetReliquaryFarmSnapshots = gql`
     query GetReliquaryFarmSnapshots($id: String!, $range: GqlPoolSnapshotDataRange!) {

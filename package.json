@@ -27,7 +27,7 @@
         "@graphql-codegen/typescript-operations": "^2.3.7",
         "@graphql-codegen/typescript-react-apollo": "^3.2.13",
         "@rainbow-me/rainbowkit": "^0.12.8",
-        "@sentry/nextjs": "^7.41.0",
+        "@sentry/nextjs": "^7.80.0",
         "@sentry/wizard": "^2.6.0",
         "@types/lodash": "^4.14.182",
         "@types/node": "17.0.30",

@@ -3,7 +3,6 @@ import {
     GetPoolsQueryVariables,
     GqlPoolOrderBy,
     GqlPoolOrderDirection,
-    useGetPoolFiltersQuery,
     useGetPoolsQuery,
 } from '~/apollo/generated/graphql-codegen-generated';
 import { useBoolean } from '@chakra-ui/hooks';
@@ -23,6 +22,7 @@ export const DEFAULT_POOL_LIST_QUERY_VARS: PoolsQueryVariables = {
     orderDirection: 'desc',
     where: {
         categoryIn: ['INCENTIVIZED'],
+        categoryNotIn: ['BLACK_LISTED'],
         poolTypeIn: ['WEIGHTED', 'STABLE', 'PHANTOM_STABLE', 'META_STABLE', 'GYRO', 'GYRO3', 'GYROE'],
         chainIn: [networkConfig.chainName],
     },
@@ -50,8 +50,6 @@ export function _usePoolList() {
         notifyOnNetworkStatusChange: true,
         variables: state,
     });
-
-    const { data: poolFilters } = useGetPoolFiltersQuery();
 
     async function refetch(newState: PoolsQueryVariables) {
         poolListStateVar(newState);
@@ -156,7 +154,6 @@ export function _usePoolList() {
         setPageSize,
         showMyInvestments,
         setShowMyInvestments,
-        filters: poolFilters?.filters || [],
         toggleFilterVisibility,
         showFilters: useReactiveVar(showFiltersVar),
         setPoolIds,

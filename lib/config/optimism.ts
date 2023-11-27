@@ -41,6 +41,7 @@ export const optimismNetworkConfig: NetworkConfig = {
     multicall: '0x2dc0e2aa608532da689e89e237df582b783e552c',
     beets: {
         address: '0x97513e975a7fa9072c72c92d8000b0db90b163c5',
+        migration: '0x9300c7eb7e3e16ba916a7d6aafee3891236ac5fc',
     },
     fbeets: {
         address: '',
@@ -296,6 +297,8 @@ export const optimismNetworkConfig: NetworkConfig = {
         '0x9da11ff60bfc5af527f58fd61679c3ac98d040d9000000000000000000000100': 'https://app.aura.finance/#/10/pool/10', // Native Stable Beets
         '0x004700ba0a4f5f22e1e78a277fca55e36f47e09c000000000000000000000104': 'https://app.aura.finance/#/10/pool/13', // Ankr's Galactic Harmony
         '0x00b82bc5edea6e5e6c77635e31a1a25aad99f881000200000000000000000105': 'https://app.aura.finance/#/10/pool/11', // Overnight Opening Ensemble
+        '0x5f8893506ddc4c271837187d14a9c87964a074dc000000000000000000000106': 'https://app.aura.finance/#/10/pool/14', // Ethereum Triplets
+        '0xc1f46ce83439886f0ea9c21512b36e7e67239d2c000200000000000000000108': 'https://app.aura.finance/#/10/pool/15', // Roast Beets
     },
     investDisabled: {
         '0x1f131ec1175f023ee1534b16fa8ab237c00e238100000000000000000000004a': true,
@@ -337,5 +340,6 @@ export const optimismNetworkConfig: NetworkConfig = {
     maBeetsEnabled: false,
     claimAllRewardsEnabled: false,
     layerZeroChainId: 111,
+    beetsMigrationEnabled: true,
     gaugeEnabled: true,
 };
