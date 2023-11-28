@@ -147,7 +147,7 @@ export default function FinalisePoolComposeActions() {
                     buttonSize="lg"
                     isLoading={createQuery.isPending}
                     loadingButtonText=""
-                    completeButtonText={`Go to ${poolName}`}
+                    completeButtonText={`Go to your pool: ${poolName}`}
                     onCompleteButtonClick={() => navigateToPool()}
                     onSubmit={handleTransactionSubmit}
                     onConfirmed={handleCreateActionConfirmed}
@@ -156,7 +156,8 @@ export default function FinalisePoolComposeActions() {
                         { ...createQuery, id: 'create-pool' },
                         { ...joinQuery, id: 'initialise-pool' },
                     ]}
-                    isDisabled={isVerifying}
+                    isDisabled={false}
+                    isCompleteDisabled={isVerifying}
                 />
             </Box>
         </Box>
