@@ -1,10 +1,12 @@
-import { HStack, Heading, IconButton, Text, VStack, useBreakpointValue } from '@chakra-ui/react';
+import { HStack, Heading, Highlight, IconButton, Text, VStack, useBreakpointValue } from '@chakra-ui/react';
 import React from 'react';
 import PreviewPoolTokenSelections from './PreviewPoolTokenSelections';
 import PreviewPoolTokenFees from './PreviewPoolTokenFees';
 import FinalisePoolComposeActions from './FinalisePoolComposeActions';
 import { ChevronLeft } from 'react-feather';
 import { useCompose } from './ComposeProvider';
+import { BeetsBox } from '~/components/box/BeetsBox';
+import { networkConfig } from '~/lib/config/network-config';
 
 interface Props {}
 
@@ -22,7 +24,7 @@ export default function PoolComposePreview(props: Props) {
     return (
         <VStack spacing="4" width="full">
             <VStack spacing="4" width={{ base: '100%', md: '75%' }} alignItems="flex-start">
-                <VStack position="relative" spacing="1">
+                <VStack position="relative" spacing="1" alignItems="flex-start">
                     {!isMobile && (
                         <IconButton
                             aria-label={'back-button'}
@@ -59,6 +61,29 @@ export default function PoolComposePreview(props: Props) {
                         Verify your pool fee and token selections before finalising pool creation. You can go back and
                         change your selections as well.
                     </Text>
+                    {networkConfig.poolVerificationEnabled && (
+                        <BeetsBox p="4">
+                            <Text>
+                                <Highlight
+                                    query={['initialised', 'verified automatically', 'to complete before going']}
+                                    styles={{ fontWeight: 'bold', color: 'white' }}
+                                >
+                                    After the pool has been initialised it will be verified automatically on FTMScan.
+                                    Please wait for the verification to complete before going to your pool.
+                                </Highlight>
+                            </Text>
+                            <Text mt="16px">
+                                <Highlight
+                                    query={['an error', 'Wait', 'refresh']}
+                                    styles={{ fontWeight: 'bold', color: 'white' }}
+                                >
+                                    When you go to your pool page and you see an error, it means the data for it has not
+                                    been loaded in the backend. Wait for a couple of minutes and refresh the pool page
+                                    again.
+                                </Highlight>
+                            </Text>
+                        </BeetsBox>
+                    )}
                 </VStack>
                 <VStack width="full">
                     <PreviewPoolTokenFees />
