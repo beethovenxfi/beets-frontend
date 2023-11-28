@@ -1,4 +1,4 @@
-import { Text } from '@chakra-ui/react';
+import { Spinner, HStack, Text } from '@chakra-ui/react';
 import { useGetContructorArgs } from '~/lib/global/useGetConstructorArgs';
 import { useEffect } from 'react';
 import { useVerifySourceCode } from '~/lib/global/useVerifySourceCode';
@@ -21,6 +21,7 @@ export function PoolVerification({ poolAddress, updateIsVerifying }: Props) {
         isRefetching: isRefetchingCheckVerifyStatus,
         refetch,
     } = useCheckVerifyStatus(guid);
+
     const isLoading = isLoadingVerifySourceCode || isLoadingCheckVerifyStatus || isRefetchingCheckVerifyStatus;
 
     useEffect(() => {
@@ -32,5 +33,14 @@ export function PoolVerification({ poolAddress, updateIsVerifying }: Props) {
         }
     }, [result, isLoading]);
 
-    return <Text>{isLoading || result?.message === 'NOTOK' ? 'Verifying...' : 'Verified!'}</Text>;
+    return (
+        <HStack>
+            <Text>
+                {isLoading || result?.message === 'NOTOK'
+                    ? 'Pool is being verified. Please wait.'
+                    : 'Pool is verified!'}
+            </Text>
+            {isLoading && <Spinner size="sm" />}
+        </HStack>
+    );
 }
