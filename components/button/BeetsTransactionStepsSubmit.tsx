@@ -37,11 +37,10 @@ interface Props {
     onSubmit: (id: string) => void;
     onConfirmed: (id: string) => void;
     isDisabled?: boolean;
-
+    isCompleteDisabled?: boolean;
     steps: TransactionStep[];
     queries: (Omit<SubmitTransactionQuery, 'submit' | 'submitAsync'> & { id: string })[];
     buttonSize?: string;
-
     onComplete?: () => void;
 }
 
@@ -56,6 +55,7 @@ export function BeetsTransactionStepsSubmit({
     onComplete,
     queries,
     isDisabled,
+    isCompleteDisabled,
     buttonSize = 'lg',
 }: Props) {
     const [currentStepIdx, setCurrentStepIdx] = useState<number>(0);
@@ -189,6 +189,7 @@ export function BeetsTransactionStepsSubmit({
                     width="full"
                     variant="outline"
                     size={buttonSize}
+                    isDisabled={isCompleteDisabled}
                 >
                     {completeButtonText}
                 </Button>
