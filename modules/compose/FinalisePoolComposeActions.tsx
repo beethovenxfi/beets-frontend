@@ -126,7 +126,7 @@ export default function FinalisePoolComposeActions() {
     }, [requiredApprovals.length, isLoadingAllowances]);
 
     useEffect(() => {
-        if (joinQuery.isConfirmed && poolAddress) {
+        if (networkConfig.poolVerificationEnabled && joinQuery.isConfirmed && poolAddress) {
             showToast({
                 id: 'verify-pool',
                 content: <PoolVerification poolAddress={poolAddress} updateIsVerifying={updateIsVerifying} />,
