@@ -43,6 +43,13 @@ export function PoolProvider({ pool: poolFromProps, children }: { pool: GqlPoolU
 
     let pool = (data?.pool || poolFromProps) as GqlPoolUnion;
 
+    // api needed to add bpts to tokens, filter them out again here
+    // https://github.com/beethovenxfi/beethovenx-backend/pull/536
+    pool = {
+        ...pool,
+        tokens: pool.tokens.filter((token) => token.address !== pool.address),
+    } as GqlPoolUnion;
+
     // drop FTM as an invest option from the FreshBeets pool for now
     const freshBeetsPool: GqlPoolUnion | null = useMemo(() => {
         if (pool.address !== networkConfig.reliquary.fbeets.poolAddress) {
