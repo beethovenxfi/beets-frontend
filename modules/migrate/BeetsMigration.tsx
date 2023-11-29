@@ -7,24 +7,24 @@ import { BeetsMigrationButton } from './BeetsMigrationButton';
 import { useUserAllowances } from '~/lib/util/useUserAllowances';
 
 interface Props {
-    beetsBalance: string;
+    oldBeetsBalance: string;
     tokenData: TokenBase | null;
 }
 
-export function BeetsMigration({ beetsBalance, tokenData }: Props) {
+export function BeetsMigration({ oldBeetsBalance, tokenData }: Props) {
     const [isConfirmed, setIsConfirmed] = useState(false);
     const { hasApprovalForAmount, isLoading, refetch } = useUserAllowances([tokenData], networkConfig.beets.migration);
-    const hasApprovedToken = hasApprovalForAmount(tokenData?.address || '', beetsBalance);
+    const hasApprovedToken = hasApprovalForAmount(tokenData?.address || '', oldBeetsBalance);
 
     return (
         <HStack>
             {isConfirmed && <Text>You have successfully migrated multiBEETS to (lz)BEETS!</Text>}
             {!isConfirmed && (
                 <>
-                    <Text>You have {beetsBalance} multiBEETS that you can migrate 1:1 to (lz)BEETS.</Text>
+                    <Text>You have {oldBeetsBalance} multiBEETS that you can migrate 1:1 to (lz)BEETS.</Text>
                     {hasApprovedToken && (
                         <BeetsMigrationButton
-                            amount={beetsBalance}
+                            amount={oldBeetsBalance}
                             onConfirmed={() => {
                                 setIsConfirmed(true);
                             }}
@@ -37,7 +37,7 @@ export function BeetsMigration({ beetsBalance, tokenData }: Props) {
                         <Box w="200px">
                             <BeetsTokenApprovalButton
                                 contractToApprove={networkConfig.beets.migration}
-                                tokenWithAmount={{ ...tokenData, amount: beetsBalance }}
+                                tokenWithAmount={{ ...tokenData, amount: oldBeetsBalance }}
                                 onConfirmed={() => {
                                     refetch();
                                 }}
