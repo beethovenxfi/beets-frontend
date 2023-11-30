@@ -47,6 +47,7 @@ export interface NetworkConfig {
     beets: {
         address: string;
         migration: string;
+        oldAddress: string;
     };
     fbeets: {
         address: string;

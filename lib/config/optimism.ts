@@ -40,8 +40,9 @@ export const optimismNetworkConfig: NetworkConfig = {
     rpcUrl: 'https://rpc.ankr.com/optimism',
     multicall: '0x2dc0e2aa608532da689e89e237df582b783e552c',
     beets: {
-        address: '0x97513e975a7fa9072c72c92d8000b0db90b163c5',
+        oldAddress: '0x97513e975a7fa9072c72c92d8000b0db90b163c5',
         migration: '0x9300c7eb7e3e16ba916a7d6aafee3891236ac5fc',
+        address: '0xb4bc46bc6cb217b59ea8f4530bae26bf69f677f0',
     },
     fbeets: {
         address: '',
