@@ -65,7 +65,7 @@ export function useInvest() {
                 ).length > 0,
         ).length === pool.investConfig.options.length;
 
-    const totalInvestValue = sumBy(selectedInvestTokensWithAmounts, priceForAmount);
+    const totalInvestValue = hasValidUserInput ? sumBy(selectedInvestTokensWithAmounts, priceForAmount) : 0;
     const isInvestingWithEth = !!selectedInvestTokens.find((token) => isEth(token.address));
 
     return {
