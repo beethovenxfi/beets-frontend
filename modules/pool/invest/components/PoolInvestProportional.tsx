@@ -41,7 +41,7 @@ export function PoolInvestProportional({ onShowPreview }: Props) {
         proportionalInputAmounts: inputAmounts,
     } = useInvestState();
     const { tokenProportionalAmounts } = usePoolJoinGetProportionalInvestmentAmount();
-    const { selectedInvestTokens, isInvestingWithEth, firstTokenOption } = useInvest();
+    const { selectedInvestTokens, isInvestingWithEth, firstTokenOption, hasValidUserInput } = useInvest();
 
     const { userPoolTokenBalances } = usePoolUserTokenBalancesInWallet();
 
@@ -168,7 +168,7 @@ export function PoolInvestProportional({ onShowPreview }: Props) {
                     width="full"
                     mt="8"
                     onClick={onShowPreview}
-                    isDisabled={proportionalPercent === 0}
+                    isDisabled={!hasValidUserInput || proportionalPercent === 0}
                 >
                     Preview
                 </Button>

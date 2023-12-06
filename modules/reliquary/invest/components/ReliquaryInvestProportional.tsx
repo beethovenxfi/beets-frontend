@@ -35,7 +35,7 @@ export function ReliquaryInvestProportional({ onShowPreview }: Props) {
     const investOptions = pool.investConfig.options;
     const { setSelectedOption, selectedOptions, setInputAmounts, inputAmounts } = useReliquaryInvestState();
     const { tokenProportionalAmounts } = useReliquaryJoinGetProportionalInvestmentAmount();
-    const { selectedInvestTokens, isInvestingWithEth } = useReliquaryInvest();
+    const { selectedInvestTokens, isInvestingWithEth, hasValidUserInput } = useReliquaryInvest();
 
     const { userPoolTokenBalances } = usePoolUserTokenBalancesInWallet();
 
@@ -159,7 +159,7 @@ export function ReliquaryInvestProportional({ onShowPreview }: Props) {
                     width="full"
                     mt="8"
                     onClick={onShowPreview}
-                    isDisabled={proportionalPercent === 0}
+                    isDisabled={!hasValidUserInput || proportionalPercent === 0}
                 >
                     Preview
                 </Button>
