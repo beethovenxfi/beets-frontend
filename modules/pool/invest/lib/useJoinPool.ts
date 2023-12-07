@@ -19,7 +19,7 @@ export function useJoinPool(pool: GqlPoolUnion, zapEnabled?: boolean) {
                 ? batchRelayerContractConfig
                 : {
                       ...vaultContractConfig,
-                      functionName: pool.__typename === 'GqlPoolPhantomStable' ? 'batchSwap' : 'joinPool',
+                      functionName: pool.__typename === 'GqlPoolComposableStable' ? 'batchSwap' : 'joinPool',
                   },
         transactionType: 'JOIN',
     });

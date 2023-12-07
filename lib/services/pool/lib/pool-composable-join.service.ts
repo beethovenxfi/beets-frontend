@@ -383,7 +383,7 @@ export class PoolComposableJoinService {
 
             const tokenAmountIn = step.tokenAmountsIn.find((tokenAmountIn) => tokenAmountIn.address === token.address);
 
-            if (token.__typename === 'GqlPoolTokenLinear' || token.__typename === 'GqlPoolTokenPhantomStable') {
+            if (token.__typename === 'GqlPoolTokenLinear' || token.__typename === 'GqlPoolTokenComposableStable') {
                 //This token is a nested BPT, not a mainToken
                 //Replace the amount with the chained reference value
                 const index = assets.findIndex((asset) => asset.toLowerCase() === token.address);

@@ -540,6 +540,7 @@ export interface GqlPoolMinimal {
     staking?: Maybe<GqlPoolStaking>;
     symbol: Scalars['String'];
     type: GqlPoolMinimalType;
+    userBalance?: Maybe<GqlPoolUserBalance>;
     version: Scalars['Int'];
 }
 
@@ -824,6 +825,13 @@ export type GqlPoolUnion =
     | GqlPoolMetaStable
     | GqlPoolStable
     | GqlPoolWeighted;
+
+export interface GqlPoolUserBalance {
+    __typename: 'GqlPoolUserBalance';
+    stakedBalance: Scalars['AmountHumanReadable'];
+    totalBalance: Scalars['AmountHumanReadable'];
+    walletBalance: Scalars['AmountHumanReadable'];
+}
 
 export interface GqlPoolUserSwapVolume {
     __typename: 'GqlPoolUserSwapVolume';
@@ -1188,6 +1196,7 @@ export interface GqlVotingPool {
 
 export interface Mutation {
     __typename: 'Mutation';
+    balancerMutationTest: Scalars['String'];
     beetsPoolLoadReliquarySnapshotsForAllFarms: Scalars['String'];
     beetsSyncFbeetsRatio: Scalars['String'];
     cacheAverageBlockTime: Scalars['String'];
@@ -1310,6 +1319,7 @@ export interface MutationUserSyncBalanceArgs {
 
 export interface Query {
     __typename: 'Query';
+    balancerQueryTest: Scalars['String'];
     beetsGetFbeetsRatio: Scalars['String'];
     beetsPoolGetReliquaryFarmSnapshots: Array<GqlReliquaryFarmSnapshot>;
     blocksGetAverageBlockTime: Scalars['Float'];
@@ -1419,7 +1429,11 @@ export interface QueryPoolGetSwapsArgs {
 }
 
 export interface QueryProtocolMetricsAggregatedArgs {
-    chainIds: Array<Scalars['String']>;
+    chains?: InputMaybe<Array<GqlChain>>;
+}
+
+export interface QueryProtocolMetricsChainArgs {
+    chain?: InputMaybe<GqlChain>;
 }
 
 export interface QuerySorGetBatchSwapForTokensInArgs {
@@ -2340,6 +2354,7 @@ export type GetPoolQuery = {
               factory?: string | null;
               symbol: string;
               createTime: number;
+              version: number;
               tokens: Array<
                   | {
                         __typename: 'GqlPoolToken';
@@ -2697,6 +2712,7 @@ export type GetPoolQuery = {
               factory?: string | null;
               symbol: string;
               createTime: number;
+              version: number;
               tokens: Array<{
                   __typename: 'GqlPoolToken';
                   id: string;
@@ -2918,6 +2934,7 @@ export type GetPoolQuery = {
               factory?: string | null;
               symbol: string;
               createTime: number;
+              version: number;
               tokens: Array<
                   | {
                         __typename: 'GqlPoolToken';
@@ -3143,6 +3160,7 @@ export type GetPoolQuery = {
               factory?: string | null;
               symbol: string;
               createTime: number;
+              version: number;
               tokens: Array<{
                   __typename: 'GqlPoolToken';
                   id: string;
@@ -3361,6 +3379,7 @@ export type GetPoolQuery = {
               factory?: string | null;
               symbol: string;
               createTime: number;
+              version: number;
               tokens: Array<
                   | {
                         __typename: 'GqlPoolToken';
@@ -3716,6 +3735,7 @@ export type GetPoolQuery = {
               factory?: string | null;
               symbol: string;
               createTime: number;
+              version: number;
               tokens: Array<{
                   __typename: 'GqlPoolToken';
                   id: string;
@@ -3934,6 +3954,7 @@ export type GetPoolQuery = {
               factory?: string | null;
               symbol: string;
               createTime: number;
+              version: number;
               tokens: Array<{
                   __typename: 'GqlPoolToken';
                   id: string;
@@ -4152,6 +4173,7 @@ export type GetPoolQuery = {
               factory?: string | null;
               symbol: string;
               createTime: number;
+              version: number;
               tokens: Array<
                   | {
                         __typename: 'GqlPoolToken';
@@ -4816,6 +4838,7 @@ export type GetPoolsQuery = {
         name: string;
         symbol: string;
         createTime: number;
+        version: number;
         dynamicData: {
             __typename: 'GqlPoolDynamicData';
             totalLiquidity: string;
@@ -4907,6 +4930,7 @@ export type GqlPoolMinimalFragment = {
     name: string;
     symbol: string;
     createTime: number;
+    version: number;
     dynamicData: {
         __typename: 'GqlPoolDynamicData';
         totalLiquidity: string;
@@ -5645,6 +5669,7 @@ export const GqlPoolMinimalFragmentDoc = gql`
         name
         symbol
         createTime
+        version
         dynamicData {
             totalLiquidity
             totalShares
@@ -6612,6 +6637,7 @@ export const GetPoolDocument = gql`
             factory
             symbol
             createTime
+            version
             dynamicData {
                 poolId
                 swapEnabled

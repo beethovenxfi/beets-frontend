@@ -5,7 +5,7 @@ import { BigNumber } from 'ethers';
 import BalancerSorQueriesAbi from '~/lib/abi/BalancerSorQueries.json';
 import {
     GqlPoolLinearNested,
-    GqlPoolPhantomStableNested,
+    GqlPoolComposableStableNested,
     GqlPoolUnion,
 } from '~/apollo/generated/graphql-codegen-generated';
 import { isSameAddress } from '@balancer-labs/sdk';
@@ -94,9 +94,9 @@ export class SorQueryService {
     }
 
     public getTotalSupplyType(
-        pool: GqlPoolUnion | GqlPoolPhantomStableNested | GqlPoolLinearNested,
+        pool: GqlPoolUnion | GqlPoolComposableStableNested | GqlPoolLinearNested,
     ): SorQueriesTotalSupplyType {
-        const isPhantomStable = ['GqlPoolPhantomStable', 'GqlPoolPhantomStableNested'].includes(pool.__typename);
+        const isPhantomStable = ['GqlPoolComposableStable', 'GqlPoolComposableStableNested'].includes(pool.__typename);
         const hasComposableStableFactory = networkConfig.balancer.composableStableFactories.includes(
             pool.factory || '',
         );

@@ -8,6 +8,7 @@ query GetPool($id: String!) {
         factory
         symbol
         createTime
+        version
         dynamicData {
             poolId
             swapEnabled

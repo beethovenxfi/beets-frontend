@@ -345,6 +345,7 @@ export const GqlPoolMinimal = gql`
         name
         symbol
         createTime
+        version
         dynamicData {
             totalLiquidity
             totalShares
@@ -772,6 +773,7 @@ export const GetPool = gql`
             factory
             symbol
             createTime
+            version
             dynamicData {
                 poolId
                 swapEnabled

@@ -19,7 +19,7 @@ export function PoolUserSwapsTable() {
         notifyOnNetworkStatusChange: true,
     });
 
-    const isPhantomStable = pool.__typename === 'GqlPoolPhantomStable';
+    const isPhantomStable = pool.__typename === 'GqlPoolComposableStable';
     const isFetchingMoreSwaps = swapsStatus === NetworkStatus.fetchMore;
 
     const transactions = useMemo(() => {

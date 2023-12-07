@@ -506,6 +506,7 @@ type GqlPoolMinimal {
     staking: GqlPoolStaking
     symbol: String!
     type: GqlPoolMinimalType!
+    userBalance: GqlPoolUserBalance
     version: Int!
 }
 
@@ -797,6 +798,12 @@ union GqlPoolUnion =
     | GqlPoolMetaStable
     | GqlPoolStable
     | GqlPoolWeighted
+
+type GqlPoolUserBalance {
+    stakedBalance: AmountHumanReadable!
+    totalBalance: AmountHumanReadable!
+    walletBalance: AmountHumanReadable!
+}
 
 type GqlPoolUserSwapVolume {
     swapVolumeUSD: BigDecimal!
@@ -1148,6 +1155,7 @@ The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://
 scalar JSON
 
 type Mutation {
+    balancerMutationTest: String!
     beetsPoolLoadReliquarySnapshotsForAllFarms: String!
     beetsSyncFbeetsRatio: String!
     cacheAverageBlockTime: String!
@@ -1202,6 +1210,7 @@ type Mutation {
 }
 
 type Query {
+    balancerQueryTest: String!
     beetsGetFbeetsRatio: String!
     beetsPoolGetReliquaryFarmSnapshots(id: String!, range: GqlPoolSnapshotDataRange!): [GqlReliquaryFarmSnapshot!]!
     blocksGetAverageBlockTime: Float!
@@ -1234,8 +1243,8 @@ type Query {
     ): Int!
     poolGetSnapshots(chain: GqlChain, id: String!, range: GqlPoolSnapshotDataRange!): [GqlPoolSnapshot!]!
     poolGetSwaps(first: Int, skip: Int, where: GqlPoolSwapFilter): [GqlPoolSwap!]!
-    protocolMetricsAggregated(chainIds: [String!]!): GqlProtocolMetricsAggregated!
-    protocolMetricsChain: GqlProtocolMetricsChain!
+    protocolMetricsAggregated(chains: [GqlChain!]): GqlProtocolMetricsAggregated!
+    protocolMetricsChain(chain: GqlChain): GqlProtocolMetricsChain!
     sorGetBatchSwapForTokensIn(
         swapOptions: GqlSorSwapOptionsInput!
         tokenOut: String!

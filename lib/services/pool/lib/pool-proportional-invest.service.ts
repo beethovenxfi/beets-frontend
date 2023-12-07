@@ -1,7 +1,7 @@
 import { sortBy } from 'lodash';
 import {
     GqlPoolGyro,
-    GqlPoolTokenPhantomStableNestedUnion,
+    GqlPoolTokenComposableStableNestedUnion,
     GqlPoolTokenUnion,
     GqlPoolWeighted,
 } from '~/apollo/generated/graphql-codegen-generated';
@@ -22,7 +22,7 @@ export class PoolProportionalInvestService {
         // so we can use that as the base to calculate the proportions of the other tokens
         const smallestBptOutAmount = sortBy(
             this.pool.tokens.map((token) => {
-                if (token.__typename === 'GqlPoolTokenPhantomStable') {
+                if (token.__typename === 'GqlPoolTokenComposableStable') {
                     // another loop to find the smallest bptOut amount for the nested stable pool
                     const nestedTokens = token.pool.tokens.map((poolToken) => {
                         const bptOut = this.getBptOutForToken(
@@ -92,7 +92,7 @@ export class PoolProportionalInvestService {
 
     private getBptOutForToken(
         userInvestTokenBalances: TokenAmountHumanReadable[],
-        poolToken: GqlPoolTokenUnion | GqlPoolTokenPhantomStableNestedUnion,
+        poolToken: GqlPoolTokenUnion | GqlPoolTokenComposableStableNestedUnion,
         bptTotalSupply: string,
     ) {
         const investToken =
@@ -154,7 +154,7 @@ export class PoolProportionalInvestService {
 
     private getInvestTokenForLinearPoolToken(
         userInvestTokenBalances: TokenAmountHumanReadable[],
-        poolToken: GqlPoolTokenUnion | GqlPoolTokenPhantomStableNestedUnion,
+        poolToken: GqlPoolTokenUnion | GqlPoolTokenComposableStableNestedUnion,
     ) {
         return userInvestTokenBalances.find((balance) => {
             if (poolToken.__typename === 'GqlPoolTokenLinear') {
