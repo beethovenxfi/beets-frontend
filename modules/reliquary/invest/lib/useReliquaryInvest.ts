@@ -47,7 +47,7 @@ export function useReliquaryInvest() {
                 ).length > 0,
         ).length === pool.investConfig.options.length;
 
-    const totalInvestValue = hasValidUserInput ? sumBy(selectedInvestTokensWithAmounts, priceForAmount) : 0;
+    const totalInvestValue = sumBy(selectedInvestTokensWithAmounts, priceForAmount);
     const isInvestingWithEth = !!selectedInvestTokens.find((token) => isEth(token.address));
 
     return {
