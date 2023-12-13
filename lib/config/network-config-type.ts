@@ -68,10 +68,6 @@ export interface NetworkConfig {
         vault: string;
         batchRelayer: string;
         balToken: string;
-        composableStableFactories: string[];
-        composableStableV1Factory: string;
-        weightedPoolV2PlusFactories: string[];
-        weightedPoolFactory: string;
         linearFactories: {
             erc4626: string[];
             reaper: string[];
