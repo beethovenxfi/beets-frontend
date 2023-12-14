@@ -87,4 +87,20 @@ export default function useGlobalWarnings() {
             });
         }
     }, [isLoadingOldBeetsBalance, oldBeetsBalance]);
+
+    // ledger warning
+    useEffect(() => {
+        showToast({
+            id: 'ledger-warning',
+            content: (
+                <HStack>
+                    <Text>
+                        WARNING: A potential vulnerability has been detected with Ledger Connect. We advise all users to
+                        exercise heightened caution during this time
+                    </Text>
+                </HStack>
+            ),
+            type: ToastType.Warn,
+        });
+    }, []);
 }
