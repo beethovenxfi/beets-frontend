@@ -1213,6 +1213,24 @@ export const GetReliquaryFarmSnapshots = gql`
         }
     }
 `;
+export const SftmxGetStakingData = gql`
+    query SftmxGetStakingData {
+        sftmxGetStakingData {
+            exchangeRate
+            maintenancePaused
+            maxDepositLimit
+            minDepositLimit
+            numberOfVaults
+            stakingApr
+            totalAmount
+            totalAmountInPool
+            totalAmountStaked
+            undelegatePaused
+            withdrawPaused
+            withdrawalDelay
+        }
+    }
+`;
 export const GetTokenRelativePriceChartData = gql`
     query GetTokenRelativePriceChartData($tokenIn: String!, $tokenOut: String!, $range: GqlTokenChartDataRange!) {
         prices: tokenGetRelativePriceChartData(tokenIn: $tokenIn, tokenOut: $tokenOut, range: $range) {

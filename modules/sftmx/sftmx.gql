@@ -1,0 +1,16 @@
+query SftmxGetStakingData {
+    sftmxGetStakingData {
+        exchangeRate
+        maintenancePaused
+        maxDepositLimit
+        minDepositLimit
+        numberOfVaults
+        stakingApr
+        totalAmount
+        totalAmountInPool
+        totalAmountStaked
+        undelegatePaused
+        withdrawPaused
+        withdrawalDelay
+    }
+}
