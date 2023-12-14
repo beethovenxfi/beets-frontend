@@ -9,15 +9,15 @@ import { tokenInputBlockInvalidCharacters, tokenInputTruncateDecimalPlaces } fro
 import { numberFormatLargeUsdValue } from '~/lib/util/number-formats';
 
 type Props = {
+    label: string;
     address: string;
     onChange?: (event: { currentTarget: { value: string } }) => void;
     value?: string | null;
     showBalance?: boolean;
-    requiresApproval?: boolean;
     placeholder?: string;
 };
 
-export const FtmTokenInput = forwardRef(({ address, onChange, value, requiresApproval, placeholder }: Props, ref) => {
+export const FtmTokenInput = forwardRef(({ label, address, onChange, value, placeholder }: Props, ref) => {
     const { getToken, priceForAmount } = useGetTokens();
     const { isConnected } = useUserAccount();
     const { userBalances, isLoading } = useUserTokenBalances();
@@ -45,7 +45,7 @@ export const FtmTokenInput = forwardRef(({ address, onChange, value, requiresApp
                     onKeyDown={tokenInputBlockInvalidCharacters}
                     placeholder={placeholder || '0'}
                     type="number"
-                    label="Stake"
+                    label={label}
                     textAlign="right"
                     wrapperProps={{ height: '125px' }}
                     headingProps={{ marginTop: '2', fontSize: '.85rem' }}
