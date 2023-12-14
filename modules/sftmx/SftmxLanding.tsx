@@ -39,8 +39,8 @@ function SftmxLanding() {
                         <TabPanel h="full" pb="0">
                             <Card shadow="lg" h="full">
                                 <VStack spacing="4" p="4" align="flex-start" h="full">
-                                    <Heading size="md">Enter an FTM amount</Heading>
-                                    <FtmTokenInput address={networkConfig.eth.address} />
+                                    <Heading size="md">Enter amount to stake</Heading>
+                                    <FtmTokenInput address={networkConfig.eth.address} label="Stake" />
                                     <HStack w="full" justifyContent="space-between">
                                         <Text>You will get</Text>
                                         <Text>0 SFTMX</Text>
@@ -63,10 +63,10 @@ function SftmxLanding() {
                             </Card>
                         </TabPanel>
                         <TabPanel h="full" pb="0">
-                            <Card shadow="lg">
+                            <Card shadow="lg" h="full">
                                 <VStack spacing="4" p="4" align="flex-start" h="full">
-                                    <Heading size="md">Enter a sFTMX amount</Heading>
-                                    <FtmTokenInput address={networkConfig.eth.address} />
+                                    <Heading size="md">Enter amount to unstake</Heading>
+                                    <FtmTokenInput address={networkConfig.sftmx.address} label="Unstake" />
                                     <HStack w="full" justifyContent="space-between">
                                         <Text>You will get</Text>
                                         <Text>0 FTM</Text>

@@ -26,7 +26,7 @@ function Stake() {
                 <meta property="twitter:description" content={DESCRIPTION} />
             </Head>
             <PageMasthead
-                title="Stake FTM"
+                title="sFTMX"
                 image={
                     <NextImage
                         src={chainId === '10' ? InvestMastheadOpImage : InvestMastheadImage}
