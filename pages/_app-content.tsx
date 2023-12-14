@@ -59,9 +59,8 @@ export function AppContent({ Component, pageProps }: AppProps) {
         <VStack h="full" w="full" justifyContent="center" px="64">
             <Center>
                 <Heading>
-                    WARNING: A potential vulnerability has been detected with Ledger Connect. We advise all users to
-                    exercise heightened caution and avoid using the Beethoven X frontend until further information is
-                    available.
+                    WARNING: A potential vulnerability has been detected with Ledger Connect. The Beethoven X frontend
+                    has been taken offline until further information is available.
                 </Heading>
             </Center>
         </VStack>
