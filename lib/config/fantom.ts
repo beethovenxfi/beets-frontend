@@ -61,6 +61,9 @@ export const fantomNetworkConfig: NetworkConfig = {
             maxLevel: 10,
         },
     },
+    sftmx: {
+        address: '0xd7028092c830b5c8fce061af2e593413ebbc1fc1',
+    },
     balancer: {
         vault: '0x20dd72Ed959b6147912C2e529F0a0C651c33c9ce',
         batchRelayer: '0x0faa25293a36241c214f3760c6ff443e1b731981',

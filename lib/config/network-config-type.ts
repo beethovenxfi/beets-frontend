@@ -64,6 +64,9 @@ export interface NetworkConfig {
             maxLevel: number;
         };
     };
+    sftmx: {
+        address: string;
+    };
     balancer: {
         vault: string;
         batchRelayer: string;

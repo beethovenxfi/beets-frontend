@@ -59,6 +59,9 @@ export const optimismNetworkConfig: NetworkConfig = {
             maxLevel: 0,
         },
     },
+    sftmx: {
+        address: '',
+    },
     balancer: {
         vault: '0xba12222222228d8ba445958a75a0704d566bf2c8',
         batchRelayer: '0x03f1ab8b19bce21eb06c364aec9e40322572a1e9',
