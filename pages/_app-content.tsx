@@ -1,4 +1,4 @@
-import { Box, useTheme } from '@chakra-ui/react';
+import { Box, Center, Heading, VStack, useTheme } from '@chakra-ui/react';
 import { AppProps } from 'next/app';
 import { Navbar } from '~/modules/nav/Navbar';
 import { SubNavBar } from '~/modules/nav/SubNavBar';
@@ -11,50 +11,59 @@ import { UserWarning } from '~/components/user-warning/UserWarning';
 import useGlobalWarnings from '~/lib/global/useGlobalWarnings';
 
 export function AppContent({ Component, pageProps }: AppProps) {
-    const ref = useRef(null);
-    const { scrollY } = useElementScroll(ref);
-    const theme = useTheme();
-    useGlobalWarnings();
+    // const ref = useRef(null);
+    // const { scrollY } = useElementScroll(ref);
+    // const theme = useTheme();
+    // useGlobalWarnings();
 
     return (
-        <Box
-            id="app-content"
-            height="full"
-            className="bg"
-            overflowX="hidden"
-            ref={ref}
-            css={{
-                '&::-webkit-scrollbar': {
-                    width: '4px',
-                },
-                '&::-webkit-scrollbar-track': {
-                    width: '6px',
-                    background: theme.colors.gray['400'],
-                },
-                '&::-webkit-scrollbar-thumb': {
-                    background: theme.colors.beets.base['300'],
-                    borderRadius: '24px',
-                },
-            }}
-        >
-            <GlobalRenderer />
-            <Box pt="3" />
-            <Navbar scrollY={scrollY} />
-            <Box pt="1" />
-            <SubNavBar />
-            <Box display="flex" justifyContent="center" mt="8">
-                <Box
-                    width={{ base: 'full', '2xl': theme.breakpoints['2xl'] }}
-                    px={{ base: '4', xl: '8' }}
-                    pb={{ base: '4', xl: '8' }}
-                >
-                    <Component {...pageProps} />
-                </Box>
-            </Box>
+        // <Box
+        //     id="app-content"
+        //     height="full"
+        //     className="bg"
+        //     overflowX="hidden"
+        //     ref={ref}
+        //     css={{
+        //         '&::-webkit-scrollbar': {
+        //             width: '4px',
+        //         },
+        //         '&::-webkit-scrollbar-track': {
+        //             width: '6px',
+        //             background: theme.colors.gray['400'],
+        //         },
+        //         '&::-webkit-scrollbar-thumb': {
+        //             background: theme.colors.beets.base['300'],
+        //             borderRadius: '24px',
+        //         },
+        //     }}
+        // >
+        //     <GlobalRenderer />
+        //     <Box pt="3" />
+        //     <Navbar scrollY={scrollY} />
+        //     <Box pt="1" />
+        //     <SubNavBar />
+        //     <Box display="flex" justifyContent="center" mt="8">
+        //         <Box
+        //             width={{ base: 'full', '2xl': theme.breakpoints['2xl'] }}
+        //             px={{ base: '4', xl: '8' }}
+        //             pb={{ base: '4', xl: '8' }}
+        //         >
+        //             <Component {...pageProps} />
+        //         </Box>
+        //     </Box>
 
-            <Footer />
-            <NavbarMobile />
-            <UserWarning />
-        </Box>
+        //     <Footer />
+        //     <NavbarMobile />
+        //     <UserWarning />
+        // </Box>
+        <VStack h="full" w="full" justifyContent="center" px="64">
+            <Center>
+                <Heading>
+                    WARNING: A potential vulnerability has been detected with Ledger Connect. We advise all users to
+                    exercise heightened caution and avoid using the Beethoven X frontend until further information is
+                    available.
+                </Heading>
+            </Center>
+        </VStack>
     );
 }
