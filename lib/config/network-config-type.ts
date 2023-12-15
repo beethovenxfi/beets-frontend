@@ -66,6 +66,7 @@ export interface NetworkConfig {
     };
     sftmx: {
         address: string;
+        ftmStakingProxyAddress: string;
     };
     balancer: {
         vault: string;

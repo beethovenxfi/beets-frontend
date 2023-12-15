@@ -63,6 +63,7 @@ export const fantomNetworkConfig: NetworkConfig = {
     },
     sftmx: {
         address: '0xd7028092c830b5c8fce061af2e593413ebbc1fc1',
+        ftmStakingProxyAddress: '0xB458BfC855ab504a8a327720FcEF98886065529b',
     },
     balancer: {
         vault: '0x20dd72Ed959b6147912C2e529F0a0C651c33c9ce',
