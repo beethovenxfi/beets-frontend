@@ -30,7 +30,7 @@ export default function SftmxOverallStats() {
                                 Total amount
                             </Text>
                             <Text color="white" fontSize="1.75rem">
-                                {numeral(data?.sftmxGetStakingData.totalAmount).format('0,0.00a')}
+                                {numeral(data?.sftmxGetStakingData.totalFtmAmount).format('0,0.00a')}
                                 <Text as="span" fontSize="xl">
                                     &nbsp;FTM
                                 </Text>
@@ -41,7 +41,7 @@ export default function SftmxOverallStats() {
                                 Total amount staked
                             </Text>
                             <Text color="white" fontSize="1.75rem">
-                                {numeral(data?.sftmxGetStakingData.totalAmountStaked).format('0,0.00a')}
+                                {numeral(data?.sftmxGetStakingData.totalFtmAmountStaked).format('0,0.00a')}
                                 <Text as="span" fontSize="xl">
                                     &nbsp;FTM
                                 </Text>
@@ -52,7 +52,7 @@ export default function SftmxOverallStats() {
                                 Total amount free
                             </Text>
                             <Text color="white" fontSize="1.75rem">
-                                {numeral(data?.sftmxGetStakingData.totalAmountInPool).format('0,0.00a')}
+                                {numeral(data?.sftmxGetStakingData.totalFtmAmountInPool).format('0,0.00a')}
                                 <Text as="span" fontSize="xl">
                                     &nbsp;FTM
                                 </Text>

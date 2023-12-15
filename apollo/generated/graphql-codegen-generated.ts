@@ -1015,9 +1015,9 @@ export interface GqlSftmxStakingData {
     minDepositLimit: Scalars['AmountHumanReadable'];
     numberOfVaults: Scalars['Int'];
     stakingApr: Scalars['String'];
-    totalAmount: Scalars['AmountHumanReadable'];
-    totalAmountInPool: Scalars['AmountHumanReadable'];
-    totalAmountStaked: Scalars['AmountHumanReadable'];
+    totalFtmAmount: Scalars['AmountHumanReadable'];
+    totalFtmAmountInPool: Scalars['AmountHumanReadable'];
+    totalFtmAmountStaked: Scalars['AmountHumanReadable'];
     undelegatePaused: Scalars['Boolean'];
     withdrawPaused: Scalars['Boolean'];
     withdrawalDelay: Scalars['Int'];
@@ -1025,7 +1025,7 @@ export interface GqlSftmxStakingData {
 
 export interface GqlSftmxWithdrawalRequests {
     __typename: 'GqlSftmxWithdrawalRequests';
-    amount: Scalars['AmountHumanReadable'];
+    amountSftmx: Scalars['AmountHumanReadable'];
     id: Scalars['String'];
     isWithdrawn: Scalars['Boolean'];
     requestTimestamp: Scalars['Int'];
@@ -5165,9 +5165,9 @@ export type SftmxGetStakingDataQuery = {
         minDepositLimit: string;
         numberOfVaults: number;
         stakingApr: string;
-        totalAmount: string;
-        totalAmountInPool: string;
-        totalAmountStaked: string;
+        totalFtmAmount: string;
+        totalFtmAmountInPool: string;
+        totalFtmAmountStaked: string;
         undelegatePaused: boolean;
         withdrawPaused: boolean;
         withdrawalDelay: number;
@@ -7584,9 +7584,9 @@ export const SftmxGetStakingDataDocument = gql`
             minDepositLimit
             numberOfVaults
             stakingApr
-            totalAmount
-            totalAmountInPool
-            totalAmountStaked
+            totalFtmAmount
+            totalFtmAmountInPool
+            totalFtmAmountStaked
             undelegatePaused
             withdrawPaused
             withdrawalDelay

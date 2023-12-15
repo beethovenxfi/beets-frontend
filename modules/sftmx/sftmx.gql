@@ -6,9 +6,9 @@ query SftmxGetStakingData {
         minDepositLimit
         numberOfVaults
         stakingApr
-        totalAmount
-        totalAmountInPool
-        totalAmountStaked
+        totalFtmAmount
+        totalFtmAmountInPool
+        totalFtmAmountStaked
         undelegatePaused
         withdrawPaused
         withdrawalDelay

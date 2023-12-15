@@ -1222,9 +1222,9 @@ export const SftmxGetStakingData = gql`
             minDepositLimit
             numberOfVaults
             stakingApr
-            totalAmount
-            totalAmountInPool
-            totalAmountStaked
+            totalFtmAmount
+            totalFtmAmountInPool
+            totalFtmAmountStaked
             undelegatePaused
             withdrawPaused
             withdrawalDelay

@@ -981,16 +981,16 @@ type GqlSftmxStakingData {
     minDepositLimit: AmountHumanReadable!
     numberOfVaults: Int!
     stakingApr: String!
-    totalAmount: AmountHumanReadable!
-    totalAmountInPool: AmountHumanReadable!
-    totalAmountStaked: AmountHumanReadable!
+    totalFtmAmount: AmountHumanReadable!
+    totalFtmAmountInPool: AmountHumanReadable!
+    totalFtmAmountStaked: AmountHumanReadable!
     undelegatePaused: Boolean!
     withdrawPaused: Boolean!
     withdrawalDelay: Int!
 }
 
 type GqlSftmxWithdrawalRequests {
-    amount: AmountHumanReadable!
+    amountSftmx: AmountHumanReadable!
     id: String!
     isWithdrawn: Boolean!
     requestTimestamp: Int!
