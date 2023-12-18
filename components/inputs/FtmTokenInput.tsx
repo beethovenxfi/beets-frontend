@@ -11,7 +11,7 @@ import { numberFormatLargeUsdValue } from '~/lib/util/number-formats';
 type Props = {
     label: string;
     address: string;
-    onChange?: (event: { currentTarget: { value: string } }) => void;
+    onChange?: (value: string) => void;
     value?: string | null;
     showBalance?: boolean;
     placeholder?: string;
@@ -31,7 +31,7 @@ export const FtmTokenInput = forwardRef(({ label, address, onChange, value, plac
     const handleOnChange = (event: { currentTarget: { value: string } }) => {
         const newValue = tokenInputTruncateDecimalPlaces(event.currentTarget.value, decimalPlaces);
 
-        onChange && onChange({ currentTarget: { value: newValue } });
+        onChange && onChange(newValue);
     };
 
     return (
