@@ -697,15 +697,15 @@ export class PoolComposableExitService {
     }
 
     private isComposableV1(pool: GqlPoolWeighted | GqlPoolComposableStable | GqlPoolComposableStableNested): boolean {
-        return pool.factory === networkConfig.balancer.composableStableV1Factory;
+        return pool.version === 1;
     }
 
     private getPoolKind(pool: GqlPoolWeighted | GqlPoolComposableStable | GqlPoolComposableStableNested) {
         if (this.isComposableV1(pool)) {
             return BatchRelayerPoolKind.COMPOSABLE_STABLE;
         } else if (
-            pool.__typename === 'GqlPoolComposableStable' ||
-            pool.__typename === 'GqlPoolComposableStableNested'
+            (pool.__typename === 'GqlPoolComposableStable' || pool.__typename === 'GqlPoolComposableStableNested') &&
+            pool.version >= 2
         ) {
             return BatchRelayerPoolKind.COMPOSABLE_STABLE_V2;
         } else {
