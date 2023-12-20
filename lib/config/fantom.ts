@@ -65,6 +65,7 @@ export const fantomNetworkConfig: NetworkConfig = {
         vault: '0x20dd72Ed959b6147912C2e529F0a0C651c33c9ce',
         batchRelayer: '0x0faa25293a36241c214f3760c6ff443e1b731981',
         balToken: AddressZero,
+        weightedPoolFactory: '0xb841Df73861E65E6D61a80F503F095a91ce75e15',
         linearFactories: {
             erc4626: ['0x89857161e0ad36f8c5a537733c1fcf7145220aae'],
             reaper: ['0xd448c4156b8de31e56fdfc071c8d96459bb28119'],
