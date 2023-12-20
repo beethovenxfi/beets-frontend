@@ -697,7 +697,10 @@ export class PoolComposableExitService {
     }
 
     private isComposableV1(pool: GqlPoolWeighted | GqlPoolComposableStable | GqlPoolComposableStableNested): boolean {
-        return pool.version === 1;
+        return (
+            (pool.__typename === 'GqlPoolComposableStable' || pool.__typename === 'GqlPoolComposableStableNested') &&
+            pool.version === 1
+        );
     }
 
     private getPoolKind(pool: GqlPoolWeighted | GqlPoolComposableStable | GqlPoolComposableStableNested) {
