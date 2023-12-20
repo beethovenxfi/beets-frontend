@@ -674,6 +674,7 @@ export const GetUserData = gql`
             id
             type
             address
+            chain
             farm {
                 id
                 beetsPerBlock
