@@ -171,7 +171,7 @@ export interface GqlPoolBase {
     owner?: Maybe<Scalars['Bytes']>;
     staking?: Maybe<GqlPoolStaking>;
     symbol: Scalars['String'];
-    type: Scalars['String'];
+    type: GqlPoolType;
     userBalance?: Maybe<GqlPoolUserBalance>;
     version: Scalars['Int'];
     withdrawConfig: GqlPoolWithdrawConfig;
@@ -234,7 +234,7 @@ export interface GqlPoolComposableStable extends GqlPoolBase {
     staking?: Maybe<GqlPoolStaking>;
     symbol: Scalars['String'];
     tokens: Array<GqlPoolTokenUnion>;
-    type: Scalars['String'];
+    type: GqlPoolType;
     userBalance?: Maybe<GqlPoolUserBalance>;
     version: Scalars['Int'];
     withdrawConfig: GqlPoolWithdrawConfig;
@@ -256,7 +256,7 @@ export interface GqlPoolComposableStableNested {
     tokens: Array<GqlPoolTokenComposableStableNestedUnion>;
     totalLiquidity: Scalars['BigDecimal'];
     totalShares: Scalars['BigDecimal'];
-    type: Scalars['String'];
+    type: GqlPoolType;
     version: Scalars['Int'];
 }
 
@@ -317,7 +317,7 @@ export interface GqlPoolElement extends GqlPoolBase {
     staking?: Maybe<GqlPoolStaking>;
     symbol: Scalars['String'];
     tokens: Array<GqlPoolToken>;
-    type: Scalars['String'];
+    type: GqlPoolType;
     unitSeconds: Scalars['BigInt'];
     userBalance?: Maybe<GqlPoolUserBalance>;
     version: Scalars['Int'];
@@ -344,8 +344,8 @@ export interface GqlPoolFilter {
     filterNotIn?: InputMaybe<Array<Scalars['String']>>;
     idIn?: InputMaybe<Array<Scalars['String']>>;
     idNotIn?: InputMaybe<Array<Scalars['String']>>;
-    poolTypeIn?: InputMaybe<Array<GqlPoolFilterType>>;
-    poolTypeNotIn?: InputMaybe<Array<GqlPoolFilterType>>;
+    poolTypeIn?: InputMaybe<Array<GqlPoolType>>;
+    poolTypeNotIn?: InputMaybe<Array<GqlPoolType>>;
     tokensIn?: InputMaybe<Array<Scalars['String']>>;
     tokensNotIn?: InputMaybe<Array<Scalars['String']>>;
     userAddress?: InputMaybe<Scalars['String']>;
@@ -358,20 +358,6 @@ export interface GqlPoolFilterDefinition {
     id: Scalars['ID'];
     title: Scalars['String'];
 }
-
-export type GqlPoolFilterType =
-    | 'COMPOSABLE_STABLE'
-    | 'ELEMENT'
-    | 'GYRO'
-    | 'GYRO3'
-    | 'GYROE'
-    | 'INVESTMENT'
-    | 'LINEAR'
-    | 'LIQUIDITY_BOOTSTRAPPING'
-    | 'META_STABLE'
-    | 'STABLE'
-    | 'UNKNOWN'
-    | 'WEIGHTED';
 
 export interface GqlPoolGyro extends GqlPoolBase {
     __typename: 'GqlPoolGyro';
@@ -404,7 +390,7 @@ export interface GqlPoolGyro extends GqlPoolBase {
     tauBetaX: Scalars['String'];
     tauBetaY: Scalars['String'];
     tokens: Array<GqlPoolTokenUnion>;
-    type: Scalars['String'];
+    type: GqlPoolType;
     u: Scalars['String'];
     userBalance?: Maybe<GqlPoolUserBalance>;
     v: Scalars['String'];
@@ -474,7 +460,7 @@ export interface GqlPoolLinear extends GqlPoolBase {
     staking?: Maybe<GqlPoolStaking>;
     symbol: Scalars['String'];
     tokens: Array<GqlPoolToken>;
-    type: Scalars['String'];
+    type: GqlPoolType;
     upperTarget: Scalars['BigInt'];
     userBalance?: Maybe<GqlPoolUserBalance>;
     version: Scalars['Int'];
@@ -497,7 +483,7 @@ export interface GqlPoolLinearNested {
     tokens: Array<GqlPoolToken>;
     totalLiquidity: Scalars['BigDecimal'];
     totalShares: Scalars['BigDecimal'];
-    type: Scalars['String'];
+    type: GqlPoolType;
     upperTarget: Scalars['BigInt'];
     version: Scalars['Int'];
     wrappedIndex: Scalars['Int'];
@@ -559,7 +545,7 @@ export interface GqlPoolLiquidityBootstrapping extends GqlPoolBase {
     staking?: Maybe<GqlPoolStaking>;
     symbol: Scalars['String'];
     tokens: Array<GqlPoolTokenUnion>;
-    type: Scalars['String'];
+    type: GqlPoolType;
     userBalance?: Maybe<GqlPoolUserBalance>;
     version: Scalars['Int'];
     withdrawConfig: GqlPoolWithdrawConfig;
@@ -583,7 +569,7 @@ export interface GqlPoolMetaStable extends GqlPoolBase {
     staking?: Maybe<GqlPoolStaking>;
     symbol: Scalars['String'];
     tokens: Array<GqlPoolToken>;
-    type: Scalars['String'];
+    type: GqlPoolType;
     userBalance?: Maybe<GqlPoolUserBalance>;
     version: Scalars['Int'];
     withdrawConfig: GqlPoolWithdrawConfig;
@@ -604,26 +590,10 @@ export interface GqlPoolMinimal {
     owner?: Maybe<Scalars['Bytes']>;
     staking?: Maybe<GqlPoolStaking>;
     symbol: Scalars['String'];
-    type: GqlPoolMinimalType;
+    type: GqlPoolType;
     userBalance?: Maybe<GqlPoolUserBalance>;
     version: Scalars['Int'];
 }
-
-export type GqlPoolMinimalType =
-    | 'COMPOSABLE_STABLE'
-    | 'ELEMENT'
-    | 'FX'
-    | 'GYRO'
-    | 'GYRO3'
-    | 'GYROE'
-    | 'INVESTMENT'
-    | 'LINEAR'
-    | 'LIQUIDITY_BOOTSTRAPPING'
-    | 'META_STABLE'
-    | 'PHANTOM_STABLE'
-    | 'STABLE'
-    | 'UNKNOWN'
-    | 'WEIGHTED';
 
 export type GqlPoolNestedUnion = GqlPoolComposableStableNested | GqlPoolLinearNested;
 
@@ -676,7 +646,7 @@ export interface GqlPoolStable extends GqlPoolBase {
     staking?: Maybe<GqlPoolStaking>;
     symbol: Scalars['String'];
     tokens: Array<GqlPoolToken>;
-    type: Scalars['String'];
+    type: GqlPoolType;
     userBalance?: Maybe<GqlPoolUserBalance>;
     version: Scalars['Int'];
     withdrawConfig: GqlPoolWithdrawConfig;
@@ -882,6 +852,22 @@ export interface GqlPoolTokenLinear extends GqlPoolTokenBase {
 
 export type GqlPoolTokenUnion = GqlPoolToken | GqlPoolTokenComposableStable | GqlPoolTokenLinear;
 
+export type GqlPoolType =
+    | 'COMPOSABLE_STABLE'
+    | 'ELEMENT'
+    | 'FX'
+    | 'GYRO'
+    | 'GYRO3'
+    | 'GYROE'
+    | 'INVESTMENT'
+    | 'LINEAR'
+    | 'LIQUIDITY_BOOTSTRAPPING'
+    | 'META_STABLE'
+    | 'PHANTOM_STABLE'
+    | 'STABLE'
+    | 'UNKNOWN'
+    | 'WEIGHTED';
+
 export type GqlPoolUnion =
     | GqlPoolComposableStable
     | GqlPoolElement
@@ -926,7 +912,7 @@ export interface GqlPoolWeighted extends GqlPoolBase {
     staking?: Maybe<GqlPoolStaking>;
     symbol: Scalars['String'];
     tokens: Array<GqlPoolTokenUnion>;
-    type: Scalars['String'];
+    type: GqlPoolType;
     userBalance?: Maybe<GqlPoolUserBalance>;
     version: Scalars['Int'];
     withdrawConfig: GqlPoolWithdrawConfig;
@@ -1270,7 +1256,7 @@ export interface GqlVotingPool {
     id: Scalars['ID'];
     symbol: Scalars['String'];
     tokens: Array<GqlVotingGaugeToken>;
-    type: GqlPoolMinimalType;
+    type: GqlPoolType;
 }
 
 export interface Mutation {
@@ -1663,7 +1649,7 @@ export type GetPoolBatchSwapsQuery = {
                 __typename: 'GqlPoolMinimal';
                 id: string;
                 name: string;
-                type: GqlPoolMinimalType;
+                type: GqlPoolType;
                 symbol: string;
                 allTokens: Array<{
                     __typename: 'GqlPoolTokenExpanded';
@@ -1703,7 +1689,7 @@ export type GqlPoolBatchSwapFragment = {
             __typename: 'GqlPoolMinimal';
             id: string;
             name: string;
-            type: GqlPoolMinimalType;
+            type: GqlPoolType;
             symbol: string;
             allTokens: Array<{
                 __typename: 'GqlPoolTokenExpanded';
@@ -1729,7 +1715,7 @@ export type GqlPoolBatchSwapSwapFragment = {
         __typename: 'GqlPoolMinimal';
         id: string;
         name: string;
-        type: GqlPoolMinimalType;
+        type: GqlPoolType;
         symbol: string;
         allTokens: Array<{
             __typename: 'GqlPoolTokenExpanded';
@@ -3019,7 +3005,7 @@ export type GetPoolQuery = {
               __typename: 'GqlPoolGyro';
               alpha: string;
               beta: string;
-              type: string;
+              type: GqlPoolType;
               nestingType: GqlPoolNestingType;
               id: string;
               address: string;
@@ -5207,7 +5193,7 @@ export type GetSorSwapsQuery = {
                     __typename: 'GqlPoolMinimal';
                     id: string;
                     name: string;
-                    type: GqlPoolMinimalType;
+                    type: GqlPoolType;
                     symbol: string;
                     dynamicData: { __typename: 'GqlPoolDynamicData'; totalLiquidity: string };
                     allTokens: Array<{
@@ -5268,7 +5254,7 @@ export type GqlSorGetSwapsResponseFragment = {
                 __typename: 'GqlPoolMinimal';
                 id: string;
                 name: string;
-                type: GqlPoolMinimalType;
+                type: GqlPoolType;
                 symbol: string;
                 dynamicData: { __typename: 'GqlPoolDynamicData'; totalLiquidity: string };
                 allTokens: Array<{
@@ -5301,7 +5287,7 @@ export type GqlSorSwapRouteFragment = {
             __typename: 'GqlPoolMinimal';
             id: string;
             name: string;
-            type: GqlPoolMinimalType;
+            type: GqlPoolType;
             symbol: string;
             dynamicData: { __typename: 'GqlPoolDynamicData'; totalLiquidity: string };
             allTokens: Array<{
@@ -5326,7 +5312,7 @@ export type GqlSorSwapRouteHopFragment = {
         __typename: 'GqlPoolMinimal';
         id: string;
         name: string;
-        type: GqlPoolMinimalType;
+        type: GqlPoolType;
         symbol: string;
         dynamicData: { __typename: 'GqlPoolDynamicData'; totalLiquidity: string };
         allTokens: Array<{

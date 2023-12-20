@@ -156,7 +156,7 @@ interface GqlPoolBase {
     owner: Bytes
     staking: GqlPoolStaking
     symbol: String!
-    type: String!
+    type: GqlPoolType!
     userBalance: GqlPoolUserBalance
     version: Int!
     withdrawConfig: GqlPoolWithdrawConfig!
@@ -215,7 +215,7 @@ type GqlPoolComposableStable implements GqlPoolBase {
     staking: GqlPoolStaking
     symbol: String!
     tokens: [GqlPoolTokenUnion!]!
-    type: String!
+    type: GqlPoolType!
     userBalance: GqlPoolUserBalance
     version: Int!
     withdrawConfig: GqlPoolWithdrawConfig!
@@ -236,7 +236,7 @@ type GqlPoolComposableStableNested {
     tokens: [GqlPoolTokenComposableStableNestedUnion!]!
     totalLiquidity: BigDecimal!
     totalShares: BigDecimal!
-    type: String!
+    type: GqlPoolType!
     version: Int!
 }
 
@@ -295,7 +295,7 @@ type GqlPoolElement implements GqlPoolBase {
     staking: GqlPoolStaking
     symbol: String!
     tokens: [GqlPoolToken!]!
-    type: String!
+    type: GqlPoolType!
     unitSeconds: BigInt!
     userBalance: GqlPoolUserBalance
     version: Int!
@@ -321,8 +321,8 @@ input GqlPoolFilter {
     filterNotIn: [String!]
     idIn: [String!]
     idNotIn: [String!]
-    poolTypeIn: [GqlPoolFilterType!]
-    poolTypeNotIn: [GqlPoolFilterType!]
+    poolTypeIn: [GqlPoolType!]
+    poolTypeNotIn: [GqlPoolType!]
     tokensIn: [String!]
     tokensNotIn: [String!]
     userAddress: String
@@ -336,21 +336,6 @@ enum GqlPoolFilterCategory {
 type GqlPoolFilterDefinition {
     id: ID!
     title: String!
-}
-
-enum GqlPoolFilterType {
-    COMPOSABLE_STABLE
-    ELEMENT
-    GYRO
-    GYRO3
-    GYROE
-    INVESTMENT
-    LINEAR
-    LIQUIDITY_BOOTSTRAPPING
-    META_STABLE
-    STABLE
-    UNKNOWN
-    WEIGHTED
 }
 
 type GqlPoolGyro implements GqlPoolBase {
@@ -383,7 +368,7 @@ type GqlPoolGyro implements GqlPoolBase {
     tauBetaX: String!
     tauBetaY: String!
     tokens: [GqlPoolTokenUnion!]!
-    type: String!
+    type: GqlPoolType!
     u: String!
     userBalance: GqlPoolUserBalance
     v: String!
@@ -451,7 +436,7 @@ type GqlPoolLinear implements GqlPoolBase {
     staking: GqlPoolStaking
     symbol: String!
     tokens: [GqlPoolToken!]!
-    type: String!
+    type: GqlPoolType!
     upperTarget: BigInt!
     userBalance: GqlPoolUserBalance
     version: Int!
@@ -473,7 +458,7 @@ type GqlPoolLinearNested {
     tokens: [GqlPoolToken!]!
     totalLiquidity: BigDecimal!
     totalShares: BigDecimal!
-    type: String!
+    type: GqlPoolType!
     upperTarget: BigInt!
     version: Int!
     wrappedIndex: Int!
@@ -531,7 +516,7 @@ type GqlPoolLiquidityBootstrapping implements GqlPoolBase {
     staking: GqlPoolStaking
     symbol: String!
     tokens: [GqlPoolTokenUnion!]!
-    type: String!
+    type: GqlPoolType!
     userBalance: GqlPoolUserBalance
     version: Int!
     withdrawConfig: GqlPoolWithdrawConfig!
@@ -554,7 +539,7 @@ type GqlPoolMetaStable implements GqlPoolBase {
     staking: GqlPoolStaking
     symbol: String!
     tokens: [GqlPoolToken!]!
-    type: String!
+    type: GqlPoolType!
     userBalance: GqlPoolUserBalance
     version: Int!
     withdrawConfig: GqlPoolWithdrawConfig!
@@ -574,26 +559,9 @@ type GqlPoolMinimal {
     owner: Bytes
     staking: GqlPoolStaking
     symbol: String!
-    type: GqlPoolMinimalType!
+    type: GqlPoolType!
     userBalance: GqlPoolUserBalance
     version: Int!
-}
-
-enum GqlPoolMinimalType {
-    COMPOSABLE_STABLE
-    ELEMENT
-    FX
-    GYRO
-    GYRO3
-    GYROE
-    INVESTMENT
-    LINEAR
-    LIQUIDITY_BOOTSTRAPPING
-    META_STABLE
-    PHANTOM_STABLE
-    STABLE
-    UNKNOWN
-    WEIGHTED
 }
 
 union GqlPoolNestedUnion = GqlPoolComposableStableNested | GqlPoolLinearNested
@@ -660,7 +628,7 @@ type GqlPoolStable implements GqlPoolBase {
     staking: GqlPoolStaking
     symbol: String!
     tokens: [GqlPoolToken!]!
-    type: String!
+    type: GqlPoolType!
     userBalance: GqlPoolUserBalance
     version: Int!
     withdrawConfig: GqlPoolWithdrawConfig!
@@ -860,6 +828,23 @@ type GqlPoolTokenLinear implements GqlPoolTokenBase {
 
 union GqlPoolTokenUnion = GqlPoolToken | GqlPoolTokenComposableStable | GqlPoolTokenLinear
 
+enum GqlPoolType {
+    COMPOSABLE_STABLE
+    ELEMENT
+    FX
+    GYRO
+    GYRO3
+    GYROE
+    INVESTMENT
+    LINEAR
+    LIQUIDITY_BOOTSTRAPPING
+    META_STABLE
+    PHANTOM_STABLE
+    STABLE
+    UNKNOWN
+    WEIGHTED
+}
+
 union GqlPoolUnion =
       GqlPoolComposableStable
     | GqlPoolElement
@@ -901,7 +886,7 @@ type GqlPoolWeighted implements GqlPoolBase {
     staking: GqlPoolStaking
     symbol: String!
     tokens: [GqlPoolTokenUnion!]!
-    type: String!
+    type: GqlPoolType!
     userBalance: GqlPoolUserBalance
     version: Int!
     withdrawConfig: GqlPoolWithdrawConfig!
@@ -1229,7 +1214,7 @@ type GqlVotingPool {
     id: ID!
     symbol: String!
     tokens: [GqlVotingGaugeToken!]!
-    type: GqlPoolMinimalType!
+    type: GqlPoolType!
 }
 
 """
