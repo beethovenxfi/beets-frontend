@@ -65,16 +65,6 @@ export const fantomNetworkConfig: NetworkConfig = {
         vault: '0x20dd72Ed959b6147912C2e529F0a0C651c33c9ce',
         batchRelayer: '0x0faa25293a36241c214f3760c6ff443e1b731981',
         balToken: AddressZero,
-        composableStableFactories: [
-            '0x5c3094982cf3c97a06b7d62a6f7669f14a199b19',
-            '0x23f03a4fb344d8b98833d2ace093cc305e03474f',
-        ],
-        composableStableV1Factory: '',
-        weightedPoolFactory: '0xb841Df73861E65E6D61a80F503F095a91ce75e15',
-        weightedPoolV2PlusFactories: [
-            '0x8ea1c497c16726e097f62c8c9fbd944143f27090',
-            '0xb841df73861e65e6d61a80f503f095a91ce75e15',
-        ],
         linearFactories: {
             erc4626: ['0x89857161e0ad36f8c5a537733c1fcf7145220aae'],
             reaper: ['0xd448c4156b8de31e56fdfc071c8d96459bb28119'],

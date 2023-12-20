@@ -300,8 +300,8 @@ export const GqlPoolTokenLinear = gql`
     }
     ${GqlPoolToken}
 `;
-export const GqlPoolTokenPhantomStable = gql`
-    fragment GqlPoolTokenPhantomStable on GqlPoolTokenPhantomStable {
+export const GqlPoolTokenComposableStable = gql`
+    fragment GqlPoolTokenComposableStable on GqlPoolTokenComposableStable {
         id
         index
         name
@@ -345,6 +345,7 @@ export const GqlPoolMinimal = gql`
         name
         symbol
         createTime
+        version
         dynamicData {
             totalLiquidity
             totalShares
@@ -772,6 +773,7 @@ export const GetPool = gql`
             factory
             symbol
             createTime
+            version
             dynamicData {
                 poolId
                 swapEnabled
@@ -968,8 +970,8 @@ export const GetPool = gql`
                     ... on GqlPoolTokenLinear {
                         ...GqlPoolTokenLinear
                     }
-                    ... on GqlPoolTokenPhantomStable {
-                        ...GqlPoolTokenPhantomStable
+                    ... on GqlPoolTokenComposableStable {
+                        ...GqlPoolTokenComposableStable
                     }
                 }
             }
@@ -999,7 +1001,7 @@ export const GetPool = gql`
                     }
                 }
             }
-            ... on GqlPoolPhantomStable {
+            ... on GqlPoolComposableStable {
                 amp
                 nestingType
                 tokens {
@@ -1009,8 +1011,8 @@ export const GetPool = gql`
                     ... on GqlPoolTokenLinear {
                         ...GqlPoolTokenLinear
                     }
-                    ... on GqlPoolTokenPhantomStable {
-                        ...GqlPoolTokenPhantomStable
+                    ... on GqlPoolTokenComposableStable {
+                        ...GqlPoolTokenComposableStable
                     }
                 }
             }
@@ -1035,8 +1037,8 @@ export const GetPool = gql`
                     ... on GqlPoolTokenLinear {
                         ...GqlPoolTokenLinear
                     }
-                    ... on GqlPoolTokenPhantomStable {
-                        ...GqlPoolTokenPhantomStable
+                    ... on GqlPoolTokenComposableStable {
+                        ...GqlPoolTokenComposableStable
                     }
                 }
             }
@@ -1055,7 +1057,7 @@ export const GetPool = gql`
     }
     ${GqlPoolToken}
     ${GqlPoolTokenLinear}
-    ${GqlPoolTokenPhantomStable}
+    ${GqlPoolTokenComposableStable}
 `;
 export const GetPoolSwaps = gql`
     query GetPoolSwaps($first: Int, $skip: Int, $where: GqlPoolSwapFilter) {

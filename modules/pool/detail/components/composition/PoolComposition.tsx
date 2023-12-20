@@ -32,7 +32,7 @@ import { usePoolUserInvestedTokenBalances } from '~/modules/pool/lib/usePoolUser
 import { usePool } from '~/modules/pool/lib/usePool';
 import {
     GqlPoolLinearNested,
-    GqlPoolPhantomStableNested,
+    GqlPoolComposableStableNested,
     GqlPoolTokenUnion,
     GqlPoolUnion,
 } from '~/apollo/generated/graphql-codegen-generated';
@@ -225,7 +225,7 @@ export function PoolComposition() {
     const { userPoolBalanceUSD } = usePoolUserDepositBalance();
     const { getUserPoolTokenBalance } = usePoolComposableUserPoolTokenBalances();
     const hasNestedTokens = pool.tokens.some((token) =>
-        ['GqlPoolTokenLinear', 'GqlPoolTokenPhantomStable'].includes(token.__typename),
+        ['GqlPoolTokenLinear', 'GqlPoolTokenComposableStable'].includes(token.__typename),
     );
 
     const columns: Column<TableDataTemplate>[] = React.useMemo(
@@ -264,7 +264,7 @@ export function PoolComposition() {
 
     function getTokenData(
         tokens: GqlPoolTokenUnion[],
-        containingPool: GqlPoolUnion | GqlPoolLinearNested | GqlPoolPhantomStableNested,
+        containingPool: GqlPoolUnion | GqlPoolLinearNested | GqlPoolComposableStableNested,
     ): TableData[] {
         return tokens
             .filter((token) => token.address !== containingPool.address)
