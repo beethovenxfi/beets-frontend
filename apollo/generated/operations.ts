@@ -1234,6 +1234,17 @@ export const SftmxGetStakingData = gql`
         }
     }
 `;
+export const SftmxGetWithdrawalRequests = gql`
+    query SftmxGetWithdrawalRequests($user: String!) {
+        sftmxGetWithdrawalRequests(user: $user) {
+            amountSftmx
+            id
+            isWithdrawn
+            requestTimestamp
+            user
+        }
+    }
+`;
 export const GetTokenRelativePriceChartData = gql`
     query GetTokenRelativePriceChartData($tokenIn: String!, $tokenOut: String!, $range: GqlTokenChartDataRange!) {
         prices: tokenGetRelativePriceChartData(tokenIn: $tokenIn, tokenOut: $tokenOut, range: $range) {

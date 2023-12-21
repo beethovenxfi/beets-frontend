@@ -14,3 +14,13 @@ query SftmxGetStakingData {
         withdrawalDelay
     }
 }
+
+query SftmxGetWithdrawalRequests($user: String!) {
+    sftmxGetWithdrawalRequests(user: $user) {
+        amountSftmx
+        id
+        isWithdrawn
+        requestTimestamp
+        user
+    }
+}
