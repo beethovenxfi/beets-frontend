@@ -18,8 +18,6 @@ export default function SftmxUnstakeTab() {
 
     const { data: penaltyData } = useSftmxGetCalculatePenalty(amount);
 
-    console.log({ penaltyData, amount });
-
     return (
         <Card shadow="lg" h="full">
             <VStack spacing="4" p={{ base: '4', lg: '8' }} align="flex-start" h="full">
