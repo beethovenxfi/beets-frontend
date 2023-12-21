@@ -67,16 +67,6 @@ export const optimismNetworkConfig: NetworkConfig = {
         vault: '0xba12222222228d8ba445958a75a0704d566bf2c8',
         batchRelayer: '0x03f1ab8b19bce21eb06c364aec9e40322572a1e9',
         balToken: '0xfe8b128ba8c78aabc59d4c64cee7ff28e9379921',
-        composableStableFactories: [
-            '0xf145cafb67081895ee80eb7c04a30cf87f07b745',
-            '0xe2e901ab09f37884ba31622df3ca7fc19aa443be',
-            '0x043a2dad730d585c44fb79d2614f295d2d625412',
-        ],
-        composableStableV1Factory: '0xf145cafb67081895ee80eb7c04a30cf87f07b745',
-        weightedPoolV2PlusFactories: [
-            '0xad901309d9e9dbc5df19c84f729f429f0189a633',
-            '0x230a59f4d9adc147480f03b0d3fffecd56c3289a',
-        ],
         weightedPoolFactory: '0x230a59F4d9ADc147480f03B0D3fFfeCd56c3289a',
         linearFactories: {
             erc4626: ['0x4c4287b07d293e361281bceee8715c8cdeb64e34'],
@@ -303,6 +293,8 @@ export const optimismNetworkConfig: NetworkConfig = {
         '0x00b82bc5edea6e5e6c77635e31a1a25aad99f881000200000000000000000105': 'https://app.aura.finance/#/10/pool/11', // Overnight Opening Ensemble
         '0x5f8893506ddc4c271837187d14a9c87964a074dc000000000000000000000106': 'https://app.aura.finance/#/10/pool/14', // Ethereum Triplets
         '0xc1f46ce83439886f0ea9c21512b36e7e67239d2c000200000000000000000108': 'https://app.aura.finance/#/10/pool/15', // Roast Beets
+        '0x0244b0025264dc5f5c113d472d579c9c994a59ce0002000000000000000000c9': 'https://app.aura.finance/#/10/pool/16', // A Night at the OPara
+        '0x478980c67d53cd990f2b7bab311ddc9934324e7b00020000000000000000010c': 'https://app.aura.finance/#/10/pool/17', // All Roads Lead to Frax
     },
     investDisabled: {
         '0x1f131ec1175f023ee1534b16fa8ab237c00e238100000000000000000000004a': true,

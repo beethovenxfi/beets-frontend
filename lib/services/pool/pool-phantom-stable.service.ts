@@ -1,5 +1,5 @@
 import {
-    GqlPoolPhantomStable,
+    GqlPoolComposableStable,
     GqlPoolToken,
     GqlPoolTokenUnion,
     GqlPoolWithdrawOption,
@@ -47,7 +47,7 @@ export class PoolPhantomStableService implements PoolService {
     private readonly baseService: PoolBaseService;
 
     constructor(
-        private pool: GqlPoolPhantomStable,
+        private pool: GqlPoolComposableStable,
         private batchRelayerService: BatchRelayerService,
         private readonly wethAddress: string,
         private readonly provider: BaseProvider,
@@ -55,7 +55,7 @@ export class PoolPhantomStableService implements PoolService {
         this.baseService = new PoolBaseService(pool, wethAddress);
     }
 
-    public updatePool(pool: GqlPoolPhantomStable) {
+    public updatePool(pool: GqlPoolComposableStable) {
         this.pool = pool;
         this.baseService.updatePool(pool);
     }
@@ -293,7 +293,7 @@ export class PoolPhantomStableService implements PoolService {
                 }
 
                 return parseUnits(mainTokenAmount.amount, 18).toString();
-            } else if (poolToken.__typename === 'GqlPoolTokenPhantomStable') {
+            } else if (poolToken.__typename === 'GqlPoolTokenComposableStable') {
                 //we calc the bpt for zero price impact assuming an independent invest into the phantom stable
                 const phantomStable = poolToken.pool;
                 const denormAmounts = this.getDenormAmounts(tokenAmounts, poolToken.pool.tokens);

@@ -5,10 +5,9 @@ import { BigNumber } from 'ethers';
 import BalancerSorQueriesAbi from '~/lib/abi/BalancerSorQueries.json';
 import {
     GqlPoolLinearNested,
-    GqlPoolPhantomStableNested,
+    GqlPoolComposableStableNested,
     GqlPoolUnion,
 } from '~/apollo/generated/graphql-codegen-generated';
-import { isSameAddress } from '@balancer-labs/sdk';
 
 export enum SorQueriesTotalSupplyType {
     TOTAL_SUPPLY = 0,
@@ -94,21 +93,16 @@ export class SorQueryService {
     }
 
     public getTotalSupplyType(
-        pool: GqlPoolUnion | GqlPoolPhantomStableNested | GqlPoolLinearNested,
+        pool: GqlPoolUnion | GqlPoolComposableStableNested | GqlPoolLinearNested,
     ): SorQueriesTotalSupplyType {
-        const isPhantomStable = ['GqlPoolPhantomStable', 'GqlPoolPhantomStableNested'].includes(pool.__typename);
-        const hasComposableStableFactory = networkConfig.balancer.composableStableFactories.includes(
-            pool.factory || '',
+        const isComposableStable = ['GqlPoolComposableStable', 'GqlPoolComposableStableNested'].includes(
+            pool.__typename,
         );
 
-        if (
-            (pool.__typename === 'GqlPoolWeighted' &&
-                networkConfig.balancer.weightedPoolV2PlusFactories.includes(pool.factory || '')) ||
-            (isPhantomStable && hasComposableStableFactory)
-        ) {
+        if ((pool.__typename === 'GqlPoolWeighted' && pool.version >= 2) || (isComposableStable && pool.version > 0)) {
             return SorQueriesTotalSupplyType.ACTUAL_SUPPLY;
         } else if (
-            (isPhantomStable && !hasComposableStableFactory) ||
+            (isComposableStable && pool.version === 0) ||
             ['GqlPoolLinear', 'GqlPoolLinearNested'].includes(pool.__typename)
         ) {
             return SorQueriesTotalSupplyType.VIRTUAL_SUPPLY;

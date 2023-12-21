@@ -33,6 +33,7 @@ fragment GqlPoolMinimal on GqlPoolMinimal {
     name
     symbol
     createTime
+    version
     dynamicData {
         totalLiquidity
         totalShares

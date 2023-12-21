@@ -18,7 +18,7 @@ export function useExitPool(pool: GqlPoolUnion) {
             ? batchRelayerContractConfig
             : {
                   ...vaultContractConfig,
-                  functionName: pool.__typename === 'GqlPoolPhantomStable' ? 'batchSwap' : 'exitPool',
+                  functionName: pool.__typename === 'GqlPoolComposableStable' ? 'batchSwap' : 'exitPool',
               },
         transactionType: 'EXIT',
     });
