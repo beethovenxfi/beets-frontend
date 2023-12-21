@@ -42,11 +42,11 @@ import {
 } from '~/lib/services/pool/lib/old-big-number';
 import { parseUnits } from 'ethers/lib/utils';
 import {
-    GqlPoolPhantomStable,
-    GqlPoolPhantomStableNested,
+    GqlPoolComposableStable,
+    GqlPoolComposableStableNested,
     GqlPoolToken,
     GqlPoolTokenLinear,
-    GqlPoolTokenPhantomStable,
+    GqlPoolTokenComposableStable,
     GqlPoolTokenUnion,
     GqlPoolWeighted,
     GqlPoolWithdrawOption,
@@ -643,7 +643,7 @@ export class PoolComposableExitService {
         poolToken,
     }: {
         bptIn: AmountHumanReadable;
-        pool: GqlPoolWeighted | GqlPoolPhantomStable | GqlPoolPhantomStableNested;
+        pool: GqlPoolWeighted | GqlPoolComposableStable | GqlPoolComposableStableNested;
         poolToken: GqlPoolTokenUnion;
     }): {
         tokenAmountOut: AmountHumanReadable;
@@ -674,12 +674,12 @@ export class PoolComposableExitService {
         return poolGetNestedLinearPoolTokens(this.pool);
     }
 
-    private get nestedStablePoolTokens(): GqlPoolTokenPhantomStable[] {
+    private get nestedStablePoolTokens(): GqlPoolTokenComposableStable[] {
         return poolGetNestedStablePoolTokens(this.pool);
     }
 
     private get isStablePool(): boolean {
-        return this.pool.__typename === 'GqlPoolPhantomStable';
+        return this.pool.__typename === 'GqlPoolComposableStable';
     }
 
     private get isWeightedPool(): boolean {
@@ -696,14 +696,20 @@ export class PoolComposableExitService {
         return singleAssetExit;
     }
 
-    private isComposableV1(pool: GqlPoolWeighted | GqlPoolPhantomStable | GqlPoolPhantomStableNested): boolean {
-        return pool.factory === networkConfig.balancer.composableStableV1Factory;
+    private isComposableV1(pool: GqlPoolWeighted | GqlPoolComposableStable | GqlPoolComposableStableNested): boolean {
+        return (
+            (pool.__typename === 'GqlPoolComposableStable' || pool.__typename === 'GqlPoolComposableStableNested') &&
+            pool.version === 1
+        );
     }
 
-    private getPoolKind(pool: GqlPoolWeighted | GqlPoolPhantomStable | GqlPoolPhantomStableNested) {
+    private getPoolKind(pool: GqlPoolWeighted | GqlPoolComposableStable | GqlPoolComposableStableNested) {
         if (this.isComposableV1(pool)) {
             return BatchRelayerPoolKind.COMPOSABLE_STABLE;
-        } else if (pool.__typename === 'GqlPoolPhantomStable' || pool.__typename === 'GqlPoolPhantomStableNested') {
+        } else if (
+            (pool.__typename === 'GqlPoolComposableStable' || pool.__typename === 'GqlPoolComposableStableNested') &&
+            pool.version >= 2
+        ) {
             return BatchRelayerPoolKind.COMPOSABLE_STABLE_V2;
         } else {
             return BatchRelayerPoolKind.WEIGHTED;
@@ -719,7 +725,7 @@ export class PoolComposableExitService {
         toInternalBalance,
         inputReference,
     }: {
-        pool: GqlPoolWeighted | GqlPoolPhantomStable | GqlPoolPhantomStableNested;
+        pool: GqlPoolWeighted | GqlPoolComposableStable | GqlPoolComposableStableNested;
         bptIn: AmountHumanReadable;
         slippage: string;
         exitAmounts: TokenAmountHumanReadable[];
@@ -755,7 +761,7 @@ export class PoolComposableExitService {
             return amountScaled.minus(amountScaled.times(slippage)).toFixed(0);
         });
 
-        if (pool.__typename === 'GqlPoolPhantomStable' || pool.__typename === 'GqlPoolPhantomStableNested') {
+        if (pool.__typename === 'GqlPoolComposableStable' || pool.__typename === 'GqlPoolComposableStableNested') {
             const idx = tokensWithPhantomBpt.findIndex((token) => token.address === pool.address);
             minAmountsOut.splice(idx, 0, '0');
         }

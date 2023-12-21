@@ -1,9 +1,4 @@
-import {
-    GqlPoolTokenLinear,
-    GqlPoolTokenPhantomStable,
-    GqlPoolTokenUnion,
-    GqlPoolWeighted,
-} from '~/apollo/generated/graphql-codegen-generated';
+import { GqlPoolTokenUnion, GqlPoolWeighted } from '~/apollo/generated/graphql-codegen-generated';
 import {
     PoolExitBptInSingleAssetWithdrawOutput,
     PoolExitContractCallData,
@@ -396,7 +391,10 @@ export class PoolWeightedBoostedService implements PoolService {
             );
 
             //we're only concerned with nested phantom bpts
-            if (poolToken.__typename === 'GqlPoolTokenLinear' || poolToken.__typename === 'GqlPoolTokenPhantomStable') {
+            if (
+                poolToken.__typename === 'GqlPoolTokenLinear' ||
+                poolToken.__typename === 'GqlPoolTokenComposableStable'
+            ) {
                 //get join swaps adds this pool as the last item, which is not needed for the weighted pool so we remove it.
                 const { swaps, assets } = poolGetJoinSwapForToken({
                     poolId: this.pool.id,
@@ -430,7 +428,10 @@ export class PoolWeightedBoostedService implements PoolService {
                 this.pool.investConfig.options,
             );
 
-            if (poolToken.__typename === 'GqlPoolTokenPhantomStable' || poolToken.__typename === 'GqlPoolTokenLinear') {
+            if (
+                poolToken.__typename === 'GqlPoolTokenComposableStable' ||
+                poolToken.__typename === 'GqlPoolTokenLinear'
+            ) {
                 const assetIndex = assets.findIndex((asset) => asset === poolToken.address);
                 const delta = deltas[assetIndex];
 
@@ -570,7 +571,10 @@ export class PoolWeightedBoostedService implements PoolService {
             }
 
             //we're only concerned with nested phantom bpts
-            if (poolToken.__typename === 'GqlPoolTokenLinear' || poolToken.__typename === 'GqlPoolTokenPhantomStable') {
+            if (
+                poolToken.__typename === 'GqlPoolTokenLinear' ||
+                poolToken.__typename === 'GqlPoolTokenComposableStable'
+            ) {
                 joinSwaps.push(
                     this.phantomBptPoolTokenGetExitSwaps({
                         tokenOut: exitAmount.tokenOut,
@@ -644,7 +648,7 @@ export class PoolWeightedBoostedService implements PoolService {
                 ],
                 assets: [poolToken.address, nestedToken.address],
             };
-        } else if (poolToken.__typename === 'GqlPoolTokenPhantomStable') {
+        } else if (poolToken.__typename === 'GqlPoolTokenComposableStable') {
             const nestedPoolToken = poolFindNestedPoolTokenForToken(tokenOut, poolToken.pool.tokens);
 
             if (!nestedPoolToken) {

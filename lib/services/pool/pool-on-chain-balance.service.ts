@@ -26,7 +26,7 @@ export class PoolOnChainBalanceService {
         clone.dynamicData.totalShares = formatFixed(dataMap[pool.id].totalSupply, 18);
 
         for (const token of clone.tokens) {
-            if (token.__typename === 'GqlPoolTokenLinear' || token.__typename === 'GqlPoolTokenPhantomStable') {
+            if (token.__typename === 'GqlPoolTokenLinear' || token.__typename === 'GqlPoolTokenComposableStable') {
                 token.pool.totalShares = formatFixed(dataMap[token.pool.id].totalSupply, 18);
             }
 
@@ -34,7 +34,7 @@ export class PoolOnChainBalanceService {
             token.balance = tokenBalance;
             token.totalBalance = tokenBalance;
 
-            if (token.__typename === 'GqlPoolTokenLinear' || token.__typename === 'GqlPoolTokenPhantomStable') {
+            if (token.__typename === 'GqlPoolTokenLinear' || token.__typename === 'GqlPoolTokenComposableStable') {
                 const percentOfNestedSupply =
                     parseFloat(tokenBalance) / parseFloat(formatFixed(dataMap[token.pool.id].totalSupply, 18));
 
@@ -100,12 +100,12 @@ export class PoolOnChainBalanceService {
         const totalSupplyTypes: SorQueriesTotalSupplyType[] = [this.sorQueryService.getTotalSupplyType(pool)];
 
         for (const token of pool.tokens) {
-            if (token.__typename === 'GqlPoolTokenLinear' || token.__typename === 'GqlPoolTokenPhantomStable') {
+            if (token.__typename === 'GqlPoolTokenLinear' || token.__typename === 'GqlPoolTokenComposableStable') {
                 poolIds.push(token.pool.id);
                 totalSupplyTypes.push(this.sorQueryService.getTotalSupplyType(token.pool));
             }
 
-            if (token.__typename === 'GqlPoolTokenPhantomStable') {
+            if (token.__typename === 'GqlPoolTokenComposableStable') {
                 for (const nestedToken of token.pool.tokens) {
                     if (nestedToken.__typename === 'GqlPoolTokenLinear') {
                         poolIds.push(nestedToken.pool.id);

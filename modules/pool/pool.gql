@@ -8,6 +8,7 @@ query GetPool($id: String!) {
         factory
         symbol
         createTime
+        version
         dynamicData {
             poolId
             swapEnabled
@@ -204,8 +205,8 @@ query GetPool($id: String!) {
                 ... on GqlPoolTokenLinear {
                     ...GqlPoolTokenLinear
                 }
-                ... on GqlPoolTokenPhantomStable {
-                    ...GqlPoolTokenPhantomStable
+                ... on GqlPoolTokenComposableStable {
+                    ...GqlPoolTokenComposableStable
                 }
             }
         }
@@ -235,7 +236,7 @@ query GetPool($id: String!) {
                 }
             }
         }
-        ... on GqlPoolPhantomStable {
+        ... on GqlPoolComposableStable {
             amp
             nestingType
             tokens {
@@ -245,8 +246,8 @@ query GetPool($id: String!) {
                 ... on GqlPoolTokenLinear {
                     ...GqlPoolTokenLinear
                 }
-                ... on GqlPoolTokenPhantomStable {
-                    ...GqlPoolTokenPhantomStable
+                ... on GqlPoolTokenComposableStable {
+                    ...GqlPoolTokenComposableStable
                 }
             }
         }
@@ -271,8 +272,8 @@ query GetPool($id: String!) {
                 ... on GqlPoolTokenLinear {
                     ...GqlPoolTokenLinear
                 }
-                ... on GqlPoolTokenPhantomStable {
-                    ...GqlPoolTokenPhantomStable
+                ... on GqlPoolTokenComposableStable {
+                    ...GqlPoolTokenComposableStable
                 }
             }
         }
@@ -340,7 +341,7 @@ fragment GqlPoolTokenLinear on GqlPoolTokenLinear {
     }
 }
 
-fragment GqlPoolTokenPhantomStable on GqlPoolTokenPhantomStable {
+fragment GqlPoolTokenComposableStable on GqlPoolTokenComposableStable {
     id
     index
     name

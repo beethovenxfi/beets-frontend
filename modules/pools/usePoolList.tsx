@@ -23,7 +23,7 @@ export const DEFAULT_POOL_LIST_QUERY_VARS: PoolsQueryVariables = {
     where: {
         categoryIn: ['INCENTIVIZED'],
         categoryNotIn: ['BLACK_LISTED'],
-        poolTypeIn: ['WEIGHTED', 'STABLE', 'PHANTOM_STABLE', 'META_STABLE', 'GYRO', 'GYRO3', 'GYROE'],
+        poolTypeIn: ['WEIGHTED', 'STABLE', 'COMPOSABLE_STABLE', 'META_STABLE', 'GYRO', 'GYRO3', 'GYROE'],
         chainIn: [networkConfig.chainName],
     },
     textSearch: null,

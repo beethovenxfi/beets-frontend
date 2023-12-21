@@ -2,27 +2,27 @@
     "possibleTypes": {
         "GqlPoolAprValue": ["GqlPoolAprRange", "GqlPoolAprTotal"],
         "GqlPoolBase": [
+            "GqlPoolComposableStable",
             "GqlPoolElement",
             "GqlPoolGyro",
             "GqlPoolLinear",
             "GqlPoolLiquidityBootstrapping",
             "GqlPoolMetaStable",
-            "GqlPoolPhantomStable",
             "GqlPoolStable",
             "GqlPoolWeighted"
         ],
         "GqlPoolFeaturedPoolGroupItem": ["GqlFeaturePoolGroupItemExternalLink", "GqlPoolMinimal"],
-        "GqlPoolNestedUnion": ["GqlPoolLinearNested", "GqlPoolPhantomStableNested"],
-        "GqlPoolTokenBase": ["GqlPoolToken", "GqlPoolTokenLinear", "GqlPoolTokenPhantomStable"],
-        "GqlPoolTokenPhantomStableNestedUnion": ["GqlPoolToken", "GqlPoolTokenLinear"],
-        "GqlPoolTokenUnion": ["GqlPoolToken", "GqlPoolTokenLinear", "GqlPoolTokenPhantomStable"],
+        "GqlPoolNestedUnion": ["GqlPoolComposableStableNested", "GqlPoolLinearNested"],
+        "GqlPoolTokenBase": ["GqlPoolToken", "GqlPoolTokenComposableStable", "GqlPoolTokenLinear"],
+        "GqlPoolTokenComposableStableNestedUnion": ["GqlPoolToken", "GqlPoolTokenLinear"],
+        "GqlPoolTokenUnion": ["GqlPoolToken", "GqlPoolTokenComposableStable", "GqlPoolTokenLinear"],
         "GqlPoolUnion": [
+            "GqlPoolComposableStable",
             "GqlPoolElement",
             "GqlPoolGyro",
             "GqlPoolLinear",
             "GqlPoolLiquidityBootstrapping",
             "GqlPoolMetaStable",
-            "GqlPoolPhantomStable",
             "GqlPoolStable",
             "GqlPoolWeighted"
         ]
