@@ -3,6 +3,7 @@ import BeetsTab from '~/components/tabs/BeetsTab';
 import SftmxStakeTab from './SftmxStakeTab';
 import SftmxUnstakeTab from './SftmxUnstakeTab';
 import SftmxOverallStats from './SftmxOverallStats';
+import SftmxWithdrawTab from './SftmxWithdrawTab';
 
 export default function SftmxLanding() {
     return (
@@ -23,8 +24,8 @@ export default function SftmxLanding() {
                         <TabPanel h="full" px="0" pb="0">
                             <SftmxUnstakeTab />
                         </TabPanel>
-                        <TabPanel px="0" pb="0">
-                            <p>three!</p>
+                        <TabPanel h="full" px="0" pb="0">
+                            <SftmxWithdrawTab />
                         </TabPanel>
                     </TabPanels>
                 </Tabs>
