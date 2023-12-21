@@ -17,6 +17,7 @@ query GetUserData {
         chain
         type
         address
+        chain
         farm {
             id
             beetsPerBlock

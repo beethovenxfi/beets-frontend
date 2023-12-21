@@ -36,7 +36,7 @@ export class PoolBaseService {
 
     public get ampScaled(): OldBigNumber {
         if (
-            this.pool.__typename === 'GqlPoolPhantomStable' ||
+            this.pool.__typename === 'GqlPoolComposableStable' ||
             this.pool.__typename === 'GqlPoolStable' ||
             this.pool.__typename === 'GqlPoolMetaStable'
         ) {

@@ -5,7 +5,7 @@ import { ToastType, useToast } from '~/components/toast/BeetsToast';
 import useCheckpointTrigger from '~/modules/pool/stake/lib/useCheckpointTrigger';
 import { useGaugeCheckpoint } from '~/modules/pool/stake/lib/useGaugeCheckpoint';
 import useVeMigrationTrigger from '~/modules/pool/stake/lib/useVeMigrationTrigger';
-import { useBeetsBalance } from './useBeetsBalance';
+import { useOldBeetsBalance } from './useOldBeetsBalance';
 import { BeetsMigration } from '~/modules/migrate/BeetsMigration';
 import { networkConfig } from '~/lib/config/network-config';
 import { useGetTokens } from './useToken';
@@ -15,9 +15,9 @@ export default function useGlobalWarnings() {
     const { isLoading: isLoadingCheckpointableGauges, checkpointableGauges } = useCheckpointTrigger();
     const { checkpoint, ...checkpointMutation } = useGaugeCheckpoint();
     const { showToast, removeToast } = useToast();
-    const { isLoading: isLoadingBeetsBalance, balance: beetsBalance } = useBeetsBalance();
+    const { isLoading: isLoadingOldBeetsBalance, balance: oldBeetsBalance } = useOldBeetsBalance();
     const { getToken } = useGetTokens();
-    const tokenData = getToken(networkConfig.beets.address);
+    const tokenData = getToken(networkConfig.beets.oldAddress);
 
     // sync veBAL warning
     useEffect(() => {
@@ -79,12 +79,12 @@ export default function useGlobalWarnings() {
 
     // check for BEETS migration on OP
     useEffect(() => {
-        if (parseFloat(beetsBalance) > 0 && networkConfig.beetsMigrationEnabled) {
+        if (parseFloat(oldBeetsBalance) > 0 && networkConfig.beetsMigrationEnabled) {
             showToast({
                 id: 'beets-migration',
-                content: <BeetsMigration beetsBalance={beetsBalance} tokenData={tokenData} />,
+                content: <BeetsMigration oldBeetsBalance={oldBeetsBalance} tokenData={tokenData} />,
                 type: ToastType.Warn,
             });
         }
-    }, [isLoadingBeetsBalance, beetsBalance]);
+    }, [isLoadingOldBeetsBalance, oldBeetsBalance]);
 }

@@ -47,6 +47,7 @@ export interface NetworkConfig {
     beets: {
         address: string;
         migration: string;
+        oldAddress: string;
     };
     fbeets: {
         address: string;
@@ -67,9 +68,6 @@ export interface NetworkConfig {
         vault: string;
         batchRelayer: string;
         balToken: string;
-        composableStableFactories: string[];
-        composableStableV1Factory: string;
-        weightedPoolV2PlusFactories: string[];
         weightedPoolFactory: string;
         linearFactories: {
             erc4626: string[];

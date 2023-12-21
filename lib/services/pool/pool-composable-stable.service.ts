@@ -1,4 +1,4 @@
-import { GqlPoolPhantomStable } from '~/apollo/generated/graphql-codegen-generated';
+import { GqlPoolComposableStable } from '~/apollo/generated/graphql-codegen-generated';
 import {
     ComposablePoolJoinProcessedStepsOutput,
     PoolExitBptInSingleAssetWithdrawOutput,
@@ -21,7 +21,7 @@ export class PoolComposableStableService implements PoolService {
     private readonly composableExitService: PoolComposableExitService;
 
     constructor(
-        private pool: GqlPoolPhantomStable,
+        private pool: GqlPoolComposableStable,
         private batchRelayerService: BatchRelayerService,
         private readonly wethAddress: string,
         private readonly provider: BaseProvider,
@@ -30,7 +30,7 @@ export class PoolComposableStableService implements PoolService {
         this.composableExitService = new PoolComposableExitService(pool, batchRelayerService, provider, wethAddress);
     }
 
-    public updatePool(pool: GqlPoolPhantomStable) {
+    public updatePool(pool: GqlPoolComposableStable) {
         this.pool = pool;
         this.composableJoinService.updatePool(pool);
     }

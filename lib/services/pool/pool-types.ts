@@ -3,8 +3,8 @@ import { BigNumberish } from 'ethers';
 import { BatchSwapStep, SwapKind } from '@balancer-labs/balancer-js';
 import {
     GqlPoolLinearNested,
-    GqlPoolPhantomStable,
-    GqlPoolPhantomStableNested,
+    GqlPoolComposableStable,
+    GqlPoolComposableStableNested,
     GqlPoolToken,
     GqlPoolTokenExpanded,
     GqlPoolTokenLinear,
@@ -204,7 +204,7 @@ export interface ComposablePoolJoinBatchSwapStep {
 
 export interface ComposablePoolJoinPoolStep {
     type: 'Join';
-    pool: GqlPoolWeighted | GqlPoolPhantomStable | GqlPoolPhantomStableNested;
+    pool: GqlPoolWeighted | GqlPoolComposableStable | GqlPoolComposableStableNested;
     tokensIn: string[];
 }
 
@@ -221,7 +221,7 @@ export interface ComposablePoolJoinProcessedBatchSwapStep {
 
 export interface ComposablePoolJoinProcessedJoinPoolStep {
     type: 'Join';
-    pool: GqlPoolWeighted | GqlPoolPhantomStable | GqlPoolPhantomStableNested;
+    pool: GqlPoolWeighted | GqlPoolComposableStable | GqlPoolComposableStableNested;
     priceImpact: number;
     minBptReceived: AmountHumanReadable;
     tokenAmountsIn: TokenAmountHumanReadable[];
@@ -238,8 +238,8 @@ export interface ComposablePoolJoinProcessedStepsOutput {
     nestedPriceImpacts: PoolJoinEstimateOutputNestedPriceImpact[];
 }
 
-export type PoolWithPossibleNesting = GqlPoolWeighted | GqlPoolPhantomStable;
-export type ComposableExitSwapPool = GqlPoolPhantomStable | GqlPoolPhantomStableNested | GqlPoolLinearNested;
+export type PoolWithPossibleNesting = GqlPoolWeighted | GqlPoolComposableStable;
+export type ComposableExitSwapPool = GqlPoolComposableStable | GqlPoolComposableStableNested | GqlPoolLinearNested;
 
 export interface ComposablePoolExitNestedLinearPool {
     linearPoolToken: GqlPoolTokenLinear;

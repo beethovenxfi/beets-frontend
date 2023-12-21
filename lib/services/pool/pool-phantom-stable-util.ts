@@ -1,7 +1,7 @@
 import { AmountHumanReadable, TokenAmountHumanReadable } from '~/lib/services/token/token-types';
 import {
     GqlPoolInvestOption,
-    GqlPoolTokenPhantomStableNestedUnion,
+    GqlPoolTokenComposableStableNestedUnion,
     GqlPoolTokenUnion,
     GqlPoolWithdrawOption,
 } from '~/apollo/generated/graphql-codegen-generated';
@@ -62,7 +62,7 @@ export function poolGetJoinSwapForToken({
             ],
             assets: [nestedToken.address, poolToken.address, poolAddress],
         };
-    } else if (poolToken.__typename === 'GqlPoolTokenPhantomStable') {
+    } else if (poolToken.__typename === 'GqlPoolTokenComposableStable') {
         const nestedPoolToken = poolFindNestedPoolTokenForToken(tokenIn, poolToken.pool.tokens);
 
         if (!nestedPoolToken) {
@@ -128,7 +128,7 @@ export function poolGetExitSwaps({
             ],
             assets: [poolAddress, poolToken.address, nestedToken.address],
         };
-    } else if (poolToken.__typename === 'GqlPoolTokenPhantomStable') {
+    } else if (poolToken.__typename === 'GqlPoolTokenComposableStable') {
         const nestedPoolToken = poolFindNestedPoolTokenForToken(tokenOut, poolToken.pool.tokens);
 
         if (!nestedPoolToken) {
@@ -171,7 +171,7 @@ export function poolSumPoolTokenBalances(poolTokens: GqlPoolTokenUnion[]): OldBi
 
 export function poolFindNestedPoolTokenForToken(
     tokenAddress: string,
-    poolTokens: GqlPoolTokenPhantomStableNestedUnion[],
+    poolTokens: GqlPoolTokenComposableStableNestedUnion[],
 ) {
     const nestedPoolToken = poolTokens.find((token) => {
         if (token.__typename === 'GqlPoolTokenLinear') {

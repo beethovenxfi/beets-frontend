@@ -43,6 +43,13 @@ export function PoolProvider({ pool: poolFromProps, children }: { pool: GqlPoolU
 
     let pool = (data?.pool || poolFromProps) as GqlPoolUnion;
 
+    // api needed to add bpts to tokens, filter them out again here
+    // https://github.com/beethovenxfi/beethovenx-backend/pull/536
+    pool = {
+        ...pool,
+        tokens: pool.tokens.filter((token) => token.address !== pool.address),
+    } as GqlPoolUnion;
+
     // drop FTM as an invest option from the FreshBeets pool for now
     const freshBeetsPool: GqlPoolUnion | null = useMemo(() => {
         if (pool.address !== networkConfig.reliquary.fbeets.poolAddress) {
@@ -90,15 +97,12 @@ export function PoolProvider({ pool: poolFromProps, children }: { pool: GqlPoolU
         (pool.__typename === 'GqlPoolWeighted' ||
             pool.__typename === 'GqlPoolStable' ||
             pool.__typename === 'GqlPoolMetaStable' ||
-            (pool.__typename === 'GqlPoolPhantomStable' &&
-                pool.factory &&
-                networkConfig.balancer.composableStableFactories.includes(pool.factory))) &&
+            (pool.__typename === 'GqlPoolComposableStable' && pool.version === 0)) &&
         pool.staking?.type === 'MASTER_CHEF' &&
         !!pool.staking.farm;
     const supportsZapIntoGauge =
-        ((pool.__typename === 'GqlPoolWeighted' &&
-            networkConfig.balancer.weightedPoolV2PlusFactories.includes(pool.factory || '')) ||
-            pool.__typename === 'GqlPoolPhantomStable' ||
+        ((pool.__typename === 'GqlPoolWeighted' && pool.version >= 2) ||
+            pool.__typename === 'GqlPoolComposableStable' ||
             pool.__typename === 'GqlPoolMetaStable' ||
             pool.__typename === 'GqlPoolGyro') &&
         pool.staking?.type === 'GAUGE' &&
@@ -121,7 +125,7 @@ export function PoolProvider({ pool: poolFromProps, children }: { pool: GqlPoolU
 
     const isStablePool =
         pool.__typename === 'GqlPoolStable' ||
-        pool.__typename === 'GqlPoolPhantomStable' ||
+        pool.__typename === 'GqlPoolComposableStable' ||
         pool.__typename === 'GqlPoolMetaStable';
 
     const totalApr =

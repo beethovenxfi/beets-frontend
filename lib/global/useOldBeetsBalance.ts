@@ -2,17 +2,17 @@ import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 import { useUserBalances } from '~/lib/user/useUserBalances';
 import { keyBy } from 'lodash';
 
-export function useBeetsBalance() {
+export function useOldBeetsBalance() {
     const networkConfig = useNetworkConfig();
     const { userBalances: balances = [], isLoading: isLoadingBalances } = useUserBalances([
-        networkConfig.beets.address,
+        networkConfig.beets.oldAddress,
     ]);
 
     const userBalancesMap = keyBy(balances, 'address');
-    const beetsBalance = userBalancesMap[networkConfig.beets.address]?.amount || '0';
+    const oldBeetsBalance = userBalancesMap[networkConfig.beets.oldAddress]?.amount || '0';
 
     return {
-        balance: beetsBalance,
+        balance: oldBeetsBalance,
         isLoading: isLoadingBalances,
     };
 }
