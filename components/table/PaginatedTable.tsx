@@ -55,6 +55,7 @@ interface Props<T> extends BoxProps {
     onFetchMore?: () => void;
     isInfinite?: boolean;
     isShort?: boolean;
+    noResultLabel?: string;
 }
 
 export function PaginatedTable({
@@ -72,6 +73,7 @@ export function PaginatedTable({
     isInfinite,
     onFetchMore,
     isShort,
+    noResultLabel,
     ...rest
 }: Props<any>) {
     const isLoadingRows = loading && items.length === 0;
@@ -87,7 +89,7 @@ export function PaginatedTable({
                 )}
                 {!isLoadingRows && items.length === 0 && (
                     <Box height="md" display="flex" alignItems="center" justifyContent="center" bg="box.500">
-                        No results found for your search criteria.
+                        {noResultLabel || 'No results found for your search criteria.'}
                     </Box>
                 )}
                 {!isLoadingRows &&
