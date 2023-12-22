@@ -6,18 +6,25 @@ import { networkConfig } from '~/lib/config/network-config';
 import { useUserAccount } from '~/lib/user/useUserAccount';
 import { useSftmxGetStakingData } from './useSftmxGetStakingData';
 import { tokenFormatAmount } from '~/lib/services/token/token-util';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { SftmxStakeButton } from './SftmxStakeButton';
 import { useSftmxGetFtmxAmountForFtm } from './useSftmxGetFtmxAmountForFtm';
 import { formatFixed } from '@ethersproject/bignumber';
 
 export default function SftmxStakeTab() {
     const [amount, setAmount] = useState('');
+    const [sftmxAmount, setSftmxAmount] = useState('');
     const { isConnected } = useUserAccount();
     const { data: sftmxStakingData } = useSftmxGetStakingData();
-    const { data: sftmxAmountData } = useSftmxGetFtmxAmountForFtm('1'); // set to 1 FTM to get current rate
+    const { data: sftmxAmountData, isLoading: isLoadingSftmxAmountData } = useSftmxGetFtmxAmountForFtm('1'); // set to 1 FTM to get current rate
 
-    const exchangeRateFtm = parseFloat(formatFixed(sftmxAmountData?.amountSftmx || '', 18));
+    useEffect(() => {
+        if (!isLoadingSftmxAmountData && sftmxAmountData) {
+            setSftmxAmount(formatFixed(sftmxAmountData.amountSftmx, 18));
+        }
+    }, [isLoadingSftmxAmountData]);
+
+    const exchangeRateFtm = 1 / parseFloat(sftmxAmount);
 
     const isBelowMin =
         sftmxStakingData && parseFloat(amount) < parseFloat(sftmxStakingData.sftmxGetStakingData.minDepositLimit);
@@ -33,12 +40,12 @@ export default function SftmxStakeTab() {
                 {isAboveMax && <Alert status="error">Amount above maximum deposit requirement.</Alert>}
                 <HStack w="full" justifyContent="space-between">
                     <Text>You will get</Text>
-                    <Text>{`${amount ? tokenFormatAmount(parseFloat(amount) * exchangeRateFtm) : '0'} SFTMX`}</Text>
+                    <Text>{`${amount ? tokenFormatAmount(parseFloat(amount) * exchangeRateFtm) : '--'} SFTMX`}</Text>
                 </HStack>
                 <Divider />
                 <HStack w="full" justifyContent="space-between">
                     <Text>1 FTM is</Text>
-                    <Text>{tokenFormatAmount(exchangeRateFtm)} sFTMX</Text>
+                    <Text>{isLoadingSftmxAmountData ? '-' : tokenFormatAmount(exchangeRateFtm)} sFTMX</Text>
                 </HStack>
                 <Spacer />
                 <Box w="full">

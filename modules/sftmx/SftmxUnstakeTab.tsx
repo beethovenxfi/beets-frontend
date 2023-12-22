@@ -1,25 +1,31 @@
-import { Box, VStack, Heading, HStack, Divider, Spacer, Button, Text } from '@chakra-ui/react';
+import { Box, VStack, Heading, HStack, Divider, Spacer, Text, Alert, AlertIcon } from '@chakra-ui/react';
 import { WalletConnectButton } from '~/components/button/WalletConnectButton';
 import Card from '~/components/card/Card';
 import { FtmTokenInput } from '~/components/inputs/FtmTokenInput';
 import { networkConfig } from '~/lib/config/network-config';
 import { useUserAccount } from '~/lib/user/useUserAccount';
-import { useSftmxGetStakingData } from './useSftmxGetStakingData';
 import { tokenFormatAmount } from '~/lib/services/token/token-util';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useSftmxGetCalculatePenalty } from './useSftmxGetCalculatePenalty';
 import { formatFixed } from '@ethersproject/bignumber';
 import { SftmxUnstakeButton } from './SftmxUnstakeButton';
 import { useSftmxGetFtmxAmountForFtm } from './useSftmxGetFtmxAmountForFtm';
+import { InfoButton } from '~/components/info-button/InfoButton';
 
 export default function SftmxUnstakeTab() {
     const [amount, setAmount] = useState('');
+    const [sftmxAmount, setSftmxAmount] = useState('');
     const { isConnected } = useUserAccount();
-    const { data: stakingData } = useSftmxGetStakingData();
-    const { data: sftmxAmountData } = useSftmxGetFtmxAmountForFtm('1'); // set to 1 FTM to get current rate
-    const { data: penaltyData } = useSftmxGetCalculatePenalty(amount);
+    const { data: sftmxAmountData, isLoading: isLoadingSftmxAmountData } = useSftmxGetFtmxAmountForFtm('1'); // set to 1 FTM to get current rate
+    const { data: penaltyData, isLoading: isLoadingPenaltyData } = useSftmxGetCalculatePenalty(amount);
 
-    const exchangeRateFtm = 1 / parseFloat(formatFixed(sftmxAmountData?.amountSftmx || '', 18));
+    useEffect(() => {
+        if (!isLoadingSftmxAmountData && sftmxAmountData) {
+            setSftmxAmount(formatFixed(sftmxAmountData.amountSftmx, 18));
+        }
+    }, [isLoadingSftmxAmountData]);
+
+    const exchangeRateFtm = 1 / parseFloat(sftmxAmount);
 
     return (
         <Card shadow="lg" h="full">
@@ -34,19 +40,29 @@ export default function SftmxUnstakeTab() {
                 <HStack w="full" justifyContent="space-between">
                     <Text>You will get</Text>
                     <Text>
-                        {`${amount && stakingData ? tokenFormatAmount(parseFloat(amount) * exchangeRateFtm) : '0'} FTM`}
+                        {`${
+                            amount && amount !== '0' && !isLoadingSftmxAmountData
+                                ? tokenFormatAmount(parseFloat(amount) * exchangeRateFtm)
+                                : '--'
+                        } FTM`}
                     </Text>
                 </HStack>
                 <Divider w="full" />
                 <HStack w="full" justifyContent="space-between">
                     <Text>1 sFTMX is</Text>
-                    <Text>{tokenFormatAmount(exchangeRateFtm)} FTM</Text>
+                    <Text>{isLoadingSftmxAmountData ? '-' : tokenFormatAmount(exchangeRateFtm)} FTM</Text>
                 </HStack>
                 <HStack w="full" justifyContent="space-between">
-                    <Text>Penalty</Text>
-                    <Text>{penaltyData ? formatFixed(penaltyData.amountPenalty, 18) : '-'}%</Text>
+                    <InfoButton label="Penalty" infoText="explainer text" />
+                    <Text>
+                        {penaltyData && !isLoadingPenaltyData ? formatFixed(penaltyData.amountPenalty, 18) : '-'}%
+                    </Text>
                 </HStack>
                 <Spacer />
+                <Alert status="warning" mb="4">
+                    <AlertIcon />
+                    Unstaked FTM will be withdrawable after 7 days
+                </Alert>
                 <Box w="full">
                     {!isConnected && <WalletConnectButton width="full" size="lg" />}
                     {isConnected && <SftmxUnstakeButton amount={amount} penalty={penaltyData?.amountPenalty} />}
