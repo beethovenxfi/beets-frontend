@@ -1,4 +1,4 @@
-import { Tabs, TabList, TabPanels, TabPanel, VStack, Grid } from '@chakra-ui/react';
+import { Tabs, TabList, TabPanels, TabPanel, VStack, Grid, Box } from '@chakra-ui/react';
 import BeetsTab from '~/components/tabs/BeetsTab';
 import SftmxStakeTab from './SftmxStakeTab';
 import SftmxUnstakeTab from './SftmxUnstakeTab';
@@ -29,7 +29,9 @@ export default function SftmxLanding() {
                         </TabPanel>
                     </TabPanels>
                 </Tabs>
-                <SftmxOverallStats />
+                <Box w="66%" h="full">
+                    <SftmxOverallStats />
+                </Box>
             </Grid>
         </VStack>
     );
