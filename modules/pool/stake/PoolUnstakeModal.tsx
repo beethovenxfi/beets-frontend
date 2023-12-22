@@ -63,7 +63,7 @@ export function PoolUnstakeModal({ isOpen, onOpen, onClose }: Props) {
     const [steps, setSteps] = useState<TransactionStep[] | null>(null);
     const { data: hasMinterApproval, isLoading: isLoadingHasMinterApproval } = useHasMinterApproval();
     const { data: hasBatchRelayerApproval, isLoading: isLoadingBatchRelayerApproval } = useHasBatchRelayerApproval();
-    const loading = isLoadingBalances || isLoadingHasMinterApproval || isLoadingBatchRelayerApproval;
+    const isLoading = isLoadingBalances || isLoadingHasMinterApproval || isLoadingBatchRelayerApproval;
 
     const { data: contractCalls } = useGaugeUnstakeGetContractCallData(
         oldBnumToBnum(oldBnum(oldBnumScaleAmount(userStakedBptBalance).times(percent).div(100).toFixed(0))),
@@ -76,7 +76,7 @@ export function PoolUnstakeModal({ isOpen, onOpen, onClose }: Props) {
     }, [isOpen]);
 
     useEffect(() => {
-        if (!loading) {
+        if (!isLoading) {
             setSteps([
                 ...(!hasMinterApproval
                     ? [
@@ -96,7 +96,7 @@ export function PoolUnstakeModal({ isOpen, onOpen, onClose }: Props) {
                 },
             ]);
         }
-    }, [loading, isOpen]);
+    }, [isLoading, isOpen]);
 
     function onCloseModal() {
         unstakeQuery.reset();
@@ -165,7 +165,7 @@ export function PoolUnstakeModal({ isOpen, onOpen, onClose }: Props) {
                         </CardRow>
                     </BeetsBox>
                     <BeetsTransactionStepsSubmit
-                        isLoading={loading}
+                        isLoading={isLoading}
                         loadingButtonText="Loading balances..."
                         completeButtonText="Close"
                         onCompleteButtonClick={onCloseModal}
