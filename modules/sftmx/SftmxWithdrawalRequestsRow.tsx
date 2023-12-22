@@ -12,8 +12,6 @@ export default function SftmxWithdrawalRequestsRow({ item, withdrawalDelay }: Pr
     const availableForWithdrawalTime = (item.requestTimestamp + withdrawalDelay) * 1000;
     const now = Date.now();
 
-    console.log({ now, availableForWithdrawalTime });
-
     return (
         <Grid alignItems="center" templateColumns={'repeat(3, 1fr)'} gap="0" bgColor="rgba(255,255,255,0.05)" p="4">
             <GridItem>{item.amountSftmx} sFTMX</GridItem>
