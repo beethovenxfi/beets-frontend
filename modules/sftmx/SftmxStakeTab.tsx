@@ -22,7 +22,7 @@ export default function SftmxStakeTab() {
         if (!isLoadingSftmxAmountData && sftmxAmountData) {
             setSftmxAmount(formatFixed(sftmxAmountData.amountSftmx, 18));
         }
-    }, [isLoadingSftmxAmountData]);
+    }, [isLoadingSftmxAmountData, sftmxAmountData]);
 
     const exchangeRateFtm = 1 / parseFloat(sftmxAmount);
 
