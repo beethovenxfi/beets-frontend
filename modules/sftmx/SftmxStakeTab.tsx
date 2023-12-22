@@ -40,7 +40,11 @@ export default function SftmxStakeTab() {
                 {isAboveMax && <Alert status="error">Amount above maximum deposit requirement.</Alert>}
                 <HStack w="full" justifyContent="space-between">
                     <Text>You will get</Text>
-                    <Text>{`${amount ? tokenFormatAmount(parseFloat(amount) * exchangeRateFtm) : '--'} SFTMX`}</Text>
+                    <Text>{`${
+                        amount && !isLoadingSftmxAmountData && !isBelowMin && !isAboveMax
+                            ? tokenFormatAmount(parseFloat(amount) * exchangeRateFtm)
+                            : '--'
+                    } SFTMX`}</Text>
                 </HStack>
                 <Divider />
                 <HStack w="full" justifyContent="space-between">
