@@ -24,6 +24,18 @@ export class SftmxService {
         const response = await contract.calculatePenalty(parseUnits(amount, 18));
         return { amountFtmReceived: response[0], amountUndelegated: response[1], amountPenalty: response[2] };
     }
+
+    public async getFtmxAmountForFtm({
+        amount,
+        provider,
+    }: {
+        amount: AmountHumanReadable;
+        provider: BaseProvider;
+    }): Promise<{ amountSftmx: BigNumber }> {
+        const contract = new Contract(this.ftmStakingProxyAddress, FTMStakingAbi, provider);
+        const response = await contract.getFTMxAmountForFTM(parseUnits(amount, 18), false);
+        return { amountSftmx: response };
+    }
 }
 
 export const sftmxService = new SftmxService(networkConfig.sftmx.ftmStakingProxyAddress);
