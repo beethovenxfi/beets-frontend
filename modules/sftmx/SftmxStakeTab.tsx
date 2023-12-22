@@ -8,25 +8,29 @@ import { useSftmxGetStakingData } from './useSftmxGetStakingData';
 import { tokenFormatAmount } from '~/lib/services/token/token-util';
 import { useState } from 'react';
 import { SftmxStakeButton } from './SftmxStakeButton';
+import { useSftmxGetFtmxAmountForFtm } from './useSftmxGetFtmxAmountForFtm';
+import { formatFixed } from '@ethersproject/bignumber';
 
 export default function SftmxStakeTab() {
-    const { isConnected } = useUserAccount();
-    const { data } = useSftmxGetStakingData();
     const [amount, setAmount] = useState('');
+    const { isConnected } = useUserAccount();
+    const { data: sftmxStakingData } = useSftmxGetStakingData();
+    const { data: sftmxAmountData } = useSftmxGetFtmxAmountForFtm('1'); // set to 1 FTM to get current rate
 
-    const exchangeRateFtm = 1 / parseFloat(data?.sftmxGetStakingData.exchangeRate || '');
+    const exchangeRateFtm = parseFloat(formatFixed(sftmxAmountData?.amountSftmx || '', 18));
+
+    const isBelowMin =
+        sftmxStakingData && parseFloat(amount) < parseFloat(sftmxStakingData.sftmxGetStakingData.minDepositLimit);
+    const isAboveMax =
+        sftmxStakingData && parseFloat(amount) > parseFloat(sftmxStakingData.sftmxGetStakingData.maxDepositLimit);
 
     return (
         <Card shadow="lg" h="full">
             <VStack spacing="4" p={{ base: '4', lg: '8' }} align="flex-start" h="full">
                 <Heading size="md">Enter amount to stake</Heading>
                 <FtmTokenInput address={networkConfig.eth.address} label="Stake" value={amount} onChange={setAmount} />
-                {data && parseFloat(amount) < parseFloat(data.sftmxGetStakingData.minDepositLimit) && (
-                    <Alert status="error">Amount below minimum deposit requirement.</Alert>
-                )}
-                {data && parseFloat(amount) > parseFloat(data.sftmxGetStakingData.maxDepositLimit) && (
-                    <Alert status="error">Amount above maximum deposit requirement.</Alert>
-                )}
+                {isBelowMin && <Alert status="error">Amount below minimum deposit requirement.</Alert>}
+                {isAboveMax && <Alert status="error">Amount above maximum deposit requirement.</Alert>}
                 <HStack w="full" justifyContent="space-between">
                     <Text>You will get</Text>
                     <Text>{`${amount ? tokenFormatAmount(parseFloat(amount) * exchangeRateFtm) : '0'} SFTMX`}</Text>
@@ -39,7 +43,9 @@ export default function SftmxStakeTab() {
                 <Spacer />
                 <Box w="full">
                     {!isConnected && <WalletConnectButton width="full" size="lg" />}
-                    {isConnected && <SftmxStakeButton amount={amount} />}
+                    {isConnected && (
+                        <SftmxStakeButton amount={amount} isDisabled={!amount || isBelowMin || isAboveMax} />
+                    )}
                 </Box>
             </VStack>
         </Card>

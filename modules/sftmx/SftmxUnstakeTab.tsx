@@ -10,13 +10,16 @@ import { useState } from 'react';
 import { useSftmxGetCalculatePenalty } from './useSftmxGetCalculatePenalty';
 import { formatFixed } from '@ethersproject/bignumber';
 import { SftmxUnstakeButton } from './SftmxUnstakeButton';
+import { useSftmxGetFtmxAmountForFtm } from './useSftmxGetFtmxAmountForFtm';
 
 export default function SftmxUnstakeTab() {
+    const [amount, setAmount] = useState('');
     const { isConnected } = useUserAccount();
     const { data: stakingData } = useSftmxGetStakingData();
-    const [amount, setAmount] = useState('');
-
+    const { data: sftmxAmountData } = useSftmxGetFtmxAmountForFtm('1'); // set to 1 FTM to get current rate
     const { data: penaltyData } = useSftmxGetCalculatePenalty(amount);
+
+    const exchangeRateFtm = 1 / parseFloat(formatFixed(sftmxAmountData?.amountSftmx || '', 18));
 
     return (
         <Card shadow="lg" h="full">
@@ -31,19 +34,13 @@ export default function SftmxUnstakeTab() {
                 <HStack w="full" justifyContent="space-between">
                     <Text>You will get</Text>
                     <Text>
-                        {`${
-                            amount && stakingData
-                                ? tokenFormatAmount(
-                                      parseFloat(amount) * parseFloat(stakingData.sftmxGetStakingData.exchangeRate),
-                                  )
-                                : '0'
-                        } FTM`}
+                        {`${amount && stakingData ? tokenFormatAmount(parseFloat(amount) * exchangeRateFtm) : '0'} FTM`}
                     </Text>
                 </HStack>
                 <Divider w="full" />
                 <HStack w="full" justifyContent="space-between">
                     <Text>1 sFTMX is</Text>
-                    <Text>{tokenFormatAmount(stakingData?.sftmxGetStakingData.exchangeRate || '0')} FTM</Text>
+                    <Text>{tokenFormatAmount(exchangeRateFtm)} FTM</Text>
                 </HStack>
                 <HStack w="full" justifyContent="space-between">
                     <Text>Penalty</Text>
