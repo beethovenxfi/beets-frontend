@@ -11,7 +11,7 @@ export default function SftmxWithdrawalRequestsHeader() {
             </GridItem>
             <GridItem justifySelf="flex-end">
                 <Text fontSize="md" fontWeight="semibold" color="beets.base.100">
-                    Can withdraw when?
+                    Withdraw on
                 </Text>
             </GridItem>
             {/* no header for third column */}
