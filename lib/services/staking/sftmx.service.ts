@@ -38,16 +38,15 @@ export class SftmxService {
     }
 
     public async getAllWithdrawalRequests({ wrId, provider }: { wrId: string; provider: BaseProvider }): Promise<{
-        requestTime: number;
+        requestTime: BigNumber;
         poolAmount: BigNumber;
         undelegateAmount: BigNumber;
-        penalty: number;
+        penalty: BigNumber;
         user: string;
         isWithdrawn: boolean;
     }> {
         const contract = new Contract(this.ftmStakingProxyAddress, FTMStakingAbi, provider);
         const response = await contract.allWithdrawalRequests(wrId);
-        console.log({ response });
         return {
             requestTime: response[0],
             poolAmount: response[1],

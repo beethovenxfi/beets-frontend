@@ -9,13 +9,13 @@ export function useSftmxGetAllWithdrawalRequests(wrId: string) {
     return useQuery(
         ['sftmxGetAllWithdrawalRequests', wrId],
         async (): Promise<{
-            requestTime: number;
+            requestTime: BigNumber;
             poolAmount: BigNumber;
             undelegateAmount: BigNumber;
-            penalty: number;
+            penalty: BigNumber;
             user: string;
             isWithdrawn: boolean;
         }> => sftmxService.getAllWithdrawalRequests({ wrId, provider }),
-        { enabled: !wrId },
+        { enabled: !!wrId },
     );
 }
