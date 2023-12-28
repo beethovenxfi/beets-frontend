@@ -16,7 +16,7 @@ export function useSftmxUnstake() {
         transactionType: 'UNSTAKE',
     });
 
-    const wrID = `${Date.now()}00000000`;
+    const wrID = `${Date.now()}`;
 
     function undelegate(amount: AmountHumanReadable, penalty: BigNumber) {
         submit({
