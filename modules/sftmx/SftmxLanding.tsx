@@ -14,7 +14,7 @@ export default function SftmxLanding() {
                 w={{ base: 'full', lg: '75%' }}
                 minH="550px"
             >
-                <Tabs variant="soft-rounded" display="flex" flexDirection="column">
+                <Tabs variant="soft-rounded" display="flex" flexDirection="column" isLazy>
                     <TabList>
                         <Grid templateColumns="1fr 1fr 1fr" gap="4" w="full">
                             <BeetsTab key="stake">Stake</BeetsTab>
