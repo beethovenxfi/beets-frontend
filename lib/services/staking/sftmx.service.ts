@@ -36,6 +36,27 @@ export class SftmxService {
         const response = await contract.getFTMxAmountForFTM(parseUnits(amount, 18), false);
         return { amountSftmx: response };
     }
+
+    public async getAllWithdrawalRequests({ wrId, provider }: { wrId: string; provider: BaseProvider }): Promise<{
+        requestTime: number;
+        poolAmount: BigNumber;
+        undelegateAmount: BigNumber;
+        penalty: number;
+        user: string;
+        isWithdrawn: boolean;
+    }> {
+        const contract = new Contract(this.ftmStakingProxyAddress, FTMStakingAbi, provider);
+        const response = await contract.allWithdrawalRequests(wrId);
+        console.log({ response });
+        return {
+            requestTime: response[0],
+            poolAmount: response[1],
+            undelegateAmount: response[2],
+            penalty: response[3],
+            user: response[4],
+            isWithdrawn: response[5],
+        };
+    }
 }
 
 export const sftmxService = new SftmxService(networkConfig.sftmx.ftmStakingProxyAddress);
