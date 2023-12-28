@@ -23,7 +23,7 @@ export default function SftmxWithdrawTab() {
                 </VStack>
             )}
             {isConnected && requests && stakingData && (
-                <VStack spacing="4" p={{ base: '4', lg: '8' }} align="flex-start" h="full">
+                <VStack spacing="4" p="4" align="flex-start" h="full">
                     <Heading size="md">Withdrawal requests</Heading>
                     <PaginatedTable
                         isInfinite

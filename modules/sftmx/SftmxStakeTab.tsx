@@ -33,7 +33,7 @@ export default function SftmxStakeTab() {
 
     return (
         <Card shadow="lg" h="full">
-            <VStack spacing="4" p={{ base: '4', lg: '8' }} align="flex-start" h="full">
+            <VStack spacing="4" p="4" align="flex-start" h="full">
                 <Heading size="md">Enter amount to stake</Heading>
                 <FtmTokenInput address={networkConfig.eth.address} label="Stake" value={amount} onChange={setAmount} />
                 {isBelowMin && <Alert status="error">Amount below minimum deposit requirement.</Alert>}

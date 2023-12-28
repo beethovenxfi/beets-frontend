@@ -29,7 +29,7 @@ export default function SftmxUnstakeTab() {
 
     return (
         <Card shadow="lg" h="full">
-            <VStack spacing="4" p={{ base: '4', lg: '8' }} align="flex-start" h="full">
+            <VStack spacing="4" p="4" align="flex-start" h="full">
                 <Heading size="md">Enter amount to unstake</Heading>
                 <FtmTokenInput
                     address={networkConfig.sftmx.address}

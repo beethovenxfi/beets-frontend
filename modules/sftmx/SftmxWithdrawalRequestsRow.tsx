@@ -1,4 +1,4 @@
-import { Grid, GridItem } from '@chakra-ui/react';
+import { Grid, GridItem, Text } from '@chakra-ui/react';
 import { format } from 'date-fns';
 import { GqlSftmxWithdrawalRequests } from '~/apollo/generated/graphql-codegen-generated';
 import { SftmxWithdrawButton } from './SftmxWithdrawButton';
@@ -24,9 +24,13 @@ export default function SftmxWithdrawalRequestsRow({ item, withdrawalDelay }: Pr
 
     return (
         <Grid alignItems="center" templateColumns={'repeat(3, 1fr)'} gap="0" bgColor="rgba(255,255,255,0.05)" p="4">
-            <GridItem>{item.amountSftmx} sFTMX</GridItem>
+            <GridItem>
+                <Text as={isWithdrawn ? 'del' : undefined}>{item.amountSftmx} sFTMX</Text>
+            </GridItem>
             <GridItem justifySelf="flex-end">
-                {format(new Date(availableForWithdrawalTime), 'dd/MM/yyyy HH:mm')}
+                <Text as={isWithdrawn ? 'del' : undefined}>
+                    {format(new Date(availableForWithdrawalTime), 'dd/MM/yyyy HH:mm')}
+                </Text>
             </GridItem>
             <GridItem justifySelf="flex-end">
                 <SftmxWithdrawButton

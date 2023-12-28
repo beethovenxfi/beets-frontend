@@ -7,8 +7,13 @@ import SftmxWithdrawTab from './SftmxWithdrawTab';
 
 export default function SftmxLanding() {
     return (
-        <VStack spacing="4" w="full" align="flex-start">
-            <Grid templateColumns={{ base: '1fr', lg: '1fr 1fr' }} gap={{ base: '8', lg: '24' }} w="full" minH="550px">
+        <VStack spacing="4" w="full" align="center">
+            <Grid
+                templateColumns={{ base: '1fr', lg: '1fr 1fr' }}
+                gap={{ base: '8', lg: '4' }}
+                w={{ base: 'full', lg: '75%' }}
+                minH="550px"
+            >
                 <Tabs variant="soft-rounded" display="flex" flexDirection="column">
                     <TabList>
                         <Grid templateColumns="1fr 1fr 1fr" gap="4" w="full">
