@@ -65,7 +65,13 @@ export default function SftmxUnstakeTab() {
                 </Alert>
                 <Box w="full">
                     {!isConnected && <WalletConnectButton width="full" size="lg" />}
-                    {isConnected && <SftmxUnstakeButton amount={amount} penalty={penaltyData?.amountPenalty} />}
+                    {isConnected && (
+                        <SftmxUnstakeButton
+                            amount={amount}
+                            penalty={penaltyData?.amountPenalty}
+                            onConfirmed={() => setAmount('')}
+                        />
+                    )}
                 </Box>
             </VStack>
         </Card>

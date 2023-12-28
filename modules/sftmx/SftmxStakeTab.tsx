@@ -55,7 +55,11 @@ export default function SftmxStakeTab() {
                 <Box w="full">
                     {!isConnected && <WalletConnectButton width="full" size="lg" />}
                     {isConnected && (
-                        <SftmxStakeButton amount={amount} isDisabled={!amount || isBelowMin || isAboveMax} />
+                        <SftmxStakeButton
+                            amount={amount}
+                            isDisabled={!amount || isBelowMin || isAboveMax}
+                            onConfirmed={() => setAmount('')}
+                        />
                     )}
                 </Box>
             </VStack>
