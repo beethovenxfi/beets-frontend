@@ -13,9 +13,10 @@ interface Props {
     size?: string;
     inline?: boolean;
     isLoading?: boolean;
+    isWithdrawn: boolean;
 }
 
-export function SftmxWithdrawButton({ amount, wrId, ...rest }: Props) {
+export function SftmxWithdrawButton({ amount, wrId, isWithdrawn, ...rest }: Props) {
     const { withdraw, ...query } = useSftmxWithdraw();
 
     return (
@@ -25,10 +26,9 @@ export function SftmxWithdrawButton({ amount, wrId, ...rest }: Props) {
             onClick={() => {
                 withdraw(amount, wrId);
             }}
-            isDisabled={!amount || amount === '0' || rest.isDisabled}
             {...rest}
         >
-            Withdraw
+            {isWithdrawn ? 'Withdrawn' : 'Withdraw'}
         </BeetsSubmitTransactionButton>
     );
 }
