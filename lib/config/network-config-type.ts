@@ -131,4 +131,5 @@ export interface NetworkConfig {
     layerZeroChainId: number;
     beetsMigrationEnabled: boolean;
     gaugeEnabled: boolean;
+    sftmxEnabled: boolean;
 }

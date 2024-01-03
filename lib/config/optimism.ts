@@ -338,4 +338,5 @@ export const optimismNetworkConfig: NetworkConfig = {
     layerZeroChainId: 111,
     beetsMigrationEnabled: true,
     gaugeEnabled: true,
+    sftmxEnabled: false,
 };

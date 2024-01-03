@@ -409,4 +409,5 @@ export const fantomNetworkConfig: NetworkConfig = {
     layerZeroChainId: -1,
     beetsMigrationEnabled: false,
     gaugeEnabled: false,
+    sftmxEnabled: true,
 };

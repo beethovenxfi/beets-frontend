@@ -7,9 +7,10 @@ import InvestMastheadOpImage from '~/assets/images/invest-masthead-image-OP.png'
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 import { UserTokenBalancesProvider } from '~/lib/user/useUserTokenBalances';
 import SftmxLanding from '~/modules/sftmx/SftmxLanding';
+import { VStack, Heading } from '@chakra-ui/react';
 
 function Stake() {
-    const { chainId } = useNetworkConfig();
+    const { chainId, sftmxEnabled } = useNetworkConfig();
 
     const TITLE = 'Beethoven X | Stake FTM';
     const DESCRIPTION = 'Text';
@@ -35,9 +36,15 @@ function Stake() {
                     />
                 }
             />
-            <UserTokenBalancesProvider>
-                <SftmxLanding />
-            </UserTokenBalancesProvider>
+            {sftmxEnabled ? (
+                <UserTokenBalancesProvider>
+                    <SftmxLanding />
+                </UserTokenBalancesProvider>
+            ) : (
+                <VStack minH="300px" justifyContent="center">
+                    <Heading>sFTMX is not supported on this chain.</Heading>
+                </VStack>
+            )}
         </>
     );
 }
