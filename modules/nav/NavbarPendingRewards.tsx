@@ -178,7 +178,7 @@ export function NavbarPendingRewards() {
                                                 }}
                                                 width="full"
                                             >
-                                                Claim all pending gauge rewards
+                                                Claim all pool rewards
                                             </BeetsSubmitTransactionButton>
                                         )}
                                     </Box>
