@@ -1,4 +1,4 @@
-import { VStack, Heading, Text } from '@chakra-ui/react';
+import { VStack, Heading, Text, HStack } from '@chakra-ui/react';
 import { WalletConnectButton } from '~/components/button/WalletConnectButton';
 import Card from '~/components/card/Card';
 import { useUserAccount } from '~/lib/user/useUserAccount';
@@ -8,6 +8,7 @@ import SftmxWithdrawalRequestsHeader from './SftmxWithdrawalRequestsHeader';
 import SftmxWithdrawalRequestsRow from './SftmxWithdrawalRequestsRow';
 import { useSftmxGetStakingData } from './useSftmxGetStakingData';
 import { orderBy } from 'lodash';
+import { InfoButton } from '~/components/info-button/InfoButton';
 
 export default function SftmxWithdrawTab() {
     const { isConnected } = useUserAccount();
@@ -25,7 +26,10 @@ export default function SftmxWithdrawTab() {
             )}
             {isConnected && requests && stakingData && (
                 <VStack spacing="4" p="4" align="flex-start" h="full">
-                    <Heading size="md">Withdrawal requests</Heading>
+                    <HStack>
+                        <Heading size="md">Withdrawal requests</Heading>
+                        <InfoButton infoText="If you have just unstaked FTM it can take up to 5 minutes before your request is visible here." />
+                    </HStack>
                     <PaginatedTable
                         isInfinite
                         isShort
