@@ -11,6 +11,7 @@ import { formatFixed } from '@ethersproject/bignumber';
 import { SftmxUnstakeButton } from './SftmxUnstakeButton';
 import { useSftmxGetFtmxAmountForFtm } from './useSftmxGetFtmxAmountForFtm';
 import { InfoButton } from '~/components/info-button/InfoButton';
+import numeral from 'numeral';
 
 export default function SftmxUnstakeTab() {
     const [amount, setAmount] = useState('');
@@ -59,7 +60,10 @@ export default function SftmxUnstakeTab() {
                 <HStack w="full" justifyContent="space-between">
                     <InfoButton label="Penalty" infoText="explainer text" />
                     <Text>
-                        {penaltyData && !isLoadingPenaltyData ? formatFixed(penaltyData.amountPenalty, 18) : '-'}%
+                        {penaltyData && !isLoadingPenaltyData
+                            ? numeral(formatFixed(penaltyData.amountPenalty, 18)).format('0.000000')
+                            : '-'}
+                        %
                     </Text>
                 </HStack>
                 <Spacer />
