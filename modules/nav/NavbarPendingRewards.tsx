@@ -27,7 +27,7 @@ import { useReliquaryPendingRewards } from '../reliquary/lib/useReliquaryPending
 import { sumBy } from 'lodash';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 import { useGaugeClaimGetContractCallData } from './lib/useGaugeClaimGetContractCallData';
-import { useUserGaugeClaimAllOtherPendingRewards } from './lib/useUserGaugeClaimAllOtherPendingRewards';
+import { useUserGaugeClaimAllPendingRewards } from './lib/useUserGaugeClaimAllPendingRewards';
 import { useHasMinterApproval } from '~/lib/util/useHasMinterApproval';
 import { BeetsMinterApprovalButton } from '~/components/button/BeetsMinterApprovalButton';
 
@@ -63,7 +63,7 @@ export function NavbarPendingRewards() {
         pendingBALUSD > 0.01,
         gauges || [],
     );
-    const { claimAll } = useUserGaugeClaimAllOtherPendingRewards();
+    const { claimAll } = useUserGaugeClaimAllPendingRewards();
 
     return (
         <Popover>

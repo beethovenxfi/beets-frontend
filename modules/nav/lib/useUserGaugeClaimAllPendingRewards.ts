@@ -1,6 +1,6 @@
 import { batchRelayerContractConfig, useSubmitTransaction } from '~/lib/util/useSubmitTransaction';
 
-export function useUserGaugeClaimAllOtherPendingRewards() {
+export function useUserGaugeClaimAllPendingRewards() {
     const { submit, submitAsync, ...rest } = useSubmitTransaction({
         config: batchRelayerContractConfig,
         transactionType: 'HARVEST',
@@ -9,7 +9,7 @@ export function useUserGaugeClaimAllOtherPendingRewards() {
     function claimAll(contractCalls: string[]) {
         return submit({
             args: [contractCalls],
-            toastText: 'Claim all other rewards',
+            toastText: 'Claim all pool rewards',
         });
     }
 
