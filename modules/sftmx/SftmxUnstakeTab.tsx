@@ -53,6 +53,10 @@ export default function SftmxUnstakeTab() {
                     <Text>{isLoadingSftmxAmountData ? '-' : tokenFormatAmount(exchangeRateFtm)} FTM</Text>
                 </HStack>
                 <HStack w="full" justifyContent="space-between">
+                    <Text>1 FTM is</Text>
+                    <Text>{isLoadingSftmxAmountData ? '-' : tokenFormatAmount(1 / exchangeRateFtm)} sFTMX</Text>
+                </HStack>
+                <HStack w="full" justifyContent="space-between">
                     <InfoButton label="Penalty" infoText="explainer text" />
                     <Text>
                         {penaltyData && !isLoadingPenaltyData ? formatFixed(penaltyData.amountPenalty, 18) : '-'}%

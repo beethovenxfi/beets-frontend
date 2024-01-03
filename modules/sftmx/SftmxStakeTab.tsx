@@ -51,6 +51,10 @@ export default function SftmxStakeTab() {
                     <Text>1 FTM is</Text>
                     <Text>{isLoadingSftmxAmountData ? '-' : tokenFormatAmount(exchangeRateFtm)} sFTMX</Text>
                 </HStack>
+                <HStack w="full" justifyContent="space-between">
+                    <Text>1 sFTMX is</Text>
+                    <Text>{isLoadingSftmxAmountData ? '-' : tokenFormatAmount(1 / exchangeRateFtm)} FTM</Text>
+                </HStack>
                 <Spacer />
                 <Box w="full">
                     {!isConnected && <WalletConnectButton width="full" size="lg" />}
