@@ -24,7 +24,7 @@ export default function SftmxStakeTab() {
         }
     }, [isLoadingSftmxAmountData, sftmxAmountData]);
 
-    const exchangeRateFtm = 1 / parseFloat(sftmxAmount);
+    const exchangeRateFtm = parseFloat(sftmxAmount);
 
     const isBelowMin =
         sftmxStakingData && parseFloat(amount) < parseFloat(sftmxStakingData.sftmxGetStakingData.minDepositLimit);
