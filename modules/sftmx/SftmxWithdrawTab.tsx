@@ -7,13 +7,14 @@ import { PaginatedTable } from '~/components/table/PaginatedTable';
 import SftmxWithdrawalRequestsHeader from './SftmxWithdrawalRequestsHeader';
 import SftmxWithdrawalRequestsRow from './SftmxWithdrawalRequestsRow';
 import { useSftmxGetStakingData } from './useSftmxGetStakingData';
+import { orderBy } from 'lodash';
 
 export default function SftmxWithdrawTab() {
     const { isConnected } = useUserAccount();
     const { data: requestsData, loading: isLoading } = useSftmxGetWithdrawalRequests();
     const { data: stakingData } = useSftmxGetStakingData();
 
-    const requests = requestsData?.sftmxGetWithdrawalRequests;
+    const requests = orderBy(requestsData?.sftmxGetWithdrawalRequests, 'requestTimestamp', 'desc');
 
     return (
         <Card shadow="lg" h="full">
