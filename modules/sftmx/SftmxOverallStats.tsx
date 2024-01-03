@@ -18,15 +18,10 @@ function TokenInfo({ amount }: { amount: string }) {
             <HStack justifyContent="space-between" width="full">
                 <HStack>
                     <TokenAvatar width="40px" height="40px" maxWidth="40px" maxHeight="40px" address={token.address} />
-                    <Box>
-                        {token.name}
-                        <HStack spacing="1">
-                            <Text fontWeight="bold">{token?.symbol}</Text>
-                            <Link href={etherscanGetTokenUrl(token.address)} target="_blank" ml="1.5">
-                                <ExternalLink size={14} />
-                            </Link>
-                        </HStack>
-                    </Box>
+                    <VStack spacing="0" align="flex-start">
+                        <Text>{token.name}</Text>
+                        <Text fontWeight="bold">{token?.symbol}</Text>
+                    </VStack>
                 </HStack>
                 <VStack alignItems="flex-end" spacing="0">
                     <Text>{tokenFormatAmountPrecise(amount, 1)}</Text>
