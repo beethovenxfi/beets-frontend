@@ -4,8 +4,11 @@ import SftmxStakeTab from './SftmxStakeTab';
 import SftmxUnstakeTab from './SftmxUnstakeTab';
 import SftmxOverallStats from './SftmxOverallStats';
 import SftmxWithdrawTab from './SftmxWithdrawTab';
+import { useSftmxGetWithdrawalRequests } from './useSftmxGetWithdrawalRequests';
 
 export default function SftmxLanding() {
+    const { startPolling, stopPolling } = useSftmxGetWithdrawalRequests();
+
     return (
         <VStack spacing="4" w="full" align="center">
             <Grid
@@ -14,7 +17,20 @@ export default function SftmxLanding() {
                 w={{ base: 'full', lg: '75%' }}
                 minH="550px"
             >
-                <Tabs variant="soft-rounded" display="flex" flexDirection="column" isLazy>
+                <Tabs
+                    variant="soft-rounded"
+                    display="flex"
+                    flexDirection="column"
+                    isLazy
+                    onChange={(index: number) => {
+                        // start polling for withdrawal requests when Withdraw tab is active, else stop polling again
+                        if (index === 2) {
+                            startPolling(180000);
+                        } else {
+                            stopPolling();
+                        }
+                    }}
+                >
                     <TabList>
                         <Grid templateColumns="1fr 1fr 1fr" gap="4" w="full">
                             <BeetsTab key="stake">Stake</BeetsTab>
