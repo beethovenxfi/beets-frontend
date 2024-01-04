@@ -286,11 +286,12 @@ export const optimismNetworkConfig: NetworkConfig = {
         '0xacfe9b4782910a853b68abba60f3fd8049ffe6380000000000000000000000ff': 'https://app.aura.finance/#/10/pool/9', // Sonata for Two: DOLA & USDC
         '0x9da11ff60bfc5af527f58fd61679c3ac98d040d9000000000000000000000100': 'https://app.aura.finance/#/10/pool/10', // Native Stable Beets
         '0x004700ba0a4f5f22e1e78a277fca55e36f47e09c000000000000000000000104': 'https://app.aura.finance/#/10/pool/13', // Ankr's Galactic Harmony
-        '0x00b82bc5edea6e5e6c77635e31a1a25aad99f881000200000000000000000105': 'https://app.aura.finance/#/10/pool/11', // Overnight Opening Ensemble
+        // '0x00b82bc5edea6e5e6c77635e31a1a25aad99f881000200000000000000000105': 'https://app.aura.finance/#/10/pool/11', // Overnight Opening Ensemble
         '0x5f8893506ddc4c271837187d14a9c87964a074dc000000000000000000000106': 'https://app.aura.finance/#/10/pool/14', // Ethereum Triplets
         '0xc1f46ce83439886f0ea9c21512b36e7e67239d2c000200000000000000000108': 'https://app.aura.finance/#/10/pool/15', // Roast Beets
-        '0x0244b0025264dc5f5c113d472d579c9c994a59ce0002000000000000000000c9': 'https://app.aura.finance/#/10/pool/16', // A Night at the OPara
+        // '0x0244b0025264dc5f5c113d472d579c9c994a59ce0002000000000000000000c9': 'https://app.aura.finance/#/10/pool/16', // A Night at the OPara
         '0x478980c67d53cd990f2b7bab311ddc9934324e7b00020000000000000000010c': 'https://app.aura.finance/#/10/pool/17', // All Roads Lead to Frax
+        '0xa71021492a3966eec735ed1b505afa097c7cfe6f00000000000000000000010d': 'https://app.aura.finance/#/10/pool/18', // Fraximalist Ethereum
     },
     investDisabled: {
         '0x1f131ec1175f023ee1534b16fa8ab237c00e238100000000000000000000004a': true,
