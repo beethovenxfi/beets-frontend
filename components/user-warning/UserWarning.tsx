@@ -22,14 +22,6 @@ export function UserWarning() {
                             You are invested in a pool with a known vulnerability. Please remove liquidity from the
                             affected pool(s) immediately.
                         </Box>
-                        <Link
-                            href="https://x.com/beethoven_x/status/1694015080717787244"
-                            target="_blank"
-                            textDecoration="underline"
-                            color="inherit"
-                        >
-                            Read more
-                        </Link>
                     </HStack>
                 ),
             });
