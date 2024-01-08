@@ -125,7 +125,7 @@ export const fantomNetworkConfig: NetworkConfig = {
         },
         {
             title: 'Discord',
-            url: 'https://discord.gg/beethovenx',
+            url: 'https://discord.gg/kbPnYJjvwZ',
         },
         {
             title: 'Olympus Bonds',
