@@ -132,7 +132,7 @@ export const optimismNetworkConfig: NetworkConfig = {
         },
         {
             title: 'Discord',
-            url: 'https://discord.gg/beethovenx',
+            url: 'https://op.beets.fi/discord',
         },
         {
             title: 'Olympus Bonds',
