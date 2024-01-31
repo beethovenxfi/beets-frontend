@@ -33,6 +33,7 @@ export function PoolUserStakedStats({ poolAddress, staking, totalApr, userPoolBa
         pendingRewards,
         pendingRewardsTotalUSD,
         hasPendingBalRewards,
+        hasPendingNonBALRewards,
         hardRefetch: refetchPendingRewards,
         isLoading: isLoadingPendingRewards,
     } = usePoolUserPendingRewards();
@@ -192,7 +193,7 @@ export function PoolUserStakedStats({ poolAddress, staking, totalApr, userPoolBa
                                     buttonText="Approve BAL minting"
                                 />
                             )}
-                            {hasMinterApproval && hasBatchRelayerApproval && (
+                            {(hasPendingNonBALRewards || hasMinterApproval) && hasBatchRelayerApproval && (
                                 <BeetsSubmitTransactionButton
                                     {...harvestQuery}
                                     isDisabled={pendingRewardsTotalUSD < 0.01}
