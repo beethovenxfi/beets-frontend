@@ -30,6 +30,8 @@ import { useGaugeClaimGetContractCallData } from './lib/useGaugeClaimGetContract
 import { useUserGaugeClaimAllPendingRewards } from './lib/useUserGaugeClaimAllPendingRewards';
 import { useHasMinterApproval } from '~/lib/util/useHasMinterApproval';
 import { BeetsMinterApprovalButton } from '~/components/button/BeetsMinterApprovalButton';
+import { useHasBatchRelayerApproval } from '~/lib/util/useHasBatchRelayerApproval';
+import { BeetsBatchRelayerApprovalButton } from '~/components/button/BeetsBatchRelayerApprovalButton';
 
 export function NavbarPendingRewards() {
     const {
@@ -43,8 +45,18 @@ export function NavbarPendingRewards() {
     } = useUserPendingRewards();
     const { stakedValueUSD, loading: isLoadingUserData } = useUserData();
     const { priceForAmount, getToken } = useGetTokens();
-    const { data: hasMinterApproval, isLoading: isLoadingHasMinterApproval, refetch } = useHasMinterApproval();
-    const isLoading = isLoadingPendingRewards || isLoadingUserData || isLoadingHasMinterApproval;
+    const {
+        data: hasMinterApproval,
+        isLoading: isLoadingHasMinterApproval,
+        refetch: refetchMinterApproval,
+    } = useHasMinterApproval();
+    const {
+        data: hasBatchRelayerApproval,
+        isLoading: isLoadingBatchRelayerApproval,
+        refetch: refetchBatchRelayerApproval,
+    } = useHasBatchRelayerApproval();
+    const isLoading =
+        isLoadingPendingRewards || isLoadingUserData || isLoadingHasMinterApproval || isLoadingBatchRelayerApproval;
     const { harvestAll, ...harvestQuery } = useUserHarvestAllPendingRewards();
     const farmIds = staking.map((stake) => stake?.farm?.id || '');
     const isMasterChefOrFreshBeets = stakingType === 'MASTER_CHEF' || stakingType === 'FRESH_BEETS';
@@ -159,15 +171,23 @@ export function NavbarPendingRewards() {
                                     </Box>
                                 ) : (
                                     <Box mt="4" justifySelf="flex-end">
-                                        {!hasMinterApproval && (
+                                        {!hasBatchRelayerApproval && (
+                                            <BeetsBatchRelayerApprovalButton
+                                                onConfirmed={() => {
+                                                    refetchBatchRelayerApproval();
+                                                }}
+                                                buttonText="Approve batch relayer for claiming"
+                                            />
+                                        )}
+                                        {!hasMinterApproval && hasBatchRelayerApproval && (
                                             <BeetsMinterApprovalButton
                                                 onConfirmed={() => {
-                                                    refetch();
+                                                    refetchMinterApproval();
                                                 }}
                                                 buttonText="Approve BAL minting"
                                             />
                                         )}
-                                        {hasMinterApproval && (
+                                        {hasMinterApproval && hasBatchRelayerApproval && (
                                             <BeetsSubmitTransactionButton
                                                 {...harvestQuery}
                                                 isDisabled={pendingRewardsTotalUSD < 0.01 && pendingBALUSD < 0.01}
