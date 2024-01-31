@@ -30,8 +30,6 @@ import { useGaugeClaimGetContractCallData } from './lib/useGaugeClaimGetContract
 import { useUserGaugeClaimAllPendingRewards } from './lib/useUserGaugeClaimAllPendingRewards';
 import { useHasMinterApproval } from '~/lib/util/useHasMinterApproval';
 import { BeetsMinterApprovalButton } from '~/components/button/BeetsMinterApprovalButton';
-import { useHasBatchRelayerApproval } from '~/lib/util/useHasBatchRelayerApproval';
-import { BeetsBatchRelayerApprovalButton } from '~/components/button/BeetsBatchRelayerApprovalButton';
 
 export function NavbarPendingRewards() {
     const {
@@ -50,13 +48,7 @@ export function NavbarPendingRewards() {
         isLoading: isLoadingHasMinterApproval,
         refetch: refetchMinterApproval,
     } = useHasMinterApproval();
-    const {
-        data: hasBatchRelayerApproval,
-        isLoading: isLoadingBatchRelayerApproval,
-        refetch: refetchBatchRelayerApproval,
-    } = useHasBatchRelayerApproval();
-    const isLoading =
-        isLoadingPendingRewards || isLoadingUserData || isLoadingHasMinterApproval || isLoadingBatchRelayerApproval;
+    const isLoading = isLoadingPendingRewards || isLoadingUserData || isLoadingHasMinterApproval;
     const { harvestAll, ...harvestQuery } = useUserHarvestAllPendingRewards();
     const farmIds = staking.map((stake) => stake?.farm?.id || '');
     const isMasterChefOrFreshBeets = stakingType === 'MASTER_CHEF' || stakingType === 'FRESH_BEETS';
@@ -171,15 +163,7 @@ export function NavbarPendingRewards() {
                                     </Box>
                                 ) : (
                                     <Box mt="4" justifySelf="flex-end">
-                                        {!hasBatchRelayerApproval && (
-                                            <BeetsBatchRelayerApprovalButton
-                                                onConfirmed={() => {
-                                                    refetchBatchRelayerApproval();
-                                                }}
-                                                buttonText="Approve batch relayer for claiming"
-                                            />
-                                        )}
-                                        {!hasMinterApproval && hasBatchRelayerApproval && (
+                                        {!hasMinterApproval && (
                                             <BeetsMinterApprovalButton
                                                 onConfirmed={() => {
                                                     refetchMinterApproval();
@@ -187,7 +171,7 @@ export function NavbarPendingRewards() {
                                                 buttonText="Approve BAL minting"
                                             />
                                         )}
-                                        {hasMinterApproval && hasBatchRelayerApproval && (
+                                        {hasMinterApproval && (
                                             <BeetsSubmitTransactionButton
                                                 {...harvestQuery}
                                                 isDisabled={pendingRewardsTotalUSD < 0.01 && pendingBALUSD < 0.01}
