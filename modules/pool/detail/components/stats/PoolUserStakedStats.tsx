@@ -15,9 +15,7 @@ import { CardRow } from '~/components/card/CardRow';
 import { networkConfig } from '~/lib/config/network-config';
 import { InfoButton } from '~/components/info-button/InfoButton';
 import { usePoolGaugeClaimRewardsGetContractCallData } from '~/modules/pool/lib/usePoolGaugeClaimRewardsGetContractCallData';
-import { BeetsBatchRelayerApprovalButton } from '~/components/button/BeetsBatchRelayerApprovalButton';
 import { BeetsMinterApprovalButton } from '~/components/button/BeetsMinterApprovalButton';
-import { useHasBatchRelayerApproval } from '~/lib/util/useHasBatchRelayerApproval';
 import { useHasMinterApproval } from '~/lib/util/useHasMinterApproval';
 
 interface Props {
@@ -46,22 +44,14 @@ export function PoolUserStakedStats({ poolAddress, staking, totalApr, userPoolBa
     const dailyYieldUSD = userPoolBalanceUSD * dailyYield;
     const beetsPerDay = parseFloat(staking.farm?.beetsPerBlock || '0') * (blocksData?.blocksPerDay || 0) * userShare;
     const { data: contractCalls } = usePoolGaugeClaimRewardsGetContractCallData();
+
     const {
         data: hasMinterApproval,
         isLoading: isLoadingHasMinterApproval,
         refetch: refetchMinterApproval,
     } = useHasMinterApproval();
-    const {
-        data: hasBatchRelayerApproval,
-        isLoading: isLoadingBatchRelayerApproval,
-        refetch: refetchBatchRelayerApproval,
-    } = useHasBatchRelayerApproval();
 
-    const isLoadingStake =
-        isLoadingTotalStakedBalance ||
-        isLoadingUserBptBalance ||
-        isLoadingHasMinterApproval ||
-        isLoadingBatchRelayerApproval;
+    const isLoadingStake = isLoadingTotalStakedBalance || isLoadingUserBptBalance || isLoadingHasMinterApproval;
 
     return (
         <>
@@ -177,15 +167,7 @@ export function PoolUserStakedStats({ poolAddress, staking, totalApr, userPoolBa
                 <Box width="full">
                     {contractCalls ? (
                         <>
-                            {!hasBatchRelayerApproval && (
-                                <BeetsBatchRelayerApprovalButton
-                                    onConfirmed={() => {
-                                        refetchBatchRelayerApproval();
-                                    }}
-                                    buttonText="Approve batch relayer to claim"
-                                />
-                            )}
-                            {hasPendingBalRewards && !hasMinterApproval && hasBatchRelayerApproval && (
+                            {hasPendingBalRewards && !hasMinterApproval && (
                                 <BeetsMinterApprovalButton
                                     onConfirmed={() => {
                                         refetchMinterApproval();
@@ -193,7 +175,7 @@ export function PoolUserStakedStats({ poolAddress, staking, totalApr, userPoolBa
                                     buttonText="Approve BAL minting"
                                 />
                             )}
-                            {(hasPendingNonBALRewards || hasMinterApproval) && hasBatchRelayerApproval && (
+                            {(hasPendingNonBALRewards || hasMinterApproval) && (
                                 <BeetsSubmitTransactionButton
                                     {...harvestQuery}
                                     isDisabled={pendingRewardsTotalUSD < 0.01}
