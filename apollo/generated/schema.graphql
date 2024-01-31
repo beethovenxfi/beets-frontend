@@ -52,12 +52,8 @@ enum GqlContentNewsItemSource {
 }
 
 type GqlCowSwapApiResponse {
-    marketSp: String!
     returnAmount: String!
-    returnAmountConsideringFees: String!
-    returnAmountFromSwaps: String!
     swapAmount: String!
-    swapAmountForSwaps: String!
     swaps: [GqlSwap!]!
     tokenAddresses: [String!]!
     tokenIn: String!
@@ -908,9 +904,7 @@ type GqlProtocolMetricsAggregated {
     chains: [GqlProtocolMetricsChain!]!
     numLiquidityProviders: BigInt!
     poolCount: BigInt!
-    swapFee7d: BigDecimal!
     swapFee24h: BigDecimal!
-    swapVolume7d: BigDecimal!
     swapVolume24h: BigDecimal!
     totalLiquidity: BigDecimal!
     totalSwapFee: BigDecimal!
@@ -922,9 +916,7 @@ type GqlProtocolMetricsChain {
     chainId: String!
     numLiquidityProviders: BigInt!
     poolCount: BigInt!
-    swapFee7d: BigDecimal!
     swapFee24h: BigDecimal!
-    swapVolume7d: BigDecimal!
     swapVolume24h: BigDecimal!
     totalLiquidity: BigDecimal!
     totalSwapFee: BigDecimal!
@@ -1223,7 +1215,6 @@ The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://
 scalar JSON
 
 type Mutation {
-    balancerMutationTest: String!
     beetsPoolLoadReliquarySnapshotsForAllFarms: String!
     beetsSyncFbeetsRatio: String!
     cacheAverageBlockTime: String!
@@ -1263,6 +1254,7 @@ type Mutation {
     tokenInitChartData(tokenAddress: String!): String!
     tokenReloadAllTokenTypes: String!
     tokenReloadTokenPrices: Boolean
+    tokenSyncLatestFxPrices(chain: GqlChain!): String!
     tokenSyncTokenDefinitions: String!
     tokenSyncTokenDynamicData: String!
     userInitStakedBalances(stakingTypes: [GqlPoolStakingType!]!): String!

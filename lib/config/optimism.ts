@@ -61,7 +61,7 @@ export const optimismNetworkConfig: NetworkConfig = {
     },
     balancer: {
         vault: '0xba12222222228d8ba445958a75a0704d566bf2c8',
-        batchRelayer: '0x03f1ab8b19bce21eb06c364aec9e40322572a1e9',
+        batchRelayer: '0x015aca20a1422f3c729086c17f15f10e0cfbc75a',
         balToken: '0xfe8b128ba8c78aabc59d4c64cee7ff28e9379921',
         weightedPoolFactory: '0x230a59F4d9ADc147480f03B0D3fFfeCd56c3289a',
         linearFactories: {

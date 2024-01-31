@@ -65,12 +65,8 @@ export type GqlContentNewsItemSource = 'discord' | 'medium' | 'twitter';
 
 export interface GqlCowSwapApiResponse {
     __typename: 'GqlCowSwapApiResponse';
-    marketSp: Scalars['String'];
     returnAmount: Scalars['String'];
-    returnAmountConsideringFees: Scalars['String'];
-    returnAmountFromSwaps: Scalars['String'];
     swapAmount: Scalars['String'];
-    swapAmountForSwaps: Scalars['String'];
     swaps: Array<GqlSwap>;
     tokenAddresses: Array<Scalars['String']>;
     tokenIn: Scalars['String'];
@@ -937,9 +933,7 @@ export interface GqlProtocolMetricsAggregated {
     chains: Array<GqlProtocolMetricsChain>;
     numLiquidityProviders: Scalars['BigInt'];
     poolCount: Scalars['BigInt'];
-    swapFee7d: Scalars['BigDecimal'];
     swapFee24h: Scalars['BigDecimal'];
-    swapVolume7d: Scalars['BigDecimal'];
     swapVolume24h: Scalars['BigDecimal'];
     totalLiquidity: Scalars['BigDecimal'];
     totalSwapFee: Scalars['BigDecimal'];
@@ -952,9 +946,7 @@ export interface GqlProtocolMetricsChain {
     chainId: Scalars['String'];
     numLiquidityProviders: Scalars['BigInt'];
     poolCount: Scalars['BigInt'];
-    swapFee7d: Scalars['BigDecimal'];
     swapFee24h: Scalars['BigDecimal'];
-    swapVolume7d: Scalars['BigDecimal'];
     swapVolume24h: Scalars['BigDecimal'];
     totalLiquidity: Scalars['BigDecimal'];
     totalSwapFee: Scalars['BigDecimal'];
@@ -1261,7 +1253,6 @@ export interface GqlVotingPool {
 
 export interface Mutation {
     __typename: 'Mutation';
-    balancerMutationTest: Scalars['String'];
     beetsPoolLoadReliquarySnapshotsForAllFarms: Scalars['String'];
     beetsSyncFbeetsRatio: Scalars['String'];
     cacheAverageBlockTime: Scalars['String'];
@@ -1301,6 +1292,7 @@ export interface Mutation {
     tokenInitChartData: Scalars['String'];
     tokenReloadAllTokenTypes: Scalars['String'];
     tokenReloadTokenPrices?: Maybe<Scalars['Boolean']>;
+    tokenSyncLatestFxPrices: Scalars['String'];
     tokenSyncTokenDefinitions: Scalars['String'];
     tokenSyncTokenDynamicData: Scalars['String'];
     userInitStakedBalances: Scalars['String'];
@@ -1368,6 +1360,10 @@ export interface MutationTokenDeleteTokenTypeArgs {
 
 export interface MutationTokenInitChartDataArgs {
     tokenAddress: Scalars['String'];
+}
+
+export interface MutationTokenSyncLatestFxPricesArgs {
+    chain: GqlChain;
 }
 
 export interface MutationUserInitStakedBalancesArgs {
@@ -1869,9 +1865,9 @@ export type GetUserDataQuery = {
     staking: Array<{
         __typename: 'GqlPoolStaking';
         id: string;
+        chain: GqlChain;
         type: GqlPoolStakingType;
         address: string;
-        chain: GqlChain;
         farm?: {
             __typename: 'GqlPoolStakingMasterChefFarm';
             id: string;
@@ -6413,6 +6409,7 @@ export const GetUserDataDocument = gql`
         }
         staking: userGetStaking {
             id
+            chain
             type
             address
             chain
