@@ -35,6 +35,7 @@ export function NavbarPendingRewards() {
     const {
         pendingRewards,
         pendingRewardsTotalUSD,
+        pendingRewardsNonBALTotalUSD,
         staking,
         stakingType,
         isLoading: isLoadingPendingRewards,
@@ -63,7 +64,7 @@ export function NavbarPendingRewards() {
     const totalPendingRewardsUSD = pendingRewardsTotalUSD + pendingReliquaryRewardsTotalUSD;
 
     const { data: contractCalls } = useGaugeClaimGetContractCallData(
-        totalPendingRewardsUSD > 0.01,
+        pendingRewardsNonBALTotalUSD > 0.01,
         pendingBALUSD > 0.01,
         gauges || [],
     );
@@ -174,7 +175,7 @@ export function NavbarPendingRewards() {
                                         {hasMinterApproval && (
                                             <BeetsSubmitTransactionButton
                                                 {...harvestQuery}
-                                                isDisabled={pendingRewardsTotalUSD < 0.01 && pendingBALUSD < 0.01}
+                                                isDisabled={pendingRewardsNonBALTotalUSD < 0.01 && pendingBALUSD < 0.01}
                                                 onClick={() => {
                                                     if (contractCalls) {
                                                         claimAll(contractCalls);
