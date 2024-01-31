@@ -78,6 +78,16 @@ export function PoolUnstakeModal({ isOpen, onOpen, onClose }: Props) {
     useEffect(() => {
         if (!isLoading) {
             setSteps([
+                ...(!hasBatchRelayerApproval && !isLoadingBatchRelayerApproval
+                    ? [
+                          {
+                              id: 'batch-relayer',
+                              type: 'other' as const,
+                              buttonText: 'Approve batch relayer for unstaking',
+                              tooltipText: 'Unstaking requires you to approve the batch relayer.',
+                          },
+                      ]
+                    : []),
                 ...(!hasMinterApproval
                     ? [
                           {
