@@ -50,7 +50,7 @@ export default function SftmxLanding() {
                         </TabPanel>
                     </TabPanels>
                 </Tabs>
-                <Box w="66%" h="full">
+                <Box w={{ base: '100%', lg: '66%' }} h="full">
                     <SftmxOverallStats />
                 </Box>
             </Grid>
