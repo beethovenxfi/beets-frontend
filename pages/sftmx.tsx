@@ -13,7 +13,7 @@ function Stake() {
     const { chainId, sftmxEnabled } = useNetworkConfig();
 
     const TITLE = 'Beethoven X | Stake FTM';
-    const DESCRIPTION = 'Text';
+    const DESCRIPTION = 'Flexible. Secure. Aligned. Earn native rewards with liquid staking on Fantom.';
 
     return (
         <>
