@@ -1,4 +1,5 @@
 import { NetworkConfig, PoolDetailWarning } from '~/lib/config/network-config-type';
+import { AddressZero } from '@ethersproject/constants';
 
 // warnings
 const poolListWarningString =
@@ -58,6 +59,11 @@ export const optimismNetworkConfig: NetworkConfig = {
             farmId: 0,
             maxLevel: 0,
         },
+    },
+    snapshot: {
+        contractAddress: AddressZero,
+        delegateAddress: AddressZero,
+        id: '0x0000000000000000000000000000000000000000000000000000000000000000',
     },
     balancer: {
         vault: '0xba12222222228d8ba445958a75a0704d566bf2c8',

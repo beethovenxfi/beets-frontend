@@ -61,6 +61,11 @@ export const fantomNetworkConfig: NetworkConfig = {
             maxLevel: 10,
         },
     },
+    snapshot: {
+        contractAddress: '0x469788fe6e9e9681c6ebf3bf78e7fd26fc015446',
+        delegateAddress: '0x8e7bd7b79d7ea77012a072152794eb130f8a80f2', // TODO: replace with MD address
+        id: '0x62656574732e6574680000000000000000000000000000000000000000000000', // BeethovenX Snapshot id
+    },
     balancer: {
         vault: '0x20dd72Ed959b6147912C2e529F0a0C651c33c9ce',
         batchRelayer: '0x0faa25293a36241c214f3760c6ff443e1b731981',
