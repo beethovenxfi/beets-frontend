@@ -63,7 +63,7 @@ export const fantomNetworkConfig: NetworkConfig = {
     },
     snapshot: {
         contractAddress: '0x469788fe6e9e9681c6ebf3bf78e7fd26fc015446',
-        delegateAddress: '0x8e7bd7b79d7ea77012a072152794eb130f8a80f2', // TODO: replace with MD address
+        delegateAddress: '0x641e10cd6132d3e3fa01bfd65d2e0afcf64b136a', // MD delegator address
         id: '0x62656574732e6574680000000000000000000000000000000000000000000000', // BeethovenX Snapshot id
     },
     balancer: {
