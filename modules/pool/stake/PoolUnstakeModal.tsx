@@ -34,6 +34,7 @@ import { useUserSyncBalanceMutation } from '~/apollo/generated/graphql-codegen-g
 import { useGaugeUnstakeGetContractCallData } from './lib/useGaugeUnstakeGetContractCallData';
 import { useHasMinterApproval } from '~/lib/util/useHasMinterApproval';
 import { useHasBatchRelayerApproval } from '~/lib/util/useHasBatchRelayerApproval';
+import { usePoolUserPendingRewards } from '../lib/usePoolUserPendingRewards';
 
 interface Props {
     isOpen: boolean;
@@ -69,6 +70,8 @@ export function PoolUnstakeModal({ isOpen, onOpen, onClose }: Props) {
         oldBnumToBnum(oldBnum(oldBnumScaleAmount(userStakedBptBalance).times(percent).div(100).toFixed(0))),
     );
 
+    const { hasPendingBalRewards } = usePoolUserPendingRewards();
+
     useEffect(() => {
         if (isOpen && userStakedBptBalance) {
             setPercent(100);
@@ -88,7 +91,7 @@ export function PoolUnstakeModal({ isOpen, onOpen, onClose }: Props) {
                           },
                       ]
                     : []),
-                ...(!hasMinterApproval
+                ...(hasPendingBalRewards && !hasMinterApproval
                     ? [
                           {
                               id: 'minter',
