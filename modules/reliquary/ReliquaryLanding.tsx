@@ -35,6 +35,9 @@ import Compose, { ProviderWithProps } from '~/components/providers/Compose';
 import useReliquary from './lib/useReliquary';
 import BeetsTooltip from '~/components/tooltip/BeetsTooltip';
 import numeral from 'numeral';
+import DelegateSetButton from './components/DelegateSetButton';
+import DelegateClearButton from './components/DelegateClearButton';
+import { useDelegation } from './lib/useDelegation';
 
 const infoButtonLabelProps = {
     lineHeight: '1rem',
@@ -69,6 +72,7 @@ export default function ReliquaryLanding() {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [buttonEnabled, setButtonEnabled] = useState(true);
     const { totalMaBeetsVP, isLoading } = useReliquary();
+    const { data: isDelegatedToMDs } = useDelegation();
 
     useEffect(() => {
         if (!isConnecting) {
@@ -181,6 +185,14 @@ export default function ReliquaryLanding() {
                                                 )}
                                             </Box>
                                         </VStack>
+                                    </BeetsTooltip>
+                                    <BeetsTooltip
+                                        noImage
+                                        label="Delegate or undelegate your maBEETS VP to the Music Directors. This only affects the delegation for the BeethovenX space on Snapshot."
+                                    >
+                                        <Box height="full">
+                                            {isDelegatedToMDs ? <DelegateClearButton /> : <DelegateSetButton />}
+                                        </Box>
                                     </BeetsTooltip>
                                 </HStack>
                                 <Box width="full">

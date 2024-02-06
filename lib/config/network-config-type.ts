@@ -64,6 +64,11 @@ export interface NetworkConfig {
             maxLevel: number;
         };
     };
+    snapshot: {
+        contractAddress: string;
+        delegateAddress: string;
+        id: string;
+    };
     balancer: {
         vault: string;
         batchRelayer: string;
