@@ -2,7 +2,7 @@ import { HStack, Text } from '@chakra-ui/react';
 import React, { useEffect } from 'react';
 import { BeetsSubmitTransactionButton } from '~/components/button/BeetsSubmitTransactionButton';
 import { ToastType, useToast } from '~/components/toast/BeetsToast';
-import { useDelegateClear } from '../lib/useDelegateClear';
+import { useDelegateSet } from '../lib/useDelegateSet';
 import { useDelegation } from '../lib/useDelegation';
 
 interface Props {
@@ -11,37 +11,38 @@ interface Props {
     w?: string;
 }
 
-export default function DeligateClearButton({ ...rest }: Props) {
-    const { clearDelegate, ...clearDelegateQuery } = useDelegateClear();
+export default function DelegateSetButton({ ...rest }: Props) {
+    // TODO combine into one hook?
+    const { setDelegate, ...setDelegateQuery } = useDelegateSet();
     const { refetch } = useDelegation();
     const { showToast } = useToast();
 
     useEffect(() => {
-        if (clearDelegateQuery.submitError) {
+        if (setDelegateQuery.submitError) {
             showToast({
-                id: 'clearDelegate-error',
+                id: 'setDelegate-error',
                 auto: true,
                 type: ToastType.Error,
                 content: (
                     <HStack>
-                        <Text>{clearDelegateQuery.submitError.message}</Text>
+                        <Text>{setDelegateQuery.submitError.message}</Text>
                     </HStack>
                 ),
             });
         }
-    }, [clearDelegateQuery.submitError]);
+    }, [setDelegateQuery.submitError]);
 
     return (
         <BeetsSubmitTransactionButton
             inline
             submittingText="Confirm..."
             pendingText="Waiting..."
-            onClick={() => clearDelegate()}
+            onClick={() => setDelegate()}
             onConfirmed={() => refetch()}
-            {...clearDelegateQuery}
+            {...setDelegateQuery}
             {...rest}
         >
-            Undelegate to MDs
+            Delegate to MDs
         </BeetsSubmitTransactionButton>
     );
 }

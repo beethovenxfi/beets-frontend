@@ -18,7 +18,7 @@ export class SnapshotService {
     }): Promise<string> {
         const contract = new Contract(this.contractAddress, DelegateRegistryAbi, provider);
         const address = await contract.delegation(userAddress, id);
-        return address.toLowerCase();
+        return address;
     }
 }
 

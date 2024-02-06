@@ -2,9 +2,7 @@ import { HStack, Text } from '@chakra-ui/react';
 import React, { useEffect } from 'react';
 import { BeetsSubmitTransactionButton } from '~/components/button/BeetsSubmitTransactionButton';
 import { ToastType, useToast } from '~/components/toast/BeetsToast';
-import useReliquary from '../lib/useReliquary';
-import { useRelicBurn } from '../lib/useRelicBurn';
-import { useDelegateSet } from '../lib/useDelegateSet';
+import { useDelegateClear } from '../lib/useDelegateClear';
 import { useDelegation } from '../lib/useDelegation';
 
 interface Props {
@@ -13,37 +11,38 @@ interface Props {
     w?: string;
 }
 
-export default function DeligateSetButton({ ...rest }: Props) {
-    const { setDelegate, ...setDelegateQuery } = useDelegateSet();
+export default function DelegateClearButton({ ...rest }: Props) {
+    // TODO combine into one hook?
+    const { clearDelegate, ...clearDelegateQuery } = useDelegateClear();
     const { refetch } = useDelegation();
     const { showToast } = useToast();
 
     useEffect(() => {
-        if (setDelegateQuery.submitError) {
+        if (clearDelegateQuery.submitError) {
             showToast({
-                id: 'setDelegate-error',
+                id: 'clearDelegate-error',
                 auto: true,
                 type: ToastType.Error,
                 content: (
                     <HStack>
-                        <Text>{setDelegateQuery.submitError.message}</Text>
+                        <Text>{clearDelegateQuery.submitError.message}</Text>
                     </HStack>
                 ),
             });
         }
-    }, [setDelegateQuery.submitError]);
+    }, [clearDelegateQuery.submitError]);
 
     return (
         <BeetsSubmitTransactionButton
             inline
             submittingText="Confirm..."
             pendingText="Waiting..."
-            onClick={() => setDelegate()}
+            onClick={() => clearDelegate()}
             onConfirmed={() => refetch()}
-            {...setDelegateQuery}
+            {...clearDelegateQuery}
             {...rest}
         >
-            Delegate to MDs
+            Undelegate to MDs
         </BeetsSubmitTransactionButton>
     );
 }
