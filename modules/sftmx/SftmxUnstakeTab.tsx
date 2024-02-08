@@ -16,6 +16,7 @@ import numeral from 'numeral';
 export default function SftmxUnstakeTab() {
     const [amount, setAmount] = useState('');
     const [sftmxAmount, setSftmxAmount] = useState('');
+    const [sftmxPenaltyAmount, setPenaltySftmxAmount] = useState('');
     const { isConnected } = useUserAccount();
     const { data: sftmxAmountData, isLoading: isLoadingSftmxAmountData } = useSftmxGetFtmxAmountForFtm('1'); // set to 1 FTM to get current rate
     const { data: penaltyData, isLoading: isLoadingPenaltyData } = useSftmxGetCalculatePenalty(amount);
@@ -25,6 +26,12 @@ export default function SftmxUnstakeTab() {
             setSftmxAmount(formatFixed(sftmxAmountData.amountSftmx, 18));
         }
     }, [isLoadingSftmxAmountData, sftmxAmountData]);
+
+    useEffect(() => {
+        if (!isLoadingPenaltyData && penaltyData) {
+            setPenaltySftmxAmount(formatFixed(penaltyData.amountPenalty, 18));
+        }
+    }, [isLoadingPenaltyData, penaltyData]);
 
     const exchangeRateFtm = 1 / parseFloat(sftmxAmount);
 
@@ -43,7 +50,9 @@ export default function SftmxUnstakeTab() {
                     <Text>
                         {`${
                             amount && amount !== '0' && !isLoadingSftmxAmountData
-                                ? tokenFormatAmount(parseFloat(amount) * exchangeRateFtm)
+                                ? tokenFormatAmount(
+                                      parseFloat(amount) * exchangeRateFtm - parseFloat(sftmxPenaltyAmount),
+                                  )
                                 : '--'
                         } FTM`}
                     </Text>
@@ -59,12 +68,7 @@ export default function SftmxUnstakeTab() {
                 </HStack>
                 <HStack w="full" justifyContent="space-between">
                     <InfoButton label="Penalty" infoText="explainer text" />
-                    <Text>
-                        {penaltyData && !isLoadingPenaltyData
-                            ? numeral(formatFixed(penaltyData.amountPenalty, 18)).format('0.000000')
-                            : '-'}
-                        %
-                    </Text>
+                    <Text>{sftmxPenaltyAmount ? numeral(sftmxPenaltyAmount).format('0.00') : '-'} FTM</Text>
                 </HStack>
                 <Spacer />
                 <Alert status="warning" mb="4">
