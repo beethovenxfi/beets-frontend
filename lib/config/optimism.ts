@@ -298,6 +298,8 @@ export const optimismNetworkConfig: NetworkConfig = {
         // '0x0244b0025264dc5f5c113d472d579c9c994a59ce0002000000000000000000c9': 'https://app.aura.finance/#/10/pool/16', // A Night at the OPara
         '0x478980c67d53cd990f2b7bab311ddc9934324e7b00020000000000000000010c': 'https://app.aura.finance/#/10/pool/17', // All Roads Lead to Frax
         '0xa71021492a3966eec735ed1b505afa097c7cfe6f00000000000000000000010d': 'https://app.aura.finance/#/10/pool/18', // Fraximalist Ethereum
+        '0x2feb76966459d7841fa8a7ed0aa4bf574d6111bf00020000000000000000011d': 'https://app.aura.finance/#/10/pool/19', // Yield Concerto by FRAX
+        '0x2a5139cd86c041aa3467e649f5ee0880a5de2f2f00020000000000000000011a': 'https://app.aura.finance/#/10/pool/20', // Staked Duet
     },
     investDisabled: {
         '0x1f131ec1175f023ee1534b16fa8ab237c00e238100000000000000000000004a': true,
