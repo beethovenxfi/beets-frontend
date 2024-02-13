@@ -97,7 +97,7 @@ export function PoolProvider({ pool: poolFromProps, children }: { pool: GqlPoolU
         (pool.__typename === 'GqlPoolWeighted' ||
             pool.__typename === 'GqlPoolStable' ||
             pool.__typename === 'GqlPoolMetaStable' ||
-            (pool.__typename === 'GqlPoolComposableStable' && pool.version === 0)) &&
+            pool.__typename === 'GqlPoolComposableStable') &&
         pool.staking?.type === 'MASTER_CHEF' &&
         !!pool.staking.farm;
     const supportsZapIntoGauge =
