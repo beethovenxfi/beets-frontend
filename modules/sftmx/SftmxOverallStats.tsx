@@ -1,13 +1,12 @@
-import { VStack, HStack, Divider, Text, Heading, Box, Link, StackDivider } from '@chakra-ui/react';
+import { VStack, HStack, Divider, Text, Heading, Box, StackDivider } from '@chakra-ui/react';
 import Card from '~/components/card/Card';
 import { useSftmxGetStakingData } from './useSftmxGetStakingData';
 import numeral from 'numeral';
 import { useGetTokens } from '~/lib/global/useToken';
 import { networkConfig } from '~/lib/config/network-config';
-import { ExternalLink } from 'react-feather';
 import TokenAvatar from '~/components/token/TokenAvatar';
 import { tokenFormatAmountPrecise } from '~/lib/services/token/token-util';
-import { etherscanGetTokenUrl } from '~/lib/util/etherscan';
+import { InfoButton } from '~/components/info-button/InfoButton';
 
 function TokenInfo({ amount }: { amount: string }) {
     const { formattedPrice, getToken } = useGetTokens();
@@ -63,9 +62,17 @@ export default function SftmxOverallStats() {
                             {data && <TokenInfo amount={data?.sftmxGetStakingData.totalFtmAmountStaked} />}
                         </VStack>
                         <VStack w="full" align="flex-start">
-                            <Heading size="sm" mb="2">
-                                Total free
-                            </Heading>
+                            <Box mb="2">
+                                <InfoButton
+                                    labelProps={{
+                                        lineHeight: '1.25rem',
+                                        fontWeight: 'bold',
+                                        fontSize: 'md',
+                                    }}
+                                    label="Total free"
+                                    infoText="The free pool is a dynamic reserve of to-be-staked FTM that allows penalty-free unstaking. The pool is made up of new staking deposits, maturities, and accrued rewards."
+                                />
+                            </Box>
                             {data && <TokenInfo amount={data?.sftmxGetStakingData.totalFtmAmountInPool} />}
                         </VStack>
                         <VStack w="full" align="flex-start">

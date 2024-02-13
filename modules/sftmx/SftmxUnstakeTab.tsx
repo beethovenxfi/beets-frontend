@@ -67,7 +67,10 @@ export default function SftmxUnstakeTab() {
                     <Text>{isLoadingSftmxAmountData ? '-' : tokenFormatAmount(1 / exchangeRateFtm)} sFTMX</Text>
                 </HStack>
                 <HStack w="full" justifyContent="space-between">
-                    <InfoButton label="Penalty" infoText="explainer text" />
+                    <InfoButton
+                        label="Penalty"
+                        infoText="If your unstaking request exceeds what is available in the free pool a penalty will be incurred. This deduction is automatically reflected in the numbers displayed above."
+                    />
                     <Text>{sftmxPenaltyAmount ? numeral(sftmxPenaltyAmount).format('0.00') : '-'} FTM</Text>
                 </HStack>
                 <Spacer />
