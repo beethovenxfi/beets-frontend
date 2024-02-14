@@ -2,7 +2,7 @@ import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 import { useQuery } from 'react-query';
 import { snapshotService } from '~/lib/services/util/snapshot.service';
 import { useUserAccount } from '~/lib/user/useUserAccount';
-import { useProvider } from 'wagmi';
+import { Address, useProvider } from 'wagmi';
 
 export function useDelegation() {
     const { userAddress } = useUserAccount();
@@ -13,7 +13,7 @@ export function useDelegation() {
         ['getDelegation', userAddress],
         async (): Promise<boolean> => {
             const delegationAddress = await snapshotService.getDelegation({
-                userAddress,
+                userAddress: userAddress as Address,
                 provider,
                 id: networkConfig.snapshot.id,
             });

@@ -156,15 +156,17 @@ export function PoolDetailAboutThisPool() {
                             </HStack>
                         </Link>
                     </CardRow>
-                    <CardRow>
-                        <Box flex="1">Pool owner</Box>
-                        <Link href={etherscanGetAddressUrl(pool.owner)} target="_blank">
-                            <HStack spacing="1">
-                                <Box>{addressShortDisplayName(pool.owner)}</Box>
-                                <ExternalLink size={16} />
-                            </HStack>
-                        </Link>
-                    </CardRow>
+                    {pool.owner && (
+                        <CardRow>
+                            <Box flex="1">Pool owner</Box>
+                            <Link href={etherscanGetAddressUrl(pool.owner)} target="_blank">
+                                <HStack spacing="1">
+                                    <Box>{addressShortDisplayName(pool.owner)}</Box>
+                                    <ExternalLink size={16} />
+                                </HStack>
+                            </Link>
+                        </CardRow>
+                    )}
                     {pool.factory && (
                         <CardRow>
                             <Box flex="1">Factory contract</Box>
