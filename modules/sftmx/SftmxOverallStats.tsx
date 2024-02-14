@@ -48,7 +48,7 @@ export default function SftmxOverallStats() {
                     <VStack spacing="2" align="flex-start">
                         <Heading size="sm">Staking APR</Heading>
                         <HStack>
-                            <div className="apr-stripes">4.3%</div>
+                            <div className="apr-stripes">4.36%</div>
                         </HStack>
                     </VStack>
                     <Divider />
