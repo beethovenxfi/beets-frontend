@@ -61,10 +61,9 @@ export class GaugeService {
             calls.push(this.getGaugeEncodeClaimRewardsCallData({ gauges }));
         }
 
-        // TODO: put back in when relayer v6 is released
-        // if (hasPendingBalRewards) {
-        //     calls.push(this.getGaugeEncodeMintCallData({ gauges, outputReference }));
-        // }
+        if (hasPendingBalRewards) {
+            calls.push(this.getGaugeEncodeMintCallData({ gauges, outputReference }));
+        }
 
         return calls;
     }

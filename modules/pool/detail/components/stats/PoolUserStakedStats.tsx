@@ -14,8 +14,9 @@ import { useStakingClaimRewards } from '~/lib/global/useStakingClaimRewards';
 import { CardRow } from '~/components/card/CardRow';
 import { networkConfig } from '~/lib/config/network-config';
 import { InfoButton } from '~/components/info-button/InfoButton';
-import useStakingMintableRewards from '~/lib/global/useStakingMintableRewards';
 import { usePoolGaugeClaimRewardsGetContractCallData } from '~/modules/pool/lib/usePoolGaugeClaimRewardsGetContractCallData';
+import { BeetsMinterApprovalButton } from '~/components/button/BeetsMinterApprovalButton';
+import { useHasMinterApproval } from '~/lib/util/useHasMinterApproval';
 
 interface Props {
     poolAddress: string;
@@ -31,7 +32,6 @@ export function PoolUserStakedStats({ poolAddress, staking, totalApr, userPoolBa
         pendingRewardsTotalUSD,
         hasPendingBalRewards,
         hasPendingNonBALRewards,
-        pendingBALUSD,
         hardRefetch: refetchPendingRewards,
         isLoading: isLoadingPendingRewards,
     } = usePoolUserPendingRewards();
@@ -39,19 +39,19 @@ export function PoolUserStakedStats({ poolAddress, staking, totalApr, userPoolBa
     const { data, isLoading: isLoadingTotalStakedBalance } = useStakingTotalStakedBalance(poolAddress, staking);
     const { userStakedBptBalance, isLoading: isLoadingUserBptBalance } = usePoolUserBptBalance();
     const { refetch: refetchUserTokenBalances } = usePoolUserTokenBalancesInWallet();
-    const isLoadingStake = isLoadingTotalStakedBalance || isLoadingUserBptBalance;
     const userShare = parseFloat(userStakedBptBalance) / parseFloat(data || '1');
     const dailyYield = totalApr / 365;
     const dailyYieldUSD = userPoolBalanceUSD * dailyYield;
     const beetsPerDay = parseFloat(staking.farm?.beetsPerBlock || '0') * (blocksData?.blocksPerDay || 0) * userShare;
-
-    // TODO: remove again when v6 relayer is released
-    const {
-        claim: { claimBAL, ...claimQuery },
-        refetch: refetchClaimableBAL,
-    } = useStakingMintableRewards([staking]);
-    const showClaimBALButton = staking.gauge?.gaugeAddress && staking.gauge.version === 2;
     const { data: contractCalls } = usePoolGaugeClaimRewardsGetContractCallData();
+
+    const {
+        data: hasMinterApproval,
+        isLoading: isLoadingHasMinterApproval,
+        refetch: refetchMinterApproval,
+    } = useHasMinterApproval();
+
+    const isLoadingStake = isLoadingTotalStakedBalance || isLoadingUserBptBalance || isLoadingHasMinterApproval;
 
     return (
         <>
@@ -165,36 +165,43 @@ export function PoolUserStakedStats({ poolAddress, staking, totalApr, userPoolBa
             </CardRow>
             <VStack width="full">
                 <Box width="full">
-                    <BeetsSubmitTransactionButton
-                        {...harvestQuery}
-                        // TODO: switch 'isDisabled' when relayer v6 is released
-                        //isDisabled={pendingRewardsTotalUSD < 0.01}
-                        isDisabled={!hasPendingNonBALRewards}
-                        onClick={() => (contractCalls ? claim(contractCalls) : claim())}
-                        onConfirmed={() => {
-                            refetchPendingRewards();
-                            refetchUserTokenBalances();
-                        }}
-                        width="full"
-                    >
-                        Claim rewards
-                    </BeetsSubmitTransactionButton>
-                </Box>
-                {/* TODO: remove again when v6 relayer is released */}
-                <Box width="full">
-                    {showClaimBALButton && (
+                    {contractCalls ? (
+                        <>
+                            {hasPendingBalRewards && !hasMinterApproval && (
+                                <BeetsMinterApprovalButton
+                                    onConfirmed={() => {
+                                        refetchMinterApproval();
+                                    }}
+                                    buttonText="Approve BAL minting"
+                                />
+                            )}
+                            {(hasPendingNonBALRewards || hasMinterApproval) && (
+                                <BeetsSubmitTransactionButton
+                                    {...harvestQuery}
+                                    isDisabled={pendingRewardsTotalUSD < 0.01}
+                                    onClick={() => claim(contractCalls)}
+                                    onConfirmed={() => {
+                                        refetchPendingRewards();
+                                        refetchUserTokenBalances();
+                                    }}
+                                    width="full"
+                                >
+                                    Claim all rewards
+                                </BeetsSubmitTransactionButton>
+                            )}
+                        </>
+                    ) : (
                         <BeetsSubmitTransactionButton
-                            {...claimQuery}
-                            isDisabled={!hasPendingBalRewards || pendingBALUSD < 0.01}
-                            onClick={() => claimBAL(staking.gauge?.gaugeAddress || '')}
+                            {...harvestQuery}
+                            isDisabled={pendingRewardsTotalUSD < 0.01}
+                            onClick={() => claim()}
                             onConfirmed={() => {
                                 refetchPendingRewards();
                                 refetchUserTokenBalances();
-                                refetchClaimableBAL();
                             }}
                             width="full"
                         >
-                            Claim BAL rewards
+                            Claim rewards
                         </BeetsSubmitTransactionButton>
                     )}
                 </Box>

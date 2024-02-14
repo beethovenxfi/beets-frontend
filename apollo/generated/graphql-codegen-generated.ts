@@ -1898,9 +1898,9 @@ export type GetUserDataQuery = {
     staking: Array<{
         __typename: 'GqlPoolStaking';
         id: string;
+        chain: GqlChain;
         type: GqlPoolStakingType;
         address: string;
-        chain: GqlChain;
         farm?: {
             __typename: 'GqlPoolStakingMasterChefFarm';
             id: string;
@@ -6479,6 +6479,7 @@ export const GetUserDataDocument = gql`
         }
         staking: userGetStaking {
             id
+            chain
             type
             address
             chain

@@ -7,7 +7,6 @@ import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 import { usePool } from '~/modules/pool/lib/usePool';
 import { createContext, ReactNode, useContext } from 'react';
 import useStakingMintableRewards from '~/lib/global/useStakingMintableRewards';
-import { GqlPoolStaking } from '~/apollo/generated/graphql-codegen-generated';
 
 export function _usePoolUserPendingRewards() {
     const networkConfig = useNetworkConfig();

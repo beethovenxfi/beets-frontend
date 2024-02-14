@@ -1,4 +1,5 @@
 import { NetworkConfig, PoolDetailWarning } from '~/lib/config/network-config-type';
+import { AddressZero } from '@ethersproject/constants';
 
 // warnings
 const poolListWarningString =
@@ -63,9 +64,14 @@ export const optimismNetworkConfig: NetworkConfig = {
         address: '',
         ftmStakingProxyAddress: '',
     },
+    snapshot: {
+        contractAddress: AddressZero,
+        delegateAddress: AddressZero,
+        id: '0x0000000000000000000000000000000000000000000000000000000000000000',
+    },
     balancer: {
         vault: '0xba12222222228d8ba445958a75a0704d566bf2c8',
-        batchRelayer: '0x03f1ab8b19bce21eb06c364aec9e40322572a1e9',
+        batchRelayer: '0x015aca20a1422f3c729086c17f15f10e0cfbc75a',
         balToken: '0xfe8b128ba8c78aabc59d4c64cee7ff28e9379921',
         weightedPoolFactory: '0x230a59F4d9ADc147480f03B0D3fFfeCd56c3289a',
         linearFactories: {
@@ -136,7 +142,7 @@ export const optimismNetworkConfig: NetworkConfig = {
         },
         {
             title: 'Discord',
-            url: 'https://discord.gg/beethovenx',
+            url: 'https://op.beets.fi/discord',
         },
         {
             title: 'Olympus Bonds',
@@ -290,11 +296,14 @@ export const optimismNetworkConfig: NetworkConfig = {
         '0xacfe9b4782910a853b68abba60f3fd8049ffe6380000000000000000000000ff': 'https://app.aura.finance/#/10/pool/9', // Sonata for Two: DOLA & USDC
         '0x9da11ff60bfc5af527f58fd61679c3ac98d040d9000000000000000000000100': 'https://app.aura.finance/#/10/pool/10', // Native Stable Beets
         '0x004700ba0a4f5f22e1e78a277fca55e36f47e09c000000000000000000000104': 'https://app.aura.finance/#/10/pool/13', // Ankr's Galactic Harmony
-        '0x00b82bc5edea6e5e6c77635e31a1a25aad99f881000200000000000000000105': 'https://app.aura.finance/#/10/pool/11', // Overnight Opening Ensemble
+        // '0x00b82bc5edea6e5e6c77635e31a1a25aad99f881000200000000000000000105': 'https://app.aura.finance/#/10/pool/11', // Overnight Opening Ensemble
         '0x5f8893506ddc4c271837187d14a9c87964a074dc000000000000000000000106': 'https://app.aura.finance/#/10/pool/14', // Ethereum Triplets
         '0xc1f46ce83439886f0ea9c21512b36e7e67239d2c000200000000000000000108': 'https://app.aura.finance/#/10/pool/15', // Roast Beets
         '0x0244b0025264dc5f5c113d472d579c9c994a59ce0002000000000000000000c9': 'https://app.aura.finance/#/10/pool/16', // A Night at the OPara
         '0x478980c67d53cd990f2b7bab311ddc9934324e7b00020000000000000000010c': 'https://app.aura.finance/#/10/pool/17', // All Roads Lead to Frax
+        '0xa71021492a3966eec735ed1b505afa097c7cfe6f00000000000000000000010d': 'https://app.aura.finance/#/10/pool/18', // Fraximalist Ethereum
+        '0x2feb76966459d7841fa8a7ed0aa4bf574d6111bf00020000000000000000011d': 'https://app.aura.finance/#/10/pool/19', // Yield Concerto by FRAX
+        '0x2a5139cd86c041aa3467e649f5ee0880a5de2f2f00020000000000000000011a': 'https://app.aura.finance/#/10/pool/20', // Staked Duet
     },
     investDisabled: {
         '0x1f131ec1175f023ee1534b16fa8ab237c00e238100000000000000000000004a': true,

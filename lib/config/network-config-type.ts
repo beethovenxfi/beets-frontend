@@ -68,6 +68,11 @@ export interface NetworkConfig {
         address: string;
         ftmStakingProxyAddress: string;
     };
+    snapshot: {
+        contractAddress: string;
+        delegateAddress: string;
+        id: string;
+    };
     balancer: {
         vault: string;
         batchRelayer: string;
