@@ -1,0 +1,26 @@
+query SftmxGetStakingData {
+    sftmxGetStakingData {
+        exchangeRate
+        maintenancePaused
+        maxDepositLimit
+        minDepositLimit
+        numberOfVaults
+        stakingApr
+        totalFtmAmount
+        totalFtmAmountInPool
+        totalFtmAmountStaked
+        undelegatePaused
+        withdrawPaused
+        withdrawalDelay
+    }
+}
+
+query SftmxGetWithdrawalRequests($user: String!) {
+    sftmxGetWithdrawalRequests(user: $user) {
+        amountSftmx
+        id
+        isWithdrawn
+        requestTimestamp
+        user
+    }
+}

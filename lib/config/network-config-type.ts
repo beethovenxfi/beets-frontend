@@ -64,6 +64,10 @@ export interface NetworkConfig {
             maxLevel: number;
         };
     };
+    sftmx: {
+        address: string;
+        ftmStakingProxyAddress: string;
+    };
     snapshot: {
         contractAddress: string;
         delegateAddress: string;
@@ -132,4 +136,5 @@ export interface NetworkConfig {
     layerZeroChainId: number;
     beetsMigrationEnabled: boolean;
     gaugeEnabled: boolean;
+    sftmxEnabled: boolean;
 }

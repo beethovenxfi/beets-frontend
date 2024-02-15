@@ -60,6 +60,10 @@ export const optimismNetworkConfig: NetworkConfig = {
             maxLevel: 0,
         },
     },
+    sftmx: {
+        address: '',
+        ftmStakingProxyAddress: '',
+    },
     snapshot: {
         contractAddress: AddressZero,
         delegateAddress: AddressZero,
@@ -343,4 +347,5 @@ export const optimismNetworkConfig: NetworkConfig = {
     layerZeroChainId: 111,
     beetsMigrationEnabled: true,
     gaugeEnabled: true,
+    sftmxEnabled: false,
 };

@@ -995,6 +995,31 @@ export interface GqlReliquaryTokenBalanceSnapshot {
     symbol: Scalars['String'];
 }
 
+export interface GqlSftmxStakingData {
+    __typename: 'GqlSftmxStakingData';
+    exchangeRate: Scalars['String'];
+    maintenancePaused: Scalars['Boolean'];
+    maxDepositLimit: Scalars['AmountHumanReadable'];
+    minDepositLimit: Scalars['AmountHumanReadable'];
+    numberOfVaults: Scalars['Int'];
+    stakingApr: Scalars['String'];
+    totalFtmAmount: Scalars['AmountHumanReadable'];
+    totalFtmAmountInPool: Scalars['AmountHumanReadable'];
+    totalFtmAmountStaked: Scalars['AmountHumanReadable'];
+    undelegatePaused: Scalars['Boolean'];
+    withdrawPaused: Scalars['Boolean'];
+    withdrawalDelay: Scalars['Int'];
+}
+
+export interface GqlSftmxWithdrawalRequests {
+    __typename: 'GqlSftmxWithdrawalRequests';
+    amountSftmx: Scalars['AmountHumanReadable'];
+    id: Scalars['String'];
+    isWithdrawn: Scalars['Boolean'];
+    requestTimestamp: Scalars['Int'];
+    user: Scalars['String'];
+}
+
 export interface GqlSorGetBatchSwapForTokensInResponse {
     __typename: 'GqlSorGetBatchSwapForTokensInResponse';
     assets: Array<Scalars['String']>;
@@ -1287,6 +1312,8 @@ export interface Mutation {
     poolUpdateLiquidityValuesForAllPools: Scalars['String'];
     poolUpdateVolumeAndFeeValuesForAllPools: Scalars['String'];
     protocolCacheMetrics: Scalars['String'];
+    sftmxSyncStakingData: Scalars['String'];
+    sftmxSyncWithdrawalRequests: Scalars['String'];
     tokenDeletePrice: Scalars['Boolean'];
     tokenDeleteTokenType: Scalars['String'];
     tokenInitChartData: Scalars['String'];
@@ -1401,6 +1428,8 @@ export interface Query {
     poolGetSwaps: Array<GqlPoolSwap>;
     protocolMetricsAggregated: GqlProtocolMetricsAggregated;
     protocolMetricsChain: GqlProtocolMetricsChain;
+    sftmxGetStakingData: GqlSftmxStakingData;
+    sftmxGetWithdrawalRequests: Array<GqlSftmxWithdrawalRequests>;
     sorGetBatchSwapForTokensIn: GqlSorGetBatchSwapForTokensInResponse;
     sorGetCowSwaps: GqlCowSwapApiResponse;
     sorGetSwaps: GqlSorGetSwapsResponse;
@@ -1501,6 +1530,10 @@ export interface QueryProtocolMetricsAggregatedArgs {
 
 export interface QueryProtocolMetricsChainArgs {
     chain?: InputMaybe<GqlChain>;
+}
+
+export interface QuerySftmxGetWithdrawalRequestsArgs {
+    user: Scalars['String'];
 }
 
 export interface QuerySorGetBatchSwapForTokensInArgs {
@@ -5123,6 +5156,43 @@ export type GetReliquaryFarmSnapshotsQuery = {
     }>;
 };
 
+export type SftmxGetStakingDataQueryVariables = Exact<{ [key: string]: never }>;
+
+export type SftmxGetStakingDataQuery = {
+    __typename: 'Query';
+    sftmxGetStakingData: {
+        __typename: 'GqlSftmxStakingData';
+        exchangeRate: string;
+        maintenancePaused: boolean;
+        maxDepositLimit: string;
+        minDepositLimit: string;
+        numberOfVaults: number;
+        stakingApr: string;
+        totalFtmAmount: string;
+        totalFtmAmountInPool: string;
+        totalFtmAmountStaked: string;
+        undelegatePaused: boolean;
+        withdrawPaused: boolean;
+        withdrawalDelay: number;
+    };
+};
+
+export type SftmxGetWithdrawalRequestsQueryVariables = Exact<{
+    user: Scalars['String'];
+}>;
+
+export type SftmxGetWithdrawalRequestsQuery = {
+    __typename: 'Query';
+    sftmxGetWithdrawalRequests: Array<{
+        __typename: 'GqlSftmxWithdrawalRequests';
+        amountSftmx: string;
+        id: string;
+        isWithdrawn: boolean;
+        requestTimestamp: number;
+        user: string;
+    }>;
+};
+
 export type GetTokenRelativePriceChartDataQueryVariables = Exact<{
     tokenIn: Scalars['String'];
     tokenOut: Scalars['String'];
@@ -7527,6 +7597,119 @@ export type GetReliquaryFarmSnapshotsLazyQueryHookResult = ReturnType<typeof use
 export type GetReliquaryFarmSnapshotsQueryResult = Apollo.QueryResult<
     GetReliquaryFarmSnapshotsQuery,
     GetReliquaryFarmSnapshotsQueryVariables
+>;
+export const SftmxGetStakingDataDocument = gql`
+    query SftmxGetStakingData {
+        sftmxGetStakingData {
+            exchangeRate
+            maintenancePaused
+            maxDepositLimit
+            minDepositLimit
+            numberOfVaults
+            stakingApr
+            totalFtmAmount
+            totalFtmAmountInPool
+            totalFtmAmountStaked
+            undelegatePaused
+            withdrawPaused
+            withdrawalDelay
+        }
+    }
+`;
+
+/**
+ * __useSftmxGetStakingDataQuery__
+ *
+ * To run a query within a React component, call `useSftmxGetStakingDataQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSftmxGetStakingDataQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSftmxGetStakingDataQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useSftmxGetStakingDataQuery(
+    baseOptions?: Apollo.QueryHookOptions<SftmxGetStakingDataQuery, SftmxGetStakingDataQueryVariables>,
+) {
+    const options = { ...defaultOptions, ...baseOptions };
+    return Apollo.useQuery<SftmxGetStakingDataQuery, SftmxGetStakingDataQueryVariables>(
+        SftmxGetStakingDataDocument,
+        options,
+    );
+}
+export function useSftmxGetStakingDataLazyQuery(
+    baseOptions?: Apollo.LazyQueryHookOptions<SftmxGetStakingDataQuery, SftmxGetStakingDataQueryVariables>,
+) {
+    const options = { ...defaultOptions, ...baseOptions };
+    return Apollo.useLazyQuery<SftmxGetStakingDataQuery, SftmxGetStakingDataQueryVariables>(
+        SftmxGetStakingDataDocument,
+        options,
+    );
+}
+export type SftmxGetStakingDataQueryHookResult = ReturnType<typeof useSftmxGetStakingDataQuery>;
+export type SftmxGetStakingDataLazyQueryHookResult = ReturnType<typeof useSftmxGetStakingDataLazyQuery>;
+export type SftmxGetStakingDataQueryResult = Apollo.QueryResult<
+    SftmxGetStakingDataQuery,
+    SftmxGetStakingDataQueryVariables
+>;
+export const SftmxGetWithdrawalRequestsDocument = gql`
+    query SftmxGetWithdrawalRequests($user: String!) {
+        sftmxGetWithdrawalRequests(user: $user) {
+            amountSftmx
+            id
+            isWithdrawn
+            requestTimestamp
+            user
+        }
+    }
+`;
+
+/**
+ * __useSftmxGetWithdrawalRequestsQuery__
+ *
+ * To run a query within a React component, call `useSftmxGetWithdrawalRequestsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSftmxGetWithdrawalRequestsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSftmxGetWithdrawalRequestsQuery({
+ *   variables: {
+ *      user: // value for 'user'
+ *   },
+ * });
+ */
+export function useSftmxGetWithdrawalRequestsQuery(
+    baseOptions: Apollo.QueryHookOptions<SftmxGetWithdrawalRequestsQuery, SftmxGetWithdrawalRequestsQueryVariables>,
+) {
+    const options = { ...defaultOptions, ...baseOptions };
+    return Apollo.useQuery<SftmxGetWithdrawalRequestsQuery, SftmxGetWithdrawalRequestsQueryVariables>(
+        SftmxGetWithdrawalRequestsDocument,
+        options,
+    );
+}
+export function useSftmxGetWithdrawalRequestsLazyQuery(
+    baseOptions?: Apollo.LazyQueryHookOptions<
+        SftmxGetWithdrawalRequestsQuery,
+        SftmxGetWithdrawalRequestsQueryVariables
+    >,
+) {
+    const options = { ...defaultOptions, ...baseOptions };
+    return Apollo.useLazyQuery<SftmxGetWithdrawalRequestsQuery, SftmxGetWithdrawalRequestsQueryVariables>(
+        SftmxGetWithdrawalRequestsDocument,
+        options,
+    );
+}
+export type SftmxGetWithdrawalRequestsQueryHookResult = ReturnType<typeof useSftmxGetWithdrawalRequestsQuery>;
+export type SftmxGetWithdrawalRequestsLazyQueryHookResult = ReturnType<typeof useSftmxGetWithdrawalRequestsLazyQuery>;
+export type SftmxGetWithdrawalRequestsQueryResult = Apollo.QueryResult<
+    SftmxGetWithdrawalRequestsQuery,
+    SftmxGetWithdrawalRequestsQueryVariables
 >;
 export const GetTokenRelativePriceChartDataDocument = gql`
     query GetTokenRelativePriceChartData($tokenIn: String!, $tokenOut: String!, $range: GqlTokenChartDataRange!) {

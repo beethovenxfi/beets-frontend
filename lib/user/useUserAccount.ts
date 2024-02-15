@@ -23,7 +23,7 @@ export function useUserAccount() {
         ...query,
         isLoading: query.isConnecting || isFirstRender,
         isConnecting: query.isConnecting || isFirstRender,
-        userAddress: query.address,
+        userAddress: query.address?.toLowerCase(),
         isConnected: !!query.address && !isFirstRender,
     };
 }

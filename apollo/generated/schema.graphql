@@ -961,6 +961,29 @@ type GqlReliquaryTokenBalanceSnapshot {
     symbol: String!
 }
 
+type GqlSftmxStakingData {
+    exchangeRate: String!
+    maintenancePaused: Boolean!
+    maxDepositLimit: AmountHumanReadable!
+    minDepositLimit: AmountHumanReadable!
+    numberOfVaults: Int!
+    stakingApr: String!
+    totalFtmAmount: AmountHumanReadable!
+    totalFtmAmountInPool: AmountHumanReadable!
+    totalFtmAmountStaked: AmountHumanReadable!
+    undelegatePaused: Boolean!
+    withdrawPaused: Boolean!
+    withdrawalDelay: Int!
+}
+
+type GqlSftmxWithdrawalRequests {
+    amountSftmx: AmountHumanReadable!
+    id: String!
+    isWithdrawn: Boolean!
+    requestTimestamp: Int!
+    user: String!
+}
+
 type GqlSorGetBatchSwapForTokensInResponse {
     assets: [String!]!
     swaps: [GqlSorSwap!]!
@@ -1249,6 +1272,8 @@ type Mutation {
     poolUpdateLiquidityValuesForAllPools: String!
     poolUpdateVolumeAndFeeValuesForAllPools: String!
     protocolCacheMetrics: String!
+    sftmxSyncStakingData: String!
+    sftmxSyncWithdrawalRequests: String!
     tokenDeletePrice(timestamp: Int!, tokenAddress: String!): Boolean!
     tokenDeleteTokenType(tokenAddress: String!, type: GqlTokenType!): String!
     tokenInitChartData(tokenAddress: String!): String!
@@ -1305,6 +1330,8 @@ type Query {
     poolGetSwaps(first: Int, skip: Int, where: GqlPoolSwapFilter): [GqlPoolSwap!]!
     protocolMetricsAggregated(chains: [GqlChain!]): GqlProtocolMetricsAggregated!
     protocolMetricsChain(chain: GqlChain): GqlProtocolMetricsChain!
+    sftmxGetStakingData: GqlSftmxStakingData!
+    sftmxGetWithdrawalRequests(user: String!): [GqlSftmxWithdrawalRequests!]!
     sorGetBatchSwapForTokensIn(
         swapOptions: GqlSorSwapOptionsInput!
         tokenOut: String!

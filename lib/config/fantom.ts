@@ -61,6 +61,10 @@ export const fantomNetworkConfig: NetworkConfig = {
             maxLevel: 10,
         },
     },
+    sftmx: {
+        address: '0xd7028092c830b5c8fce061af2e593413ebbc1fc1',
+        ftmStakingProxyAddress: '0xB458BfC855ab504a8a327720FcEF98886065529b',
+    },
     snapshot: {
         contractAddress: '0x469788fe6e9e9681c6ebf3bf78e7fd26fc015446',
         delegateAddress: '0x641e10Cd6132D3e3FA01bfd65d2e0afCf64b136A', // MD delegator address case sensitive!
@@ -410,4 +414,5 @@ export const fantomNetworkConfig: NetworkConfig = {
     layerZeroChainId: -1,
     beetsMigrationEnabled: false,
     gaugeEnabled: false,
+    sftmxEnabled: true,
 };
