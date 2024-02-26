@@ -292,11 +292,11 @@ export const optimismNetworkConfig: NetworkConfig = {
     auraStaking: {
         '0x7ca75bdea9dede97f8b13c6641b768650cb837820002000000000000000000d5': 'https://app.aura.finance/#/10/pool/6', // Gyroscope ECLP wstETH/WETH
         '0x4fd63966879300cafafbb35d157dc5229278ed2300020000000000000000002b': 'https://app.aura.finance/#/10/pool/0', // Rocket Fuel
-        '0x7b50775383d3d6f0215a8f290f2c9e2eebbeceb200020000000000000000008b': 'https://app.aura.finance/#/10/pool/4', // Shanghai Shakedown
+        // '0x7b50775383d3d6f0215a8f290f2c9e2eebbeceb200020000000000000000008b': 'https://app.aura.finance/#/10/pool/4', // Shanghai Shakedown
         '0xacfe9b4782910a853b68abba60f3fd8049ffe6380000000000000000000000ff': 'https://app.aura.finance/#/10/pool/9', // Sonata for Two: DOLA & USDC
         '0x9da11ff60bfc5af527f58fd61679c3ac98d040d9000000000000000000000100': 'https://app.aura.finance/#/10/pool/10', // Native Stable Beets
         '0x004700ba0a4f5f22e1e78a277fca55e36f47e09c000000000000000000000104': 'https://app.aura.finance/#/10/pool/13', // Ankr's Galactic Harmony
-        // '0x00b82bc5edea6e5e6c77635e31a1a25aad99f881000200000000000000000105': 'https://app.aura.finance/#/10/pool/11', // Overnight Opening Ensemble
+        '0x00b82bc5edea6e5e6c77635e31a1a25aad99f881000200000000000000000105': 'https://app.aura.finance/#/10/pool/11', // Overnight Opening Ensemble
         '0x5f8893506ddc4c271837187d14a9c87964a074dc000000000000000000000106': 'https://app.aura.finance/#/10/pool/14', // Ethereum Triplets
         '0xc1f46ce83439886f0ea9c21512b36e7e67239d2c000200000000000000000108': 'https://app.aura.finance/#/10/pool/15', // Roast Beets
         '0x0244b0025264dc5f5c113d472d579c9c994a59ce0002000000000000000000c9': 'https://app.aura.finance/#/10/pool/16', // A Night at the OPara
