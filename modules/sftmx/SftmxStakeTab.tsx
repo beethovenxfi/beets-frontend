@@ -35,7 +35,13 @@ export default function SftmxStakeTab() {
         <Card shadow="lg" h="full">
             <VStack spacing="4" p="4" align="flex-start" h="full">
                 <Heading size="md">Enter amount to stake</Heading>
-                <FtmTokenInput address={networkConfig.eth.address} label="Stake" value={amount} onChange={setAmount} />
+                <FtmTokenInput
+                    address={networkConfig.eth.address}
+                    label="Stake"
+                    value={amount}
+                    onChange={setAmount}
+                    leaveSomeGas
+                />
                 {isBelowMin && <Alert status="error">Amount below minimum deposit requirement.</Alert>}
                 {isAboveMax && <Alert status="error">Amount above maximum deposit requirement.</Alert>}
                 <HStack w="full" justifyContent="space-between">
