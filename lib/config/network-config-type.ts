@@ -7,7 +7,8 @@ export type PoolBadgeType =
     | 'overnight'
     | 'reaper'
     | 'beefy-exactly'
-    | 'gyroscope';
+    | 'gyroscope'
+    | 'experimental';
 
 export interface PoolDetailWarning {
     id: string;
