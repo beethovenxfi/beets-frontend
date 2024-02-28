@@ -332,6 +332,7 @@ export const fantomNetworkConfig: NetworkConfig = {
         '0xf47f4d59c863c02cbfa3eefe6771b9c9fbe7b97800000000000000000000072b': 'reaper',
         '0xba0e9aea8a7fa1daab4edf244191f2387a4e472b000100000000000000000737': 'reaper',
         '0x6e6dc948ce85c62125ff7a1e543d761a88f0a4cb000000000000000000000743': 'reaper',
+        '0xd67041d2d93f03774092caaeb4553e26c51ae4ed0002000000000000000007e9': 'experimental',
     },
     auraStaking: {},
     investDisabled: {

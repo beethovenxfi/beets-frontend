@@ -8,8 +8,9 @@ import GyroscopeBuilt from './assets/gyro-short.svg';
 import Image from 'next/image';
 import { PoolBadgeType } from '~/lib/config/network-config-type';
 import BeetsTooltip from '~/components/tooltip/BeetsTooltip';
-import { Box } from '@chakra-ui/react';
+import { Box, Text } from '@chakra-ui/react';
 import { PoolBadgeTooltips } from '~/components/pool-badge/lib/pool-badge-tooltips';
+import Experimental from './assets/badge-experimental.gif';
 
 interface Props {
     poolBadge: PoolBadgeType;
@@ -43,6 +44,9 @@ export function PoolBadgeSmall({ poolBadge }: Props) {
             break;
         case 'gyroscope':
             image = <Image src={GyroscopeBuilt} alt="Built by Gyroscope" height="28px" width="96px" />;
+            break;
+        case 'experimental':
+            image = image = <Image src={Experimental} alt="Experimental" height="28px" width="96px" />;
             break;
     }
 
