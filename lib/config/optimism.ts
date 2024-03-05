@@ -285,6 +285,7 @@ export const optimismNetworkConfig: NetworkConfig = {
         '0x58910d5bd045a20a37de147f8acea75b2d881f610002000000000000000000d3': 'gyroscope',
         '0x7ca75bdea9dede97f8b13c6641b768650cb837820002000000000000000000d5': 'gyroscope',
         '0x2c4a83f98d1cdbeeec825fabacd09c46e2dd3c570002000000000000000000de': 'gyroscope',
+        '0xe906d4c4fc4c3fe96560de86b4bf7ed89af9a69a000200000000000000000126': 'gyroscope',
         '0x62cf35db540152e94936de63efc90d880d4e241b0000000000000000000000ef': 'reaper',
         '0x7fe29a818438ed2759e30f65c2302295711d66fc0000000000000000000000e5': 'reaper', // to be deprecated soon
     },
