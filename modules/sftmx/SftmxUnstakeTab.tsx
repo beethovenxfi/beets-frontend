@@ -59,12 +59,12 @@ export default function SftmxUnstakeTab() {
                 </HStack>
                 <Divider w="full" />
                 <HStack w="full" justifyContent="space-between">
-                    <Text>1 sFTMX is</Text>
+                    <Text>1 sFTMx is</Text>
                     <Text>{isLoadingSftmxAmountData ? '-' : tokenFormatAmount(exchangeRateFtm)} FTM</Text>
                 </HStack>
                 <HStack w="full" justifyContent="space-between">
                     <Text>1 FTM is</Text>
-                    <Text>{isLoadingSftmxAmountData ? '-' : tokenFormatAmount(1 / exchangeRateFtm)} sFTMX</Text>
+                    <Text>{isLoadingSftmxAmountData ? '-' : tokenFormatAmount(1 / exchangeRateFtm)} sFTMx</Text>
                 </HStack>
                 <HStack w="full" justifyContent="space-between">
                     <InfoButton

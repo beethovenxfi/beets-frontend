@@ -27,7 +27,7 @@ function Stake() {
                 <meta property="twitter:description" content={DESCRIPTION} />
             </Head>
             <PageMasthead
-                title="sFTMX"
+                title="sFTMx"
                 image={
                     <NextImage
                         src={chainId === '10' ? InvestMastheadOpImage : InvestMastheadImage}
@@ -42,7 +42,7 @@ function Stake() {
                 </UserTokenBalancesProvider>
             ) : (
                 <VStack minH="300px" justifyContent="center">
-                    <Heading>sFTMX is not supported on this chain.</Heading>
+                    <Heading>sFTMx is not supported on this chain.</Heading>
                 </VStack>
             )}
         </>
