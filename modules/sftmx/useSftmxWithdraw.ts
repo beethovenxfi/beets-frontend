@@ -17,7 +17,7 @@ export function useSftmxWithdraw() {
     function withdraw(amount: AmountHumanReadable, wrId: string) {
         submit({
             args: [wrId, 0],
-            toastText: `Withdraw ${amount} sFTMX`,
+            toastText: `Withdraw ${amount} sFTMx`,
         });
     }
 

@@ -25,7 +25,7 @@ export default function SftmxWithdrawalRequestsRow({ item, withdrawalDelay }: Pr
     return (
         <Grid alignItems="center" templateColumns={'repeat(3, 1fr)'} gap="0" bgColor="rgba(255,255,255,0.05)" p="4">
             <GridItem>
-                <Text as={isWithdrawn ? 'del' : undefined}>{item.amountSftmx} sFTMX</Text>
+                <Text as={isWithdrawn ? 'del' : undefined}>{item.amountSftmx} sFTMx</Text>
             </GridItem>
             <GridItem justifySelf="flex-end">
                 <Text as={isWithdrawn ? 'del' : undefined}>
