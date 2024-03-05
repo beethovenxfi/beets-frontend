@@ -50,7 +50,7 @@ export default function SftmxStakeTab() {
                         amount && !isLoadingSftmxAmountData && !isBelowMin && !isAboveMax
                             ? tokenFormatAmount(parseFloat(amount) * exchangeRateFtm)
                             : '--'
-                    } SFTMX`}</Text>
+                    } sFTMx`}</Text>
                 </HStack>
                 <Divider />
                 <HStack w="full" justifyContent="space-between">
