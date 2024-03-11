@@ -38,7 +38,7 @@ export function Footer() {
                         </GridItem>
                         <GridItem>
                             <FooterLink href="https://snapshot.org/#/beets.eth">Vote</FooterLink>
-                            <FooterLink href="https://info.beets.fi">Analytics</FooterLink>
+                            <FooterLink href="https://beets.defilytica.com">Analytics</FooterLink>
                             <FooterLink href="https://docs.beets.fi">Docs & Help</FooterLink>
                             <FooterLink href="/terms-of-service" linkType="internal">
                                 Terms of Service
