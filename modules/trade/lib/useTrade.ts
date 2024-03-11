@@ -74,7 +74,17 @@ export function useTrade() {
             },
         });
 
-        const swapInfo = data?.swaps || null;
+        let swapInfo = data?.swaps || null;
+
+        // show FTM as token to sell in modal
+        if (swapInfo && isEth(state.tokenIn)) {
+            swapInfo = { ...swapInfo, tokenIn: networkConfig.eth.address };
+        }
+
+        // show FTM as token to receive in modal
+        if (swapInfo && isEth(state.tokenOut)) {
+            swapInfo = { ...swapInfo, tokenOut: networkConfig.eth.address };
+        }
 
         setTradeState({ swapInfo });
 
