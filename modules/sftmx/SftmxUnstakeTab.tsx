@@ -12,6 +12,7 @@ import { SftmxUnstakeButton } from './SftmxUnstakeButton';
 import { useSftmxGetFtmxAmountForFtm } from './useSftmxGetFtmxAmountForFtm';
 import { InfoButton } from '~/components/info-button/InfoButton';
 import numeral from 'numeral';
+import { useUserTokenBalances } from '~/lib/user/useUserTokenBalances';
 
 export default function SftmxUnstakeTab() {
     const [amount, setAmount] = useState('');
@@ -20,6 +21,7 @@ export default function SftmxUnstakeTab() {
     const { isConnected } = useUserAccount();
     const { data: sftmxAmountData, isLoading: isLoadingSftmxAmountData } = useSftmxGetFtmxAmountForFtm('1'); // set to 1 FTM to get current rate
     const { data: penaltyData, isLoading: isLoadingPenaltyData } = useSftmxGetCalculatePenalty(amount);
+    const { refetch } = useUserTokenBalances();
 
     useEffect(() => {
         if (!isLoadingSftmxAmountData && sftmxAmountData) {
@@ -84,7 +86,10 @@ export default function SftmxUnstakeTab() {
                         <SftmxUnstakeButton
                             amount={amount}
                             penalty={penaltyData?.amountPenalty}
-                            onConfirmed={() => setAmount('')}
+                            onConfirmed={() => {
+                                setAmount('');
+                                refetch();
+                            }}
                         />
                     )}
                 </Box>
