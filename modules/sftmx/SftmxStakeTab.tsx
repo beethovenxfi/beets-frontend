@@ -10,6 +10,7 @@ import { useEffect, useState } from 'react';
 import { SftmxStakeButton } from './SftmxStakeButton';
 import { useSftmxGetFtmxAmountForFtm } from './useSftmxGetFtmxAmountForFtm';
 import { formatFixed } from '@ethersproject/bignumber';
+import { useUserTokenBalances } from '~/lib/user/useUserTokenBalances';
 
 export default function SftmxStakeTab() {
     const [amount, setAmount] = useState('');
@@ -17,6 +18,7 @@ export default function SftmxStakeTab() {
     const { isConnected } = useUserAccount();
     const { data: sftmxStakingData } = useSftmxGetStakingData();
     const { data: sftmxAmountData, isLoading: isLoadingSftmxAmountData } = useSftmxGetFtmxAmountForFtm('1'); // set to 1 FTM to get current rate
+    const { refetch } = useUserTokenBalances();
 
     useEffect(() => {
         if (!isLoadingSftmxAmountData && sftmxAmountData) {
@@ -68,7 +70,10 @@ export default function SftmxStakeTab() {
                         <SftmxStakeButton
                             amount={amount}
                             isDisabled={!amount || isBelowMin || isAboveMax}
-                            onConfirmed={() => setAmount('')}
+                            onConfirmed={() => {
+                                setAmount('');
+                                refetch();
+                            }}
                         />
                     )}
                 </Box>
