@@ -6,7 +6,7 @@ import { useGetTokens } from '~/lib/global/useToken';
 import { parseUnits } from 'ethers/lib/utils';
 import { oldBnumScaleAmount } from '~/lib/services/pool/lib/old-big-number';
 import { AddressZero, MaxUint256 } from '@ethersproject/constants';
-import { isEth, tokenFormatAmount } from '~/lib/services/token/token-util';
+import { isEth, replaceWethWithZeroAddress, tokenFormatAmount } from '~/lib/services/token/token-util';
 import { useUserAccount } from '~/lib/user/useUserAccount';
 
 export function useBatchSwap() {
@@ -36,11 +36,17 @@ export function useBatchSwap() {
         const tokenInDefinition = getRequiredToken(tokenIn);
         const tokenOutDefinition = getRequiredToken(tokenOut);
 
+        let adjustedTokenAddresses = tokenAddresses;
+
+        if (isEth(tokenIn) || isEth(tokenOut)) {
+            adjustedTokenAddresses = replaceWethWithZeroAddress(tokenAddresses);
+        }
+
         // Limits:
         // +ve means max to send
         // -ve means min to receive
         // For a multihop the intermediate tokens should be 0
-        const limits = tokenAddresses.map((tokenAddress, i) => {
+        const limits = adjustedTokenAddresses.map((tokenAddress, i) => {
             if (swapType === 'EXACT_IN') {
                 if (isSameAddress(tokenAddress, tokenIn) || (isEth(tokenIn) && tokenAddress === AddressZero)) {
                     return parseUnits(tokenInAmount, tokenInDefinition.decimals).toString();
@@ -67,7 +73,7 @@ export function useBatchSwap() {
             args: [
                 swapType === 'EXACT_IN' ? 0 : 1,
                 swaps,
-                tokenAddresses,
+                adjustedTokenAddresses,
                 {
                     sender: userAddress,
                     fromInternalBalance: false,
