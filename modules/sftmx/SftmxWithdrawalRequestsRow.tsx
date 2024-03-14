@@ -4,6 +4,7 @@ import { GqlSftmxWithdrawalRequests } from '~/apollo/generated/graphql-codegen-g
 import { SftmxWithdrawButton } from './SftmxWithdrawButton';
 import { useSftmxGetAllWithdrawalRequests } from './useSftmxGetAllWithdrawalRequests';
 import { useEffect, useState } from 'react';
+import numeral from 'numeral';
 
 interface Props {
     item: GqlSftmxWithdrawalRequests;
@@ -25,7 +26,7 @@ export default function SftmxWithdrawalRequestsRow({ item, withdrawalDelay }: Pr
     return (
         <Grid alignItems="center" templateColumns={'repeat(3, 1fr)'} gap="0" bgColor="rgba(255,255,255,0.05)" p="4">
             <GridItem>
-                <Text as={isWithdrawn ? 'del' : undefined}>{item.amountSftmx} sFTMx</Text>
+                <Text as={isWithdrawn ? 'del' : undefined}>{numeral(item.amountSftmx).format('0.[000]a')} sFTMx</Text>
             </GridItem>
             <GridItem justifySelf="flex-end">
                 <Text as={isWithdrawn ? 'del' : undefined}>
