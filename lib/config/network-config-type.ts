@@ -20,6 +20,12 @@ export interface PoolDetailWarning {
     };
 }
 
+export interface ThirdPartyStakingPool {
+    poolId: string;
+    url: string;
+    name: string;
+}
+
 export interface NetworkConfig {
     appName: string;
     chainId: string;
@@ -131,8 +137,7 @@ export interface NetworkConfig {
     poolBadgeTypes: {
         [poolId: string]: PoolBadgeType;
     };
-    auraStaking: { [poolId: string]: string };
-    thirdPartyStakingPools: string[];
+    thirdPartyStakingPools: ThirdPartyStakingPool[];
     maBeetsEnabled: boolean;
     claimAllRewardsEnabled: boolean;
     layerZeroChainId: number;
