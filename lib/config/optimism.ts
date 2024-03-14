@@ -306,6 +306,7 @@ export const optimismNetworkConfig: NetworkConfig = {
         '0x2feb76966459d7841fa8a7ed0aa4bf574d6111bf00020000000000000000011d': 'https://app.aura.finance/#/10/pool/19', // Yield Concerto by FRAX
         '0x2a5139cd86c041aa3467e649f5ee0880a5de2f2f00020000000000000000011a': 'https://app.aura.finance/#/10/pool/20', // Staked Duet
     },
+    noZapPools: [],
     investDisabled: {
         '0x1f131ec1175f023ee1534b16fa8ab237c00e238100000000000000000000004a': true,
         '0x479a7d1fcdd71ce0c2ed3184bfbe9d23b92e8337000000000000000000000049': true,

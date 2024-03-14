@@ -335,6 +335,9 @@ export const fantomNetworkConfig: NetworkConfig = {
         '0xd67041d2d93f03774092caaeb4553e26c51ae4ed0002000000000000000007e9': 'experimental',
     },
     auraStaking: {},
+    noZapPools: [
+        '0x2ddcd6916ee7ccc6300cb0fe2919a341be0ee8bb0002000000000000000007eb', // fMoney with Attitude
+    ],
     investDisabled: {
         '0xa10285f445bcb521f1d623300dc4998b02f11c8f00000000000000000000043b': true,
         '0xcde5a11a4acb4ee4c805352cec57e236bdbc3837000200000000000000000019': true,
