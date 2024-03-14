@@ -11,18 +11,16 @@ export function PoolInvestSettings({ ...rest }: BoxProps) {
     const { zapEnabled, toggleZapEnabled } = useInvestState();
     const { pool, supportsZap } = usePool();
     const networkConfig = useNetworkConfig();
-    const isNoZapPool =
-        Object.keys(networkConfig.auraStaking).includes(pool.id) ||
-        networkConfig.thirdPartyStakingPools.includes(pool.id);
+    const setZapDefaultFalse = networkConfig.thirdPartyStakingPools.some((staking) => staking.poolId === pool.id);
 
-    // set zap default to false for aura pools & noZap pools
+    // set zap default to false for pools w/ third party staking
     useEffect(() => {
-        if ((!supportsZap || isNoZapPool) && zapEnabled) {
-            toggleZapEnabled();
-        } else if (supportsZap && !isNoZapPool && !zapEnabled) {
-            toggleZapEnabled();
+        if ((!supportsZap || setZapDefaultFalse) && zapEnabled) {
+            toggleZapEnabled(false);
+        } else if (supportsZap && !setZapDefaultFalse && !zapEnabled) {
+            toggleZapEnabled(true);
         }
-    }, [supportsZap]);
+    }, []);
 
     return (
         <Box {...rest} width="full">
@@ -40,7 +38,7 @@ export function PoolInvestSettings({ ...rest }: BoxProps) {
                                 id="zap-into-farm"
                                 colorScheme="green"
                                 isChecked={zapEnabled}
-                                onChange={toggleZapEnabled}
+                                onChange={() => toggleZapEnabled()}
                             />
                         </Flex>
                     )}

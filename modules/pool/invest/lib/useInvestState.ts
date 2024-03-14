@@ -130,15 +130,17 @@ export function useInvestState() {
         );
     }
 
-    function toggleZapEnabled() {
+    function toggleZapEnabled(value?: boolean) {
         const state = investStateVar();
 
         investStateVar(
             state.map((state) => {
+                const zapEnabled = value ?? !state.zapEnabled;
+
                 if (state.poolId === poolId) {
                     return {
                         ...state,
-                        zapEnabled: !state.zapEnabled,
+                        zapEnabled,
                     };
                 } else {
                     return state;
