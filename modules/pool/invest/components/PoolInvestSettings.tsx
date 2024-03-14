@@ -12,7 +12,8 @@ export function PoolInvestSettings({ ...rest }: BoxProps) {
     const { pool, supportsZap } = usePool();
     const networkConfig = useNetworkConfig();
     const isNoZapPool =
-        Object.keys(networkConfig.auraStaking).includes(pool.id) || networkConfig.noZapPools.includes(pool.id);
+        Object.keys(networkConfig.auraStaking).includes(pool.id) ||
+        networkConfig.thirdPartyStakingPools.includes(pool.id);
 
     // set zap default to false for aura pools & noZap pools
     useEffect(() => {
