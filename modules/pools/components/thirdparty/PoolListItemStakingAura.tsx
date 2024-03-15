@@ -10,7 +10,7 @@ export function PoolListItemStakingAura() {
             noImage
         >
             <Box ml="2" mt="1">
-                <Image src={AuraLogo} alt="Aura Finance" height="24px" width="24px" />
+                <Image src={AuraLogo} alt="Aura Finance" height="24px" width="24px" className="icon-shadow" />
             </Box>
         </BeetsTooltip>
     );
