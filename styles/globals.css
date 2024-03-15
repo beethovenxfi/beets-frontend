@@ -51,7 +51,7 @@ a {
 }
 
 .icon-shadow {
-    --stroke-color: rgba(0, 248, 156, 0.5);
+    --stroke-color: rgba(0, 248, 156, 0.3);
     filter: drop-shadow(1.5px 0 0 var(--stroke-color)) drop-shadow(-0.5px 0 var(--stroke-color))
         drop-shadow(0 1.5px 0 var(--stroke-color)) drop-shadow(0 -0.5px 0 var(--stroke-color))
         drop-shadow(1px 1px 0 var(--stroke-color)) drop-shadow(1px -1px 0 var(--stroke-color))
