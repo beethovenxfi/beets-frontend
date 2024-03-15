@@ -50,6 +50,14 @@ a {
     -webkit-animation: move 15s infinite linear;*/
 }
 
+.icon-shadow {
+    --stroke-color: rgba(0, 248, 156, 0.5);
+    filter: drop-shadow(1.5px 0 0 var(--stroke-color)) drop-shadow(-0.5px 0 var(--stroke-color))
+        drop-shadow(0 1.5px 0 var(--stroke-color)) drop-shadow(0 -0.5px 0 var(--stroke-color))
+        drop-shadow(1px 1px 0 var(--stroke-color)) drop-shadow(1px -1px 0 var(--stroke-color))
+        drop-shadow(-1px 1px 0 var(--stroke-color)) drop-shadow(-1px -1px 0 var(--stroke-color));
+}
+
 @-webkit-keyframes move {
     0% {
         background-position: 0% 50%;
