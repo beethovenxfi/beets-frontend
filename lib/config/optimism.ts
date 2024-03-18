@@ -362,6 +362,11 @@ export const optimismNetworkConfig: NetworkConfig = {
             url: 'https://app.aura.finance/#/10/pool/20',
             name: 'aura',
         },
+        {
+            poolId: '0x16d7e97b845145da68bd22291d6c10275c3b3f77000200000000000000000128',
+            url: '',
+            name: 'gyro',
+        },
     ],
     investDisabled: {
         '0x1f131ec1175f023ee1534b16fa8ab237c00e238100000000000000000000004a': true,
