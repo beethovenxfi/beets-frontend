@@ -363,7 +363,7 @@ export const optimismNetworkConfig: NetworkConfig = {
             name: 'aura',
         },
         {
-            poolId: '0x16d7e97b845145da68bd22291d6c10275c3b3f77000200000000000000000128',
+            poolId: '0x8bb826afc0ff7d2c034a2883f4c461ffd238e1c300020000000000000000012b',
             url: '',
             name: 'gyro',
         },
