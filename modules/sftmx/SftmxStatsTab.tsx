@@ -1,6 +1,6 @@
 import { Heading, VStack } from '@chakra-ui/react';
 import Card from '~/components/card/Card';
-import { SftmxStatsCharts } from './SftmxStatsCharts';
+import { SftmxStatsCharts } from './components/stats/SftmxStatsCharts';
 
 export default function SftmxStatsTab() {
     return (
