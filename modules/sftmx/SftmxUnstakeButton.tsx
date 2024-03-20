@@ -1,6 +1,6 @@
 import { AmountHumanReadable } from '~/lib/services/token/token-types';
 import { BeetsSubmitTransactionButton } from '~/components/button/BeetsSubmitTransactionButton';
-import { useSftmxUnstake } from './hooks/useSftmxUnstake';
+import { useSftmxUnstake } from './lib/useSftmxUnstake';
 import { BigNumber } from 'ethers';
 
 interface Props {

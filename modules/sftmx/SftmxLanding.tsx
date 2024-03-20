@@ -4,7 +4,7 @@ import SftmxStakeTab from './SftmxStakeTab';
 import SftmxUnstakeTab from './SftmxUnstakeTab';
 import SftmxOverallStats from './SftmxOverallStats';
 import SftmxWithdrawTab from './SftmxWithdrawTab';
-import { useSftmxGetWithdrawalRequests } from './hooks/useSftmxGetWithdrawalRequests';
+import { useSftmxGetWithdrawalRequests } from './lib/useSftmxGetWithdrawalRequests';
 
 export default function SftmxLanding() {
     const { startPolling, stopPolling } = useSftmxGetWithdrawalRequests();

@@ -2,7 +2,7 @@ import { Grid, GridItem, Text } from '@chakra-ui/react';
 import { format } from 'date-fns';
 import { GqlSftmxWithdrawalRequests } from '~/apollo/generated/graphql-codegen-generated';
 import { SftmxWithdrawButton } from './SftmxWithdrawButton';
-import { useSftmxGetAllWithdrawalRequests } from './hooks/useSftmxGetAllWithdrawalRequests';
+import { useSftmxGetAllWithdrawalRequests } from './lib/useSftmxGetAllWithdrawalRequests';
 import { useEffect, useState } from 'react';
 import numeral from 'numeral';
 
