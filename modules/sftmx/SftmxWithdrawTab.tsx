@@ -12,10 +12,10 @@ import { InfoButton } from '~/components/info-button/InfoButton';
 
 export default function SftmxWithdrawTab() {
     const { isConnected } = useUserAccount();
-    const { data: requestsData, loading: isLoading } = useSftmxGetWithdrawalRequests();
+    const { data: requestsData, isLoading } = useSftmxGetWithdrawalRequests();
     const { data: stakingData } = useSftmxGetStakingData();
 
-    const requests = orderBy(requestsData?.sftmxGetWithdrawalRequests, 'requestTimestamp', 'desc');
+    const requests = orderBy(requestsData, 'requestTimestamp', 'desc');
 
     return (
         <Card shadow="lg" h="full">
