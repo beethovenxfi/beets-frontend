@@ -5,6 +5,7 @@ import SftmxUnstakeTab from './SftmxUnstakeTab';
 import SftmxOverallStats from './SftmxOverallStats';
 import SftmxWithdrawTab from './SftmxWithdrawTab';
 import { useSftmxGetWithdrawalRequests } from './lib/useSftmxGetWithdrawalRequests';
+import SftmxStatsTab from './SftmxStatsTab';
 
 export default function SftmxLanding() {
     const { startPolling, stopPolling } = useSftmxGetWithdrawalRequests();
@@ -32,10 +33,11 @@ export default function SftmxLanding() {
                     }}
                 >
                     <TabList>
-                        <Grid templateColumns="1fr 1fr 1fr" gap="4" w="full">
+                        <Grid templateColumns="repeat(4, 1fr)" gap="4" w="full">
                             <BeetsTab key="stake">Stake</BeetsTab>
                             <BeetsTab key="unstake">Unstake</BeetsTab>
                             <BeetsTab key="withdraw">Withdraw</BeetsTab>
+                            <BeetsTab key="stats">Stats</BeetsTab>
                         </Grid>
                     </TabList>
                     <TabPanels h="full">
@@ -47,6 +49,9 @@ export default function SftmxLanding() {
                         </TabPanel>
                         <TabPanel h="full" px="0" pb="0">
                             <SftmxWithdrawTab />
+                        </TabPanel>
+                        <TabPanel h="full" px="0" pb="0">
+                            <SftmxStatsTab />
                         </TabPanel>
                     </TabPanels>
                 </Tabs>
