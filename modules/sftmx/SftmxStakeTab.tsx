@@ -4,11 +4,11 @@ import Card from '~/components/card/Card';
 import { FtmTokenInput } from '~/components/inputs/FtmTokenInput';
 import { networkConfig } from '~/lib/config/network-config';
 import { useUserAccount } from '~/lib/user/useUserAccount';
-import { useSftmxGetStakingData } from './useSftmxGetStakingData';
+import { useSftmxGetStakingData } from './hooks/useSftmxGetStakingData';
 import { tokenFormatAmount } from '~/lib/services/token/token-util';
 import { useEffect, useState } from 'react';
 import { SftmxStakeButton } from './SftmxStakeButton';
-import { useSftmxGetFtmxAmountForFtm } from './useSftmxGetFtmxAmountForFtm';
+import { useSftmxGetFtmxAmountForFtm } from './hooks/useSftmxGetFtmxAmountForFtm';
 import { formatFixed } from '@ethersproject/bignumber';
 import { useUserTokenBalances } from '~/lib/user/useUserTokenBalances';
 
