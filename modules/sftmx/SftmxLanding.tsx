@@ -1,4 +1,4 @@
-import { Tabs, TabList, TabPanels, TabPanel, VStack, Grid, Box } from '@chakra-ui/react';
+import { Tabs, TabList, TabPanels, TabPanel, VStack, Grid, Box, GridItem } from '@chakra-ui/react';
 import BeetsTab from '~/components/tabs/BeetsTab';
 import SftmxStakeTab from './SftmxStakeTab';
 import SftmxUnstakeTab from './SftmxUnstakeTab';
@@ -33,11 +33,27 @@ export default function SftmxLanding() {
                     }}
                 >
                     <TabList>
-                        <Grid templateColumns="repeat(4, 1fr)" gap="4" w="full">
-                            <BeetsTab key="stake">Stake</BeetsTab>
-                            <BeetsTab key="unstake">Unstake</BeetsTab>
-                            <BeetsTab key="withdraw">Withdraw</BeetsTab>
-                            <BeetsTab key="stats">Stats</BeetsTab>
+                        <Grid
+                            gap="4"
+                            w="full"
+                            templateAreas={{
+                                base: `"stake unstake"
+                                    "withdraw stats"`,
+                                lg: `"stake unstake withdraw stats"`,
+                            }}
+                        >
+                            <GridItem area="stake">
+                                <BeetsTab w="full">Stake</BeetsTab>
+                            </GridItem>
+                            <GridItem area="unstake">
+                                <BeetsTab w="full">Unstake</BeetsTab>
+                            </GridItem>
+                            <GridItem area="withdraw">
+                                <BeetsTab w="full">Withdraw</BeetsTab>
+                            </GridItem>
+                            <GridItem area="stats">
+                                <BeetsTab w="full">Stats</BeetsTab>
+                            </GridItem>
                         </Grid>
                     </TabList>
                     <TabPanels h="full">

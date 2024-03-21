@@ -5,13 +5,13 @@ import {
     GqlSftmxStakingSnapshotDataRange,
     useSftmxGetStakingSnapshotsQuery,
 } from '~/apollo/generated/graphql-codegen-generated';
-import { SftmxStatsChartsStakedFree } from './SftmxStatsChartsStakedFree';
+import { SftmxStatsFtmStakedFree } from './SftmxStatsFtmStakedFree';
 import { useSftmxGetStakingData } from '../../lib/useSftmxGetStakingData';
-import { SftmxStatsTable } from './SftmxStatsTable';
+import { SftmxStatsVaults } from './SftmxStatsVaults';
 
 type StatsType = 'STAKED' | 'VAULTS';
 
-export function SftmxStatsCharts() {
+export function SftmxStats() {
     const [statsType, setStatsType] = useState<StatsType>('STAKED');
     const [range, setRange] = useState<GqlSftmxStakingSnapshotDataRange>('THIRTY_DAYS');
     const { data: stakingSnapshotData } = useSftmxGetStakingSnapshotsQuery({
@@ -21,7 +21,7 @@ export function SftmxStatsCharts() {
 
     return (
         <Card h="full" w="full" p="4">
-            <HStack padding={{ base: '2', lg: '4' }} pb="0" justify={{ base: 'space-between', lg: 'flex-start' }}>
+            <HStack justify={{ base: 'space-between', lg: 'flex-start' }}>
                 <Select
                     value={statsType}
                     onChange={(e) => setStatsType(e.currentTarget.value as StatsType)}
@@ -48,8 +48,10 @@ export function SftmxStatsCharts() {
                 )}
             </HStack>
             <Box height="full">
-                {statsType === 'STAKED' && <SftmxStatsChartsStakedFree data={stakingSnapshotData?.snapshots || []} />}
-                {statsType === 'VAULTS' && <SftmxStatsTable />}
+                {statsType === 'STAKED' && stakingSnapshotData && (
+                    <SftmxStatsFtmStakedFree data={stakingSnapshotData.snapshots} />
+                )}
+                {statsType === 'VAULTS' && stakingData && <SftmxStatsVaults data={stakingData.sftmxGetStakingData} />}
             </Box>
         </Card>
     );

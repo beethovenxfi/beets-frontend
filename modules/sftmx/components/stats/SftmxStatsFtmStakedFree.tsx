@@ -17,7 +17,7 @@ interface Props {
     data: DataProps[];
 }
 
-export function SftmxStatsChartsStakedFree({ data }: Props) {
+export function SftmxStatsFtmStakedFree({ data }: Props) {
     const { colors } = useTheme();
 
     const option = useMemo<EChartsOption>(
@@ -94,23 +94,7 @@ export function SftmxStatsChartsStakedFree({ data }: Props) {
                         parseInt(item.totalFtmAmountInPool) + parseInt(item.totalFtmAmountStaked),
                     ]),
                     itemStyle: {
-                        color: colors.beets.red,
-                    },
-                    axisLine: { show: false },
-                    minorSplitLine: { show: false },
-                    splitLine: { show: false },
-                    tooltip: {
-                        valueFormatter: (value) => numberFormatUSDValue(value as number),
-                    },
-                },
-                {
-                    type: 'line',
-                    smooth: true,
-                    name: 'Total FTM amount in pool',
-                    showSymbol: false,
-                    data: data.map((item) => [item.timestamp * 1000, parseInt(item.totalFtmAmountInPool)]),
-                    itemStyle: {
-                        color: colors.beets.base['200'],
+                        color: colors.beets.base['100'],
                     },
                     axisLine: { show: false },
                     minorSplitLine: { show: false },
@@ -126,7 +110,23 @@ export function SftmxStatsChartsStakedFree({ data }: Props) {
                     showSymbol: false,
                     data: data.map((item) => [item.timestamp * 1000, parseInt(item.totalFtmAmountStaked)]),
                     itemStyle: {
-                        color: colors.beets.green,
+                        color: colors.beets.base['200'],
+                    },
+                    axisLine: { show: false },
+                    minorSplitLine: { show: false },
+                    splitLine: { show: false },
+                    tooltip: {
+                        valueFormatter: (value) => numberFormatUSDValue(value as number),
+                    },
+                },
+                {
+                    type: 'line',
+                    smooth: true,
+                    name: 'Total FTM amount in pool',
+                    showSymbol: false,
+                    data: data.map((item) => [item.timestamp * 1000, parseInt(item.totalFtmAmountInPool)]),
+                    itemStyle: {
+                        color: colors.beets.base['300'],
                     },
                     axisLine: { show: false },
                     minorSplitLine: { show: false },

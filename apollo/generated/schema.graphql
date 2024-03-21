@@ -1852,7 +1852,7 @@ type Query {
         chain: GqlChain!
 
         """
-        Whether to run queryBatchSwap to update with onchain values, default: true
+        Whether to run queryBatchSwap to update with onchain values, default: false
         """
         queryBatchSwap: Boolean
 
