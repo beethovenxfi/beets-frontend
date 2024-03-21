@@ -9,7 +9,6 @@ interface Props {
 }
 
 export function SftmxStatsVaults({ data }: Props) {
-    console.log({ data });
     return (
         <Box mt="4">
             <PaginatedTable

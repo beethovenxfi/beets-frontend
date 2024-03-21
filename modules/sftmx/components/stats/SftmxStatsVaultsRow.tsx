@@ -1,7 +1,6 @@
 import { GqlSftmxStakingVault } from '~/apollo/generated/graphql-codegen-generated';
-import { Flex, Text, Link, Grid, GridItem, Box, Divider } from '@chakra-ui/react';
-import { BoxProps, HStack } from '@chakra-ui/layout';
-import { ExternalLink } from 'react-feather';
+import { Flex, Text, Link, Grid, GridItem, Divider } from '@chakra-ui/react';
+import { BoxProps } from '@chakra-ui/layout';
 import { formatDistanceToNow } from 'date-fns';
 import numeral from 'numeral';
 import { addressShortDisplayName } from '~/lib/util/address';
@@ -15,11 +14,6 @@ export default function SftmxStatsVaultsRow({ vault, ...rest }: Props) {
     const gridItemMb = { base: '4', lg: '0' };
     const justifyContent = { base: 'flex-start', lg: 'flex-end' };
 
-    console.log({
-        unlock: formatDistanceToNow(new Date(vault.unlockTimestamp * 1000), {
-            addSuffix: true,
-        }),
-    });
     return (
         <>
             <Grid
