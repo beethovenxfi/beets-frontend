@@ -21,13 +21,13 @@ export default function SftmxStatsVaultsRow({ vault, ...rest }: Props) {
                 py={{ base: '4', lg: '2' }}
                 templateColumns={{
                     base: '1fr 1fr',
-                    lg: '1fr 100px  75px 100px',
+                    lg: '60px 1fr 100px 100px',
                 }}
                 gap="4"
                 templateAreas={{
                     base: `"validator vault"
                              "staked unlock"`,
-                    lg: `"vault validator staked unlock"`,
+                    lg: `"validator vault staked unlock"`,
                 }}
                 bgColor="rgba(255,255,255,0.05)"
                 _hover={{ bg: 'beets.base.800' }}
@@ -49,7 +49,7 @@ export default function SftmxStatsVaultsRow({ vault, ...rest }: Props) {
                 <Flex align={flexAlign}>
                     <GridItem area="staked">
                         <MobileLabel text="Staked FTM" />
-                        {numeral(vault.ftmAmountStaked).format('0.[00]a')}
+                        {numeral(vault.ftmAmountStaked).format('0.00[00]a')}
                     </GridItem>
                 </Flex>
                 <Flex align={flexAlign} justify={justifyContent}>

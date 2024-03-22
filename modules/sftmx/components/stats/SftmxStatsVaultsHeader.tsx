@@ -13,18 +13,18 @@ export default function SftmxStatsVaultsHeader() {
             borderBottom="2px"
             borderColor="beets.base.500"
             mb={{ base: '4', lg: '0' }}
-            templateColumns="1fr 100px 75px 100px"
+            templateColumns="60px 1fr 100px 100px"
             gap="4"
             display={{ base: 'none', xl: 'grid' }}
         >
             <GridItem>
                 <Text fontSize="md" fontWeight="semibold" color="beets.base.100">
-                    Vault Address
+                    Id
                 </Text>
             </GridItem>
             <GridItem>
                 <Text fontSize="md" fontWeight="semibold" color="beets.base.100">
-                    Validator Id
+                    Vault Address
                 </Text>
             </GridItem>
             <GridItem>
