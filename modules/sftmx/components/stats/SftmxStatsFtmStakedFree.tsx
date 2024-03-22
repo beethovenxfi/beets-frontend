@@ -42,9 +42,9 @@ export function SftmxStatsFtmStakedFree({ data }: Props) {
                     },
                 },
                 // any -> https://github.com/apache/echarts/issues/14277
-                formatter: (params: any) => `Total: ${numeral(params[0].data[1]).format('0a')}<br />
-                                            Total staked: ${numeral(params[1].data[1]).format('0a')}<br />
-                                            Total free: ${numeral(params[2].data[1]).format('0a')}`,
+                formatter: (params: any) => `Total: ${numeral(params[0].data[1]).format('0.[00]a')}<br />
+                                            Total staked: ${numeral(params[1].data[1]).format('0.[00]a')}<br />
+                                            Total free: ${numeral(params[2].data[1]).format('0.[00]a')}`,
             },
             xAxis: {
                 show: true,

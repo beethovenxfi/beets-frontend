@@ -21,13 +21,13 @@ export default function SftmxStatsVaultsRow({ vault, ...rest }: Props) {
                 py={{ base: '4', lg: '2' }}
                 templateColumns={{
                     base: '1fr 1fr',
-                    lg: '1fr 75px 75px 100px',
+                    lg: '1fr 100px  75px 100px',
                 }}
                 gap="4"
                 templateAreas={{
                     base: `"validator vault"
                              "staked unlock"`,
-                    lg: `"staked validator vault unlock"`,
+                    lg: `"vault validator staked unlock"`,
                 }}
                 bgColor="rgba(255,255,255,0.05)"
                 _hover={{ bg: 'beets.base.800' }}
