@@ -57,6 +57,12 @@ export default function SftmxOverallStats() {
                     <VStack w="full" align="flex-start" divider={<StackDivider borderColor="whiteAlpha.200" />} gap="2">
                         <VStack w="full" align="flex-start">
                             <Heading size="sm" mb="2">
+                                Total
+                            </Heading>
+                            {data && <TokenInfo amount={data?.sftmxGetStakingData.totalFtmAmount} />}
+                        </VStack>
+                        <VStack w="full" align="flex-start">
+                            <Heading size="sm" mb="2">
                                 Total staked
                             </Heading>
                             {data && <TokenInfo amount={data?.sftmxGetStakingData.totalFtmAmountStaked} />}
@@ -74,12 +80,6 @@ export default function SftmxOverallStats() {
                                 />
                             </Box>
                             {data && <TokenInfo amount={data?.sftmxGetStakingData.totalFtmAmountInPool} />}
-                        </VStack>
-                        <VStack w="full" align="flex-start">
-                            <Heading size="sm" mb="2">
-                                Total
-                            </Heading>
-                            {data && <TokenInfo amount={data?.sftmxGetStakingData.totalFtmAmount} />}
                         </VStack>
                     </VStack>
                 </VStack>
