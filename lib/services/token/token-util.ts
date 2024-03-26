@@ -59,6 +59,8 @@ export function tokenFormatAmount(amount: AmountHumanReadable | number, isDust =
         return numeral(amount).format('0.[0000]');
     } else if (amountNum < 5000) {
         return numeral(amount).format('0,0.[00]');
+    } else if (amountNum > 100000000) {
+        return numeral(amount).format('0,0.[00]a');
     } else {
         return numeral(amount).format('0,0');
     }
