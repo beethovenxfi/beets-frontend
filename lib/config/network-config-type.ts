@@ -98,6 +98,7 @@ export interface NetworkConfig {
         };
         minimumBoost: number;
     };
+    rateproviders: { [tokenAddress: string]: string };
     beetsPoolOwnerAddress: string;
     masterChefContractAddress: string;
     defaultTokenIn: string;

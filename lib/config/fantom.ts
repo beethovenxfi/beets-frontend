@@ -38,7 +38,7 @@ export const fantomNetworkConfig: NetworkConfig = {
         nativeAssetId: 'fantom',
         platformId: 'fantom',
     },
-    rpcUrl: 'https://rpc.ftm.tools',
+    rpcUrl: 'https://rpc.tenderly.co/fork/80e724dd-626c-4c36-bc9d-3f57e32d0f07',
     //rpcUrl: 'https://rpc.ankr.com/fantom',
     multicall: '0x66335d7ad8011f6aa3f48aadcb523b62b38ed961',
     beets: {
@@ -102,6 +102,7 @@ export const fantomNetworkConfig: NetworkConfig = {
         },
         minimumBoost: 1.0,
     },
+    rateproviders: { '0xd7028092c830b5c8fce061af2e593413ebbc1fc1': '0x629d4c27057915e59dd94bca8d48c6d80735b521' },
     beetsPoolOwnerAddress: '0xcd983793adb846dce4830c22f30c7ef0c864a776',
     masterChefContractAddress: '0x8166994d9ebBe5829EC86Bd81258149B87faCfd3',
     defaultTokenIn: '0x21be370d5312f44cb42ce377bc9b8a0cef1a4c83',
