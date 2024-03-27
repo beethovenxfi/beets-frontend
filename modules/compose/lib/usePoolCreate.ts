@@ -57,7 +57,7 @@ export function usePoolCreate() {
                 symbol,
                 tokenAddresses,
                 scaledTokenWeights,
-                tokenAddresses.map((tokenAddress) => getRateProvider(tokenAddress)), // rate providers TODO VERIFY
+                tokenAddresses.map((tokenAddress) => getRateProvider(tokenAddress)),
                 swapFeeScaled.toString(),
                 swapFeeManager,
                 generateSalt(), // TODO VERIFY
