@@ -1,16 +1,14 @@
 import { useSubmitTransaction } from '~/lib/util/useSubmitTransaction';
 import WeightedPoolFactoryV4 from '~/lib/abi/WeightedPoolFactoryV4.json';
-import { useUserAccount } from '~/lib/user/useUserAccount';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 import { PoolCreationToken } from '../ComposeProvider';
 import { BigNumber as EPBigNumber } from 'ethers';
 import BigNumber from 'bignumber.js';
 import { toNormalizedWeights } from '@balancer-labs/balancer-js';
-import { useGetTokens } from '~/lib/global/useToken';
-import { BytesLike, randomBytes, toUtf8Bytes } from 'ethers/lib/utils.js';
 import { generateSalt } from '~/lib/util/random';
 import { scale } from '~/lib/util/number-formats';
 import { AddressZero } from '@ethersproject/constants';
+import { networkConfig } from '~/lib/config/network-config';
 
 export interface CreateWeightedPoolRequest {
     name: string;
@@ -31,6 +29,11 @@ function scaleTokenWeights(tokens: PoolCreationToken[]): string[] {
     });
 
     return weightStrings;
+}
+
+function getRateProvider(tokenAddress: string) {
+    const rateProvider = networkConfig.rateproviders[tokenAddress];
+    return rateProvider ?? AddressZero;
 }
 
 export function usePoolCreate() {
@@ -54,7 +57,7 @@ export function usePoolCreate() {
                 symbol,
                 tokenAddresses,
                 scaledTokenWeights,
-                tokens.map(_ => AddressZero), // rate providers TODO VERIFY
+                tokenAddresses.map((tokenAddress) => getRateProvider(tokenAddress)),
                 swapFeeScaled.toString(),
                 swapFeeManager,
                 generateSalt(), // TODO VERIFY

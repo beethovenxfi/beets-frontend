@@ -110,6 +110,7 @@ export const optimismNetworkConfig: NetworkConfig = {
         },
         minimumBoost: 1.0,
     },
+    rateproviders: { AddressZero: AddressZero },
     beetsPoolOwnerAddress: '0xd9e2889ac8c6fff8e94c7c1beeade1352df1a513',
     masterChefContractAddress: '',
     defaultTokenIn: '0x7f5c764cbc14f9669b88837ca1490cca17c31607',
