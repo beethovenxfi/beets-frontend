@@ -38,7 +38,7 @@ export const fantomNetworkConfig: NetworkConfig = {
         nativeAssetId: 'fantom',
         platformId: 'fantom',
     },
-    rpcUrl: 'https://rpc.tenderly.co/fork/80e724dd-626c-4c36-bc9d-3f57e32d0f07',
+    rpcUrl: 'https://rpc.ftm.tools',
     //rpcUrl: 'https://rpc.ankr.com/fantom',
     multicall: '0x66335d7ad8011f6aa3f48aadcb523b62b38ed961',
     beets: {
