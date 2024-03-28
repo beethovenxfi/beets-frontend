@@ -5,7 +5,7 @@ import numeral from 'numeral';
 import { useGetTokens } from '~/lib/global/useToken';
 import { networkConfig } from '~/lib/config/network-config';
 import TokenAvatar from '~/components/token/TokenAvatar';
-import { tokenFormatAmountPrecise } from '~/lib/services/token/token-util';
+import { tokenFormatAmount } from '~/lib/services/token/token-util';
 import { InfoButton } from '~/components/info-button/InfoButton';
 
 function TokenInfo({ amount }: { amount: string }) {
@@ -23,7 +23,7 @@ function TokenInfo({ amount }: { amount: string }) {
                     </VStack>
                 </HStack>
                 <VStack alignItems="flex-end" spacing="0">
-                    <Text>{tokenFormatAmountPrecise(amount, 1)}</Text>
+                    <Text>{tokenFormatAmount(amount)}</Text>
                     <Text fontSize="sm" color="beets.base.100">
                         ~
                         {formattedPrice({
