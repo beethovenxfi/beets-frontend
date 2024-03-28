@@ -18,7 +18,7 @@ export default function SftmxLanding() {
                 base: `"tabs" "stats" "charts" "vaults"`,
                 xl: `"stats tabs tabs . ." "vaults vaults charts charts charts"`,
             }}
-            gap={{ base: '8', lg: '4' }}
+            gap="8"
             w="full"
         >
             <GridItem area="tabs">
@@ -49,7 +49,7 @@ export default function SftmxLanding() {
                             </GridItem>
                         </Grid>
                     </TabList>
-                    <TabPanels minH="615px">
+                    <TabPanels>
                         <TabPanel px="0" pb="0">
                             <SftmxStakeTab />
                         </TabPanel>
