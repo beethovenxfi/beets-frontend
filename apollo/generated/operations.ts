@@ -1232,6 +1232,16 @@ export const SftmxGetStakingData = gql`
             undelegatePaused
             withdrawPaused
             withdrawalDelay
+            numberOfVaults
+            vaults {
+                ftmAmountStaked
+                isMatured
+                unlockTimestamp
+                validatorAddress
+                validatorId
+                vaultAddress
+                vaultIndex
+            }
         }
     }
 `;
@@ -1243,6 +1253,18 @@ export const SftmxGetWithdrawalRequests = gql`
             isWithdrawn
             requestTimestamp
             user
+        }
+    }
+`;
+export const SftmxGetStakingSnapshots = gql`
+    query SftmxGetStakingSnapshots($range: GqlSftmxStakingSnapshotDataRange!) {
+        snapshots: sftmxGetStakingSnapshots(range: $range) {
+            exchangeRate
+            id
+            timestamp
+            totalFtmAmount
+            totalFtmAmountInPool
+            totalFtmAmountStaked
         }
     }
 `;
