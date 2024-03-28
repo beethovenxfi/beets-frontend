@@ -8,6 +8,7 @@ import SftmxWithdrawalRequestsHeader from './SftmxWithdrawalRequestsHeader';
 import SftmxWithdrawalRequestsRow from './SftmxWithdrawalRequestsRow';
 import { useSftmxGetStakingData } from './lib/useSftmxGetStakingData';
 import { orderBy } from 'lodash';
+import { useEffect, useState } from 'react';
 
 export default function SftmxWithdrawTab() {
     const { isConnected } = useUserAccount();
@@ -15,6 +16,19 @@ export default function SftmxWithdrawTab() {
     const { data: stakingData } = useSftmxGetStakingData();
 
     const requests = orderBy(requestsData?.sftmxGetWithdrawalRequests, 'requestTimestamp', 'desc');
+    const skip = 5;
+    const [first, setFirst] = useState(0);
+    const [requestsView, setRequestsView] = useState(requests.slice(first, skip));
+
+    useEffect(() => {
+        const start = first * skip;
+        if (requests.length - skip - start < 0) {
+            setRequestsView(requests.slice(start));
+        } else {
+            console.log({ req: requests.slice(start, start + skip) });
+            setRequestsView(requests.slice(start, start + skip));
+        }
+    }, [first]);
 
     return (
         <Card shadow="lg" h="full" title="Withdrawal requests">
@@ -29,9 +43,8 @@ export default function SftmxWithdrawTab() {
                         If you have just unstaked FTM it can take up to 5 minutes before your request is visible here.
                     </Text>
                     <PaginatedTable
-                        isShort
                         width="full"
-                        items={requests}
+                        items={requestsView}
                         loading={isLoading}
                         renderTableHeader={() => <SftmxWithdrawalRequestsHeader />}
                         renderTableRow={(item) => (
@@ -41,6 +54,13 @@ export default function SftmxWithdrawTab() {
                             />
                         )}
                         noResultLabel="No withdrawal requests found!"
+                        hidePageSizeChange
+                        count={requests.length}
+                        currentPage={first + 1}
+                        onPageChange={(page) => {
+                            setFirst(page - 1);
+                        }}
+                        pageSize={5}
                     />
                 </VStack>
             )}

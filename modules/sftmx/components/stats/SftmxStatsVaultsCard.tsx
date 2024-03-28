@@ -18,7 +18,6 @@ export function SftmxStatsVaultsCard() {
                 loading={false}
                 renderTableHeader={() => <SftmxStatsVaultsHeader />}
                 renderTableRow={(item) => <SftmxStatsVaultsRow vault={item} />}
-                pageSize={5}
                 hidePageSizeChange
             />
         </Card>
