@@ -16,7 +16,7 @@ export default function SftmxLanding() {
             templateColumns={{ base: '1fr', lg: 'repeat(5, 1fr)' }}
             templateAreas={{
                 base: `"tabs" "stats" "charts" "vaults"`,
-                xl: `"stats tabs tabs . ." "vaults vaults charts charts charts"`,
+                xl: `". stats tabs tabs  ." "vaults vaults charts charts charts"`,
             }}
             gap="8"
             w="full"
