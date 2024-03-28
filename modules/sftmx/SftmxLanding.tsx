@@ -1,23 +1,27 @@
-import { Tabs, TabList, TabPanels, TabPanel, VStack, Grid, Box, GridItem } from '@chakra-ui/react';
+import { Tabs, TabList, TabPanels, TabPanel, Grid, GridItem } from '@chakra-ui/react';
 import BeetsTab from '~/components/tabs/BeetsTab';
 import SftmxStakeTab from './SftmxStakeTab';
 import SftmxUnstakeTab from './SftmxUnstakeTab';
 import SftmxOverallStats from './SftmxOverallStats';
 import SftmxWithdrawTab from './SftmxWithdrawTab';
 import { useSftmxGetWithdrawalRequests } from './lib/useSftmxGetWithdrawalRequests';
-import SftmxStatsTab from './SftmxStatsTab';
+import { SftmxStatsVaultsCard } from './components/stats/SftmxStatsVaultsCard';
+import { SftmxStatsChartsCard } from './components/stats/SftmxStatsChartsCard';
 
 export default function SftmxLanding() {
     const { startPolling, stopPolling } = useSftmxGetWithdrawalRequests();
 
     return (
-        <VStack spacing="4" w="full" align="center">
-            <Grid
-                templateColumns={{ base: '1fr', lg: '1fr 1fr' }}
-                gap={{ base: '8', lg: '4' }}
-                w={{ base: 'full', lg: '75%' }}
-                minH="550px"
-            >
+        <Grid
+            templateColumns={{ base: '1fr', lg: 'repeat(5, 1fr)' }}
+            templateAreas={{
+                base: `"tabs" "stats" "charts" "vaults"`,
+                xl: `". tabs tabs stats ." "charts charts charts vaults vaults"`,
+            }}
+            gap={{ base: '8', lg: '4' }}
+            w="full"
+        >
+            <GridItem area="tabs">
                 <Tabs
                     variant="soft-rounded"
                     display="flex"
@@ -33,15 +37,7 @@ export default function SftmxLanding() {
                     }}
                 >
                     <TabList>
-                        <Grid
-                            gap="4"
-                            w="full"
-                            templateAreas={{
-                                base: `"stake unstake"
-                                    "withdraw stats"`,
-                                lg: `"stake unstake withdraw stats"`,
-                            }}
-                        >
+                        <Grid gap="4" w="full" templateAreas={`"stake unstake withdraw"`}>
                             <GridItem area="stake">
                                 <BeetsTab w="full">Stake</BeetsTab>
                             </GridItem>
@@ -50,9 +46,6 @@ export default function SftmxLanding() {
                             </GridItem>
                             <GridItem area="withdraw">
                                 <BeetsTab w="full">Withdraw</BeetsTab>
-                            </GridItem>
-                            <GridItem area="stats">
-                                <BeetsTab w="full">Stats</BeetsTab>
                             </GridItem>
                         </Grid>
                     </TabList>
@@ -66,15 +59,18 @@ export default function SftmxLanding() {
                         <TabPanel h="full" px="0" pb="0">
                             <SftmxWithdrawTab />
                         </TabPanel>
-                        <TabPanel h="full" px="0" pb="0">
-                            <SftmxStatsTab />
-                        </TabPanel>
                     </TabPanels>
                 </Tabs>
-                <Box w={{ base: '100%', lg: '66%' }} h="full">
-                    <SftmxOverallStats />
-                </Box>
-            </Grid>
-        </VStack>
+            </GridItem>
+            <GridItem area="stats">
+                <SftmxOverallStats />
+            </GridItem>
+            <GridItem area="charts">
+                <SftmxStatsChartsCard />
+            </GridItem>
+            <GridItem area="vaults">
+                <SftmxStatsVaultsCard />
+            </GridItem>
+        </Grid>
     );
 }

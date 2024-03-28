@@ -21,7 +21,7 @@ export default function SftmxStatsVaultsRow({ vault, ...rest }: Props) {
                 py={{ base: '4', lg: '2' }}
                 templateColumns={{
                     base: '1fr 1fr',
-                    lg: '60px 1fr 100px 100px',
+                    lg: '60px 150px 100px 1fr',
                 }}
                 gap="4"
                 templateAreas={{

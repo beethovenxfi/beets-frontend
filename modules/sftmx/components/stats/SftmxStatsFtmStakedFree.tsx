@@ -71,17 +71,29 @@ export function SftmxStatsFtmStakedFree({ data }: Props) {
                 axisLine: { show: false },
             },
             yAxis: {
-                show: false,
-                scale: true,
+                type: 'value',
+                axisLine: { show: false },
+                minorSplitLine: { show: false },
                 splitLine: { show: false },
-                offset: 0,
+                axisLabel: {
+                    formatter: function (value: number, index: number) {
+                        return index % 2 === 1 ? `$${numeral(value).format('0a')}` : '';
+                    },
+                    color: colors.beets.base['100'],
+                },
+                axisPointer: {
+                    label: {
+                        formatter: function (params) {
+                            return `$${numeral(params.value).format('0a')}`;
+                        },
+                    },
+                },
             },
             grid: {
-                left: 0,
+                left: '5%',
                 right: 0,
                 top: '5%',
                 bottom: '7.5%',
-                containLabel: false,
             },
             series: [
                 {
@@ -140,5 +152,5 @@ export function SftmxStatsFtmStakedFree({ data }: Props) {
         [JSON.stringify(data)],
     );
 
-    return <ReactECharts option={option} style={{ height: '100%' }} />;
+    return <ReactECharts option={option} style={{ height: '400px' }} />;
 }

@@ -38,9 +38,8 @@ export default function SftmxUnstakeTab() {
     const exchangeRateFtm = 1 / parseFloat(sftmxAmount);
 
     return (
-        <Card shadow="lg" h="full">
+        <Card shadow="lg" h="full" title="Enter amount to unstake">
             <VStack spacing="4" p="4" align="flex-start" h="full">
-                <Heading size="md">Enter amount to unstake</Heading>
                 <FtmTokenInput
                     address={networkConfig.sftmx.address}
                     label="Unstake"

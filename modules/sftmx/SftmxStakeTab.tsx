@@ -34,9 +34,8 @@ export default function SftmxStakeTab() {
         sftmxStakingData && parseFloat(amount) > parseFloat(sftmxStakingData.sftmxGetStakingData.maxDepositLimit);
 
     return (
-        <Card shadow="lg" h="full">
+        <Card shadow="lg" h="full" title="Enter amount to stake">
             <VStack spacing="4" p="4" align="flex-start" h="full">
-                <Heading size="md">Enter amount to stake</Heading>
                 <FtmTokenInput
                     address={networkConfig.eth.address}
                     label="Stake"
