@@ -16,7 +16,7 @@ export default function SftmxLanding() {
             templateColumns={{ base: '1fr', lg: 'repeat(5, 1fr)' }}
             templateAreas={{
                 base: `"tabs" "stats" "charts" "vaults"`,
-                xl: `". tabs tabs stats ." "charts charts charts vaults vaults"`,
+                xl: `"stats tabs tabs . ." "vaults vaults charts charts charts"`,
             }}
             gap={{ base: '8', lg: '4' }}
             w="full"
@@ -49,14 +49,14 @@ export default function SftmxLanding() {
                             </GridItem>
                         </Grid>
                     </TabList>
-                    <TabPanels h="full">
-                        <TabPanel h="full" px="0" pb="0">
+                    <TabPanels minH="615px">
+                        <TabPanel px="0" pb="0">
                             <SftmxStakeTab />
                         </TabPanel>
-                        <TabPanel h="full" px="0" pb="0">
+                        <TabPanel px="0" pb="0">
                             <SftmxUnstakeTab />
                         </TabPanel>
-                        <TabPanel h="full" px="0" pb="0">
+                        <TabPanel px="0" pb="0">
                             <SftmxWithdrawTab />
                         </TabPanel>
                     </TabPanels>

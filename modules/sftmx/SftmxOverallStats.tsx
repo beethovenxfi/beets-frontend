@@ -41,10 +41,10 @@ export default function SftmxOverallStats() {
     const { data } = useSftmxGetStakingData();
 
     return (
-        <VStack align="flex-start" w="full">
+        <VStack align="flex-start" w="full" h="full">
             <Box h="50px"></Box>
-            <Card p="4" w="full" minH="470px">
-                <VStack spacing="4" w="full" align="flex-start">
+            <Card p="4" w="full" h="full">
+                <VStack spacing="4" w="full" h="full" align="flex-start">
                     <VStack spacing="2" align="flex-start">
                         <Heading size="sm">Staking APR</Heading>
                         <HStack>
