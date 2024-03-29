@@ -41,8 +41,8 @@ export default function SftmxStatsVaultsRow({ vault, ...rest }: Props) {
                 <Flex align={flexAlign}>
                     <GridItem area="vault" mb={gridItemMb}>
                         <MobileLabel text="Vault Address" />
-                        <Link href={`https://ftmscan.com/address/${vault.validatorAddress}`} isExternal>
-                            {addressShortDisplayName(vault.validatorAddress)}
+                        <Link href={`https://ftmscan.com/address/${vault.vaultAddress}`} isExternal>
+                            {addressShortDisplayName(vault.vaultAddress)}
                         </Link>
                     </GridItem>
                 </Flex>
