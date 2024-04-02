@@ -25,7 +25,6 @@ export default function SftmxWithdrawTab() {
         if (requests.length - skip - start < 0) {
             setRequestsView(requests.slice(start));
         } else {
-            console.log({ req: requests.slice(start, start + skip) });
             setRequestsView(requests.slice(start, start + skip));
         }
     }, [first]);
