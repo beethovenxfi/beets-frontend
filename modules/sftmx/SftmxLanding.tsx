@@ -16,12 +16,13 @@ export default function SftmxLanding() {
             templateColumns={{ base: '1fr', lg: 'repeat(5, 1fr)' }}
             templateAreas={{
                 base: `"tabs" "stats" "charts" "vaults"`,
-                xl: `". stats tabs tabs  ." "vaults vaults charts charts charts"`,
+                xl: `". tabs tabs stats ." "charts charts charts charts charts" "vaults vaults vaults . ."`,
             }}
             gap="8"
             w="full"
+            templateRows={{ base: 'repeat(4, 1fr)', lg: '640px 1fr 1fr' }}
         >
-            <GridItem area="tabs">
+            <GridItem area="tabs" h="full">
                 <Tabs
                     variant="soft-rounded"
                     display="flex"
@@ -35,6 +36,7 @@ export default function SftmxLanding() {
                             stopPolling();
                         }
                     }}
+                    h="full"
                 >
                     <TabList>
                         <Grid gap="4" w="full" templateAreas={`"stake unstake withdraw"`}>
@@ -49,14 +51,14 @@ export default function SftmxLanding() {
                             </GridItem>
                         </Grid>
                     </TabList>
-                    <TabPanels>
-                        <TabPanel px="0" pb="0">
+                    <TabPanels h="full">
+                        <TabPanel h="full" px="0" pb="0">
                             <SftmxStakeTab />
                         </TabPanel>
-                        <TabPanel px="0" pb="0">
+                        <TabPanel h="full" px="0" pb="0">
                             <SftmxUnstakeTab />
                         </TabPanel>
-                        <TabPanel px="0" pb="0">
+                        <TabPanel h="full" px="0" pb="0">
                             <SftmxWithdrawTab />
                         </TabPanel>
                     </TabPanels>
