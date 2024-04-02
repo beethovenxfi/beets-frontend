@@ -1,10 +1,10 @@
 import Card from '~/components/card/Card';
-import { SftmxStatsCharts } from './SftmxStatsCharts';
+import { SftmxStatsTVLCharts } from './SftmxStatsTVLCharts';
 
-export function SftmxStatsChartsCard() {
+export function SftmxStatsTVLChartsCard() {
     return (
         <Card shadow="lg" h="full" p="4" title="FTM staked">
-            <SftmxStatsCharts />
+            <SftmxStatsTVLCharts />
         </Card>
     );
 }

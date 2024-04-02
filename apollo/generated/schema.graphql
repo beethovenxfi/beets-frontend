@@ -1768,7 +1768,7 @@ type Query {
     blocksGetBlocksPerDay: Float!
     blocksGetBlocksPerSecond: Float!
     blocksGetBlocksPerYear: Float!
-    contentGetNewsItems: [GqlContentNewsItem!]!
+    contentGetNewsItems(chain: GqlChain): [GqlContentNewsItem!]!
     latestSyncedBlocks: GqlLatestSyncedBlocks!
 
     """

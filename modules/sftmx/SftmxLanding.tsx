@@ -6,7 +6,8 @@ import SftmxOverallStats from './SftmxOverallStats';
 import SftmxWithdrawTab from './SftmxWithdrawTab';
 import { useSftmxGetWithdrawalRequests } from './lib/useSftmxGetWithdrawalRequests';
 import { SftmxStatsVaultsCard } from './components/stats/SftmxStatsVaultsCard';
-import { SftmxStatsChartsCard } from './components/stats/SftmxStatsChartsCard';
+import { SftmxStatsTVLChartsCard } from './components/stats/SftmxStatsTVLChartsCard';
+import { SftmxStatsRateChartsCard } from './components/stats/SftmxStatsRateChartsCard';
 
 export default function SftmxLanding() {
     const { startPolling, stopPolling } = useSftmxGetWithdrawalRequests();
@@ -15,12 +16,12 @@ export default function SftmxLanding() {
         <Grid
             templateColumns={{ base: '1fr', lg: 'repeat(5, 1fr)' }}
             templateAreas={{
-                base: `"tabs" "stats" "charts" "vaults"`,
-                xl: `". tabs tabs stats ." "charts charts charts charts charts" "vaults vaults vaults . ."`,
+                base: `"tabs" "stats" "tvl" "rate" "vaults"`,
+                xl: `". tabs tabs stats ." "tvl tvl tvl tvl tvl" "rate rate rate rate rate" "vaults vaults vaults . ."`,
             }}
             gap="8"
             w="full"
-            templateRows={{ base: 'repeat(4, 1fr)', lg: '640px 1fr 1fr' }}
+            templateRows={{ base: 'repeat(4, 1fr)', lg: 'repeat(3, 640px) 1fr' }}
         >
             <GridItem area="tabs" h="full">
                 <Tabs
@@ -67,8 +68,11 @@ export default function SftmxLanding() {
             <GridItem area="stats">
                 <SftmxOverallStats />
             </GridItem>
-            <GridItem area="charts">
-                <SftmxStatsChartsCard />
+            <GridItem area="tvl">
+                <SftmxStatsTVLChartsCard />
+            </GridItem>
+            <GridItem area="rate">
+                <SftmxStatsRateChartsCard />
             </GridItem>
             <GridItem area="vaults">
                 <SftmxStatsVaultsCard />
