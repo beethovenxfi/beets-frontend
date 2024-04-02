@@ -289,6 +289,7 @@ export const optimismNetworkConfig: NetworkConfig = {
         '0xe906d4c4fc4c3fe96560de86b4bf7ed89af9a69a000200000000000000000126': 'gyroscope',
         '0x62cf35db540152e94936de63efc90d880d4e241b0000000000000000000000ef': 'reaper',
         '0x7fe29a818438ed2759e30f65c2302295711d66fc0000000000000000000000e5': 'reaper', // to be deprecated soon
+        '0x8bb826afc0ff7d2c034a2883f4c461ffd238e1c300020000000000000000012b': 'gyroscope',
     },
     // manually added for now
     thirdPartyStakingPools: [
@@ -343,16 +344,16 @@ export const optimismNetworkConfig: NetworkConfig = {
             url: 'https://app.aura.finance/#/10/pool/16',
             name: 'aura',
         },
-        // {
-        //     poolId: '0x478980c67d53cd990f2b7bab311ddc9934324e7b00020000000000000000010c', // All Roads Lead to Frax
-        //     url: 'https://app.aura.finance/#/10/pool/17',
-        //     name: 'aura',
-        // },
-        // {
-        //     poolId: '0xa71021492a3966eec735ed1b505afa097c7cfe6f00000000000000000000010d', // Fraximalist Ethereum
-        //     url: 'https://app.aura.finance/#/10/pool/18',
-        //     name: 'aura',
-        // },
+        {
+            poolId: '0x478980c67d53cd990f2b7bab311ddc9934324e7b00020000000000000000010c', // All Roads Lead to Frax
+            url: 'https://app.aura.finance/#/10/pool/17',
+            name: 'aura',
+        },
+        {
+            poolId: '0xa71021492a3966eec735ed1b505afa097c7cfe6f00000000000000000000010d', // Fraximalist Ethereum
+            url: 'https://app.aura.finance/#/10/pool/18',
+            name: 'aura',
+        },
         {
             poolId: '0x2feb76966459d7841fa8a7ed0aa4bf574d6111bf00020000000000000000011d', // Yield Concerto by FRAX
             url: 'https://app.aura.finance/#/10/pool/19',
@@ -361,6 +362,11 @@ export const optimismNetworkConfig: NetworkConfig = {
         {
             poolId: '0x2a5139cd86c041aa3467e649f5ee0880a5de2f2f00020000000000000000011a', // Staked Duet
             url: 'https://app.aura.finance/#/10/pool/20',
+            name: 'aura',
+        },
+        {
+            poolId: '0xe906d4c4fc4c3fe96560de86b4bf7ed89af9a69a000200000000000000000126', // Frax Symphony
+            url: 'https://app.aura.finance/#/10/pool/21',
             name: 'aura',
         },
     ],
