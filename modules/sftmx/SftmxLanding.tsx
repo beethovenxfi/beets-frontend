@@ -15,8 +15,8 @@ export default function SftmxLanding() {
         <Grid
             templateColumns={{ base: '1fr', lg: 'repeat(5, 1fr)' }}
             templateAreas={{
-                base: `"tabs" "stats" "charts" "vaults"`,
-                xl: `". tabs tabs stats ." "vaults vaults charts charts charts"`,
+                base: `"tabs" "stats" "vaults" "charts" `,
+                xl: `"stats tabs tabs vaults vaults" "charts charts charts charts charts"`,
             }}
             gap="8"
             w="full"
