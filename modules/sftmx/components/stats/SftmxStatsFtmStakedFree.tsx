@@ -3,7 +3,7 @@ import { EChartsOption } from 'echarts';
 import { format } from 'date-fns';
 import { numberFormatUSDValue } from '~/lib/util/number-formats';
 import ReactECharts from 'echarts-for-react';
-import { useTheme } from '@chakra-ui/react';
+import { useBreakpointValue, useTheme } from '@chakra-ui/react';
 import numeral from 'numeral';
 
 interface DataProps {
@@ -19,6 +19,7 @@ interface Props {
 
 export function SftmxStatsFtmStakedFree({ data }: Props) {
     const { colors } = useTheme();
+    const isMobile = useBreakpointValue({ base: true, lg: false });
 
     const option = useMemo<EChartsOption>(
         () => ({
@@ -90,7 +91,7 @@ export function SftmxStatsFtmStakedFree({ data }: Props) {
                 },
             },
             grid: {
-                left: '5%',
+                left: isMobile ? '12%' : '5%',
                 right: 0,
                 top: '5%',
                 bottom: '7.5%',
@@ -152,5 +153,5 @@ export function SftmxStatsFtmStakedFree({ data }: Props) {
         [JSON.stringify(data)],
     );
 
-    return <ReactECharts option={option} style={{ height: '100%' }} />;
+    return <ReactECharts option={option} style={{ height: isMobile ? '400px' : '100%' }} />;
 }

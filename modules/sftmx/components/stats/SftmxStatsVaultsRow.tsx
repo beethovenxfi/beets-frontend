@@ -1,5 +1,5 @@
 import { GqlSftmxStakingVault } from '~/apollo/generated/graphql-codegen-generated';
-import { Flex, Text, Link, Grid, GridItem, Divider } from '@chakra-ui/react';
+import { Flex, Text, Link, Grid, GridItem, Divider, useBreakpointValue } from '@chakra-ui/react';
 import { BoxProps } from '@chakra-ui/layout';
 import { formatDistanceToNow } from 'date-fns';
 import numeral from 'numeral';
@@ -10,6 +10,7 @@ interface Props extends BoxProps {
 }
 
 export default function SftmxStatsVaultsRow({ vault, ...rest }: Props) {
+    const isMobile = useBreakpointValue({ base: true, lg: false });
     const flexAlign = { base: 'flex-start', lg: 'center' };
     const gridItemMb = { base: '4', lg: '0' };
     const justifyContent = { base: 'flex-start', lg: 'flex-end' };
@@ -21,7 +22,7 @@ export default function SftmxStatsVaultsRow({ vault, ...rest }: Props) {
                 py={{ base: '4', lg: '2' }}
                 templateColumns={{
                     base: '1fr 1fr',
-                    lg: '60px 150px 100px 1fr',
+                    lg: '60px 450px 100px 1fr',
                 }}
                 gap="4"
                 templateAreas={{
@@ -42,7 +43,7 @@ export default function SftmxStatsVaultsRow({ vault, ...rest }: Props) {
                     <GridItem area="vault" mb={gridItemMb}>
                         <MobileLabel text="Vault Address" />
                         <Link href={`https://ftmscan.com/address/${vault.vaultAddress}`} isExternal>
-                            {addressShortDisplayName(vault.vaultAddress)}
+                            {isMobile ? addressShortDisplayName(vault.vaultAddress) : vault.vaultAddress}
                         </Link>
                     </GridItem>
                 </Flex>
