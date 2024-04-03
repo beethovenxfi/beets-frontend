@@ -655,18 +655,6 @@ export const GetBeetsPrice = gql`
         beetsPrice: tokenGetProtocolTokenPrice
     }
 `;
-export const GetHistoricalTokenPrices = gql`
-    query GetHistoricalTokenPrices($addresses: [String!]!, $chain: GqlChain!, $range: GqlTokenChartDataRange!) {
-        tokenGetHistoricalPrices(addresses: $addresses, chain: $chain, range: $range) {
-            address
-            chain
-            prices {
-                price
-                timestamp
-            }
-        }
-    }
-`;
 export const GetUserData = gql`
     query GetUserData {
         balances: userGetPoolBalances {

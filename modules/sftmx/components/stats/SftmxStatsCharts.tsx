@@ -7,7 +7,7 @@ import {
 } from '~/apollo/generated/graphql-codegen-generated';
 import { SftmxStatsFtmStakedFree } from './SftmxStatsFtmStakedFree';
 
-export function SftmxStatsTVLCharts() {
+export function SftmxStatsCharts() {
     const [range, setRange] = useState<GqlSftmxStakingSnapshotDataRange>('THIRTY_DAYS');
     const { data: stakingSnapshotData } = useSftmxGetStakingSnapshotsQuery({
         variables: { range },

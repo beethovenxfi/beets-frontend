@@ -1684,10 +1684,6 @@ export interface QueryBeetsPoolGetReliquaryFarmSnapshotsArgs {
     range: GqlPoolSnapshotDataRange;
 }
 
-export interface QueryContentGetNewsItemsArgs {
-    chain?: InputMaybe<GqlChain>;
-}
-
 export interface QueryPoolGetBatchSwapsArgs {
     first?: InputMaybe<Scalars['Int']>;
     skip?: InputMaybe<Scalars['Int']>;
@@ -2118,22 +2114,6 @@ export type GetBlocksPerDayQuery = { __typename: 'Query'; blocksPerDay: number; 
 export type GetBeetsPriceQueryVariables = Exact<{ [key: string]: never }>;
 
 export type GetBeetsPriceQuery = { __typename: 'Query'; beetsPrice: string };
-
-export type GetHistoricalTokenPricesQueryVariables = Exact<{
-    addresses: Array<Scalars['String']> | Scalars['String'];
-    chain: GqlChain;
-    range: GqlTokenChartDataRange;
-}>;
-
-export type GetHistoricalTokenPricesQuery = {
-    __typename: 'Query';
-    tokenGetHistoricalPrices: Array<{
-        __typename: 'GqlHistoricalTokenPrice';
-        address: string;
-        chain: GqlChain;
-        prices: Array<{ __typename: 'GqlHistoricalTokenPriceEntry'; price: number; timestamp: string }>;
-    }>;
-};
 
 export type GetUserDataQueryVariables = Exact<{ [key: string]: never }>;
 
@@ -6954,61 +6934,6 @@ export function useGetBeetsPriceLazyQuery(
 export type GetBeetsPriceQueryHookResult = ReturnType<typeof useGetBeetsPriceQuery>;
 export type GetBeetsPriceLazyQueryHookResult = ReturnType<typeof useGetBeetsPriceLazyQuery>;
 export type GetBeetsPriceQueryResult = Apollo.QueryResult<GetBeetsPriceQuery, GetBeetsPriceQueryVariables>;
-export const GetHistoricalTokenPricesDocument = gql`
-    query GetHistoricalTokenPrices($addresses: [String!]!, $chain: GqlChain!, $range: GqlTokenChartDataRange!) {
-        tokenGetHistoricalPrices(addresses: $addresses, chain: $chain, range: $range) {
-            address
-            chain
-            prices {
-                price
-                timestamp
-            }
-        }
-    }
-`;
-
-/**
- * __useGetHistoricalTokenPricesQuery__
- *
- * To run a query within a React component, call `useGetHistoricalTokenPricesQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetHistoricalTokenPricesQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetHistoricalTokenPricesQuery({
- *   variables: {
- *      addresses: // value for 'addresses'
- *      chain: // value for 'chain'
- *      range: // value for 'range'
- *   },
- * });
- */
-export function useGetHistoricalTokenPricesQuery(
-    baseOptions: Apollo.QueryHookOptions<GetHistoricalTokenPricesQuery, GetHistoricalTokenPricesQueryVariables>,
-) {
-    const options = { ...defaultOptions, ...baseOptions };
-    return Apollo.useQuery<GetHistoricalTokenPricesQuery, GetHistoricalTokenPricesQueryVariables>(
-        GetHistoricalTokenPricesDocument,
-        options,
-    );
-}
-export function useGetHistoricalTokenPricesLazyQuery(
-    baseOptions?: Apollo.LazyQueryHookOptions<GetHistoricalTokenPricesQuery, GetHistoricalTokenPricesQueryVariables>,
-) {
-    const options = { ...defaultOptions, ...baseOptions };
-    return Apollo.useLazyQuery<GetHistoricalTokenPricesQuery, GetHistoricalTokenPricesQueryVariables>(
-        GetHistoricalTokenPricesDocument,
-        options,
-    );
-}
-export type GetHistoricalTokenPricesQueryHookResult = ReturnType<typeof useGetHistoricalTokenPricesQuery>;
-export type GetHistoricalTokenPricesLazyQueryHookResult = ReturnType<typeof useGetHistoricalTokenPricesLazyQuery>;
-export type GetHistoricalTokenPricesQueryResult = Apollo.QueryResult<
-    GetHistoricalTokenPricesQuery,
-    GetHistoricalTokenPricesQueryVariables
->;
 export const GetUserDataDocument = gql`
     query GetUserData {
         balances: userGetPoolBalances {
