@@ -38,11 +38,12 @@ export default function SftmxWithdrawTab() {
             )}
             {isConnected && requests && stakingData && (
                 <VStack spacing="4" p="4" align="flex-start" h="full">
-                    <Text color="gray.200" fontSize="sm" mt="-8">
+                    <Text color="gray.200" fontSize="sm" mt="-4" mb="2">
                         If you have just unstaked FTM it can take up to 5 minutes before your request is visible here.
                     </Text>
                     <PaginatedTable
-                        width="full"
+                        w="full"
+                        h="full"
                         items={requestsView}
                         loading={isLoading}
                         renderTableHeader={() => <SftmxWithdrawalRequestsHeader />}
@@ -59,7 +60,7 @@ export default function SftmxWithdrawTab() {
                         onPageChange={(page) => {
                             setFirst(page - 1);
                         }}
-                        pageSize={5}
+                        pageSize={skip}
                     />
                 </VStack>
             )}

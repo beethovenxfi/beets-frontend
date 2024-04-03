@@ -13,7 +13,7 @@ export default function SftmxStatsVaultsHeader() {
             borderBottom="2px"
             borderColor="beets.base.500"
             mb={{ base: '4', lg: '0' }}
-            templateColumns="60px 450px 100px 1fr"
+            templateColumns="60px 150px 100px 1fr"
             gap="4"
             display={{ base: 'none', xl: 'grid' }}
         >

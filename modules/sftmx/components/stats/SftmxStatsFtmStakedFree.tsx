@@ -91,7 +91,7 @@ export function SftmxStatsFtmStakedFree({ data }: Props) {
                 },
             },
             grid: {
-                left: isMobile ? '12%' : '5%',
+                left: isMobile ? '12%' : '3%',
                 right: 0,
                 top: '5%',
                 bottom: '7.5%',

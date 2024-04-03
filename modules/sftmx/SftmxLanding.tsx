@@ -16,11 +16,11 @@ export default function SftmxLanding() {
             templateColumns={{ base: '1fr', lg: 'repeat(5, 1fr)' }}
             templateAreas={{
                 base: `"tabs" "stats" "charts" "vaults"`,
-                xl: `". tabs tabs stats ." "charts charts charts charts charts" "vaults vaults vaults . ."`,
+                xl: `". tabs tabs stats ." "vaults vaults charts charts charts"`,
             }}
             gap="8"
             w="full"
-            templateRows={{ base: 'auto', lg: '640px 640px 1fr' }}
+            templateRows={{ base: 'auto', lg: '640px 1fr' }}
         >
             <GridItem area="tabs" h="full">
                 <Tabs

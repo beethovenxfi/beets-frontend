@@ -1,4 +1,4 @@
-import { VStack, HStack, Divider, Text, Heading, Box, StackDivider } from '@chakra-ui/react';
+import { VStack, HStack, Divider, Text, Heading, Box, StackDivider, Spacer, Link } from '@chakra-ui/react';
 import Card from '~/components/card/Card';
 import { useSftmxGetStakingData } from './lib/useSftmxGetStakingData';
 import numeral from 'numeral';
@@ -7,6 +7,7 @@ import { networkConfig } from '~/lib/config/network-config';
 import TokenAvatar from '~/components/token/TokenAvatar';
 import { tokenFormatAmount } from '~/lib/services/token/token-util';
 import { InfoButton } from '~/components/info-button/InfoButton';
+import { ExternalLink } from 'react-feather';
 
 function TokenInfo({ amount }: { amount: string }) {
     const { formattedPrice, getToken } = useGetTokens();
@@ -82,6 +83,16 @@ export default function SftmxOverallStats() {
                             {data && <TokenInfo amount={data?.sftmxGetStakingData.totalFtmAmountInPool} />}
                         </VStack>
                     </VStack>
+                    <Spacer />
+                    <HStack>
+                        <Text fontSize="sm">Find more info on </Text>
+                        <Link href="https://www.defiwars.xyz/wars/ftm" target="_blank">
+                            <HStack>
+                                <Text fontSize="sm">Defi Wars</Text>
+                                <ExternalLink size={16} />
+                            </HStack>
+                        </Link>
+                    </HStack>
                 </VStack>
             </Card>
         </VStack>
