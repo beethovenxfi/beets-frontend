@@ -20,7 +20,7 @@ export default function SftmxLanding() {
             }}
             gap="8"
             w="full"
-            templateRows={{ base: 'auto', lg: '640px 1fr' }}
+            templateRows={{ base: 'auto', lg: '640px 640px' }}
         >
             <GridItem area="tabs" h="full">
                 <Tabs
