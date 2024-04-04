@@ -153,5 +153,5 @@ export function SftmxStatsFtmStakedFree({ data }: Props) {
         [JSON.stringify(data)],
     );
 
-    return <ReactECharts option={option} style={{ height: isMobile ? '400px' : '100%' }} />;
+    return <ReactECharts option={option} style={{ height: isMobile ? '400px' : '100%', width: '100%' }} />;
 }
