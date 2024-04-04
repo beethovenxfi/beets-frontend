@@ -26,8 +26,8 @@ export function SftmxStatsVaultsCard() {
 
     return (
         <VStack align="flex-start" w="full" h="full">
-            <Box h="50px"></Box>
-            <Card shadow="lg" h="full" p="4" title="FTM vaults">
+            <Box h="50px" display={{ base: 'none', lg: 'block' }}></Box>
+            <Card shadow="lg" h="full" p="4" title="FTM vaults" w="full">
                 <PaginatedTable
                     w="full"
                     h="full"

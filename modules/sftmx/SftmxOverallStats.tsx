@@ -43,7 +43,7 @@ export default function SftmxOverallStats() {
 
     return (
         <VStack align="flex-start" w="full" h="full">
-            <Box h="50px"></Box>
+            <Box h="50px" display={{ base: 'none', lg: 'block' }}></Box>
             <Card p="4" w="full" h="full">
                 <VStack spacing="4" w="full" h="full" align="flex-start">
                     <VStack spacing="2" align="flex-start">
