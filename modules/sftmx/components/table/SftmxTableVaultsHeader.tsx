@@ -1,7 +1,7 @@
 import { Text } from '@chakra-ui/layout';
 import { Grid, GridItem } from '@chakra-ui/react';
 
-export default function SftmxStatsVaultsHeader() {
+export default function SftmxTableVaultsHeader() {
     return (
         <Grid
             px="4"

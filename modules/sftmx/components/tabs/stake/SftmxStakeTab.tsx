@@ -1,14 +1,14 @@
-import { Box, VStack, Heading, HStack, Divider, Spacer, Text, Alert } from '@chakra-ui/react';
+import { Box, VStack, HStack, Divider, Spacer, Text, Alert } from '@chakra-ui/react';
 import { WalletConnectButton } from '~/components/button/WalletConnectButton';
 import Card from '~/components/card/Card';
 import { FtmTokenInput } from '~/components/inputs/FtmTokenInput';
 import { networkConfig } from '~/lib/config/network-config';
 import { useUserAccount } from '~/lib/user/useUserAccount';
-import { useSftmxGetStakingData } from './lib/useSftmxGetStakingData';
+import { useSftmxGetStakingData } from '../../../lib/useSftmxGetStakingData';
 import { tokenFormatAmount } from '~/lib/services/token/token-util';
 import { useEffect, useState } from 'react';
 import { SftmxStakeButton } from './SftmxStakeButton';
-import { useSftmxGetFtmxAmountForFtm } from './lib/useSftmxGetFtmxAmountForFtm';
+import { useSftmxGetFtmxAmountForFtm } from '../../../lib/useSftmxGetFtmxAmountForFtm';
 import { formatFixed } from '@ethersproject/bignumber';
 import { useUserTokenBalances } from '~/lib/user/useUserTokenBalances';
 

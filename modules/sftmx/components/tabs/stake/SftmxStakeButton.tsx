@@ -1,6 +1,6 @@
 import { AmountHumanReadable } from '~/lib/services/token/token-types';
 import { BeetsSubmitTransactionButton } from '~/components/button/BeetsSubmitTransactionButton';
-import { useSftmxStake } from './lib/useSftmxStake';
+import { useSftmxStake } from '../../../lib/useSftmxStake';
 
 interface Props {
     amount: AmountHumanReadable;

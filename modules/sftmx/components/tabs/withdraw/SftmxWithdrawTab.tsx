@@ -2,11 +2,11 @@ import { VStack, Text } from '@chakra-ui/react';
 import { WalletConnectButton } from '~/components/button/WalletConnectButton';
 import Card from '~/components/card/Card';
 import { useUserAccount } from '~/lib/user/useUserAccount';
-import { useSftmxGetWithdrawalRequests } from './lib/useSftmxGetWithdrawalRequests';
+import { useSftmxGetWithdrawalRequests } from '../../../lib/useSftmxGetWithdrawalRequests';
 import { PaginatedTable } from '~/components/table/PaginatedTable';
 import SftmxWithdrawalRequestsHeader from './SftmxWithdrawalRequestsHeader';
 import SftmxWithdrawalRequestsRow from './SftmxWithdrawalRequestsRow';
-import { useSftmxGetStakingData } from './lib/useSftmxGetStakingData';
+import { useSftmxGetStakingData } from '../../../lib/useSftmxGetStakingData';
 import { orderBy } from 'lodash';
 import { useEffect, useState } from 'react';
 

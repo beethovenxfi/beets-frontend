@@ -1,12 +1,13 @@
 import { Tabs, TabList, TabPanels, TabPanel, Grid, GridItem } from '@chakra-ui/react';
 import BeetsTab from '~/components/tabs/BeetsTab';
-import SftmxStakeTab from './SftmxStakeTab';
-import SftmxUnstakeTab from './SftmxUnstakeTab';
-import SftmxOverallStats from './SftmxOverallStats';
-import SftmxWithdrawTab from './SftmxWithdrawTab';
+import SftmxStakeTab from './components/tabs/stake/SftmxStakeTab';
+import SftmxUnstakeTab from './components/tabs/unstake/SftmxUnstakeTab';
+import SftmxOverallStats from './components/stats/SftmxOverallStats';
+import SftmxWithdrawTab from './components/tabs/withdraw/SftmxWithdrawTab';
 import { useSftmxGetWithdrawalRequests } from './lib/useSftmxGetWithdrawalRequests';
-import { SftmxStatsVaultsCard } from './components/stats/SftmxStatsVaultsCard';
-import { SftmxStatsChartsCard } from './components/stats/SftmxStatsChartsCard';
+import { SftmxStatsFtmStakedFree } from './components/stats/SftmxStatsFtmStakedFree';
+import { SftmxStatsFtmValidator } from './components/stats/SftmxStatsFtmValidator';
+import { SftmxStatsVaults } from './components/stats/SftmxStatsVaults';
 
 export default function SftmxLanding() {
     const { startPolling, stopPolling } = useSftmxGetWithdrawalRequests();
@@ -15,8 +16,8 @@ export default function SftmxLanding() {
         <Grid
             templateColumns={{ base: '1fr', lg: 'repeat(5, 1fr)' }}
             templateAreas={{
-                base: `"tabs" "stats" "vaults" "charts" `,
-                xl: `"stats tabs tabs vaults vaults" "charts charts charts charts charts"`,
+                base: `"tabs" "stats" "table" "charts" "pie"`,
+                xl: `"stats tabs tabs table table" "charts charts charts pie pie"`,
             }}
             gap="8"
             w="full"
@@ -68,10 +69,13 @@ export default function SftmxLanding() {
                 <SftmxOverallStats />
             </GridItem>
             <GridItem area="charts">
-                <SftmxStatsChartsCard />
+                <SftmxStatsFtmStakedFree />
             </GridItem>
-            <GridItem area="vaults">
-                <SftmxStatsVaultsCard />
+            <GridItem area="table">
+                <SftmxStatsVaults />
+            </GridItem>
+            <GridItem area="pie">
+                <SftmxStatsFtmValidator />
             </GridItem>
         </Grid>
     );

@@ -1,4 +1,4 @@
-import { Box, VStack, Heading, HStack, Divider, Spacer, Text, Alert, AlertIcon } from '@chakra-ui/react';
+import { Box, VStack, HStack, Divider, Spacer, Text, Alert, AlertIcon } from '@chakra-ui/react';
 import { WalletConnectButton } from '~/components/button/WalletConnectButton';
 import Card from '~/components/card/Card';
 import { FtmTokenInput } from '~/components/inputs/FtmTokenInput';
@@ -6,10 +6,10 @@ import { networkConfig } from '~/lib/config/network-config';
 import { useUserAccount } from '~/lib/user/useUserAccount';
 import { tokenFormatAmount } from '~/lib/services/token/token-util';
 import { useEffect, useState } from 'react';
-import { useSftmxGetCalculatePenalty } from './lib/useSftmxGetCalculatePenalty';
+import { useSftmxGetCalculatePenalty } from '../../../lib/useSftmxGetCalculatePenalty';
 import { formatFixed } from '@ethersproject/bignumber';
 import { SftmxUnstakeButton } from './SftmxUnstakeButton';
-import { useSftmxGetFtmxAmountForFtm } from './lib/useSftmxGetFtmxAmountForFtm';
+import { useSftmxGetFtmxAmountForFtm } from '../../../lib/useSftmxGetFtmxAmountForFtm';
 import { InfoButton } from '~/components/info-button/InfoButton';
 import numeral from 'numeral';
 import { useUserTokenBalances } from '~/lib/user/useUserTokenBalances';

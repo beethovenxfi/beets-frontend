@@ -1,6 +1,6 @@
 import { VStack, HStack, Divider, Text, Heading, Box, StackDivider, Spacer, Link } from '@chakra-ui/react';
 import Card from '~/components/card/Card';
-import { useSftmxGetStakingData } from './lib/useSftmxGetStakingData';
+import { useSftmxGetStakingData } from '../../lib/useSftmxGetStakingData';
 import numeral from 'numeral';
 import { useGetTokens } from '~/lib/global/useToken';
 import { networkConfig } from '~/lib/config/network-config';

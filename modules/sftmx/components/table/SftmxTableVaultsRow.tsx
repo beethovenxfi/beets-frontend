@@ -9,7 +9,7 @@ interface Props extends BoxProps {
     vault: GqlSftmxStakingVault;
 }
 
-export default function SftmxStatsVaultsRow({ vault, ...rest }: Props) {
+export default function SftmxTableVaultsRow({ vault, ...rest }: Props) {
     const flexAlign = { base: 'flex-start', lg: 'center' };
     const gridItemMb = { base: '4', lg: '0' };
     const justifyContent = { base: 'flex-start', lg: 'flex-end' };
