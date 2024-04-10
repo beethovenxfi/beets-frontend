@@ -32,6 +32,7 @@ import { motion } from 'framer-motion';
 import { useBatchRelayerHasApprovedForAll } from '../lib/useBatchRelayerHasApprovedForAll';
 import RelicMaturityModal from './RelicMaturityModal';
 import { BarChart } from 'react-feather';
+import { GqlPoolAprTotal } from '~/apollo/generated/graphql-codegen-generated';
 
 export default function RelicSlideApr() {
     const { pool } = usePool();
@@ -68,6 +69,25 @@ export default function RelicSlideApr() {
         maxTotalSelectedRelicApr,
     ).format('0.00%')}`;
 
+    // show selected relic (beets) apr in tooltip
+    const dynamicDataApr = {
+        ...pool.dynamicData.apr,
+        items: pool.dynamicData.apr.items.map((item) => {
+            if (item.title === 'BEETS reward APR' && item.apr.__typename === 'GqlPoolAprRange') {
+                return {
+                    ...item,
+                    apr: {
+                        __typename: 'GqlPoolAprTotal',
+                        total: selectedRelicApr,
+                    } as GqlPoolAprTotal,
+                };
+            } else {
+                return item;
+            }
+        }),
+    };
+
+    console.log({ dynamicDataApr });
     return (
         <>
             <Stack
@@ -97,7 +117,7 @@ export default function RelicSlideApr() {
                     </Text>
                     <HStack>
                         <div className="apr-stripes">{relicAprRangeView}</div>
-                        <AprTooltip onlySparkles data={pool.dynamicData.apr} />
+                        <AprTooltip onlySparkles data={dynamicDataApr} apr={relicAprRangeView} />
                     </HStack>
                     <HStack>
                         <HStack
