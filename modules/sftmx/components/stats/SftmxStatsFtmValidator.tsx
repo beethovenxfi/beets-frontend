@@ -5,7 +5,7 @@ import { SftmxChartsFtmValidator } from '../charts/SftmxChartsFtmValidator';
 import { groupBy, sumBy } from 'lodash';
 
 export function SftmxStatsFtmValidator() {
-    const { data, loading: isLoading } = useSftmxGetStakingData();
+    const { data } = useSftmxGetStakingData();
     const validatorsGroupedAndSummed = groupBy(data?.sftmxGetStakingData.vaults, 'validatorId');
     const totalFtmAmounts = Object.keys(validatorsGroupedAndSummed).map((key) => ({
         name: key,
@@ -13,7 +13,7 @@ export function SftmxStatsFtmValidator() {
     }));
 
     return (
-        <Card shadow="lg" h="full" p="4" title="FTM per validator">
+        <Card shadow="lg" h="full" p="4" title="FTM staked per validator">
             <Card h="full" w="full" p="4">
                 <Box height="full">{data && <SftmxChartsFtmValidator data={totalFtmAmounts} />}</Box>
             </Card>

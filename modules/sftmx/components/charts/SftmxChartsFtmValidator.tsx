@@ -1,9 +1,7 @@
 import { useMemo } from 'react';
 import { EChartsOption } from 'echarts';
-import { format } from 'date-fns';
-import { numberFormatUSDValue } from '~/lib/util/number-formats';
 import ReactECharts from 'echarts-for-react';
-import { useBreakpointValue, useTheme } from '@chakra-ui/react';
+import { useBreakpointValue } from '@chakra-ui/react';
 import numeral from 'numeral';
 
 interface DataProps {
@@ -18,13 +16,11 @@ interface Props {
 }
 
 export function SftmxChartsFtmValidator({ data }: Props) {
-    const { colors } = useTheme();
     const isMobile = useBreakpointValue({ base: true, lg: false });
-
-    const gridLeft = isMobile ? '12%' : '5%';
 
     const option = useMemo<EChartsOption>(
         () => ({
+            darkMode: true,
             tooltip: {
                 trigger: 'item',
             },
@@ -39,10 +35,17 @@ export function SftmxChartsFtmValidator({ data }: Props) {
                             shadowColor: 'rgba(0, 0, 0, 0.5)',
                         },
                     },
+                    width: '100%',
+                    label: {
+                        overflow: 'none',
+                    },
+                    tooltip: {
+                        valueFormatter: (value) => `${numeral(value as number).format('0.[00]a')} FTM staked`,
+                    },
                 },
             ],
         }),
-        [JSON.stringify(data), gridLeft],
+        [JSON.stringify(data)],
     );
 
     return <ReactECharts option={option} style={{ height: isMobile ? '400px' : '100%', width: '100%' }} />;
