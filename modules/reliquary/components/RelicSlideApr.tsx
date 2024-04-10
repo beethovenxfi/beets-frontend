@@ -59,7 +59,14 @@ export default function RelicSlideApr() {
     const swapFeesItem = pool.dynamicData.apr.items.find((item) => item.title === 'Swap fees APR');
     const swapFeesApr =
         swapFeesItem?.apr && swapFeesItem.apr.__typename === 'GqlPoolAprTotal' ? swapFeesItem.apr.total : '0';
-    const totalSelectedRelicApr = (parseFloat(selectedRelicApr) + parseFloat(swapFeesApr)).toString();
+    const votingAprItem = pool.dynamicData.apr.items.find((item) => item.title === 'Voting APR*');
+    const maxVotingApr =
+        votingAprItem?.apr && votingAprItem.apr.__typename === 'GqlPoolAprRange' ? votingAprItem.apr.max : '0';
+    const minTotalSelectedRelicApr = parseFloat(selectedRelicApr) + parseFloat(swapFeesApr);
+    const maxTotalSelectedRelicApr = minTotalSelectedRelicApr + parseFloat(maxVotingApr);
+    const relicAprRangeView = `${numeral(minTotalSelectedRelicApr).format('0.00%')} - ${numeral(
+        maxTotalSelectedRelicApr,
+    ).format('0.00%')}`;
 
     return (
         <>
@@ -89,7 +96,7 @@ export default function RelicSlideApr() {
                         Relic APR
                     </Text>
                     <HStack>
-                        <div className="apr-stripes">{numeral(totalSelectedRelicApr).format('0.00%')}</div>
+                        <div className="apr-stripes">{relicAprRangeView}</div>
                         <AprTooltip onlySparkles data={pool.dynamicData.apr} />
                     </HStack>
                     <HStack>
