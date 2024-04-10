@@ -34,7 +34,10 @@ export default function SftmxTableVaultsRow({ vault, ...rest }: Props) {
             >
                 <GridItem area="validator" mb={gridItemMb}>
                     <MobileLabel text="Validator Id" />
-                    <Link href={`https://explorer.fantom.network/validator/${vault.validatorAddress}`} isExternal>
+                    <Link
+                        href={`https://fantom.foundation/validatorStats?address=${vault.validatorAddress.toLowerCase()}`}
+                        isExternal
+                    >
                         {vault.validatorId}
                     </Link>
                 </GridItem>
