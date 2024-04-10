@@ -87,7 +87,6 @@ export default function RelicSlideApr() {
         }),
     };
 
-    console.log({ dynamicDataApr });
     return (
         <>
             <Stack
