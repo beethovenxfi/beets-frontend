@@ -10,22 +10,30 @@ import { useSftmxGetStakingData } from '../../../lib/useSftmxGetStakingData';
 import { orderBy } from 'lodash';
 import { useEffect, useState } from 'react';
 
+const SKIP = 5;
+
 export default function SftmxWithdrawTab() {
     const { isConnected } = useUserAccount();
     const { data: requestsData, loading: isLoading } = useSftmxGetWithdrawalRequests();
     const { data: stakingData } = useSftmxGetStakingData();
 
+    // keep original requests in order for table
     const requests = orderBy(requestsData?.sftmxGetWithdrawalRequests, 'requestTimestamp', 'desc');
-    const skip = 5;
+
+    // set first (starting) row in table
     const [first, setFirst] = useState(0);
-    const [requestsView, setRequestsView] = useState(requests.slice(first, skip));
+    // set inital rows for view in table (slice from requests)
+    const [requestsView, setRequestsView] = useState(requests.slice(first, SKIP));
 
     useEffect(() => {
-        const start = first * skip;
-        if (requests.length - skip - start < 0) {
+        // determine first (starting) row in table
+        const start = first * SKIP;
+
+        // if there are less than 5 rows left in requests, else show all 5 rows
+        if (requests.length - SKIP - start < 0) {
             setRequestsView(requests.slice(start));
         } else {
-            setRequestsView(requests.slice(start, start + skip));
+            setRequestsView(requests.slice(start, start + SKIP));
         }
     }, [first]);
 
@@ -60,7 +68,7 @@ export default function SftmxWithdrawTab() {
                         onPageChange={(page) => {
                             setFirst(page - 1);
                         }}
-                        pageSize={skip}
+                        pageSize={SKIP}
                     />
                 </VStack>
             )}

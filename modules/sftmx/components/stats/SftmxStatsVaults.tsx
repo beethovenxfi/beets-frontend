@@ -6,26 +6,34 @@ import { useState, useEffect } from 'react';
 import { GqlSftmxStakingVault } from '~/apollo/generated/graphql-codegen-generated';
 import { SftmxTableVaults } from '../table/SftmxTableVaults';
 
+const SKIP = 10;
+
 export function SftmxStatsVaults() {
     const { data, loading: isLoading } = useSftmxGetStakingData();
+
+    // keep original vaults data in order for table
     const vaults = sortBy(data?.sftmxGetStakingData.vaults, 'unlockTimestamp');
 
-    const skip = 10;
+    // set first (starting) row in table
     const [first, setFirst] = useState(0);
+    // set inital rows for view in table (slice from vaults)
     const [vaultsView, setVaultsView] = useState<GqlSftmxStakingVault[] | undefined>();
 
     useEffect(() => {
-        const start = first * skip;
-        if (vaults.length - skip - start < 0) {
+        // determine first (starting) row in table
+        const start = first * SKIP;
+
+        // if there are less than 10 rows left in vaults, else show all 10 rows
+        if (vaults.length - SKIP - start < 0) {
             setVaultsView(vaults.slice(start));
         } else {
-            setVaultsView(vaults.slice(start, start + skip));
+            setVaultsView(vaults.slice(start, start + SKIP));
         }
     }, [first]);
 
     useEffect(() => {
         if (!isLoading) {
-            setVaultsView(vaults.slice(first, skip));
+            setVaultsView(vaults.slice(first, SKIP));
         }
     }, [isLoading]);
 
@@ -41,7 +49,7 @@ export function SftmxStatsVaults() {
                     onPageChange={(page: number) => {
                         setFirst(page - 1);
                     }}
-                    pageSize={skip}
+                    pageSize={SKIP}
                 />
             </Card>
         </VStack>

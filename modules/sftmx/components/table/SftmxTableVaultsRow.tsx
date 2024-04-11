@@ -1,5 +1,5 @@
 import { GqlSftmxStakingVault } from '~/apollo/generated/graphql-codegen-generated';
-import { Flex, Text, Link, Grid, GridItem, Divider } from '@chakra-ui/react';
+import { Flex, Text, Link, Grid, GridItem, Divider, ResponsiveValue, FlexProps, SpaceProps } from '@chakra-ui/react';
 import { BoxProps } from '@chakra-ui/layout';
 import { formatDistanceToNow } from 'date-fns';
 import numeral from 'numeral';
@@ -9,11 +9,11 @@ interface Props extends BoxProps {
     vault: GqlSftmxStakingVault;
 }
 
-export default function SftmxTableVaultsRow({ vault, ...rest }: Props) {
-    const flexAlign = { base: 'flex-start', lg: 'center' };
-    const gridItemMb = { base: '4', lg: '0' };
-    const justifyContent = { base: 'flex-start', lg: 'flex-end' };
+const FLEX_ALIGN = { base: 'flex-start', lg: 'center' };
+const GRID_ITEM_MB = { base: '4', lg: '0' };
+const JUSTIFY_CONTENT = { base: 'flex-start', lg: 'flex-end' };
 
+export default function SftmxTableVaultsRow({ vault }: Props) {
     return (
         <>
             <Grid
@@ -32,7 +32,7 @@ export default function SftmxTableVaultsRow({ vault, ...rest }: Props) {
                 bgColor="rgba(255,255,255,0.05)"
                 _hover={{ bg: 'beets.base.800' }}
             >
-                <GridItem area="validator" mb={gridItemMb}>
+                <GridItem area="validator" mb={GRID_ITEM_MB}>
                     <MobileLabel text="Validator Id" />
                     <Link
                         href={`https://fantom.foundation/validatorStats?address=${vault.validatorAddress.toLowerCase()}`}
@@ -41,22 +41,22 @@ export default function SftmxTableVaultsRow({ vault, ...rest }: Props) {
                         {vault.validatorId}
                     </Link>
                 </GridItem>
-                <Flex align={flexAlign}>
-                    <GridItem area="vault" mb={gridItemMb}>
+                <Flex align={FLEX_ALIGN}>
+                    <GridItem area="vault" mb={GRID_ITEM_MB}>
                         <MobileLabel text="Vault Address" />
                         <Link href={`https://ftmscan.com/address/${vault.vaultAddress}`} isExternal>
                             {addressShortDisplayName(vault.vaultAddress)}
                         </Link>
                     </GridItem>
                 </Flex>
-                <Flex align={flexAlign}>
+                <Flex align={FLEX_ALIGN}>
                     <GridItem area="staked">
                         <MobileLabel text="Staked FTM" />
                         {numeral(vault.ftmAmountStaked).format('0.00[00]a')}
                     </GridItem>
                 </Flex>
-                <Flex align={flexAlign} justify={justifyContent}>
-                    <GridItem area="unlock" mb={gridItemMb}>
+                <Flex align={FLEX_ALIGN} justify={JUSTIFY_CONTENT}>
+                    <GridItem area="unlock" mb={GRID_ITEM_MB}>
                         <MobileLabel text="Unlock Time" />
                         {formatDistanceToNow(new Date(vault.unlockTimestamp * 1000), {
                             addSuffix: true,
