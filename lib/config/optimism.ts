@@ -29,7 +29,7 @@ export const optimismNetworkConfig: NetworkConfig = {
         address: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
         symbol: 'ETH',
         decimals: 18,
-        iconUrl: 'https://optimistic.etherscan.io/images/svg/brands/optimism.svg?v=1.3',
+        iconUrl: 'https://raw.githubusercontent.com/ethereum-optimism/brand-kit/main/assets/images/Profile-Logo.png',
         minGasAmount: '0.0005',
     },
     wethAddress: '0x4200000000000000000000000000000000000006',
