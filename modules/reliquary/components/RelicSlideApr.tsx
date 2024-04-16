@@ -32,6 +32,7 @@ import { motion } from 'framer-motion';
 import { useBatchRelayerHasApprovedForAll } from '../lib/useBatchRelayerHasApprovedForAll';
 import RelicMaturityModal from './RelicMaturityModal';
 import { BarChart } from 'react-feather';
+import { GqlPoolAprTotal } from '~/apollo/generated/graphql-codegen-generated';
 
 export default function RelicSlideApr() {
     const { pool } = usePool();
@@ -59,7 +60,32 @@ export default function RelicSlideApr() {
     const swapFeesItem = pool.dynamicData.apr.items.find((item) => item.title === 'Swap fees APR');
     const swapFeesApr =
         swapFeesItem?.apr && swapFeesItem.apr.__typename === 'GqlPoolAprTotal' ? swapFeesItem.apr.total : '0';
-    const totalSelectedRelicApr = (parseFloat(selectedRelicApr) + parseFloat(swapFeesApr)).toString();
+    const votingAprItem = pool.dynamicData.apr.items.find((item) => item.title === 'Voting APR*');
+    const maxVotingApr =
+        votingAprItem?.apr && votingAprItem.apr.__typename === 'GqlPoolAprRange' ? votingAprItem.apr.max : '0';
+    const minTotalSelectedRelicApr = parseFloat(selectedRelicApr) + parseFloat(swapFeesApr);
+    const maxTotalSelectedRelicApr = minTotalSelectedRelicApr + parseFloat(maxVotingApr);
+    const relicAprRangeView = `${numeral(minTotalSelectedRelicApr).format('0.00%')} - ${numeral(
+        maxTotalSelectedRelicApr,
+    ).format('0.00%')}`;
+
+    // show selected relic (beets) apr in tooltip
+    const dynamicDataApr = {
+        ...pool.dynamicData.apr,
+        items: pool.dynamicData.apr.items.map((item) => {
+            if (item.title === 'BEETS reward APR' && item.apr.__typename === 'GqlPoolAprRange') {
+                return {
+                    ...item,
+                    apr: {
+                        __typename: 'GqlPoolAprTotal',
+                        total: selectedRelicApr,
+                    } as GqlPoolAprTotal,
+                };
+            } else {
+                return item;
+            }
+        }),
+    };
 
     return (
         <>
@@ -89,8 +115,8 @@ export default function RelicSlideApr() {
                         Relic APR
                     </Text>
                     <HStack>
-                        <div className="apr-stripes">{numeral(totalSelectedRelicApr).format('0.00%')}</div>
-                        <AprTooltip onlySparkles data={pool.dynamicData.apr} />
+                        <div className="apr-stripes">{relicAprRangeView}</div>
+                        <AprTooltip onlySparkles data={dynamicDataApr} apr={relicAprRangeView} />
                     </HStack>
                     <HStack>
                         <HStack
