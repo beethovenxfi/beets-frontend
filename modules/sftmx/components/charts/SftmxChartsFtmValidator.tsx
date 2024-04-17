@@ -20,6 +20,19 @@ export function SftmxChartsFtmValidator({ data }: Props) {
 
     const option = useMemo<EChartsOption>(
         () => ({
+            color: [
+                '#12ecab',
+                '#ccffcc',
+                '#00ffff',
+                '#0071bc',
+                '#2e3192',
+                '#1b1464',
+                '#000000',
+                '#333333',
+                '#4d4d4d',
+                '#ff0000',
+                '#c1272d',
+            ],
             darkMode: true,
             tooltip: {
                 trigger: 'item',
