@@ -71,7 +71,7 @@ function AprTooltip({ data, textProps, onlySparkles, placement, aprLabel, sparkl
                     <Text textAlign="left">
                         Total APR
                         <br />
-                        <span style={{ fontSize: '1.5rem' }}>{getApr(data.apr)}</span>
+                        <span style={{ fontSize: '1.5rem' }}>{aprToShow}</span>
                     </Text>
                 </PopoverHeader>
                 <Box p="2" fontSize="sm" bgColor="whiteAlpha.200">
