@@ -7,6 +7,7 @@ import numeral from 'numeral';
 interface DataProps {
     value: number;
     name: string;
+    validatorAddress: string;
 }
 interface Props {
     data: DataProps[];
@@ -93,5 +94,25 @@ export function SftmxChartsFtmValidator({ data }: Props) {
         [JSON.stringify(data)],
     );
 
-    return <ReactECharts option={option} style={{ height: isMobile ? '400px' : '100%', width: '100%' }} />;
+    const onChartClick = (params: any) => {
+        if (params && params.data.validatorAddress) {
+            window.open(
+                `https://fantom.foundation/validatorStats?address=${params.data.validatorAddress}`,
+                '_blank',
+                'noopener,noreferrer',
+            );
+        }
+    };
+
+    const onEvents = {
+        click: onChartClick,
+    };
+
+    return (
+        <ReactECharts
+            option={option}
+            onEvents={onEvents}
+            style={{ height: isMobile ? '400px' : '100%', width: '100%' }}
+        />
+    );
 }

@@ -10,6 +10,7 @@ export function SftmxStatsFtmValidator() {
     const totalFtmAmounts = Object.keys(validatorsGroupedAndSummed).map((key) => ({
         name: key,
         value: sumBy(validatorsGroupedAndSummed[key].map((value) => parseFloat(value.ftmAmountStaked))),
+        validatorAddress: validatorsGroupedAndSummed[key][0].validatorAddress.toLowerCase(),
     }));
 
     const totalFtmAmountsSorted = sortBy(totalFtmAmounts, 'value').reverse();
