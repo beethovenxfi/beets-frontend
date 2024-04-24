@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { EChartsOption } from 'echarts';
 import ReactECharts from 'echarts-for-react';
-import { useBreakpointValue } from '@chakra-ui/react';
+import { useBreakpointValue, useTheme } from '@chakra-ui/react';
 import numeral from 'numeral';
 
 interface DataProps {
@@ -15,6 +15,7 @@ interface Props {
 
 export function SftmxChartsFtmValidator({ data }: Props) {
     const isMobile = useBreakpointValue({ base: true, lg: false });
+    const { colors } = useTheme();
 
     const option = useMemo<EChartsOption>(
         () => ({
@@ -60,6 +61,13 @@ export function SftmxChartsFtmValidator({ data }: Props) {
             darkMode: true,
             tooltip: {
                 trigger: 'item',
+                type: 'shadow',
+                backgroundColor: colors.beets.base['700'],
+                borderColor: 'transparent',
+                borderRadius: 8,
+                textStyle: {
+                    color: 'white',
+                },
             },
             series: [
                 {
