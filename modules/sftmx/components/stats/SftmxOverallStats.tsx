@@ -1,12 +1,13 @@
-import { VStack, HStack, Divider, Text, Heading, Box, StackDivider } from '@chakra-ui/react';
+import { VStack, HStack, Divider, Text, Heading, Box, StackDivider, Spacer, Link } from '@chakra-ui/react';
 import Card from '~/components/card/Card';
-import { useSftmxGetStakingData } from './useSftmxGetStakingData';
+import { useSftmxGetStakingData } from '../../lib/useSftmxGetStakingData';
 import numeral from 'numeral';
 import { useGetTokens } from '~/lib/global/useToken';
 import { networkConfig } from '~/lib/config/network-config';
 import TokenAvatar from '~/components/token/TokenAvatar';
-import { tokenFormatAmountPrecise } from '~/lib/services/token/token-util';
+import { tokenFormatAmount } from '~/lib/services/token/token-util';
 import { InfoButton } from '~/components/info-button/InfoButton';
+import { ExternalLink } from 'react-feather';
 
 function TokenInfo({ amount }: { amount: string }) {
     const { formattedPrice, getToken } = useGetTokens();
@@ -23,7 +24,7 @@ function TokenInfo({ amount }: { amount: string }) {
                     </VStack>
                 </HStack>
                 <VStack alignItems="flex-end" spacing="0">
-                    <Text>{tokenFormatAmountPrecise(amount, 1)}</Text>
+                    <Text>{tokenFormatAmount(amount)}</Text>
                     <Text fontSize="sm" color="beets.base.100">
                         ~
                         {formattedPrice({
@@ -41,10 +42,10 @@ export default function SftmxOverallStats() {
     const { data } = useSftmxGetStakingData();
 
     return (
-        <VStack align="flex-start" h="full">
-            <Box h="56px"></Box>
-            <Card p="4" h="full" w="full">
-                <VStack spacing="4" w="full" align="flex-start">
+        <VStack align="flex-start" w="full" h="full">
+            <Box h="50px" display={{ base: 'none', lg: 'block' }}></Box>
+            <Card p="4" w="full" h="full">
+                <VStack spacing="4" w="full" h="full" align="flex-start">
                     <VStack spacing="2" align="flex-start">
                         <Heading size="sm">Staking APR</Heading>
                         <HStack>
@@ -55,6 +56,12 @@ export default function SftmxOverallStats() {
                     </VStack>
                     <Divider />
                     <VStack w="full" align="flex-start" divider={<StackDivider borderColor="whiteAlpha.200" />} gap="2">
+                        <VStack w="full" align="flex-start">
+                            <Heading size="sm" mb="2">
+                                Total
+                            </Heading>
+                            {data && <TokenInfo amount={data?.sftmxGetStakingData.totalFtmAmount} />}
+                        </VStack>
                         <VStack w="full" align="flex-start">
                             <Heading size="sm" mb="2">
                                 Total staked
@@ -75,13 +82,17 @@ export default function SftmxOverallStats() {
                             </Box>
                             {data && <TokenInfo amount={data?.sftmxGetStakingData.totalFtmAmountInPool} />}
                         </VStack>
-                        <VStack w="full" align="flex-start">
-                            <Heading size="sm" mb="2">
-                                Total
-                            </Heading>
-                            {data && <TokenInfo amount={data?.sftmxGetStakingData.totalFtmAmount} />}
-                        </VStack>
                     </VStack>
+                    <Spacer />
+                    <HStack>
+                        <Text fontSize="sm">Find more info on </Text>
+                        <Link href="https://www.defiwars.xyz/wars/ftm" target="_blank">
+                            <HStack>
+                                <Text fontSize="sm">Defi Wars</Text>
+                                <ExternalLink size={16} />
+                            </HStack>
+                        </Link>
+                    </HStack>
                 </VStack>
             </Card>
         </VStack>

@@ -1,14 +1,14 @@
-import { Box, VStack, Heading, HStack, Divider, Spacer, Text, Alert } from '@chakra-ui/react';
+import { Box, VStack, HStack, Divider, Spacer, Text, Alert } from '@chakra-ui/react';
 import { WalletConnectButton } from '~/components/button/WalletConnectButton';
 import Card from '~/components/card/Card';
 import { FtmTokenInput } from '~/components/inputs/FtmTokenInput';
 import { networkConfig } from '~/lib/config/network-config';
 import { useUserAccount } from '~/lib/user/useUserAccount';
-import { useSftmxGetStakingData } from './useSftmxGetStakingData';
+import { useSftmxGetStakingData } from '../../../lib/useSftmxGetStakingData';
 import { tokenFormatAmount } from '~/lib/services/token/token-util';
 import { useEffect, useState } from 'react';
 import { SftmxStakeButton } from './SftmxStakeButton';
-import { useSftmxGetFtmxAmountForFtm } from './useSftmxGetFtmxAmountForFtm';
+import { useSftmxGetFtmxAmountForFtm } from '../../../lib/useSftmxGetFtmxAmountForFtm';
 import { formatFixed } from '@ethersproject/bignumber';
 import { useUserTokenBalances } from '~/lib/user/useUserTokenBalances';
 
@@ -34,9 +34,8 @@ export default function SftmxStakeTab() {
         sftmxStakingData && parseFloat(amount) > parseFloat(sftmxStakingData.sftmxGetStakingData.maxDepositLimit);
 
     return (
-        <Card shadow="lg" h="full">
+        <Card shadow="lg" h="full" title="Enter amount to stake">
             <VStack spacing="4" p="4" align="flex-start" h="full">
-                <Heading size="md">Enter amount to stake</Heading>
                 <FtmTokenInput
                     address={networkConfig.eth.address}
                     label="Stake"
