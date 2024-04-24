@@ -86,10 +86,9 @@ export function SftmxChartsFtmValidator({ data }: Props) {
                     tooltip: {
                         valueFormatter: (value) => `${numeral(value as number).format('0.[00]a')} FTM staked`,
                     },
+                    padAngle: 1,
                     itemStyle: {
                         borderRadius: 10,
-                        borderColor: '#27244d',
-                        borderWidth: 2,
                     },
                 },
             ],
