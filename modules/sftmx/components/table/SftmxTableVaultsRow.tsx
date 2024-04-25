@@ -21,7 +21,7 @@ export default function SftmxTableVaultsRow({ vault }: Props) {
                 py={{ base: '4', lg: '2' }}
                 templateColumns={{
                     base: '1fr 1fr',
-                    lg: '60px 150px 100px 1fr',
+                    lg: 'minmax(30px, 60px) minmax(115px, 150px) minmax(55px, 100px) minmax(150px, 1fr)',
                 }}
                 gap="4"
                 templateAreas={{
@@ -52,7 +52,7 @@ export default function SftmxTableVaultsRow({ vault }: Props) {
                 <Flex align={FLEX_ALIGN}>
                     <GridItem area="staked">
                         <MobileLabel text="Staked FTM" />
-                        {numeral(vault.ftmAmountStaked).format('0.00[00]a')}
+                        {numeral(vault.ftmAmountStaked).format('0.[00]a')}
                     </GridItem>
                 </Flex>
                 <Flex align={FLEX_ALIGN} justify={JUSTIFY_CONTENT}>

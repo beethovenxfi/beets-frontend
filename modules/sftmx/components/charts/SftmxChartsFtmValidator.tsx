@@ -69,6 +69,7 @@ export function SftmxChartsFtmValidator({ data }: Props) {
                     color: 'white',
                 },
             },
+            animation: false,
             series: [
                 {
                     type: 'pie',
@@ -99,7 +100,7 @@ export function SftmxChartsFtmValidator({ data }: Props) {
                 },
             ],
         }),
-        [JSON.stringify(data)],
+        [data],
     );
 
     const onChartClick = (params: any) => {

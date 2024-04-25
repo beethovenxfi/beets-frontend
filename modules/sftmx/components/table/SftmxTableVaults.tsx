@@ -1,11 +1,7 @@
 import { PaginatedTable } from '~/components/table/PaginatedTable';
 import SftmxStatsVaultsHeader from './SftmxTableVaultsHeader';
 import SftmxStatsVaultsRow from './SftmxTableVaultsRow';
-import { sortBy } from 'lodash';
-import { useSftmxGetStakingData } from '../../lib/useSftmxGetStakingData';
-import Card from '~/components/card/Card';
-import { VStack, Box, Spinner } from '@chakra-ui/react';
-import { useState, useEffect } from 'react';
+import { VStack, Spinner } from '@chakra-ui/react';
 import { GqlSftmxStakingVault } from '~/apollo/generated/graphql-codegen-generated';
 
 interface SftmxTableVaultsProps {
