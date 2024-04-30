@@ -1,4 +1,5 @@
 import { NetworkConfig, PoolDetailWarning } from '~/lib/config/network-config-type';
+import { AddressZero } from '@ethersproject/constants';
 
 // warnings
 const poolListWarningString =
@@ -28,7 +29,7 @@ export const optimismNetworkConfig: NetworkConfig = {
         address: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
         symbol: 'ETH',
         decimals: 18,
-        iconUrl: 'https://optimistic.etherscan.io/images/svg/brands/optimism.svg?v=1.3',
+        iconUrl: 'https://raw.githubusercontent.com/ethereum-optimism/brand-kit/main/assets/images/Profile-Logo.png',
         minGasAmount: '0.0005',
     },
     wethAddress: '0x4200000000000000000000000000000000000006',
@@ -59,9 +60,18 @@ export const optimismNetworkConfig: NetworkConfig = {
             maxLevel: 0,
         },
     },
+    sftmx: {
+        address: '',
+        ftmStakingProxyAddress: '',
+    },
+    snapshot: {
+        contractAddress: AddressZero,
+        delegateAddress: AddressZero,
+        id: '0x0000000000000000000000000000000000000000000000000000000000000000',
+    },
     balancer: {
         vault: '0xba12222222228d8ba445958a75a0704d566bf2c8',
-        batchRelayer: '0x03f1ab8b19bce21eb06c364aec9e40322572a1e9',
+        batchRelayer: '0x015aca20a1422f3c729086c17f15f10e0cfbc75a',
         balToken: '0xfe8b128ba8c78aabc59d4c64cee7ff28e9379921',
         weightedPoolFactory: '0x230a59F4d9ADc147480f03B0D3fFfeCd56c3289a',
         linearFactories: {
@@ -100,6 +110,7 @@ export const optimismNetworkConfig: NetworkConfig = {
         },
         minimumBoost: 1.0,
     },
+    rateproviders: { AddressZero: AddressZero },
     beetsPoolOwnerAddress: '0xd9e2889ac8c6fff8e94c7c1beeade1352df1a513',
     masterChefContractAddress: '',
     defaultTokenIn: '0x7f5c764cbc14f9669b88837ca1490cca17c31607',
@@ -132,7 +143,7 @@ export const optimismNetworkConfig: NetworkConfig = {
         },
         {
             title: 'Discord',
-            url: 'https://discord.gg/beethovenx',
+            url: 'https://op.beets.fi/discord',
         },
         {
             title: 'Olympus Bonds',
@@ -275,21 +286,90 @@ export const optimismNetworkConfig: NetworkConfig = {
         '0x58910d5bd045a20a37de147f8acea75b2d881f610002000000000000000000d3': 'gyroscope',
         '0x7ca75bdea9dede97f8b13c6641b768650cb837820002000000000000000000d5': 'gyroscope',
         '0x2c4a83f98d1cdbeeec825fabacd09c46e2dd3c570002000000000000000000de': 'gyroscope',
+        '0xe906d4c4fc4c3fe96560de86b4bf7ed89af9a69a000200000000000000000126': 'gyroscope',
         '0x62cf35db540152e94936de63efc90d880d4e241b0000000000000000000000ef': 'reaper',
         '0x7fe29a818438ed2759e30f65c2302295711d66fc0000000000000000000000e5': 'reaper', // to be deprecated soon
+        '0x8bb826afc0ff7d2c034a2883f4c461ffd238e1c300020000000000000000012b': 'gyroscope',
     },
     // manually added for now
-    auraStaking: {
-        '0x7ca75bdea9dede97f8b13c6641b768650cb837820002000000000000000000d5': 'https://app.aura.finance/#/10/pool/6', // Gyroscope ECLP wstETH/WETH
-        '0x4fd63966879300cafafbb35d157dc5229278ed2300020000000000000000002b': 'https://app.aura.finance/#/10/pool/0', // Rocket Fuel
-        '0x7b50775383d3d6f0215a8f290f2c9e2eebbeceb200020000000000000000008b': 'https://app.aura.finance/#/10/pool/4', // Shanghai Shakedown
-        '0xacfe9b4782910a853b68abba60f3fd8049ffe6380000000000000000000000ff': 'https://app.aura.finance/#/10/pool/9', // Sonata for Two: DOLA & USDC
-        '0x9da11ff60bfc5af527f58fd61679c3ac98d040d9000000000000000000000100': 'https://app.aura.finance/#/10/pool/10', // Native Stable Beets
-        '0x004700ba0a4f5f22e1e78a277fca55e36f47e09c000000000000000000000104': 'https://app.aura.finance/#/10/pool/13', // Ankr's Galactic Harmony
-        '0x00b82bc5edea6e5e6c77635e31a1a25aad99f881000200000000000000000105': 'https://app.aura.finance/#/10/pool/11', // Overnight Opening Ensemble
-        '0x5f8893506ddc4c271837187d14a9c87964a074dc000000000000000000000106': 'https://app.aura.finance/#/10/pool/14', // Ethereum Triplets
-        '0xc1f46ce83439886f0ea9c21512b36e7e67239d2c000200000000000000000108': 'https://app.aura.finance/#/10/pool/15', // Roast Beets
-    },
+    thirdPartyStakingPools: [
+        {
+            poolId: '0x7ca75bdea9dede97f8b13c6641b768650cb837820002000000000000000000d5', // Gyroscope ECLP wstETH/WETH
+            url: 'https://app.aura.finance/#/10/pool/6',
+            name: 'aura',
+        },
+        {
+            poolId: '0x4fd63966879300cafafbb35d157dc5229278ed2300020000000000000000002b', // Rocket Fuel
+            url: 'https://app.aura.finance/#/10/pool/0',
+            name: 'aura',
+        },
+        // {
+        //     poolId: '0x7b50775383d3d6f0215a8f290f2c9e2eebbeceb200020000000000000000008b', // Shanghai Shakedown
+        //     url: 'https://app.aura.finance/#/10/pool/4',
+        //     name: 'aura',
+        // },
+        {
+            poolId: '0xacfe9b4782910a853b68abba60f3fd8049ffe6380000000000000000000000ff', // Sonata for Two: DOLA & USDC
+            url: 'https://app.aura.finance/#/10/pool/9',
+            name: 'aura',
+        },
+        {
+            poolId: '0x9da11ff60bfc5af527f58fd61679c3ac98d040d9000000000000000000000100', // Native Stable Beets
+            url: 'https://app.aura.finance/#/10/pool/10',
+            name: 'aura',
+        },
+        {
+            poolId: '0x004700ba0a4f5f22e1e78a277fca55e36f47e09c000000000000000000000104', // Ankr's Galactic Harmony
+            url: 'https://app.aura.finance/#/10/pool/13',
+            name: 'aura',
+        },
+        {
+            poolId: '0x00b82bc5edea6e5e6c77635e31a1a25aad99f881000200000000000000000105', // Overnight Opening Ensemble
+            url: 'https://app.aura.finance/#/10/pool/11',
+            name: 'aura',
+        },
+        {
+            poolId: '0x5f8893506ddc4c271837187d14a9c87964a074dc000000000000000000000106', // Ethereum Triplets
+
+            url: 'https://app.aura.finance/#/10/pool/14',
+            name: 'aura',
+        },
+        {
+            poolId: '0xc1f46ce83439886f0ea9c21512b36e7e67239d2c000200000000000000000108', // Roast Beets
+            url: 'https://app.aura.finance/#/10/pool/15',
+            name: 'aura',
+        },
+        {
+            poolId: '0x0244b0025264dc5f5c113d472d579c9c994a59ce0002000000000000000000c9', // A Night at the OPara
+            url: 'https://app.aura.finance/#/10/pool/16',
+            name: 'aura',
+        },
+        {
+            poolId: '0x478980c67d53cd990f2b7bab311ddc9934324e7b00020000000000000000010c', // All Roads Lead to Frax
+            url: 'https://app.aura.finance/#/10/pool/17',
+            name: 'aura',
+        },
+        {
+            poolId: '0xa71021492a3966eec735ed1b505afa097c7cfe6f00000000000000000000010d', // Fraximalist Ethereum
+            url: 'https://app.aura.finance/#/10/pool/18',
+            name: 'aura',
+        },
+        {
+            poolId: '0x2feb76966459d7841fa8a7ed0aa4bf574d6111bf00020000000000000000011d', // Yield Concerto by FRAX
+            url: 'https://app.aura.finance/#/10/pool/19',
+            name: 'aura',
+        },
+        {
+            poolId: '0x2a5139cd86c041aa3467e649f5ee0880a5de2f2f00020000000000000000011a', // Staked Duet
+            url: 'https://app.aura.finance/#/10/pool/20',
+            name: 'aura',
+        },
+        {
+            poolId: '0xe906d4c4fc4c3fe96560de86b4bf7ed89af9a69a000200000000000000000126', // Frax Symphony
+            url: 'https://app.aura.finance/#/10/pool/21',
+            name: 'aura',
+        },
+    ],
     investDisabled: {
         '0x1f131ec1175f023ee1534b16fa8ab237c00e238100000000000000000000004a': true,
         '0x479a7d1fcdd71ce0c2ed3184bfbe9d23b92e8337000000000000000000000049': true,
@@ -332,4 +412,5 @@ export const optimismNetworkConfig: NetworkConfig = {
     layerZeroChainId: 111,
     beetsMigrationEnabled: true,
     gaugeEnabled: true,
+    sftmxEnabled: false,
 };

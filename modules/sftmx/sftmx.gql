@@ -1,0 +1,47 @@
+query SftmxGetStakingData {
+    sftmxGetStakingData {
+        exchangeRate
+        maintenancePaused
+        maxDepositLimit
+        minDepositLimit
+        numberOfVaults
+        stakingApr
+        totalFtmAmount
+        totalFtmAmountInPool
+        totalFtmAmountStaked
+        undelegatePaused
+        withdrawPaused
+        withdrawalDelay
+        numberOfVaults
+        vaults {
+            ftmAmountStaked
+            isMatured
+            unlockTimestamp
+            validatorAddress
+            validatorId
+            vaultAddress
+            vaultIndex
+        }
+    }
+}
+
+query SftmxGetWithdrawalRequests($user: String!) {
+    sftmxGetWithdrawalRequests(user: $user) {
+        amountSftmx
+        id
+        isWithdrawn
+        requestTimestamp
+        user
+    }
+}
+
+query SftmxGetStakingSnapshots($range: GqlSftmxStakingSnapshotDataRange!) {
+    snapshots: sftmxGetStakingSnapshots(range: $range) {
+        exchangeRate
+        id
+        timestamp
+        totalFtmAmount
+        totalFtmAmountInPool
+        totalFtmAmountStaked
+    }
+}

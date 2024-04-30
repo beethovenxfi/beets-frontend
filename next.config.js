@@ -18,6 +18,16 @@ const nextConfig = {
     },
 
     sentry: { hideSourcemaps: true, autoInstrumentServerFunctions: false },
+
+    async redirects() {
+        return [
+            {
+                source: '/discord',
+                destination: 'https://discord.gg/kbPnYJjvwZ',
+                permanent: false,
+            },
+        ];
+    },
 };
 
 const sentryWebpackPluginOptions = { silent: true };

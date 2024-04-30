@@ -130,6 +130,12 @@ export const fantomTheme: Partial<ChakraTheme> = {
                 '900': 'rgba(0, 255, 255, 0.9)',
             },
         },
+        fmoney: {
+            green: {
+                '100': '#60e8a0',
+                '400': '#51be84',
+            },
+        },
     },
     components: {
         Select: {

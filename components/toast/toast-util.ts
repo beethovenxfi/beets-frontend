@@ -12,7 +12,9 @@ export type BeetsTransactionType =
     | 'BURN'
     | 'MIGRATE'
     | 'CHECKPOINT'
-    | 'CREATE_POOL';
+    | 'CREATE_POOL'
+    | 'DELEGATE'
+    | 'UNDELEGATE';
 
 export type ToastTransactionStatus = 'PENDING' | 'CONFIRMED' | 'ERROR';
 export type ToastHeadlines = Record<ToastTransactionStatus, string>;
@@ -86,6 +88,16 @@ const TRANSACTION_HEADLINES: Record<BeetsTransactionType, ToastHeadlines> = {
         PENDING: 'Create pool pending',
         CONFIRMED: 'Create pool confirmed',
         ERROR: 'Create pool error',
+    },
+    DELEGATE: {
+        PENDING: 'Set delegate pending',
+        CONFIRMED: 'Set delegate confirmed',
+        ERROR: 'Set delegate error',
+    },
+    UNDELEGATE: {
+        PENDING: 'Clear delegate pending',
+        CONFIRMED: 'Clear delegate confirmed',
+        ERROR: 'Clear delegate error',
     },
 };
 

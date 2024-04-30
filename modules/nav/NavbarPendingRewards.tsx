@@ -27,9 +27,9 @@ import { useReliquaryPendingRewards } from '../reliquary/lib/useReliquaryPending
 import { sumBy } from 'lodash';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 import { useGaugeClaimGetContractCallData } from './lib/useGaugeClaimGetContractCallData';
-import { useUserGaugeClaimAllOtherPendingRewards } from './lib/useUserGaugeClaimAllOtherPendingRewards';
-import { AddressZero } from '@ethersproject/constants';
-import useStakingMintableRewards from '~/lib/global/useStakingMintableRewards';
+import { useUserGaugeClaimAllPendingRewards } from './lib/useUserGaugeClaimAllPendingRewards';
+import { useHasMinterApproval } from '~/lib/util/useHasMinterApproval';
+import { BeetsMinterApprovalButton } from '~/components/button/BeetsMinterApprovalButton';
 
 export function NavbarPendingRewards() {
     const {
@@ -38,13 +38,18 @@ export function NavbarPendingRewards() {
         pendingRewardsNonBALTotalUSD,
         staking,
         stakingType,
-        isLoading: pendingRewardsLoading,
+        isLoading: isLoadingPendingRewards,
         pendingBALUSD,
         gauges,
     } = useUserPendingRewards();
-    const { stakedValueUSD, loading: userDataLoading } = useUserData();
+    const { stakedValueUSD, loading: isLoadingUserData } = useUserData();
     const { priceForAmount, getToken } = useGetTokens();
-    const loading = pendingRewardsLoading || userDataLoading;
+    const {
+        data: hasMinterApproval,
+        isLoading: isLoadingHasMinterApproval,
+        refetch: refetchMinterApproval,
+    } = useHasMinterApproval();
+    const isLoading = isLoadingPendingRewards || isLoadingUserData || isLoadingHasMinterApproval;
     const { harvestAll, ...harvestQuery } = useUserHarvestAllPendingRewards();
     const farmIds = staking.map((stake) => stake?.farm?.id || '');
     const isMasterChefOrFreshBeets = stakingType === 'MASTER_CHEF' || stakingType === 'FRESH_BEETS';
@@ -59,17 +64,11 @@ export function NavbarPendingRewards() {
     const totalPendingRewardsUSD = pendingRewardsTotalUSD + pendingReliquaryRewardsTotalUSD;
 
     const { data: contractCalls } = useGaugeClaimGetContractCallData(
-        totalPendingRewardsUSD > 0.01,
+        pendingRewardsNonBALTotalUSD > 0.01,
         pendingBALUSD > 0.01,
         gauges || [],
     );
-    const { claimAll } = useUserGaugeClaimAllOtherPendingRewards();
-
-    // TODO: can remove again when relayer v6 is released
-    const canClaimBAL = networkConfig.gauge.balancerPseudoMinterAddress !== AddressZero && pendingBALUSD > 0;
-    const {
-        claimAll: { claimAllBAL, ...claimAllQuery },
-    } = useStakingMintableRewards(staking);
+    const { claimAll } = useUserGaugeClaimAllPendingRewards();
 
     return (
         <Popover>
@@ -84,13 +83,13 @@ export function NavbarPendingRewards() {
                     alignItems="center"
                     justifyContent="center"
                     flexDirection="column"
-                    disabled={loading}
+                    disabled={isLoading}
                     _disabled={{ opacity: 1.0, cursor: 'not-allowed' }}
                     _hover={{ transform: 'scale(1.1)' }}
                 >
                     <StarsIcon width={15} height={16} />
 
-                    {loading ? (
+                    {isLoading ? (
                         <Skeleton height="7.5px" width="36px" mt="1.5" mb="2px" />
                     ) : (
                         <Box fontSize="11px" pt="0.5">
@@ -165,36 +164,30 @@ export function NavbarPendingRewards() {
                                     </Box>
                                 ) : (
                                     <Box mt="4" justifySelf="flex-end">
-                                        <BeetsSubmitTransactionButton
-                                            {...harvestQuery}
-                                            // TODO: when v6 is released, remove below and put this back: isDisabled={pendingRewardsNonBALTotalUSD < 0.01 && pendingBALUSD < 0.01}
-                                            isDisabled={pendingRewardsNonBALTotalUSD < 0.01}
-                                            onClick={() => {
-                                                if (contractCalls) {
-                                                    claimAll(contractCalls);
-                                                }
-                                            }}
-                                            width="full"
-                                        >
-                                            Claim all pending gauge rewards
-                                        </BeetsSubmitTransactionButton>
-                                    </Box>
-                                )}
-                                {
-                                    // TODO: remove again when v6 relayer is released
-                                    canClaimBAL && (
-                                        <Box mt="4" justifySelf="flex-end">
+                                        {!hasMinterApproval && (
+                                            <BeetsMinterApprovalButton
+                                                onConfirmed={() => {
+                                                    refetchMinterApproval();
+                                                }}
+                                                buttonText="Approve BAL minting"
+                                            />
+                                        )}
+                                        {hasMinterApproval && (
                                             <BeetsSubmitTransactionButton
-                                                {...claimAllQuery}
-                                                isDisabled={pendingBALUSD < 0.01}
-                                                onClick={() => claimAllBAL()}
+                                                {...harvestQuery}
+                                                isDisabled={pendingRewardsNonBALTotalUSD < 0.01 && pendingBALUSD < 0.01}
+                                                onClick={() => {
+                                                    if (contractCalls) {
+                                                        claimAll(contractCalls);
+                                                    }
+                                                }}
                                                 width="full"
                                             >
-                                                Claim all pending BAL
+                                                Claim all pool rewards
                                             </BeetsSubmitTransactionButton>
-                                        </Box>
-                                    )
-                                }
+                                        )}
+                                    </Box>
+                                )}
                             </VStack>
                         </GridItem>
                     </Grid>

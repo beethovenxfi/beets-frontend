@@ -67,7 +67,7 @@ function _useCompose() {
         { address: networkConfig.beets.address, amount: null, isLocked: false, weight: 50 },
         {
             address:
-                networkConfig.chainName === 'OPTIMISM' ? networkConfig.balancer.balToken : networkConfig.wethAddress,
+                networkConfig.chainName === 'OPTIMISM' ? networkConfig.balancer.balToken : networkConfig.sftmx.address,
             amount: null,
             isLocked: false,
             weight: 50,

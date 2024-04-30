@@ -672,6 +672,7 @@ export const GetUserData = gql`
         }
         staking: userGetStaking {
             id
+            chain
             type
             address
             chain
@@ -1213,6 +1214,57 @@ export const GetReliquaryFarmSnapshots = gql`
                 balance
                 symbol
             }
+        }
+    }
+`;
+export const SftmxGetStakingData = gql`
+    query SftmxGetStakingData {
+        sftmxGetStakingData {
+            exchangeRate
+            maintenancePaused
+            maxDepositLimit
+            minDepositLimit
+            numberOfVaults
+            stakingApr
+            totalFtmAmount
+            totalFtmAmountInPool
+            totalFtmAmountStaked
+            undelegatePaused
+            withdrawPaused
+            withdrawalDelay
+            numberOfVaults
+            vaults {
+                ftmAmountStaked
+                isMatured
+                unlockTimestamp
+                validatorAddress
+                validatorId
+                vaultAddress
+                vaultIndex
+            }
+        }
+    }
+`;
+export const SftmxGetWithdrawalRequests = gql`
+    query SftmxGetWithdrawalRequests($user: String!) {
+        sftmxGetWithdrawalRequests(user: $user) {
+            amountSftmx
+            id
+            isWithdrawn
+            requestTimestamp
+            user
+        }
+    }
+`;
+export const SftmxGetStakingSnapshots = gql`
+    query SftmxGetStakingSnapshots($range: GqlSftmxStakingSnapshotDataRange!) {
+        snapshots: sftmxGetStakingSnapshots(range: $range) {
+            exchangeRate
+            id
+            timestamp
+            totalFtmAmount
+            totalFtmAmountInPool
+            totalFtmAmountStaked
         }
     }
 `;

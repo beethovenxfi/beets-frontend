@@ -7,7 +7,8 @@ export type PoolBadgeType =
     | 'overnight'
     | 'reaper'
     | 'beefy-exactly'
-    | 'gyroscope';
+    | 'gyroscope'
+    | 'experimental';
 
 export interface PoolDetailWarning {
     id: string;
@@ -17,6 +18,12 @@ export interface PoolDetailWarning {
         url: string;
         text: string;
     };
+}
+
+export interface ThirdPartyStakingPool {
+    poolId: string;
+    url: string;
+    name: string;
 }
 
 export interface NetworkConfig {
@@ -64,6 +71,15 @@ export interface NetworkConfig {
             maxLevel: number;
         };
     };
+    sftmx: {
+        address: string;
+        ftmStakingProxyAddress: string;
+    };
+    snapshot: {
+        contractAddress: string;
+        delegateAddress: string;
+        id: string;
+    };
     balancer: {
         vault: string;
         batchRelayer: string;
@@ -82,6 +98,7 @@ export interface NetworkConfig {
         };
         minimumBoost: number;
     };
+    rateproviders: { [tokenAddress: string]: string };
     beetsPoolOwnerAddress: string;
     masterChefContractAddress: string;
     defaultTokenIn: string;
@@ -121,10 +138,11 @@ export interface NetworkConfig {
     poolBadgeTypes: {
         [poolId: string]: PoolBadgeType;
     };
-    auraStaking: { [poolId: string]: string };
+    thirdPartyStakingPools: ThirdPartyStakingPool[];
     maBeetsEnabled: boolean;
     claimAllRewardsEnabled: boolean;
     layerZeroChainId: number;
     beetsMigrationEnabled: boolean;
     gaugeEnabled: boolean;
+    sftmxEnabled: boolean;
 }

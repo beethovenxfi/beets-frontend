@@ -12,4 +12,5 @@ export const PoolBadgeTooltips: { [type: string]: string } = {
         'This pool deposits a portion of its assets into Beefy vault(s) to generate boosted yield. The vault(s) are configured to deposit assets to Exactly in supply-only mode.',
     gyroscope:
         'The Gyroscope E-CLP merges the UX of StableSwap with the capital efficiency of Uniswap V3, featuring asymmetric price bounds and custom liquidity profiles.',
+    experimental: 'This pool contains one or more tokens that are highly experimental. Invest with caution!',
 };

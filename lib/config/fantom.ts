@@ -61,6 +61,15 @@ export const fantomNetworkConfig: NetworkConfig = {
             maxLevel: 10,
         },
     },
+    sftmx: {
+        address: '0xd7028092c830b5c8fce061af2e593413ebbc1fc1',
+        ftmStakingProxyAddress: '0xB458BfC855ab504a8a327720FcEF98886065529b',
+    },
+    snapshot: {
+        contractAddress: '0x469788fe6e9e9681c6ebf3bf78e7fd26fc015446',
+        delegateAddress: '0x641e10Cd6132D3e3FA01bfd65d2e0afCf64b136A', // MD delegator address case sensitive!
+        id: '0x62656574732e6574680000000000000000000000000000000000000000000000', // BeethovenX Snapshot id
+    },
     balancer: {
         vault: '0x20dd72Ed959b6147912C2e529F0a0C651c33c9ce',
         batchRelayer: '0x0faa25293a36241c214f3760c6ff443e1b731981',
@@ -93,6 +102,7 @@ export const fantomNetworkConfig: NetworkConfig = {
         },
         minimumBoost: 1.0,
     },
+    rateproviders: { '0xd7028092c830b5c8fce061af2e593413ebbc1fc1': '0x629d4c27057915e59dd94bca8d48c6d80735b521' },
     beetsPoolOwnerAddress: '0xcd983793adb846dce4830c22f30c7ef0c864a776',
     masterChefContractAddress: '0x8166994d9ebBe5829EC86Bd81258149B87faCfd3',
     defaultTokenIn: '0x21be370d5312f44cb42ce377bc9b8a0cef1a4c83',
@@ -125,7 +135,7 @@ export const fantomNetworkConfig: NetworkConfig = {
         },
         {
             title: 'Discord',
-            url: 'https://discord.gg/beethovenx',
+            url: 'https://beets.fi/discord',
         },
         {
             title: 'Olympus Bonds',
@@ -323,8 +333,16 @@ export const fantomNetworkConfig: NetworkConfig = {
         '0xf47f4d59c863c02cbfa3eefe6771b9c9fbe7b97800000000000000000000072b': 'reaper',
         '0xba0e9aea8a7fa1daab4edf244191f2387a4e472b000100000000000000000737': 'reaper',
         '0x6e6dc948ce85c62125ff7a1e543d761a88f0a4cb000000000000000000000743': 'reaper',
+        '0xd67041d2d93f03774092caaeb4553e26c51ae4ed0002000000000000000007e9': 'experimental',
+        '0xc3cbb0dba094893b268421cc4909f14ad18334bb00020000000000000000080e': 'experimental',
     },
-    auraStaking: {},
+    thirdPartyStakingPools: [
+        {
+            poolId: '0x2ddcd6916ee7ccc6300cb0fe2919a341be0ee8bb0002000000000000000007eb', // fMoney with Attitude
+            url: 'https://www.fmoney.market/stake',
+            name: 'fmoney',
+        },
+    ],
     investDisabled: {
         '0xa10285f445bcb521f1d623300dc4998b02f11c8f00000000000000000000043b': true,
         '0xcde5a11a4acb4ee4c805352cec57e236bdbc3837000200000000000000000019': true,
@@ -405,4 +423,5 @@ export const fantomNetworkConfig: NetworkConfig = {
     layerZeroChainId: -1,
     beetsMigrationEnabled: false,
     gaugeEnabled: false,
+    sftmxEnabled: true,
 };

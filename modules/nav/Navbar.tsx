@@ -74,6 +74,9 @@ export function Navbar({ scrollY }: Props) {
                                     mr="5"
                                 />
                             )}
+                            {networkConfig.sftmxEnabled && (
+                                <NavbarLink href={'/sftmx'} selected={router.asPath === '/sftmx'} text="sFTMx" mr="5" />
+                            )}
                             {/*<NavbarAdditionalLinksMenu />*/}
                         </Flex>
                     </Box>

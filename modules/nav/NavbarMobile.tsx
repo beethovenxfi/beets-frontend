@@ -32,6 +32,9 @@ export function NavbarMobile() {
                         px="4"
                     />
                 )}
+                {networkConfig.sftmxEnabled && (
+                    <NavbarLink href={'/sftmx'} selected={router.asPath === '/sftmx'} text="sFTMx" mr="1" px="4" />
+                )}
             </Flex>
         </Box>
     );
