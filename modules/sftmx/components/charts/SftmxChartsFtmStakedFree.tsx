@@ -127,13 +127,13 @@ export function SftmxChartsFtmStakedFree({ data }: Props) {
                         data: [
                             [
                                 {
-                                    name: 'Beets Takeover',
-                                    xAxis: 1708214400 * 1000,
+                                    name: 'Beethoven X assumes control',
+                                    xAxis: 1707955200 * 1000,
                                     yAxis: 0,
                                 },
                                 {
                                     name: 'end',
-                                    xAxis: 1708214400 * 1000,
+                                    xAxis: 1707955200 * 1000,
                                     yAxis: 'max',
                                 },
                             ],
