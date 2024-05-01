@@ -123,6 +123,26 @@ export function SftmxChartsFtmStakedFree({ data }: Props) {
                     tooltip: {
                         valueFormatter: (value) => numeral(value as number).format('0a'),
                     },
+                    markLine: {
+                        data: [
+                            [
+                                {
+                                    name: 'Beets Takeover',
+                                    xAxis: 1708214400 * 1000,
+                                    yAxis: 0,
+                                },
+                                {
+                                    name: 'end',
+                                    xAxis: 1708214400 * 1000,
+                                    yAxis: 'max',
+                                },
+                            ],
+                        ],
+                        symbol: 'none',
+                        label: {
+                            color: 'white',
+                        },
+                    },
                 },
                 {
                     type: 'line',
