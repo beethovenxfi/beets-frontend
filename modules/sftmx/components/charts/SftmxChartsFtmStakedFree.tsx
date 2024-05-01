@@ -100,7 +100,7 @@ export function SftmxChartsFtmStakedFree({ data }: Props) {
             },
             grid: {
                 left: gridLeft,
-                right: 0,
+                right: '2%',
                 top: '5%',
                 bottom: '7.5%',
             },
