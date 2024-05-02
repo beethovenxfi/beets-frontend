@@ -100,7 +100,7 @@ export function SftmxChartsFtmStakedFree({ data }: Props) {
             },
             grid: {
                 left: gridLeft,
-                right: 0,
+                right: '2%',
                 top: '5%',
                 bottom: '7.5%',
             },
@@ -122,6 +122,26 @@ export function SftmxChartsFtmStakedFree({ data }: Props) {
                     splitLine: { show: false },
                     tooltip: {
                         valueFormatter: (value) => numeral(value as number).format('0a'),
+                    },
+                    markLine: {
+                        data: [
+                            [
+                                {
+                                    name: 'Beethoven X assumes control',
+                                    xAxis: 1707955200 * 1000,
+                                    yAxis: 0,
+                                },
+                                {
+                                    name: 'end',
+                                    xAxis: 1707955200 * 1000,
+                                    yAxis: 'max',
+                                },
+                            ],
+                        ],
+                        symbol: 'none',
+                        label: {
+                            color: 'white',
+                        },
                     },
                 },
                 {
