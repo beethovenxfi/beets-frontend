@@ -16,10 +16,9 @@ interface Props {
 }
 
 export function BatchSwapRoute({ route, minimalWidth }: Props) {
-    const hopsWithoutLinear = route.hops.filter((hop) => hop.pool.type !== 'LINEAR');
-    const hops = hopsWithoutLinear.filter((hop, index) => {
+    const hops = route.hops.filter((hop, index) => {
         if (minimalWidth) {
-            return index === hopsWithoutLinear.length - 1;
+            return index === route.hops.length - 1;
         }
 
         return true;

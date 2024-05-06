@@ -609,90 +609,6 @@ enum GqlPoolJoinExitType {
     Join
 }
 
-type GqlPoolLinear implements GqlPoolBase {
-    address: Bytes!
-    allTokens: [GqlPoolTokenExpanded!]!
-    bptPriceRate: BigDecimal!
-    chain: GqlChain!
-    createTime: Int!
-    decimals: Int!
-    displayTokens: [GqlPoolTokenDisplay!]!
-    dynamicData: GqlPoolDynamicData!
-    factory: Bytes
-    id: ID!
-    investConfig: GqlPoolInvestConfig!
-    lowerTarget: BigInt!
-    mainIndex: Int!
-    name: String!
-    owner: Bytes!
-    poolTokens: [GqlPoolTokenDetail!]!
-    staking: GqlPoolStaking
-    symbol: String!
-    tokens: [GqlPoolToken!]!
-    type: GqlPoolType!
-    upperTarget: BigInt!
-    userBalance: GqlPoolUserBalance
-    vaultVersion: Int!
-    version: Int!
-    withdrawConfig: GqlPoolWithdrawConfig!
-    wrappedIndex: Int!
-}
-
-type GqlPoolLinearNested {
-    address: Bytes!
-    bptPriceRate: BigDecimal!
-    createTime: Int!
-    factory: Bytes
-    id: ID!
-    lowerTarget: BigInt!
-    mainIndex: Int!
-    name: String!
-    owner: Bytes!
-    symbol: String!
-    tokens: [GqlPoolToken!]!
-    totalLiquidity: BigDecimal!
-    totalShares: BigDecimal!
-    type: GqlPoolType!
-    upperTarget: BigInt!
-    version: Int!
-    wrappedIndex: Int!
-}
-
-type GqlPoolLinearPoolData {
-    address: String!
-    balance: String!
-    id: ID!
-    mainToken: GqlPoolLinearPoolMainToken!
-    mainTokenTotalBalance: String!
-    poolToken: String!
-    priceRate: String!
-    symbol: String!
-    totalSupply: String!
-    unwrappedTokenAddress: String!
-    wrappedToken: GqlPoolLinearPoolWrappedToken!
-}
-
-type GqlPoolLinearPoolMainToken {
-    address: String!
-    balance: String!
-    decimals: Int!
-    index: Int!
-    name: String!
-    symbol: String!
-    totalSupply: String!
-}
-
-type GqlPoolLinearPoolWrappedToken {
-    address: String!
-    balance: String!
-    decimals: Int!
-    index: Int!
-    name: String!
-    priceRate: String!
-    symbol: String!
-    totalSupply: String!
-}
-
 type GqlPoolLiquidityBootstrapping implements GqlPoolBase {
     address: Bytes!
     allTokens: [GqlPoolTokenExpanded!]!
@@ -833,7 +749,7 @@ type GqlPoolMinimal {
     version: Int!
 }
 
-union GqlPoolNestedUnion = GqlPoolComposableStableNested | GqlPoolLinearNested
+union GqlPoolNestedUnion = GqlPoolComposableStableNested
 
 enum GqlPoolNestingType {
     HAS_ONLY_PHANTOM_BPT
@@ -1077,7 +993,22 @@ type GqlPoolTokenComposableStable implements GqlPoolTokenBase {
     weight: BigDecimal
 }
 
-union GqlPoolTokenComposableStableNestedUnion = GqlPoolToken | GqlPoolTokenLinear
+union GqlPoolTokenComposableStableNestedUnion = GqlPoolToken
+
+type GqlPoolTokenDetail {
+    address: String!
+    balance: BigDecimal!
+    decimals: Int!
+    hasNestedPool: Boolean!
+    id: ID!
+    index: Int!
+    name: String!
+    nestedPool: GqlNestedPool
+    priceRate: BigDecimal!
+    priceRateProvider: String
+    symbol: String!
+    weight: BigDecimal
+}
 
 type GqlPoolTokenDetail {
     address: String!
@@ -1115,25 +1046,7 @@ type GqlPoolTokenExpanded {
     weight: String
 }
 
-type GqlPoolTokenLinear implements GqlPoolTokenBase {
-    address: String!
-    balance: BigDecimal!
-    decimals: Int!
-    id: ID!
-    index: Int!
-    mainTokenBalance: BigDecimal!
-    name: String!
-    pool: GqlPoolLinearNested!
-    priceRate: BigDecimal!
-    priceRateProvider: String
-    symbol: String!
-    totalBalance: BigDecimal!
-    totalMainTokenBalance: BigDecimal!
-    weight: BigDecimal
-    wrappedTokenBalance: BigDecimal!
-}
-
-union GqlPoolTokenUnion = GqlPoolToken | GqlPoolTokenComposableStable | GqlPoolTokenLinear
+union GqlPoolTokenUnion = GqlPoolToken | GqlPoolTokenComposableStable
 
 """
 Supported pool types
@@ -1146,7 +1059,6 @@ enum GqlPoolType {
     GYRO3
     GYROE
     INVESTMENT
-    LINEAR
     LIQUIDITY_BOOTSTRAPPING
     META_STABLE
     PHANTOM_STABLE
@@ -1160,7 +1072,6 @@ union GqlPoolUnion =
     | GqlPoolElement
     | GqlPoolFx
     | GqlPoolGyro
-    | GqlPoolLinear
     | GqlPoolLiquidityBootstrapping
     | GqlPoolMetaStable
     | GqlPoolStable
@@ -1884,7 +1795,6 @@ type GqlTokenPriceChartDataItem {
 
 enum GqlTokenType {
     BPT
-    LINEAR_WRAPPED_TOKEN
     PHANTOM_BPT
     WHITE_LISTED
 }
@@ -2052,11 +1962,6 @@ type Query {
     Will de deprecated in favor of poolEvents
     """
     poolGetJoinExits(first: Int, skip: Int, where: GqlPoolJoinExitFilter): [GqlPoolJoinExit!]!
-
-    """
-    Gets all linear pools
-    """
-    poolGetLinearPools(chains: [GqlChain!]): [GqlPoolLinear!]!
 
     """
     Returns one pool. If a user address is provided, the user balances for the given pool will also be returned.

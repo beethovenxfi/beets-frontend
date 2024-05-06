@@ -2,12 +2,9 @@ import { AmountHumanReadable, AmountScaledString, TokenAmountHumanReadable } fro
 import { BigNumberish } from 'ethers';
 import { BatchSwapStep, SwapKind } from '@balancer-labs/balancer-js';
 import {
-    GqlPoolLinearNested,
     GqlPoolComposableStable,
     GqlPoolComposableStableNested,
-    GqlPoolToken,
     GqlPoolTokenExpanded,
-    GqlPoolTokenLinear,
     GqlPoolTokenUnion,
     GqlPoolUnion,
     GqlPoolWeighted,
@@ -239,18 +236,11 @@ export interface ComposablePoolJoinProcessedStepsOutput {
 }
 
 export type PoolWithPossibleNesting = GqlPoolWeighted | GqlPoolComposableStable;
-export type ComposableExitSwapPool = GqlPoolComposableStable | GqlPoolComposableStableNested | GqlPoolLinearNested;
-
-export interface ComposablePoolExitNestedLinearPool {
-    linearPoolToken: GqlPoolTokenLinear;
-    mainToken: GqlPoolToken;
-    wrappedToken: GqlPoolToken;
-}
+export type ComposableExitSwapPool = GqlPoolComposableStable | GqlPoolComposableStableNested;
 
 export interface ComposablePoolSingleAssetExit {
     tokenOut: GqlPoolTokenExpanded;
     poolToken: GqlPoolTokenUnion;
-    linearPool?: ComposablePoolExitNestedLinearPool;
     exitSwaps?: {
         swaps: SwapV2[];
         assets: string[];

@@ -283,16 +283,6 @@ export class PoolPhantomStableService implements PoolService {
                 const tokenAmount = tokenAmounts.find((amount) => amount.address === poolToken.address);
 
                 return tokenAmount ? parseUnits(tokenAmount.amount, poolToken.decimals).toString() : '0';
-            } else if (poolToken.__typename === 'GqlPoolTokenLinear') {
-                const linearPool = poolToken.pool;
-                const mainToken = linearPool.tokens.find((token) => token.index === linearPool.mainIndex);
-                const mainTokenAmount = tokenAmounts.find((amount) => amount.address === mainToken?.address);
-
-                if (!mainToken || !mainTokenAmount) {
-                    return '0';
-                }
-
-                return parseUnits(mainTokenAmount.amount, 18).toString();
             } else if (poolToken.__typename === 'GqlPoolTokenComposableStable') {
                 //we calc the bpt for zero price impact assuming an independent invest into the phantom stable
                 const phantomStable = poolToken.pool;
@@ -327,7 +317,7 @@ export class PoolPhantomStableService implements PoolService {
             const poolToken = this.pool.tokens.find((poolToken) => poolToken.index === option.poolTokenIndex)!;
             const poolTokenWeight = oldBnum(oldBnum(poolToken.balance).times(poolToken.priceRate)).div(totalBalance);
 
-            if (poolToken.__typename === 'GqlPoolToken' || poolToken.__typename === 'GqlPoolTokenLinear') {
+            if (poolToken.__typename === 'GqlPoolToken') {
                 return {
                     address: tokenOption.address,
                     amount: oldBnum(bptIn).times(poolTokenWeight).toFixed(18).toString(),
