@@ -21,8 +21,6 @@ import { oldBnum, oldBnumSubtractSlippage } from '~/lib/services/pool/lib/old-bi
 import {
     poolBatchSwaps,
     poolGetEthAmountFromJoinData,
-    poolGetMainTokenFromLinearPoolToken,
-    poolGetNestedLinearPoolTokens,
     poolGetNestedStablePoolTokens,
     poolQueryBatchSwap,
     poolStableBptForTokensZeroPriceImpact,
@@ -51,28 +49,7 @@ export class PoolComposableJoinService {
 
     public get joinSteps(): ComposablePoolJoinStep[] {
         const steps: ComposablePoolJoinStep[] = [];
-        const nestedLinearPoolTokens = poolGetNestedLinearPoolTokens(this.pool);
         const nestedStablePoolTokens = poolGetNestedStablePoolTokens(this.pool);
-
-        if (nestedLinearPoolTokens.length > 0) {
-            steps.push({
-                type: 'BatchSwap',
-                swaps: nestedLinearPoolTokens.map((linearPoolToken) => {
-                    const mainToken = poolGetMainTokenFromLinearPoolToken(linearPoolToken);
-
-                    return {
-                        poolId: linearPoolToken.pool.id,
-                        tokenIn: mainToken.address,
-                        tokenOut: linearPoolToken.address,
-                    };
-                }),
-                tokensIn: nestedLinearPoolTokens.map((linearPoolToken) => {
-                    const mainToken = poolGetMainTokenFromLinearPoolToken(linearPoolToken);
-
-                    return mainToken.address;
-                }),
-            });
-        }
 
         for (const nestedStablePoolToken of nestedStablePoolTokens) {
             steps.push({
@@ -383,7 +360,7 @@ export class PoolComposableJoinService {
 
             const tokenAmountIn = step.tokenAmountsIn.find((tokenAmountIn) => tokenAmountIn.address === token.address);
 
-            if (token.__typename === 'GqlPoolTokenLinear' || token.__typename === 'GqlPoolTokenComposableStable') {
+            if (token.__typename === 'GqlPoolTokenComposableStable') {
                 //This token is a nested BPT, not a mainToken
                 //Replace the amount with the chained reference value
                 const index = assets.findIndex((asset) => asset.toLowerCase() === token.address);

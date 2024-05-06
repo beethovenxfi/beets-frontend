@@ -36,32 +36,6 @@ export function poolGetJoinSwapForToken({
             ],
             assets: [tokenIn, poolAddress],
         };
-    } else if (poolToken.__typename === 'GqlPoolTokenLinear') {
-        const nestedToken = poolToken.pool.tokens.find((token) => token.address === tokenIn);
-
-        if (!nestedToken) {
-            throw new Error(`Token does not exist in pool token: ${tokenIn}`);
-        }
-
-        return {
-            swaps: [
-                {
-                    poolId: poolToken.pool.id,
-                    assetInIndex: 0,
-                    assetOutIndex: 1,
-                    amount: parseUnits(tokenAmountIn.amount, nestedToken.decimals).toString(),
-                    userData: '0x',
-                },
-                {
-                    poolId,
-                    assetInIndex: 1,
-                    assetOutIndex: 2,
-                    amount: '0',
-                    userData: '0x',
-                },
-            ],
-            assets: [nestedToken.address, poolToken.address, poolAddress],
-        };
     } else if (poolToken.__typename === 'GqlPoolTokenComposableStable') {
         const nestedPoolToken = poolFindNestedPoolTokenForToken(tokenIn, poolToken.pool.tokens);
 
@@ -114,20 +88,6 @@ export function poolGetExitSwaps({
             swaps: [{ poolId, assetInIndex: 0, assetOutIndex: 1, amount: bptInScaled, userData: '0x' }],
             assets: [poolAddress, tokenOut],
         };
-    } else if (poolToken.__typename === 'GqlPoolTokenLinear') {
-        const nestedToken = poolToken.pool.tokens.find((token) => token.address === tokenOut);
-
-        if (!nestedToken) {
-            throw new Error(`Token does not exist in pool token: ${tokenOut}`);
-        }
-
-        return {
-            swaps: [
-                { poolId, assetInIndex: 0, assetOutIndex: 1, amount: bptInScaled, userData: '0x' },
-                { poolId: poolToken.pool.id, assetInIndex: 1, assetOutIndex: 2, amount: '0', userData: '0x' },
-            ],
-            assets: [poolAddress, poolToken.address, nestedToken.address],
-        };
     } else if (poolToken.__typename === 'GqlPoolTokenComposableStable') {
         const nestedPoolToken = poolFindNestedPoolTokenForToken(tokenOut, poolToken.pool.tokens);
 
@@ -174,10 +134,6 @@ export function poolFindNestedPoolTokenForToken(
     poolTokens: GqlPoolTokenComposableStableNestedUnion[],
 ) {
     const nestedPoolToken = poolTokens.find((token) => {
-        if (token.__typename === 'GqlPoolTokenLinear') {
-            return token.pool.tokens.find((linearPoolToken) => linearPoolToken.address === tokenAddress);
-        }
-
         return token.address === tokenAddress;
     });
 

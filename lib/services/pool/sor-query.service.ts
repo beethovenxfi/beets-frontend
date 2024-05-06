@@ -3,11 +3,7 @@ import { networkConfig } from '~/lib/config/network-config';
 import { BaseProvider } from '@ethersproject/providers';
 import { BigNumber } from 'ethers';
 import BalancerSorQueriesAbi from '~/lib/abi/BalancerSorQueries.json';
-import {
-    GqlPoolLinearNested,
-    GqlPoolComposableStableNested,
-    GqlPoolUnion,
-} from '~/apollo/generated/graphql-codegen-generated';
+import { GqlPoolComposableStableNested, GqlPoolUnion } from '~/apollo/generated/graphql-codegen-generated';
 
 export enum SorQueriesTotalSupplyType {
     TOTAL_SUPPLY = 0,
@@ -92,19 +88,14 @@ export class SorQueryService {
         };
     }
 
-    public getTotalSupplyType(
-        pool: GqlPoolUnion | GqlPoolComposableStableNested | GqlPoolLinearNested,
-    ): SorQueriesTotalSupplyType {
+    public getTotalSupplyType(pool: GqlPoolUnion | GqlPoolComposableStableNested): SorQueriesTotalSupplyType {
         const isComposableStable = ['GqlPoolComposableStable', 'GqlPoolComposableStableNested'].includes(
             pool.__typename,
         );
 
         if ((pool.__typename === 'GqlPoolWeighted' && pool.version >= 2) || (isComposableStable && pool.version > 0)) {
             return SorQueriesTotalSupplyType.ACTUAL_SUPPLY;
-        } else if (
-            (isComposableStable && pool.version === 0) ||
-            ['GqlPoolLinear', 'GqlPoolLinearNested'].includes(pool.__typename)
-        ) {
+        } else if (isComposableStable && pool.version === 0) {
             return SorQueriesTotalSupplyType.VIRTUAL_SUPPLY;
         } else {
             return SorQueriesTotalSupplyType.TOTAL_SUPPLY;

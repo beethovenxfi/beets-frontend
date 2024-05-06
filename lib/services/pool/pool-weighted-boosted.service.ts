@@ -391,10 +391,7 @@ export class PoolWeightedBoostedService implements PoolService {
             );
 
             //we're only concerned with nested phantom bpts
-            if (
-                poolToken.__typename === 'GqlPoolTokenLinear' ||
-                poolToken.__typename === 'GqlPoolTokenComposableStable'
-            ) {
+            if (poolToken.__typename === 'GqlPoolTokenComposableStable') {
                 //get join swaps adds this pool as the last item, which is not needed for the weighted pool so we remove it.
                 const { swaps, assets } = poolGetJoinSwapForToken({
                     poolId: this.pool.id,
@@ -428,10 +425,7 @@ export class PoolWeightedBoostedService implements PoolService {
                 this.pool.investConfig.options,
             );
 
-            if (
-                poolToken.__typename === 'GqlPoolTokenComposableStable' ||
-                poolToken.__typename === 'GqlPoolTokenLinear'
-            ) {
+            if (poolToken.__typename === 'GqlPoolTokenComposableStable') {
                 const assetIndex = assets.findIndex((asset) => asset === poolToken.address);
                 const delta = deltas[assetIndex];
 
@@ -571,10 +565,7 @@ export class PoolWeightedBoostedService implements PoolService {
             }
 
             //we're only concerned with nested phantom bpts
-            if (
-                poolToken.__typename === 'GqlPoolTokenLinear' ||
-                poolToken.__typename === 'GqlPoolTokenComposableStable'
-            ) {
+            if (poolToken.__typename === 'GqlPoolTokenComposableStable') {
                 joinSwaps.push(
                     this.phantomBptPoolTokenGetExitSwaps({
                         tokenOut: exitAmount.tokenOut,
@@ -629,26 +620,7 @@ export class PoolWeightedBoostedService implements PoolService {
     }): { swaps: SwapV2[]; assets: string[] } {
         const bptInScaled = parseUnits(bptIn, 18).toString();
 
-        if (poolToken.__typename === 'GqlPoolTokenLinear') {
-            const nestedToken = poolToken.pool.tokens.find((token) => token.address === tokenOut);
-
-            if (!nestedToken) {
-                throw new Error(`Token does not exist in pool token: ${tokenOut}`);
-            }
-
-            return {
-                swaps: [
-                    {
-                        poolId: poolToken.pool.id,
-                        assetInIndex: 0,
-                        assetOutIndex: 1,
-                        amount: bptInScaled,
-                        userData: '0x',
-                    },
-                ],
-                assets: [poolToken.address, nestedToken.address],
-            };
-        } else if (poolToken.__typename === 'GqlPoolTokenComposableStable') {
+        if (poolToken.__typename === 'GqlPoolTokenComposableStable') {
             const nestedPoolToken = poolFindNestedPoolTokenForToken(tokenOut, poolToken.pool.tokens);
 
             if (!nestedPoolToken) {

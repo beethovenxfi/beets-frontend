@@ -4,17 +4,10 @@ import { GetPoolsQuery, GetPoolsQueryVariables } from '~/apollo/generated/graphq
 import { DEFAULT_POOL_LIST_QUERY_VARS, PoolListProvider } from '~/modules/pools/usePoolList';
 import Head from 'next/head';
 import { PageMasthead } from '~/components/masthead/PageMasthead';
-import NextImage from 'next/image';
-import InvestMastheadImage from '~/assets/images/invest-masthead-image.png';
-import InvestMastheadOpImage from '~/assets/images/invest-masthead-image-OP.png';
-import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 import { UserTokenBalancesProvider } from '~/lib/user/useUserTokenBalances';
-import { LinearPoolList } from '~/modules/linear-pools/LinearPoolList';
 import { RecoveryExitContent } from '~/modules/recovery-exit/RecoveryExitContent';
 
 function LinearPools() {
-    const { chainId } = useNetworkConfig();
-
     const TITLE = 'Beethoven X | Recovery exit';
 
     return (

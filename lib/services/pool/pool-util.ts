@@ -1,5 +1,4 @@
 import {
-    GqlPoolLinearNested,
     GqlPoolComposableStableNested,
     GqlPoolTokenUnion,
     GqlPoolUnion,
@@ -17,9 +16,7 @@ import { PoolComposableStableService } from '~/lib/services/pool/pool-composable
 import { PoolWeightedV2Service } from '~/lib/services/pool/pool-weighted-v2.service';
 import { PoolGyroService } from './pool-gyro.service';
 
-export function poolGetTokensWithoutPhantomBpt(
-    pool: GqlPoolUnion | GqlPoolComposableStableNested | GqlPoolLinearNested,
-) {
+export function poolGetTokensWithoutPhantomBpt(pool: GqlPoolUnion | GqlPoolComposableStableNested) {
     return pool.tokens.filter((token) => token.address !== pool.address);
 }
 
@@ -28,7 +25,7 @@ export function poolIsWeightedLikePool(pool: GqlPoolUnion) {
 }
 
 export function poolIsTokenPhantomBpt(poolToken: GqlPoolTokenUnion) {
-    return poolToken.__typename === 'GqlPoolTokenLinear' || poolToken.__typename === 'GqlPoolTokenComposableStable';
+    return poolToken.__typename === 'GqlPoolTokenComposableStable';
 }
 
 export function poolIsComposablePool(pool: GqlPoolUnion) {
@@ -121,26 +118,4 @@ export function poolGetTypeName(pool: GqlPoolUnion) {
 
 export function isReaperLinearPool(factoryAddress: string | undefined | null) {
     return networkConfig.balancer.linearFactories.reaper.includes((factoryAddress || '').toLowerCase());
-}
-
-export function hasSmallWrappedBalancedIn18Decimals(
-    pool: GqlPoolUnion | GqlPoolComposableStableNested | GqlPoolLinearNested,
-) {
-    if (pool.__typename == 'GqlPoolLinear' || pool.__typename === 'GqlPoolLinearNested') {
-        const mainToken = pool.tokens.find((token) => token.index === pool.mainIndex);
-
-        return isReaperLinearPool(pool.factory) && mainToken && mainToken.decimals < 18;
-    }
-
-    return false;
-}
-
-export function getLinearPoolMainToken(pool: GqlPoolUnion | GqlPoolComposableStableNested | GqlPoolLinearNested) {
-    if (pool.__typename == 'GqlPoolLinear' || pool.__typename === 'GqlPoolLinearNested') {
-        const mainToken = pool.tokens.find((token) => token.index === pool.mainIndex);
-
-        return mainToken || null;
-    }
-
-    return null;
 }

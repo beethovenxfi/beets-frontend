@@ -1,10 +1,7 @@
 import {
-    GqlPoolLinearNested,
     GqlPoolComposableStable,
     GqlPoolComposableStableNested,
-    GqlPoolToken,
     GqlPoolTokenBase,
-    GqlPoolTokenLinear,
     GqlPoolTokenComposableStable,
     GqlPoolWeighted,
     GqlToken,
@@ -16,7 +13,6 @@ import {
     oldBnumScale,
     oldBnumScaleAmount,
     oldBnumToBnum,
-    oldBnumToHumanReadable,
     oldBnumZero,
 } from '~/lib/services/pool/lib/old-big-number';
 import OldBigNumber from 'bignumber.js';
@@ -401,26 +397,6 @@ export function poolStableBptInForExactTokenOut(
     return formatFixed(bptIn.toString(), 18);
 }
 
-export function poolGetNestedLinearPoolTokens(pool: PoolWithPossibleNesting): GqlPoolTokenLinear[] {
-    const tokens: GqlPoolTokenLinear[] = [];
-
-    for (const poolToken of pool.tokens) {
-        if (poolToken.__typename === 'GqlPoolTokenLinear') {
-            tokens.push(poolToken);
-        }
-
-        if ('pool' in poolToken) {
-            for (const nestedPoolToken of poolToken.pool.tokens) {
-                if (nestedPoolToken.__typename === 'GqlPoolTokenLinear') {
-                    tokens.push(nestedPoolToken);
-                }
-            }
-        }
-    }
-
-    return tokens;
-}
-
 export function poolGetNestedStablePoolTokens(pool: PoolWithPossibleNesting): GqlPoolTokenComposableStable[] {
     const tokens: GqlPoolTokenComposableStable[] = [];
 
@@ -431,26 +407,6 @@ export function poolGetNestedStablePoolTokens(pool: PoolWithPossibleNesting): Gq
     }
 
     return tokens;
-}
-
-export function poolGetMainTokenFromLinearPoolToken(linearPoolToken: GqlPoolTokenLinear): GqlPoolToken {
-    const mainToken = linearPoolToken.pool.tokens.find((token) => token.index === linearPoolToken.pool.mainIndex);
-
-    if (!mainToken) {
-        throw new Error('Linear pool missing main token');
-    }
-
-    return mainToken;
-}
-
-export function poolGetWrappedTokenFromLinearPoolToken(linearPoolToken: GqlPoolTokenLinear): GqlPoolToken {
-    const wrappedToken = linearPoolToken.pool.tokens.find((token) => token.index === linearPoolToken.pool.wrappedIndex);
-
-    if (!wrappedToken) {
-        throw new Error('Linear pool missing main token');
-    }
-
-    return wrappedToken;
 }
 
 export function poolGetTotalShares(
@@ -481,7 +437,7 @@ function scaleTokenAmountDownFrom18Decimals(
 }
 
 export function poolGetPoolTokenForPossiblyNestedTokenOut(
-    pool: GqlPoolWeighted | GqlPoolComposableStable | GqlPoolComposableStableNested | GqlPoolLinearNested,
+    pool: GqlPoolWeighted | GqlPoolComposableStable | GqlPoolComposableStableNested,
     tokenOutAddress: string,
 ) {
     return pool.tokens.find((poolToken) => {
@@ -489,32 +445,14 @@ export function poolGetPoolTokenForPossiblyNestedTokenOut(
             return true;
         }
 
-        if (poolToken.__typename === 'GqlPoolTokenLinear') {
-            return !!poolToken.pool.tokens.find((linearPoolToken) => linearPoolToken.address === tokenOutAddress);
-        } else if (poolToken.__typename === 'GqlPoolTokenComposableStable') {
+        if (poolToken.__typename === 'GqlPoolTokenComposableStable') {
             const nestedPoolToken = poolToken.pool.tokens.find((nestedPoolToken) => {
-                if (nestedPoolToken.__typename === 'GqlPoolTokenLinear') {
-                    return nestedPoolToken.pool.tokens.find(
-                        (linearPoolToken) => linearPoolToken.address === tokenOutAddress,
-                    );
-                }
-
                 return nestedPoolToken.address === tokenOutAddress;
             });
 
             return !!nestedPoolToken;
         }
     });
-}
-
-export function poolHasOnlyLinearBpts(pool: GqlPoolWeighted | GqlPoolComposableStable | GqlPoolComposableStableNested) {
-    for (const token of pool.tokens) {
-        if (token.__typename !== 'GqlPoolTokenLinear') {
-            return false;
-        }
-    }
-
-    return true;
 }
 
 export function poolGetNestedTokenEstimateForPoolTokenAmounts({
@@ -527,7 +465,6 @@ export function poolGetNestedTokenEstimateForPoolTokenAmounts({
     nestedTokens: string[];
 }): TokenAmountHumanReadable[] {
     const nestedStablePoolTokens = poolGetNestedStablePoolTokens(pool);
-    const nestedLinearPoolTokens = poolGetNestedLinearPoolTokens(pool);
     let tokenAmountsOut = poolTokenAmounts.filter((amountOut) => nestedTokens.includes(amountOut.address));
     let bptAmounts = poolTokenAmounts.filter((amountOut) => !nestedTokens.includes(amountOut.address));
 
@@ -549,22 +486,6 @@ export function poolGetNestedTokenEstimateForPoolTokenAmounts({
         bptAmounts = bptAmounts.concat(
             nestedExitAmounts.filter((amountOut) => !nestedTokens.includes(amountOut.address)),
         );
-    }
-
-    for (const linearPoolToken of nestedLinearPoolTokens) {
-        const mainToken = poolGetMainTokenFromLinearPoolToken(linearPoolToken);
-        const bptAmount = bptAmounts.find((bptAmount) => bptAmount.address === linearPoolToken.address);
-
-        if (bptAmount) {
-            //TODO: this is an estimation, but should be adequate assuming rates are up to date
-            tokenAmountsOut.push({
-                address: mainToken.address,
-                amount: oldBnumToHumanReadable(
-                    oldBnumScale(bptAmount.amount, mainToken.decimals).times(linearPoolToken.priceRate),
-                    mainToken.decimals,
-                ),
-            });
-        }
     }
 
     return tokenAmountsOut;

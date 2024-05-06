@@ -1,13 +1,7 @@
 import { useGetTokens } from '~/lib/global/useToken';
-import { Box, useDisclosure } from '@chakra-ui/react';
+import { Box } from '@chakra-ui/react';
 import { PaginatedTable } from '~/components/table/PaginatedTable';
-import {
-    GqlPoolLinearFragment,
-    GqlPoolMinimalFragment,
-    useGetPoolsQuery,
-} from '~/apollo/generated/graphql-codegen-generated';
-import { LinearPoolActionsModal } from '~/modules/linear-pools/components/LinearPoolActionsModal';
-import { useState } from 'react';
+import { GqlPoolMinimalFragment, useGetPoolsQuery } from '~/apollo/generated/graphql-codegen-generated';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 import { RecoveryExitWithdrawListItem } from '~/modules/recovery-exit/components/RecoveryExitWithdrawListItem';
 import { RecoveryExitWithdrawTableHeader } from '~/modules/recovery-exit/components/RecoveryExitWithdrawTableHeader';
@@ -38,15 +32,12 @@ export function RecoveryExitContent() {
     });
 
     const { poolTokens } = useGetRecoveryPoolTokens(RECOVERY_POOL_IDS);
-    const { isOpen, onOpen, onClose } = useDisclosure();
-    const [selectedPool, setSelectedPool] = useState<GqlPoolLinearFragment | null>(null);
-    const { getToken, priceForAmount } = useGetTokens();
+    const { getToken } = useGetTokens();
     const pools: GqlPoolMinimalFragment[] = data?.poolGetPools || [];
     const bpts = pools.map((pool) => ({ ...pool, decimals: 18 }));
     const count = data?.count || 0;
 
     const {
-        userBalances,
         getUserBalance,
         refetch: refetchUserBalances,
         isRefetching,
@@ -95,7 +86,6 @@ export function RecoveryExitContent() {
                     );
                 }}
             />
-            <LinearPoolActionsModal isOpen={isOpen} onClose={onClose} pool={selectedPool} />
         </Box>
     );
 }
