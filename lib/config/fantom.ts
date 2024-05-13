@@ -338,8 +338,8 @@ export const fantomNetworkConfig: NetworkConfig = {
     },
     thirdPartyStakingPools: [
         {
-            poolId: '0x2ddcd6916ee7ccc6300cb0fe2919a341be0ee8bb0002000000000000000007eb', // fMoney with Attitude
-            url: 'https://www.fmoney.market/stake',
+            poolId: '0x9426d9077620efaae688d3c3b398fa814406ce4a000200000000000000000833', // fMoney with Attitude Vol. 2
+            url: 'https://www.fmoney.market/stakev2', // TODO: switch to https://www.fmoney.market/stake
             name: 'fmoney',
         },
     ],
