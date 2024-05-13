@@ -149,104 +149,6 @@ export const GqlPoolFeaturedPoolGroup = gql`
     }
     ${GqlPoolCardData}
 `;
-export const GqlPoolLinear = gql`
-    fragment GqlPoolLinear on GqlPoolLinear {
-        id
-        address
-        name
-        owner
-        decimals
-        factory
-        symbol
-        createTime
-        dynamicData {
-            poolId
-            swapEnabled
-            totalLiquidity
-            totalLiquidity24hAgo
-            totalShares
-            totalShares24hAgo
-            fees24h
-            swapFee
-            volume24h
-            fees48h
-            volume48h
-            apr {
-                hasRewardApr
-                thirdPartyApr {
-                    ... on GqlPoolAprTotal {
-                        total
-                    }
-                    ... on GqlPoolAprRange {
-                        min
-                        max
-                    }
-                }
-                nativeRewardApr {
-                    ... on GqlPoolAprTotal {
-                        total
-                    }
-                    ... on GqlPoolAprRange {
-                        min
-                        max
-                    }
-                }
-                swapApr
-                apr {
-                    ... on GqlPoolAprTotal {
-                        total
-                    }
-                    ... on GqlPoolAprRange {
-                        min
-                        max
-                    }
-                }
-                items {
-                    id
-                    title
-                    apr {
-                        ... on GqlPoolAprTotal {
-                            total
-                        }
-                        ... on GqlPoolAprRange {
-                            min
-                            max
-                        }
-                    }
-                    subItems {
-                        id
-                        title
-                        apr {
-                            ... on GqlPoolAprTotal {
-                                total
-                            }
-                            ... on GqlPoolAprRange {
-                                min
-                                max
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        mainIndex
-        wrappedIndex
-        lowerTarget
-        upperTarget
-        tokens {
-            id
-            index
-            name
-            symbol
-            balance
-            address
-            priceRate
-            decimals
-            weight
-            totalBalance
-        }
-    }
-`;
 export const GqlPoolToken = gql`
     fragment GqlPoolToken on GqlPoolToken {
         id
@@ -260,45 +162,6 @@ export const GqlPoolToken = gql`
         weight
         totalBalance
     }
-`;
-export const GqlPoolTokenLinear = gql`
-    fragment GqlPoolTokenLinear on GqlPoolTokenLinear {
-        id
-        index
-        name
-        symbol
-        balance
-        address
-        priceRate
-        decimals
-        weight
-        mainTokenBalance
-        wrappedTokenBalance
-        totalMainTokenBalance
-        totalBalance
-        pool {
-            id
-            name
-            symbol
-            address
-            owner
-            factory
-            createTime
-            wrappedIndex
-            mainIndex
-            upperTarget
-            lowerTarget
-            totalShares
-            totalLiquidity
-            bptPriceRate
-            tokens {
-                ... on GqlPoolToken {
-                    ...GqlPoolToken
-                }
-            }
-        }
-    }
-    ${GqlPoolToken}
 `;
 export const GqlPoolTokenComposableStable = gql`
     fragment GqlPoolTokenComposableStable on GqlPoolTokenComposableStable {
@@ -329,14 +192,10 @@ export const GqlPoolTokenComposableStable = gql`
                 ... on GqlPoolToken {
                     ...GqlPoolToken
                 }
-                ... on GqlPoolTokenLinear {
-                    ...GqlPoolTokenLinear
-                }
             }
         }
     }
     ${GqlPoolToken}
-    ${GqlPoolTokenLinear}
 `;
 export const GqlPoolMinimal = gql`
     fragment GqlPoolMinimal on GqlPoolMinimal {
@@ -756,14 +615,6 @@ export const GetHomeNewsItems = gql`
         }
     }
 `;
-export const GetLinearPools = gql`
-    query GetLinearPools {
-        pools: poolGetLinearPools {
-            ...GqlPoolLinear
-        }
-    }
-    ${GqlPoolLinear}
-`;
 export const GetPool = gql`
     query GetPool($id: String!) {
         pool: poolGetPool(id: $id) {
@@ -969,9 +820,6 @@ export const GetPool = gql`
                     ... on GqlPoolToken {
                         ...GqlPoolToken
                     }
-                    ... on GqlPoolTokenLinear {
-                        ...GqlPoolTokenLinear
-                    }
                     ... on GqlPoolTokenComposableStable {
                         ...GqlPoolTokenComposableStable
                     }
@@ -1010,22 +858,8 @@ export const GetPool = gql`
                     ... on GqlPoolToken {
                         ...GqlPoolToken
                     }
-                    ... on GqlPoolTokenLinear {
-                        ...GqlPoolTokenLinear
-                    }
                     ... on GqlPoolTokenComposableStable {
                         ...GqlPoolTokenComposableStable
-                    }
-                }
-            }
-            ... on GqlPoolLinear {
-                mainIndex
-                wrappedIndex
-                lowerTarget
-                upperTarget
-                tokens {
-                    ... on GqlPoolToken {
-                        ...GqlPoolToken
                     }
                 }
             }
@@ -1035,9 +869,6 @@ export const GetPool = gql`
                 tokens {
                     ... on GqlPoolToken {
                         ...GqlPoolToken
-                    }
-                    ... on GqlPoolTokenLinear {
-                        ...GqlPoolTokenLinear
                     }
                     ... on GqlPoolTokenComposableStable {
                         ...GqlPoolTokenComposableStable
@@ -1058,7 +889,6 @@ export const GetPool = gql`
         }
     }
     ${GqlPoolToken}
-    ${GqlPoolTokenLinear}
     ${GqlPoolTokenComposableStable}
 `;
 export const GetPoolSwaps = gql`

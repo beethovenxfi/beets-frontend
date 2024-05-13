@@ -28,7 +28,7 @@ export function HomePools(props: BoxProps) {
     useEffect(() => {
         getPools({
             variables: {
-                where: { idIn: userPoolIds, poolTypeNotIn: ['LINEAR', 'LIQUIDITY_BOOTSTRAPPING', 'UNKNOWN'] },
+                where: { idIn: userPoolIds, poolTypeNotIn: ['LIQUIDITY_BOOTSTRAPPING', 'UNKNOWN'] },
             },
         });
     }, [userPoolIdsStr]);

@@ -65,7 +65,7 @@ export class PoolProportionalInvestService {
                         },
                     };
                 } else {
-                    // the function will take either 'GqlPoolToken' or 'GqlPoolTokenLinear'
+                    // the function will take a 'GqlPoolToken'
                     const bptOut = this.getBptOutForToken(
                         userInvestTokenBalances,
                         token,
@@ -95,14 +95,10 @@ export class PoolProportionalInvestService {
         poolToken: GqlPoolTokenUnion | GqlPoolTokenComposableStableNestedUnion,
         bptTotalSupply: string,
     ) {
-        const investToken =
-            poolToken.__typename === 'GqlPoolTokenLinear'
-                ? this.getInvestTokenForLinearPoolToken(userInvestTokenBalances, poolToken)
-                : userInvestTokenBalances.find(
-                      (balance) =>
-                          balance.address === poolToken.address ||
-                          balance.address === replaceWethWithEth(poolToken.address),
-                  )!;
+        const investToken = userInvestTokenBalances.find(
+            (balance) =>
+                balance.address === poolToken.address || balance.address === replaceWethWithEth(poolToken.address),
+        )!;
 
         // for the old weighted boosted pools only the 'selected' token is in the userInvestBalances
         // so we return null to filter out the other tokens in the invest service
@@ -110,10 +106,7 @@ export class PoolProportionalInvestService {
             return null;
         }
 
-        const decimals =
-            poolToken.__typename === 'GqlPoolTokenLinear'
-                ? poolToken.pool.tokens.find((token) => token.address === investToken.address)?.decimals
-                : poolToken.decimals;
+        const decimals = poolToken.decimals;
 
         return {
             bptOut: this.calculateBptOut(
@@ -150,16 +143,5 @@ export class PoolProportionalInvestService {
 
         // return human readable so we can convert a sum to the correct decimals again (alternative?)
         return oldBnumToHumanReadable(amountIn);
-    }
-
-    private getInvestTokenForLinearPoolToken(
-        userInvestTokenBalances: TokenAmountHumanReadable[],
-        poolToken: GqlPoolTokenUnion | GqlPoolTokenComposableStableNestedUnion,
-    ) {
-        return userInvestTokenBalances.find((balance) => {
-            if (poolToken.__typename === 'GqlPoolTokenLinear') {
-                return !!poolToken.pool.tokens.find((nestedPoolToken) => nestedPoolToken.address === balance.address);
-            }
-        })!;
     }
 }
