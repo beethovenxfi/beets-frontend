@@ -366,7 +366,7 @@ export const optimismNetworkConfig: NetworkConfig = {
         },
         {
             poolId: '0x8bb826afc0ff7d2c034a2883f4c461ffd238e1c300020000000000000000012b',
-            url: '',
+            url: 'https://app.gyro.finance/pools/optimism/e-clp/0x8bb826afc0ff7d2c034a2883f4c461ffd238e1c3/aave-deposit-redeem/',
             name: 'gyro',
         },
         {
