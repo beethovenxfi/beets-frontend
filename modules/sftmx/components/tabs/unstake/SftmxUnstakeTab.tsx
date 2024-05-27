@@ -1,4 +1,4 @@
-import { Box, VStack, Heading, HStack, Divider, Spacer, Text, Alert, AlertIcon } from '@chakra-ui/react';
+import { Box, VStack, HStack, Divider, Spacer, Text, Alert, AlertIcon } from '@chakra-ui/react';
 import { WalletConnectButton } from '~/components/button/WalletConnectButton';
 import Card from '~/components/card/Card';
 import { FtmTokenInput } from '~/components/inputs/FtmTokenInput';
@@ -6,10 +6,10 @@ import { networkConfig } from '~/lib/config/network-config';
 import { useUserAccount } from '~/lib/user/useUserAccount';
 import { tokenFormatAmount } from '~/lib/services/token/token-util';
 import { useEffect, useState } from 'react';
-import { useSftmxGetCalculatePenalty } from './useSftmxGetCalculatePenalty';
+import { useSftmxGetCalculatePenalty } from '../../../lib/useSftmxGetCalculatePenalty';
 import { formatFixed } from '@ethersproject/bignumber';
 import { SftmxUnstakeButton } from './SftmxUnstakeButton';
-import { useSftmxGetFtmxAmountForFtm } from './useSftmxGetFtmxAmountForFtm';
+import { useSftmxGetFtmxAmountForFtm } from '../../../lib/useSftmxGetFtmxAmountForFtm';
 import { InfoButton } from '~/components/info-button/InfoButton';
 import numeral from 'numeral';
 import { useUserTokenBalances } from '~/lib/user/useUserTokenBalances';
@@ -38,9 +38,8 @@ export default function SftmxUnstakeTab() {
     const exchangeRateFtm = 1 / parseFloat(sftmxAmount);
 
     return (
-        <Card shadow="lg" h="full">
+        <Card shadow="lg" h="full" title="Enter amount to unstake">
             <VStack spacing="4" p="4" align="flex-start" h="full">
-                <Heading size="md">Enter amount to unstake</Heading>
                 <FtmTokenInput
                     address={networkConfig.sftmx.address}
                     label="Unstake"

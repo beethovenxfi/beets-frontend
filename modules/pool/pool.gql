@@ -202,9 +202,6 @@ query GetPool($id: String!) {
                 ... on GqlPoolToken {
                     ...GqlPoolToken
                 }
-                ... on GqlPoolTokenLinear {
-                    ...GqlPoolTokenLinear
-                }
                 ... on GqlPoolTokenComposableStable {
                     ...GqlPoolTokenComposableStable
                 }
@@ -243,22 +240,8 @@ query GetPool($id: String!) {
                 ... on GqlPoolToken {
                     ...GqlPoolToken
                 }
-                ... on GqlPoolTokenLinear {
-                    ...GqlPoolTokenLinear
-                }
                 ... on GqlPoolTokenComposableStable {
                     ...GqlPoolTokenComposableStable
-                }
-            }
-        }
-        ... on GqlPoolLinear {
-            mainIndex
-            wrappedIndex
-            lowerTarget
-            upperTarget
-            tokens {
-                ... on GqlPoolToken {
-                    ...GqlPoolToken
                 }
             }
         }
@@ -268,9 +251,6 @@ query GetPool($id: String!) {
             tokens {
                 ... on GqlPoolToken {
                     ...GqlPoolToken
-                }
-                ... on GqlPoolTokenLinear {
-                    ...GqlPoolTokenLinear
                 }
                 ... on GqlPoolTokenComposableStable {
                     ...GqlPoolTokenComposableStable
@@ -304,43 +284,6 @@ fragment GqlPoolToken on GqlPoolToken {
     totalBalance
 }
 
-fragment GqlPoolTokenLinear on GqlPoolTokenLinear {
-    id
-    index
-    name
-    symbol
-    balance
-    address
-    priceRate
-    decimals
-    weight
-    mainTokenBalance
-    wrappedTokenBalance
-    totalMainTokenBalance
-    totalBalance
-    pool {
-        id
-        name
-        symbol
-        address
-        owner
-        factory
-        createTime
-        wrappedIndex
-        mainIndex
-        upperTarget
-        lowerTarget
-        totalShares
-        totalLiquidity
-        bptPriceRate
-        tokens {
-            ... on GqlPoolToken {
-                ...GqlPoolToken
-            }
-        }
-    }
-}
-
 fragment GqlPoolTokenComposableStable on GqlPoolTokenComposableStable {
     id
     index
@@ -368,9 +311,6 @@ fragment GqlPoolTokenComposableStable on GqlPoolTokenComposableStable {
         tokens {
             ... on GqlPoolToken {
                 ...GqlPoolToken
-            }
-            ... on GqlPoolTokenLinear {
-                ...GqlPoolTokenLinear
             }
         }
     }

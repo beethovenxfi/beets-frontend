@@ -26,7 +26,7 @@ export class PoolOnChainBalanceService {
         clone.dynamicData.totalShares = formatFixed(dataMap[pool.id].totalSupply, 18);
 
         for (const token of clone.tokens) {
-            if (token.__typename === 'GqlPoolTokenLinear' || token.__typename === 'GqlPoolTokenComposableStable') {
+            if (token.__typename === 'GqlPoolTokenComposableStable') {
                 token.pool.totalShares = formatFixed(dataMap[token.pool.id].totalSupply, 18);
             }
 
@@ -34,7 +34,7 @@ export class PoolOnChainBalanceService {
             token.balance = tokenBalance;
             token.totalBalance = tokenBalance;
 
-            if (token.__typename === 'GqlPoolTokenLinear' || token.__typename === 'GqlPoolTokenComposableStable') {
+            if (token.__typename === 'GqlPoolTokenComposableStable') {
                 const percentOfNestedSupply =
                     parseFloat(tokenBalance) / parseFloat(formatFixed(dataMap[token.pool.id].totalSupply, 18));
 
@@ -53,31 +53,6 @@ export class PoolOnChainBalanceService {
                     );
 
                     nestedToken.totalBalance = nestedTokenBalance;
-
-                    if (nestedToken.__typename === 'GqlPoolTokenLinear') {
-                        const totalShares = formatFixed(dataMap[nestedToken.pool.id].totalSupply, 18);
-                        nestedToken.pool.totalShares = totalShares;
-
-                        const percentOfLinearSupplyNested = parseFloat(nestedTokenBalance) / parseFloat(totalShares);
-
-                        for (const nestedLinearToken of nestedToken.pool.tokens) {
-                            const nestedLinearTokenbalance =
-                                dataMap[nestedToken.pool.id].balances[nestedLinearToken.index];
-
-                            nestedLinearToken.balance = formatFixed(
-                                oldBnumFromBnum(nestedLinearTokenbalance)
-                                    .times(percentOfNestedSupply)
-                                    .times(percentOfLinearSupplyNested)
-                                    .toFixed(0)
-                                    .toString(),
-                                nestedLinearToken.decimals,
-                            );
-                            nestedLinearToken.totalBalance = formatFixed(
-                                nestedLinearTokenbalance,
-                                nestedLinearToken.decimals,
-                            );
-                        }
-                    }
                 }
             }
         }
@@ -100,18 +75,9 @@ export class PoolOnChainBalanceService {
         const totalSupplyTypes: SorQueriesTotalSupplyType[] = [this.sorQueryService.getTotalSupplyType(pool)];
 
         for (const token of pool.tokens) {
-            if (token.__typename === 'GqlPoolTokenLinear' || token.__typename === 'GqlPoolTokenComposableStable') {
+            if (token.__typename === 'GqlPoolTokenComposableStable') {
                 poolIds.push(token.pool.id);
                 totalSupplyTypes.push(this.sorQueryService.getTotalSupplyType(token.pool));
-            }
-
-            if (token.__typename === 'GqlPoolTokenComposableStable') {
-                for (const nestedToken of token.pool.tokens) {
-                    if (nestedToken.__typename === 'GqlPoolTokenLinear') {
-                        poolIds.push(nestedToken.pool.id);
-                        totalSupplyTypes.push(this.sorQueryService.getTotalSupplyType(nestedToken.pool));
-                    }
-                }
             }
         }
 

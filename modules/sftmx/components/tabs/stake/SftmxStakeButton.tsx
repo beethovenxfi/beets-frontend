@@ -1,11 +1,9 @@
 import { AmountHumanReadable } from '~/lib/services/token/token-types';
 import { BeetsSubmitTransactionButton } from '~/components/button/BeetsSubmitTransactionButton';
-import { useSftmxUnstake } from './useSftmxUnstake';
-import { BigNumber } from 'ethers';
+import { useSftmxStake } from '../../../lib/useSftmxStake';
 
 interface Props {
     amount: AmountHumanReadable;
-    penalty: BigNumber | undefined;
     onConfirmed?: () => void;
     onPending?: () => void;
     onSubmitting?: () => void;
@@ -16,22 +14,19 @@ interface Props {
     isLoading?: boolean;
 }
 
-export function SftmxUnstakeButton({ amount, penalty, ...rest }: Props) {
-    const { undelegate, ...query } = useSftmxUnstake();
+export function SftmxStakeButton({ amount, ...rest }: Props) {
+    const { stake, ...query } = useSftmxStake();
 
     return (
         <BeetsSubmitTransactionButton
             {...query}
             width="full"
             onClick={() => {
-                if (penalty) {
-                    undelegate(amount, penalty);
-                }
+                stake(amount);
             }}
-            isDisabled={!amount || amount === '0' || penalty === undefined}
             {...rest}
         >
-            Unstake
+            Stake
         </BeetsSubmitTransactionButton>
     );
 }

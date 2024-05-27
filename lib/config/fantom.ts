@@ -102,6 +102,7 @@ export const fantomNetworkConfig: NetworkConfig = {
         },
         minimumBoost: 1.0,
     },
+    rateproviders: { '0xd7028092c830b5c8fce061af2e593413ebbc1fc1': '0x629d4c27057915e59dd94bca8d48c6d80735b521' },
     beetsPoolOwnerAddress: '0xcd983793adb846dce4830c22f30c7ef0c864a776',
     masterChefContractAddress: '0x8166994d9ebBe5829EC86Bd81258149B87faCfd3',
     defaultTokenIn: '0x21be370d5312f44cb42ce377bc9b8a0cef1a4c83',
@@ -333,11 +334,12 @@ export const fantomNetworkConfig: NetworkConfig = {
         '0xba0e9aea8a7fa1daab4edf244191f2387a4e472b000100000000000000000737': 'reaper',
         '0x6e6dc948ce85c62125ff7a1e543d761a88f0a4cb000000000000000000000743': 'reaper',
         '0xd67041d2d93f03774092caaeb4553e26c51ae4ed0002000000000000000007e9': 'experimental',
+        '0xc3cbb0dba094893b268421cc4909f14ad18334bb00020000000000000000080e': 'experimental',
     },
     thirdPartyStakingPools: [
         {
-            poolId: '0x2ddcd6916ee7ccc6300cb0fe2919a341be0ee8bb0002000000000000000007eb', // fMoney with Attitude
-            url: 'https://www.fmoney.market/stake',
+            poolId: '0x9426d9077620efaae688d3c3b398fa814406ce4a000200000000000000000833', // fMoney with Attitude Vol. 2
+            url: 'https://www.fmoney.market/stakev2', // TODO: switch to https://www.fmoney.market/stake
             name: 'fmoney',
         },
     ],

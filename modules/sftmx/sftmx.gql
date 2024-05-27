@@ -12,6 +12,16 @@ query SftmxGetStakingData {
         undelegatePaused
         withdrawPaused
         withdrawalDelay
+        numberOfVaults
+        vaults {
+            ftmAmountStaked
+            isMatured
+            unlockTimestamp
+            validatorAddress
+            validatorId
+            vaultAddress
+            vaultIndex
+        }
     }
 }
 
@@ -22,5 +32,16 @@ query SftmxGetWithdrawalRequests($user: String!) {
         isWithdrawn
         requestTimestamp
         user
+    }
+}
+
+query SftmxGetStakingSnapshots($range: GqlSftmxStakingSnapshotDataRange!) {
+    snapshots: sftmxGetStakingSnapshots(range: $range) {
+        exchangeRate
+        id
+        timestamp
+        totalFtmAmount
+        totalFtmAmountInPool
+        totalFtmAmountStaked
     }
 }
