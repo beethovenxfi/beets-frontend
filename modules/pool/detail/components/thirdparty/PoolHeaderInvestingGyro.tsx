@@ -13,13 +13,13 @@ export function PoolHeaderInvestingGyro({ poolId }: { poolId: string }) {
                 <Link mr="2" href={url} isExternal style={{ textDecoration: 'none' }}>
                     <HStack>
                         <Text mr="2" color="beets.base.50">
-                            Get static aTokens on Gyro first?
+                            Join & manage this pool on Gyroscope
                         </Text>
-                        <Image src={GyroLogo} alt="Aura Finance" height="24px" width="24px" />
+                        <Image src={GyroLogo} alt="Gyroscope" height="24px" width="24px" />
                     </HStack>
                 </Link>
             }
-            content={'bla bla bla'}
+            content="Go to Gyroscope to join & manage this pool using the underlying token(s), aToken(s) or static aToken(s)"
             border="2px"
             borderColor="aura.pink"
             _hover={{ borderColor: 'aura.purple' }}
