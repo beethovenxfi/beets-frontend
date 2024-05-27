@@ -308,11 +308,11 @@ export const optimismNetworkConfig: NetworkConfig = {
         //     url: 'https://app.aura.finance/#/10/pool/4',
         //     name: 'aura',
         // },
-        {
-            poolId: '0xacfe9b4782910a853b68abba60f3fd8049ffe6380000000000000000000000ff', // Sonata for Two: DOLA & USDC
-            url: 'https://app.aura.finance/#/10/pool/9',
-            name: 'aura',
-        },
+        // {
+        //     poolId: '0xacfe9b4782910a853b68abba60f3fd8049ffe6380000000000000000000000ff', // Sonata for Two: DOLA & USDC
+        //     url: 'https://app.aura.finance/#/10/pool/9',
+        //     name: 'aura',
+        // },
         {
             poolId: '0x9da11ff60bfc5af527f58fd61679c3ac98d040d9000000000000000000000100', // Native Stable Beets
             url: 'https://app.aura.finance/#/10/pool/10',
@@ -323,32 +323,32 @@ export const optimismNetworkConfig: NetworkConfig = {
             url: 'https://app.aura.finance/#/10/pool/13',
             name: 'aura',
         },
-        {
-            poolId: '0x00b82bc5edea6e5e6c77635e31a1a25aad99f881000200000000000000000105', // Overnight Opening Ensemble
-            url: 'https://app.aura.finance/#/10/pool/11',
-            name: 'aura',
-        },
+        // {
+        //     poolId: '0x00b82bc5edea6e5e6c77635e31a1a25aad99f881000200000000000000000105', // Overnight Opening Ensemble
+        //     url: 'https://app.aura.finance/#/10/pool/11',
+        //     name: 'aura',
+        // },
         {
             poolId: '0x5f8893506ddc4c271837187d14a9c87964a074dc000000000000000000000106', // Ethereum Triplets
 
             url: 'https://app.aura.finance/#/10/pool/14',
             name: 'aura',
         },
-        {
-            poolId: '0xc1f46ce83439886f0ea9c21512b36e7e67239d2c000200000000000000000108', // Roast Beets
-            url: 'https://app.aura.finance/#/10/pool/15',
-            name: 'aura',
-        },
+        // {
+        //     poolId: '0xc1f46ce83439886f0ea9c21512b36e7e67239d2c000200000000000000000108', // Roast Beets
+        //     url: 'https://app.aura.finance/#/10/pool/15',
+        //     name: 'aura',
+        // },
         {
             poolId: '0x0244b0025264dc5f5c113d472d579c9c994a59ce0002000000000000000000c9', // A Night at the OPara
             url: 'https://app.aura.finance/#/10/pool/16',
             name: 'aura',
         },
-        {
-            poolId: '0x478980c67d53cd990f2b7bab311ddc9934324e7b00020000000000000000010c', // All Roads Lead to Frax
-            url: 'https://app.aura.finance/#/10/pool/17',
-            name: 'aura',
-        },
+        // {
+        //     poolId: '0x478980c67d53cd990f2b7bab311ddc9934324e7b00020000000000000000010c', // All Roads Lead to Frax
+        //     url: 'https://app.aura.finance/#/10/pool/17',
+        //     name: 'aura',
+        // },
         {
             poolId: '0xa71021492a3966eec735ed1b505afa097c7cfe6f00000000000000000000010d', // Fraximalist Ethereum
             url: 'https://app.aura.finance/#/10/pool/18',
