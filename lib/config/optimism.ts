@@ -365,14 +365,16 @@ export const optimismNetworkConfig: NetworkConfig = {
             name: 'aura',
         },
         {
-            poolId: '0x8bb826afc0ff7d2c034a2883f4c461ffd238e1c300020000000000000000012b',
-            url: 'https://app.gyro.finance/pools/optimism/e-clp/0x8bb826afc0ff7d2c034a2883f4c461ffd238e1c3/aave-deposit-redeem/',
-            name: 'gyro',
-        },
-        {
             poolId: '0xe906d4c4fc4c3fe96560de86b4bf7ed89af9a69a000200000000000000000126', // Frax Symphony
             url: 'https://app.aura.finance/#/10/pool/21',
             name: 'aura',
+        },
+    ],
+    specialPools: [
+        {
+            poolId: '0x8bb826afc0ff7d2c034a2883f4c461ffd238e1c300020000000000000000012b',
+            url: 'https://app.gyro.finance/pools/optimism/e-clp/0x8bb826afc0ff7d2c034a2883f4c461ffd238e1c3',
+            buttonText: 'Manage liquidity on Gyroscope',
         },
     ],
     investDisabled: {
