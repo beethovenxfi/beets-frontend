@@ -1,7 +1,7 @@
 import { PaginatedTable } from '~/components/table/PaginatedTable';
 import SftmxStatsVaultsHeader from './SftmxTableVaultsHeader';
 import SftmxStatsVaultsRow from './SftmxTableVaultsRow';
-import { VStack, Spinner } from '@chakra-ui/react';
+import { VStack, Spinner, useBreakpointValue } from '@chakra-ui/react';
 import { GqlSftmxStakingVault } from '~/apollo/generated/graphql-codegen-generated';
 
 interface SftmxTableVaultsProps {
@@ -21,6 +21,8 @@ export function SftmxTableVaults({
     onPageChange,
     pageSize,
 }: SftmxTableVaultsProps) {
+    const isMobile = useBreakpointValue({ base: true, md: false });
+
     return (
         <>
             {isLoading && (
@@ -41,6 +43,7 @@ export function SftmxTableVaults({
                     currentPage={currentPage}
                     onPageChange={onPageChange}
                     pageSize={pageSize}
+                    showLessItems={isMobile}
                 />
             )}
         </>
