@@ -148,7 +148,7 @@ export default function PoolOverallStats() {
                     )}
                     {rewards &&
                         rewards.map((reward) => {
-                            if (!reward || reward.rewardPerSecond === '0') {
+                            if (!reward || reward.rewardPerSecond === '0.0') {
                                 return null;
                             }
                             return (
