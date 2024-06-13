@@ -992,6 +992,48 @@ export const GetPoolTokensDynamicData = gql`
     }
     ${GqlTokenDynamicData}
 `;
+export const GetPoolEvents = gql`
+    query GetPoolEvents(
+        $first: Int
+        $skip: Int
+        $poolId: String!
+        $chain: GqlChain!
+        $range: GqlPoolEventsDataRange
+        $typeIn: [GqlPoolEventType]
+        $userAddress: String
+    ) {
+        poolEvents(
+            first: $first
+            skip: $skip
+            where: { poolId: $poolId, chain: $chain, range: $range, typeIn: $typeIn, userAddress: $userAddress }
+        ) {
+            id
+            poolId
+            timestamp
+            tx
+            type
+            valueUSD
+            userAddress
+            ... on GqlPoolSwapEventV3 {
+                tokenIn {
+                    address
+                    amount
+                }
+                tokenOut {
+                    address
+                    amount
+                }
+            }
+            ... on GqlPoolAddRemoveEventV3 {
+                tokens {
+                    address
+                    amount
+                    valueUSD
+                }
+            }
+        }
+    }
+`;
 export const GetPools = gql`
     query GetPools(
         $first: Int

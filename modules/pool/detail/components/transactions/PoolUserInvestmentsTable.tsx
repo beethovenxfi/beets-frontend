@@ -1,20 +1,30 @@
 import { PaginatedTable } from '~/components/table/PaginatedTable';
-import { useGetPoolUserJoinExitsQuery } from '~/apollo/generated/graphql-codegen-generated';
+import { useGetPoolEventsQuery } from '~/apollo/generated/graphql-codegen-generated';
 import PoolTransactionItem, { PoolTransactionType } from './PoolTransactionRow';
 import { useMemo } from 'react';
 import PoolTransactionHeader from './PoolTransactionsHeader';
 import { NetworkStatus } from '@apollo/client';
 import { usePool } from '~/modules/pool/lib/usePool';
+import { useUserAccount } from '~/lib/user/useUserAccount';
+import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 
 export function PoolUserInvestmentsTable() {
     const { pool } = usePool();
+    const { userAddress } = useUserAccount();
+    const networkConfig = useNetworkConfig();
 
     const {
         data: userInvestmentsResponse,
         fetchMore: fetchMoreUserInvestments,
         networkStatus: userInvestmentsStatus,
-    } = useGetPoolUserJoinExitsQuery({
-        variables: { poolId: pool.id },
+    } = useGetPoolEventsQuery({
+        variables: {
+            first: 10,
+            chain: networkConfig.chainName,
+            poolId: pool.id,
+            typeIn: ['ADD', 'REMOVE'],
+            userAddress,
+        },
         pollInterval: 30000,
         notifyOnNetworkStatusChange: true,
     });
@@ -24,12 +34,12 @@ export function PoolUserInvestmentsTable() {
     const isFetchingMoreUserInvestments = userInvestmentsStatus === NetworkStatus.fetchMore;
 
     const transactions = useMemo(() => {
-        const userJoinExits = userInvestmentsResponse?.joinExits || [];
+        const userJoinExits = userInvestmentsResponse?.poolEvents || [];
         return userJoinExits.map((action) => ({
             transaction: action,
-            type: action.type === 'Join' ? PoolTransactionType.Join : PoolTransactionType.Exit,
+            type: action.type === 'ADD' ? PoolTransactionType.Join : PoolTransactionType.Exit,
         }));
-    }, [isPhantomStable, userInvestmentsResponse?.joinExits]);
+    }, [isPhantomStable, userInvestmentsResponse?.poolEvents]);
 
     const handleFetchMoreTransactions = () => {
         fetchMoreUserInvestments({ variables: { skip: transactions.length } });
@@ -38,7 +48,7 @@ export function PoolUserInvestmentsTable() {
     return (
         <PaginatedTable
             isInfinite
-            isShort={transactions.length < 11}
+            isShort={transactions.length < 10}
             width="full"
             items={transactions}
             loading={false}

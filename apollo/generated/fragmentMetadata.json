@@ -11,7 +11,7 @@
             "GqlPoolStable",
             "GqlPoolWeighted"
         ],
-        "GqlPoolEvent": ["GqlPoolJoinExitEventV3", "GqlPoolSwapEventV3"],
+        "GqlPoolEvent": ["GqlPoolAddRemoveEventV3", "GqlPoolSwapEventV3"],
         "GqlPoolFeaturedPoolGroupItem": ["GqlFeaturePoolGroupItemExternalLink", "GqlPoolMinimal"],
         "GqlPoolNestedUnion": ["GqlPoolComposableStableNested"],
         "GqlPoolTokenBase": ["GqlPoolToken", "GqlPoolTokenComposableStable"],

@@ -26,7 +26,7 @@ const userMiddleware = new ApolloLink((operation, forward) => {
 });
 
 function createApolloClient() {
-    const keyArgs = ['where', ['poolIdIn']];
+    const keyArgs = ['where', ['poolIdIn', 'typeIn', 'userAddress']];
 
     return new ApolloClient({
         ssrMode: typeof window === 'undefined',
@@ -44,9 +44,7 @@ function createApolloClient() {
                 },
                 Query: {
                     fields: {
-                        poolGetJoinExits: concatPagination(keyArgs),
-                        poolGetSwaps: concatPagination(keyArgs),
-                        userGetSwaps: concatPagination(keyArgs),
+                        poolEvents: concatPagination(keyArgs),
                         //poolGetBatchSwaps: concatPagination(),
                         userGetPoolBalances: {
                             merge(existing = [], incoming: any[]) {

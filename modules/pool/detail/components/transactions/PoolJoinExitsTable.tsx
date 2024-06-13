@@ -1,19 +1,22 @@
 import { PaginatedTable } from '~/components/table/PaginatedTable';
-import { useGetPoolJoinExitsQuery } from '~/apollo/generated/graphql-codegen-generated';
+import { useGetPoolEventsQuery } from '~/apollo/generated/graphql-codegen-generated';
 import PoolTransactionItem, { PoolTransactionType } from './PoolTransactionRow';
 import { useMemo } from 'react';
 import PoolTransactionHeader from './PoolTransactionsHeader';
 import { NetworkStatus } from '@apollo/client';
 import { usePool } from '~/modules/pool/lib/usePool';
+import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 
 export function PoolJoinExitsTable() {
     const { pool } = usePool();
+    const networkConfig = useNetworkConfig();
+
     const {
         data: investmentsResponse,
         fetchMore: fetchMoreInvestments,
         networkStatus: investmentsStatus,
-    } = useGetPoolJoinExitsQuery({
-        variables: { poolId: pool.id },
+    } = useGetPoolEventsQuery({
+        variables: { first: 10, chain: networkConfig.chainName, poolId: pool.id, typeIn: ['ADD', 'REMOVE'] },
         pollInterval: 30000,
         notifyOnNetworkStatusChange: true,
     });
@@ -21,13 +24,13 @@ export function PoolJoinExitsTable() {
     const isFetchingMoreInvestments = investmentsStatus === NetworkStatus.fetchMore;
 
     const transactions = useMemo(() => {
-        const joinExits = investmentsResponse?.joinExits || [];
+        const joinExits = investmentsResponse?.poolEvents || [];
 
         return joinExits.map((action) => ({
             transaction: action,
-            type: action.type === 'Join' ? PoolTransactionType.Join : PoolTransactionType.Exit,
+            type: action.type === 'ADD' ? PoolTransactionType.Join : PoolTransactionType.Exit,
         }));
-    }, [investmentsResponse?.joinExits]);
+    }, [investmentsResponse?.poolEvents]);
 
     const handleFetchMoreTransactions = () => {
         fetchMoreInvestments({ variables: { skip: transactions.length } });

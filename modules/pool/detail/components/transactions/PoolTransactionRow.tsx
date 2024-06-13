@@ -1,4 +1,4 @@
-import { GqlPoolJoinExit, GqlPoolSwap } from '~/apollo/generated/graphql-codegen-generated';
+import { GqlPoolAddRemoveEventV3, GqlPoolSwapEventV3 } from '~/apollo/generated/graphql-codegen-generated';
 import { Box, Flex, Text, Link, Grid, GridItem, Stack, useBreakpointValue } from '@chakra-ui/react';
 import { BoxProps, HStack } from '@chakra-ui/layout';
 import { ArrowDown, ArrowRight, ExternalLink, Minus, Plus, Zap } from 'react-feather';
@@ -9,12 +9,12 @@ import { numberFormatUSDValue } from '~/lib/util/number-formats';
 
 export enum PoolTransactionType {
     Swap = 'SWAP',
-    Join = 'JOIN',
-    Exit = 'EXIT',
+    Join = 'ADD',
+    Exit = 'REMOVE',
 }
 
 export type PoolTransaction = {
-    transaction: GqlPoolJoinExit | GqlPoolSwap;
+    transaction: GqlPoolAddRemoveEventV3 | GqlPoolSwapEventV3;
     type: PoolTransactionType;
     isPhantomStable?: boolean;
 };
@@ -76,30 +76,30 @@ function Pool(props: PoolTransaction) {
             {!props.isPhantomStable && (
                 <>
                     {isInvestAction &&
-                        (props.transaction as GqlPoolJoinExit).amounts
-                            .filter((tokenAmount) => tokenAmount.amount !== '0')
-                            .map((tokenAmount, index) => (
+                        (props.transaction as GqlPoolAddRemoveEventV3).tokens
+                            .filter((token) => token.amount !== '0')
+                            .map((token, index) => (
                                 <TokenAmountPill
                                     fontSize="md"
                                     key={index}
-                                    amount={tokenAmount.amount}
-                                    address={tokenAmount.address}
+                                    amount={token.amount}
+                                    address={token.address}
                                 />
                             ))}
                     {!isInvestAction && (
                         <>
                             <TokenAmountPill
                                 fontSize="md"
-                                amount={(props.transaction as GqlPoolSwap).tokenAmountIn}
-                                address={(props.transaction as GqlPoolSwap).tokenIn}
+                                amount={(props.transaction as GqlPoolSwapEventV3).tokenIn.amount}
+                                address={(props.transaction as GqlPoolSwapEventV3).tokenIn.address}
                             />
                             <Box mx={{ base: 0, lg: 2 }} pl={{ base: 10, lg: 0 }}>
                                 {isMobile ? <ArrowDown /> : <ArrowRight />}
                             </Box>
                             <TokenAmountPill
                                 fontSize="md"
-                                amount={(props.transaction as GqlPoolSwap).tokenAmountOut}
-                                address={(props.transaction as GqlPoolSwap).tokenOut}
+                                amount={(props.transaction as GqlPoolSwapEventV3).tokenOut.amount}
+                                address={(props.transaction as GqlPoolSwapEventV3).tokenOut.address}
                             />
                         </>
                     )}
@@ -110,8 +110,8 @@ function Pool(props: PoolTransaction) {
                     {(isSwapAction || isJoinAction) && (
                         <TokenAmountPill
                             fontSize="md"
-                            amount={(props.transaction as GqlPoolSwap).tokenAmountIn}
-                            address={(props.transaction as GqlPoolSwap).tokenIn}
+                            amount={(props.transaction as GqlPoolSwapEventV3).tokenIn.amount}
+                            address={(props.transaction as GqlPoolSwapEventV3).tokenIn.address}
                         />
                     )}
                     {isSwapAction && (
@@ -122,8 +122,8 @@ function Pool(props: PoolTransaction) {
                     {(isSwapAction || isExitAction) && (
                         <TokenAmountPill
                             fontSize="md"
-                            amount={(props.transaction as GqlPoolSwap).tokenAmountOut}
-                            address={(props.transaction as GqlPoolSwap).tokenOut}
+                            amount={(props.transaction as GqlPoolSwapEventV3).tokenOut.amount}
+                            address={(props.transaction as GqlPoolSwapEventV3).tokenOut.address}
                         />
                     )}
                 </>
