@@ -153,7 +153,8 @@ export function usePoolUserStakedBalance(stakingAddresses: string[]) {
                     }
                     return '0';
                 case 'RELIQUARY':
-                    //TODO: implement
+                //TODO: implement
+                default:
                     return '0';
             }
         },
