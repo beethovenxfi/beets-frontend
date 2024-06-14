@@ -72,7 +72,13 @@ function Pool(props: PoolTransaction) {
     const isMobile = useBreakpointValue({ base: true, lg: false });
 
     return (
-        <Stack spacing="2" alignItems={{ base: 'flex-start', lg: 'center' }} direction={{ base: 'column', lg: 'row' }}>
+        <Stack
+            gap="2"
+            alignItems={{ base: 'flex-start', lg: 'center' }}
+            direction={{ base: 'column', lg: 'row' }}
+            wrap="wrap"
+            mr="8"
+        >
             {!props.isPhantomStable && (
                 <>
                     {isInvestAction &&
