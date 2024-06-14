@@ -78,6 +78,7 @@ function Pool(props: PoolTransaction) {
             direction={{ base: 'column', lg: 'row' }}
             wrap="wrap"
             mr="8"
+            __css={{ marginInlineStart: 0 }}
         >
             {!props.isPhantomStable && (
                 <>
