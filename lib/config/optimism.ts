@@ -339,11 +339,11 @@ export const optimismNetworkConfig: NetworkConfig = {
             url: 'https://app.aura.finance/#/10/pool/15',
             name: 'aura',
         },
-        {
-            poolId: '0x0244b0025264dc5f5c113d472d579c9c994a59ce0002000000000000000000c9', // A Night at the OPara
-            url: 'https://app.aura.finance/#/10/pool/16',
-            name: 'aura',
-        },
+        // {
+        //     poolId: '0x0244b0025264dc5f5c113d472d579c9c994a59ce0002000000000000000000c9', // A Night at the OPara
+        //     url: 'https://app.aura.finance/#/10/pool/16',
+        //     name: 'aura',
+        // },
         // {
         //     poolId: '0x478980c67d53cd990f2b7bab311ddc9934324e7b00020000000000000000010c', // All Roads Lead to Frax
         //     url: 'https://app.aura.finance/#/10/pool/17',
@@ -369,11 +369,11 @@ export const optimismNetworkConfig: NetworkConfig = {
             url: 'https://app.aura.finance/#/10/pool/21',
             name: 'aura',
         },
-        {
-            poolId: '0x73a7fe27fe9545d53924e529acf11f3073841b9e000000000000000000000133', // Balancer wrsETH/wETH
-            url: 'https://app.aura.finance/#/10/pool/24',
-            name: 'aura',
-        },
+        // {
+        //     poolId: '0x73a7fe27fe9545d53924e529acf11f3073841b9e000000000000000000000133', // Balancer wrsETH/wETH
+        //     url: 'https://app.aura.finance/#/10/pool/24',
+        //     name: 'aura',
+        // },
     ],
     investDisabled: {
         '0x1f131ec1175f023ee1534b16fa8ab237c00e238100000000000000000000004a': true,
