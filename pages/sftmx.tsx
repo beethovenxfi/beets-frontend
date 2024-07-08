@@ -2,8 +2,7 @@ import { initializeApolloClient, loadApolloState } from '~/apollo/client';
 import Head from 'next/head';
 import { PageMasthead } from '~/components/masthead/PageMasthead';
 import NextImage from 'next/image';
-import InvestMastheadImage from '~/assets/images/invest-masthead-image.png';
-import InvestMastheadOpImage from '~/assets/images/invest-masthead-image-OP.png';
+import SFTMxMastheadImage from '~/assets/images/sFTMx-header.png';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 import { UserTokenBalancesProvider } from '~/lib/user/useUserTokenBalances';
 import SftmxLanding from '~/modules/sftmx/SftmxLanding';
@@ -26,16 +25,7 @@ function Stake() {
                 <meta property="og:description" content={DESCRIPTION} />
                 <meta property="twitter:description" content={DESCRIPTION} />
             </Head>
-            <PageMasthead
-                title="sFTMx"
-                image={
-                    <NextImage
-                        src={chainId === '10' ? InvestMastheadOpImage : InvestMastheadImage}
-                        width="208.62px"
-                        height="68px"
-                    />
-                }
-            />
+            <PageMasthead title="sFTMx" image={<NextImage src={SFTMxMastheadImage} width="208.62px" height="68px" />} />
             {sftmxEnabled ? (
                 <UserTokenBalancesProvider>
                     <SftmxLanding />
