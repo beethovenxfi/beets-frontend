@@ -12,6 +12,8 @@ import { PoolBadgeType } from '~/lib/config/network-config-type';
 import { PoolListItemWarning } from '~/modules/pools/components/PoolListItemWarning';
 import { PoolBadgeSmall } from '~/components/pool-badge/PoolBadgeSmall';
 import { PoolListItemStaking } from './PoolListItemStaking';
+import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
+import { PoolListItemPoints } from './thirdparty/PoolListItemPoints';
 
 interface Props extends BoxProps {
     pool: GqlPoolMinimalFragment;
@@ -36,6 +38,10 @@ export function PoolListItem({
     warningMessage,
     ...rest
 }: Props) {
+    const networkConfig = useNetworkConfig();
+
+    const hasPoints = networkConfig.pointsPools.find((pointsPool) => pointsPool.poolId === pool.id)?.textString;
+
     return (
         <Box
             mb={{ base: '4', lg: '0' }}
@@ -90,6 +96,7 @@ export function PoolListItem({
                                 {pool.name}
                             </Text>
                             <PoolListItemStaking poolId={pool.id} />
+                            {hasPoints && <PoolListItemPoints />}
                             {warningMessage && <PoolListItemWarning ml="2" message={warningMessage} />}
                         </GridItem>
                         {showUserBalance && (

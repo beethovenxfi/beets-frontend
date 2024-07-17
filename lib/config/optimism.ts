@@ -375,6 +375,12 @@ export const optimismNetworkConfig: NetworkConfig = {
         //     name: 'aura',
         // },
     ],
+    pointsPools: [
+        {
+            poolId: '0x73a7fe27fe9545d53924e529acf11f3073841b9e000000000000000000000133',
+            textString: 'Earn 2x Kelp Miles and 1x EigenLayer Points',
+        },
+    ],
     investDisabled: {
         '0x1f131ec1175f023ee1534b16fa8ab237c00e238100000000000000000000004a': true,
         '0x479a7d1fcdd71ce0c2ed3184bfbe9d23b92e8337000000000000000000000049': true,
