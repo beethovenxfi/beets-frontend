@@ -26,7 +26,7 @@ export interface ThirdPartyStakingPool {
     name: string;
 }
 
-export interface SpecialPool {
+export interface rehypePool {
     poolId: string;
     url: string;
     buttonText: string;
@@ -150,7 +150,7 @@ export interface NetworkConfig {
         [poolId: string]: PoolBadgeType;
     };
     thirdPartyStakingPools: ThirdPartyStakingPool[];
-    specialPools: SpecialPool[];
+    rehypePools: rehypePool[];
     pointsPools: PointsPool[];
     maBeetsEnabled: boolean;
     claimAllRewardsEnabled: boolean;

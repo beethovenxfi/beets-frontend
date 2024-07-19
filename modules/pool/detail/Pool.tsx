@@ -13,9 +13,9 @@ import { useLegacyFBeetsBalance } from '~/modules/reliquary/lib/useLegacyFbeetsB
 
 export function Pool() {
     const { pool, isFbeetsPool } = usePool();
-    const { investDisabled, specialPools } = useNetworkConfig();
+    const { investDisabled, rehypePools } = useNetworkConfig();
     const { total } = useLegacyFBeetsBalance();
-    const specialPool = specialPools.find((specialPool) => pool.id === specialPool.poolId);
+    const rehypePool = rehypePools.find((rehypePool) => pool.id === rehypePool.poolId);
 
     return (
         <Box marginBottom="8">
@@ -23,10 +23,10 @@ export function Pool() {
             <VStack width="full" spacing="4">
                 <PoolWarnings />
                 <HStack width="full" justifyContent="flex-end">
-                    {specialPool ? (
-                        <Link href={specialPool.url} isExternal>
+                    {rehypePool ? (
+                        <Link href={rehypePool.url} isExternal>
                             <Button variant="primary" width={{ base: 'full', md: '300px' }}>
-                                {specialPool.buttonText}
+                                {rehypePool.buttonText}
                             </Button>
                         </Link>
                     ) : (
