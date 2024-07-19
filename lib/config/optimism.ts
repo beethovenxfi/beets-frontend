@@ -381,6 +381,13 @@ export const optimismNetworkConfig: NetworkConfig = {
             textString: 'Earn 2x Kelp Miles and 1x EigenLayer Points',
         },
     ],
+    rehypePools: [
+        {
+            poolId: '0x8bb826afc0ff7d2c034a2883f4c461ffd238e1c300020000000000000000012b',
+            url: 'https://app.gyro.finance/pools/optimism/e-clp/0x8bb826afc0ff7d2c034a2883f4c461ffd238e1c3',
+            buttonText: 'Manage liquidity on Gyroscope',
+        },
+    ],
     investDisabled: {
         '0x1f131ec1175f023ee1534b16fa8ab237c00e238100000000000000000000004a': true,
         '0x479a7d1fcdd71ce0c2ed3184bfbe9d23b92e8337000000000000000000000049': true,
