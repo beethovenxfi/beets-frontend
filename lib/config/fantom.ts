@@ -38,7 +38,8 @@ export const fantomNetworkConfig: NetworkConfig = {
         nativeAssetId: 'fantom',
         platformId: 'fantom',
     },
-    rpcUrl: 'https://rpc.ftm.tools',
+    //rpcUrl: 'https://rpc.ftm.tools',
+    rpcUrl: 'https://rpcapi.fantom.network',
     //rpcUrl: 'https://rpc.ankr.com/fantom',
     multicall: '0x66335d7ad8011f6aa3f48aadcb523b62b38ed961',
     beets: {
@@ -339,11 +340,12 @@ export const fantomNetworkConfig: NetworkConfig = {
     thirdPartyStakingPools: [
         {
             poolId: '0x9426d9077620efaae688d3c3b398fa814406ce4a000200000000000000000833', // fMoney with Attitude Vol. 2
-            url: 'https://www.fmoney.market/stakev2', // TODO: switch to https://www.fmoney.market/stake
+            url: 'https://www.fmoney.market/stake',
             name: 'fmoney',
         },
     ],
     specialPools: [],
+    pointsPools: [],
     investDisabled: {
         '0xa10285f445bcb521f1d623300dc4998b02f11c8f00000000000000000000043b': true,
         '0xcde5a11a4acb4ee4c805352cec57e236bdbc3837000200000000000000000019': true,

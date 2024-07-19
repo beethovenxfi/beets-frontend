@@ -32,6 +32,11 @@ export interface SpecialPool {
     buttonText: string;
 }
 
+export interface PointsPool {
+    poolId: string;
+    textString: string;
+}
+
 export interface NetworkConfig {
     appName: string;
     chainId: string;
@@ -146,6 +151,7 @@ export interface NetworkConfig {
     };
     thirdPartyStakingPools: ThirdPartyStakingPool[];
     specialPools: SpecialPool[];
+    pointsPools: PointsPool[];
     maBeetsEnabled: boolean;
     claimAllRewardsEnabled: boolean;
     layerZeroChainId: number;

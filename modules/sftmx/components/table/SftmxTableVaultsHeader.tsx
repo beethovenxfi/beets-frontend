@@ -13,7 +13,7 @@ export default function SftmxTableVaultsHeader() {
             borderBottom="2px"
             borderColor="beets.base.500"
             mb={{ base: '4', lg: '0' }}
-            templateColumns="minmax(25px, 60px) minmax(115px, 150px) minmax(60px, 100px) minmax(150px, 1fr)"
+            templateColumns="minmax(30px,50px) 4fr minmax(50px,110px) 110px"
             gap="4"
             display={{ base: 'none', xl: 'grid' }}
         >
