@@ -9,6 +9,7 @@ import { AddressZero } from '@ethersproject/constants';
 import { usePool } from '~/modules/pool/lib/usePool';
 import { CustomTooltip } from '~/components/tooltip/CustomTooltip';
 import { PoolHeaderStaking } from './PoolHeaderStaking';
+import { PoolHeaderPoints } from './thirdparty/PoolHeaderPoints';
 
 function PoolHeader() {
     const networkConfig = useNetworkConfig();
@@ -18,9 +19,12 @@ function PoolHeader() {
     const hasZeroOwner = pool.owner === AddressZero;
     const swapFeeType = hasZeroOwner ? 'Fixed' : 'Dynamic';
     const tooltipText1 = `Liquidity providers earn ${swapFeeType.toLowerCase()} swap fees on every trade utilizing the liquidity in this pool.`;
+
     const tooltipText2 = `Dynamic swap fees are controlled by the ${
         hasBeetsOwner ? 'Beethoven X Liquidity Committee Multisig' : 'pool owner'
     }.`;
+
+    const textString = networkConfig.pointsPools.find((pointsPool) => pointsPool.poolId === pool.id)?.textString;
 
     return (
         <VStack width="full" alignItems="flex-start" mb="8">
@@ -62,6 +66,7 @@ function PoolHeader() {
                     alignSelf="flex-start"
                 />
                 <PoolHeaderStaking poolId={pool.id} />
+                {textString && <PoolHeaderPoints textString={textString} />}
             </Stack>
         </VStack>
     );
