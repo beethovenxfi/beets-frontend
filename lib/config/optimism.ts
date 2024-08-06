@@ -374,6 +374,16 @@ export const optimismNetworkConfig: NetworkConfig = {
         //     url: 'https://app.aura.finance/#/10/pool/24',
         //     name: 'aura',
         // },
+        {
+            poolId: '0x2bb4712247d5f451063b5e4f6948abdfb925d93d000000000000000000000136', // Stake me baby one more time
+            url: 'https://app.aura.finance/#/10/pool/25',
+            name: 'aura',
+        },
+        {
+            poolId: '0x73a7fe27fe9545d53924e529acf11f3073841b9e000000000000000000000133', // Balancer wrsETH/wETH
+            url: 'https://app.aura.finance/#/10/pool/24',
+            name: 'aura',
+        },
     ],
     pointsPools: [
         {
