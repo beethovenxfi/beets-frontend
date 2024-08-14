@@ -38,8 +38,8 @@ export const fantomNetworkConfig: NetworkConfig = {
         nativeAssetId: 'fantom',
         platformId: 'fantom',
     },
-    //rpcUrl: 'https://rpc.ftm.tools',
-    rpcUrl: 'https://rpcapi.fantom.network',
+    rpcUrl: 'https://rpc.ftm.tools',
+    //rpcUrl: 'https://rpcapi.fantom.network',
     //rpcUrl: 'https://rpc.ankr.com/fantom',
     multicall: '0x66335d7ad8011f6aa3f48aadcb523b62b38ed961',
     beets: {
