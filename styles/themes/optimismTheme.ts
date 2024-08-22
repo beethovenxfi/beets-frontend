@@ -135,6 +135,9 @@ export const optimismTheme: Partial<ChakraTheme> = {
             pink: '#9c4ed6',
             purple: '#5d24c6',
         },
+        merkl: {
+            melrose: '#b9aafd',
+        },
     },
     components: {
         Select: {

@@ -379,6 +379,11 @@ export const optimismNetworkConfig: NetworkConfig = {
             url: 'https://app.aura.finance/#/10/pool/25',
             name: 'aura',
         },
+        {
+            poolId: '0x408e11ec9b1751c3d00589b61cae484e07fb9e44000000000000000000000141', // Bedrock'n'Roll
+            url: 'https://merkl.angle.money/user',
+            name: 'merkl',
+        },
     ],
     pointsPools: [
         {
