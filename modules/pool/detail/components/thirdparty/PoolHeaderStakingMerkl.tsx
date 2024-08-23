@@ -2,7 +2,7 @@ import { Link, HStack, Text } from '@chakra-ui/react';
 import { CustomTooltip } from '~/components/tooltip/CustomTooltip';
 import { networkConfig } from '~/lib/config/network-config';
 import Image from 'next/image';
-import MerklLogo from '~/assets/logo/merkl-32x32.png';
+import MerklLogo from '~/assets/logo/merkl2x.png';
 
 export function PoolHeaderStakingMerkl({ poolId }: { poolId: string }) {
     const url = networkConfig.thirdPartyStakingPools.find((pool) => pool.poolId === poolId)?.url;
