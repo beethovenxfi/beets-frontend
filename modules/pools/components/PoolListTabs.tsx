@@ -10,11 +10,11 @@ export function PoolListTabs() {
 
     const handleTabChanged = (index: number) => {
         const tab = TABS[index];
-        const categoryNotIn: any = [
-            ...DEFAULT_POOL_LIST_QUERY_VARS.where!.categoryNotIn!,
+        const tagNotIn: any = [
+            ...DEFAULT_POOL_LIST_QUERY_VARS.where!.tagNotIn!,
             tab.id === 'community' ? 'INCENTIVIZED' : null,
         ].filter(Boolean);
-        const categoryIn: any = tab.id === 'incentivized' ? ['INCENTIVIZED'] : null;
+        const tagIn: any = tab.id === 'incentivized' ? ['INCENTIVIZED'] : null;
 
         if (['incentivized', 'community'].includes(tab.id)) {
             setShowMyInvestments(false);
@@ -24,8 +24,8 @@ export function PoolListTabs() {
                 first: 20,
                 where: {
                     ...state.where,
-                    categoryIn,
-                    categoryNotIn,
+                    tagIn,
+                    tagNotIn,
                     idIn: undefined,
                 },
             });
@@ -41,7 +41,7 @@ export function PoolListTabs() {
             variant="soft-rounded"
             display="flex"
             onChange={handleTabChanged}
-            defaultIndex={showMyInvestments ? 2 : state.where?.categoryIn?.includes('INCENTIVIZED') ? 0 : 1}
+            defaultIndex={showMyInvestments ? 2 : state.where?.tagIn?.includes('INCENTIVIZED') ? 0 : 1}
         >
             <TabList>
                 <HStack spacing="2">
