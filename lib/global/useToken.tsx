@@ -48,6 +48,7 @@ export function _useGetTokens() {
                 chainId: parseInt(networkConfig.chainId),
                 priority: 0,
                 tradable: false,
+                isErc4626: false,
             };
         }
 
