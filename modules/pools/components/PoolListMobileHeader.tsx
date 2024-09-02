@@ -38,14 +38,14 @@ export function PoolListMobileHeader() {
                     buttonText={
                         showMyInvestments
                             ? 'My investments'
-                            : state.where?.categoryNotIn?.includes('INCENTIVIZED')
+                            : state.where?.tagNotIn?.includes('INCENTIVIZED')
                             ? 'Community'
                             : 'Incentivized'
                     }
                     items={[
                         {
                             label: 'Incentivized pools',
-                            selected: !showMyInvestments && state.where?.categoryIn?.includes('INCENTIVIZED'),
+                            selected: !showMyInvestments && state.where?.tagIn?.includes('INCENTIVIZED'),
                             onClick: () => {
                                 setShowMyInvestments(false);
                                 refreshPoolList({
@@ -54,8 +54,8 @@ export function PoolListMobileHeader() {
                                     first: 20,
                                     where: {
                                         ...state.where,
-                                        categoryIn: ['INCENTIVIZED'],
-                                        categoryNotIn: null,
+                                        tagIn: ['INCENTIVIZED'],
+                                        tagNotIn: null,
                                         idIn: undefined,
                                     },
                                 });
@@ -63,7 +63,7 @@ export function PoolListMobileHeader() {
                         },
                         {
                             label: 'Community pools',
-                            selected: !showMyInvestments && state.where?.categoryNotIn?.includes('INCENTIVIZED'),
+                            selected: !showMyInvestments && state.where?.tagNotIn?.includes('INCENTIVIZED'),
                             onClick: () => {
                                 setShowMyInvestments(false);
                                 refreshPoolList({
@@ -72,8 +72,8 @@ export function PoolListMobileHeader() {
                                     first: 20,
                                     where: {
                                         ...state.where,
-                                        categoryIn: null,
-                                        categoryNotIn: ['INCENTIVIZED'],
+                                        tagIn: null,
+                                        tagNotIn: ['INCENTIVIZED'],
                                         idIn: undefined,
                                     },
                                 });

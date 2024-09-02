@@ -100,6 +100,7 @@ export function useUserImportedTokens() {
             tradable: true,
             priority: 0,
             imported: true,
+            isErc4626: false, // TODO: check if this is correct
         }));
 
     return {

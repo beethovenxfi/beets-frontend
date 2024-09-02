@@ -8,6 +8,7 @@ query GetAppGlobalData {
         logoURI
         priority
         tradable
+        isErc4626
     }
     #tokenGetCurrentPrices {
     #    price
@@ -48,6 +49,7 @@ query GetTokens {
         logoURI
         priority
         tradable
+        isErc4626
     }
 }
 
