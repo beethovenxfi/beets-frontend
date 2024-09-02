@@ -2607,6 +2607,7 @@ export type GetAppGlobalDataQuery = {
         logoURI?: string | null;
         priority: number;
         tradable: boolean;
+        isErc4626: boolean;
     }>;
 };
 
@@ -2644,6 +2645,7 @@ export type GetTokensQuery = {
         logoURI?: string | null;
         priority: number;
         tradable: boolean;
+        isErc4626: boolean;
     }>;
 };
 
@@ -6237,6 +6239,7 @@ export const GetAppGlobalDataDocument = gql`
             logoURI
             priority
             tradable
+            isErc4626
         }
         beetsGetFbeetsRatio
         blocksGetBlocksPerDay
@@ -6349,6 +6352,7 @@ export const GetTokensDocument = gql`
             logoURI
             priority
             tradable
+            isErc4626
         }
     }
 `;

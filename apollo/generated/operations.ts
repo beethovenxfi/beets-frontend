@@ -415,6 +415,7 @@ export const GetAppGlobalData = gql`
             logoURI
             priority
             tradable
+            isErc4626
         }
         beetsGetFbeetsRatio
         blocksGetBlocksPerDay
@@ -453,6 +454,7 @@ export const GetTokens = gql`
             logoURI
             priority
             tradable
+            isErc4626
         }
     }
 `;
