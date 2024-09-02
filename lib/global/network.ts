@@ -17,8 +17,10 @@ const getRpc = (chain: GqlChain) => {
     if (shouldUsePrivateRpc) {
         return getPrivateRpcUrl(chain);
     }
-    return undefined;
+    return networkConfig.rpcUrl;
 };
+
+const rpcUrl = getRpc(networkConfig.chainName as GqlChain);
 
 const response = configureChains(
     [
@@ -36,10 +38,10 @@ const response = configureChains(
             },
             rpcUrls: {
                 default: {
-                    http: [getRpc(networkConfig.chainName as GqlChain) || networkConfig.rpcUrl],
+                    http: [rpcUrl],
                 },
                 public: {
-                    http: [getRpc(networkConfig.chainName as GqlChain) || networkConfig.rpcUrl],
+                    http: [rpcUrl],
                 },
             },
             blockExplorers: {
@@ -57,7 +59,7 @@ const response = configureChains(
     ],
     [
         batchJsonRpcProvider({
-            rpc: () => ({ http: getRpc(networkConfig.chainName as GqlChain) || networkConfig.rpcUrl }),
+            rpc: () => ({ http: rpcUrl }),
         }),
     ],
 );
