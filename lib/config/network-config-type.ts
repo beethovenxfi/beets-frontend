@@ -26,6 +26,17 @@ export interface ThirdPartyStakingPool {
     name: string;
 }
 
+export interface rehypePool {
+    poolId: string;
+    url: string;
+    buttonText: string;
+}
+
+export interface PointsPool {
+    poolId: string;
+    textString: string;
+}
+
 export interface NetworkConfig {
     appName: string;
     chainId: string;
@@ -139,6 +150,8 @@ export interface NetworkConfig {
         [poolId: string]: PoolBadgeType;
     };
     thirdPartyStakingPools: ThirdPartyStakingPool[];
+    rehypePools: rehypePool[];
+    pointsPools: PointsPool[];
     maBeetsEnabled: boolean;
     claimAllRewardsEnabled: boolean;
     layerZeroChainId: number;

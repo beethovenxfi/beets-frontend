@@ -56,6 +56,7 @@ interface Props<T> extends BoxProps {
     isInfinite?: boolean;
     isShort?: boolean;
     noResultLabel?: string;
+    showLessItems?: boolean;
 }
 
 export function PaginatedTable({
@@ -74,6 +75,7 @@ export function PaginatedTable({
     onFetchMore,
     isShort,
     noResultLabel,
+    showLessItems = false,
     ...rest
 }: Props<any>) {
     const isLoadingRows = loading && items.length === 0;
@@ -134,6 +136,7 @@ export function PaginatedTable({
                                 const props = { pageNumber, type, element, currentPage };
                                 return <PageItem {...props} />;
                             }}
+                            showLessItems={showLessItems}
                         />
                     )}
                 </Flex>
