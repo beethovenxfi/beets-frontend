@@ -289,7 +289,7 @@ export function PoolComposition() {
 
     const data = React.useMemo(
         (): TableDataTemplate[] => getTokenData(pool.tokens, pool),
-        [JSON.stringify(pool.tokens), JSON.stringify(userInvestedBalances), JSON.stringify(prices)],
+        [pool, userInvestedBalances, prices],
     );
 
     return (
