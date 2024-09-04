@@ -122,7 +122,7 @@ export function _usePoolList() {
                     ...state.where,
                     idIn: poolIds,
                     tagIn: null,
-                    tagNotIn: ['INCENTIVIZED'],
+                    tagNotIn: null,
                 },
                 first: 100,
             });
