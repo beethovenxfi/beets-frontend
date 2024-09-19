@@ -2,6 +2,7 @@ import { AmountHumanReadable } from '~/lib/services/token/token-types';
 import { BeetsSubmitTransactionButton } from '~/components/button/BeetsSubmitTransactionButton';
 import { useSftmxUnstake } from '../../../lib/useSftmxUnstake';
 import { BigNumber } from 'ethers';
+import { useWalletConnectMetadata } from '~/lib/wallet/useWalletConnectMetadata';
 
 interface Props {
     amount: AmountHumanReadable;
@@ -18,6 +19,7 @@ interface Props {
 
 export function SftmxUnstakeButton({ amount, penalty, ...rest }: Props) {
     const { undelegate, ...query } = useSftmxUnstake();
+    const { isSafeAccountViaWalletConnect } = useWalletConnectMetadata();
 
     return (
         <BeetsSubmitTransactionButton
@@ -28,7 +30,7 @@ export function SftmxUnstakeButton({ amount, penalty, ...rest }: Props) {
                     undelegate(amount, penalty);
                 }
             }}
-            isDisabled={!amount || amount === '0' || penalty === undefined}
+            isDisabled={isSafeAccountViaWalletConnect || !amount || amount === '0' || penalty === undefined}
             {...rest}
         >
             Unstake
