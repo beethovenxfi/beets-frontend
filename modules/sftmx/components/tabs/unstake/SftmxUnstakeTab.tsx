@@ -13,6 +13,7 @@ import { useSftmxGetFtmxAmountForFtm } from '../../../lib/useSftmxGetFtmxAmountF
 import { InfoButton } from '~/components/info-button/InfoButton';
 import numeral from 'numeral';
 import { useUserTokenBalances } from '~/lib/user/useUserTokenBalances';
+import { useWalletConnectMetadata } from '~/lib/wallet/useWalletConnectMetadata';
 
 export default function SftmxUnstakeTab() {
     const [amount, setAmount] = useState('');
@@ -22,6 +23,7 @@ export default function SftmxUnstakeTab() {
     const { data: sftmxAmountData, isLoading: isLoadingSftmxAmountData } = useSftmxGetFtmxAmountForFtm('1'); // set to 1 FTM to get current rate
     const { data: penaltyData, isLoading: isLoadingPenaltyData } = useSftmxGetCalculatePenalty(amount);
     const { refetch } = useUserTokenBalances();
+    const { isSafeAccountViaWalletConnect } = useWalletConnectMetadata();
 
     useEffect(() => {
         if (!isLoadingSftmxAmountData && sftmxAmountData) {
@@ -77,7 +79,9 @@ export default function SftmxUnstakeTab() {
                 <Spacer />
                 <Alert status="warning" mb="4">
                     <AlertIcon />
-                    Unstaked FTM will be withdrawable after 7 days
+                    {isSafeAccountViaWalletConnect
+                        ? 'Unstake via Safe is not supported. Use an EOA instead.'
+                        : 'Unstaked FTM will be withdrawable after 7 days'}
                 </Alert>
                 <Box w="full">
                     {!isConnected && <WalletConnectButton width="full" size="lg" />}
