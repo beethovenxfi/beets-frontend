@@ -79,7 +79,7 @@ export default function SftmxUnstakeTab() {
                 <Spacer />
                 <Alert status="warning" mb="4">
                     <AlertIcon />
-                    {isSafeAccountViaWalletConnect
+                    {isConnected && isSafeAccountViaWalletConnect
                         ? 'Unstake via Safe is not supported. Use an EOA instead.'
                         : 'Unstaked FTM will be withdrawable after 7 days'}
                 </Alert>
