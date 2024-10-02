@@ -21,7 +21,7 @@ export default function SftmxWithdrawalRequestsRow({ item, withdrawalDelay }: Pr
         if (!isRefetching && data) {
             setIsWithdrawn(data.isWithdrawn);
         }
-    }, [isRefetching]);
+    }, [isRefetching, data]);
 
     return (
         <Grid
