@@ -75,12 +75,12 @@ export default function SftmxUnstakeTab() {
                 <Alert status="info">
                     <AlertIcon />
                     <Text>
-                        sFTMx can also be swapped at market rate{' '}
+                        You can also swap sFTMx at market rate on{' '}
                         <Link
                             href="/swap?tokenIn=0xd7028092c830b5C8FcE061Af2E593413EbbC1fc1&tokenOut=0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE"
                             target="_blank"
                         >
-                            here
+                            the swap page
                         </Link>
                     </Text>
                 </Alert>
