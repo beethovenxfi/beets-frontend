@@ -1240,22 +1240,6 @@ export interface GqlPoolTokenDetail {
     weight?: Maybe<Scalars['BigDecimal']>;
 }
 
-export interface GqlPoolTokenDetail {
-    __typename: 'GqlPoolTokenDetail';
-    address: Scalars['String'];
-    balance: Scalars['BigDecimal'];
-    decimals: Scalars['Int'];
-    hasNestedPool: Scalars['Boolean'];
-    id: Scalars['ID'];
-    index: Scalars['Int'];
-    name: Scalars['String'];
-    nestedPool?: Maybe<GqlNestedPool>;
-    priceRate: Scalars['BigDecimal'];
-    priceRateProvider?: Maybe<Scalars['String']>;
-    symbol: Scalars['String'];
-    weight?: Maybe<Scalars['BigDecimal']>;
-}
-
 export interface GqlPoolTokenDisplay {
     __typename: 'GqlPoolTokenDisplay';
     address: Scalars['String'];

@@ -5,16 +5,22 @@ import { networkConfig } from '~/lib/config/network-config';
 import { batchJsonRpcProvider } from '~/lib/global/batchJsonRpcProvider';
 import { getBaseUrl } from '../util/urls';
 
-const baseUrl = getBaseUrl();
 // we're in the browser, so we won't expose the alchemy key here
 const shouldUsePrivateRpc = !!process.env.NEXT_PUBLIC_HAS_ALCHEMY_KEY;
-const getPrivateRpcUrl = (chain: GqlChain) => `${baseUrl}/api/rpc/${chain}/routes`;
+
+const getPrivateRpcUrl = (chain: GqlChain) => {
+    const baseUrl = getBaseUrl();
+    return `${baseUrl}/api/rpc/${chain}/routes`;
+};
+
 const getRpc = (chain: GqlChain) => {
     if (shouldUsePrivateRpc) {
         return getPrivateRpcUrl(chain);
     }
-    return undefined;
+    return networkConfig.rpcUrl;
 };
+
+const rpcUrl = getRpc(networkConfig.chainName as GqlChain);
 
 const response = configureChains(
     [
@@ -32,10 +38,10 @@ const response = configureChains(
             },
             rpcUrls: {
                 default: {
-                    http: [getRpc(networkConfig.chainName as GqlChain) || networkConfig.rpcUrl],
+                    http: [rpcUrl],
                 },
                 public: {
-                    http: [getRpc(networkConfig.chainName as GqlChain) || networkConfig.rpcUrl],
+                    http: [rpcUrl],
                 },
             },
             blockExplorers: {
@@ -53,7 +59,7 @@ const response = configureChains(
     ],
     [
         batchJsonRpcProvider({
-            rpc: () => ({ http: getRpc(networkConfig.chainName as GqlChain) || networkConfig.rpcUrl }),
+            rpc: () => ({ http: rpcUrl }),
         }),
     ],
 );

@@ -1,4 +1,4 @@
-import { Box, VStack, HStack, Divider, Spacer, Text, Alert, AlertIcon } from '@chakra-ui/react';
+import { Box, VStack, HStack, Divider, Text, Alert, AlertIcon, Link } from '@chakra-ui/react';
 import { WalletConnectButton } from '~/components/button/WalletConnectButton';
 import Card from '~/components/card/Card';
 import { FtmTokenInput } from '~/components/inputs/FtmTokenInput';
@@ -13,6 +13,7 @@ import { useSftmxGetFtmxAmountForFtm } from '../../../lib/useSftmxGetFtmxAmountF
 import { InfoButton } from '~/components/info-button/InfoButton';
 import numeral from 'numeral';
 import { useUserTokenBalances } from '~/lib/user/useUserTokenBalances';
+import { useWalletConnectMetadata } from '~/lib/wallet/useWalletConnectMetadata';
 
 export default function SftmxUnstakeTab() {
     const [amount, setAmount] = useState('');
@@ -22,6 +23,7 @@ export default function SftmxUnstakeTab() {
     const { data: sftmxAmountData, isLoading: isLoadingSftmxAmountData } = useSftmxGetFtmxAmountForFtm('1'); // set to 1 FTM to get current rate
     const { data: penaltyData, isLoading: isLoadingPenaltyData } = useSftmxGetCalculatePenalty(amount);
     const { refetch } = useUserTokenBalances();
+    const { isSafeAccountViaWalletConnect } = useWalletConnectMetadata();
 
     useEffect(() => {
         if (!isLoadingSftmxAmountData && sftmxAmountData) {
@@ -64,20 +66,29 @@ export default function SftmxUnstakeTab() {
                     <Text>{isLoadingSftmxAmountData ? '-' : tokenFormatAmount(exchangeRateFtm)} FTM</Text>
                 </HStack>
                 <HStack w="full" justifyContent="space-between">
-                    <Text>1 FTM is</Text>
-                    <Text>{isLoadingSftmxAmountData ? '-' : tokenFormatAmount(1 / exchangeRateFtm)} sFTMx</Text>
-                </HStack>
-                <HStack w="full" justifyContent="space-between">
                     <InfoButton
                         label="Penalty"
                         infoText="If your unstaking request exceeds what is available in the free pool a penalty will be incurred. This deduction is automatically reflected in the numbers displayed above."
                     />
                     <Text>{sftmxPenaltyAmount ? numeral(sftmxPenaltyAmount).format('0.00') : '-'} FTM</Text>
                 </HStack>
-                <Spacer />
-                <Alert status="warning" mb="4">
+                <Alert status="info">
                     <AlertIcon />
-                    Unstaked FTM will be withdrawable after 7 days
+                    <Text>
+                        You can also swap sFTMx at market rate on{' '}
+                        <Link
+                            href="/swap?tokenIn=0xd7028092c830b5C8FcE061Af2E593413EbbC1fc1&tokenOut=0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE"
+                            target="_blank"
+                        >
+                            the swap page
+                        </Link>
+                    </Text>
+                </Alert>
+                <Alert status="warning">
+                    <AlertIcon />
+                    {isConnected && isSafeAccountViaWalletConnect
+                        ? 'Unstake via Safe is not supported. Use an EOA instead.'
+                        : 'Unstaked FTM will be withdrawable after 7 days'}
                 </Alert>
                 <Box w="full">
                     {!isConnected && <WalletConnectButton width="full" size="lg" />}

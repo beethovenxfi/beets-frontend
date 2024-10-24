@@ -344,11 +344,11 @@ export const optimismNetworkConfig: NetworkConfig = {
         //     url: 'https://app.aura.finance/#/10/pool/16',
         //     name: 'aura',
         // },
-        {
-            poolId: '0x478980c67d53cd990f2b7bab311ddc9934324e7b00020000000000000000010c', // All Roads Lead to Frax
-            url: 'https://app.aura.finance/#/10/pool/17',
-            name: 'aura',
-        },
+        // {
+        //     poolId: '0x478980c67d53cd990f2b7bab311ddc9934324e7b00020000000000000000010c', // All Roads Lead to Frax
+        //     url: 'https://app.aura.finance/#/10/pool/17',
+        //     name: 'aura',
+        // },
         {
             poolId: '0xa71021492a3966eec735ed1b505afa097c7cfe6f00000000000000000000010d', // Fraximalist Ethereum
             url: 'https://app.aura.finance/#/10/pool/18',
@@ -364,11 +364,11 @@ export const optimismNetworkConfig: NetworkConfig = {
         //     url: 'https://app.aura.finance/#/10/pool/20',
         //     name: 'aura',
         // },
-        // {
-        //     poolId: '0xe906d4c4fc4c3fe96560de86b4bf7ed89af9a69a000200000000000000000126', // Frax Symphony
-        //     url: 'https://app.aura.finance/#/10/pool/21',
-        //     name: 'aura',
-        // },
+        {
+            poolId: '0xe906d4c4fc4c3fe96560de86b4bf7ed89af9a69a000200000000000000000126', // Frax Symphony
+            url: 'https://app.aura.finance/#/10/pool/21',
+            name: 'aura',
+        },
         {
             poolId: '0x73a7fe27fe9545d53924e529acf11f3073841b9e000000000000000000000133', // Balancer wrsETH/wETH
             url: 'https://app.aura.finance/#/10/pool/24',
@@ -379,10 +379,20 @@ export const optimismNetworkConfig: NetworkConfig = {
             url: 'https://app.aura.finance/#/10/pool/25',
             name: 'aura',
         },
+        // {
+        //     poolId: '0x408e11ec9b1751c3d00589b61cae484e07fb9e44000000000000000000000141', // Bedrock'n'Roll
+        //     url: 'https://merkl.angle.money/user',
+        //     name: 'merkl',
+        // },
         {
-            poolId: '0x408e11ec9b1751c3d00589b61cae484e07fb9e44000000000000000000000141', // Bedrock'n'Roll
-            url: 'https://merkl.angle.money/user',
-            name: 'merkl',
+            poolId: '0xc9eb4b8ce914ee451360b315ffd1d1af8df96be9000000000000000000000143', // Staked Inception Opus No 1
+            url: 'https://app.aura.finance/#/10/pool/27',
+            name: 'aura',
+        },
+        {
+            poolId: '0x0ccb0c34d4898dfa8de3ece9d814074e60adefd0000000000000000000000142', // (Re)stake On Me, Natively
+            url: 'https://app.aura.finance/#/10/pool/26',
+            name: 'aura',
         },
     ],
     pointsPools: [
