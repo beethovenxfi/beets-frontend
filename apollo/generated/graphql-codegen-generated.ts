@@ -138,6 +138,8 @@ export interface GqlNestedPool {
     factory?: Maybe<Scalars['Bytes']>;
     /** Unique identifier of the pool. */
     id: Scalars['ID'];
+    /** Liquidity management settings for v3 pools. */
+    liquidityManagement?: Maybe<LiquidityManagement>;
     /** Name of the pool. */
     name: Scalars['String'];
     /** Total liquidity of the parent pool in the nested pool in USD. */
@@ -195,6 +197,82 @@ export interface GqlPoolAddRemoveEventV3 extends GqlPoolEvent {
     valueUSD: Scalars['Float'];
 }
 
+export interface GqlPoolAggregator {
+    __typename: 'GqlPoolAggregator';
+    /** The contract address of the pool. */
+    address: Scalars['Bytes'];
+    /** Data specific to gyro/fx pools */
+    alpha?: Maybe<Scalars['String']>;
+    /** Data specific to stable pools */
+    amp?: Maybe<Scalars['BigInt']>;
+    /** Data specific to gyro/fx pools */
+    beta?: Maybe<Scalars['String']>;
+    /** Data specific to gyro pools */
+    c?: Maybe<Scalars['String']>;
+    /** The chain on which the pool is deployed */
+    chain: GqlChain;
+    /** The timestamp the pool was created. */
+    createTime: Scalars['Int'];
+    /** Data specific to gyro pools */
+    dSq?: Maybe<Scalars['String']>;
+    /** The decimals of the BPT, usually 18 */
+    decimals: Scalars['Int'];
+    /** Data specific to fx pools */
+    delta?: Maybe<Scalars['String']>;
+    /** Dynamic data such as token balances, swap fees or volume */
+    dynamicData: GqlPoolDynamicData;
+    /** Data specific to fx pools */
+    epsilon?: Maybe<Scalars['String']>;
+    /** The factory contract address from which the pool was created. */
+    factory?: Maybe<Scalars['Bytes']>;
+    /** Hook assigned to a pool */
+    hook?: Maybe<Hook>;
+    /** The pool id. This is equal to the address for protocolVersion 3 pools */
+    id: Scalars['ID'];
+    /** Data specific to gyro/fx pools */
+    lambda?: Maybe<Scalars['String']>;
+    /** Liquidity management settings for v3 pools. */
+    liquidityManagement?: Maybe<LiquidityManagement>;
+    /** The name of the pool as per contract */
+    name: Scalars['String'];
+    /** The wallet address of the owner of the pool. Pool owners can set certain properties like swapFees or AMP. */
+    owner?: Maybe<Scalars['Bytes']>;
+    /** Returns all pool tokens, including BPTs and nested pools if there are any. Only one nested level deep. */
+    poolTokens: Array<GqlPoolTokenDetail>;
+    /** The protocol version on which the pool is deployed, 1, 2 or 3 */
+    protocolVersion: Scalars['Int'];
+    /** Data specific to gyro pools */
+    root3Alpha?: Maybe<Scalars['String']>;
+    /** Data specific to gyro pools */
+    s?: Maybe<Scalars['String']>;
+    /** Data specific to gyro pools */
+    sqrtAlpha?: Maybe<Scalars['String']>;
+    /** Data specific to gyro pools */
+    sqrtBeta?: Maybe<Scalars['String']>;
+    /** The token symbol of the pool as per contract */
+    symbol: Scalars['String'];
+    /** Data specific to gyro pools */
+    tauAlphaX?: Maybe<Scalars['String']>;
+    /** Data specific to gyro pools */
+    tauAlphaY?: Maybe<Scalars['String']>;
+    /** Data specific to gyro pools */
+    tauBetaX?: Maybe<Scalars['String']>;
+    /** Data specific to gyro pools */
+    tauBetaY?: Maybe<Scalars['String']>;
+    /** The pool type, such as weighted, stable, etc. */
+    type: GqlPoolType;
+    /** Data specific to gyro pools */
+    u?: Maybe<Scalars['String']>;
+    /** Data specific to gyro pools */
+    v?: Maybe<Scalars['String']>;
+    /** The version of the pool type. */
+    version: Scalars['Int'];
+    /** Data specific to gyro pools */
+    w?: Maybe<Scalars['String']>;
+    /** Data specific to gyro pools */
+    z?: Maybe<Scalars['String']>;
+}
+
 export interface GqlPoolApr {
     __typename: 'GqlPoolApr';
     apr: GqlPoolAprValue;
@@ -212,7 +290,14 @@ export interface GqlPoolAprItem {
     apr: Scalars['Float'];
     /** The id of the APR item */
     id: Scalars['ID'];
-    /** The title of the APR item, a human readable form */
+    /** The reward token address, if the APR originates from token emissions */
+    rewardTokenAddress?: Maybe<Scalars['String']>;
+    /** The reward token symbol, if the APR originates from token emissions */
+    rewardTokenSymbol?: Maybe<Scalars['String']>;
+    /**
+     * The title of the APR item, a human readable form
+     * @deprecated No replacement, should be built client side
+     */
     title: Scalars['String'];
     /** Specific type of this APR */
     type: GqlPoolAprItemType;
@@ -226,18 +311,34 @@ export type GqlPoolAprItemType =
     | 'IB_YIELD'
     /** APR in a pool that can be earned through locking, i.e. veBAL */
     | 'LOCKING'
+    /** Reward APR in a pool from maBEETS emissions allocated by gauge votes. Emitted in BEETS. */
+    | 'MABEETS_EMISSIONS'
     /** Rewards distributed by merkl.xyz */
     | 'MERKL'
     /** Represents if the APR items comes from a nested pool. */
     | 'NESTED'
-    /** Staking reward APR in a pool, i.e. BAL or BEETS. */
+    /** Staking reward APR in a pool from a reward token. */
     | 'STAKING'
     /** APR boost that can be earned, i.e. via veBAL or maBEETS. */
     | 'STAKING_BOOST'
     /** Cow AMM specific APR */
     | 'SURPLUS'
+    /** Surplus APR based on data from the last 7d */
+    | 'SURPLUS_7D'
+    /** Surplus APR based on data from the last 24h */
+    | 'SURPLUS_24H'
+    /** Surplus APR based on data from the last 30d */
+    | 'SURPLUS_30D'
     /** Represents the swap fee APR in a pool. */
     | 'SWAP_FEE'
+    /** Swap fee APR based on data from the last 7d */
+    | 'SWAP_FEE_7D'
+    /** Swap fee APR based on data from the last 24h */
+    | 'SWAP_FEE_24H'
+    /** Swap fee APR based on data from the last 30d */
+    | 'SWAP_FEE_30D'
+    /** Reward APR in a pool from veBAL emissions allocated by gauge votes. Emitted in BAL. */
+    | 'VEBAL_EMISSIONS'
     /** APR that can be earned thourgh voting, i.e. gauge votes */
     | 'VOTING';
 
@@ -287,6 +388,8 @@ export interface GqlPoolBase {
      * @deprecated Removed without replacement
      */
     investConfig: GqlPoolInvestConfig;
+    /** Liquidity management settings for v3 pools. */
+    liquidityManagement?: Maybe<LiquidityManagement>;
     /** The name of the pool as per contract */
     name: Scalars['String'];
     /** The wallet address of the owner of the pool. Pool owners can set certain properties like swapFees or AMP. */
@@ -345,7 +448,7 @@ export interface GqlPoolBatchSwapPool {
 export interface GqlPoolBatchSwapSwap {
     __typename: 'GqlPoolBatchSwapSwap';
     id: Scalars['ID'];
-    pool: GqlPoolMinimal;
+    pool: PoolForBatchSwap;
     timestamp: Scalars['Int'];
     tokenAmountIn: Scalars['String'];
     tokenAmountOut: Scalars['String'];
@@ -372,6 +475,7 @@ export interface GqlPoolComposableStable extends GqlPoolBase {
     id: Scalars['ID'];
     /** @deprecated Removed without replacement */
     investConfig: GqlPoolInvestConfig;
+    liquidityManagement?: Maybe<LiquidityManagement>;
     name: Scalars['String'];
     nestingType: GqlPoolNestingType;
     owner: Scalars['Bytes'];
@@ -459,6 +563,7 @@ export interface GqlPoolDynamicData {
     totalLiquidityAtlTimestamp: Scalars['Int'];
     totalShares: Scalars['BigDecimal'];
     totalShares24hAgo: Scalars['BigDecimal'];
+    totalSupply: Scalars['BigDecimal'];
     volume24h: Scalars['BigDecimal'];
     volume24hAth: Scalars['BigDecimal'];
     volume24hAthTimestamp: Scalars['Int'];
@@ -484,6 +589,7 @@ export interface GqlPoolElement extends GqlPoolBase {
     id: Scalars['ID'];
     /** @deprecated Removed without replacement */
     investConfig: GqlPoolInvestConfig;
+    liquidityManagement?: Maybe<LiquidityManagement>;
     name: Scalars['String'];
     owner: Scalars['Bytes'];
     poolTokens: Array<GqlPoolTokenDetail>;
@@ -579,6 +685,7 @@ export interface GqlPoolFilter {
     createTime?: InputMaybe<GqlPoolTimePeriod>;
     filterIn?: InputMaybe<Array<Scalars['String']>>;
     filterNotIn?: InputMaybe<Array<Scalars['String']>>;
+    hasHook?: InputMaybe<Scalars['Boolean']>;
     idIn?: InputMaybe<Array<Scalars['String']>>;
     idNotIn?: InputMaybe<Array<Scalars['String']>>;
     minTvl?: InputMaybe<Scalars['Float']>;
@@ -631,6 +738,7 @@ export interface GqlPoolFx extends GqlPoolBase {
     /** @deprecated Removed without replacement */
     investConfig: GqlPoolInvestConfig;
     lambda: Scalars['String'];
+    liquidityManagement?: Maybe<LiquidityManagement>;
     name: Scalars['String'];
     owner?: Maybe<Scalars['Bytes']>;
     poolTokens: Array<GqlPoolTokenDetail>;
@@ -671,6 +779,7 @@ export interface GqlPoolGyro extends GqlPoolBase {
     /** @deprecated Removed without replacement */
     investConfig: GqlPoolInvestConfig;
     lambda: Scalars['String'];
+    liquidityManagement?: Maybe<LiquidityManagement>;
     name: Scalars['String'];
     nestingType: GqlPoolNestingType;
     owner: Scalars['Bytes'];
@@ -759,6 +868,7 @@ export interface GqlPoolLiquidityBootstrapping extends GqlPoolBase {
     id: Scalars['ID'];
     /** @deprecated Removed without replacement */
     investConfig: GqlPoolInvestConfig;
+    liquidityManagement?: Maybe<LiquidityManagement>;
     name: Scalars['String'];
     nestingType: GqlPoolNestingType;
     owner: Scalars['Bytes'];
@@ -796,6 +906,7 @@ export interface GqlPoolMetaStable extends GqlPoolBase {
     id: Scalars['ID'];
     /** @deprecated Removed without replacement */
     investConfig: GqlPoolInvestConfig;
+    liquidityManagement?: Maybe<LiquidityManagement>;
     name: Scalars['String'];
     owner: Scalars['Bytes'];
     poolTokens: Array<GqlPoolTokenDetail>;
@@ -843,6 +954,8 @@ export interface GqlPoolMinimal {
     id: Scalars['ID'];
     /** Pool is receiving rewards when liquidity tokens are staked */
     incentivized: Scalars['Boolean'];
+    /** Liquidity management settings for v3 pools. */
+    liquidityManagement?: Maybe<LiquidityManagement>;
     /** The name of the pool as per contract */
     name: Scalars['String'];
     /** The wallet address of the owner of the pool. Pool owners can set certain properties like swapFees or AMP. */
@@ -931,6 +1044,7 @@ export interface GqlPoolStable extends GqlPoolBase {
     id: Scalars['ID'];
     /** @deprecated Removed without replacement */
     investConfig: GqlPoolInvestConfig;
+    liquidityManagement?: Maybe<LiquidityManagement>;
     name: Scalars['String'];
     owner: Scalars['Bytes'];
     poolTokens: Array<GqlPoolTokenDetail>;
@@ -947,16 +1061,6 @@ export interface GqlPoolStable extends GqlPoolBase {
     version: Scalars['Int'];
     /** @deprecated Removed without replacement */
     withdrawConfig: GqlPoolWithdrawConfig;
-}
-
-export interface GqlPoolStableComposablePoolData {
-    __typename: 'GqlPoolStableComposablePoolData';
-    address: Scalars['String'];
-    balance: Scalars['String'];
-    id: Scalars['ID'];
-    symbol: Scalars['String'];
-    tokens: Array<GqlPoolToken>;
-    totalSupply: Scalars['String'];
 }
 
 export interface GqlPoolStaking {
@@ -1232,6 +1336,8 @@ export interface GqlPoolTokenDetail {
     priceRateProvider?: Maybe<Scalars['String']>;
     /** Additional data for the price rate provider, such as reviews or warnings. */
     priceRateProviderData?: Maybe<GqlPriceRateProviderData>;
+    /** Conversion factor used to adjust for token decimals for uniform precision in calculations. V3 only. */
+    scalingFactor?: Maybe<Scalars['BigDecimal']>;
     /** Symbol of the pool token. */
     symbol: Scalars['String'];
     /** If it is an Erc4262, this will be the underlying token if present in the API. */
@@ -1328,6 +1434,7 @@ export interface GqlPoolWeighted extends GqlPoolBase {
     id: Scalars['ID'];
     /** @deprecated Removed without replacement */
     investConfig: GqlPoolInvestConfig;
+    liquidityManagement?: Maybe<LiquidityManagement>;
     name: Scalars['String'];
     nestingType: GqlPoolNestingType;
     owner: Scalars['Bytes'];
@@ -1643,15 +1750,15 @@ export interface GqlSorPath {
     /** Input amount of this path in scaled form */
     inputAmountRaw: Scalars['String'];
     /** A sorted list of booleans that indicate if the respective pool is a buffer */
-    isBuffer: Array<Maybe<Scalars['Boolean']>>;
+    isBuffer: Array<Scalars['Boolean']>;
     /** Output amount of this path in scaled form */
     outputAmountRaw: Scalars['String'];
     /** A sorted list of pool ids that are used in this path */
-    pools: Array<Maybe<Scalars['String']>>;
+    pools: Array<Scalars['String']>;
     /** The version of the protocol these paths are from */
     protocolVersion: Scalars['Int'];
     /** A sorted list of tokens that are ussed in this path */
-    tokens: Array<Maybe<Token>>;
+    tokens: Array<Token>;
     /**
      * Vault version of this path.
      * @deprecated Use protocolVersion instead
@@ -1907,9 +2014,21 @@ export interface GqlVeBalBalance {
     lockedUsd: Scalars['AmountHumanReadable'];
 }
 
+/** Represents a snapshot of a VeBal lock at a specific point in time. */
+export interface GqlVeBalLockSnapshot {
+    __typename: 'GqlVeBalLockSnapshot';
+    /** The locked balance at that time. */
+    balance: Scalars['AmountHumanReadable'];
+    bias: Scalars['String'];
+    slope: Scalars['String'];
+    /** The timestamp of the snapshot, snapshots are taking at lock events. */
+    timestamp: Scalars['Int'];
+}
+
 export interface GqlVeBalUserData {
     __typename: 'GqlVeBalUserData';
     balance: Scalars['AmountHumanReadable'];
+    lockSnapshots: Array<GqlVeBalLockSnapshot>;
     locked: Scalars['AmountHumanReadable'];
     lockedUsd: Scalars['AmountHumanReadable'];
     rank?: Maybe<Scalars['Int']>;
@@ -1994,39 +2113,33 @@ export interface HookData {
     swapFeePercentage?: Maybe<Scalars['String']>;
 }
 
+/** Liquidity management settings for v3 pools. */
+export interface LiquidityManagement {
+    __typename: 'LiquidityManagement';
+    /** Indicates whether this pool has disabled add and removes of unbalanced/non-proportional liquidity. Meaning it will only support proportional add and remove liquidity. */
+    disableUnbalancedLiquidity?: Maybe<Scalars['Boolean']>;
+    /** Whether this pool support additional, custom add liquditiy operations apart from proportional, unbalanced and single asset. */
+    enableAddLiquidityCustom?: Maybe<Scalars['Boolean']>;
+    /** Indicates whether donation is enabled. Meaning you can send funds to the pool without receiving a BPT. */
+    enableDonation?: Maybe<Scalars['Boolean']>;
+    /** Whether this pool support additional, custom remove liquditiy operations apart from proportional, unbalanced and single asset. */
+    enableRemoveLiquidityCustom?: Maybe<Scalars['Boolean']>;
+}
+
 export interface Mutation {
     __typename: 'Mutation';
     beetsPoolLoadReliquarySnapshotsForAllFarms: Scalars['String'];
     beetsSyncFbeetsRatio: Scalars['String'];
     cacheAverageBlockTime: Scalars['String'];
-    poolBlackListAddPool: Scalars['String'];
-    poolBlackListRemovePool: Scalars['String'];
-    poolDeletePool: Scalars['String'];
-    poolInitOnChainDataForAllPools: Scalars['String'];
-    poolInitializeSnapshotsForPool: Scalars['String'];
-    poolLoadOnChainDataForAllPools: Scalars['String'];
-    poolLoadOnChainDataForPoolsWithActiveUpdates: Scalars['String'];
-    poolLoadSnapshotsForAllPools: Scalars['String'];
+    poolLoadOnChainDataForAllPools: Array<GqlPoolMutationResult>;
     poolLoadSnapshotsForPools: Scalars['String'];
     poolReloadAllPoolAprs: Scalars['String'];
-    poolReloadAllTokenNestedPoolIds: Scalars['String'];
     poolReloadPools: Array<GqlPoolMutationResult>;
     poolReloadStakingForAllPools: Scalars['String'];
     poolSyncAllCowSnapshots: Array<GqlPoolMutationResult>;
     poolSyncAllPoolsFromSubgraph: Array<Scalars['String']>;
-    poolSyncLatestSnapshotsForAllPools: Scalars['String'];
-    poolSyncNewPoolsFromSubgraph: Array<Scalars['String']>;
-    poolSyncPool: Scalars['String'];
-    poolSyncPoolAllTokensRelationship: Scalars['String'];
-    poolSyncSanityPoolData: Scalars['String'];
-    poolSyncStakingForPools: Scalars['String'];
-    poolSyncSwapsForLast48Hours: Scalars['String'];
-    poolSyncTotalShares: Scalars['String'];
-    poolUpdateAprs: Scalars['String'];
     poolUpdateLifetimeValuesForAllPools: Scalars['String'];
-    poolUpdateLiquidity24hAgoForAllPools: Scalars['String'];
     poolUpdateLiquidityValuesForAllPools: Scalars['String'];
-    poolUpdateVolumeAndFeeValuesForAllPools: Scalars['String'];
     protocolCacheMetrics: Scalars['String'];
     sftmxSyncStakingData: Scalars['String'];
     sftmxSyncWithdrawalRequests: Scalars['String'];
@@ -2047,20 +2160,8 @@ export interface Mutation {
     veBalSyncTotalSupply: Scalars['String'];
 }
 
-export interface MutationPoolBlackListAddPoolArgs {
-    poolId: Scalars['String'];
-}
-
-export interface MutationPoolBlackListRemovePoolArgs {
-    poolId: Scalars['String'];
-}
-
-export interface MutationPoolDeletePoolArgs {
-    poolId: Scalars['String'];
-}
-
-export interface MutationPoolInitializeSnapshotsForPoolArgs {
-    poolId: Scalars['String'];
+export interface MutationPoolLoadOnChainDataForAllPoolsArgs {
+    chains: Array<GqlChain>;
 }
 
 export interface MutationPoolLoadSnapshotsForPoolsArgs {
@@ -2082,18 +2183,6 @@ export interface MutationPoolReloadStakingForAllPoolsArgs {
 
 export interface MutationPoolSyncAllCowSnapshotsArgs {
     chains: Array<GqlChain>;
-}
-
-export interface MutationPoolSyncLatestSnapshotsForAllPoolsArgs {
-    chain: GqlChain;
-}
-
-export interface MutationPoolSyncPoolArgs {
-    poolId: Scalars['String'];
-}
-
-export interface MutationPoolUpdateAprsArgs {
-    chain: GqlChain;
 }
 
 export interface MutationTokenDeleteTokenTypeArgs {
@@ -2125,6 +2214,15 @@ export interface MutationUserSyncBalanceArgs {
     poolId: Scalars['String'];
 }
 
+export interface PoolForBatchSwap {
+    __typename: 'PoolForBatchSwap';
+    allTokens?: Maybe<Array<TokenForBatchSwapPool>>;
+    id: Scalars['String'];
+    name: Scalars['String'];
+    symbol: Scalars['String'];
+    type: GqlPoolType;
+}
+
 export interface Query {
     __typename: 'Query';
     beetsGetFbeetsRatio: Scalars['String'];
@@ -2139,6 +2237,8 @@ export interface Query {
     latestSyncedBlocks: GqlLatestSyncedBlocks;
     /** Getting swap, add and remove events with paging */
     poolEvents: Array<GqlPoolEvent>;
+    /** Returns all pools for a given filter, specific for aggregators */
+    poolGetAggregatorPools: Array<GqlPoolAggregator>;
     /**
      * Will de deprecated in favor of poolEvents
      * @deprecated Use poolEvents instead
@@ -2252,6 +2352,14 @@ export interface QueryPoolEventsArgs {
     first?: InputMaybe<Scalars['Int']>;
     skip?: InputMaybe<Scalars['Int']>;
     where?: InputMaybe<GqlPoolEventsFilter>;
+}
+
+export interface QueryPoolGetAggregatorPoolsArgs {
+    first?: InputMaybe<Scalars['Int']>;
+    orderBy?: InputMaybe<GqlPoolOrderBy>;
+    orderDirection?: InputMaybe<GqlPoolOrderDirection>;
+    skip?: InputMaybe<Scalars['Int']>;
+    where?: InputMaybe<GqlPoolFilter>;
 }
 
 export interface QueryPoolGetBatchSwapsArgs {
@@ -2461,6 +2569,14 @@ export interface Token {
     decimals: Scalars['Int'];
 }
 
+export interface TokenForBatchSwapPool {
+    __typename: 'TokenForBatchSwapPool';
+    address: Scalars['String'];
+    isNested: Scalars['Boolean'];
+    isPhantomBpt: Scalars['Boolean'];
+    weight?: Maybe<Scalars['BigDecimal']>;
+}
+
 export type GetPoolBatchSwapsQueryVariables = Exact<{
     first?: InputMaybe<Scalars['Int']>;
     skip?: InputMaybe<Scalars['Int']>;
@@ -2492,18 +2608,18 @@ export type GetPoolBatchSwapsQuery = {
             tokenOut: string;
             valueUSD: number;
             pool: {
-                __typename: 'GqlPoolMinimal';
+                __typename: 'PoolForBatchSwap';
                 id: string;
                 name: string;
                 type: GqlPoolType;
                 symbol: string;
-                allTokens: Array<{
-                    __typename: 'GqlPoolTokenExpanded';
+                allTokens?: Array<{
+                    __typename: 'TokenForBatchSwapPool';
                     address: string;
                     isNested: boolean;
                     isPhantomBpt: boolean;
                     weight?: string | null;
-                }>;
+                }> | null;
             };
         }>;
     }>;
@@ -2532,18 +2648,18 @@ export type GqlPoolBatchSwapFragment = {
         tokenOut: string;
         valueUSD: number;
         pool: {
-            __typename: 'GqlPoolMinimal';
+            __typename: 'PoolForBatchSwap';
             id: string;
             name: string;
             type: GqlPoolType;
             symbol: string;
-            allTokens: Array<{
-                __typename: 'GqlPoolTokenExpanded';
+            allTokens?: Array<{
+                __typename: 'TokenForBatchSwapPool';
                 address: string;
                 isNested: boolean;
                 isPhantomBpt: boolean;
                 weight?: string | null;
-            }>;
+            }> | null;
         };
     }>;
 };
@@ -2558,18 +2674,18 @@ export type GqlPoolBatchSwapSwapFragment = {
     tokenOut: string;
     valueUSD: number;
     pool: {
-        __typename: 'GqlPoolMinimal';
+        __typename: 'PoolForBatchSwap';
         id: string;
         name: string;
         type: GqlPoolType;
         symbol: string;
-        allTokens: Array<{
-            __typename: 'GqlPoolTokenExpanded';
+        allTokens?: Array<{
+            __typename: 'TokenForBatchSwapPool';
             address: string;
             isNested: boolean;
             isPhantomBpt: boolean;
             weight?: string | null;
-        }>;
+        }> | null;
     };
 };
 
