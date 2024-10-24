@@ -144,6 +144,11 @@ type GqlNestedPool {
     id: ID!
 
     """
+    Liquidity management settings for v3 pools.
+    """
+    liquidityManagement: LiquidityManagement
+
+    """
     Name of the pool.
     """
     name: String!
@@ -274,6 +279,188 @@ type GqlPoolAddRemoveEventV3 implements GqlPoolEvent {
     valueUSD: Float!
 }
 
+type GqlPoolAggregator {
+    """
+    The contract address of the pool.
+    """
+    address: Bytes!
+
+    """
+    Data specific to gyro/fx pools
+    """
+    alpha: String
+
+    """
+    Data specific to stable pools
+    """
+    amp: BigInt
+
+    """
+    Data specific to gyro/fx pools
+    """
+    beta: String
+
+    """
+    Data specific to gyro pools
+    """
+    c: String
+
+    """
+    The chain on which the pool is deployed
+    """
+    chain: GqlChain!
+
+    """
+    The timestamp the pool was created.
+    """
+    createTime: Int!
+
+    """
+    Data specific to gyro pools
+    """
+    dSq: String
+
+    """
+    The decimals of the BPT, usually 18
+    """
+    decimals: Int!
+
+    """
+    Data specific to fx pools
+    """
+    delta: String
+
+    """
+    Dynamic data such as token balances, swap fees or volume
+    """
+    dynamicData: GqlPoolDynamicData!
+
+    """
+    Data specific to fx pools
+    """
+    epsilon: String
+
+    """
+    The factory contract address from which the pool was created.
+    """
+    factory: Bytes
+
+    """
+    Hook assigned to a pool
+    """
+    hook: Hook
+
+    """
+    The pool id. This is equal to the address for protocolVersion 3 pools
+    """
+    id: ID!
+
+    """
+    Data specific to gyro/fx pools
+    """
+    lambda: String
+
+    """
+    Liquidity management settings for v3 pools.
+    """
+    liquidityManagement: LiquidityManagement
+
+    """
+    The name of the pool as per contract
+    """
+    name: String!
+
+    """
+    The wallet address of the owner of the pool. Pool owners can set certain properties like swapFees or AMP.
+    """
+    owner: Bytes
+
+    """
+    Returns all pool tokens, including BPTs and nested pools if there are any. Only one nested level deep.
+    """
+    poolTokens: [GqlPoolTokenDetail!]!
+
+    """
+    The protocol version on which the pool is deployed, 1, 2 or 3
+    """
+    protocolVersion: Int!
+
+    """
+    Data specific to gyro pools
+    """
+    root3Alpha: String
+
+    """
+    Data specific to gyro pools
+    """
+    s: String
+
+    """
+    Data specific to gyro pools
+    """
+    sqrtAlpha: String
+
+    """
+    Data specific to gyro pools
+    """
+    sqrtBeta: String
+
+    """
+    The token symbol of the pool as per contract
+    """
+    symbol: String!
+
+    """
+    Data specific to gyro pools
+    """
+    tauAlphaX: String
+
+    """
+    Data specific to gyro pools
+    """
+    tauAlphaY: String
+
+    """
+    Data specific to gyro pools
+    """
+    tauBetaX: String
+
+    """
+    Data specific to gyro pools
+    """
+    tauBetaY: String
+
+    """
+    The pool type, such as weighted, stable, etc.
+    """
+    type: GqlPoolType!
+
+    """
+    Data specific to gyro pools
+    """
+    u: String
+
+    """
+    Data specific to gyro pools
+    """
+    v: String
+
+    """
+    The version of the pool type.
+    """
+    version: Int!
+
+    """
+    Data specific to gyro pools
+    """
+    w: String
+
+    """
+    Data specific to gyro pools
+    """
+    z: String
+}
+
 type GqlPoolApr {
     apr: GqlPoolAprValue!
     hasRewardApr: Boolean!
@@ -298,9 +485,19 @@ type GqlPoolAprItem {
     id: ID!
 
     """
+    The reward token address, if the APR originates from token emissions
+    """
+    rewardTokenAddress: String
+
+    """
+    The reward token symbol, if the APR originates from token emissions
+    """
+    rewardTokenSymbol: String
+
+    """
     The title of the APR item, a human readable form
     """
-    title: String!
+    title: String! @deprecated(reason: "No replacement, should be built client side")
 
     """
     Specific type of this APR
@@ -328,6 +525,11 @@ enum GqlPoolAprItemType {
     LOCKING
 
     """
+    Reward APR in a pool from maBEETS emissions allocated by gauge votes. Emitted in BEETS.
+    """
+    MABEETS_EMISSIONS
+
+    """
     Rewards distributed by merkl.xyz
     """
     MERKL
@@ -338,7 +540,7 @@ enum GqlPoolAprItemType {
     NESTED
 
     """
-    Staking reward APR in a pool, i.e. BAL or BEETS.
+    Staking reward APR in a pool from a reward token.
     """
     STAKING
 
@@ -350,12 +552,47 @@ enum GqlPoolAprItemType {
     """
     Cow AMM specific APR
     """
-    SURPLUS
+    SURPLUS @deprecated(reason: "Use SURPLUS_24H instead")
+
+    """
+    Surplus APR based on data from the last 7d
+    """
+    SURPLUS_7D
+
+    """
+    Surplus APR based on data from the last 24h
+    """
+    SURPLUS_24H
+
+    """
+    Surplus APR based on data from the last 30d
+    """
+    SURPLUS_30D
 
     """
     Represents the swap fee APR in a pool.
     """
-    SWAP_FEE
+    SWAP_FEE @deprecated(reason: "Use SWAP_FEE_24H instead")
+
+    """
+    Swap fee APR based on data from the last 7d
+    """
+    SWAP_FEE_7D
+
+    """
+    Swap fee APR based on data from the last 24h
+    """
+    SWAP_FEE_24H
+
+    """
+    Swap fee APR based on data from the last 30d
+    """
+    SWAP_FEE_30D
+
+    """
+    Reward APR in a pool from veBAL emissions allocated by gauge votes. Emitted in BAL.
+    """
+    VEBAL_EMISSIONS
 
     """
     APR that can be earned thourgh voting, i.e. gauge votes
@@ -432,6 +669,11 @@ interface GqlPoolBase {
     Deprecated
     """
     investConfig: GqlPoolInvestConfig! @deprecated(reason: "Removed without replacement")
+
+    """
+    Liquidity management settings for v3 pools.
+    """
+    liquidityManagement: LiquidityManagement
 
     """
     The name of the pool as per contract
@@ -517,7 +759,7 @@ type GqlPoolBatchSwapPool {
 
 type GqlPoolBatchSwapSwap {
     id: ID!
-    pool: GqlPoolMinimal!
+    pool: PoolForBatchSwap!
     timestamp: Int!
     tokenAmountIn: String!
     tokenAmountOut: String!
@@ -542,6 +784,7 @@ type GqlPoolComposableStable implements GqlPoolBase {
     factory: Bytes
     id: ID!
     investConfig: GqlPoolInvestConfig! @deprecated(reason: "Removed without replacement")
+    liquidityManagement: LiquidityManagement
     name: String!
     nestingType: GqlPoolNestingType!
     owner: Bytes!
@@ -640,6 +883,7 @@ type GqlPoolDynamicData {
     totalLiquidityAtlTimestamp: Int!
     totalShares: BigDecimal!
     totalShares24hAgo: BigDecimal!
+    totalSupply: BigDecimal!
     volume24h: BigDecimal!
     volume24hAth: BigDecimal!
     volume24hAthTimestamp: Int!
@@ -663,6 +907,7 @@ type GqlPoolElement implements GqlPoolBase {
     factory: Bytes
     id: ID!
     investConfig: GqlPoolInvestConfig! @deprecated(reason: "Removed without replacement")
+    liquidityManagement: LiquidityManagement
     name: String!
     owner: Bytes!
     poolTokens: [GqlPoolTokenDetail!]!
@@ -803,6 +1048,7 @@ input GqlPoolFilter {
     createTime: GqlPoolTimePeriod
     filterIn: [String!]
     filterNotIn: [String!]
+    hasHook: Boolean
     idIn: [String!]
     idNotIn: [String!]
     minTvl: Float
@@ -856,6 +1102,7 @@ type GqlPoolFx implements GqlPoolBase {
     id: ID!
     investConfig: GqlPoolInvestConfig! @deprecated(reason: "Removed without replacement")
     lambda: String!
+    liquidityManagement: LiquidityManagement
     name: String!
     owner: Bytes
     poolTokens: [GqlPoolTokenDetail!]!
@@ -892,6 +1139,7 @@ type GqlPoolGyro implements GqlPoolBase {
     id: ID!
     investConfig: GqlPoolInvestConfig! @deprecated(reason: "Removed without replacement")
     lambda: String!
+    liquidityManagement: LiquidityManagement
     name: String!
     nestingType: GqlPoolNestingType!
     owner: Bytes!
@@ -975,6 +1223,7 @@ type GqlPoolLiquidityBootstrapping implements GqlPoolBase {
     factory: Bytes
     id: ID!
     investConfig: GqlPoolInvestConfig! @deprecated(reason: "Removed without replacement")
+    liquidityManagement: LiquidityManagement
     name: String!
     nestingType: GqlPoolNestingType!
     owner: Bytes!
@@ -1008,6 +1257,7 @@ type GqlPoolMetaStable implements GqlPoolBase {
     factory: Bytes
     id: ID!
     investConfig: GqlPoolInvestConfig! @deprecated(reason: "Removed without replacement")
+    liquidityManagement: LiquidityManagement
     name: String!
     owner: Bytes!
     poolTokens: [GqlPoolTokenDetail!]!
@@ -1093,9 +1343,9 @@ type GqlPoolMinimal {
     incentivized: Boolean!
 
     """
-    Pool is receiving rewards when liquidity tokens are staked
+    Liquidity management settings for v3 pools.
     """
-    incentivized: Boolean!
+    liquidityManagement: LiquidityManagement
 
     """
     The name of the pool as per contract
@@ -1235,6 +1485,7 @@ type GqlPoolStable implements GqlPoolBase {
     factory: Bytes
     id: ID!
     investConfig: GqlPoolInvestConfig! @deprecated(reason: "Removed without replacement")
+    liquidityManagement: LiquidityManagement
     name: String!
     owner: Bytes!
     poolTokens: [GqlPoolTokenDetail!]!
@@ -1248,15 +1499,6 @@ type GqlPoolStable implements GqlPoolBase {
     vaultVersion: Int! @deprecated(reason: "use protocolVersion instead")
     version: Int!
     withdrawConfig: GqlPoolWithdrawConfig! @deprecated(reason: "Removed without replacement")
-}
-
-type GqlPoolStableComposablePoolData {
-    address: String!
-    balance: String!
-    id: ID!
-    symbol: String!
-    tokens: [GqlPoolToken!]!
-    totalSupply: String!
 }
 
 type GqlPoolStaking {
@@ -1665,6 +1907,11 @@ type GqlPoolTokenDetail {
     priceRateProviderData: GqlPriceRateProviderData
 
     """
+    Conversion factor used to adjust for token decimals for uniform precision in calculations. V3 only.
+    """
+    scalingFactor: BigDecimal
+
+    """
     Symbol of the pool token.
     """
     symbol: String!
@@ -1781,6 +2028,7 @@ type GqlPoolWeighted implements GqlPoolBase {
     factory: Bytes
     id: ID!
     investConfig: GqlPoolInvestConfig! @deprecated(reason: "Removed without replacement")
+    liquidityManagement: LiquidityManagement
     name: String!
     nestingType: GqlPoolNestingType!
     owner: Bytes!
@@ -2277,7 +2525,7 @@ type GqlSorPath {
     """
     A sorted list of booleans that indicate if the respective pool is a buffer
     """
-    isBuffer: [Boolean]!
+    isBuffer: [Boolean!]!
 
     """
     Output amount of this path in scaled form
@@ -2287,7 +2535,7 @@ type GqlSorPath {
     """
     A sorted list of pool ids that are used in this path
     """
-    pools: [String]!
+    pools: [String!]!
 
     """
     The version of the protocol these paths are from
@@ -2297,7 +2545,7 @@ type GqlSorPath {
     """
     A sorted list of tokens that are ussed in this path
     """
-    tokens: [Token]!
+    tokens: [Token!]!
 
     """
     Vault version of this path.
@@ -2741,8 +2989,26 @@ type GqlVeBalBalance {
     lockedUsd: AmountHumanReadable!
 }
 
+"""
+Represents a snapshot of a VeBal lock at a specific point in time.
+"""
+type GqlVeBalLockSnapshot {
+    """
+    The locked balance at that time.
+    """
+    balance: AmountHumanReadable!
+    bias: String!
+    slope: String!
+
+    """
+    The timestamp of the snapshot, snapshots are taking at lock events.
+    """
+    timestamp: Int!
+}
+
 type GqlVeBalUserData {
     balance: AmountHumanReadable!
+    lockSnapshots: [GqlVeBalLockSnapshot!]!
     locked: AmountHumanReadable!
     lockedUsd: AmountHumanReadable!
     rank: Int
@@ -2894,38 +3160,44 @@ The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://
 """
 scalar JSON
 
+"""
+Liquidity management settings for v3 pools.
+"""
+type LiquidityManagement {
+    """
+    Indicates whether this pool has disabled add and removes of unbalanced/non-proportional liquidity. Meaning it will only support proportional add and remove liquidity.
+    """
+    disableUnbalancedLiquidity: Boolean
+
+    """
+    Whether this pool support additional, custom add liquditiy operations apart from proportional, unbalanced and single asset.
+    """
+    enableAddLiquidityCustom: Boolean
+
+    """
+    Indicates whether donation is enabled. Meaning you can send funds to the pool without receiving a BPT.
+    """
+    enableDonation: Boolean
+
+    """
+    Whether this pool support additional, custom remove liquditiy operations apart from proportional, unbalanced and single asset.
+    """
+    enableRemoveLiquidityCustom: Boolean
+}
+
 type Mutation {
     beetsPoolLoadReliquarySnapshotsForAllFarms: String!
     beetsSyncFbeetsRatio: String!
     cacheAverageBlockTime: String!
-    poolBlackListAddPool(poolId: String!): String!
-    poolBlackListRemovePool(poolId: String!): String!
-    poolDeletePool(poolId: String!): String!
-    poolInitOnChainDataForAllPools: String!
-    poolInitializeSnapshotsForPool(poolId: String!): String!
-    poolLoadOnChainDataForAllPools: String!
-    poolLoadOnChainDataForPoolsWithActiveUpdates: String!
-    poolLoadSnapshotsForAllPools: String!
+    poolLoadOnChainDataForAllPools(chains: [GqlChain!]!): [GqlPoolMutationResult!]!
     poolLoadSnapshotsForPools(poolIds: [String!]!, reload: Boolean): String!
     poolReloadAllPoolAprs(chain: GqlChain!): String!
-    poolReloadAllTokenNestedPoolIds: String!
     poolReloadPools(chains: [GqlChain!]!): [GqlPoolMutationResult!]!
     poolReloadStakingForAllPools(stakingTypes: [GqlPoolStakingType!]!): String!
     poolSyncAllCowSnapshots(chains: [GqlChain!]!): [GqlPoolMutationResult!]!
     poolSyncAllPoolsFromSubgraph: [String!]!
-    poolSyncLatestSnapshotsForAllPools(chain: GqlChain!): String!
-    poolSyncNewPoolsFromSubgraph: [String!]!
-    poolSyncPool(poolId: String!): String!
-    poolSyncPoolAllTokensRelationship: String!
-    poolSyncSanityPoolData: String!
-    poolSyncStakingForPools: String!
-    poolSyncSwapsForLast48Hours: String!
-    poolSyncTotalShares: String!
-    poolUpdateAprs(chain: GqlChain!): String!
     poolUpdateLifetimeValuesForAllPools: String!
-    poolUpdateLiquidity24hAgoForAllPools: String!
     poolUpdateLiquidityValuesForAllPools: String!
-    poolUpdateVolumeAndFeeValuesForAllPools: String!
     protocolCacheMetrics: String!
     sftmxSyncStakingData: String!
     sftmxSyncWithdrawalRequests: String!
@@ -2944,6 +3216,14 @@ type Mutation {
     userSyncChangedWalletBalancesForAllPools: String!
     veBalSyncAllUserBalances: String!
     veBalSyncTotalSupply: String!
+}
+
+type PoolForBatchSwap {
+    allTokens: [TokenForBatchSwapPool!]
+    id: String!
+    name: String!
+    symbol: String!
+    type: GqlPoolType!
 }
 
 type Query {
@@ -2965,6 +3245,17 @@ type Query {
     Getting swap, add and remove events with paging
     """
     poolEvents(first: Int, skip: Int, where: GqlPoolEventsFilter): [GqlPoolEvent!]!
+
+    """
+    Returns all pools for a given filter, specific for aggregators
+    """
+    poolGetAggregatorPools(
+        first: Int
+        orderBy: GqlPoolOrderBy
+        orderDirection: GqlPoolOrderDirection
+        skip: Int
+        where: GqlPoolFilter
+    ): [GqlPoolAggregator!]!
 
     """
     Will de deprecated in favor of poolEvents
@@ -3242,4 +3533,11 @@ type Query {
 type Token {
     address: String!
     decimals: Int!
+}
+
+type TokenForBatchSwapPool {
+    address: String!
+    isNested: Boolean!
+    isPhantomBpt: Boolean!
+    weight: BigDecimal
 }
