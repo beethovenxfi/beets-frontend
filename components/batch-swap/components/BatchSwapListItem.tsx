@@ -76,12 +76,17 @@ export function BatchSwapListItem({ tokenIn, tokenOut, tokenInPrice, tokenOutPri
                         />
                         <Flex flex="1" height="64px" alignItems="center" position="relative" top="2px">
                             <BatchSwapRouteDashedLineArrowSpacer />
-                            {batchSwap.swaps.map((swap, index) => (
-                                <Fragment key={index}>
-                                    <BatchSwapHop hop={swap} />
-                                    <BatchSwapRouteDashedLineArrowSpacer />
-                                </Fragment>
-                            ))}
+                            {batchSwap.swaps.map((swap, index) => {
+                                const allTokens = swap.pool.allTokens ?? [];
+                                return (
+                                    allTokens.length > 0 && (
+                                        <Fragment key={index}>
+                                            <BatchSwapHop hop={{ ...swap, pool: { ...swap.pool, allTokens } }} />
+                                            <BatchSwapRouteDashedLineArrowSpacer />
+                                        </Fragment>
+                                    )
+                                );
+                            })}
                         </Flex>
                         <BatchSwapTokenAmount
                             address={batchSwap.tokenOut}
