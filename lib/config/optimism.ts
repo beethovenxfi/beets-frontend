@@ -394,6 +394,11 @@ export const optimismNetworkConfig: NetworkConfig = {
             url: 'https://app.aura.finance/#/10/pool/26',
             name: 'aura',
         },
+        {
+            poolId: '0xcb7d357c84b101e3d559ff4845cef63d7d0753ef000000000000000000000150', // Kelp's Restaking Symphony
+            url: 'https://app.aura.finance/#/10/pool/28',
+            name: 'aura',
+        },
     ],
     pointsPools: [
         {
