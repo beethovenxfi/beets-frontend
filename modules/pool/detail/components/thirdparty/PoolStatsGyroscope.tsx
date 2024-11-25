@@ -10,8 +10,11 @@ interface Props {
     poolTokens: GqlPoolTokenUnion[];
 }
 
-function formatPriceRange(alpha: string, beta: string, poolTokens: GqlPoolTokenUnion[]) {
+function formatPriceRange(_alpha: string, _beta: string, poolTokens: GqlPoolTokenUnion[]) {
     const tokens = orderBy(poolTokens, ['priceRate'], ['desc']);
+    const reverseAlphaAndBeta = tokens.length > 2 ? false : tokens[0].address !== poolTokens[0].address;
+    const alpha = reverseAlphaAndBeta ? 1 / parseFloat(_alpha) : parseFloat(_alpha);
+    const beta = reverseAlphaAndBeta ? 1 / parseFloat(_beta) : parseFloat(_beta);
     const priceRates = tokens.map((token) => parseFloat(token.priceRate));
     let priceRange;
 
@@ -20,7 +23,8 @@ function formatPriceRange(alpha: string, beta: string, poolTokens: GqlPoolTokenU
         priceRange = `${numeral(alpha).format('0.0000a')} - ${numeral(beta).format('0.0000a')}`;
     } else {
         priceRange = [alpha, beta]
-            .map((value) => numeral((parseFloat(value) * priceRates[0]) / priceRates[1]).format('0.0000a'))
+            .sort((a, b) => a - b) // alpha & beta reversed should be sorted again
+            .map((value) => numeral((value * priceRates[0]) / priceRates[1]).format('0.0000a'))
             .join(' - ');
     }
 
