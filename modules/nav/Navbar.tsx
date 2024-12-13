@@ -84,7 +84,7 @@ export function Navbar({ scrollY }: Props) {
                     </Box>
                     <FadeInOutBox mr="3" isVisible={isConnected}>
                         <HStack spacing="3">
-                            <NetworkSelectorPopover>
+                            {/* <NetworkSelectorPopover>
                                 <Button
                                     bgColor="box.500"
                                     width="50px"
@@ -98,8 +98,8 @@ export function Navbar({ scrollY }: Props) {
                                 >
                                     <Image width="24px" height="24px" src={networkConfig.eth.iconUrl} />
                                 </Button>
-                            </NetworkSelectorPopover>
-                            <NavbarPendingRewards />
+                            </NetworkSelectorPopover> */}
+                            {/* <NavbarPendingRewards /> */}
                             {/*<NavbarAlerts />*/}
                             {/*<NavbarPortfolioDrawer />*/}
                         </HStack>
