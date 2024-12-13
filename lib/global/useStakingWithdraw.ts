@@ -17,7 +17,7 @@ export function useStakingWithdraw(staking?: GqlPoolStaking | null) {
                 : {
                       addressOrName: networkConfig.masterChefContractAddress,
                       contractInterface: BeethovenxMasterChefAbi,
-                      functionName: 'withdrawAndHarvest',
+                      functionName: 'emergencyWithdraw',
                   },
         transactionType: 'UNSTAKE',
     });
@@ -35,8 +35,8 @@ export function useStakingWithdraw(staking?: GqlPoolStaking | null) {
                 case 'MASTER_CHEF':
                 default:
                     return submit({
-                        args: [staking.farm?.id, parseUnits(options.amount || '', 18), userAddress],
-                        toastText: 'Withdraw and claim rewards',
+                        args: [staking.farm?.id, userAddress],
+                        toastText: 'Unstake',
                     });
             }
         }
