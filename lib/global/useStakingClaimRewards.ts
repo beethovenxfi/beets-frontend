@@ -6,7 +6,7 @@ import { GqlPoolStaking } from '~/apollo/generated/graphql-codegen-generated';
 import { useUserAccount } from '~/lib/user/useUserAccount';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 
-export function useStakingClaimRewards(staking: GqlPoolStaking | null) {
+export function useStakingClaimRewards(staking: GqlPoolStaking | null | undefined) {
     const networkConfig = useNetworkConfig();
     const { userAddress } = useUserAccount();
 

@@ -35,6 +35,7 @@ import { useGaugeUnstakeGetContractCallData } from './lib/useGaugeUnstakeGetCont
 import { useHasMinterApproval } from '~/lib/util/useHasMinterApproval';
 import { useHasBatchRelayerApproval } from '~/lib/util/useHasBatchRelayerApproval';
 import { usePoolUserPendingRewards } from '../lib/usePoolUserPendingRewards';
+import { useStakingClaimRewards } from '~/lib/global/useStakingClaimRewards';
 
 interface Props {
     isOpen: boolean;
@@ -61,16 +62,22 @@ export function PoolUnstakeModal({ isOpen, onOpen, onClose }: Props) {
     const amountValue = (parseFloat(amount) / parseFloat(userTotalBptBalance)) * userPoolBalanceUSD;
     const { pool } = usePool();
     const { withdraw, ...unstakeQuery } = useStakingWithdraw(pool.staking);
+    const { claim, ...harvestQuery } = useStakingClaimRewards(pool.staking);
     const [steps, setSteps] = useState<TransactionStep[] | null>(null);
     const { data: hasMinterApproval, isLoading: isLoadingHasMinterApproval } = useHasMinterApproval();
     const { data: hasBatchRelayerApproval, isLoading: isLoadingBatchRelayerApproval } = useHasBatchRelayerApproval();
-    const isLoading = isLoadingBalances || isLoadingHasMinterApproval || isLoadingBatchRelayerApproval;
+    const {
+        hasPendingBalRewards,
+        hasPendingNonBALRewards,
+        isLoading: isLoadingPendingRewards,
+    } = usePoolUserPendingRewards();
+
+    const isLoading =
+        isLoadingBalances || isLoadingHasMinterApproval || isLoadingBatchRelayerApproval || isLoadingPendingRewards;
 
     const { data: contractCalls } = useGaugeUnstakeGetContractCallData(
         oldBnumToBnum(oldBnum(oldBnumScaleAmount(userStakedBptBalance).times(percent).div(100).toFixed(0))),
     );
-
-    const { hasPendingBalRewards } = usePoolUserPendingRewards();
 
     useEffect(() => {
         if (isOpen && userStakedBptBalance) {
@@ -101,11 +108,21 @@ export function PoolUnstakeModal({ isOpen, onOpen, onClose }: Props) {
                           },
                       ]
                     : []),
+                ...(hasPendingNonBALRewards
+                    ? [
+                          {
+                              id: 'claim',
+                              type: 'other' as const,
+                              buttonText: 'Claim rewards',
+                              tooltipText: 'Claim rewards',
+                          },
+                      ]
+                    : []),
                 {
                     id: 'unstake',
                     type: 'other',
                     buttonText: 'Unstake BPT',
-                    tooltipText: 'Unstake BPT and claim all rewards',
+                    tooltipText: 'Unstake BPT',
                 },
             ]);
         }
@@ -126,7 +143,7 @@ export function PoolUnstakeModal({ isOpen, onOpen, onClose }: Props) {
                         {capitalize(networkConfig.farmTypeName)}
                     </Heading>
                     <Text color="gray.200" fontSize="md">
-                        Unstake your BPT
+                        Claim rewards and unstake your BPT
                     </Text>
                 </ModalHeader>
                 <ModalBody className="bg" pt="4" pb="6">
@@ -183,7 +200,9 @@ export function PoolUnstakeModal({ isOpen, onOpen, onClose }: Props) {
                         completeButtonText="Close"
                         onCompleteButtonClick={onCloseModal}
                         onSubmit={(id) => {
-                            if (id === 'unstake') {
+                            if (id === 'claim') {
+                                claim();
+                            } else if (id === 'unstake') {
                                 withdraw(contractCalls ? { contractCalls } : { amount });
                             }
                         }}
@@ -192,7 +211,10 @@ export function PoolUnstakeModal({ isOpen, onOpen, onClose }: Props) {
                             userSyncBalance({ variables: { poolId: pool.id } });
                         }}
                         steps={steps || []}
-                        queries={[{ ...unstakeQuery, id: 'unstake' }]}
+                        queries={[
+                            { ...unstakeQuery, id: 'unstake' },
+                            { ...harvestQuery, id: 'claim' },
+                        ]}
                         isDisabled={!hasValue || !amountIsValid}
                     />
                 </ModalBody>
