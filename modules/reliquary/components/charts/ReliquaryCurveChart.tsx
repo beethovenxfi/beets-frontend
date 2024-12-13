@@ -84,6 +84,9 @@ export function ReliquaryCurveChart() {
                         { offset: 1, color: chartGetPrimaryColor(networkConfig.chainId, 0) },
                     ]),
                 },
+                lineStyle: {
+                    color: '#05D690',
+                },
             },
         ],
     };
