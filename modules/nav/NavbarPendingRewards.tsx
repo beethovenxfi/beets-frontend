@@ -76,7 +76,7 @@ export function NavbarPendingRewards() {
             //@ts-ignore */}
             <PopoverTrigger>
                 <Button
-                    bgColor="beets.lightAlpha.200"
+                    bgColor="box.500"
                     width="60px"
                     height="40px"
                     display="flex"

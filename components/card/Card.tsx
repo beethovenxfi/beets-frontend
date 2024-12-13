@@ -76,10 +76,9 @@ export default function Card({
             exit={exit}
             rounded="lg"
             backgroundColor="box.500"
-            border="1px"
-            borderColor="blackAlpha.400"
             display="flex"
             flexDirection="column"
+            boxShadow="0px 0px 0px 1px #00000005,1px 1px 1px -0.5px #0000000F,3px 3px 3px -1.5px #0000000F,6px 6px 6px -3px #0000000F,12px 12px 12px -6px #0000000F,24px 24px 24px -12px #0000001A,-0.5px -1px 0px 0px #FFFFFF26"
             {...(boxProps as any)}
         >
             {title && TitleSection}

@@ -40,9 +40,9 @@ export function AppContent({ Component, pageProps }: AppProps) {
             <GlobalRenderer />
             <Box pt="3" />
             <Navbar scrollY={scrollY} />
-            <Box pt="1" />
-            <SubNavBar />
-            <Box display="flex" justifyContent="center" mt="8">
+            {/* <Box pt="1" />
+            <SubNavBar /> */}
+            <Box display="flex" justifyContent="center" mt="2">
                 <Box
                     width={{ base: 'full', '2xl': theme.breakpoints['2xl'] }}
                     px={{ base: '4', xl: '8' }}
@@ -52,9 +52,9 @@ export function AppContent({ Component, pageProps }: AppProps) {
                 </Box>
             </Box>
 
-            <Footer />
+            {/* <Footer />
             <NavbarMobile />
-            <UserWarning />
+            <UserWarning /> */}
         </Box>
     );
 }
