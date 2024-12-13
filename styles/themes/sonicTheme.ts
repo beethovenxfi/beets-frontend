@@ -83,7 +83,7 @@ export const sonicTheme: Partial<ChakraTheme> = {
             red: '#FF0000',
             highlight: '#91E2C1',
             base: {
-                '50': '#7c7c7c',
+                '50': '#D3D3D3',
                 '100': '#707070',
                 '200': '#646464',
                 '300': '#585858',
