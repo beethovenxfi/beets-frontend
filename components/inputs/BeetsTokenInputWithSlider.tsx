@@ -114,7 +114,7 @@ export function BeetsTokenInputWithSlider({
                         _hover={{ borderColor: 'gray.200' }}
                         _focus={{ outline: 'none' }}
                         _placeholder={{ color: 'gray.400' }}
-                        color="gray.100"
+                        color="beets.base.50"
                         borderColor="transparent"
                         border="2px"
                         bgColor="blackAlpha.400"
@@ -148,7 +148,7 @@ export function BeetsTokenInputWithSlider({
                         }
                     }}
                 >
-                    <SliderTrack bg="gray.400">
+                    <SliderTrack bg="gray.600">
                         <SliderFilledTrack />
                     </SliderTrack>
                     <SliderThumb boxSize={3} boxShadow="xl" />
@@ -174,7 +174,7 @@ export function BeetsTokenInputWithSlider({
                 <Box flex="1" height="18px">
                     {!changing && (
                         <Link
-                            color="gray.200"
+                            color="beets.base.50"
                             fontSize="sm"
                             display="flex"
                             onClick={() => {
@@ -197,7 +197,7 @@ export function BeetsTokenInputWithSlider({
                 </Box>
                 <Box height="18px">
                     {!changing && (
-                        <Text color="gray.200" fontSize="sm">
+                        <Text color="beets.base.50" fontSize="sm">
                             {formattedPrice({ address: selectedTokenOption.address, amount: value || '0' })}
                         </Text>
                     )}
