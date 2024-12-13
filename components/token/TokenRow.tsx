@@ -43,7 +43,6 @@ export default function TokenRow({
         onAmountChange && onAmountChange(amount);
     };
 
-
     return (
         <HStack
             width="full"
@@ -87,7 +86,7 @@ export default function TokenRow({
                         _hover={{ borderColor: 'gray.200' }}
                         _focus={{ outline: 'none' }}
                         _placeholder={{ color: 'gray.400' }}
-                        color="gray.100"
+                        color="beets.base.50"
                         borderColor="transparent"
                         border="2px"
                         bgColor="blackAlpha.400"
@@ -100,7 +99,7 @@ export default function TokenRow({
                     />
                 )}
                 {!withInput && <Text>{tokenFormatAmount(amount)}</Text>}
-                <Text fontSize="sm" color="beets.base.100">
+                <Text fontSize="sm" color="beets.base.50">
                     {numberFormatUSDValue(
                         priceForAmount({
                             address,
@@ -109,7 +108,7 @@ export default function TokenRow({
                     )}
                 </Text>
                 {balance && (
-                    <Text fontSize="sm" color="gray.100">
+                    <Text fontSize="sm" color="beets.base.50">
                         You have {tokenFormatAmount(balance || '0')}
                     </Text>
                 )}
