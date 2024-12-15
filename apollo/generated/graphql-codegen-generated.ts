@@ -454,6 +454,8 @@ export interface GqlPoolBase {
     dynamicData: GqlPoolDynamicData;
     /** The factory contract address from which the pool was created. */
     factory?: Maybe<Scalars['Bytes']>;
+    /** Whether at least one token in this pool is considered an ERC4626 token and the buffer is allowed. */
+    hasAnyAllowedBuffer: Scalars['Boolean'];
     /** Whether at least one token in this pool is considered an ERC4626 token. */
     hasErc4626: Scalars['Boolean'];
     /** Whether at least one token in a nested pool is considered an ERC4626 token. */
@@ -562,6 +564,7 @@ export interface GqlPoolComposableStable extends GqlPoolBase {
     displayTokens: Array<GqlPoolTokenDisplay>;
     dynamicData: GqlPoolDynamicData;
     factory?: Maybe<Scalars['Bytes']>;
+    hasAnyAllowedBuffer: Scalars['Boolean'];
     hasErc4626: Scalars['Boolean'];
     hasNestedErc4626: Scalars['Boolean'];
     hook?: Maybe<GqlHook>;
@@ -703,6 +706,7 @@ export interface GqlPoolElement extends GqlPoolBase {
     displayTokens: Array<GqlPoolTokenDisplay>;
     dynamicData: GqlPoolDynamicData;
     factory?: Maybe<Scalars['Bytes']>;
+    hasAnyAllowedBuffer: Scalars['Boolean'];
     hasErc4626: Scalars['Boolean'];
     hasNestedErc4626: Scalars['Boolean'];
     hook?: Maybe<GqlHook>;
@@ -866,6 +870,7 @@ export interface GqlPoolFx extends GqlPoolBase {
     dynamicData: GqlPoolDynamicData;
     epsilon: Scalars['String'];
     factory?: Maybe<Scalars['Bytes']>;
+    hasAnyAllowedBuffer: Scalars['Boolean'];
     hasErc4626: Scalars['Boolean'];
     hasNestedErc4626: Scalars['Boolean'];
     hook?: Maybe<GqlHook>;
@@ -922,6 +927,7 @@ export interface GqlPoolGyro extends GqlPoolBase {
     displayTokens: Array<GqlPoolTokenDisplay>;
     dynamicData: GqlPoolDynamicData;
     factory?: Maybe<Scalars['Bytes']>;
+    hasAnyAllowedBuffer: Scalars['Boolean'];
     hasErc4626: Scalars['Boolean'];
     hasNestedErc4626: Scalars['Boolean'];
     hook?: Maybe<GqlHook>;
@@ -1028,6 +1034,7 @@ export interface GqlPoolLiquidityBootstrapping extends GqlPoolBase {
     displayTokens: Array<GqlPoolTokenDisplay>;
     dynamicData: GqlPoolDynamicData;
     factory?: Maybe<Scalars['Bytes']>;
+    hasAnyAllowedBuffer: Scalars['Boolean'];
     hasErc4626: Scalars['Boolean'];
     hasNestedErc4626: Scalars['Boolean'];
     hook?: Maybe<GqlHook>;
@@ -1082,6 +1089,7 @@ export interface GqlPoolMetaStable extends GqlPoolBase {
     displayTokens: Array<GqlPoolTokenDisplay>;
     dynamicData: GqlPoolDynamicData;
     factory?: Maybe<Scalars['Bytes']>;
+    hasAnyAllowedBuffer: Scalars['Boolean'];
     hasErc4626: Scalars['Boolean'];
     hasNestedErc4626: Scalars['Boolean'];
     hook?: Maybe<GqlHook>;
@@ -1144,6 +1152,8 @@ export interface GqlPoolMinimal {
     dynamicData: GqlPoolDynamicData;
     /** The factory contract address from which the pool was created. */
     factory?: Maybe<Scalars['Bytes']>;
+    /** Whether at least one token in this pool is considered an ERC4626 token and the buffer is allowed. */
+    hasAnyAllowedBuffer: Scalars['Boolean'];
     /** Whether at least one token in this pool is considered an ERC4626 token. */
     hasErc4626: Scalars['Boolean'];
     /** Whether at least one token in a nested pool is considered an ERC4626 token. */
@@ -1255,6 +1265,7 @@ export interface GqlPoolStable extends GqlPoolBase {
     displayTokens: Array<GqlPoolTokenDisplay>;
     dynamicData: GqlPoolDynamicData;
     factory?: Maybe<Scalars['Bytes']>;
+    hasAnyAllowedBuffer: Scalars['Boolean'];
     hasErc4626: Scalars['Boolean'];
     hasNestedErc4626: Scalars['Boolean'];
     hook?: Maybe<GqlHook>;
@@ -1672,6 +1683,7 @@ export interface GqlPoolWeighted extends GqlPoolBase {
     displayTokens: Array<GqlPoolTokenDisplay>;
     dynamicData: GqlPoolDynamicData;
     factory?: Maybe<Scalars['Bytes']>;
+    hasAnyAllowedBuffer: Scalars['Boolean'];
     hasErc4626: Scalars['Boolean'];
     hasNestedErc4626: Scalars['Boolean'];
     hook?: Maybe<GqlHook>;
@@ -2113,6 +2125,8 @@ export interface GqlToken {
     discordUrl?: Maybe<Scalars['String']>;
     /** The ERC4626 review data for the token */
     erc4626ReviewData?: Maybe<Erc4626ReviewData>;
+    /** If it is an ERC4626 token, this defines whether we allow it to use the buffer for pool operations. */
+    isBufferAllowed: Scalars['Boolean'];
     /** Whether the token is considered an ERC4626 token. */
     isErc4626: Scalars['Boolean'];
     /** The logo URI of the token */
@@ -2386,6 +2400,7 @@ export interface Mutation {
     sftmxSyncWithdrawalRequests: Scalars['String'];
     tokenDeleteTokenType: Scalars['String'];
     tokenReloadAllTokenTypes: Scalars['String'];
+    tokenReloadErc4626Tokens: Array<GqlTokenMutationResult>;
     tokenReloadTokenPrices?: Maybe<Scalars['Boolean']>;
     tokenSyncLatestFxPrices: Scalars['String'];
     tokenSyncTokenDefinitions: Scalars['String'];
@@ -2428,6 +2443,10 @@ export interface MutationPoolSyncAllCowSnapshotsArgs {
 export interface MutationTokenDeleteTokenTypeArgs {
     tokenAddress: Scalars['String'];
     type: GqlTokenType;
+}
+
+export interface MutationTokenReloadErc4626TokensArgs {
+    chains: Array<GqlChain>;
 }
 
 export interface MutationTokenReloadTokenPricesArgs {

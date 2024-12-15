@@ -778,6 +778,11 @@ interface GqlPoolBase {
     factory: Bytes
 
     """
+    Whether at least one token in this pool is considered an ERC4626 token and the buffer is allowed.
+    """
+    hasAnyAllowedBuffer: Boolean!
+
+    """
     Whether at least one token in this pool is considered an ERC4626 token.
     """
     hasErc4626: Boolean!
@@ -929,6 +934,7 @@ type GqlPoolComposableStable implements GqlPoolBase {
     displayTokens: [GqlPoolTokenDisplay!]! @deprecated(reason: "Use poolTokens instead")
     dynamicData: GqlPoolDynamicData!
     factory: Bytes
+    hasAnyAllowedBuffer: Boolean!
     hasErc4626: Boolean!
     hasNestedErc4626: Boolean!
     hook: GqlHook
@@ -1093,6 +1099,7 @@ type GqlPoolElement implements GqlPoolBase {
     displayTokens: [GqlPoolTokenDisplay!]! @deprecated(reason: "Use poolTokens instead")
     dynamicData: GqlPoolDynamicData!
     factory: Bytes
+    hasAnyAllowedBuffer: Boolean!
     hasErc4626: Boolean!
     hasNestedErc4626: Boolean!
     hook: GqlHook
@@ -1309,6 +1316,7 @@ type GqlPoolFx implements GqlPoolBase {
     dynamicData: GqlPoolDynamicData!
     epsilon: String!
     factory: Bytes
+    hasAnyAllowedBuffer: Boolean!
     hasErc4626: Boolean!
     hasNestedErc4626: Boolean!
     hook: GqlHook
@@ -1368,6 +1376,7 @@ type GqlPoolGyro implements GqlPoolBase {
     displayTokens: [GqlPoolTokenDisplay!]! @deprecated(reason: "Use poolTokens instead")
     dynamicData: GqlPoolDynamicData!
     factory: Bytes
+    hasAnyAllowedBuffer: Boolean!
     hasErc4626: Boolean!
     hasNestedErc4626: Boolean!
     hook: GqlHook
@@ -1475,6 +1484,7 @@ type GqlPoolLiquidityBootstrapping implements GqlPoolBase {
     displayTokens: [GqlPoolTokenDisplay!]! @deprecated(reason: "Use poolTokens instead")
     dynamicData: GqlPoolDynamicData!
     factory: Bytes
+    hasAnyAllowedBuffer: Boolean!
     hasErc4626: Boolean!
     hasNestedErc4626: Boolean!
     hook: GqlHook
@@ -1531,6 +1541,7 @@ type GqlPoolMetaStable implements GqlPoolBase {
     displayTokens: [GqlPoolTokenDisplay!]! @deprecated(reason: "Use poolTokens instead")
     dynamicData: GqlPoolDynamicData!
     factory: Bytes
+    hasAnyAllowedBuffer: Boolean!
     hasErc4626: Boolean!
     hasNestedErc4626: Boolean!
     hook: GqlHook
@@ -1619,6 +1630,11 @@ type GqlPoolMinimal {
     The factory contract address from which the pool was created.
     """
     factory: Bytes
+
+    """
+    Whether at least one token in this pool is considered an ERC4626 token and the buffer is allowed.
+    """
+    hasAnyAllowedBuffer: Boolean!
 
     """
     Whether at least one token in this pool is considered an ERC4626 token.
@@ -1807,6 +1823,7 @@ type GqlPoolStable implements GqlPoolBase {
     displayTokens: [GqlPoolTokenDisplay!]! @deprecated(reason: "Use poolTokens instead")
     dynamicData: GqlPoolDynamicData!
     factory: Bytes
+    hasAnyAllowedBuffer: Boolean!
     hasErc4626: Boolean!
     hasNestedErc4626: Boolean!
     hook: GqlHook
@@ -2399,6 +2416,7 @@ type GqlPoolWeighted implements GqlPoolBase {
     displayTokens: [GqlPoolTokenDisplay!]! @deprecated(reason: "Use poolTokens instead")
     dynamicData: GqlPoolDynamicData!
     factory: Bytes
+    hasAnyAllowedBuffer: Boolean!
     hasErc4626: Boolean!
     hasNestedErc4626: Boolean!
     hook: GqlHook
@@ -3130,6 +3148,11 @@ type GqlToken {
     erc4626ReviewData: Erc4626ReviewData
 
     """
+    If it is an ERC4626 token, this defines whether we allow it to use the buffer for pool operations.
+    """
+    isBufferAllowed: Boolean!
+
+    """
     Whether the token is considered an ERC4626 token.
     """
     isErc4626: Boolean!
@@ -3577,6 +3600,7 @@ type Mutation {
     sftmxSyncWithdrawalRequests: String!
     tokenDeleteTokenType(tokenAddress: String!, type: GqlTokenType!): String!
     tokenReloadAllTokenTypes: String!
+    tokenReloadErc4626Tokens(chains: [GqlChain!]!): [GqlTokenMutationResult!]!
     tokenReloadTokenPrices(chains: [GqlChain!]!): Boolean
     tokenSyncLatestFxPrices(chain: GqlChain!): String!
     tokenSyncTokenDefinitions: String!
