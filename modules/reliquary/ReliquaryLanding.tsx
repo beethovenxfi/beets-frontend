@@ -51,24 +51,6 @@ const infoButtonLabelProps = {
     color: 'beets.base.50',
 };
 
-const rqImages = [
-    {
-        src: Rq1Image,
-        alt: 'fBEETS',
-        info: 'Invest BEETS/wFTM (80/20) into the Fresh BEETS pool to receive fBEETS.',
-    },
-    {
-        src: Rq2Image,
-        alt: 'Reliquary',
-        info: 'Deposit fBEETS into Reliquary to unlock your maturity adjusted position.',
-    },
-    {
-        src: Rq3Image,
-        alt: 'maBEETS',
-        info: 'Receive a transferable and composable Relic that holds your maturity adjusted BEETS (maBEETS) position.',
-    },
-];
-
 export default function ReliquaryLanding() {
     const { isConnected, isConnecting } = useUserAccount();
     const { total } = useLegacyFBeetsBalance();
@@ -147,7 +129,7 @@ export default function ReliquaryLanding() {
                         </Box>
                         <Box flex="1" />
                     </Flex>
-                    <Box>Invest BEETS/wS (80/20) into the Fresh BEETS pool to receive fBEETS.</Box>
+                    <Box>Invest BEETS/stS (80/20) into the Fresh BEETS pool to receive fBEETS.</Box>
                 </Card>
                 <Card flex="1" padding="4">
                     <Flex mb="8">

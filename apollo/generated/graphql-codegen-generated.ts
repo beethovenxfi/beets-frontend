@@ -62,6 +62,7 @@ export type GqlChain =
     | 'OPTIMISM'
     | 'POLYGON'
     | 'SEPOLIA'
+    | 'SONIC'
     | 'ZKEVM';
 
 export interface GqlContentNewsItem {
