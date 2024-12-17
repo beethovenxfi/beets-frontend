@@ -72,23 +72,11 @@ export default function SftmxUnstakeTab() {
                     />
                     <Text>{sftmxPenaltyAmount ? numeral(sftmxPenaltyAmount).format('0.00') : '-'} FTM</Text>
                 </HStack>
-                <Alert status="info">
-                    <AlertIcon />
-                    <Text>
-                        You can also swap sFTMx at market rate on{' '}
-                        <Link
-                            href="/swap?tokenIn=0xd7028092c830b5C8FcE061Af2E593413EbbC1fc1&tokenOut=0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE"
-                            target="_blank"
-                        >
-                            the swap page
-                        </Link>
-                    </Text>
-                </Alert>
                 <Alert status="warning">
                     <AlertIcon />
                     {isConnected && isSafeAccountViaWalletConnect
                         ? 'Unstake via Safe is not supported. Use an EOA instead.'
-                        : 'Unstaked FTM will be withdrawable after 7 days'}
+                        : 'With the upcoming migration to Sonic, the withdrawal penalty has been removed and the withdrawal delay has been reduced to 24 hours.'}
                 </Alert>
                 <Box w="full">
                     {!isConnected && <WalletConnectButton width="full" size="lg" />}
