@@ -85,7 +85,7 @@ export default function FinalisePoolComposeActions() {
     }
 
     function navigateToPool() {
-        router.replace(`/pool/${poolId}`);
+        router.replace(`https://beets.fi/pools/sonic/v2/${poolId}`);
     }
 
     useEffect(() => {
