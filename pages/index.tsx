@@ -1,55 +1,73 @@
-import { Home } from '~/modules/home/Home';
-import Head from 'next/head';
 import { initializeApolloClient, loadApolloState } from '~/apollo/client';
-import { GetHomeData } from '~/apollo/generated/operations';
-import { useEffect, useRef } from 'react';
-import { useRouter } from 'next/router';
+import Head from 'next/head';
+import { UserTokenBalancesProvider } from '~/lib/user/useUserTokenBalances';
+import { GetPoolQuery, GetPoolQueryVariables, GqlPoolUnion } from '~/apollo/generated/graphql-codegen-generated';
+import { GetPool } from '~/apollo/generated/operations';
+import { PoolProvider } from '~/modules/pool/lib/usePool';
+import { PoolUserTokenBalancesInWalletProvider } from '~/modules/pool/lib/usePoolUserTokenBalancesInWallet';
+import { PoolUserBptBalanceProvider } from '~/modules/pool/lib/usePoolUserBptBalance';
+import { networkConfig } from '~/lib/config/network-config';
+import React from 'react';
+import { RelicDepositBalanceProvider } from '~/modules/reliquary/lib/useRelicDepositBalance';
+import { PoolUserDepositBalanceProvider } from '~/modules/pool/lib/usePoolUserDepositBalance';
+import ReliquaryLanding from '~/modules/reliquary/ReliquaryLanding';
+import Compose, { ProviderWithProps } from '~/components/providers/Compose';
+import { Heading, VStack } from '@chakra-ui/react';
 
-function useV1Redirect() {
-    const { push } = useRouter();
-    const redirectChecked = useRef(false);
-
-    useEffect(() => {
-        if (typeof window !== 'undefined' && window.location.hash && !redirectChecked.current) {
-            const hash = window.location.hash;
-
-            redirectChecked.current = true;
-
-            if (hash.indexOf('#/pool/') === 0) {
-                const poolId = hash.slice(7, 74);
-
-                push(`/pool/${poolId}`);
-            } else if (hash.indexOf('#/pools') === 0) {
-                push('/pools');
-            } else if (hash.indexOf('#/trade') === 0) {
-                push('/swap');
-            }
-        }
-    });
+interface Props {
+    pool: GqlPoolUnion | null;
 }
+function MaBEETS({ pool }: Props) {
+    const TITLE = 'Beethoven X | Reliquary';
+    const DESCRIPTION = '';
 
-function HomePage() {
-    useV1Redirect();
+    const MaBeetsProviders: ProviderWithProps[] = [
+        [PoolProvider, { pool }],
+        [PoolUserBptBalanceProvider, {}],
+        [PoolUserTokenBalancesInWalletProvider, {}],
+        [UserTokenBalancesProvider, {}],
+        [PoolUserDepositBalanceProvider, {}],
+        [RelicDepositBalanceProvider, {}],
+    ];
 
     return (
         <>
             <Head>
-                <title>Beethoven X</title>
+                <title>{TITLE}</title>
+                <meta name="title" content={TITLE} />
+                <meta property="og:title" content={TITLE} />
+                <meta property="twitter:title" content={TITLE} />
+
+                <meta name="description" content={DESCRIPTION} />
+                <meta property="og:description" content={DESCRIPTION} />
+                <meta property="twitter:description" content={DESCRIPTION} />
             </Head>
-            <Home />
+            {pool ? (
+                <Compose providers={MaBeetsProviders}>
+                    <ReliquaryLanding />
+                </Compose>
+            ) : (
+                <VStack minH="300px" justifyContent="center">
+                    <Heading>MaBEETS is not supported on this chain.</Heading>
+                </VStack>
+            )}
         </>
     );
 }
 
 export async function getStaticProps() {
     const client = initializeApolloClient();
+    const response = networkConfig.maBeetsEnabled
+        ? await client.query<GetPoolQuery, GetPoolQueryVariables>({
+              query: GetPool,
+              variables: { id: networkConfig.reliquary.fbeets.poolId },
+          })
+        : null;
 
     return loadApolloState({
         client,
-        pageSetup: async () => {
-            await client.query({ query: GetHomeData });
-        },
+        props: { pool: response?.data.pool || null },
     });
 }
 
-export default HomePage;
+export default MaBEETS;
