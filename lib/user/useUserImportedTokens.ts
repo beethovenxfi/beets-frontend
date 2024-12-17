@@ -89,6 +89,7 @@ export function useUserImportedTokens() {
 
     function removeAllUserImportedTokens() {
         userImportedTokensVar([]);
+
         localStorage.setItem(USER_IMPORTED_CACHE_KEY, JSON.stringify([]));
     }
 
