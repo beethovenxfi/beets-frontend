@@ -18,7 +18,7 @@ interface Props {
     pool: GqlPoolUnion | null;
 }
 function MaBEETS({ pool }: Props) {
-    const TITLE = 'Beethoven X | Reliquary';
+    const TITLE = 'Beets | Reliquary';
     const DESCRIPTION = '';
 
     const MaBeetsProviders: ProviderWithProps[] = [
