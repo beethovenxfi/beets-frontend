@@ -74,7 +74,7 @@ export const sonicNetworkConfig: NetworkConfig = {
         minimumBoost: 1.0,
     },
     rateproviders: {},
-    beetsPoolOwnerAddress: '0xcd983793adb846dce4830c22f30c7ef0c864a776',
+    beetsPoolOwnerAddress: '0x97079F7E04B535FE7cD3f972Ce558412dFb33946',
     masterChefContractAddress: '0x8166994d9ebBe5829EC86Bd81258149B87faCfd3',
     defaultTokenIn: '0x21be370d5312f44cb42ce377bc9b8a0cef1a4c83',
     defaultTokenOut: '0xf24bcf4d1e507740041c9cfd2dddb29585adce1e',
