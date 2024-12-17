@@ -1,3 +1,8 @@
+"""
+Indicates exactly one field must be supplied and this field must not be `null`.
+"""
+directive @oneOf on INPUT_OBJECT
+
 scalar AmountHumanReadable
 
 scalar BigDecimal
@@ -2253,6 +2258,11 @@ type GqlPoolTokenDetail {
     isAllowed: Boolean!
 
     """
+    If it is an ERC4626 token, this defines whether we allow it to use the buffer for pool operations.
+    """
+    isBufferAllowed: Boolean!
+
+    """
     Whether the token is considered an ERC4626 token.
     """
     isErc4626: Boolean!
@@ -3553,9 +3563,6 @@ type GqlVotingPool {
     type: GqlPoolType!
 }
 
-"""
-The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
-"""
 scalar JSON
 
 """

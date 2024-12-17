@@ -25,30 +25,30 @@ export const sonicNetworkConfig: NetworkConfig = {
         platformId: 'sonic',
     },
     rpcUrl: 'https://rpc.soniclabs.com',
-    multicall: '0xC07500b9fE7BEa9efD5b54341D0aa3658a33d39a',
+    multicall: '0xc07500b9fe7bea9efd5b54341d0aa3658a33d39a',
     beets: {
-        address: '0x2D0E0814E62D80056181F5cd932274405966e4f0',
+        address: '0x2d0e0814e62d80056181f5cd932274405966e4f0',
         migration: AddressZero,
-        oldAddress: '',
+        oldAddress: AddressZero,
     },
     fbeets: {
-        address: '0x10ac2F9DaE6539E77e372aDB14B1BF8fBD16b3e8', // not on sonic
+        address: '0x10ac2f9dae6539e77e372adb14b1bf8fbd16b3e8', // not on sonic
         farmId: '0', // not on sonic
         poolId: '0x10ac2f9dae6539e77e372adb14b1bf8fbd16b3e8000200000000000000000005',
-        poolAddress: '0x10ac2F9DaE6539E77e372aDB14B1BF8fBD16b3e8',
+        poolAddress: '0x10ac2f9dae6539e77e372adb14b1bf8fbd16b3e8',
     },
     reliquary: {
         address: '0x973670ce19594f857a7cd85ee834c7a74a941684',
         fbeets: {
             poolId: '0x10ac2f9dae6539e77e372adb14b1bf8fbd16b3e8000200000000000000000005',
-            poolAddress: '0x10ac2f9dae6539e77e372adb14b1bf8fbd16b3e8000200000000000000000005',
+            poolAddress: '0x10ac2f9dae6539e77e372adb14b1bf8fbd16b3e8',
             farmId: 0,
             maxLevel: 10,
         },
     },
     sftmx: {
-        address: '',
-        ftmStakingProxyAddress: '',
+        address: '0xe5da20f15420ad15de0fa650600afc998bbe3955',
+        ftmStakingProxyAddress: AddressZero,
     },
     snapshot: {
         contractAddress: '0x469788fe6e9e9681c6ebf3bf78e7fd26fc015446',
@@ -56,18 +56,18 @@ export const sonicNetworkConfig: NetworkConfig = {
         id: '0x62656574732e6574680000000000000000000000000000000000000000000000', // BeethovenX Snapshot id
     },
     balancer: {
-        vault: '0xBA12222222228d8Ba445958a75a0704d566BF2C8',
-        batchRelayer: '0xb5F8f253d0A6D4A18014cecA4253A2cEC6C98763',
+        vault: '0xba12222222228d8ba445958a75a0704d566bf2c8',
+        batchRelayer: '0x7b52d5ef006e59e3227629f97f182d6442380bb6',
         balToken: AddressZero,
-        weightedPoolFactory: '0x22f5b7FDD99076f1f20f8118854ce3984544D56d',
+        weightedPoolFactory: '0x22f5b7fdd99076f1f20f8118854ce3984544d56d',
         linearFactories: {
             erc4626: [],
             reaper: [],
         },
         linearRebalancers: {},
-        reaperManualRebalancer: '',
-        sorQueries: '',
-        balancerQueries: '0x4B29DB997Ec0efDFEF13bAeE2a2D7783bCf67f17',
+        reaperManualRebalancer: AddressZero,
+        sorQueries: '0x2f4799933c34127e715839445ebc90d62cb3e4e6',
+        balancerQueries: '0x4b29db997ec0efdfef13baee2a2d7783bcf67f17',
         unwrapExceptions: {
             reaper: [],
         },

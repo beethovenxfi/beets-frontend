@@ -37,8 +37,8 @@ export class ReliquaryZapService {
 
         const joinNewFbeets = this.getReliquaryFbeetsJoinCallData({
             userAddress,
-            amountsIn: [ftmAmountScaled, beetsAmountScaled],
-            maxAmountsIn: [ftmAmountScaled, beetsAmountScaled],
+            amountsIn: [beetsAmountScaled, ftmAmountScaled],
+            maxAmountsIn: [beetsAmountScaled, ftmAmountScaled],
             //this is set to 0 for the peek
             minimumBPT: '0',
             outputReference: this.batchRelayerService.toPersistentChainedReference('0'),
@@ -66,8 +66,8 @@ export class ReliquaryZapService {
         return [
             this.getReliquaryFbeetsJoinCallData({
                 userAddress,
-                amountsIn: [ftmAmountScaled, beetsAmountScaled],
-                maxAmountsIn: [ftmAmountScaled, beetsAmountScaled],
+                amountsIn: [beetsAmountScaled, ftmAmountScaled],
+                maxAmountsIn: [beetsAmountScaled, ftmAmountScaled],
                 minimumBPT: oldBnum(newFbeetsBptAmountOut)
                     .minus(oldBnum(newFbeetsBptAmountOut).times(slippage))
                     .toFixed(0),
@@ -177,7 +177,7 @@ export class ReliquaryZapService {
                     this.batchRelayerService.toPersistentChainedReference('1'),
                     this.batchRelayerService.toPersistentChainedReference('2'),
                 ],
-                maxAmountsIn: [BigNumber.from(wftmExitAmount), BigNumber.from(beetsExitAmount)],
+                maxAmountsIn: [BigNumber.from(beetsExitAmount), BigNumber.from(wftmExitAmount)],
                 minimumBPT: oldBnum(newFbeetsBptAmountOut)
                     .minus(oldBnum(newFbeetsBptAmountOut).times(slippage))
                     .toFixed(0),
@@ -264,7 +264,7 @@ export class ReliquaryZapService {
             recipient: userAddress,
             outputReferences,
             exitPoolRequest: {
-                assets: [networkConfig.wethAddress, networkConfig.beets.address],
+                assets: [networkConfig.beets.address, networkConfig.sftmx.address],
                 minAmountsOut,
                 userData: WeightedPoolEncoder.exitExactBPTInForTokensOut(bptIn),
                 toInternalBalance: true,
@@ -295,7 +295,7 @@ export class ReliquaryZapService {
             sender: userAddress,
             recipient: networkConfig.balancer.batchRelayer,
             joinPoolRequest: {
-                assets: [networkConfig.wethAddress, networkConfig.beets.address],
+                assets: [networkConfig.beets.address, networkConfig.sftmx.address],
                 userData: WeightedPoolEncoder.joinExactTokensInForBPTOut(amountsIn, minimumBPT),
                 maxAmountsIn,
                 fromInternalBalance,
@@ -345,7 +345,7 @@ export class ReliquaryZapService {
             sender: userAddress,
             recipient: userAddress,
             exitPoolRequest: {
-                assets: [networkConfig.wethAddress, networkConfig.beets.address],
+                assets: [networkConfig.beets.address, networkConfig.sftmx.address],
                 minAmountsOut,
                 userData: WeightedPoolEncoder.exitExactBPTInForTokensOut(
                     this.batchRelayerService.toChainedReference('0'),

@@ -20,7 +20,6 @@ export interface Scalars {
     Bytes: string;
     Date: any;
     GqlBigNumber: any;
-    /** The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf). */
     JSON: any;
 }
 
@@ -1569,6 +1568,8 @@ export interface GqlPoolTokenDetail {
     index: Scalars['Int'];
     /** Whether the token is in the allow list. */
     isAllowed: Scalars['Boolean'];
+    /** If it is an ERC4626 token, this defines whether we allow it to use the buffer for pool operations. */
+    isBufferAllowed: Scalars['Boolean'];
     /** Whether the token is considered an ERC4626 token. */
     isErc4626: Scalars['Boolean'];
     /** Token logo */
