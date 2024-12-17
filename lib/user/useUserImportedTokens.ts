@@ -89,6 +89,7 @@ export function useUserImportedTokens() {
 
     function removeAllUserImportedTokens() {
         userImportedTokensVar([]);
+
         localStorage.setItem(USER_IMPORTED_CACHE_KEY, JSON.stringify([]));
     }
 
@@ -101,6 +102,7 @@ export function useUserImportedTokens() {
             priority: 0,
             imported: true,
             isErc4626: false, // TODO: check if this is correct
+            isBufferAllowed: false,
         }));
 
     return {

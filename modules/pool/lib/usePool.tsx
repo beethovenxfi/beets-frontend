@@ -55,7 +55,8 @@ export function PoolProvider({ pool: poolFromProps, children }: { pool: GqlPoolU
         if (pool.address !== networkConfig.reliquary.fbeets.poolAddress) {
             return null;
         } else {
-            const wFTMIndex = pool.investConfig.options.findIndex(
+            // sonic uses stS for the fresh beets pool
+            /* const wFTMIndex = pool.investConfig.options.findIndex(
                 (option) => option.poolTokenAddress.toLowerCase() === networkConfig.wethAddress,
             );
             const filteredTokenOptions = pool.investConfig.options[wFTMIndex].tokenOptions.filter(
@@ -73,7 +74,9 @@ export function PoolProvider({ pool: poolFromProps, children }: { pool: GqlPoolU
                         ...pool.investConfig.options.filter((option, index) => index !== wFTMIndex),
                     ],
                 },
-            };
+            }; */
+
+            return pool;
         }
     }, [pool.address]);
 

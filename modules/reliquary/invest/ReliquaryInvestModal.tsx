@@ -167,7 +167,7 @@ export function ReliquaryInvestModal({
                             background="gray.700"
                         >
                             <Box transformOrigin="top" width="full" height="full" background="blackAlpha.400">
-                                <Box width="full" height="full" className="bg" />
+                                <Box width="full" height="full" />
                             </Box>
                         </Box>
                         <ModalCloseButton />

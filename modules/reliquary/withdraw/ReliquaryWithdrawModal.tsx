@@ -67,7 +67,7 @@ export function ReliquaryWithdrawModal({
                 initialFocusRef={initialRef}
             >
                 <ModalOverlay />
-                <ModalContent backgroundColor="black">
+                <ModalContent backgroundColor="base.700">
                     <ModalCloseButton />
                     {modalState !== 'start' ? (
                         <IconButton
@@ -94,7 +94,7 @@ export function ReliquaryWithdrawModal({
                             }}
                         />
                     ) : null}
-                    <ModalHeader className="bg">
+                    <ModalHeader>
                         {modalState === 'start' ? (
                             <>
                                 <Heading size="md" noOfLines={1}>
@@ -121,7 +121,7 @@ export function ReliquaryWithdrawModal({
                             </Heading>
                         ) : null}
                     </ModalHeader>
-                    <ModalBody className="bg" p="0">
+                    <ModalBody p="0">
                         <FadeInBox isVisible={modalState === 'start'}>
                             <ReliquaryWithdrawTypeChoice
                                 onShowProportional={() => {

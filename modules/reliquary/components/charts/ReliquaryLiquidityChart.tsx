@@ -27,6 +27,9 @@ export function ReliquaryLiquidityChart({ data }: Props) {
                     },
                 },
             },
+            textStyle: {
+                color: '#D3D3D3',
+            },
             legend: {
                 show: false,
                 data: ['TVL'],

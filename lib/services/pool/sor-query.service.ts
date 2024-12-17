@@ -21,6 +21,8 @@ export interface SorPoolDataQueryConfig {
     loadTotalSupply: boolean;
     loadSwapFees: boolean;
     loadLinearWrappedTokenRates: boolean;
+    loadLinearTargets: boolean;
+    loadRates: boolean;
     loadNormalizedWeights: boolean;
     loadScalingFactors: boolean;
     loadAmps: boolean;
@@ -31,6 +33,7 @@ export interface SorPoolDataQueryConfig {
     weightedPoolIdxs: number[];
     scalingFactorPoolIdxs: number[];
     ampPoolIdxs: number[];
+    ratePoolIdxs: number[];
 }
 
 const defaultPoolDataQueryConfig: SorPoolDataQueryConfig = {
@@ -38,9 +41,11 @@ const defaultPoolDataQueryConfig: SorPoolDataQueryConfig = {
     loadTotalSupply: false,
     loadSwapFees: false,
     loadLinearWrappedTokenRates: false,
+    loadLinearTargets: false,
     loadNormalizedWeights: false,
     loadScalingFactors: false,
     loadAmps: false,
+    loadRates: false,
     blockNumber: 0,
     totalSupplyTypes: [],
     swapFeeTypes: [],
@@ -48,6 +53,7 @@ const defaultPoolDataQueryConfig: SorPoolDataQueryConfig = {
     weightedPoolIdxs: [],
     scalingFactorPoolIdxs: [],
     ampPoolIdxs: [],
+    ratePoolIdxs: [],
 };
 
 export class SorQueryService {

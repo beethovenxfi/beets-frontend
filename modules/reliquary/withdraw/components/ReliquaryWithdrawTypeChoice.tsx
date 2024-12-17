@@ -44,7 +44,7 @@ export function ReliquaryWithdrawTypeChoice({ onShowProportional, onShowSingleAs
                     </BeetsBox>
                 </GridItem>
             </Grid>
-            <Button variant="primary" width="full" isDisabled={relicBalanceUSD <= 0} onClick={onShowProportional}>
+            <Button variant="primary" width="full" onClick={onShowProportional}>
                 Withdraw proportionally
             </Button>
             {/* <Button

@@ -27,6 +27,9 @@ export function ReliquaryMaturityChart() {
                 formatter: (params: any) =>
                     `Level ${params[0].data[0]}: ${numeral(params[0].data[1]).format('0a')} fBEETS`,
             },
+            textStyle: {
+                color: '#D3D3D3',
+            },
             xAxis: {
                 name: 'Level',
                 nameLocation: 'middle',
@@ -36,7 +39,6 @@ export function ReliquaryMaturityChart() {
                 axisTick: { show: false, alignWithLabel: true },
                 interval: 1,
                 axisLabel: {
-                    color: colors.gray['200'],
                     margin: 16,
                 },
                 axisLine: { show: false },
