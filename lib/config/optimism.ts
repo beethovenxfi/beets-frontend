@@ -16,7 +16,7 @@ const PoolDetailWarningObject: PoolDetailWarning = {
 };
 
 export const optimismNetworkConfig: NetworkConfig = {
-    appName: 'Beethoven X',
+    appName: 'Beets',
     chainId: '10',
     networkName: 'Optimism Mainnet',
     networkShortName: 'Optimism',

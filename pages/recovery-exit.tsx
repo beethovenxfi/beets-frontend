@@ -8,7 +8,7 @@ import { UserTokenBalancesProvider } from '~/lib/user/useUserTokenBalances';
 import { RecoveryExitContent } from '~/modules/recovery-exit/RecoveryExitContent';
 
 function LinearPools() {
-    const TITLE = 'Beethoven X | Recovery exit';
+    const TITLE = 'Beets | Recovery exit';
 
     return (
         <>
