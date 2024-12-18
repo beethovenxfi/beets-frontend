@@ -1,48 +1,25 @@
-import {
-    Button,
-    HStack,
-    ListItem,
-    Text,
-    UnorderedList,
-    VStack,
-    Stack,
-    Heading,
-    Box,
-    Spacer,
-    useDisclosure,
-    Flex,
-    Badge,
-} from '@chakra-ui/react';
-import React, { useEffect, useState } from 'react';
-import { InfoButton } from '~/components/info-button/InfoButton';
-import { RelicCarousel } from './components/RelicCarousel';
-import Rq1Image from '~/assets/images/rq-1.png';
-import Rq2Image from '~/assets/images/rq-2.png';
-import Rq3Image from '~/assets/images/rq-3.png';
-import Image from 'next/image';
-import { ReliquaryInvestModal } from './invest/ReliquaryInvestModal';
-import ReliquaryGlobalStats from './components/stats/ReliquaryGlobalStats';
-import { motion } from 'framer-motion';
-import { useUserAccount } from '~/lib/user/useUserAccount';
-import ReliquaryConnectWallet from './components/ReliquaryConnectWallet';
-import { ToastType, useToast } from '~/components/toast/BeetsToast';
-import { TokensProvider } from '~/lib/global/useToken';
-import { PoolProvider, usePool } from '../pool/lib/usePool';
-import ReliquaryMigrateModal from './components/ReliquaryMigrateModal';
-import { useLegacyFBeetsBalance } from './lib/useLegacyFbeetsBalance';
-import { CurrentStepProvider } from './lib/useReliquaryCurrentStep';
-import Compose, { ProviderWithProps } from '~/components/providers/Compose';
-import useReliquary from './lib/useReliquary';
-import BeetsTooltip from '~/components/tooltip/BeetsTooltip';
+import { Badge, Box, Button, Flex, Heading, HStack, Stack, Text, useDisclosure, VStack } from '@chakra-ui/react';
 import numeral from 'numeral';
-import DelegateSetButton from './components/DelegateSetButton';
-import DelegateClearButton from './components/DelegateClearButton';
-import { useDelegation } from './lib/useDelegation';
-import ReliquaryHeroBanner from './components/ReliquaryHeroBanner';
-import Card from '~/components/card/Card';
+import { useEffect, useState } from 'react';
 import { BeetsTokenSonic } from '~/assets/logo/BeetsTokenSonic';
 import { FBeetsTokenSonic } from '~/assets/logo/FBeetsTokenSonic';
 import { MaBeetsTokenSonic } from '~/assets/logo/MaBeetsTokenSonic';
+import Card from '~/components/card/Card';
+import { ToastType, useToast } from '~/components/toast/BeetsToast';
+import BeetsTooltip from '~/components/tooltip/BeetsTooltip';
+import { TokensProvider } from '~/lib/global/useToken';
+import { useUserAccount } from '~/lib/user/useUserAccount';
+import { PoolProvider, usePool } from '../pool/lib/usePool';
+import DelegateClearButton from './components/DelegateClearButton';
+import DelegateSetButton from './components/DelegateSetButton';
+import { RelicCarousel } from './components/RelicCarousel';
+import ReliquaryConnectWallet from './components/ReliquaryConnectWallet';
+import ReliquaryHeroBanner from './components/ReliquaryHeroBanner';
+import ReliquaryMigrateModal from './components/ReliquaryMigrateModal';
+import ReliquaryGlobalStats from './components/stats/ReliquaryGlobalStats';
+import { useDelegation } from './lib/useDelegation';
+import useReliquary from './lib/useReliquary';
+import { CurrentStepProvider } from './lib/useReliquaryCurrentStep';
 
 const infoButtonLabelProps = {
     lineHeight: '1rem',
@@ -53,7 +30,6 @@ const infoButtonLabelProps = {
 
 export default function ReliquaryLanding() {
     const { isConnected, isConnecting } = useUserAccount();
-    const { total } = useLegacyFBeetsBalance();
     const { showToast } = useToast();
     const { pool } = usePool();
     const { isOpen, onOpen, onClose } = useDisclosure();
@@ -68,7 +44,7 @@ export default function ReliquaryLanding() {
     }, [isConnected]);
 
     useEffect(() => {
-        if (total > 0 && !isOpen) {
+        if (!isOpen) {
             showToast({
                 id: 'migrate-fbeets',
                 type: ToastType.Info,
@@ -79,15 +55,15 @@ export default function ReliquaryLanding() {
                         alignItems="center"
                         justifyContent={{ base: 'stretch', xl: undefined }}
                     >
-                        <Text>You have a legacy fBEETS balance that can be migrated to maBEETS</Text>
+                        <Text>Sonic is live! If you have maBEETS Fantom, you can now migrate to Sonic.</Text>
                         <Button variant="primary" onClick={onOpen} w={{ base: 'full', xl: 'inherit' }}>
-                            Migrate
+                            Migration Docs
                         </Button>
                     </Stack>
                 ),
             });
         }
-    }, [total, isOpen]);
+    }, [isOpen]);
 
     return (
         <>
