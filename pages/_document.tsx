@@ -7,7 +7,7 @@ class BeetsDocument extends Document {
         return (
             <Html>
                 <Head>
-                    <meta name="title" content="Beethoven X" />
+                    <meta name="title" content="Beets" />
                     <meta
                         name="description"
                         content="The future of DeFi re-imagineered. Your next generation Decentralised Exchange."
@@ -15,26 +15,26 @@ class BeetsDocument extends Document {
 
                     <meta property="og:type" content="website" />
                     <meta property="og:url" content={`${process.env.VERCEL_URL}`} />
-                    <meta property="og:title" content="Beethoven X" />
+                    <meta property="og:title" content="Beets" />
                     <meta
                         property="og:description"
                         content="The future of DeFi re-imagineered. Your next generation Decentralised Exchange."
                     />
                     <meta
                         property="og:image"
-                        content="https://beethoven-assets.s3.eu-central-1.amazonaws.com/social-image.png"
+                        content="https://beethoven-assets.s3.eu-central-1.amazonaws.com/web-preview.png"
                     />
 
                     <meta property="twitter:card" content="summary_large_image" />
                     <meta property="twitter:url" content={`${process.env.VERCEL_URL}`} />
-                    <meta property="twitter:title" content="Beethoven X" />
+                    <meta property="twitter:title" content="Beets" />
                     <meta
                         property="twitter:description"
                         content="The future of DeFi re-imagineered. Your next generation Decentralised Exchange."
                     />
                     <meta
                         property="twitter:image"
-                        content="https://beethoven-assets.s3.eu-central-1.amazonaws.com/social-image.png"
+                        content="https://beethoven-assets.s3.eu-central-1.amazonaws.com/web-preview.png"
                     />
 
                     <script

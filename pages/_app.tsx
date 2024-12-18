@@ -102,7 +102,7 @@ function BeetsApp(props: AppProps) {
                         coolMode
                         chains={networkChainDefinitions}
                         showRecentTransactions={true}
-                        appInfo={{ appName: 'Beethoven X', learnMoreUrl: 'https://docs.beets.fi' }}
+                        appInfo={{ appName: 'Beets', learnMoreUrl: 'https://docs.beets.fi' }}
                         theme={darkTheme()}
                         avatar={() => <WalletUserAvatar />}
                     >

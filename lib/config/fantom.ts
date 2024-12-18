@@ -16,7 +16,7 @@ const PoolDetailWarningObject: PoolDetailWarning = {
 };
 
 export const fantomNetworkConfig: NetworkConfig = {
-    appName: 'Beethoven X',
+    appName: 'Beets',
     chainId: '250',
     networkName: 'Fantom Opera',
     networkShortName: 'Fantom',

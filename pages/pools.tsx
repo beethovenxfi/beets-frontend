@@ -14,7 +14,7 @@ import { UserTokenBalancesProvider } from '~/lib/user/useUserTokenBalances';
 function Pools() {
     const { chainId } = useNetworkConfig();
 
-    const TITLE = 'Beethoven X | Investment pools';
+    const TITLE = 'Beets | Investment pools';
     const DESCRIPTION =
         'Competitive yield with unmatched flexibility. Invest in a pool of your choice or create your own.';
 

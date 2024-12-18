@@ -84,7 +84,7 @@ export const TokenInput = forwardRef(
                         {requiresApproval && (
                             <Box position="absolute" color="orange" top=".5rem" right=".75rem" mt="1">
                                 <Tooltip
-                                    label={`Before swapping, you'll need to give the Beethoven X vault contract permission to move ${token?.symbol} on your behalf.`}
+                                    label={`Before swapping, you'll need to give the Beets vault contract permission to move ${token?.symbol} on your behalf.`}
                                     hasArrow
                                 >
                                     <Lock size={16} />

@@ -34,7 +34,7 @@ function HomePage() {
     return (
         <>
             <Head>
-                <title>Beethoven X</title>
+                <title>Beets</title>
             </Head>
             <Home />
         </>

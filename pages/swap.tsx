@@ -11,7 +11,7 @@ import { UserTokenBalancesProvider } from '~/lib/user/useUserTokenBalances';
 function Swap() {
     const { chainId } = useNetworkConfig();
 
-    const TITLE = 'Beethoven X | Swap';
+    const TITLE = 'Beets | Swap';
     const DESCRIPTION = 'Intelligent trades at optimal prices. Swap your tokens with the Smart Order Router.';
 
     return (

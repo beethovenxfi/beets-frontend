@@ -42,10 +42,10 @@ const PoolPage = ({ pool }: Props) => {
     return (
         <>
             <Head>
-                <title>Beethoven X | {pool.name}</title>
-                <meta name="title" content={`Beethoven X | ${pool.name}`} />
-                <meta property="og:title" content={`Beethoven X | ${pool.name}`} />
-                <meta property="twitter:title" content={`Beethoven X | ${pool.name}`} />
+                <title>Beets | {pool.name}</title>
+                <meta name="title" content={`Beets | ${pool.name}`} />
+                <meta property="og:title" content={`Beets | ${pool.name}`} />
+                <meta property="twitter:title" content={`Beets | ${pool.name}`} />
             </Head>
             <Compose providers={PoolProviders}>
                 {isReliquaryPool ? (
