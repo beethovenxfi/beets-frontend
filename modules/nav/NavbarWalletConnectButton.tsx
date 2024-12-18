@@ -87,7 +87,7 @@ export default function NavbarWalletConnectButton() {
                                         onClick={openAccountModal}
                                         paddingX="none"
                                         padding="3px"
-                                        color="gray.100"
+                                        color="#D3D3D3"
                                         zIndex="100"
                                         position="relative"
                                         _hover={{

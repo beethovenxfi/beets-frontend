@@ -13,6 +13,7 @@ import { networkConfig } from '~/lib/config/network-config';
 import { NetworkSelectorPopover } from '~/modules/nav/NetworkSelectorPopover';
 import { Badge } from '@chakra-ui/layout';
 import { BeetsLogo } from '~/assets/logo/BeetsLogo';
+import { BeetsLogoSonic } from '~/assets/logo/BeetsLogoSonic';
 
 interface Props {
     scrollY: MotionValue<number>;
@@ -42,31 +43,32 @@ export function Navbar({ scrollY }: Props) {
                     </motion.div>
                     <Flex alignItems="center" mr="6" zIndex="2" cursor="pointer">
                         <NextLink href="/" chakraProps={{ _focus: { boxShadow: 'none' } }}>
-                            {chainId === '10' ? (
+                            {/* {chainId === '10' ? (
                                 <BeetsBalLogo width="132px" />
                             ) : (
                                 <Box mb="2">
                                     <BeetsLogo width="132px" />
                                 </Box>
-                            )}
+                            )} */}
+                            <BeetsLogoSonic width="132px" />
                         </NextLink>
                     </Flex>
                     <Box flex="1" zIndex="2">
                         <Flex alignItems="center" display={{ base: 'none', md: 'flex' }}>
-                            <NavbarLink
+                            {/* <NavbarLink
                                 href={'/pools'}
                                 selected={router.asPath.startsWith('/pool')}
                                 text="Invest"
                                 mr="5"
                             />
-                            <NavbarLink href={'/swap'} selected={router.asPath === '/swap'} text="Swap" mr="5" />
+                            <NavbarLink href={'/swap'} selected={router.asPath === '/swap'} text="Swap" mr="5" /> */}
                             {/* <NavbarLink
                                 href={'/compose'}
                                 selected={router.asPath === '/compose'}
                                 text="Compose"
                                 mr="5"
                             /> */}
-                            {networkConfig.maBeetsEnabled && (
+                            {/* {networkConfig.maBeetsEnabled && (
                                 <NavbarLink
                                     href={'/mabeets'}
                                     selected={router.asPath === '/mabeets'}
@@ -76,15 +78,15 @@ export function Navbar({ scrollY }: Props) {
                             )}
                             {networkConfig.sftmxEnabled && (
                                 <NavbarLink href={'/sftmx'} selected={router.asPath === '/sftmx'} text="sFTMx" mr="5" />
-                            )}
+                            )} */}
                             {/*<NavbarAdditionalLinksMenu />*/}
                         </Flex>
                     </Box>
                     <FadeInOutBox mr="3" isVisible={isConnected}>
                         <HStack spacing="3">
-                            <NetworkSelectorPopover>
+                            {/* <NetworkSelectorPopover>
                                 <Button
-                                    bgColor="beets.lightAlpha.200"
+                                    bgColor="box.500"
                                     width="50px"
                                     height="40px"
                                     display="flex"
@@ -96,8 +98,8 @@ export function Navbar({ scrollY }: Props) {
                                 >
                                     <Image width="24px" height="24px" src={networkConfig.eth.iconUrl} />
                                 </Button>
-                            </NetworkSelectorPopover>
-                            <NavbarPendingRewards />
+                            </NetworkSelectorPopover> */}
+                            {/* <NavbarPendingRewards /> */}
                             {/*<NavbarAlerts />*/}
                             {/*<NavbarPortfolioDrawer />*/}
                         </HStack>

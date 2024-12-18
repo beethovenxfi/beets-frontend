@@ -13,7 +13,7 @@ import { UserTokenBalancesProvider } from '~/lib/user/useUserTokenBalances';
 function Compose() {
     const { chainId } = useNetworkConfig();
 
-    const TITLE = 'Beethoven X | Create a pool';
+    const TITLE = 'Beets | Create a pool';
     const DESCRIPTION = 'Unbound composability made simple. Build your own weighted pools with up to 8 tokens.';
 
     return (

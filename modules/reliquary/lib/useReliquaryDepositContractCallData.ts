@@ -30,15 +30,17 @@ export function useReliquaryDepositContractCallData({
     const investData = useMemo(() => {
         let beetsAmount = '0';
         let ftmAmount = '0';
-        let isNativeFtm = true;
+        let isNativeFtm = false;
+
         if (enabled) {
             beetsAmount = investTokensWithAmountsMap[networkConfig.beets.address].amount;
-            if (investTokensWithAmountsMap[networkConfig.eth.address.toLowerCase()]?.address) {
+            ftmAmount = investTokensWithAmountsMap[networkConfig.sftmx.address].amount;
+            /* if (investTokensWithAmountsMap[networkConfig.eth.address.toLowerCase()]?.address) {
                 ftmAmount = investTokensWithAmountsMap[networkConfig.eth.address.toLowerCase()].amount;
             } else {
                 ftmAmount = investTokensWithAmountsMap[networkConfig.wethAddress].amount;
                 isNativeFtm = false;
-            }
+            } */
         }
 
         return {
@@ -51,6 +53,15 @@ export function useReliquaryDepositContractCallData({
     const query = useQuery(
         ['reliquaryDepositContractCallData', userAddress, slippage, investData],
         async () => {
+            console.log('reliquaryDepositContractCallData', {
+                userAddress: userAddress || '',
+                slippage,
+                beetsAmount: investData.beetsAmount,
+                ftmAmount: investData.ftmAmount,
+                isNativeFtm: investData.isNativeFtm,
+                relicId: createRelic ? undefined : parseInt(selectedRelicId || ''),
+            });
+
             return reliquaryZapService.getReliquaryDepositContractCallData({
                 userAddress: userAddress || '',
                 slippage,

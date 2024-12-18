@@ -27,6 +27,9 @@ export function ReliquaryMaBEETSLevelChart() {
                 formatter: (params: any) =>
                     `Level ${params[0].data[0]}: ${numeral(params[0].data[1]).format('0a')} maBEETS`,
             },
+            textStyle: {
+                color: '#D3D3D3',
+            },
             xAxis: {
                 name: 'Level',
                 nameLocation: 'middle',

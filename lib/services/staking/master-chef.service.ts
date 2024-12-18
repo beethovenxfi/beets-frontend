@@ -33,9 +33,10 @@ export class MasterChefService {
         farmId: string;
         provider: BaseProvider;
     }): Promise<AmountHumanReadable> {
-        const contract = new Contract(this.masterChefContractAddress, BeethovenxMasterChefAbi, provider);
-        const response: { amount: BigNumber } = await contract.userInfo(farmId, userAddress);
-        return formatFixed(response.amount, 18);
+        // Masterchef not supported on sonic
+        //const contract = new Contract(this.masterChefContractAddress, BeethovenxMasterChefAbi, provider);
+        //const response: { amount: BigNumber } = await contract.userInfo(farmId, userAddress);
+        return formatFixed('0', 18);
     }
 
     public async getMasterChefTokenBalance({
