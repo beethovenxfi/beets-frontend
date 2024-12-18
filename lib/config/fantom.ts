@@ -128,7 +128,7 @@ export const fantomNetworkConfig: NetworkConfig = {
         },
         {
             title: 'Twitter',
-            url: 'https://twitter.com/beethoven_x',
+            url: 'https://x.com/beets_fi',
         },
         {
             title: 'Medium',
