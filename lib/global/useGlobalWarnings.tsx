@@ -35,7 +35,7 @@ export default function useGlobalWarnings() {
                     >
                         <Text>Sonic is live! If you have assets on Fantom, you can now migrate to Sonic.</Text>
                         <Button variant="primary" onClick={onOpen} w={{ base: 'full', xl: 'inherit' }}>
-                            Migration Docs
+                            Migration Guide
                         </Button>
                     </Stack>
                 ),
