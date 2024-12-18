@@ -76,9 +76,8 @@ export default function SftmxUnstakeTab() {
                 </HStack>
                 <Alert status="warning">
                     <AlertIcon />
-                    {isConnected && isSafeAccountViaWalletConnect
-                        ? 'Unstake via Safe is not supported. Use an EOA instead.'
-                        : 'With the upcoming migration to Sonic, the withdrawal penalty has been removed and the withdrawal delay has been reduced to 24 hours.'}
+                    With the upcoming migration to Sonic, the withdrawal penalty has been removed and the withdrawal
+                    delay has been reduced to 24 hours.
                 </Alert>
                 <Box w="full">
                     {!isConnected && <WalletConnectButton width="full" size="lg" />}
