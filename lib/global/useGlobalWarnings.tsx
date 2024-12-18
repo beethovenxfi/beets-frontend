@@ -18,7 +18,11 @@ export default function useGlobalWarnings() {
     const { isLoading: isLoadingOldBeetsBalance, balance: oldBeetsBalance } = useOldBeetsBalance();
     const { getToken } = useGetTokens();
     const tokenData = getToken(networkConfig.beets.oldAddress);
-    const { isOpen, onOpen, onClose } = useDisclosure();
+    const { isOpen, onOpen, onClose } = useDisclosure({
+        onOpen: () => {
+            window.open('https://docs.beets.fi/sonic', '_blank');
+        },
+    });
     const isFantom = networkConfig.chainId === '250';
 
     useEffect(() => {
