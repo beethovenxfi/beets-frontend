@@ -161,15 +161,15 @@ export const sonicTheme: Partial<ChakraTheme> = {
                 filled: {
                     field: {
                         color: 'gray.100',
-                        bgColor: 'beets.lightAlpha.500',
+                        bgColor: 'rgba(119,119,119, 0.05)',
                         borderColor: 'transparent',
                         //color: 'gray.100',
                         _hover: {
                             borderColor: 'beets.base.100',
-                            bgColor: 'beets.lightAlpha.500',
+                            bgColor: 'rgba(119,119,119, 0.05)',
                         },
                         _focus: {
-                            bgColor: 'beets.lightAlpha.500',
+                            bgColor: 'rgba(119,119,119, 0.05)',
                             borderColor: 'beets.base.100',
                         },
                         _placeholder: {
