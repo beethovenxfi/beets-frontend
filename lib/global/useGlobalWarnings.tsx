@@ -1,4 +1,4 @@
-import { Button, HStack, Link, Text } from '@chakra-ui/react';
+import { Button, HStack, Link, Stack, Text, useDisclosure } from '@chakra-ui/react';
 import { useEffect } from 'react';
 import { BeetsSubmitTransactionButton } from '~/components/button/BeetsSubmitTransactionButton';
 import { ToastType, useToast } from '~/components/toast/BeetsToast';
@@ -18,6 +18,30 @@ export default function useGlobalWarnings() {
     const { isLoading: isLoadingOldBeetsBalance, balance: oldBeetsBalance } = useOldBeetsBalance();
     const { getToken } = useGetTokens();
     const tokenData = getToken(networkConfig.beets.oldAddress);
+    const { isOpen, onOpen, onClose } = useDisclosure();
+    const isFantom = networkConfig.chainId === '250';
+
+    useEffect(() => {
+        if (isFantom && !isOpen) {
+            showToast({
+                id: 'migrate-sonic',
+                type: ToastType.Info,
+                content: (
+                    <Stack
+                        direction={['column', 'row']}
+                        spacing="4"
+                        alignItems="center"
+                        justifyContent={{ base: 'stretch', xl: undefined }}
+                    >
+                        <Text>Sonic is live! If you have assets on Fantom, you can now migrate to Sonic.</Text>
+                        <Button variant="primary" onClick={onOpen} w={{ base: 'full', xl: 'inherit' }}>
+                            Migration Docs
+                        </Button>
+                    </Stack>
+                ),
+            });
+        }
+    }, [isOpen]);
 
     // sync veBAL warning
     useEffect(() => {
