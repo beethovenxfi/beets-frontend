@@ -15,7 +15,7 @@ export const sonicNetworkConfig: NetworkConfig = {
         address: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
         symbol: 'S',
         decimals: 18,
-        iconUrl: 'https://assets.coingecko.com/coins/images/4001/large/Fantom.png',
+        iconUrl: 'https://beethoven-assets.s3.eu-central-1.amazonaws.com/sonic.png',
         minGasAmount: '0.1',
     },
     wethAddress: '0x039e2fb66102314ce7b64ce5ce3e5183bc94ad38',

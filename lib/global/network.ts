@@ -31,6 +31,9 @@ const response = configureChains(
             ...(networkConfig.chainId === '250' && {
                 iconUrl: 'https://assets.coingecko.com/coins/images/4001/large/Fantom.png?1558015016',
             }),
+            ...(networkConfig.chainId === '146' && {
+                iconUrl: 'https://beethoven-assets.s3.eu-central-1.amazonaws.com/sonic.png',
+            }),
             nativeCurrency: {
                 name: networkConfig.eth.name,
                 symbol: networkConfig.eth.symbol,
