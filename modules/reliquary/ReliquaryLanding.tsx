@@ -32,7 +32,11 @@ export default function ReliquaryLanding() {
     const { isConnected, isConnecting } = useUserAccount();
     const { showToast } = useToast();
     const { pool } = usePool();
-    const { isOpen, onOpen, onClose } = useDisclosure();
+    const { isOpen, onOpen, onClose } = useDisclosure({
+        onOpen: () => {
+            window.open('https://docs.beets.fi/sonic', '_blank');
+        },
+    });
     const [buttonEnabled, setButtonEnabled] = useState(true);
     const { totalMaBeetsVP, isLoading } = useReliquary();
     const { data: isDelegatedToMDs } = useDelegation();
@@ -46,7 +50,7 @@ export default function ReliquaryLanding() {
     useEffect(() => {
         if (!isOpen) {
             showToast({
-                id: 'migrate-fbeets',
+                id: 'migrate-sonic',
                 type: ToastType.Info,
                 content: (
                     <Stack
@@ -226,13 +230,13 @@ export default function ReliquaryLanding() {
                     </VStack>
                 </Box>
             </Stack>
-            <TokensProvider>
+            {/* <TokensProvider>
                 <PoolProvider pool={pool}>
                     <CurrentStepProvider>
                         <ReliquaryMigrateModal isOpen={isOpen} onClose={onClose} />
                     </CurrentStepProvider>
                 </PoolProvider>
-            </TokensProvider>
+            </TokensProvider> */}
         </>
     );
 }
