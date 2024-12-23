@@ -12,8 +12,16 @@ import { useReliquaryZap } from '../../lib/useReliquaryZap';
 export function ReliquarySonicMigrateExitRelics() {
     const networkConfig = useNetworkConfig();
     const { refetchRelicPositions } = useReliquary();
-    const { relics, allRelicsUsdValue, allRelicsBeetsAmount, allRelicsWftmAmount, alllRelicsBptTotal, isLoading } =
-        useAllRelicsDepositBalances();
+    const {
+        relics: relicsToFilter,
+        allRelicsUsdValue,
+        allRelicsBeetsAmount,
+        allRelicsWftmAmount,
+        alllRelicsBptTotal,
+        isLoading,
+    } = useAllRelicsDepositBalances();
+
+    const relics = relicsToFilter.filter((relic) => relic.amount !== '0.0');
     const relicNumbersString = relics.map((relic, idx) => `${idx !== 0 ? ', #' : '#'}${relic.relicId}`);
 
     const { data: contractCallData, isLoading: isLoadingReliquaryContractCallData } =

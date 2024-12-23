@@ -1,5 +1,4 @@
 import { useReliquaryWithdraw } from '../withdraw/lib/useReliquaryWithdraw';
-
 import { useQuery } from 'react-query';
 import { useGetTokens } from '~/lib/global/useToken';
 import { sum, sumBy } from 'lodash';
@@ -44,7 +43,9 @@ export function useAllRelicsDepositBalances() {
     let allRelicsBeetsAmount = BigNumber.from(0);
     let allRelicsWftmAmount = BigNumber.from(0);
 
-    for (const relic of query.data || []) {
+    const relics = (query.data || []).filter((relic) => relic.amount !== '0.0');
+
+    for (const relic of relics) {
         alllRelicsBptTotal = alllRelicsBptTotal.add(parseUnits(relic.amount || '0', 18));
 
         allRelicsWftmAmount = allRelicsWftmAmount.add(parseUnits(relic.tokenAmounts[0]?.amount || '0', 18));
@@ -54,8 +55,8 @@ export function useAllRelicsDepositBalances() {
     return {
         ...query,
         isLoading: query.isLoading || isLoadingRelicPositions,
-        relics: query.data || [],
-        allRelicsUsdValue: sum((query.data || []).map((relic) => relic.usdValue)),
+        relics,
+        allRelicsUsdValue: sum(relics.map((relic) => relic.usdValue)),
         alllRelicsBptTotal: formatFixed(alllRelicsBptTotal, 18),
         allRelicsBeetsAmount: formatFixed(allRelicsBeetsAmount, 18),
         allRelicsWftmAmount: formatFixed(allRelicsWftmAmount, 18),
