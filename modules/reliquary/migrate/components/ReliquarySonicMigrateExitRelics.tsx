@@ -39,8 +39,8 @@ export function ReliquarySonicMigrateExitRelics() {
             {hasRelics && (
                 <>
                     <Text mb="4">
-                        In this wallet, you have {relics.length} relics with a total value of{' '}
-                        {numberFormatUSDValue(allRelicsUsdValue)}.
+                        Withdraw your BEETS and wFTM from your maBEETS relic(s). In this wallet, you have{' '}
+                        {relics.length} relic(s) with a total value of {numberFormatUSDValue(allRelicsUsdValue)}.
                     </Text>
 
                     <BeetsBox mb="6">

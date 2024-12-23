@@ -16,12 +16,12 @@ export function ReliquarySonicMigrateUnwrapFtm() {
 
     return (
         <Box>
-            <Heading size="md">2. Unwrap Your FTM</Heading>
+            <Heading size="md">3. Unwrap Your FTM</Heading>
             {isLoading ? <Skeleton width="full" height="100px" mt="2" /> : null}
             {!hasWftmBalance && <Text mb="4">You have no WFTM in this wallet.</Text>}
             {hasWftmBalance && (
                 <>
-                    <Text mb="4">You need to unwrap your FTM before upgrading to S.</Text>
+                    <Text mb="4">Convert your wFTM back to native FTM to prepare for the upgrade to S.</Text>
 
                     <BeetsBox mb="6" p="2">
                         <TokenRow address={networkConfig.wethAddress} amount={wftmBalance} />

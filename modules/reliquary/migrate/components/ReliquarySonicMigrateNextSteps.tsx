@@ -5,7 +5,7 @@ export function ReliquarySonicMigrateNextSteps() {
     return (
         <Box>
             <Heading size="md">5. Next steps</Heading>
-            <Text mb="2">Once you've completed the steps above, you can mint your maBEETS relic on Sonic.</Text>
+            <Text mb="2">Once you've completed the steps above, you can create your maBEETS relic on Sonic.</Text>
             <Link href="https://ma.beets.fi/" target="_blank" mr="1">
                 <Flex alignItems="center">
                     <Text mr="1">https://ma.beets.fi/</Text>

@@ -62,14 +62,14 @@ export function ReliquarySonicMigrateBridgeBeets() {
 
     return (
         <Box>
-            <Heading size="md">3. Bridge your BEETS on Fantom for lzBEETS on Sonic</Heading>
+            <Heading size="md">2. Bridge your BEETS on Fantom for lzBEETS on Sonic</Heading>
             {isLoading && <Skeleton height="100px" width="full" mt="2" />}
             {!hasBeetsBalance && !isLoading && <Text>You don't have any BEETS to bridge.</Text>}
             {hasBeetsBalance && !isLoading && (
                 <>
                     <Text mb="2">
-                        You'll bridge your BEETS using Layer Zero. You'll be interacting with the BeetsProxyOFTV2
-                        contract. Verify the address in all transactions.
+                        Transfer your Fantom BEETS to lzBEETS via the LayerZero bridge. You'll be interacting with the
+                        BEETSProxyOFTv2 contract. Please verify the address in all transactions.
                     </Text>
                     <Box mb="4">
                         <Link href={etherscanGetAddressUrl(beetsOftProxy)} target="_blank">
@@ -79,6 +79,14 @@ export function ReliquarySonicMigrateBridgeBeets() {
                             </Flex>
                         </Link>
                     </Box>
+
+                    <Text mb="2">
+                        <Text display="inline" fontWeight="bold">
+                            Note
+                        </Text>
+                        : The BEETS will be sent to the same wallet address on Sonic. If you're using a multisig wallet
+                        or any other non EOA, please wait for the stargate UI to come online.
+                    </Text>
 
                     <Text mb="2">Once done you can check the bridge transaction on LayerZeroScan.</Text>
                     <Box mb="4">
@@ -97,7 +105,6 @@ export function ReliquarySonicMigrateBridgeBeets() {
                         onCompleteButtonClick={() => {}}
                         steps={steps || []}
                         onSubmit={() => {
-                            //bridge(beetsBalance);
                             bridge(beetsTokenWithBalance.amount);
                         }}
                         onConfirmed={(id) => {

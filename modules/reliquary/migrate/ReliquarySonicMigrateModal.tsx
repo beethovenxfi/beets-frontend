@@ -20,33 +20,32 @@ export function ReliquarySonicMigrateModal({ isOpen, onClose }: Props) {
     const initialRef = useRef(null);
 
     return (
-        <Modal isOpen={isOpen} onClose={onClose} size="3xl" initialFocusRef={initialRef}>
+        <Modal isOpen={isOpen} onClose={onClose} size="4xl" initialFocusRef={initialRef}>
             <ModalOverlay />
             <ModalContent backgroundColor="black">
                 <ModalCloseButton />
                 <ModalHeader className="bg">
                     <Heading size="md" noOfLines={1}>
-                        Upgrade to Sonic
+                        Migrate your maBEETS to Sonic
                     </Heading>
                 </ModalHeader>
                 <ModalBody className="bg" p="0">
                     <FadeInBox isVisible={true}>
                         <Box px="6" pb="6">
                             <Text mb="6">
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a turpis lacinia,
-                                pellentesque metus a, sollicitudin mi. Ut non velit euismod, consectetur orci at,
-                                condimentum metus.{' '}
+                                Migrating your maBEETS from Fantom to Sonic unlocks access to the upgraded Beets
+                                ecosystem on Sonic. Follow the steps below carefully and enjoy the transition to Sonic!
                             </Text>
                             <CurrentStepProvider>
-                                <Box pb="8">
+                                <Box pb="12">
                                     <ReliquarySonicMigrateExitRelics />
                                 </Box>
                             </CurrentStepProvider>
-                            <Box pb="8">
-                                <ReliquarySonicMigrateUnwrapFtm />
-                            </Box>
-                            <Box pb="8">
+                            <Box pb="12">
                                 <ReliquarySonicMigrateBridgeBeets />
+                            </Box>
+                            <Box pb="12">
+                                <ReliquarySonicMigrateUnwrapFtm />
                             </Box>
                             <Box pb="6">
                                 <ReliquarySonicMigrateBridgeFtm />
