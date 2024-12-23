@@ -4,7 +4,7 @@ import { ExternalLink } from 'react-feather';
 export function ReliquarySonicMigrateNextSteps() {
     return (
         <Box>
-            <Heading size="md">5. Next steps</Heading>
+            <Heading size="md">6. Next steps</Heading>
             <Text mb="2">Once you've completed the steps above, you can create your maBEETS relic on Sonic.</Text>
             <Link href="https://ma.beets.fi/" target="_blank" mr="1">
                 <Flex alignItems="center">

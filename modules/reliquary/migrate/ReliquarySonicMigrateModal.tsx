@@ -21,6 +21,7 @@ import { ReliquarySonicMigrateBridgeFtm } from './components/ReliquarySonicMigra
 import { ReliquarySonicMigrateUnwrapFtm } from './components/ReliquarySonicMigrateUnwrapFtm';
 import { ReliquarySonicMigrateExitRelics } from './components/ReliquarySonicMigrateExitRelics';
 import { CurrentStepProvider } from '../lib/useReliquaryCurrentStep';
+import { ReliquarySonicMigrateStakeS } from './components/ReliquarySonicMigrateStakeS';
 
 interface Props {
     isOpen: boolean;
@@ -63,6 +64,10 @@ export function ReliquarySonicMigrateModal({ isOpen, onClose }: Props) {
                             <Divider borderColor="whiteAlpha.600" mb="6" mt="6" />
                             <Box px="6">
                                 <ReliquarySonicMigrateBridgeFtm />
+                            </Box>
+                            <Divider borderColor="whiteAlpha.600" mb="6" mt="2" />
+                            <Box px="6">
+                                <ReliquarySonicMigrateStakeS />
                             </Box>
                             <Divider borderColor="whiteAlpha.600" mb="6" mt="2" />
                             <Box px="6">
