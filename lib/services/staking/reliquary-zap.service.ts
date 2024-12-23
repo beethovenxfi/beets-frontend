@@ -358,6 +358,59 @@ export class ReliquaryZapService {
             ],
         });
     }
+
+    public async getReliquaryWithdrawManyAndHarvestContractCallData({
+        userAddress,
+        relics,
+        slippage,
+        totalBptAmount,
+        totalWftmAmount,
+        totalBeetsAmount,
+    }: {
+        userAddress: string;
+        relics: { relicId: string; amount: AmountHumanReadable }[];
+        slippage: AmountHumanReadable;
+        totalBptAmount: AmountHumanReadable;
+        totalWftmAmount: AmountHumanReadable;
+        totalBeetsAmount: AmountHumanReadable;
+    }): Promise<string[]> {
+        const withdrawBptsFromRelics = relics.map((relic) =>
+            this.batchRelayerService.reliquaryEncodeWithdrawAndHarvest({
+                recipient: userAddress,
+                relicId: parseInt(relic.relicId),
+                amount: parseFixed(relic.amount, 18),
+                outputReference: this.batchRelayerService.toChainedReference('0'),
+            }),
+        );
+
+        const exitFbeetsPool = this.batchRelayerService.vaultEncodeExitPool({
+            poolId: networkConfig.reliquary.fbeets.poolId,
+            poolKind: 0,
+            sender: userAddress,
+            recipient: userAddress,
+            exitPoolRequest: {
+                assets: [networkConfig.wethAddress, networkConfig.beets.address],
+                minAmountsOut: [
+                    this.getAmountMinusSlippage(totalWftmAmount, slippage),
+                    this.getAmountMinusSlippage(totalBeetsAmount, slippage),
+                ],
+                userData: WeightedPoolEncoder.exitExactBPTInForTokensOut(parseUnits(totalBptAmount, 18)),
+                toInternalBalance: false,
+            },
+            outputReferences: [
+                { index: 0, key: this.batchRelayerService.toChainedReference('1') },
+                { index: 1, key: this.batchRelayerService.toChainedReference('2') },
+            ],
+        });
+
+        return [...withdrawBptsFromRelics, exitFbeetsPool];
+    }
+
+    private getAmountMinusSlippage(amount: AmountHumanReadable, slippage: AmountHumanReadable) {
+        const amountScaled = parseUnits(amount, 18).toString();
+
+        return oldBnum(amountScaled).minus(oldBnum(amountScaled).times(slippage)).toFixed(0);
+    }
 }
 
 export const reliquaryZapService = new ReliquaryZapService(batchRelayerService, networkProvider);
