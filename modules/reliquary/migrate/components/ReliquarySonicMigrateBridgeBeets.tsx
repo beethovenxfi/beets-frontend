@@ -9,8 +9,10 @@ import { useUserTokenBalances } from '~/lib/user/useUserTokenBalances';
 import { etherscanGetAddressUrl } from '~/lib/util/etherscan';
 import { useUserAllowances } from '~/lib/util/useUserAllowances';
 import { beetsOftProxy, useBridgeBeets } from '../../lib/useBridgeBeets';
+import { useUserAccount } from '~/lib/user/useUserAccount';
 
 export function ReliquarySonicMigrateBridgeBeets() {
+    const { userAddress } = useUserAccount();
     const networkConfig = useNetworkConfig();
     const [steps, setSteps] = useState<TransactionStep[] | null>(null);
     const { userBalances, isLoading, refetch: refetchUserBalances } = useUserTokenBalances();
@@ -78,6 +80,16 @@ export function ReliquarySonicMigrateBridgeBeets() {
                         </Link>
                     </Box>
 
+                    <Text mb="2">Once done you can check the bridge transaction on LayerZeroScan.</Text>
+                    <Box mb="4">
+                        <Link href={`https://layerzeroscan.com/address/${userAddress}`} target="_blank">
+                            <Flex alignItems="center">
+                                <Text mr="1">LayerZeroScan</Text>
+                                <ExternalLink size={16} />
+                            </Flex>
+                        </Link>
+                    </Box>
+
                     <BeetsTransactionStepsSubmit
                         isLoading={steps === null}
                         loadingButtonText="Bridge BEETS"
@@ -86,7 +98,7 @@ export function ReliquarySonicMigrateBridgeBeets() {
                         steps={steps || []}
                         onSubmit={() => {
                             //bridge(beetsBalance);
-                            bridge('1');
+                            bridge(beetsTokenWithBalance.amount);
                         }}
                         onConfirmed={(id) => {
                             if (id !== 'bridge') {
