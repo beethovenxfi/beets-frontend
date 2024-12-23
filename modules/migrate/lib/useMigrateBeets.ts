@@ -10,7 +10,7 @@ export function useMigrateBeets() {
         config: {
             addressOrName: networkConfig.beets.migration,
             contractInterface: MultiBeetsMigrationAbi,
-            functionName: 'exchange',
+            functionName: 'exchangeOperaToSonic',
         },
         transactionType: 'MIGRATE',
     });
@@ -18,7 +18,7 @@ export function useMigrateBeets() {
     function migrate(amount: AmountHumanReadable) {
         submit({
             args: [parseUnits(amount, 18)],
-            toastText: `Migrate ${amount} multiBEETS`,
+            toastText: `Migrate ${amount} lzBEETS`,
         });
     }
 
