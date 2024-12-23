@@ -17,6 +17,7 @@ const chainToRpcMap: Record<GqlChain, string | undefined> = {
     GNOSIS: `https://gnosis-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY}`,
     MODE: undefined,
     ZKEVM: `https://polygonzkevm-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY}`,
+    SONIC: `https://sonic-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY}`,
 };
 
 function getRpcUrl(chain: string) {
