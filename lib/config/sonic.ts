@@ -28,8 +28,8 @@ export const sonicNetworkConfig: NetworkConfig = {
     multicall: '0xc07500b9fe7bea9efd5b54341d0aa3658a33d39a',
     beets: {
         address: '0x2d0e0814e62d80056181f5cd932274405966e4f0',
-        migration: AddressZero,
-        oldAddress: AddressZero,
+        migration: '0x5f9a5cd0b77155ac1814ef6cd9d82da53d05e386',
+        oldAddress: '0x1e5fe95fb90ac0530f581c617272cd0864626795',
     },
     fbeets: {
         address: '0x10ac2f9dae6539e77e372adb14b1bf8fbd16b3e8', // not on sonic
@@ -117,7 +117,7 @@ export const sonicNetworkConfig: NetworkConfig = {
     maBeetsEnabled: true,
     claimAllRewardsEnabled: true,
     layerZeroChainId: -1,
-    beetsMigrationEnabled: false,
+    beetsMigrationEnabled: true,
     gaugeEnabled: false,
     sftmxEnabled: false,
 };

@@ -77,7 +77,7 @@ export default function useGlobalWarnings() {
         }
     }, [isLoadingCheckpointableGauges]);
 
-    // check for BEETS migration on OP
+    // check for BEETS migration on Sonic
     useEffect(() => {
         if (parseFloat(oldBeetsBalance) > 0 && networkConfig.beetsMigrationEnabled) {
             showToast({

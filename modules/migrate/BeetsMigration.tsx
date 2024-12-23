@@ -18,10 +18,10 @@ export function BeetsMigration({ oldBeetsBalance, tokenData }: Props) {
 
     return (
         <HStack>
-            {isConfirmed && <Text>You have successfully migrated multiBEETS to (lz)BEETS!</Text>}
+            {isConfirmed && <Text>You have successfully migrated lzBEETS to BEETS!</Text>}
             {!isConfirmed && (
                 <>
-                    <Text>You have {oldBeetsBalance} multiBEETS that you can migrate 1:1 to (lz)BEETS.</Text>
+                    <Text>You have {oldBeetsBalance} lzBEETS that you can migrate 1:1 to BEETS.</Text>
                     {hasApprovedToken && (
                         <BeetsMigrationButton
                             amount={oldBeetsBalance}
@@ -29,12 +29,12 @@ export function BeetsMigration({ oldBeetsBalance, tokenData }: Props) {
                                 setIsConfirmed(true);
                             }}
                             inline
-                            size="lg"
+                            size="md"
                             isLoading={isLoading}
                         />
                     )}
                     {!hasApprovedToken && tokenData && (
-                        <Box w="200px">
+                        <Box w="225px">
                             <BeetsTokenApprovalButton
                                 contractToApprove={networkConfig.beets.migration}
                                 tokenWithAmount={{ ...tokenData, amount: oldBeetsBalance }}
@@ -42,7 +42,7 @@ export function BeetsMigration({ oldBeetsBalance, tokenData }: Props) {
                                     refetch();
                                 }}
                                 inline
-                                size="lg"
+                                size="md"
                                 isLoading={isLoading}
                             />
                         </Box>
