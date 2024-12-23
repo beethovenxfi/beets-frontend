@@ -14,7 +14,8 @@ export type BeetsTransactionType =
     | 'CHECKPOINT'
     | 'CREATE_POOL'
     | 'DELEGATE'
-    | 'UNDELEGATE';
+    | 'UNDELEGATE'
+    | 'BRIDGE';
 
 export type ToastTransactionStatus = 'PENDING' | 'CONFIRMED' | 'ERROR';
 export type ToastHeadlines = Record<ToastTransactionStatus, string>;
@@ -98,6 +99,11 @@ const TRANSACTION_HEADLINES: Record<BeetsTransactionType, ToastHeadlines> = {
         PENDING: 'Clear delegate pending',
         CONFIRMED: 'Clear delegate confirmed',
         ERROR: 'Clear delegate error',
+    },
+    BRIDGE: {
+        PENDING: 'Bridge pending',
+        CONFIRMED: 'Bridge confirmed',
+        ERROR: 'Bridge error',
     },
 };
 
