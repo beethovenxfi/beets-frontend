@@ -1,5 +1,15 @@
 import { Modal, ModalBody, ModalCloseButton, ModalContent } from '@chakra-ui/modal';
-import { Button, ButtonProps, Heading, ModalHeader, ModalOverlay, useDisclosure, Box, Text } from '@chakra-ui/react';
+import {
+    Button,
+    ButtonProps,
+    Heading,
+    ModalHeader,
+    ModalOverlay,
+    useDisclosure,
+    Box,
+    Text,
+    Divider,
+} from '@chakra-ui/react';
 import { useEffect, useRef, useState } from 'react';
 import { FadeInBox } from '~/components/animation/FadeInBox';
 import { ReliquaryWithdrawTypeChoice } from '~/modules/reliquary/withdraw/components/ReliquaryWithdrawTypeChoice';
@@ -31,26 +41,33 @@ export function ReliquarySonicMigrateModal({ isOpen, onClose }: Props) {
                 </ModalHeader>
                 <ModalBody className="bg" p="0">
                     <FadeInBox isVisible={true}>
-                        <Box px="6" pb="6">
-                            <Text mb="6">
+                        <Box pb="6">
+                            <Text px="6">
                                 Migrating your maBEETS from Fantom to Sonic unlocks access to the upgraded Beets
                                 ecosystem on Sonic. Follow the steps below carefully and enjoy the transition to Sonic!
                             </Text>
+                            <Divider borderColor="whiteAlpha.600" mb="6" mt="6" />
                             <CurrentStepProvider>
-                                <Box pb="12">
+                                <Box px="6">
                                     <ReliquarySonicMigrateExitRelics />
                                 </Box>
                             </CurrentStepProvider>
-                            <Box pb="12">
+                            <Divider borderColor="whiteAlpha.600" mb="6" mt="6" />
+                            <Box px="6">
                                 <ReliquarySonicMigrateBridgeBeets />
                             </Box>
-                            <Box pb="12">
+                            <Divider borderColor="whiteAlpha.600" mb="6" mt="6" />
+                            <Box px="6">
                                 <ReliquarySonicMigrateUnwrapFtm />
                             </Box>
-                            <Box pb="6">
+                            <Divider borderColor="whiteAlpha.600" mb="6" mt="6" />
+                            <Box px="6">
                                 <ReliquarySonicMigrateBridgeFtm />
                             </Box>
-                            <ReliquarySonicMigrateNextSteps />
+                            <Divider borderColor="whiteAlpha.600" mb="6" mt="2" />
+                            <Box px="6">
+                                <ReliquarySonicMigrateNextSteps />
+                            </Box>
                         </Box>
                     </FadeInBox>
                 </ModalBody>
