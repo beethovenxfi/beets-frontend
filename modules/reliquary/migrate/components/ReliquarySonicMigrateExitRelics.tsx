@@ -48,7 +48,7 @@ export function ReliquarySonicMigrateExitRelics() {
     const { reliquaryZap, ...reliquaryZapQuery } = useReliquaryZap('WITHDRAW');
 
     useEffect(() => {
-        if (!isLoading) {
+        if (!isLoading && !isLoadingBatchRelayerApprovalForAll && !isLoadingBatchRelayerApproval) {
             setSteps([
                 ...(!batchRelayerHasApprovedForAll && !isLoadingBatchRelayerApprovalForAll
                     ? [
@@ -78,8 +78,6 @@ export function ReliquarySonicMigrateExitRelics() {
     }, [isLoading, isLoadingBatchRelayerApproval, isLoadingBatchRelayerApprovalForAll]);
 
     const hasRelics = !isLoading && relics.length > 0;
-
-    //console.log('steps', steps);
 
     return (
         <Box>
