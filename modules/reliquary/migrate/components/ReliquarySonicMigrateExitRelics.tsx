@@ -75,9 +75,11 @@ export function ReliquarySonicMigrateExitRelics() {
                 { id: 'exit', tooltipText: '', type: 'other', buttonText: 'Exit relics' },
             ]);
         }
-    }, [isLoadingBatchRelayerApproval, isLoadingBatchRelayerApprovalForAll]);
+    }, [isLoading, isLoadingBatchRelayerApproval, isLoadingBatchRelayerApprovalForAll]);
 
     const hasRelics = !isLoading && relics.length > 0;
+
+    //console.log('steps', steps);
 
     return (
         <Box>
