@@ -12,14 +12,14 @@ export function HomeLearn(props: BoxProps) {
                     <BeetsHeadline mb="8">Learning the notes</BeetsHeadline>
                     <Box>
                         DeFi can be confusing; whether you’re a beginner or a seasoned veteran, we want to provide you
-                        with information that helps. Check out the resources below to learn more about DeFi, Beethoven X
-                        and the technology we provide.
+                        with information that helps. Check out the resources below to learn more about DeFi, Beets and
+                        the technology we provide.
                     </Box>
                 </GridItem>
             </Grid>
             <Grid templateColumns={{ base: 'repeat(1, 1fr)', lg: 'repeat(3, 1fr)' }} gap="12">
                 <GridItem>
-                    <BeetsSubHeadline mb="8">Beethoven X Basics</BeetsSubHeadline>
+                    <BeetsSubHeadline mb="8">Beets Basics</BeetsSubHeadline>
                     <HomeLearnItem
                         title="Weighted Pools"
                         description="From multiple assets, customized token weightings and dynamic swap fees, weighted pools are the industry standard when it comes to tailored investment strategies. Discover more about this unique type of liquidity pool and how you can get the most out of it."
@@ -32,7 +32,7 @@ export function HomeLearn(props: BoxProps) {
                     />
                     <HomeLearnItem
                         title="Gauge Voting"
-                        description="30% of all the Beethoven X emissions are distributed to liquidity pools based on a bi-weekly gauge vote. Learn all about how to get involved, the mechanics of the gauge vote, bribes, snapshots and more."
+                        description="30% of all the Beets emissions are distributed to liquidity pools based on a bi-weekly gauge vote. Learn all about how to get involved, the mechanics of the gauge vote, bribes, snapshots and more."
                         url="https://beethovenxio.medium.com/beethoven-x-gauge-vote-maximising-your-melody-fbeb10e5711b"
                         last={true}
                     />
@@ -66,7 +66,7 @@ export function HomeLearn(props: BoxProps) {
                     />
                     <HomeLearnItem
                         title="Balancer (balancer.fi)"
-                        description="Beethoven X is an official friendly fork built on top of Balancer. Take a deep dive into the foundations that made it all possible and learn all there is to know about the wonders of Balancer technology."
+                        description="Beets is an official friendly fork built on top of Balancer. Take a deep dive into the foundations that made it all possible and learn all there is to know about the wonders of Balancer technology."
                         url="https://docs.balancer.fi/"
                     />
 

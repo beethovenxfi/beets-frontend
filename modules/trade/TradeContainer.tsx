@@ -50,8 +50,8 @@ export function TradeContainer() {
                                             Smart order routing
                                         </Text>
                                         <Text mb="4" color="gray.200">
-                                            The SOR searches all Beethoven X pools to ensure you receive the best
-                                            available price.
+                                            The SOR searches all Beets pools to ensure you receive the best available
+                                            price.
                                         </Text>
                                     </motion.div>
                                 )}

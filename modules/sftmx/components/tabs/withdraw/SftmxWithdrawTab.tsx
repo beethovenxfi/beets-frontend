@@ -61,7 +61,7 @@ export default function SftmxWithdrawTab() {
                                 withdrawalDelay={stakingData.sftmxGetStakingData.withdrawalDelay}
                             />
                         )}
-                        noResultLabel="No withdrawal requests found!"
+                        noResultLabel="No withdrawal requests found. If you have just unstaked FTM it can take up to 5 minutes before your request is visible here."
                         hidePageSizeChange
                         count={requests.length}
                         currentPage={first + 1}

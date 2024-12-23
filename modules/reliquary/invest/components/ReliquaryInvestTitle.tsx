@@ -31,7 +31,7 @@ export function ReliquaryInvestTitle({ investTypeText }: Props) {
             case 'unstake':
                 return {
                     title: 'Unstake fBEETS',
-                    subtitle: 'From the Beethoven X farm',
+                    subtitle: 'From the Beets farm',
                 };
             case 'batch-relayer-reliquary':
                 return {

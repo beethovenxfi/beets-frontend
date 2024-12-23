@@ -39,7 +39,7 @@ export function HomeHero() {
                     >
                         Welcome to
                         <br />
-                        Beethoven X
+                        Beets
                     </Text>
                     <Text
                         color="white"

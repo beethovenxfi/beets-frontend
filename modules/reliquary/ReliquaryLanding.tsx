@@ -38,6 +38,7 @@ import numeral from 'numeral';
 import DelegateSetButton from './components/DelegateSetButton';
 import DelegateClearButton from './components/DelegateClearButton';
 import { useDelegation } from './lib/useDelegation';
+import { ReliquarySonicMigrateModal } from './migrate/ReliquarySonicMigrateModal';
 
 const infoButtonLabelProps = {
     lineHeight: '1rem',
@@ -73,10 +74,15 @@ export default function ReliquaryLanding() {
     const [buttonEnabled, setButtonEnabled] = useState(true);
     const { totalMaBeetsVP, isLoading } = useReliquary();
     const { data: isDelegatedToMDs } = useDelegation();
+    const { isOpen: isSonicMigrateOpen, onOpen: onSonicMigrateOpen, onClose: onSonicMigrateClose } = useDisclosure();
 
     useEffect(() => {
         if (!isConnecting) {
             setButtonEnabled(isConnected);
+        }
+
+        if (isConnected) {
+            onSonicMigrateOpen();
         }
     }, [isConnected]);
 
@@ -209,13 +215,14 @@ export default function ReliquaryLanding() {
                     </VStack>
                 </Box>
             </Stack>
-            <TokensProvider>
+            {/* <TokensProvider>
                 <PoolProvider pool={pool}>
                     <CurrentStepProvider>
                         <ReliquaryMigrateModal isOpen={isOpen} onClose={onClose} />
                     </CurrentStepProvider>
                 </PoolProvider>
-            </TokensProvider>
+            </TokensProvider> */}
+            <ReliquarySonicMigrateModal isOpen={isSonicMigrateOpen} onClose={onSonicMigrateClose} />
         </>
     );
 }

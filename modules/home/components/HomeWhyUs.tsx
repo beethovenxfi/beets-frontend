@@ -13,8 +13,8 @@ export function HomeWhyUs(props: BoxProps) {
         <Box {...props}>
             <BeetsHeadline mb="8">Built for the Future - Accessible, Innovative</BeetsHeadline>
             <Box mr={{ base: '0', lg: '20' }}>
-                Designed to evolve and adapt, Beethoven X provides all the tools necessary for anyone to participate in
-                the future of finance.
+                Designed to evolve and adapt, Beets provides all the tools necessary for anyone to participate in the
+                future of finance.
             </Box>
             <Box my="6" display="flex" justifyContent="center">
                 <NextImage src={chainId === '10' ? WhyUsOpImage : WhyUsImage} width="657px" height="250px" />
@@ -37,8 +37,8 @@ export function HomeWhyUs(props: BoxProps) {
                 <GridItem>
                     <BeetsSubHeadline mb={{ base: '2', md: '6' }}>For Protocols</BeetsSubHeadline>
                     <Box>
-                        Beethoven X leverages constant innovation to bring to its users novel primitives that are
-                        tailored to meet the demands of an ever-changing marketplace.
+                        Beets leverages constant innovation to bring to its users novel primitives that are tailored to
+                        meet the demands of an ever-changing marketplace.
                     </Box>
                 </GridItem>
             </Grid>

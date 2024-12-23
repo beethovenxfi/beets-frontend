@@ -21,7 +21,7 @@ export function HomeBeetsInfo(props: BoxProps) {
             <Box mb="10">
                 Bringing power back to the people: The BEETs token grants users the ability to influence the evolution
                 of the protocol through decentralized governance; make sure your voice is heard and have your say in
-                decisions that shape the future of Beethoven X.
+                decisions that shape the future of Beets.
             </Box>
             <Button variant="primary" as="a" href="https://docs.beets.fi/beets/tokenomics" target="_blank">
                 BEETS tokenomics

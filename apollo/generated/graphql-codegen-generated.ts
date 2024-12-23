@@ -20,7 +20,6 @@ export interface Scalars {
     Bytes: string;
     Date: any;
     GqlBigNumber: any;
-    /** The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf). */
     JSON: any;
 }
 
@@ -62,6 +61,7 @@ export type GqlChain =
     | 'OPTIMISM'
     | 'POLYGON'
     | 'SEPOLIA'
+    | 'SONIC'
     | 'ZKEVM';
 
 export interface GqlContentNewsItem {
@@ -454,6 +454,8 @@ export interface GqlPoolBase {
     dynamicData: GqlPoolDynamicData;
     /** The factory contract address from which the pool was created. */
     factory?: Maybe<Scalars['Bytes']>;
+    /** Whether at least one token in this pool is considered an ERC4626 token and the buffer is allowed. */
+    hasAnyAllowedBuffer: Scalars['Boolean'];
     /** Whether at least one token in this pool is considered an ERC4626 token. */
     hasErc4626: Scalars['Boolean'];
     /** Whether at least one token in a nested pool is considered an ERC4626 token. */
@@ -562,6 +564,7 @@ export interface GqlPoolComposableStable extends GqlPoolBase {
     displayTokens: Array<GqlPoolTokenDisplay>;
     dynamicData: GqlPoolDynamicData;
     factory?: Maybe<Scalars['Bytes']>;
+    hasAnyAllowedBuffer: Scalars['Boolean'];
     hasErc4626: Scalars['Boolean'];
     hasNestedErc4626: Scalars['Boolean'];
     hook?: Maybe<GqlHook>;
@@ -703,6 +706,7 @@ export interface GqlPoolElement extends GqlPoolBase {
     displayTokens: Array<GqlPoolTokenDisplay>;
     dynamicData: GqlPoolDynamicData;
     factory?: Maybe<Scalars['Bytes']>;
+    hasAnyAllowedBuffer: Scalars['Boolean'];
     hasErc4626: Scalars['Boolean'];
     hasNestedErc4626: Scalars['Boolean'];
     hook?: Maybe<GqlHook>;
@@ -866,6 +870,7 @@ export interface GqlPoolFx extends GqlPoolBase {
     dynamicData: GqlPoolDynamicData;
     epsilon: Scalars['String'];
     factory?: Maybe<Scalars['Bytes']>;
+    hasAnyAllowedBuffer: Scalars['Boolean'];
     hasErc4626: Scalars['Boolean'];
     hasNestedErc4626: Scalars['Boolean'];
     hook?: Maybe<GqlHook>;
@@ -922,6 +927,7 @@ export interface GqlPoolGyro extends GqlPoolBase {
     displayTokens: Array<GqlPoolTokenDisplay>;
     dynamicData: GqlPoolDynamicData;
     factory?: Maybe<Scalars['Bytes']>;
+    hasAnyAllowedBuffer: Scalars['Boolean'];
     hasErc4626: Scalars['Boolean'];
     hasNestedErc4626: Scalars['Boolean'];
     hook?: Maybe<GqlHook>;
@@ -1028,6 +1034,7 @@ export interface GqlPoolLiquidityBootstrapping extends GqlPoolBase {
     displayTokens: Array<GqlPoolTokenDisplay>;
     dynamicData: GqlPoolDynamicData;
     factory?: Maybe<Scalars['Bytes']>;
+    hasAnyAllowedBuffer: Scalars['Boolean'];
     hasErc4626: Scalars['Boolean'];
     hasNestedErc4626: Scalars['Boolean'];
     hook?: Maybe<GqlHook>;
@@ -1082,6 +1089,7 @@ export interface GqlPoolMetaStable extends GqlPoolBase {
     displayTokens: Array<GqlPoolTokenDisplay>;
     dynamicData: GqlPoolDynamicData;
     factory?: Maybe<Scalars['Bytes']>;
+    hasAnyAllowedBuffer: Scalars['Boolean'];
     hasErc4626: Scalars['Boolean'];
     hasNestedErc4626: Scalars['Boolean'];
     hook?: Maybe<GqlHook>;
@@ -1144,6 +1152,8 @@ export interface GqlPoolMinimal {
     dynamicData: GqlPoolDynamicData;
     /** The factory contract address from which the pool was created. */
     factory?: Maybe<Scalars['Bytes']>;
+    /** Whether at least one token in this pool is considered an ERC4626 token and the buffer is allowed. */
+    hasAnyAllowedBuffer: Scalars['Boolean'];
     /** Whether at least one token in this pool is considered an ERC4626 token. */
     hasErc4626: Scalars['Boolean'];
     /** Whether at least one token in a nested pool is considered an ERC4626 token. */
@@ -1255,6 +1265,7 @@ export interface GqlPoolStable extends GqlPoolBase {
     displayTokens: Array<GqlPoolTokenDisplay>;
     dynamicData: GqlPoolDynamicData;
     factory?: Maybe<Scalars['Bytes']>;
+    hasAnyAllowedBuffer: Scalars['Boolean'];
     hasErc4626: Scalars['Boolean'];
     hasNestedErc4626: Scalars['Boolean'];
     hook?: Maybe<GqlHook>;
@@ -1557,6 +1568,8 @@ export interface GqlPoolTokenDetail {
     index: Scalars['Int'];
     /** Whether the token is in the allow list. */
     isAllowed: Scalars['Boolean'];
+    /** If it is an ERC4626 token, this defines whether we allow it to use the buffer for pool operations. */
+    isBufferAllowed: Scalars['Boolean'];
     /** Whether the token is considered an ERC4626 token. */
     isErc4626: Scalars['Boolean'];
     /** Token logo */
@@ -1672,6 +1685,7 @@ export interface GqlPoolWeighted extends GqlPoolBase {
     displayTokens: Array<GqlPoolTokenDisplay>;
     dynamicData: GqlPoolDynamicData;
     factory?: Maybe<Scalars['Bytes']>;
+    hasAnyAllowedBuffer: Scalars['Boolean'];
     hasErc4626: Scalars['Boolean'];
     hasNestedErc4626: Scalars['Boolean'];
     hook?: Maybe<GqlHook>;
@@ -2082,6 +2096,52 @@ export interface GqlSorSwapRouteHop {
 
 export type GqlSorSwapType = 'EXACT_IN' | 'EXACT_OUT';
 
+export interface GqlStakedSonicData {
+    __typename: 'GqlStakedSonicData';
+    /** A list of all the delegated validators. */
+    delegatedValidators: Array<GqlStakedSonicDelegatedValidator>;
+    /** Current exchange rate for stS -> S */
+    exchangeRate: Scalars['String'];
+    /** The current rebasing APR for stS. */
+    stakingApr: Scalars['String'];
+    /** Total amount of S in custody of stS. Delegated S plus pool S. */
+    totalAssets: Scalars['AmountHumanReadable'];
+    /** Total amount of S elegated to validators. */
+    totalAssetsDelegated: Scalars['AmountHumanReadable'];
+    /** Total amount of S in the pool to be delegated. */
+    totalAssetsPool: Scalars['AmountHumanReadable'];
+}
+
+export interface GqlStakedSonicDelegatedValidator {
+    __typename: 'GqlStakedSonicDelegatedValidator';
+    /** The amount of S that has been delegated to this validator. */
+    assetsDelegated: Scalars['AmountHumanReadable'];
+    /** The id of the validator. */
+    validatorId: Scalars['String'];
+}
+
+export interface GqlStakedSonicSnapshot {
+    __typename: 'GqlStakedSonicSnapshot';
+    /** Current exchange rate for stS -> S */
+    exchangeRate: Scalars['String'];
+    id: Scalars['ID'];
+    /** The timestamp of the snapshot. Timestamp is end of day midnight. */
+    timestamp: Scalars['Int'];
+    /** Total amount of S in custody of stS. Delegated S plus pool S. */
+    totalAssets: Scalars['AmountHumanReadable'];
+    /** Total amount of S delegated to validators. */
+    totalAssetsDelegated: Scalars['AmountHumanReadable'];
+    /** Total amount of S in the pool. */
+    totalAssetsPool: Scalars['AmountHumanReadable'];
+}
+
+export type GqlStakedSonicSnapshotDataRange =
+    | 'ALL_TIME'
+    | 'NINETY_DAYS'
+    | 'ONE_HUNDRED_EIGHTY_DAYS'
+    | 'ONE_YEAR'
+    | 'THIRTY_DAYS';
+
 /** Inputs for the call data to create the swap transaction. If this input is given, call data is added to the response. */
 export interface GqlSwapCallDataInput {
     /** How long the swap should be valid, provide a timestamp. "999999999999999999" for infinite. Default: infinite */
@@ -2113,6 +2173,8 @@ export interface GqlToken {
     discordUrl?: Maybe<Scalars['String']>;
     /** The ERC4626 review data for the token */
     erc4626ReviewData?: Maybe<Erc4626ReviewData>;
+    /** If it is an ERC4626 token, this defines whether we allow it to use the buffer for pool operations. */
+    isBufferAllowed: Scalars['Boolean'];
     /** Whether the token is considered an ERC4626 token. */
     isErc4626: Scalars['Boolean'];
     /** The logo URI of the token */
@@ -2379,6 +2441,7 @@ export interface Mutation {
     poolReloadStakingForAllPools: Scalars['String'];
     poolSyncAllCowSnapshots: Array<GqlPoolMutationResult>;
     poolSyncAllPoolsFromSubgraph: Array<Scalars['String']>;
+    poolSyncFxQuoteTokens: Array<GqlPoolMutationResult>;
     poolUpdateLifetimeValuesForAllPools: Scalars['String'];
     poolUpdateLiquidityValuesForAllPools: Scalars['String'];
     protocolCacheMetrics: Scalars['String'];
@@ -2386,6 +2449,7 @@ export interface Mutation {
     sftmxSyncWithdrawalRequests: Scalars['String'];
     tokenDeleteTokenType: Scalars['String'];
     tokenReloadAllTokenTypes: Scalars['String'];
+    tokenReloadErc4626Tokens: Array<GqlTokenMutationResult>;
     tokenReloadTokenPrices?: Maybe<Scalars['Boolean']>;
     tokenSyncLatestFxPrices: Scalars['String'];
     tokenSyncTokenDefinitions: Scalars['String'];
@@ -2425,9 +2489,17 @@ export interface MutationPoolSyncAllCowSnapshotsArgs {
     chains: Array<GqlChain>;
 }
 
+export interface MutationPoolSyncFxQuoteTokensArgs {
+    chains: Array<GqlChain>;
+}
+
 export interface MutationTokenDeleteTokenTypeArgs {
     tokenAddress: Scalars['String'];
     type: GqlTokenType;
+}
+
+export interface MutationTokenReloadErc4626TokensArgs {
+    chains: Array<GqlChain>;
 }
 
 export interface MutationTokenReloadTokenPricesArgs {
@@ -2517,6 +2589,10 @@ export interface Query {
     sorGetSwapPaths: GqlSorGetSwapPaths;
     /** Get swap quote from the SOR, queries both the old and new SOR */
     sorGetSwaps: GqlSorGetSwapsResponse;
+    /** Get the staking data and status for stS */
+    stsGetGqlStakedSonicData: GqlStakedSonicData;
+    /** Get snapshots for sftmx staking for a specific range */
+    stsGetStakedSonicSnapshots: Array<GqlStakedSonicSnapshot>;
     /**
      * Returns the candlestick chart data for a token for a given range.
      * @deprecated Use tokenGetHistoricalPrices instead
@@ -2690,6 +2766,10 @@ export interface QuerySorGetSwapsArgs {
     swapType: GqlSorSwapType;
     tokenIn: Scalars['String'];
     tokenOut: Scalars['String'];
+}
+
+export interface QueryStsGetStakedSonicSnapshotsArgs {
+    range: GqlStakedSonicSnapshotDataRange;
 }
 
 export interface QueryTokenGetCandlestickChartDataArgs {

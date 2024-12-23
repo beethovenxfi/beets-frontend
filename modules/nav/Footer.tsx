@@ -58,11 +58,7 @@ export function Footer() {
                             </Link>
                         </Box>
                         <Box>
-                            <Link
-                                href="https://twitter.com/beethoven_x"
-                                target="_blank"
-                                _active={{ boxShadow: 'none' }}
-                            >
+                            <Link href="https://x.com/beets_fi" target="_blank" _active={{ boxShadow: 'none' }}>
                                 <NextImage src={TwitterIcon} />
                             </Link>
                         </Box>

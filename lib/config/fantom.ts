@@ -10,13 +10,13 @@ const PoolDetailWarningObject: PoolDetailWarning = {
         'A vulnerability has been discovered that effects this pool. Existing liquidity providers should remove liquidity immediately, and no new deposits should be made.',
     type: 'warning',
     link: {
-        url: 'https://x.com/beethoven_x/status/1694015080717787244',
+        url: 'https://x.com/beets_fi/status/1694015080717787244',
         text: 'Read more',
     },
 };
 
 export const fantomNetworkConfig: NetworkConfig = {
-    appName: 'Beethoven X',
+    appName: 'Beets',
     chainId: '250',
     networkName: 'Fantom Opera',
     networkShortName: 'Fantom',
@@ -128,7 +128,7 @@ export const fantomNetworkConfig: NetworkConfig = {
         },
         {
             title: 'Twitter',
-            url: 'https://twitter.com/beethoven_x',
+            url: 'https://x.com/beets_fi',
         },
         {
             title: 'Medium',

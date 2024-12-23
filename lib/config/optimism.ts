@@ -16,7 +16,7 @@ const PoolDetailWarningObject: PoolDetailWarning = {
 };
 
 export const optimismNetworkConfig: NetworkConfig = {
-    appName: 'Beethoven X',
+    appName: 'Beets',
     chainId: '10',
     networkName: 'Optimism Mainnet',
     networkShortName: 'Optimism',
@@ -135,7 +135,7 @@ export const optimismNetworkConfig: NetworkConfig = {
         },
         {
             title: 'Twitter',
-            url: 'https://twitter.com/beethoven_x',
+            url: 'https://x.com/beets_fi',
         },
         {
             title: 'Medium',

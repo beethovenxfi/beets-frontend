@@ -32,7 +32,7 @@ export default function SftmxLanding() {
                     onChange={(index: number) => {
                         // start polling for withdrawal requests when Withdraw tab is active, else stop polling again
                         if (index === 2) {
-                            startPolling(180000);
+                            startPolling(30000);
                         } else {
                             stopPolling();
                         }

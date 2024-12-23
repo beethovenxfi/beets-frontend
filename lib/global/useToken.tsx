@@ -20,6 +20,7 @@ export function _useGetTokens() {
     const tokens: TokenWithImportedFlag[] = [...(tokensResponse?.tokens || []), ...userImportedTokens].map((token) => ({
         ...token,
         address: token.address.toLowerCase(),
+        isBufferAllowed: false,
     }));
     const prices = keyBy(pricesResponse?.tokenPrices || [], 'address');
 
@@ -49,6 +50,7 @@ export function _useGetTokens() {
                 priority: 0,
                 tradable: false,
                 isErc4626: false,
+                isBufferAllowed: false,
             };
         }
 
