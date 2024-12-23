@@ -55,7 +55,7 @@ export default function ReliquaryLanding() {
         },
     });
     const [buttonEnabled, setButtonEnabled] = useState(true);
-    const { totalMaBeetsVP, isLoading } = useReliquary();
+    const { totalMaBeetsVP, isLoading, relicPositions } = useReliquary();
     const { data: isDelegatedToMDs } = useDelegation();
     const { isLoading: isLoadingOldBeetsBalance, balance: oldBeetsBalance } = useOldBeetsBalance();
     const tokenData = getToken(networkConfig.beets.oldAddress);
@@ -71,8 +71,13 @@ export default function ReliquaryLanding() {
         if (!isOpenMigrateModal && !isLoadingOldBeetsBalance && parseFloat(oldBeetsBalance) > 0) {
             onOpenMigrateModal();
         }
+    }, [isLoadingOldBeetsBalance, oldBeetsBalance]);
 
-        /* if (!isOpen && !isLoadingOldBeetsBalance && parseFloat(oldBeetsBalance) === 0) {
+    const hasNoRelics = !isLoading && relicPositions.length === 0;
+    const hasNoLzBeets = !isLoadingOldBeetsBalance && parseFloat(oldBeetsBalance) === 0;
+
+    useEffect(() => {
+        if (!isOpen && hasNoRelics && hasNoLzBeets) {
             showToast({
                 id: 'migrate-sonic',
                 type: ToastType.Info,
@@ -90,8 +95,8 @@ export default function ReliquaryLanding() {
                     </Stack>
                 ),
             });
-        } */
-    }, [isLoadingOldBeetsBalance, oldBeetsBalance]);
+        }
+    }, [hasNoRelics, hasNoLzBeets]);
 
     return (
         <>
