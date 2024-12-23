@@ -229,7 +229,8 @@ export default function ReliquaryLanding() {
                                     </BeetsTooltip>
                                     <BeetsTooltip
                                         noImage
-                                        label="Delegate or undelegate your maBEETS VP to the Music Directors. This only affects the delegation for the BeethovenX space on Snapshot."
+                                        //label="Delegate or undelegate your maBEETS VP to the Music Directors. This only affects the delegation for the BeethovenX space on Snapshot."
+                                        label="Delegation is disabled until Snapshot is deployed on Sonic."
                                     >
                                         <Box height="full">
                                             {isDelegatedToMDs ? <DelegateClearButton /> : <DelegateSetButton />}
