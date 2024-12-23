@@ -8,8 +8,10 @@ import useReliquary from '../../lib/useReliquary';
 import { useAllRelicsWithdrawAndHarvestContractCallData } from '../../lib/useAllRelicsWithdrawAndHarvestContractCallData';
 import { ReliquaryTransactionStepsSubmit, TransactionStep } from '../../components/ReliquaryTransactionStepsSubmit';
 import { useReliquaryZap } from '../../lib/useReliquaryZap';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useUserTokenBalances } from '~/lib/user/useUserTokenBalances';
+import { useHasBatchRelayerApproval } from '~/lib/util/useHasBatchRelayerApproval';
+import { useBatchRelayerHasApprovedForAll } from '../../lib/useBatchRelayerHasApprovedForAll';
 
 export function ReliquarySonicMigrateExitRelics() {
     const networkConfig = useNetworkConfig();
@@ -25,6 +27,18 @@ export function ReliquarySonicMigrateExitRelics() {
         refetch: refetchRelicBalances,
     } = useAllRelicsDepositBalances();
     const { refetch: refetchUserBalances } = useUserTokenBalances();
+    const {
+        data: hasBatchRelayerApproval,
+        isLoading: isLoadingBatchRelayerApproval,
+        refetch: refetchBatchRelayerApproval,
+    } = useHasBatchRelayerApproval();
+    const [steps, setSteps] = useState<TransactionStep[]>([]);
+
+    const {
+        data: batchRelayerHasApprovedForAll,
+        isLoading: isLoadingBatchRelayerApprovalForAll,
+        refetch: refetchBatchRelayerHasApprovedForAll,
+    } = useBatchRelayerHasApprovedForAll();
 
     const relics = relicsToFilter.filter((relic) => relic.amount !== '0.0');
     const relicNumbersString = relics.map((relic, idx) => `${idx !== 0 ? ', #' : '#'}${relic.relicId}`);
@@ -33,7 +47,36 @@ export function ReliquarySonicMigrateExitRelics() {
         useAllRelicsWithdrawAndHarvestContractCallData();
     const { reliquaryZap, ...reliquaryZapQuery } = useReliquaryZap('WITHDRAW');
 
-    const steps: TransactionStep[] = [{ id: 'exit', tooltipText: '', type: 'other', buttonText: 'Exit relics' }];
+    useEffect(() => {
+        if (!isLoading) {
+            setSteps([
+                ...(!batchRelayerHasApprovedForAll && !isLoadingBatchRelayerApprovalForAll
+                    ? [
+                          {
+                              id: 'batch-relayer-reliquary',
+                              type: 'other' as const,
+                              buttonText: 'Approve relayer for reliquary',
+                              tooltipText:
+                                  'Approve the batch relayer to deposit, withdraw & claim rewards for all relics',
+                          },
+                      ]
+                    : []),
+                ...(!hasBatchRelayerApproval && !isLoadingBatchRelayerApproval
+                    ? [
+                          {
+                              id: 'batch-relayer',
+                              type: 'other' as const,
+                              buttonText: 'Approve relayer for vault',
+                              tooltipText: 'Approve the batch relayer to exit the vault.',
+                          },
+                      ]
+                    : []),
+
+                { id: 'exit', tooltipText: '', type: 'other', buttonText: 'Exit relics' },
+            ]);
+        }
+    }, [isLoadingBatchRelayerApproval, isLoadingBatchRelayerApprovalForAll]);
+
     const hasRelics = !isLoading && relics.length > 0;
 
     return (
@@ -97,10 +140,20 @@ export function ReliquarySonicMigrateExitRelics() {
                             }
                         }}
                         onConfirmed={async (id) => {
-                            setSuccess(true);
-                            refetchRelicPositions();
-                            refetchRelicBalances();
-                            refetchUserBalances();
+                            if (id === 'batch-relayer') {
+                                refetchBatchRelayerApproval();
+                            }
+
+                            if (id === 'batch-relayer-reliquary') {
+                                refetchBatchRelayerHasApprovedForAll();
+                            }
+
+                            if (id === 'exit') {
+                                setSuccess(true);
+                                refetchRelicPositions();
+                                refetchRelicBalances();
+                                refetchUserBalances();
+                            }
                         }}
                         steps={steps || []}
                         queries={[{ ...reliquaryZapQuery, id: 'exit' }]}
