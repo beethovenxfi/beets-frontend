@@ -1,4 +1,16 @@
-import { Badge, Box, Button, Flex, Heading, HStack, Stack, Text, useDisclosure, VStack } from '@chakra-ui/react';
+import {
+    Badge,
+    Box,
+    Button,
+    Flex,
+    getToken,
+    Heading,
+    HStack,
+    Stack,
+    Text,
+    useDisclosure,
+    VStack,
+} from '@chakra-ui/react';
 import numeral from 'numeral';
 import { useEffect, useState } from 'react';
 import { BeetsTokenSonic } from '~/assets/logo/BeetsTokenSonic';
@@ -7,7 +19,7 @@ import { MaBeetsTokenSonic } from '~/assets/logo/MaBeetsTokenSonic';
 import Card from '~/components/card/Card';
 import { ToastType, useToast } from '~/components/toast/BeetsToast';
 import BeetsTooltip from '~/components/tooltip/BeetsTooltip';
-import { TokensProvider } from '~/lib/global/useToken';
+import { TokensProvider, useGetTokens } from '~/lib/global/useToken';
 import { useUserAccount } from '~/lib/user/useUserAccount';
 import { PoolProvider, usePool } from '../pool/lib/usePool';
 import DelegateClearButton from './components/DelegateClearButton';
@@ -20,6 +32,9 @@ import ReliquaryGlobalStats from './components/stats/ReliquaryGlobalStats';
 import { useDelegation } from './lib/useDelegation';
 import useReliquary from './lib/useReliquary';
 import { CurrentStepProvider } from './lib/useReliquaryCurrentStep';
+import { useOldBeetsBalance } from '~/lib/global/useOldBeetsBalance';
+import { BeetsMigration } from '../migrate/BeetsMigration';
+import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 
 const infoButtonLabelProps = {
     lineHeight: '1rem',
@@ -29,17 +44,22 @@ const infoButtonLabelProps = {
 };
 
 export default function ReliquaryLanding() {
+    const networkConfig = useNetworkConfig();
+    const { getToken } = useGetTokens();
     const { isConnected, isConnecting } = useUserAccount();
     const { showToast } = useToast();
     const { pool } = usePool();
     const { isOpen, onOpen, onClose } = useDisclosure({
         onOpen: () => {
-            window.open('https://docs.beets.fi/sonic', '_blank');
+            window.open('https://ftm.beets.fi/mabeets', '_blank');
         },
     });
     const [buttonEnabled, setButtonEnabled] = useState(true);
     const { totalMaBeetsVP, isLoading } = useReliquary();
     const { data: isDelegatedToMDs } = useDelegation();
+    const { isLoading: isLoadingOldBeetsBalance, balance: oldBeetsBalance } = useOldBeetsBalance();
+    const tokenData = getToken(networkConfig.beets.oldAddress);
+    const { isOpen: isOpenMigrateModal, onOpen: onOpenMigrateModal, onClose: onCloseMigrateModal } = useDisclosure();
 
     useEffect(() => {
         if (!isConnecting) {
@@ -48,7 +68,11 @@ export default function ReliquaryLanding() {
     }, [isConnected]);
 
     useEffect(() => {
-        if (!isOpen) {
+        if (!isOpenMigrateModal && !isLoadingOldBeetsBalance && parseFloat(oldBeetsBalance) > 0) {
+            onOpenMigrateModal();
+        }
+
+        /* if (!isOpen && !isLoadingOldBeetsBalance && parseFloat(oldBeetsBalance) === 0) {
             showToast({
                 id: 'migrate-sonic',
                 type: ToastType.Info,
@@ -59,15 +83,15 @@ export default function ReliquaryLanding() {
                         alignItems="center"
                         justifyContent={{ base: 'stretch', xl: undefined }}
                     >
-                        <Text>Sonic is live! If you have maBEETS Fantom, you can now migrate to Sonic.</Text>
+                        <Text>BEETS are live on Sonic! If you have maBEETS Fantom, you can migrate to Sonic.</Text>
                         <Button variant="primary" onClick={onOpen} w={{ base: 'full', xl: 'inherit' }}>
-                            Migration Guide
+                            Fantom App
                         </Button>
                     </Stack>
                 ),
             });
-        }
-    }, [isOpen]);
+        } */
+    }, [isLoadingOldBeetsBalance, oldBeetsBalance]);
 
     return (
         <>
@@ -230,13 +254,12 @@ export default function ReliquaryLanding() {
                     </VStack>
                 </Box>
             </Stack>
-            {/* <TokensProvider>
-                <PoolProvider pool={pool}>
-                    <CurrentStepProvider>
-                        <ReliquaryMigrateModal isOpen={isOpen} onClose={onClose} />
-                    </CurrentStepProvider>
-                </PoolProvider>
-            </TokensProvider> */}
+            <BeetsMigration
+                oldBeetsBalance={oldBeetsBalance}
+                tokenData={tokenData}
+                isOpen={isOpenMigrateModal}
+                onClose={onCloseMigrateModal}
+            />
         </>
     );
 }

@@ -2096,6 +2096,52 @@ export interface GqlSorSwapRouteHop {
 
 export type GqlSorSwapType = 'EXACT_IN' | 'EXACT_OUT';
 
+export interface GqlStakedSonicData {
+    __typename: 'GqlStakedSonicData';
+    /** A list of all the delegated validators. */
+    delegatedValidators: Array<GqlStakedSonicDelegatedValidator>;
+    /** Current exchange rate for stS -> S */
+    exchangeRate: Scalars['String'];
+    /** The current rebasing APR for stS. */
+    stakingApr: Scalars['String'];
+    /** Total amount of S in custody of stS. Delegated S plus pool S. */
+    totalAssets: Scalars['AmountHumanReadable'];
+    /** Total amount of S elegated to validators. */
+    totalAssetsDelegated: Scalars['AmountHumanReadable'];
+    /** Total amount of S in the pool to be delegated. */
+    totalAssetsPool: Scalars['AmountHumanReadable'];
+}
+
+export interface GqlStakedSonicDelegatedValidator {
+    __typename: 'GqlStakedSonicDelegatedValidator';
+    /** The amount of S that has been delegated to this validator. */
+    assetsDelegated: Scalars['AmountHumanReadable'];
+    /** The id of the validator. */
+    validatorId: Scalars['String'];
+}
+
+export interface GqlStakedSonicSnapshot {
+    __typename: 'GqlStakedSonicSnapshot';
+    /** Current exchange rate for stS -> S */
+    exchangeRate: Scalars['String'];
+    id: Scalars['ID'];
+    /** The timestamp of the snapshot. Timestamp is end of day midnight. */
+    timestamp: Scalars['Int'];
+    /** Total amount of S in custody of stS. Delegated S plus pool S. */
+    totalAssets: Scalars['AmountHumanReadable'];
+    /** Total amount of S delegated to validators. */
+    totalAssetsDelegated: Scalars['AmountHumanReadable'];
+    /** Total amount of S in the pool. */
+    totalAssetsPool: Scalars['AmountHumanReadable'];
+}
+
+export type GqlStakedSonicSnapshotDataRange =
+    | 'ALL_TIME'
+    | 'NINETY_DAYS'
+    | 'ONE_HUNDRED_EIGHTY_DAYS'
+    | 'ONE_YEAR'
+    | 'THIRTY_DAYS';
+
 /** Inputs for the call data to create the swap transaction. If this input is given, call data is added to the response. */
 export interface GqlSwapCallDataInput {
     /** How long the swap should be valid, provide a timestamp. "999999999999999999" for infinite. Default: infinite */
@@ -2395,6 +2441,7 @@ export interface Mutation {
     poolReloadStakingForAllPools: Scalars['String'];
     poolSyncAllCowSnapshots: Array<GqlPoolMutationResult>;
     poolSyncAllPoolsFromSubgraph: Array<Scalars['String']>;
+    poolSyncFxQuoteTokens: Array<GqlPoolMutationResult>;
     poolUpdateLifetimeValuesForAllPools: Scalars['String'];
     poolUpdateLiquidityValuesForAllPools: Scalars['String'];
     protocolCacheMetrics: Scalars['String'];
@@ -2439,6 +2486,10 @@ export interface MutationPoolReloadStakingForAllPoolsArgs {
 }
 
 export interface MutationPoolSyncAllCowSnapshotsArgs {
+    chains: Array<GqlChain>;
+}
+
+export interface MutationPoolSyncFxQuoteTokensArgs {
     chains: Array<GqlChain>;
 }
 
@@ -2538,6 +2589,10 @@ export interface Query {
     sorGetSwapPaths: GqlSorGetSwapPaths;
     /** Get swap quote from the SOR, queries both the old and new SOR */
     sorGetSwaps: GqlSorGetSwapsResponse;
+    /** Get the staking data and status for stS */
+    stsGetGqlStakedSonicData: GqlStakedSonicData;
+    /** Get snapshots for sftmx staking for a specific range */
+    stsGetStakedSonicSnapshots: Array<GqlStakedSonicSnapshot>;
     /**
      * Returns the candlestick chart data for a token for a given range.
      * @deprecated Use tokenGetHistoricalPrices instead
@@ -2711,6 +2766,10 @@ export interface QuerySorGetSwapsArgs {
     swapType: GqlSorSwapType;
     tokenIn: Scalars['String'];
     tokenOut: Scalars['String'];
+}
+
+export interface QueryStsGetStakedSonicSnapshotsArgs {
+    range: GqlStakedSonicSnapshotDataRange;
 }
 
 export interface QueryTokenGetCandlestickChartDataArgs {

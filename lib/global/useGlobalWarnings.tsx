@@ -5,19 +5,12 @@ import { ToastType, useToast } from '~/components/toast/BeetsToast';
 import useCheckpointTrigger from '~/modules/pool/stake/lib/useCheckpointTrigger';
 import { useGaugeCheckpoint } from '~/modules/pool/stake/lib/useGaugeCheckpoint';
 import useVeMigrationTrigger from '~/modules/pool/stake/lib/useVeMigrationTrigger';
-import { useOldBeetsBalance } from './useOldBeetsBalance';
-import { BeetsMigration } from '~/modules/migrate/BeetsMigration';
-import { networkConfig } from '~/lib/config/network-config';
-import { useGetTokens } from './useToken';
 
 export default function useGlobalWarnings() {
     const { isLoading: isLoadingMigrationData, shouldShowMigrationTrigger } = useVeMigrationTrigger();
     const { isLoading: isLoadingCheckpointableGauges, checkpointableGauges } = useCheckpointTrigger();
     const { checkpoint, ...checkpointMutation } = useGaugeCheckpoint();
     const { showToast, removeToast } = useToast();
-    const { isLoading: isLoadingOldBeetsBalance, balance: oldBeetsBalance } = useOldBeetsBalance();
-    const { getToken } = useGetTokens();
-    const tokenData = getToken(networkConfig.beets.oldAddress);
 
     // sync veBAL warning
     useEffect(() => {
@@ -76,15 +69,4 @@ export default function useGlobalWarnings() {
             removeToast('checkpoint-gauges-trigger');
         }
     }, [isLoadingCheckpointableGauges]);
-
-    // check for BEETS migration on Sonic
-    useEffect(() => {
-        if (parseFloat(oldBeetsBalance) > 0 && networkConfig.beetsMigrationEnabled) {
-            showToast({
-                id: 'beets-migration',
-                content: <BeetsMigration oldBeetsBalance={oldBeetsBalance} tokenData={tokenData} />,
-                type: ToastType.Warn,
-            });
-        }
-    }, [isLoadingOldBeetsBalance, oldBeetsBalance]);
 }
