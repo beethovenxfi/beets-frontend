@@ -1,5 +1,6 @@
 import { Box, Heading, Skeleton, Text } from '@chakra-ui/react';
 import { parseUnits } from 'ethers/lib/utils.js';
+import { useState } from 'react';
 import { BeetsBox } from '~/components/box/BeetsBox';
 import { BeetsSubmitTransactionButton } from '~/components/button/BeetsSubmitTransactionButton';
 import TokenRow from '~/components/token/TokenRow';
@@ -8,6 +9,7 @@ import { useUserTokenBalances } from '~/lib/user/useUserTokenBalances';
 import { useUnwrapEth } from '~/lib/util/useUnwrapEth';
 
 export function ReliquarySonicMigrateUnwrapFtm() {
+    const [success, setSuccess] = useState(false);
     const { userBalances, isLoading, refetch: refetchUserBalances } = useUserTokenBalances();
     const networkConfig = useNetworkConfig();
     const wftmBalance = userBalances.find((balance) => balance.address === networkConfig.wethAddress)?.amount || '0';
@@ -18,8 +20,9 @@ export function ReliquarySonicMigrateUnwrapFtm() {
         <Box>
             <Heading size="md">3. Unwrap Your FTM</Heading>
             {isLoading ? <Skeleton width="full" height="100px" mt="2" /> : null}
-            {!hasWftmBalance && <Text mb="4">You have no WFTM in this wallet.</Text>}
-            {hasWftmBalance && (
+            {success && <Text mb="4">You've successfully unwrapped your FTM. Move on to step #4</Text>}
+            {!hasWftmBalance && !success && <Text mb="4">You have no WFTM in this wallet.</Text>}
+            {hasWftmBalance && !success && (
                 <>
                     <Text mb="4">Convert your wFTM back to native FTM to prepare for the upgrade to S.</Text>
 
@@ -29,7 +32,10 @@ export function ReliquarySonicMigrateUnwrapFtm() {
                     <BeetsSubmitTransactionButton
                         {...unwrapEthQuery}
                         onClick={() => unwrapEthQuery.unwrap(wftmBalance)}
-                        onConfirmed={() => refetchUserBalances()}
+                        onConfirmed={() => {
+                            refetchUserBalances();
+                            setSuccess(true);
+                        }}
                         width="full"
                         size="lg"
                     >

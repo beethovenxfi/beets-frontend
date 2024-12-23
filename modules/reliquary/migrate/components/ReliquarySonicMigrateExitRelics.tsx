@@ -8,9 +8,12 @@ import useReliquary from '../../lib/useReliquary';
 import { useAllRelicsWithdrawAndHarvestContractCallData } from '../../lib/useAllRelicsWithdrawAndHarvestContractCallData';
 import { ReliquaryTransactionStepsSubmit, TransactionStep } from '../../components/ReliquaryTransactionStepsSubmit';
 import { useReliquaryZap } from '../../lib/useReliquaryZap';
+import { useState } from 'react';
+import { useUserTokenBalances } from '~/lib/user/useUserTokenBalances';
 
 export function ReliquarySonicMigrateExitRelics() {
     const networkConfig = useNetworkConfig();
+    const [success, setSuccess] = useState(false);
     const { refetchRelicPositions } = useReliquary();
     const {
         relics: relicsToFilter,
@@ -19,7 +22,9 @@ export function ReliquarySonicMigrateExitRelics() {
         allRelicsWftmAmount,
         alllRelicsBptTotal,
         isLoading,
+        refetch: refetchRelicBalances,
     } = useAllRelicsDepositBalances();
+    const { refetch: refetchUserBalances } = useUserTokenBalances();
 
     const relics = relicsToFilter.filter((relic) => relic.amount !== '0.0');
     const relicNumbersString = relics.map((relic, idx) => `${idx !== 0 ? ', #' : '#'}${relic.relicId}`);
@@ -35,8 +40,9 @@ export function ReliquarySonicMigrateExitRelics() {
         <Box>
             <Heading size="md">1. Exit Your Relics</Heading>
             {isLoading ? <Skeleton width="full" height="200px" /> : null}
-            {!hasRelics && <Text mb="4">You have no relics in this wallet.</Text>}
-            {hasRelics && (
+            {success && <Text>You've successfully exited all of your relics!. Move on to step #2.</Text>}
+            {!hasRelics && !success && <Text mb="4">You've already exited all relics for this wallet.</Text>}
+            {hasRelics && !success && (
                 <>
                     <Text mb="4">
                         Withdraw your BEETS and wFTM from your maBEETS relic(s). In this wallet, you have{' '}
@@ -91,12 +97,10 @@ export function ReliquarySonicMigrateExitRelics() {
                             }
                         }}
                         onConfirmed={async (id) => {
-                            /* if (id === 'exit') {
-                        onWithdrawComplete();
-                        refetchRelicPositions();
-                    } */
-
+                            setSuccess(true);
                             refetchRelicPositions();
+                            refetchRelicBalances();
+                            refetchUserBalances();
                         }}
                         steps={steps || []}
                         queries={[{ ...reliquaryZapQuery, id: 'exit' }]}

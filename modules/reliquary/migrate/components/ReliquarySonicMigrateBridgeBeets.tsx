@@ -14,6 +14,7 @@ import { useUserAccount } from '~/lib/user/useUserAccount';
 export function ReliquarySonicMigrateBridgeBeets() {
     const { userAddress } = useUserAccount();
     const networkConfig = useNetworkConfig();
+    const [success, setSuccess] = useState(false);
     const [steps, setSteps] = useState<TransactionStep[] | null>(null);
     const { userBalances, isLoading, refetch: refetchUserBalances } = useUserTokenBalances();
     const beetsBalance = userBalances.find((balance) => balance.address === networkConfig.beets.address)?.amount || '0';
@@ -64,8 +65,40 @@ export function ReliquarySonicMigrateBridgeBeets() {
         <Box>
             <Heading size="md">2. Bridge your BEETS on Fantom for lzBEETS on Sonic</Heading>
             {isLoading && <Skeleton height="100px" width="full" mt="2" />}
-            {!hasBeetsBalance && !isLoading && <Text>You don't have any BEETS to bridge.</Text>}
-            {hasBeetsBalance && !isLoading && (
+            {success && (
+                <>
+                    <Text mb="2">
+                        You've started the bridging of your BEETES to lzBEETS on Sonic. You can check the bridge
+                        transaction status on LayerZeroScan. Once complete, you can move on to step #3.
+                    </Text>
+                    <Box mb="4">
+                        <Link href={`https://layerzeroscan.com/address/${userAddress}`} target="_blank">
+                            <Flex alignItems="center">
+                                <Text mr="1">LayerZeroScan</Text>
+                                <ExternalLink size={16} />
+                            </Flex>
+                        </Link>
+                    </Box>
+                </>
+            )}
+            {!hasBeetsBalance && !isLoading && !success && (
+                <>
+                    <Text mb="2">You don't have any BEETS to bridge.</Text>
+                    <Text mb="2">
+                        If you've already bridged your BEETS, you can check the bridge transaction status on
+                        LayerZeroScan.
+                    </Text>
+                    <Box mb="4">
+                        <Link href={`https://layerzeroscan.com/address/${userAddress}`} target="_blank">
+                            <Flex alignItems="center">
+                                <Text mr="1">LayerZeroScan</Text>
+                                <ExternalLink size={16} />
+                            </Flex>
+                        </Link>
+                    </Box>
+                </>
+            )}
+            {hasBeetsBalance && !isLoading && !success && (
                 <>
                     <Text mb="2">
                         Transfer your Fantom BEETS to lzBEETS via the LayerZero bridge. You'll be interacting with the
@@ -88,7 +121,7 @@ export function ReliquarySonicMigrateBridgeBeets() {
                         or any other non EOA, please wait for the stargate UI to come online.
                     </Text>
 
-                    <Text mb="2">Once done you can check the bridge transaction on LayerZeroScan.</Text>
+                    <Text mb="2">Once done you can check the bridge transaction status on LayerZeroScan.</Text>
                     <Box mb="4">
                         <Link href={`https://layerzeroscan.com/address/${userAddress}`} target="_blank">
                             <Flex alignItems="center">
@@ -112,6 +145,7 @@ export function ReliquarySonicMigrateBridgeBeets() {
                                 refetchUserAllowances();
                             } else {
                                 refetchUserBalances();
+                                setSuccess(true);
                             }
                         }}
                         queries={[{ ...bridgeQuery, id: 'bridge' }]}
