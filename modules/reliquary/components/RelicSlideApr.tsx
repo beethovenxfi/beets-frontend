@@ -1,38 +1,38 @@
-import { useSwiperSlide } from 'swiper/react';
-import { useEffect, useState } from 'react';
 import {
     Badge,
     Box,
-    HStack,
-    Skeleton,
-    VStack,
-    Text,
     Button,
-    useDisclosure,
+    HStack,
     Portal,
+    Skeleton,
     Stack,
     StackDivider,
+    Text,
+    useDisclosure,
+    VStack,
 } from '@chakra-ui/react';
-import useReliquary from '../lib/useReliquary';
-import { numberFormatUSDValue } from '~/lib/util/number-formats';
+import { motion } from 'framer-motion';
+import { sumBy } from 'lodash';
+import { useEffect, useState } from 'react';
+import { BarChart } from 'react-feather';
+import { useSwiperSlide } from 'swiper/react';
+import { GqlPoolAprTotal } from '~/apollo/generated/graphql-codegen-generated';
 import AprTooltip from '~/components/apr-tooltip/AprTooltip';
-import numeral from 'numeral';
-import { usePool } from '~/modules/pool/lib/usePool';
+import { BeetsSubmitTransactionButton } from '~/components/button/BeetsSubmitTransactionButton';
 import { InfoButton } from '~/components/info-button/InfoButton';
 import TokenAvatar from '~/components/token/TokenAvatar';
-import { tokenFormatAmount } from '~/lib/services/token/token-util';
-import { useRelicPendingRewards } from '../lib/useRelicPendingRewards';
-import { sumBy } from 'lodash';
-import { useGetTokens } from '~/lib/global/useToken';
-import { ReliquaryBatchRelayerApprovalButton } from './ReliquaryBatchRelayerApprovalButton';
-import { BeetsSubmitTransactionButton } from '~/components/button/BeetsSubmitTransactionButton';
-import { useRelicHarvestRewards } from '../lib/useRelicHarvestRewards';
 import BeetsTooltip from '~/components/tooltip/BeetsTooltip';
-import { motion } from 'framer-motion';
+import { useGetTokens } from '~/lib/global/useToken';
+import { tokenFormatAmount } from '~/lib/services/token/token-util';
+import { getApr } from '~/lib/util/apr-util';
+import { numberFormatUSDValue } from '~/lib/util/number-formats';
+import { usePool } from '~/modules/pool/lib/usePool';
 import { useBatchRelayerHasApprovedForAll } from '../lib/useBatchRelayerHasApprovedForAll';
+import { useRelicHarvestRewards } from '../lib/useRelicHarvestRewards';
+import { useRelicPendingRewards } from '../lib/useRelicPendingRewards';
+import useReliquary from '../lib/useReliquary';
 import RelicMaturityModal from './RelicMaturityModal';
-import { BarChart } from 'react-feather';
-import { GqlPoolAprTotal } from '~/apollo/generated/graphql-codegen-generated';
+import { ReliquaryBatchRelayerApprovalButton } from './ReliquaryBatchRelayerApprovalButton';
 
 export default function RelicSlideApr() {
     const { pool } = usePool();
@@ -56,18 +56,6 @@ export default function RelicSlideApr() {
     const { data: batchRelayerHasApprovedForAll, refetch } = useBatchRelayerHasApprovedForAll();
     const { priceForAmount } = useGetTokens();
     const pendingRewardsUsdValue = sumBy(pendingRewards, priceForAmount);
-
-    const swapFeesItem = pool.dynamicData.apr.items.find((item) => item.title === 'Swap fees APR');
-    const swapFeesApr =
-        swapFeesItem?.apr && swapFeesItem.apr.__typename === 'GqlPoolAprTotal' ? swapFeesItem.apr.total : '0';
-    const votingAprItem = pool.dynamicData.apr.items.find((item) => item.title === 'Voting APR*');
-    const maxVotingApr =
-        votingAprItem?.apr && votingAprItem.apr.__typename === 'GqlPoolAprRange' ? votingAprItem.apr.max : '0';
-    const minTotalSelectedRelicApr = parseFloat(selectedRelicApr) + parseFloat(swapFeesApr);
-    const maxTotalSelectedRelicApr = minTotalSelectedRelicApr + parseFloat(maxVotingApr);
-    const relicAprRangeView = `${numeral(minTotalSelectedRelicApr).format('0.00%')} - ${numeral(
-        maxTotalSelectedRelicApr,
-    ).format('0.00%')}`;
 
     // show selected relic (beets) apr in tooltip
     const dynamicDataApr = {
@@ -116,8 +104,8 @@ export default function RelicSlideApr() {
                         Relic APR
                     </Text>
                     <HStack>
-                        <div className="apr-stripes">{relicAprRangeView}</div>
-                        <AprTooltip onlySparkles data={dynamicDataApr} apr={relicAprRangeView} />
+                        <div className="apr-stripes">{getApr(pool.dynamicData.apr.apr)}</div>
+                        <AprTooltip onlySparkles data={dynamicDataApr} apr={getApr(pool.dynamicData.apr.apr)} />
                     </HStack>
                     <HStack>
                         <HStack
