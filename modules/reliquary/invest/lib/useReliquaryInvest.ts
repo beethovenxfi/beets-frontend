@@ -33,7 +33,7 @@ export function useReliquaryInvest() {
     }));
 
     const hasValidUserInput =
-        !selectedInvestTokensWithAmounts.every((token) => parseFloat(token.amount) === 0) &&
+        !selectedInvestTokensWithAmounts.some((token) => parseFloat(token.amount) === 0) &&
         selectedInvestTokensWithAmounts.every((token) =>
             oldBnum(token.amount).lte(getUserBalanceForToken(token.address)),
         );
