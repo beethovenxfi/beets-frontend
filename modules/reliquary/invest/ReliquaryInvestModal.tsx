@@ -52,7 +52,7 @@ export function ReliquaryInvestModal({
     isConnected = true,
 }: Props) {
     const { isOpen, onOpen, onClose } = useDisclosure();
-    const [modalState, setModalState] = useState<'start' | 'proportional' | 'custom' | 'preview'>('proportional');
+    const [modalState, setModalState] = useState<'start' | 'proportional' | 'custom' | 'preview'>('start');
     const [type, setInvestType] = useState<'proportional' | 'custom' | null>(null);
     const initialRef = useRef(null);
     const [investComplete, setInvestComplete] = useState(false);
@@ -76,7 +76,7 @@ export function ReliquaryInvestModal({
             setInvestType(null);
             setCreateRelic(false);
         }
-        setModalState('proportional');
+        setModalState('start');
         clearInvestState();
         onClose();
         _onClose && _onClose();
@@ -144,7 +144,7 @@ export function ReliquaryInvestModal({
                     disabled={!isConnected}
                     {...activatorProps}
                 >
-                    Get maBEETS
+                    {activatorLabel || 'Get maBEETS'}
                 </Button>
             )}
             <Modal motionPreset="none" isOpen={isOpen} onClose={onModalClose} size="lg" initialFocusRef={initialRef}>
@@ -167,11 +167,11 @@ export function ReliquaryInvestModal({
                             background="gray.700"
                         >
                             <Box transformOrigin="top" width="full" height="full" background="blackAlpha.400">
-                                <Box width="full" height="full" />
+                                <Box width="full" height="full" className="bg" />
                             </Box>
                         </Box>
                         <ModalCloseButton />
-                        {modalState !== 'start' && modalState !== 'proportional' ? (
+                        {modalState !== 'start' ? (
                             <IconButton
                                 aria-label={'back-button'}
                                 icon={<ChevronLeft />}
@@ -184,7 +184,7 @@ export function ReliquaryInvestModal({
                                 top="12px"
                                 left="12px"
                                 onClick={() => {
-                                    if (/* modalState === 'proportional' || */ modalState === 'custom') {
+                                    if (modalState === 'proportional' || modalState === 'custom') {
                                         setModalState('start');
                                     } else if (modalState === 'preview') {
                                         if (type === 'proportional') {
@@ -203,7 +203,7 @@ export function ReliquaryInvestModal({
                                         Invest into {createRelic ? 'a new  ' : 'an existing '}relic
                                     </Heading>
                                     <Text fontSize="1rem" fontWeight="normal">
-                                        Deposit into the fresh BEETS farm to get maBEETS.
+                                        Deposit into the fresh BEETS pool to get maBEETS.
                                     </Text>
                                 </>
                             ) : null}
@@ -237,14 +237,6 @@ export function ReliquaryInvestModal({
                                 />
                             </FadeInBox>
                             <FadeInBox isVisible={modalState === 'proportional'}>
-                                {!createRelic && selectedRelic && (
-                                    <Box px="4">
-                                        <Alert status="warning">
-                                            <AlertIcon />
-                                            Investing more funds into your relic will affect your level up progress.
-                                        </Alert>
-                                    </Box>
-                                )}
                                 <ReliquaryInvestProportional
                                     onShowPreview={() => {
                                         setInvestType('proportional');

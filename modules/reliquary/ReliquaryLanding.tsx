@@ -35,6 +35,7 @@ import { CurrentStepProvider } from './lib/useReliquaryCurrentStep';
 import { useOldBeetsBalance } from '~/lib/global/useOldBeetsBalance';
 import { BeetsMigration } from '../migrate/BeetsMigration';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
+import { ReliquaryInvestModal } from './invest/ReliquaryInvestModal';
 
 const infoButtonLabelProps = {
     lineHeight: '1rem',
@@ -73,6 +74,7 @@ export default function ReliquaryLanding() {
         }
     }, [isLoadingOldBeetsBalance, oldBeetsBalance]);
 
+    const hasRelics = !isLoading && relicPositions.length > 0;
     const hasNoRelics = !isLoading && relicPositions.length === 0;
     const hasNoLzBeets = !isLoadingOldBeetsBalance && parseFloat(oldBeetsBalance) === 0;
 
@@ -200,43 +202,58 @@ export default function ReliquaryLanding() {
                         )}
                         {isConnected && (
                             <>
-                                <HStack spacing="4" width="full" position="relative">
-                                    <Flex>
-                                        <Heading
-                                            size="lg"
-                                            background="linear-gradient(90deg, #CCFFCC 0%, #05D690 100%)"
-                                            backgroundClip="text"
+                                <Flex width="full">
+                                    <HStack spacing="4" width="full" position="relative" flex="1">
+                                        <Flex>
+                                            <Heading
+                                                size="lg"
+                                                background="linear-gradient(90deg, #CCFFCC 0%, #05D690 100%)"
+                                                backgroundClip="text"
+                                            >
+                                                My relics
+                                            </Heading>
+                                            <Box flex="1" />
+                                        </Flex>
+                                        <BeetsTooltip
+                                            noImage
+                                            label="This is your current maBEETS Voting Power. Depending on when you level up or invest/withdraw, it might be different to what is shown on the latest vote on Snapshot."
                                         >
-                                            My relics
-                                        </Heading>
-                                        <Box flex="1" />
-                                    </Flex>
-                                    <BeetsTooltip
-                                        noImage
-                                        label="This is your current maBEETS Voting Power. Depending on when you level up or invest/withdraw, it might be different to what is shown on the latest vote on Snapshot."
-                                    >
-                                        <VStack pt="1" height="full">
+                                            <VStack pt="1" height="full">
+                                                <Box height="full">
+                                                    {!isLoading && (
+                                                        <Badge rounded="md" colorScheme="orange" p="2">
+                                                            <Heading
+                                                                textTransform="initial"
+                                                                textAlign="center"
+                                                                size="sm"
+                                                            >
+                                                                {numeral(totalMaBeetsVP).format('0.000a')} maBEETS VP
+                                                            </Heading>
+                                                        </Badge>
+                                                    )}
+                                                </Box>
+                                            </VStack>
+                                        </BeetsTooltip>
+                                        <BeetsTooltip
+                                            noImage
+                                            //label="Delegate or undelegate your maBEETS VP to the Music Directors. This only affects the delegation for the BeethovenX space on Snapshot."
+                                            label="Delegation is disabled until Snapshot is deployed on Sonic."
+                                        >
                                             <Box height="full">
-                                                {!isLoading && (
-                                                    <Badge rounded="md" colorScheme="orange" p="2">
-                                                        <Heading textTransform="initial" textAlign="center" size="sm">
-                                                            {numeral(totalMaBeetsVP).format('0.000a')} maBEETS VP
-                                                        </Heading>
-                                                    </Badge>
-                                                )}
+                                                {isDelegatedToMDs ? <DelegateClearButton /> : <DelegateSetButton />}
                                             </Box>
-                                        </VStack>
-                                    </BeetsTooltip>
-                                    <BeetsTooltip
-                                        noImage
-                                        //label="Delegate or undelegate your maBEETS VP to the Music Directors. This only affects the delegation for the BeethovenX space on Snapshot."
-                                        label="Delegation is disabled until Snapshot is deployed on Sonic."
-                                    >
-                                        <Box height="full">
-                                            {isDelegatedToMDs ? <DelegateClearButton /> : <DelegateSetButton />}
-                                        </Box>
-                                    </BeetsTooltip>
-                                </HStack>
+                                        </BeetsTooltip>
+                                    </HStack>
+                                    <Box>
+                                        {hasRelics && (
+                                            <ReliquaryInvestModal
+                                                createRelic
+                                                activatorProps={{ size: 'md', width: '160px', mx: 'auto' }}
+                                                activatorLabel="Create new relic"
+                                            />
+                                        )}
+                                    </Box>
+                                </Flex>
                                 <Box width="full">
                                     <RelicCarousel />
                                 </Box>

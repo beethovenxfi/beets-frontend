@@ -43,7 +43,7 @@ export function ReliquaryInvestTypeChoice({ onShowProportional, onShowCustom }: 
     return (
         <VStack width="full">
             <VStack alignItems="flex-start" px="4" pb="4" width="full">
-                <VStack alignItems="flex-start" spacing="0">
+                {/* <VStack alignItems="flex-start" spacing="0">
                     <Heading size="sm">Choose your investment type</Heading>
                     <Box fontSize="base">
                         The max amount you can invest is shown for each option.
@@ -61,7 +61,7 @@ export function ReliquaryInvestTypeChoice({ onShowProportional, onShowCustom }: 
                             </HStack>
                         </BeetsTooltip>
                     </Box>
-                </VStack>
+                </VStack> */}
 
                 <ChoiceOrientation width="full">
                     <BeetsTooltip noImage label={_canInvestProportionally ? '' : disabledProportionalInvestmentTooltip}>
@@ -82,14 +82,14 @@ export function ReliquaryInvestTypeChoice({ onShowProportional, onShowCustom }: 
                                         {numberFormatUSDValue(totalValueProportionalAmounts || 0)}
                                     </Text>
                                     <Text fontSize="sm">Proportional investment</Text>
-                                    <Text fontSize="xs" color="beets.green">
+                                    {/* <Text fontSize="xs" color="beets.green">
                                         Recommended
-                                    </Text>
+                                    </Text> */}
                                 </VStack>
                             </Button>
                         </Box>
                     </BeetsTooltip>
-                    <Button
+                    {/* <Button
                         _hover={{ borderColor: 'beets.green' }}
                         borderWidth={1}
                         borderColor="beets.transparent"
@@ -105,7 +105,7 @@ export function ReliquaryInvestTypeChoice({ onShowProportional, onShowCustom }: 
                                 &nbsp;
                             </Text>
                         </VStack>
-                    </Button>
+                    </Button> */}
                 </ChoiceOrientation>
             </VStack>
             <VStack width="full" p="4" backgroundColor="blackAlpha.500" alignItems="flex-start">
