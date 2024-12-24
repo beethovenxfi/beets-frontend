@@ -42,7 +42,7 @@ export function Navbar({ scrollY }: Props) {
                         <Box width="full" height="full" bg="beets.base.800" shadow="lg" />
                     </motion.div>
                     <Flex alignItems="center" mr="6" zIndex="2" cursor="pointer">
-                        <NextLink href="/" chakraProps={{ _focus: { boxShadow: 'none' } }}>
+                        <NextLink href="https://beets.fi" chakraProps={{ _focus: { boxShadow: 'none' } }}>
                             {/* {chainId === '10' ? (
                                 <BeetsBalLogo width="132px" />
                             ) : (
