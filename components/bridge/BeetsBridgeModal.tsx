@@ -90,7 +90,7 @@ function Content() {
     return (
         <FadeInBox isVisible={true}>
             <Box p="8">
-                <Heading size="md">Bridge your BEETS on Fantom for lzBEETS on Sonic</Heading>
+                <Heading size="md">Bridge your BEETS on Fantom to lzBEETS on Sonic</Heading>
                 {isLoading && <Skeleton height="100px" width="full" mt="2" />}
                 {success && (
                     <>
