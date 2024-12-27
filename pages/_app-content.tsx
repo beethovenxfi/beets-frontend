@@ -12,6 +12,7 @@ import useGlobalWarnings from '~/lib/global/useGlobalWarnings';
 import { useUserAccount } from '~/lib/user/useUserAccount';
 import { BeetsBridgeModal } from '~/components/bridge/BeetsBridgeModal';
 import { useRouter } from 'next/router';
+import { networkConfig } from '~/lib/config/network-config';
 
 export function AppContent({ Component, pageProps }: AppProps) {
     const ref = useRef(null);
@@ -29,7 +30,7 @@ export function AppContent({ Component, pageProps }: AppProps) {
     } = useDisclosure();
 
     useEffect(() => {
-        if (isConnected && router.pathname !== '/mabeets') {
+        if (isConnected && router.pathname !== '/mabeets' && networkConfig.beetsMigrationEnabled) {
             onBeetsBridgeModalOpen();
         }
     }, [isConnected]);
