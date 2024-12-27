@@ -12,7 +12,6 @@ import {
     ModalCloseButton,
     ModalContent,
 } from '@chakra-ui/react';
-import { parseUnits } from 'ethers/lib/utils.js';
 import { useEffect, useRef, useState } from 'react';
 import { ExternalLink } from 'react-feather';
 import { FadeInBox } from '~/components/animation/FadeInBox';
@@ -23,8 +22,7 @@ import { etherscanGetAddressUrl, etherscanTxShortenForDisplay } from '~/lib/util
 import { useUserAllowances } from '~/lib/util/useUserAllowances';
 import { useBridgeBeets, beetsOftProxy } from '~/modules/reliquary/lib/useBridgeBeets';
 import { TransactionStep, BeetsTransactionStepsSubmit } from '../button/BeetsTransactionStepsSubmit';
-import { useUserBalances } from '~/lib/user/useUserBalances';
-import { keyBy } from 'lodash';
+import { useBeetsBalance } from './useBeetsBalance';
 
 interface Props {
     isOpen: boolean;
@@ -36,18 +34,11 @@ function Content() {
     const networkConfig = useNetworkConfig();
     const [success, setSuccess] = useState(false);
     const [steps, setSteps] = useState<TransactionStep[] | null>(null);
-    const {
-        userBalances: balances = [],
-        isLoading,
-        refetch: refetchUserBalances,
-    } = useUserBalances([networkConfig.beets.address]);
+    const { balance, isLoading, hasBalance, refetch: refetchBeetsBalance } = useBeetsBalance();
 
-    const userBalancesMap = keyBy(balances, 'address');
-    const beetsBalance = userBalancesMap[networkConfig.beets.address]?.amount || '0';
-    const hasBeetsBalance = parseUnits(beetsBalance, 18).gt(0);
     const beetsTokenWithBalance: TokenBaseWithAmount = {
         address: networkConfig.beets.address,
-        amount: beetsBalance,
+        amount: balance,
         name: 'Beethoven X',
         symbol: 'BEETS',
         decimals: 18,
@@ -109,7 +100,7 @@ function Content() {
                         </Box>
                     </>
                 )}
-                {!hasBeetsBalance && !isLoading && !success && (
+                {/* {!hasBeetsBalance && !isLoading && !success && (
                     <>
                         <Text mb="2">You don&apos;t have any BEETS to bridge.</Text>
                         <Text mb="2">
@@ -125,8 +116,8 @@ function Content() {
                             </Link>
                         </Box>
                     </>
-                )}
-                {hasBeetsBalance && !isLoading && !success && (
+                )} */}
+                {hasBalance && !isLoading && !success && (
                     <>
                         <Text mb="2">
                             Transfer your Fantom BEETS to lzBEETS via the LayerZero bridge. You&apos;ll be interacting
@@ -181,7 +172,7 @@ function Content() {
                                 if (id !== 'bridge') {
                                     refetchUserAllowances();
                                 } else {
-                                    refetchUserBalances();
+                                    refetchBeetsBalance();
                                     setSuccess(true);
                                 }
                             }}

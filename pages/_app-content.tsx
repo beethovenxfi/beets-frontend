@@ -13,6 +13,7 @@ import { useUserAccount } from '~/lib/user/useUserAccount';
 import { BeetsBridgeModal } from '~/components/bridge/BeetsBridgeModal';
 import { useRouter } from 'next/router';
 import { networkConfig } from '~/lib/config/network-config';
+import { useBeetsBalance } from '~/components/bridge/useBeetsBalance';
 
 export function AppContent({ Component, pageProps }: AppProps) {
     const ref = useRef(null);
@@ -20,6 +21,7 @@ export function AppContent({ Component, pageProps }: AppProps) {
     const theme = useTheme();
     useGlobalWarnings();
     const { isConnected } = useUserAccount();
+    const { hasBalance, isLoading } = useBeetsBalance();
 
     const router = useRouter();
 
@@ -30,10 +32,16 @@ export function AppContent({ Component, pageProps }: AppProps) {
     } = useDisclosure();
 
     useEffect(() => {
-        if (isConnected && router.pathname !== '/mabeets' && networkConfig.beetsMigrationEnabled) {
+        if (
+            !isLoading &&
+            isConnected &&
+            router.pathname !== '/mabeets' &&
+            networkConfig.beetsMigrationEnabled &&
+            hasBalance
+        ) {
             onBeetsBridgeModalOpen();
         }
-    }, [isConnected]);
+    }, [isConnected, isLoading]);
 
     return (
         <Box
