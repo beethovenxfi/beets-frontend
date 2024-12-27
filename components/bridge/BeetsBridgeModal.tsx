@@ -96,12 +96,13 @@ function Content() {
                     <>
                         <Text mb="2">
                             You&apos;ve started the bridging of your BEETS to lzBEETS on Sonic. You can check the bridge
-                            transaction status on LayerZeroScan. Once complete, go to .
+                            transaction status on LayerZeroScan. Once complete, go to beets.fi to migrate to
+                            (sonic)BEETS.
                         </Text>
                         <Box mb="4">
-                            <Link href={`https://layerzeroscan.com/address/${userAddress}`} target="_blank">
+                            <Link href="https://beets.fi" target="_blank">
                                 <Flex alignItems="center">
-                                    <Text mr="1">LayerZeroScan</Text>
+                                    <Text mr="1">beets.fi</Text>
                                     <ExternalLink size={16} />
                                 </Flex>
                             </Link>
