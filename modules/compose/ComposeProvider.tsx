@@ -136,6 +136,7 @@ function _useCompose() {
     }
 
     function getPoolSymbol() {
+        const maxLength = 33;
         let valid = true;
 
         const tokenSymbols = tokens.map((token) => {
@@ -144,10 +145,13 @@ function _useCompose() {
             if (!tokenInfo) {
                 valid = false;
             }
-            return tokenInfo ? `${Math.round(weightRounded)}${tokenInfo.symbol}` : '';
+            return tokenInfo ? tokenInfo.symbol : '';
         });
 
-        return valid ? tokenSymbols.join('-') : '';
+        const symbolsFull = tokenSymbols.join('-');
+        const poolSymbol = symbolsFull.length > maxLength ? symbolsFull.slice(0, maxLength) : symbolsFull;
+
+        return valid ? `BPT-${poolSymbol}` : '';
     }
 
     function toggleLockTokenByIndex(index: number) {
