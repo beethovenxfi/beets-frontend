@@ -27,9 +27,7 @@ export function AdvancedPoolComposeName(props: Props) {
                 <VStack alignItems="flex-start" spacing="1">
                     <Heading size="sm">4. Pool Name</Heading>
                     <Text lineHeight="1.25rem" fontSize="0.95rem">
-                        Finally, choose a name for you pool. You can leave it as the auto-generated pool name based on
-                        the tokens and their weights, or pick one yourself. The pool symbol is determined by your token
-                        selections and their weights.
+                        Finally, choose a name for you pool.
                     </Text>
                 </VStack>
                 <VStack width="full" height="40px">

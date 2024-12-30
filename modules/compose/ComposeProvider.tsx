@@ -75,10 +75,6 @@ function _useCompose() {
     ]);
 
     useEffect(() => {
-        setPoolName(getPoolSymbol());
-    }, [tokens]);
-
-    useEffect(() => {
         if (getTokenAndWeightValidations().isValid) {
             setProgressValidatedTo(0);
         } else {
