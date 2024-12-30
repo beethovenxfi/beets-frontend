@@ -132,7 +132,7 @@ function _useCompose() {
     }
 
     function getPoolSymbol() {
-        const maxLength = 33;
+        const maxLength = 26;
         let valid = true;
 
         const tokenSymbols = tokens.map((token) => {
