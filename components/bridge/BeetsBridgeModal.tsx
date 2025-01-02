@@ -29,7 +29,7 @@ interface Props {
     onClose: () => void;
 }
 
-function Content() {
+function Content({ onClose }: { onClose: () => void }) {
     const { userAddress } = useUserAccount();
     const networkConfig = useNetworkConfig();
     const [success, setSuccess] = useState(false);
@@ -83,7 +83,7 @@ function Content() {
             <Box p="8">
                 <Heading size="md">Bridge your BEETS on Fantom to lzBEETS on Sonic</Heading>
                 {isLoading && <Skeleton height="100px" width="full" mt="2" />}
-                {success && (
+                {/* {success && (
                     <>
                         <Text mb="2">
                             You&apos;ve started the bridging of your BEETS to lzBEETS on Sonic. You can check the bridge
@@ -99,7 +99,7 @@ function Content() {
                             </Link>
                         </Box>
                     </>
-                )}
+                )} */}
                 {/* {!hasBeetsBalance && !isLoading && !success && (
                     <>
                         <Text mb="2">You don&apos;t have any BEETS to bridge.</Text>
@@ -117,7 +117,7 @@ function Content() {
                         </Box>
                     </>
                 )} */}
-                {hasBalance && !isLoading && !success && (
+                {!isLoading && (
                     <>
                         <Text mb="2">
                             Transfer your Fantom BEETS to lzBEETS via the LayerZero bridge. You&apos;ll be interacting
@@ -163,7 +163,7 @@ function Content() {
                             isLoading={steps === null}
                             loadingButtonText="Bridge BEETS"
                             completeButtonText="Bridging complete"
-                            onCompleteButtonClick={() => {}}
+                            onCompleteButtonClick={onClose}
                             steps={steps || []}
                             onSubmit={() => {
                                 bridge(beetsTokenWithBalance.amount);
@@ -199,7 +199,7 @@ export function BeetsBridgeModal({ isOpen, onClose }: Props) {
                     </Heading>
                 </ModalHeader>
                 <ModalBody className="bg" p="0">
-                    <Content />
+                    <Content onClose={onClose} />
                 </ModalBody>
             </ModalContent>
         </Modal>
