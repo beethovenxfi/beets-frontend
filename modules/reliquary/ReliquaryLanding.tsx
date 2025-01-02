@@ -215,13 +215,13 @@ export default function ReliquaryLanding() {
                     </VStack>
                 </Box>
             </Stack>
-            {/* <TokensProvider>
+            <TokensProvider>
                 <PoolProvider pool={pool}>
                     <CurrentStepProvider>
                         <ReliquaryMigrateModal isOpen={isOpen} onClose={onClose} />
                     </CurrentStepProvider>
                 </PoolProvider>
-            </TokensProvider> */}
+            </TokensProvider>
             <ReliquarySonicMigrateModal isOpen={isSonicMigrateOpen} onClose={onSonicMigrateClose} />
         </>
     );
