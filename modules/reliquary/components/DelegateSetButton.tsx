@@ -41,7 +41,6 @@ export default function DelegateSetButton({ ...rest }: Props) {
             onConfirmed={() => refetch()}
             {...setDelegateQuery}
             {...rest}
-            disabled={true}
         >
             Delegate to MDs
         </BeetsSubmitTransactionButton>
