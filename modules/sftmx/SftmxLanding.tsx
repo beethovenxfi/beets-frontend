@@ -40,10 +40,7 @@ export default function SftmxLanding() {
                     h="full"
                 >
                     <TabList>
-                        <Grid gap="4" w="full" templateAreas={`"stake unstake withdraw"`}>
-                            <GridItem area="stake">
-                                <BeetsTab w="full">Stake</BeetsTab>
-                            </GridItem>
+                        <Grid gap="4" w="full" templateAreas={`"unstake withdraw"`}>
                             <GridItem area="unstake">
                                 <BeetsTab w="full">Unstake</BeetsTab>
                             </GridItem>
@@ -53,9 +50,6 @@ export default function SftmxLanding() {
                         </Grid>
                     </TabList>
                     <TabPanels h="full">
-                        <TabPanel h="full" px="0" pb="0">
-                            <SftmxStakeTab />
-                        </TabPanel>
                         <TabPanel h="full" px="0" pb="0">
                             <SftmxUnstakeTab />
                         </TabPanel>
