@@ -7,6 +7,7 @@ import SwapMastheadImage from '~/assets/images/swap-masthead-image.png';
 import SwapMastheadOpImage from '~/assets/images/swap-masthead-image-OP.png';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 import { UserTokenBalancesProvider } from '~/lib/user/useUserTokenBalances';
+import { Center, Link, List, ListItem, Text } from '@chakra-ui/react';
 
 function Swap() {
     const { chainId } = useNetworkConfig();
@@ -37,7 +38,27 @@ function Swap() {
                         />
                     }
                 />
-                <TradeContainer />
+                <Text mb="4">Swap is disabled. You can choose one of the aggregators below to swap your tokens:</Text>
+                <List mb="16">
+                    <ListItem>
+                        <Link href="https://app.odos.xyz/" target="_blank">
+                            Odos
+                        </Link>
+                    </ListItem>
+                    <ListItem>
+                        <Link
+                            href="https://app.paraswap.xyz/#/swap/0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE/0/SELL?network=fantom&version=6.2"
+                            target="_blank"
+                        >
+                            Paraswap
+                        </Link>
+                    </ListItem>
+                    <ListItem>
+                        <Link href="https://app.1inch.io/#/250/simple/swap/250:FTM" target="_blank">
+                            1inch
+                        </Link>
+                    </ListItem>
+                </List>
             </UserTokenBalancesProvider>
         </>
     );
