@@ -13,7 +13,7 @@ function Swap() {
     const { chainId } = useNetworkConfig();
 
     const TITLE = 'Beets | Swap';
-    const DESCRIPTION = 'Intelligent trades at optimal prices. Swap your tokens with the Smart Order Router.';
+    const DESCRIPTION = 'Please swap your tokens using one of the available aggregators.';
 
     return (
         <>
@@ -22,7 +22,6 @@ function Swap() {
                 <meta name="title" content={TITLE} />
                 <meta property="og:title" content={TITLE} />
                 <meta property="twitter:title" content={TITLE} />
-
                 <meta name="description" content={DESCRIPTION} />
                 <meta property="og:description" content={DESCRIPTION} />
                 <meta property="twitter:description" content={DESCRIPTION} />
