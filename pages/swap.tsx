@@ -28,7 +28,7 @@ function Swap() {
             </Head>
             <UserTokenBalancesProvider>
                 <PageMasthead
-                    title="Swap"
+                    title="Swap Has Moved!"
                     image={
                         <NextImage
                             src={chainId === '10' ? SwapMastheadOpImage : SwapMastheadImage}
@@ -37,7 +37,11 @@ function Swap() {
                         />
                     }
                 />
-                <Text mb="4">Swap is disabled. You can choose one of the aggregators below to swap your tokens:</Text>
+                <Text>Swap functionality has found a new home on Sonic.</Text>
+                <Text mb="4">
+                    If you need to swap tokens on the Fantom network, we recommend using one of the aggregators listed
+                    below.
+                </Text>
                 <List mb="16">
                     <ListItem>
                         <Link href="https://app.odos.xyz/" target="_blank">
