@@ -308,76 +308,6 @@ export const GqlPoolMinimal = gql`
         }
     }
 `;
-export const GqlSorSwapRouteHop = gql`
-    fragment GqlSorSwapRouteHop on GqlSorSwapRouteHop {
-        poolId
-        pool {
-            id
-            name
-            type
-            symbol
-            dynamicData {
-                totalLiquidity
-            }
-            allTokens {
-                address
-                isNested
-                isPhantomBpt
-                weight
-            }
-        }
-        tokenIn
-        tokenOut
-        tokenInAmount
-        tokenOutAmount
-    }
-`;
-export const GqlSorSwapRoute = gql`
-    fragment GqlSorSwapRoute on GqlSorSwapRoute {
-        tokenIn
-        tokenOut
-        tokenInAmount
-        tokenOutAmount
-        share
-        hops {
-            ...GqlSorSwapRouteHop
-        }
-    }
-    ${GqlSorSwapRouteHop}
-`;
-export const GqlSorGetSwapsResponse = gql`
-    fragment GqlSorGetSwapsResponse on GqlSorGetSwapsResponse {
-        tokenIn
-        tokenOut
-        swapAmount
-        tokenAddresses
-        swapType
-        marketSp
-        swaps {
-            poolId
-            amount
-            userData
-            assetInIndex
-            assetOutIndex
-        }
-        returnAmount
-        returnAmountScaled
-        returnAmountFromSwaps
-        returnAmountConsideringFees
-        swapAmount
-        swapAmountScaled
-        swapAmountForSwaps
-        tokenInAmount
-        tokenOutAmount
-        effectivePrice
-        effectivePriceReversed
-        priceImpact
-        routes {
-            ...GqlSorSwapRoute
-        }
-    }
-    ${GqlSorSwapRoute}
-`;
 export const GqlTokenDynamicData = gql`
     fragment GqlTokenDynamicData on GqlTokenDynamicData {
         id
@@ -1108,26 +1038,6 @@ export const GetTokenRelativePriceChartData = gql`
             timestamp
         }
     }
-`;
-export const GetSorSwaps = gql`
-    query GetSorSwaps(
-        $tokenIn: String!
-        $tokenOut: String!
-        $swapType: GqlSorSwapType!
-        $swapAmount: BigDecimal!
-        $swapOptions: GqlSorSwapOptionsInput!
-    ) {
-        swaps: sorGetSwaps(
-            tokenIn: $tokenIn
-            tokenOut: $tokenOut
-            swapType: $swapType
-            swapAmount: $swapAmount
-            swapOptions: $swapOptions
-        ) {
-            ...GqlSorGetSwapsResponse
-        }
-    }
-    ${GqlSorGetSwapsResponse}
 `;
 export const GetTradeSelectedTokenData = gql`
     query GetTradeSelectedTokenData($tokenIn: String!, $tokenOut: String!) {
