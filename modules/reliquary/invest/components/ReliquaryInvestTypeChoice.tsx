@@ -89,7 +89,7 @@ export function ReliquaryInvestTypeChoice({ onShowProportional, onShowCustom }: 
                             </Button>
                         </Box>
                     </BeetsTooltip>
-                    {/* <Button
+                    <Button
                         _hover={{ borderColor: 'beets.green' }}
                         borderWidth={1}
                         borderColor="beets.transparent"
@@ -105,7 +105,7 @@ export function ReliquaryInvestTypeChoice({ onShowProportional, onShowCustom }: 
                                 &nbsp;
                             </Text>
                         </VStack>
-                    </Button> */}
+                    </Button>
                 </ChoiceOrientation>
             </VStack>
             <VStack width="full" p="4" backgroundColor="blackAlpha.500" alignItems="flex-start">
