@@ -1,13 +1,12 @@
 import { initializeApolloClient, loadApolloState } from '~/apollo/client';
 import Head from 'next/head';
-import { TradeContainer } from '~/modules/trade/TradeContainer';
 import { PageMasthead } from '~/components/masthead/PageMasthead';
 import NextImage from 'next/image';
 import SwapMastheadImage from '~/assets/images/swap-masthead-image.png';
 import SwapMastheadOpImage from '~/assets/images/swap-masthead-image-OP.png';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 import { UserTokenBalancesProvider } from '~/lib/user/useUserTokenBalances';
-import { Center, Link, List, ListItem, Text } from '@chakra-ui/react';
+import { Link, List, ListItem, Text } from '@chakra-ui/react';
 
 function Swap() {
     const { chainId } = useNetworkConfig();
