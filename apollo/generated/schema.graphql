@@ -33,6 +33,37 @@ type Erc4626ReviewData {
     warnings: [String!]!
 }
 
+"""
+ExitFee hook specific params. Percentage format is 0.01 -> 0.01%.
+"""
+type ExitFeeHookParams {
+    exitFeePercentage: String
+}
+
+"""
+FeeTaking hook specific params. Percentage format is 0.01 -> 0.01%
+"""
+type FeeTakingHookParams {
+    addLiquidityFeePercentage: String
+    removeLiquidityFeePercentage: String
+    swapFeePercentage: String
+}
+
+input GqlAggregatorPoolFilter {
+    chainIn: [GqlChain!]
+    chainNotIn: [GqlChain!]
+    createTime: GqlPoolTimePeriod
+    idIn: [String!]
+    idNotIn: [String!]
+    includeHooks: [GqlHookType!]
+    minTvl: Float
+    poolTypeIn: [GqlPoolType!]
+    poolTypeNotIn: [GqlPoolType!]
+    protocolVersionIn: [Int!]
+    tokensIn: [String!]
+    tokensNotIn: [String!]
+}
+
 type GqlBalancePoolAprItem {
     apr: GqlPoolAprValue!
     id: ID!
@@ -87,40 +118,6 @@ type GqlFeaturePoolGroupItemExternalLink {
     image: String!
 }
 
-"""
-Configuration options for SOR V2
-"""
-input GqlGraphTraversalConfigInput {
-    """
-    Max number of paths to return (can be less)
-
-    Default: 5
-    """
-    approxPathsToReturn: Int
-
-    """
-    The max hops in a path.
-
-    Default: 6
-    """
-    maxDepth: Int
-
-    """
-    Limit non boosted hop tokens in a boosted path.
-
-    Default: 2
-    """
-    maxNonBoostedHopTokensInBoostedPath: Int
-
-    """
-    Limit of "non-boosted" pools for efficiency.
-
-    Default: 6
-    """
-    maxNonBoostedPathDepth: Int
-    poolIdsToInclude: [String]
-}
-
 type GqlHistoricalTokenPrice {
     address: String!
     chain: GqlChain!
@@ -139,35 +136,32 @@ Hook data
 """
 type GqlHook {
     address: String!
+    config: HookConfig
+    dynamicData: GqlHookData @deprecated
+    enableHookAdjustedAmounts: Boolean! @deprecated
+    name: String! @deprecated(reason: "unused")
 
     """
-    Data points changing over time
+    Hook type specific params
     """
-    dynamicData: GqlHookData
-
-    """
-    True when hook can change the amounts send to the vault. Necessary to deduct the fees.
-    """
-    enableHookAdjustedAmounts: Boolean!
+    params: HookParams
 
     """
     The review for this hook if applicable.
     """
     reviewData: GqlHookReviewData
-    shouldCallAfterAddLiquidity: Boolean!
-    shouldCallAfterInitialize: Boolean!
-    shouldCallAfterRemoveLiquidity: Boolean!
-    shouldCallAfterSwap: Boolean!
-    shouldCallBeforeAddLiquidity: Boolean!
-    shouldCallBeforeInitialize: Boolean!
-    shouldCallBeforeRemoveLiquidity: Boolean!
-    shouldCallBeforeSwap: Boolean!
-    shouldCallComputeDynamicSwapFee: Boolean!
+    shouldCallAfterAddLiquidity: Boolean! @deprecated
+    shouldCallAfterInitialize: Boolean! @deprecated
+    shouldCallAfterRemoveLiquidity: Boolean! @deprecated
+    shouldCallAfterSwap: Boolean! @deprecated
+    shouldCallBeforeAddLiquidity: Boolean! @deprecated
+    shouldCallBeforeInitialize: Boolean! @deprecated
+    shouldCallBeforeRemoveLiquidity: Boolean! @deprecated
+    shouldCallBeforeSwap: Boolean! @deprecated
+    shouldCallComputeDynamicSwapFee: Boolean! @deprecated
+    type: GqlHookType!
 }
 
-"""
-Collection of hook specific data. Percentage format is 0.01 -> 0.01%.
-"""
 type GqlHookData {
     addLiquidityFeePercentage: String
     maxSurgeFeePercentage: String
@@ -194,6 +188,18 @@ type GqlHookReviewData {
     Warnings associated with the hook
     """
     warnings: [String!]!
+}
+
+enum GqlHookType {
+    DIRECTIONAL_FEE
+    EXIT_FEE
+    FEE_TAKING
+    LOTTERY
+    MEV_TAX
+    NFTLIQUIDITY_POSITION
+    STABLE_SURGE
+    UNKNOWN
+    VEBAL_DISCOUNT
 }
 
 type GqlLatestSyncedBlocks {
@@ -636,6 +642,11 @@ enum GqlPoolAprItemType {
     APR that pools earns when BPT is staked on AURA.
     """
     AURA
+
+    """
+    Dynamic swap fee APR based on data from the last 24h
+    """
+    DYNAMIC_SWAP_FEE_24H
 
     """
     Represents the yield from an IB (Interest-Bearing) asset APR in a pool.
@@ -1269,9 +1280,6 @@ input GqlPoolFilter {
     chainIn: [GqlChain!]
     chainNotIn: [GqlChain!]
     createTime: GqlPoolTimePeriod
-    filterIn: [String!]
-    filterNotIn: [String!]
-    hasHook: Boolean
     idIn: [String!]
     idNotIn: [String!]
     minTvl: Float
@@ -2219,6 +2227,11 @@ type GqlPoolTokenDetail {
     USD Balance of the pool token.
     """
     balanceUSD: BigDecimal!
+
+    """
+    If it is an ERC4626 token, this defines whether we can use wrap/unwrap through the buffer in swap paths for this token.
+    """
+    canUseBufferForSwaps: Boolean
     chain: GqlChain
     chainId: Int
 
@@ -2260,12 +2273,17 @@ type GqlPoolTokenDetail {
     """
     If it is an ERC4626 token, this defines whether we allow it to use the buffer for pool operations.
     """
-    isBufferAllowed: Boolean!
+    isBufferAllowed: Boolean! @deprecated(reason: "Use useUnderlyingForAddRemove and useWrappedForAddRemove instead")
 
     """
     Whether the token is considered an ERC4626 token.
     """
     isErc4626: Boolean!
+
+    """
+    Whether the token is exempted from taking a protocol yield fee.
+    """
+    isExemptFromProtocolYieldFee: Boolean!
 
     """
     Token logo
@@ -2300,7 +2318,7 @@ type GqlPoolTokenDetail {
     """
     The priority of the token, can be used for sorting.
     """
-    priority: Int
+    priority: Int @deprecated(reason: "Unused")
 
     """
     Conversion factor used to adjust for token decimals for uniform precision in calculations. V3 only.
@@ -2315,12 +2333,22 @@ type GqlPoolTokenDetail {
     """
     Is the token tradable
     """
-    tradable: Boolean
+    tradable: Boolean @deprecated(reason: "Unused")
 
     """
     If it is an ERC4626, this will be the underlying token if present in the API.
     """
     underlyingToken: GqlToken
+
+    """
+    If it is an ERC4626 token, this defines whether we allow underlying tokens to be used for add/remove operations.
+    """
+    useUnderlyingForAddRemove: Boolean
+
+    """
+    If it is an ERC4626 token, this defines whether we allow the wrapped tokens to be used for add/remove operations.
+    """
+    useWrappedForAddRemove: Boolean
 
     """
     The weight of the token in the pool if it is a weighted pool, null otherwise
@@ -2567,8 +2595,8 @@ type GqlProtocolMetricsAggregated {
     swapFee24h: BigDecimal!
     swapVolume24h: BigDecimal!
     totalLiquidity: BigDecimal!
-    totalSwapFee: BigDecimal!
-    totalSwapVolume: BigDecimal!
+    totalSwapFee: BigDecimal! @deprecated(reason: "No replacement")
+    totalSwapVolume: BigDecimal! @deprecated(reason: "No replacement")
     yieldCapture24h: BigDecimal!
 }
 
@@ -2579,8 +2607,8 @@ type GqlProtocolMetricsChain {
     swapFee24h: BigDecimal!
     swapVolume24h: BigDecimal!
     totalLiquidity: BigDecimal!
-    totalSwapFee: BigDecimal!
-    totalSwapVolume: BigDecimal!
+    totalSwapFee: BigDecimal! @deprecated(reason: "No replacement")
+    totalSwapVolume: BigDecimal! @deprecated(reason: "No replacement")
     yieldCapture24h: BigDecimal!
 }
 
@@ -2915,28 +2943,6 @@ type GqlSorGetSwapPaths {
     vaultVersion: Int! @deprecated(reason: "Use protocolVersion instead")
 }
 
-type GqlSorGetSwapsResponse {
-    effectivePrice: AmountHumanReadable!
-    effectivePriceReversed: AmountHumanReadable!
-    marketSp: String!
-    priceImpact: AmountHumanReadable!
-    returnAmount: AmountHumanReadable!
-    returnAmountConsideringFees: BigDecimal!
-    returnAmountFromSwaps: BigDecimal
-    returnAmountScaled: BigDecimal!
-    routes: [GqlSorSwapRoute!]!
-    swapAmount: AmountHumanReadable!
-    swapAmountForSwaps: BigDecimal
-    swapAmountScaled: BigDecimal!
-    swapType: GqlSorSwapType!
-    swaps: [GqlSorSwap!]!
-    tokenAddresses: [String!]!
-    tokenIn: String!
-    tokenInAmount: AmountHumanReadable!
-    tokenOut: String!
-    tokenOutAmount: AmountHumanReadable!
-}
-
 """
 A path of a swap. A swap can have multiple paths. Used as input to execute the swap via b-sdk
 """
@@ -3005,13 +3011,6 @@ type GqlSorSwap {
     UserData used in this swap, generally uses defaults.
     """
     userData: String!
-}
-
-input GqlSorSwapOptionsInput {
-    forceRefresh: Boolean
-    maxPools: Int
-    queryBatchSwap: Boolean
-    timestamp: Int
 }
 
 """
@@ -3101,6 +3100,16 @@ type GqlStakedSonicData {
     exchangeRate: String!
 
     """
+    The total protocol fee collected in the last 24 hours.
+    """
+    protocolFee24h: String!
+
+    """
+    The total rewards claimed in the last 24 hours.
+    """
+    rewardsClaimed24h: String!
+
+    """
     The current rebasing APR for stS.
     """
     stakingApr: String!
@@ -3139,6 +3148,16 @@ type GqlStakedSonicSnapshot {
     """
     exchangeRate: String!
     id: ID!
+
+    """
+    The total protocol fee collected during that day.
+    """
+    protocolFee24h: String!
+
+    """
+    The total rewards claimed during that day.
+    """
+    rewardsClaimed24h: String!
 
     """
     The timestamp of the snapshot. Timestamp is end of day midnight.
@@ -3319,6 +3338,7 @@ type GqlTokenCandlestickChartDataItem {
 }
 
 enum GqlTokenChartDataRange {
+    ALL
     NINETY_DAY
     ONE_HUNDRED_EIGHTY_DAY
     ONE_YEAR
@@ -3643,6 +3663,24 @@ type GqlVotingPool {
     type: GqlPoolType!
 }
 
+type HookConfig {
+    """
+    True when hook can change the amounts send to the vault. Necessary to deduct the fees.
+    """
+    enableHookAdjustedAmounts: Boolean!
+    shouldCallAfterAddLiquidity: Boolean!
+    shouldCallAfterInitialize: Boolean!
+    shouldCallAfterRemoveLiquidity: Boolean!
+    shouldCallAfterSwap: Boolean!
+    shouldCallBeforeAddLiquidity: Boolean!
+    shouldCallBeforeInitialize: Boolean!
+    shouldCallBeforeRemoveLiquidity: Boolean!
+    shouldCallBeforeSwap: Boolean!
+    shouldCallComputeDynamicSwapFee: Boolean!
+}
+
+union HookParams = ExitFeeHookParams | FeeTakingHookParams | MevTaxHookParams | StableSurgeHookParams
+
 scalar JSON
 
 """
@@ -3670,10 +3708,18 @@ type LiquidityManagement {
     enableRemoveLiquidityCustom: Boolean
 }
 
+"""
+MevTax hook specific params. Percentage format is 0.01 -> 0.01%.
+"""
+type MevTaxHookParams {
+    maxMevSwapFeePercentage: String
+    mevTaxMultiplier: String
+    mevTaxThreshold: String
+}
+
 type Mutation {
     beetsPoolLoadReliquarySnapshotsForAllFarms: String!
     beetsSyncFbeetsRatio: String!
-    cacheAverageBlockTime: String!
     poolLoadOnChainDataForAllPools(chains: [GqlChain!]!): [GqlPoolMutationResult!]!
     poolLoadSnapshotsForPools(poolIds: [String!]!, reload: Boolean): String!
     poolReloadAllPoolAprs(chain: GqlChain!): String!
@@ -3694,7 +3740,7 @@ type Mutation {
     tokenSyncLatestFxPrices(chain: GqlChain!): String!
     tokenSyncTokenDefinitions: String!
     userInitStakedBalances(stakingTypes: [GqlPoolStakingType!]!): String!
-    userInitWalletBalancesForAllPools: String!
+    userInitWalletBalancesForAllPools(chain: GqlChain): String!
     userInitWalletBalancesForPool(poolId: String!): String!
     userSyncBalance(poolId: String!): String!
     userSyncBalanceAllPools: String!
@@ -3713,12 +3759,22 @@ type PoolForBatchSwap {
 }
 
 type Query {
+    """
+    Returns all pools for a given filter, specific for aggregators
+    """
+    aggregatorPools(
+        first: Int
+        orderBy: GqlPoolOrderBy
+        orderDirection: GqlPoolOrderDirection
+        skip: Int
+        where: GqlAggregatorPoolFilter
+    ): [GqlPoolAggregator!]!
     beetsGetFbeetsRatio: String!
     beetsPoolGetReliquaryFarmSnapshots(id: String!, range: GqlPoolSnapshotDataRange!): [GqlReliquaryFarmSnapshot!]!
-    blocksGetAverageBlockTime: Float!
-    blocksGetBlocksPerDay: Float!
-    blocksGetBlocksPerSecond: Float!
-    blocksGetBlocksPerYear: Float!
+    blocksGetAverageBlockTime: Float! @deprecated
+    blocksGetBlocksPerDay: Float! @deprecated
+    blocksGetBlocksPerSecond: Float! @deprecated
+    blocksGetBlocksPerYear: Float! @deprecated
     contentGetNewsItems(chain: GqlChain): [GqlContentNewsItem!]!
     latestSyncedBlocks: GqlLatestSyncedBlocks!
 
@@ -3736,7 +3792,7 @@ type Query {
         orderDirection: GqlPoolOrderDirection
         skip: Int
         where: GqlPoolFilter
-    ): [GqlPoolAggregator!]!
+    ): [GqlPoolAggregator!]! @deprecated(reason: "Use aggregatorPools instead")
 
     """
     Will de deprecated in favor of poolEvents
@@ -3875,41 +3931,6 @@ type Query {
     ): GqlSorGetSwapPaths!
 
     """
-    Get swap quote from the SOR, queries both the old and new SOR
-    """
-    sorGetSwaps(
-        """
-        The Chain to query
-        """
-        chain: GqlChain
-
-        """
-        The amount to swap, in human form.
-        """
-        swapAmount: BigDecimal!
-
-        """
-        Options for the swap
-        """
-        swapOptions: GqlSorSwapOptionsInput!
-
-        """
-        SwapType either exact_in or exact_out (also givenIn or givenOut)
-        """
-        swapType: GqlSorSwapType!
-
-        """
-        Token address of the tokenIn
-        """
-        tokenIn: String!
-
-        """
-        Token address of the tokenOut
-        """
-        tokenOut: String!
-    ): GqlSorGetSwapsResponse!
-
-    """
     Get the staking data and status for stS
     """
     stsGetGqlStakedSonicData: GqlStakedSonicData!
@@ -4018,7 +4039,15 @@ type Query {
     """
     Returns all pools with veBAL gauges that can be voted on.
     """
-    veBalGetVotingList: [GqlVotingPool!]!
+    veBalGetVotingList(includeKilled: Boolean): [GqlVotingPool!]!
+}
+
+"""
+StableSurge hook specific params. Percentage format is 0.01 -> 0.01%.
+"""
+type StableSurgeHookParams {
+    maxSurgeFeePercentage: String
+    surgeThresholdPercentage: String
 }
 
 type Token {

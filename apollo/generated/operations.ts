@@ -1,153 +1,21 @@
 import gql from 'graphql-tag';
-export const GqlPoolBatchSwapSwap = gql`
-    fragment GqlPoolBatchSwapSwap on GqlPoolBatchSwapSwap {
+export const GqlTokenDynamicData = gql`
+    fragment GqlTokenDynamicData on GqlTokenDynamicData {
         id
-        timestamp
-        tokenAmountIn
-        tokenAmountOut
-        tokenIn
-        tokenOut
-        valueUSD
-        pool {
-            id
-            name
-            type
-            symbol
-            allTokens {
-                address
-                isNested
-                isPhantomBpt
-                weight
-            }
-        }
+        tokenAddress
+        ath
+        atl
+        marketCap
+        fdv
+        priceChange24h
+        priceChangePercent24h
+        priceChangePercent7d
+        priceChangePercent14d
+        priceChangePercent30d
+        high24h
+        low24h
+        updatedAt
     }
-`;
-export const GqlPoolBatchSwap = gql`
-    fragment GqlPoolBatchSwap on GqlPoolBatchSwap {
-        id
-        timestamp
-        tokenAmountIn
-        tokenAmountOut
-        tokenIn
-        tokenOut
-        tokenInPrice
-        tokenOutPrice
-        tx
-        userAddress
-        valueUSD
-        swaps {
-            ...GqlPoolBatchSwapSwap
-        }
-    }
-    ${GqlPoolBatchSwapSwap}
-`;
-export const GqlPoolCardData = gql`
-    fragment GqlPoolCardData on GqlPoolMinimal {
-        id
-        address
-        name
-        dynamicData {
-            totalLiquidity
-            totalShares
-            apr {
-                hasRewardApr
-                thirdPartyApr {
-                    ... on GqlPoolAprTotal {
-                        total
-                    }
-                    ... on GqlPoolAprRange {
-                        min
-                        max
-                    }
-                }
-                nativeRewardApr {
-                    ... on GqlPoolAprTotal {
-                        total
-                    }
-                    ... on GqlPoolAprRange {
-                        min
-                        max
-                    }
-                }
-                swapApr
-                apr {
-                    ... on GqlPoolAprTotal {
-                        total
-                    }
-                    ... on GqlPoolAprRange {
-                        min
-                        max
-                    }
-                }
-                items {
-                    id
-                    title
-                    apr {
-                        ... on GqlPoolAprTotal {
-                            total
-                        }
-                        ... on GqlPoolAprRange {
-                            min
-                            max
-                        }
-                    }
-                    subItems {
-                        id
-                        title
-                        apr {
-                            ... on GqlPoolAprTotal {
-                                total
-                            }
-                            ... on GqlPoolAprRange {
-                                min
-                                max
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        allTokens {
-            id
-            address
-            isNested
-            isPhantomBpt
-            weight
-        }
-        displayTokens {
-            id
-            address
-            name
-            weight
-            symbol
-            nestedTokens {
-                id
-                address
-                name
-                weight
-                symbol
-            }
-        }
-    }
-`;
-export const GqlPoolFeaturedPoolGroup = gql`
-    fragment GqlPoolFeaturedPoolGroup on GqlPoolFeaturedPoolGroup {
-        id
-        icon
-        title
-        items {
-            ... on GqlFeaturePoolGroupItemExternalLink {
-                id
-                image
-                buttonText
-                buttonUrl
-            }
-            ... on GqlPoolMinimal {
-                ...GqlPoolCardData
-            }
-        }
-    }
-    ${GqlPoolCardData}
 `;
 export const GqlPoolToken = gql`
     fragment GqlPoolToken on GqlPoolToken {
@@ -307,102 +175,6 @@ export const GqlPoolMinimal = gql`
             }
         }
     }
-`;
-export const GqlSorSwapRouteHop = gql`
-    fragment GqlSorSwapRouteHop on GqlSorSwapRouteHop {
-        poolId
-        pool {
-            id
-            name
-            type
-            symbol
-            dynamicData {
-                totalLiquidity
-            }
-            allTokens {
-                address
-                isNested
-                isPhantomBpt
-                weight
-            }
-        }
-        tokenIn
-        tokenOut
-        tokenInAmount
-        tokenOutAmount
-    }
-`;
-export const GqlSorSwapRoute = gql`
-    fragment GqlSorSwapRoute on GqlSorSwapRoute {
-        tokenIn
-        tokenOut
-        tokenInAmount
-        tokenOutAmount
-        share
-        hops {
-            ...GqlSorSwapRouteHop
-        }
-    }
-    ${GqlSorSwapRouteHop}
-`;
-export const GqlSorGetSwapsResponse = gql`
-    fragment GqlSorGetSwapsResponse on GqlSorGetSwapsResponse {
-        tokenIn
-        tokenOut
-        swapAmount
-        tokenAddresses
-        swapType
-        marketSp
-        swaps {
-            poolId
-            amount
-            userData
-            assetInIndex
-            assetOutIndex
-        }
-        returnAmount
-        returnAmountScaled
-        returnAmountFromSwaps
-        returnAmountConsideringFees
-        swapAmount
-        swapAmountScaled
-        swapAmountForSwaps
-        tokenInAmount
-        tokenOutAmount
-        effectivePrice
-        effectivePriceReversed
-        priceImpact
-        routes {
-            ...GqlSorSwapRoute
-        }
-    }
-    ${GqlSorSwapRoute}
-`;
-export const GqlTokenDynamicData = gql`
-    fragment GqlTokenDynamicData on GqlTokenDynamicData {
-        id
-        tokenAddress
-        ath
-        atl
-        marketCap
-        fdv
-        priceChange24h
-        priceChangePercent24h
-        priceChangePercent7d
-        priceChangePercent14d
-        priceChangePercent30d
-        high24h
-        low24h
-        updatedAt
-    }
-`;
-export const GetPoolBatchSwaps = gql`
-    query GetPoolBatchSwaps($first: Int, $skip: Int, $where: GqlPoolSwapFilter) {
-        batchSwaps: poolGetBatchSwaps(first: $first, skip: $skip, where: $where) {
-            ...GqlPoolBatchSwap
-        }
-    }
-    ${GqlPoolBatchSwap}
 `;
 export const GetAppGlobalData = gql`
     query GetAppGlobalData {
@@ -577,44 +349,6 @@ export const GetUserData = gql`
 export const UserSyncBalance = gql`
     mutation UserSyncBalance($poolId: String!) {
         userSyncBalance(poolId: $poolId)
-    }
-`;
-export const GetHomeData = gql`
-    query GetHomeData {
-        poolGetFeaturedPoolGroups {
-            ...GqlPoolFeaturedPoolGroup
-        }
-        contentGetNewsItems {
-            id
-            text
-            image
-            url
-            source
-            timestamp
-            discussionUrl
-        }
-    }
-    ${GqlPoolFeaturedPoolGroup}
-`;
-export const GetHomeFeaturedPools = gql`
-    query GetHomeFeaturedPools {
-        featuredPoolGroups: poolGetFeaturedPoolGroups {
-            ...GqlPoolFeaturedPoolGroup
-        }
-    }
-    ${GqlPoolFeaturedPoolGroup}
-`;
-export const GetHomeNewsItems = gql`
-    query GetHomeNewsItems {
-        newsItems: contentGetNewsItems {
-            id
-            text
-            image
-            url
-            source
-            timestamp
-            discussionUrl
-        }
     }
 `;
 export const GetPool = gql`
@@ -1099,60 +833,4 @@ export const SftmxGetStakingSnapshots = gql`
             totalFtmAmountStaked
         }
     }
-`;
-export const GetTokenRelativePriceChartData = gql`
-    query GetTokenRelativePriceChartData($tokenIn: String!, $tokenOut: String!, $range: GqlTokenChartDataRange!) {
-        prices: tokenGetRelativePriceChartData(tokenIn: $tokenIn, tokenOut: $tokenOut, range: $range) {
-            id
-            price
-            timestamp
-        }
-    }
-`;
-export const GetSorSwaps = gql`
-    query GetSorSwaps(
-        $tokenIn: String!
-        $tokenOut: String!
-        $swapType: GqlSorSwapType!
-        $swapAmount: BigDecimal!
-        $swapOptions: GqlSorSwapOptionsInput!
-    ) {
-        swaps: sorGetSwaps(
-            tokenIn: $tokenIn
-            tokenOut: $tokenOut
-            swapType: $swapType
-            swapAmount: $swapAmount
-            swapOptions: $swapOptions
-        ) {
-            ...GqlSorGetSwapsResponse
-        }
-    }
-    ${GqlSorGetSwapsResponse}
-`;
-export const GetTradeSelectedTokenData = gql`
-    query GetTradeSelectedTokenData($tokenIn: String!, $tokenOut: String!) {
-        tokenInData: tokenGetTokenData(address: $tokenIn) {
-            id
-            tokenAddress
-            description
-            discordUrl
-            telegramUrl
-            twitterUsername
-        }
-        tokenOutData: tokenGetTokenData(address: $tokenOut) {
-            id
-            tokenAddress
-            description
-            discordUrl
-            telegramUrl
-            twitterUsername
-        }
-        tokenInDynamicData: tokenGetTokenDynamicData(address: $tokenIn) {
-            ...GqlTokenDynamicData
-        }
-        tokenOutDynamicData: tokenGetTokenDynamicData(address: $tokenOut) {
-            ...GqlTokenDynamicData
-        }
-    }
-    ${GqlTokenDynamicData}
 `;

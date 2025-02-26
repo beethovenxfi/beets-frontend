@@ -26,6 +26,7 @@
             "GqlPoolMetaStable",
             "GqlPoolStable",
             "GqlPoolWeighted"
-        ]
+        ],
+        "HookParams": ["ExitFeeHookParams", "FeeTakingHookParams", "MevTaxHookParams", "StableSurgeHookParams"]
     }
 }

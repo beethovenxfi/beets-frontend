@@ -34,6 +34,35 @@ export interface Erc4626ReviewData {
     warnings: Array<Scalars['String']>;
 }
 
+/** ExitFee hook specific params. Percentage format is 0.01 -> 0.01%. */
+export interface ExitFeeHookParams {
+    __typename: 'ExitFeeHookParams';
+    exitFeePercentage?: Maybe<Scalars['String']>;
+}
+
+/** FeeTaking hook specific params. Percentage format is 0.01 -> 0.01% */
+export interface FeeTakingHookParams {
+    __typename: 'FeeTakingHookParams';
+    addLiquidityFeePercentage?: Maybe<Scalars['String']>;
+    removeLiquidityFeePercentage?: Maybe<Scalars['String']>;
+    swapFeePercentage?: Maybe<Scalars['String']>;
+}
+
+export interface GqlAggregatorPoolFilter {
+    chainIn?: InputMaybe<Array<GqlChain>>;
+    chainNotIn?: InputMaybe<Array<GqlChain>>;
+    createTime?: InputMaybe<GqlPoolTimePeriod>;
+    idIn?: InputMaybe<Array<Scalars['String']>>;
+    idNotIn?: InputMaybe<Array<Scalars['String']>>;
+    includeHooks?: InputMaybe<Array<GqlHookType>>;
+    minTvl?: InputMaybe<Scalars['Float']>;
+    poolTypeIn?: InputMaybe<Array<GqlPoolType>>;
+    poolTypeNotIn?: InputMaybe<Array<GqlPoolType>>;
+    protocolVersionIn?: InputMaybe<Array<Scalars['Int']>>;
+    tokensIn?: InputMaybe<Array<Scalars['String']>>;
+    tokensNotIn?: InputMaybe<Array<Scalars['String']>>;
+}
+
 export interface GqlBalancePoolAprItem {
     __typename: 'GqlBalancePoolAprItem';
     apr: GqlPoolAprValue;
@@ -85,35 +114,6 @@ export interface GqlFeaturePoolGroupItemExternalLink {
     image: Scalars['String'];
 }
 
-/** Configuration options for SOR V2 */
-export interface GqlGraphTraversalConfigInput {
-    /**
-     * Max number of paths to return (can be less)
-     *
-     * Default: 5
-     */
-    approxPathsToReturn?: InputMaybe<Scalars['Int']>;
-    /**
-     * The max hops in a path.
-     *
-     * Default: 6
-     */
-    maxDepth?: InputMaybe<Scalars['Int']>;
-    /**
-     * Limit non boosted hop tokens in a boosted path.
-     *
-     * Default: 2
-     */
-    maxNonBoostedHopTokensInBoostedPath?: InputMaybe<Scalars['Int']>;
-    /**
-     * Limit of "non-boosted" pools for efficiency.
-     *
-     * Default: 6
-     */
-    maxNonBoostedPathDepth?: InputMaybe<Scalars['Int']>;
-    poolIdsToInclude?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-}
-
 export interface GqlHistoricalTokenPrice {
     __typename: 'GqlHistoricalTokenPrice';
     address: Scalars['String'];
@@ -133,24 +133,38 @@ export interface GqlHistoricalTokenPriceEntry {
 export interface GqlHook {
     __typename: 'GqlHook';
     address: Scalars['String'];
-    /** Data points changing over time */
+    config?: Maybe<HookConfig>;
+    /** @deprecated No longer supported */
     dynamicData?: Maybe<GqlHookData>;
-    /** True when hook can change the amounts send to the vault. Necessary to deduct the fees. */
+    /** @deprecated No longer supported */
     enableHookAdjustedAmounts: Scalars['Boolean'];
+    /** @deprecated unused */
+    name: Scalars['String'];
+    /** Hook type specific params */
+    params?: Maybe<HookParams>;
     /** The review for this hook if applicable. */
     reviewData?: Maybe<GqlHookReviewData>;
+    /** @deprecated No longer supported */
     shouldCallAfterAddLiquidity: Scalars['Boolean'];
+    /** @deprecated No longer supported */
     shouldCallAfterInitialize: Scalars['Boolean'];
+    /** @deprecated No longer supported */
     shouldCallAfterRemoveLiquidity: Scalars['Boolean'];
+    /** @deprecated No longer supported */
     shouldCallAfterSwap: Scalars['Boolean'];
+    /** @deprecated No longer supported */
     shouldCallBeforeAddLiquidity: Scalars['Boolean'];
+    /** @deprecated No longer supported */
     shouldCallBeforeInitialize: Scalars['Boolean'];
+    /** @deprecated No longer supported */
     shouldCallBeforeRemoveLiquidity: Scalars['Boolean'];
+    /** @deprecated No longer supported */
     shouldCallBeforeSwap: Scalars['Boolean'];
+    /** @deprecated No longer supported */
     shouldCallComputeDynamicSwapFee: Scalars['Boolean'];
+    type: GqlHookType;
 }
 
-/** Collection of hook specific data. Percentage format is 0.01 -> 0.01%. */
 export interface GqlHookData {
     __typename: 'GqlHookData';
     addLiquidityFeePercentage?: Maybe<Scalars['String']>;
@@ -170,6 +184,17 @@ export interface GqlHookReviewData {
     /** Warnings associated with the hook */
     warnings: Array<Scalars['String']>;
 }
+
+export type GqlHookType =
+    | 'DIRECTIONAL_FEE'
+    | 'EXIT_FEE'
+    | 'FEE_TAKING'
+    | 'LOTTERY'
+    | 'MEV_TAX'
+    | 'NFTLIQUIDITY_POSITION'
+    | 'STABLE_SURGE'
+    | 'UNKNOWN'
+    | 'VEBAL_DISCOUNT';
 
 export interface GqlLatestSyncedBlocks {
     __typename: 'GqlLatestSyncedBlocks';
@@ -380,6 +405,8 @@ export interface GqlPoolAprItem {
 export type GqlPoolAprItemType =
     /** APR that pools earns when BPT is staked on AURA. */
     | 'AURA'
+    /** Dynamic swap fee APR based on data from the last 24h */
+    | 'DYNAMIC_SWAP_FEE_24H'
     /** Represents the yield from an IB (Interest-Bearing) asset APR in a pool. */
     | 'IB_YIELD'
     /** APR in a pool that can be earned through locking, i.e. veBAL */
@@ -817,9 +844,6 @@ export interface GqlPoolFilter {
     chainIn?: InputMaybe<Array<GqlChain>>;
     chainNotIn?: InputMaybe<Array<GqlChain>>;
     createTime?: InputMaybe<GqlPoolTimePeriod>;
-    filterIn?: InputMaybe<Array<Scalars['String']>>;
-    filterNotIn?: InputMaybe<Array<Scalars['String']>>;
-    hasHook?: InputMaybe<Scalars['Boolean']>;
     idIn?: InputMaybe<Array<Scalars['String']>>;
     idNotIn?: InputMaybe<Array<Scalars['String']>>;
     minTvl?: InputMaybe<Scalars['Float']>;
@@ -1552,6 +1576,8 @@ export interface GqlPoolTokenDetail {
     balance: Scalars['BigDecimal'];
     /** USD Balance of the pool token. */
     balanceUSD: Scalars['BigDecimal'];
+    /** If it is an ERC4626 token, this defines whether we can use wrap/unwrap through the buffer in swap paths for this token. */
+    canUseBufferForSwaps?: Maybe<Scalars['Boolean']>;
     chain?: Maybe<GqlChain>;
     chainId?: Maybe<Scalars['Int']>;
     /** Coingecko ID */
@@ -1568,10 +1594,15 @@ export interface GqlPoolTokenDetail {
     index: Scalars['Int'];
     /** Whether the token is in the allow list. */
     isAllowed: Scalars['Boolean'];
-    /** If it is an ERC4626 token, this defines whether we allow it to use the buffer for pool operations. */
+    /**
+     * If it is an ERC4626 token, this defines whether we allow it to use the buffer for pool operations.
+     * @deprecated Use useUnderlyingForAddRemove and useWrappedForAddRemove instead
+     */
     isBufferAllowed: Scalars['Boolean'];
     /** Whether the token is considered an ERC4626 token. */
     isErc4626: Scalars['Boolean'];
+    /** Whether the token is exempted from taking a protocol yield fee. */
+    isExemptFromProtocolYieldFee: Scalars['Boolean'];
     /** Token logo */
     logoURI?: Maybe<Scalars['String']>;
     /** Name of the pool token. */
@@ -1584,16 +1615,26 @@ export interface GqlPoolTokenDetail {
     priceRateProvider?: Maybe<Scalars['String']>;
     /** Additional data for the price rate provider, such as reviews or warnings. */
     priceRateProviderData?: Maybe<GqlPriceRateProviderData>;
-    /** The priority of the token, can be used for sorting. */
+    /**
+     * The priority of the token, can be used for sorting.
+     * @deprecated Unused
+     */
     priority?: Maybe<Scalars['Int']>;
     /** Conversion factor used to adjust for token decimals for uniform precision in calculations. V3 only. */
     scalingFactor?: Maybe<Scalars['BigDecimal']>;
     /** Symbol of the pool token. */
     symbol: Scalars['String'];
-    /** Is the token tradable */
+    /**
+     * Is the token tradable
+     * @deprecated Unused
+     */
     tradable?: Maybe<Scalars['Boolean']>;
     /** If it is an ERC4626, this will be the underlying token if present in the API. */
     underlyingToken?: Maybe<GqlToken>;
+    /** If it is an ERC4626 token, this defines whether we allow underlying tokens to be used for add/remove operations. */
+    useUnderlyingForAddRemove?: Maybe<Scalars['Boolean']>;
+    /** If it is an ERC4626 token, this defines whether we allow the wrapped tokens to be used for add/remove operations. */
+    useWrappedForAddRemove?: Maybe<Scalars['Boolean']>;
     /** The weight of the token in the pool if it is a weighted pool, null otherwise */
     weight?: Maybe<Scalars['BigDecimal']>;
 }
@@ -1787,7 +1828,9 @@ export interface GqlProtocolMetricsAggregated {
     swapFee24h: Scalars['BigDecimal'];
     swapVolume24h: Scalars['BigDecimal'];
     totalLiquidity: Scalars['BigDecimal'];
+    /** @deprecated No replacement */
     totalSwapFee: Scalars['BigDecimal'];
+    /** @deprecated No replacement */
     totalSwapVolume: Scalars['BigDecimal'];
     yieldCapture24h: Scalars['BigDecimal'];
 }
@@ -1800,7 +1843,9 @@ export interface GqlProtocolMetricsChain {
     swapFee24h: Scalars['BigDecimal'];
     swapVolume24h: Scalars['BigDecimal'];
     totalLiquidity: Scalars['BigDecimal'];
+    /** @deprecated No replacement */
     totalSwapFee: Scalars['BigDecimal'];
+    /** @deprecated No replacement */
     totalSwapVolume: Scalars['BigDecimal'];
     yieldCapture24h: Scalars['BigDecimal'];
 }
@@ -1993,29 +2038,6 @@ export interface GqlSorGetSwapPaths {
     vaultVersion: Scalars['Int'];
 }
 
-export interface GqlSorGetSwapsResponse {
-    __typename: 'GqlSorGetSwapsResponse';
-    effectivePrice: Scalars['AmountHumanReadable'];
-    effectivePriceReversed: Scalars['AmountHumanReadable'];
-    marketSp: Scalars['String'];
-    priceImpact: Scalars['AmountHumanReadable'];
-    returnAmount: Scalars['AmountHumanReadable'];
-    returnAmountConsideringFees: Scalars['BigDecimal'];
-    returnAmountFromSwaps?: Maybe<Scalars['BigDecimal']>;
-    returnAmountScaled: Scalars['BigDecimal'];
-    routes: Array<GqlSorSwapRoute>;
-    swapAmount: Scalars['AmountHumanReadable'];
-    swapAmountForSwaps?: Maybe<Scalars['BigDecimal']>;
-    swapAmountScaled: Scalars['BigDecimal'];
-    swapType: GqlSorSwapType;
-    swaps: Array<GqlSorSwap>;
-    tokenAddresses: Array<Scalars['String']>;
-    tokenIn: Scalars['String'];
-    tokenInAmount: Scalars['AmountHumanReadable'];
-    tokenOut: Scalars['String'];
-    tokenOutAmount: Scalars['AmountHumanReadable'];
-}
-
 /** A path of a swap. A swap can have multiple paths. Used as input to execute the swap via b-sdk */
 export interface GqlSorPath {
     __typename: 'GqlSorPath';
@@ -2051,13 +2073,6 @@ export interface GqlSorSwap {
     poolId: Scalars['String'];
     /** UserData used in this swap, generally uses defaults. */
     userData: Scalars['String'];
-}
-
-export interface GqlSorSwapOptionsInput {
-    forceRefresh?: InputMaybe<Scalars['Boolean']>;
-    maxPools?: InputMaybe<Scalars['Int']>;
-    queryBatchSwap?: InputMaybe<Scalars['Boolean']>;
-    timestamp?: InputMaybe<Scalars['Int']>;
 }
 
 /** The swap routes including pool information. Used to display by the UI */
@@ -2102,6 +2117,10 @@ export interface GqlStakedSonicData {
     delegatedValidators: Array<GqlStakedSonicDelegatedValidator>;
     /** Current exchange rate for stS -> S */
     exchangeRate: Scalars['String'];
+    /** The total protocol fee collected in the last 24 hours. */
+    protocolFee24h: Scalars['String'];
+    /** The total rewards claimed in the last 24 hours. */
+    rewardsClaimed24h: Scalars['String'];
     /** The current rebasing APR for stS. */
     stakingApr: Scalars['String'];
     /** Total amount of S in custody of stS. Delegated S plus pool S. */
@@ -2125,6 +2144,10 @@ export interface GqlStakedSonicSnapshot {
     /** Current exchange rate for stS -> S */
     exchangeRate: Scalars['String'];
     id: Scalars['ID'];
+    /** The total protocol fee collected during that day. */
+    protocolFee24h: Scalars['String'];
+    /** The total rewards claimed during that day. */
+    rewardsClaimed24h: Scalars['String'];
     /** The timestamp of the snapshot. Timestamp is end of day midnight. */
     timestamp: Scalars['Int'];
     /** Total amount of S in custody of stS. Delegated S plus pool S. */
@@ -2219,7 +2242,13 @@ export interface GqlTokenCandlestickChartDataItem {
     timestamp: Scalars['Int'];
 }
 
-export type GqlTokenChartDataRange = 'NINETY_DAY' | 'ONE_HUNDRED_EIGHTY_DAY' | 'ONE_YEAR' | 'SEVEN_DAY' | 'THIRTY_DAY';
+export type GqlTokenChartDataRange =
+    | 'ALL'
+    | 'NINETY_DAY'
+    | 'ONE_HUNDRED_EIGHTY_DAY'
+    | 'ONE_YEAR'
+    | 'SEVEN_DAY'
+    | 'THIRTY_DAY';
 
 export interface GqlTokenData {
     __typename: 'GqlTokenData';
@@ -2416,6 +2445,23 @@ export interface GqlVotingPool {
     type: GqlPoolType;
 }
 
+export interface HookConfig {
+    __typename: 'HookConfig';
+    /** True when hook can change the amounts send to the vault. Necessary to deduct the fees. */
+    enableHookAdjustedAmounts: Scalars['Boolean'];
+    shouldCallAfterAddLiquidity: Scalars['Boolean'];
+    shouldCallAfterInitialize: Scalars['Boolean'];
+    shouldCallAfterRemoveLiquidity: Scalars['Boolean'];
+    shouldCallAfterSwap: Scalars['Boolean'];
+    shouldCallBeforeAddLiquidity: Scalars['Boolean'];
+    shouldCallBeforeInitialize: Scalars['Boolean'];
+    shouldCallBeforeRemoveLiquidity: Scalars['Boolean'];
+    shouldCallBeforeSwap: Scalars['Boolean'];
+    shouldCallComputeDynamicSwapFee: Scalars['Boolean'];
+}
+
+export type HookParams = ExitFeeHookParams | FeeTakingHookParams | MevTaxHookParams | StableSurgeHookParams;
+
 /** Liquidity management settings for v3 pools. */
 export interface LiquidityManagement {
     __typename: 'LiquidityManagement';
@@ -2429,11 +2475,18 @@ export interface LiquidityManagement {
     enableRemoveLiquidityCustom?: Maybe<Scalars['Boolean']>;
 }
 
+/** MevTax hook specific params. Percentage format is 0.01 -> 0.01%. */
+export interface MevTaxHookParams {
+    __typename: 'MevTaxHookParams';
+    maxMevSwapFeePercentage?: Maybe<Scalars['String']>;
+    mevTaxMultiplier?: Maybe<Scalars['String']>;
+    mevTaxThreshold?: Maybe<Scalars['String']>;
+}
+
 export interface Mutation {
     __typename: 'Mutation';
     beetsPoolLoadReliquarySnapshotsForAllFarms: Scalars['String'];
     beetsSyncFbeetsRatio: Scalars['String'];
-    cacheAverageBlockTime: Scalars['String'];
     poolLoadOnChainDataForAllPools: Array<GqlPoolMutationResult>;
     poolLoadSnapshotsForPools: Scalars['String'];
     poolReloadAllPoolAprs: Scalars['String'];
@@ -2514,6 +2567,10 @@ export interface MutationUserInitStakedBalancesArgs {
     stakingTypes: Array<GqlPoolStakingType>;
 }
 
+export interface MutationUserInitWalletBalancesForAllPoolsArgs {
+    chain?: InputMaybe<GqlChain>;
+}
+
 export interface MutationUserInitWalletBalancesForPoolArgs {
     poolId: Scalars['String'];
 }
@@ -2533,17 +2590,26 @@ export interface PoolForBatchSwap {
 
 export interface Query {
     __typename: 'Query';
+    /** Returns all pools for a given filter, specific for aggregators */
+    aggregatorPools: Array<GqlPoolAggregator>;
     beetsGetFbeetsRatio: Scalars['String'];
     beetsPoolGetReliquaryFarmSnapshots: Array<GqlReliquaryFarmSnapshot>;
+    /** @deprecated No longer supported */
     blocksGetAverageBlockTime: Scalars['Float'];
+    /** @deprecated No longer supported */
     blocksGetBlocksPerDay: Scalars['Float'];
+    /** @deprecated No longer supported */
     blocksGetBlocksPerSecond: Scalars['Float'];
+    /** @deprecated No longer supported */
     blocksGetBlocksPerYear: Scalars['Float'];
     contentGetNewsItems: Array<GqlContentNewsItem>;
     latestSyncedBlocks: GqlLatestSyncedBlocks;
     /** Getting swap, add and remove events with paging */
     poolEvents: Array<GqlPoolEvent>;
-    /** Returns all pools for a given filter, specific for aggregators */
+    /**
+     * Returns all pools for a given filter, specific for aggregators
+     * @deprecated Use aggregatorPools instead
+     */
     poolGetAggregatorPools: Array<GqlPoolAggregator>;
     /**
      * Will de deprecated in favor of poolEvents
@@ -2587,8 +2653,6 @@ export interface Query {
     sftmxGetWithdrawalRequests: Array<GqlSftmxWithdrawalRequests>;
     /** Get swap quote from the SOR v2 for the V2 vault */
     sorGetSwapPaths: GqlSorGetSwapPaths;
-    /** Get swap quote from the SOR, queries both the old and new SOR */
-    sorGetSwaps: GqlSorGetSwapsResponse;
     /** Get the staking data and status for stS */
     stsGetGqlStakedSonicData: GqlStakedSonicData;
     /** Get snapshots for sftmx staking for a specific range */
@@ -2643,6 +2707,14 @@ export interface Query {
     veBalGetUserBalances: Array<GqlVeBalBalance>;
     /** Returns all pools with veBAL gauges that can be voted on. */
     veBalGetVotingList: Array<GqlVotingPool>;
+}
+
+export interface QueryAggregatorPoolsArgs {
+    first?: InputMaybe<Scalars['Int']>;
+    orderBy?: InputMaybe<GqlPoolOrderBy>;
+    orderDirection?: InputMaybe<GqlPoolOrderDirection>;
+    skip?: InputMaybe<Scalars['Int']>;
+    where?: InputMaybe<GqlAggregatorPoolFilter>;
 }
 
 export interface QueryBeetsPoolGetReliquaryFarmSnapshotsArgs {
@@ -2759,15 +2831,6 @@ export interface QuerySorGetSwapPathsArgs {
     useProtocolVersion?: InputMaybe<Scalars['Int']>;
 }
 
-export interface QuerySorGetSwapsArgs {
-    chain?: InputMaybe<GqlChain>;
-    swapAmount: Scalars['BigDecimal'];
-    swapOptions: GqlSorSwapOptionsInput;
-    swapType: GqlSorSwapType;
-    tokenIn: Scalars['String'];
-    tokenOut: Scalars['String'];
-}
-
 export interface QueryStsGetStakedSonicSnapshotsArgs {
     range: GqlStakedSonicSnapshotDataRange;
 }
@@ -2874,6 +2937,17 @@ export interface QueryVeBalGetUserBalancesArgs {
     chains?: InputMaybe<Array<GqlChain>>;
 }
 
+export interface QueryVeBalGetVotingListArgs {
+    includeKilled?: InputMaybe<Scalars['Boolean']>;
+}
+
+/** StableSurge hook specific params. Percentage format is 0.01 -> 0.01%. */
+export interface StableSurgeHookParams {
+    __typename: 'StableSurgeHookParams';
+    maxSurgeFeePercentage?: Maybe<Scalars['String']>;
+    surgeThresholdPercentage?: Maybe<Scalars['String']>;
+}
+
 export interface Token {
     __typename: 'Token';
     address: Scalars['String'];
@@ -2887,118 +2961,6 @@ export interface TokenForBatchSwapPool {
     isPhantomBpt: Scalars['Boolean'];
     weight?: Maybe<Scalars['BigDecimal']>;
 }
-
-export type GetPoolBatchSwapsQueryVariables = Exact<{
-    first?: InputMaybe<Scalars['Int']>;
-    skip?: InputMaybe<Scalars['Int']>;
-    where?: InputMaybe<GqlPoolSwapFilter>;
-}>;
-
-export type GetPoolBatchSwapsQuery = {
-    __typename: 'Query';
-    batchSwaps: Array<{
-        __typename: 'GqlPoolBatchSwap';
-        id: string;
-        timestamp: number;
-        tokenAmountIn: string;
-        tokenAmountOut: string;
-        tokenIn: string;
-        tokenOut: string;
-        tokenInPrice: number;
-        tokenOutPrice: number;
-        tx: string;
-        userAddress: string;
-        valueUSD: number;
-        swaps: Array<{
-            __typename: 'GqlPoolBatchSwapSwap';
-            id: string;
-            timestamp: number;
-            tokenAmountIn: string;
-            tokenAmountOut: string;
-            tokenIn: string;
-            tokenOut: string;
-            valueUSD: number;
-            pool: {
-                __typename: 'PoolForBatchSwap';
-                id: string;
-                name: string;
-                type: GqlPoolType;
-                symbol: string;
-                allTokens?: Array<{
-                    __typename: 'TokenForBatchSwapPool';
-                    address: string;
-                    isNested: boolean;
-                    isPhantomBpt: boolean;
-                    weight?: string | null;
-                }> | null;
-            };
-        }>;
-    }>;
-};
-
-export type GqlPoolBatchSwapFragment = {
-    __typename: 'GqlPoolBatchSwap';
-    id: string;
-    timestamp: number;
-    tokenAmountIn: string;
-    tokenAmountOut: string;
-    tokenIn: string;
-    tokenOut: string;
-    tokenInPrice: number;
-    tokenOutPrice: number;
-    tx: string;
-    userAddress: string;
-    valueUSD: number;
-    swaps: Array<{
-        __typename: 'GqlPoolBatchSwapSwap';
-        id: string;
-        timestamp: number;
-        tokenAmountIn: string;
-        tokenAmountOut: string;
-        tokenIn: string;
-        tokenOut: string;
-        valueUSD: number;
-        pool: {
-            __typename: 'PoolForBatchSwap';
-            id: string;
-            name: string;
-            type: GqlPoolType;
-            symbol: string;
-            allTokens?: Array<{
-                __typename: 'TokenForBatchSwapPool';
-                address: string;
-                isNested: boolean;
-                isPhantomBpt: boolean;
-                weight?: string | null;
-            }> | null;
-        };
-    }>;
-};
-
-export type GqlPoolBatchSwapSwapFragment = {
-    __typename: 'GqlPoolBatchSwapSwap';
-    id: string;
-    timestamp: number;
-    tokenAmountIn: string;
-    tokenAmountOut: string;
-    tokenIn: string;
-    tokenOut: string;
-    valueUSD: number;
-    pool: {
-        __typename: 'PoolForBatchSwap';
-        id: string;
-        name: string;
-        type: GqlPoolType;
-        symbol: string;
-        allTokens?: Array<{
-            __typename: 'TokenForBatchSwapPool';
-            address: string;
-            isNested: boolean;
-            isPhantomBpt: boolean;
-            weight?: string | null;
-        }> | null;
-    };
-};
 
 export type GetAppGlobalDataQueryVariables = Exact<{ [key: string]: never }>;
 
@@ -3195,349 +3157,22 @@ export type UserSyncBalanceMutationVariables = Exact<{
 
 export type UserSyncBalanceMutation = { __typename: 'Mutation'; userSyncBalance: string };
 
-export type GetHomeDataQueryVariables = Exact<{ [key: string]: never }>;
-
-export type GetHomeDataQuery = {
-    __typename: 'Query';
-    poolGetFeaturedPoolGroups: Array<{
-        __typename: 'GqlPoolFeaturedPoolGroup';
-        id: string;
-        icon: string;
-        title: string;
-        items: Array<
-            | {
-                  __typename: 'GqlFeaturePoolGroupItemExternalLink';
-                  id: string;
-                  image: string;
-                  buttonText: string;
-                  buttonUrl: string;
-              }
-            | {
-                  __typename: 'GqlPoolMinimal';
-                  id: string;
-                  address: string;
-                  name: string;
-                  dynamicData: {
-                      __typename: 'GqlPoolDynamicData';
-                      totalLiquidity: string;
-                      totalShares: string;
-                      apr: {
-                          __typename: 'GqlPoolApr';
-                          hasRewardApr: boolean;
-                          swapApr: string;
-                          thirdPartyApr:
-                              | { __typename: 'GqlPoolAprRange'; min: string; max: string }
-                              | { __typename: 'GqlPoolAprTotal'; total: string };
-                          nativeRewardApr:
-                              | { __typename: 'GqlPoolAprRange'; min: string; max: string }
-                              | { __typename: 'GqlPoolAprTotal'; total: string };
-                          apr:
-                              | { __typename: 'GqlPoolAprRange'; min: string; max: string }
-                              | { __typename: 'GqlPoolAprTotal'; total: string };
-                          items: Array<{
-                              __typename: 'GqlBalancePoolAprItem';
-                              id: string;
-                              title: string;
-                              apr:
-                                  | { __typename: 'GqlPoolAprRange'; min: string; max: string }
-                                  | { __typename: 'GqlPoolAprTotal'; total: string };
-                              subItems?: Array<{
-                                  __typename: 'GqlBalancePoolAprSubItem';
-                                  id: string;
-                                  title: string;
-                                  apr:
-                                      | { __typename: 'GqlPoolAprRange'; min: string; max: string }
-                                      | { __typename: 'GqlPoolAprTotal'; total: string };
-                              }> | null;
-                          }>;
-                      };
-                  };
-                  allTokens: Array<{
-                      __typename: 'GqlPoolTokenExpanded';
-                      id: string;
-                      address: string;
-                      isNested: boolean;
-                      isPhantomBpt: boolean;
-                      weight?: string | null;
-                  }>;
-                  displayTokens: Array<{
-                      __typename: 'GqlPoolTokenDisplay';
-                      id: string;
-                      address: string;
-                      name: string;
-                      weight?: string | null;
-                      symbol: string;
-                      nestedTokens?: Array<{
-                          __typename: 'GqlPoolTokenDisplay';
-                          id: string;
-                          address: string;
-                          name: string;
-                          weight?: string | null;
-                          symbol: string;
-                      }> | null;
-                  }>;
-              }
-        >;
-    }>;
-    contentGetNewsItems: Array<{
-        __typename: 'GqlContentNewsItem';
-        id: string;
-        text: string;
-        image?: string | null;
-        url: string;
-        source: GqlContentNewsItemSource;
-        timestamp: string;
-        discussionUrl?: string | null;
-    }>;
-};
-
-export type GetHomeFeaturedPoolsQueryVariables = Exact<{ [key: string]: never }>;
-
-export type GetHomeFeaturedPoolsQuery = {
-    __typename: 'Query';
-    featuredPoolGroups: Array<{
-        __typename: 'GqlPoolFeaturedPoolGroup';
-        id: string;
-        icon: string;
-        title: string;
-        items: Array<
-            | {
-                  __typename: 'GqlFeaturePoolGroupItemExternalLink';
-                  id: string;
-                  image: string;
-                  buttonText: string;
-                  buttonUrl: string;
-              }
-            | {
-                  __typename: 'GqlPoolMinimal';
-                  id: string;
-                  address: string;
-                  name: string;
-                  dynamicData: {
-                      __typename: 'GqlPoolDynamicData';
-                      totalLiquidity: string;
-                      totalShares: string;
-                      apr: {
-                          __typename: 'GqlPoolApr';
-                          hasRewardApr: boolean;
-                          swapApr: string;
-                          thirdPartyApr:
-                              | { __typename: 'GqlPoolAprRange'; min: string; max: string }
-                              | { __typename: 'GqlPoolAprTotal'; total: string };
-                          nativeRewardApr:
-                              | { __typename: 'GqlPoolAprRange'; min: string; max: string }
-                              | { __typename: 'GqlPoolAprTotal'; total: string };
-                          apr:
-                              | { __typename: 'GqlPoolAprRange'; min: string; max: string }
-                              | { __typename: 'GqlPoolAprTotal'; total: string };
-                          items: Array<{
-                              __typename: 'GqlBalancePoolAprItem';
-                              id: string;
-                              title: string;
-                              apr:
-                                  | { __typename: 'GqlPoolAprRange'; min: string; max: string }
-                                  | { __typename: 'GqlPoolAprTotal'; total: string };
-                              subItems?: Array<{
-                                  __typename: 'GqlBalancePoolAprSubItem';
-                                  id: string;
-                                  title: string;
-                                  apr:
-                                      | { __typename: 'GqlPoolAprRange'; min: string; max: string }
-                                      | { __typename: 'GqlPoolAprTotal'; total: string };
-                              }> | null;
-                          }>;
-                      };
-                  };
-                  allTokens: Array<{
-                      __typename: 'GqlPoolTokenExpanded';
-                      id: string;
-                      address: string;
-                      isNested: boolean;
-                      isPhantomBpt: boolean;
-                      weight?: string | null;
-                  }>;
-                  displayTokens: Array<{
-                      __typename: 'GqlPoolTokenDisplay';
-                      id: string;
-                      address: string;
-                      name: string;
-                      weight?: string | null;
-                      symbol: string;
-                      nestedTokens?: Array<{
-                          __typename: 'GqlPoolTokenDisplay';
-                          id: string;
-                          address: string;
-                          name: string;
-                          weight?: string | null;
-                          symbol: string;
-                      }> | null;
-                  }>;
-              }
-        >;
-    }>;
-};
-
-export type GetHomeNewsItemsQueryVariables = Exact<{ [key: string]: never }>;
-
-export type GetHomeNewsItemsQuery = {
-    __typename: 'Query';
-    newsItems: Array<{
-        __typename: 'GqlContentNewsItem';
-        id: string;
-        text: string;
-        image?: string | null;
-        url: string;
-        source: GqlContentNewsItemSource;
-        timestamp: string;
-        discussionUrl?: string | null;
-    }>;
-};
-
-export type GqlPoolFeaturedPoolGroupFragment = {
-    __typename: 'GqlPoolFeaturedPoolGroup';
+export type GqlTokenDynamicDataFragment = {
+    __typename: 'GqlTokenDynamicData';
     id: string;
-    icon: string;
-    title: string;
-    items: Array<
-        | {
-              __typename: 'GqlFeaturePoolGroupItemExternalLink';
-              id: string;
-              image: string;
-              buttonText: string;
-              buttonUrl: string;
-          }
-        | {
-              __typename: 'GqlPoolMinimal';
-              id: string;
-              address: string;
-              name: string;
-              dynamicData: {
-                  __typename: 'GqlPoolDynamicData';
-                  totalLiquidity: string;
-                  totalShares: string;
-                  apr: {
-                      __typename: 'GqlPoolApr';
-                      hasRewardApr: boolean;
-                      swapApr: string;
-                      thirdPartyApr:
-                          | { __typename: 'GqlPoolAprRange'; min: string; max: string }
-                          | { __typename: 'GqlPoolAprTotal'; total: string };
-                      nativeRewardApr:
-                          | { __typename: 'GqlPoolAprRange'; min: string; max: string }
-                          | { __typename: 'GqlPoolAprTotal'; total: string };
-                      apr:
-                          | { __typename: 'GqlPoolAprRange'; min: string; max: string }
-                          | { __typename: 'GqlPoolAprTotal'; total: string };
-                      items: Array<{
-                          __typename: 'GqlBalancePoolAprItem';
-                          id: string;
-                          title: string;
-                          apr:
-                              | { __typename: 'GqlPoolAprRange'; min: string; max: string }
-                              | { __typename: 'GqlPoolAprTotal'; total: string };
-                          subItems?: Array<{
-                              __typename: 'GqlBalancePoolAprSubItem';
-                              id: string;
-                              title: string;
-                              apr:
-                                  | { __typename: 'GqlPoolAprRange'; min: string; max: string }
-                                  | { __typename: 'GqlPoolAprTotal'; total: string };
-                          }> | null;
-                      }>;
-                  };
-              };
-              allTokens: Array<{
-                  __typename: 'GqlPoolTokenExpanded';
-                  id: string;
-                  address: string;
-                  isNested: boolean;
-                  isPhantomBpt: boolean;
-                  weight?: string | null;
-              }>;
-              displayTokens: Array<{
-                  __typename: 'GqlPoolTokenDisplay';
-                  id: string;
-                  address: string;
-                  name: string;
-                  weight?: string | null;
-                  symbol: string;
-                  nestedTokens?: Array<{
-                      __typename: 'GqlPoolTokenDisplay';
-                      id: string;
-                      address: string;
-                      name: string;
-                      weight?: string | null;
-                      symbol: string;
-                  }> | null;
-              }>;
-          }
-    >;
-};
-
-export type GqlPoolCardDataFragment = {
-    __typename: 'GqlPoolMinimal';
-    id: string;
-    address: string;
-    name: string;
-    dynamicData: {
-        __typename: 'GqlPoolDynamicData';
-        totalLiquidity: string;
-        totalShares: string;
-        apr: {
-            __typename: 'GqlPoolApr';
-            hasRewardApr: boolean;
-            swapApr: string;
-            thirdPartyApr:
-                | { __typename: 'GqlPoolAprRange'; min: string; max: string }
-                | { __typename: 'GqlPoolAprTotal'; total: string };
-            nativeRewardApr:
-                | { __typename: 'GqlPoolAprRange'; min: string; max: string }
-                | { __typename: 'GqlPoolAprTotal'; total: string };
-            apr:
-                | { __typename: 'GqlPoolAprRange'; min: string; max: string }
-                | { __typename: 'GqlPoolAprTotal'; total: string };
-            items: Array<{
-                __typename: 'GqlBalancePoolAprItem';
-                id: string;
-                title: string;
-                apr:
-                    | { __typename: 'GqlPoolAprRange'; min: string; max: string }
-                    | { __typename: 'GqlPoolAprTotal'; total: string };
-                subItems?: Array<{
-                    __typename: 'GqlBalancePoolAprSubItem';
-                    id: string;
-                    title: string;
-                    apr:
-                        | { __typename: 'GqlPoolAprRange'; min: string; max: string }
-                        | { __typename: 'GqlPoolAprTotal'; total: string };
-                }> | null;
-            }>;
-        };
-    };
-    allTokens: Array<{
-        __typename: 'GqlPoolTokenExpanded';
-        id: string;
-        address: string;
-        isNested: boolean;
-        isPhantomBpt: boolean;
-        weight?: string | null;
-    }>;
-    displayTokens: Array<{
-        __typename: 'GqlPoolTokenDisplay';
-        id: string;
-        address: string;
-        name: string;
-        weight?: string | null;
-        symbol: string;
-        nestedTokens?: Array<{
-            __typename: 'GqlPoolTokenDisplay';
-            id: string;
-            address: string;
-            name: string;
-            weight?: string | null;
-            symbol: string;
-        }> | null;
-    }>;
+    tokenAddress: string;
+    ath: number;
+    atl: number;
+    marketCap?: string | null;
+    fdv?: string | null;
+    priceChange24h: number;
+    priceChangePercent24h: number;
+    priceChangePercent7d?: number | null;
+    priceChangePercent14d?: number | null;
+    priceChangePercent30d?: number | null;
+    high24h: number;
+    low24h: number;
+    updatedAt: string;
 };
 
 export type GetPoolQueryVariables = Exact<{
@@ -5920,432 +5555,23 @@ export type SftmxGetStakingSnapshotsQuery = {
     }>;
 };
 
-export type GetTokenRelativePriceChartDataQueryVariables = Exact<{
-    tokenIn: Scalars['String'];
-    tokenOut: Scalars['String'];
-    range: GqlTokenChartDataRange;
-}>;
-
-export type GetTokenRelativePriceChartDataQuery = {
-    __typename: 'Query';
-    prices: Array<{ __typename: 'GqlTokenPriceChartDataItem'; id: string; price: string; timestamp: number }>;
-};
-
-export type GetSorSwapsQueryVariables = Exact<{
-    tokenIn: Scalars['String'];
-    tokenOut: Scalars['String'];
-    swapType: GqlSorSwapType;
-    swapAmount: Scalars['BigDecimal'];
-    swapOptions: GqlSorSwapOptionsInput;
-}>;
-
-export type GetSorSwapsQuery = {
-    __typename: 'Query';
-    swaps: {
-        __typename: 'GqlSorGetSwapsResponse';
-        tokenIn: string;
-        tokenOut: string;
-        swapAmount: string;
-        tokenAddresses: Array<string>;
-        swapType: GqlSorSwapType;
-        marketSp: string;
-        returnAmount: string;
-        returnAmountScaled: string;
-        returnAmountFromSwaps?: string | null;
-        returnAmountConsideringFees: string;
-        swapAmountScaled: string;
-        swapAmountForSwaps?: string | null;
-        tokenInAmount: string;
-        tokenOutAmount: string;
-        effectivePrice: string;
-        effectivePriceReversed: string;
-        priceImpact: string;
-        swaps: Array<{
-            __typename: 'GqlSorSwap';
-            poolId: string;
-            amount: string;
-            userData: string;
-            assetInIndex: number;
-            assetOutIndex: number;
-        }>;
-        routes: Array<{
-            __typename: 'GqlSorSwapRoute';
-            tokenIn: string;
-            tokenOut: string;
-            tokenInAmount: string;
-            tokenOutAmount: string;
-            share: number;
-            hops: Array<{
-                __typename: 'GqlSorSwapRouteHop';
-                poolId: string;
-                tokenIn: string;
-                tokenOut: string;
-                tokenInAmount: string;
-                tokenOutAmount: string;
-                pool: {
-                    __typename: 'GqlPoolMinimal';
-                    id: string;
-                    name: string;
-                    type: GqlPoolType;
-                    symbol: string;
-                    dynamicData: { __typename: 'GqlPoolDynamicData'; totalLiquidity: string };
-                    allTokens: Array<{
-                        __typename: 'GqlPoolTokenExpanded';
-                        address: string;
-                        isNested: boolean;
-                        isPhantomBpt: boolean;
-                        weight?: string | null;
-                    }>;
-                };
-            }>;
-        }>;
-    };
-};
-
-export type GqlSorGetSwapsResponseFragment = {
-    __typename: 'GqlSorGetSwapsResponse';
-    tokenIn: string;
-    tokenOut: string;
-    swapAmount: string;
-    tokenAddresses: Array<string>;
-    swapType: GqlSorSwapType;
-    marketSp: string;
-    returnAmount: string;
-    returnAmountScaled: string;
-    returnAmountFromSwaps?: string | null;
-    returnAmountConsideringFees: string;
-    swapAmountScaled: string;
-    swapAmountForSwaps?: string | null;
-    tokenInAmount: string;
-    tokenOutAmount: string;
-    effectivePrice: string;
-    effectivePriceReversed: string;
-    priceImpact: string;
-    swaps: Array<{
-        __typename: 'GqlSorSwap';
-        poolId: string;
-        amount: string;
-        userData: string;
-        assetInIndex: number;
-        assetOutIndex: number;
-    }>;
-    routes: Array<{
-        __typename: 'GqlSorSwapRoute';
-        tokenIn: string;
-        tokenOut: string;
-        tokenInAmount: string;
-        tokenOutAmount: string;
-        share: number;
-        hops: Array<{
-            __typename: 'GqlSorSwapRouteHop';
-            poolId: string;
-            tokenIn: string;
-            tokenOut: string;
-            tokenInAmount: string;
-            tokenOutAmount: string;
-            pool: {
-                __typename: 'GqlPoolMinimal';
-                id: string;
-                name: string;
-                type: GqlPoolType;
-                symbol: string;
-                dynamicData: { __typename: 'GqlPoolDynamicData'; totalLiquidity: string };
-                allTokens: Array<{
-                    __typename: 'GqlPoolTokenExpanded';
-                    address: string;
-                    isNested: boolean;
-                    isPhantomBpt: boolean;
-                    weight?: string | null;
-                }>;
-            };
-        }>;
-    }>;
-};
-
-export type GqlSorSwapRouteFragment = {
-    __typename: 'GqlSorSwapRoute';
-    tokenIn: string;
-    tokenOut: string;
-    tokenInAmount: string;
-    tokenOutAmount: string;
-    share: number;
-    hops: Array<{
-        __typename: 'GqlSorSwapRouteHop';
-        poolId: string;
-        tokenIn: string;
-        tokenOut: string;
-        tokenInAmount: string;
-        tokenOutAmount: string;
-        pool: {
-            __typename: 'GqlPoolMinimal';
-            id: string;
-            name: string;
-            type: GqlPoolType;
-            symbol: string;
-            dynamicData: { __typename: 'GqlPoolDynamicData'; totalLiquidity: string };
-            allTokens: Array<{
-                __typename: 'GqlPoolTokenExpanded';
-                address: string;
-                isNested: boolean;
-                isPhantomBpt: boolean;
-                weight?: string | null;
-            }>;
-        };
-    }>;
-};
-
-export type GqlSorSwapRouteHopFragment = {
-    __typename: 'GqlSorSwapRouteHop';
-    poolId: string;
-    tokenIn: string;
-    tokenOut: string;
-    tokenInAmount: string;
-    tokenOutAmount: string;
-    pool: {
-        __typename: 'GqlPoolMinimal';
-        id: string;
-        name: string;
-        type: GqlPoolType;
-        symbol: string;
-        dynamicData: { __typename: 'GqlPoolDynamicData'; totalLiquidity: string };
-        allTokens: Array<{
-            __typename: 'GqlPoolTokenExpanded';
-            address: string;
-            isNested: boolean;
-            isPhantomBpt: boolean;
-            weight?: string | null;
-        }>;
-    };
-};
-
-export type GetTradeSelectedTokenDataQueryVariables = Exact<{
-    tokenIn: Scalars['String'];
-    tokenOut: Scalars['String'];
-}>;
-
-export type GetTradeSelectedTokenDataQuery = {
-    __typename: 'Query';
-    tokenInData?: {
-        __typename: 'GqlTokenData';
-        id: string;
-        tokenAddress: string;
-        description?: string | null;
-        discordUrl?: string | null;
-        telegramUrl?: string | null;
-        twitterUsername?: string | null;
-    } | null;
-    tokenOutData?: {
-        __typename: 'GqlTokenData';
-        id: string;
-        tokenAddress: string;
-        description?: string | null;
-        discordUrl?: string | null;
-        telegramUrl?: string | null;
-        twitterUsername?: string | null;
-    } | null;
-    tokenInDynamicData?: {
-        __typename: 'GqlTokenDynamicData';
-        id: string;
-        tokenAddress: string;
-        ath: number;
-        atl: number;
-        marketCap?: string | null;
-        fdv?: string | null;
-        priceChange24h: number;
-        priceChangePercent24h: number;
-        priceChangePercent7d?: number | null;
-        priceChangePercent14d?: number | null;
-        priceChangePercent30d?: number | null;
-        high24h: number;
-        low24h: number;
-        updatedAt: string;
-    } | null;
-    tokenOutDynamicData?: {
-        __typename: 'GqlTokenDynamicData';
-        id: string;
-        tokenAddress: string;
-        ath: number;
-        atl: number;
-        marketCap?: string | null;
-        fdv?: string | null;
-        priceChange24h: number;
-        priceChangePercent24h: number;
-        priceChangePercent7d?: number | null;
-        priceChangePercent14d?: number | null;
-        priceChangePercent30d?: number | null;
-        high24h: number;
-        low24h: number;
-        updatedAt: string;
-    } | null;
-};
-
-export type GqlTokenDynamicDataFragment = {
-    __typename: 'GqlTokenDynamicData';
-    id: string;
-    tokenAddress: string;
-    ath: number;
-    atl: number;
-    marketCap?: string | null;
-    fdv?: string | null;
-    priceChange24h: number;
-    priceChangePercent24h: number;
-    priceChangePercent7d?: number | null;
-    priceChangePercent14d?: number | null;
-    priceChangePercent30d?: number | null;
-    high24h: number;
-    low24h: number;
-    updatedAt: string;
-};
-
-export const GqlPoolBatchSwapSwapFragmentDoc = gql`
-    fragment GqlPoolBatchSwapSwap on GqlPoolBatchSwapSwap {
+export const GqlTokenDynamicDataFragmentDoc = gql`
+    fragment GqlTokenDynamicData on GqlTokenDynamicData {
         id
-        timestamp
-        tokenAmountIn
-        tokenAmountOut
-        tokenIn
-        tokenOut
-        valueUSD
-        pool {
-            id
-            name
-            type
-            symbol
-            allTokens {
-                address
-                isNested
-                isPhantomBpt
-                weight
-            }
-        }
+        tokenAddress
+        ath
+        atl
+        marketCap
+        fdv
+        priceChange24h
+        priceChangePercent24h
+        priceChangePercent7d
+        priceChangePercent14d
+        priceChangePercent30d
+        high24h
+        low24h
+        updatedAt
     }
-`;
-export const GqlPoolBatchSwapFragmentDoc = gql`
-    fragment GqlPoolBatchSwap on GqlPoolBatchSwap {
-        id
-        timestamp
-        tokenAmountIn
-        tokenAmountOut
-        tokenIn
-        tokenOut
-        tokenInPrice
-        tokenOutPrice
-        tx
-        userAddress
-        valueUSD
-        swaps {
-            ...GqlPoolBatchSwapSwap
-        }
-    }
-    ${GqlPoolBatchSwapSwapFragmentDoc}
-`;
-export const GqlPoolCardDataFragmentDoc = gql`
-    fragment GqlPoolCardData on GqlPoolMinimal {
-        id
-        address
-        name
-        dynamicData {
-            totalLiquidity
-            totalShares
-            apr {
-                hasRewardApr
-                thirdPartyApr {
-                    ... on GqlPoolAprTotal {
-                        total
-                    }
-                    ... on GqlPoolAprRange {
-                        min
-                        max
-                    }
-                }
-                nativeRewardApr {
-                    ... on GqlPoolAprTotal {
-                        total
-                    }
-                    ... on GqlPoolAprRange {
-                        min
-                        max
-                    }
-                }
-                swapApr
-                apr {
-                    ... on GqlPoolAprTotal {
-                        total
-                    }
-                    ... on GqlPoolAprRange {
-                        min
-                        max
-                    }
-                }
-                items {
-                    id
-                    title
-                    apr {
-                        ... on GqlPoolAprTotal {
-                            total
-                        }
-                        ... on GqlPoolAprRange {
-                            min
-                            max
-                        }
-                    }
-                    subItems {
-                        id
-                        title
-                        apr {
-                            ... on GqlPoolAprTotal {
-                                total
-                            }
-                            ... on GqlPoolAprRange {
-                                min
-                                max
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        allTokens {
-            id
-            address
-            isNested
-            isPhantomBpt
-            weight
-        }
-        displayTokens {
-            id
-            address
-            name
-            weight
-            symbol
-            nestedTokens {
-                id
-                address
-                name
-                weight
-                symbol
-            }
-        }
-    }
-`;
-export const GqlPoolFeaturedPoolGroupFragmentDoc = gql`
-    fragment GqlPoolFeaturedPoolGroup on GqlPoolFeaturedPoolGroup {
-        id
-        icon
-        title
-        items {
-            ... on GqlFeaturePoolGroupItemExternalLink {
-                id
-                image
-                buttonText
-                buttonUrl
-            }
-            ... on GqlPoolMinimal {
-                ...GqlPoolCardData
-            }
-        }
-    }
-    ${GqlPoolCardDataFragmentDoc}
 `;
 export const GqlPoolTokenFragmentDoc = gql`
     fragment GqlPoolToken on GqlPoolToken {
@@ -6506,139 +5732,6 @@ export const GqlPoolMinimalFragmentDoc = gql`
         }
     }
 `;
-export const GqlSorSwapRouteHopFragmentDoc = gql`
-    fragment GqlSorSwapRouteHop on GqlSorSwapRouteHop {
-        poolId
-        pool {
-            id
-            name
-            type
-            symbol
-            dynamicData {
-                totalLiquidity
-            }
-            allTokens {
-                address
-                isNested
-                isPhantomBpt
-                weight
-            }
-        }
-        tokenIn
-        tokenOut
-        tokenInAmount
-        tokenOutAmount
-    }
-`;
-export const GqlSorSwapRouteFragmentDoc = gql`
-    fragment GqlSorSwapRoute on GqlSorSwapRoute {
-        tokenIn
-        tokenOut
-        tokenInAmount
-        tokenOutAmount
-        share
-        hops {
-            ...GqlSorSwapRouteHop
-        }
-    }
-    ${GqlSorSwapRouteHopFragmentDoc}
-`;
-export const GqlSorGetSwapsResponseFragmentDoc = gql`
-    fragment GqlSorGetSwapsResponse on GqlSorGetSwapsResponse {
-        tokenIn
-        tokenOut
-        swapAmount
-        tokenAddresses
-        swapType
-        marketSp
-        swaps {
-            poolId
-            amount
-            userData
-            assetInIndex
-            assetOutIndex
-        }
-        returnAmount
-        returnAmountScaled
-        returnAmountFromSwaps
-        returnAmountConsideringFees
-        swapAmount
-        swapAmountScaled
-        swapAmountForSwaps
-        tokenInAmount
-        tokenOutAmount
-        effectivePrice
-        effectivePriceReversed
-        priceImpact
-        routes {
-            ...GqlSorSwapRoute
-        }
-    }
-    ${GqlSorSwapRouteFragmentDoc}
-`;
-export const GqlTokenDynamicDataFragmentDoc = gql`
-    fragment GqlTokenDynamicData on GqlTokenDynamicData {
-        id
-        tokenAddress
-        ath
-        atl
-        marketCap
-        fdv
-        priceChange24h
-        priceChangePercent24h
-        priceChangePercent7d
-        priceChangePercent14d
-        priceChangePercent30d
-        high24h
-        low24h
-        updatedAt
-    }
-`;
-export const GetPoolBatchSwapsDocument = gql`
-    query GetPoolBatchSwaps($first: Int, $skip: Int, $where: GqlPoolSwapFilter) {
-        batchSwaps: poolGetBatchSwaps(first: $first, skip: $skip, where: $where) {
-            ...GqlPoolBatchSwap
-        }
-    }
-    ${GqlPoolBatchSwapFragmentDoc}
-`;
-
-/**
- * __useGetPoolBatchSwapsQuery__
- *
- * To run a query within a React component, call `useGetPoolBatchSwapsQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetPoolBatchSwapsQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetPoolBatchSwapsQuery({
- *   variables: {
- *      first: // value for 'first'
- *      skip: // value for 'skip'
- *      where: // value for 'where'
- *   },
- * });
- */
-export function useGetPoolBatchSwapsQuery(
-    baseOptions?: Apollo.QueryHookOptions<GetPoolBatchSwapsQuery, GetPoolBatchSwapsQueryVariables>,
-) {
-    const options = { ...defaultOptions, ...baseOptions };
-    return Apollo.useQuery<GetPoolBatchSwapsQuery, GetPoolBatchSwapsQueryVariables>(GetPoolBatchSwapsDocument, options);
-}
-export function useGetPoolBatchSwapsLazyQuery(
-    baseOptions?: Apollo.LazyQueryHookOptions<GetPoolBatchSwapsQuery, GetPoolBatchSwapsQueryVariables>,
-) {
-    const options = { ...defaultOptions, ...baseOptions };
-    return Apollo.useLazyQuery<GetPoolBatchSwapsQuery, GetPoolBatchSwapsQueryVariables>(
-        GetPoolBatchSwapsDocument,
-        options,
-    );
-}
-export type GetPoolBatchSwapsQueryHookResult = ReturnType<typeof useGetPoolBatchSwapsQuery>;
-export type GetPoolBatchSwapsLazyQueryHookResult = ReturnType<typeof useGetPoolBatchSwapsLazyQuery>;
-export type GetPoolBatchSwapsQueryResult = Apollo.QueryResult<GetPoolBatchSwapsQuery, GetPoolBatchSwapsQueryVariables>;
 export const GetAppGlobalDataDocument = gql`
     query GetAppGlobalData {
         tokenGetTokens {
@@ -7181,149 +6274,6 @@ export type UserSyncBalanceMutationOptions = Apollo.BaseMutationOptions<
     UserSyncBalanceMutation,
     UserSyncBalanceMutationVariables
 >;
-export const GetHomeDataDocument = gql`
-    query GetHomeData {
-        poolGetFeaturedPoolGroups {
-            ...GqlPoolFeaturedPoolGroup
-        }
-        contentGetNewsItems {
-            id
-            text
-            image
-            url
-            source
-            timestamp
-            discussionUrl
-        }
-    }
-    ${GqlPoolFeaturedPoolGroupFragmentDoc}
-`;
-
-/**
- * __useGetHomeDataQuery__
- *
- * To run a query within a React component, call `useGetHomeDataQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetHomeDataQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetHomeDataQuery({
- *   variables: {
- *   },
- * });
- */
-export function useGetHomeDataQuery(
-    baseOptions?: Apollo.QueryHookOptions<GetHomeDataQuery, GetHomeDataQueryVariables>,
-) {
-    const options = { ...defaultOptions, ...baseOptions };
-    return Apollo.useQuery<GetHomeDataQuery, GetHomeDataQueryVariables>(GetHomeDataDocument, options);
-}
-export function useGetHomeDataLazyQuery(
-    baseOptions?: Apollo.LazyQueryHookOptions<GetHomeDataQuery, GetHomeDataQueryVariables>,
-) {
-    const options = { ...defaultOptions, ...baseOptions };
-    return Apollo.useLazyQuery<GetHomeDataQuery, GetHomeDataQueryVariables>(GetHomeDataDocument, options);
-}
-export type GetHomeDataQueryHookResult = ReturnType<typeof useGetHomeDataQuery>;
-export type GetHomeDataLazyQueryHookResult = ReturnType<typeof useGetHomeDataLazyQuery>;
-export type GetHomeDataQueryResult = Apollo.QueryResult<GetHomeDataQuery, GetHomeDataQueryVariables>;
-export const GetHomeFeaturedPoolsDocument = gql`
-    query GetHomeFeaturedPools {
-        featuredPoolGroups: poolGetFeaturedPoolGroups {
-            ...GqlPoolFeaturedPoolGroup
-        }
-    }
-    ${GqlPoolFeaturedPoolGroupFragmentDoc}
-`;
-
-/**
- * __useGetHomeFeaturedPoolsQuery__
- *
- * To run a query within a React component, call `useGetHomeFeaturedPoolsQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetHomeFeaturedPoolsQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetHomeFeaturedPoolsQuery({
- *   variables: {
- *   },
- * });
- */
-export function useGetHomeFeaturedPoolsQuery(
-    baseOptions?: Apollo.QueryHookOptions<GetHomeFeaturedPoolsQuery, GetHomeFeaturedPoolsQueryVariables>,
-) {
-    const options = { ...defaultOptions, ...baseOptions };
-    return Apollo.useQuery<GetHomeFeaturedPoolsQuery, GetHomeFeaturedPoolsQueryVariables>(
-        GetHomeFeaturedPoolsDocument,
-        options,
-    );
-}
-export function useGetHomeFeaturedPoolsLazyQuery(
-    baseOptions?: Apollo.LazyQueryHookOptions<GetHomeFeaturedPoolsQuery, GetHomeFeaturedPoolsQueryVariables>,
-) {
-    const options = { ...defaultOptions, ...baseOptions };
-    return Apollo.useLazyQuery<GetHomeFeaturedPoolsQuery, GetHomeFeaturedPoolsQueryVariables>(
-        GetHomeFeaturedPoolsDocument,
-        options,
-    );
-}
-export type GetHomeFeaturedPoolsQueryHookResult = ReturnType<typeof useGetHomeFeaturedPoolsQuery>;
-export type GetHomeFeaturedPoolsLazyQueryHookResult = ReturnType<typeof useGetHomeFeaturedPoolsLazyQuery>;
-export type GetHomeFeaturedPoolsQueryResult = Apollo.QueryResult<
-    GetHomeFeaturedPoolsQuery,
-    GetHomeFeaturedPoolsQueryVariables
->;
-export const GetHomeNewsItemsDocument = gql`
-    query GetHomeNewsItems {
-        newsItems: contentGetNewsItems {
-            id
-            text
-            image
-            url
-            source
-            timestamp
-            discussionUrl
-        }
-    }
-`;
-
-/**
- * __useGetHomeNewsItemsQuery__
- *
- * To run a query within a React component, call `useGetHomeNewsItemsQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetHomeNewsItemsQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetHomeNewsItemsQuery({
- *   variables: {
- *   },
- * });
- */
-export function useGetHomeNewsItemsQuery(
-    baseOptions?: Apollo.QueryHookOptions<GetHomeNewsItemsQuery, GetHomeNewsItemsQueryVariables>,
-) {
-    const options = { ...defaultOptions, ...baseOptions };
-    return Apollo.useQuery<GetHomeNewsItemsQuery, GetHomeNewsItemsQueryVariables>(GetHomeNewsItemsDocument, options);
-}
-export function useGetHomeNewsItemsLazyQuery(
-    baseOptions?: Apollo.LazyQueryHookOptions<GetHomeNewsItemsQuery, GetHomeNewsItemsQueryVariables>,
-) {
-    const options = { ...defaultOptions, ...baseOptions };
-    return Apollo.useLazyQuery<GetHomeNewsItemsQuery, GetHomeNewsItemsQueryVariables>(
-        GetHomeNewsItemsDocument,
-        options,
-    );
-}
-export type GetHomeNewsItemsQueryHookResult = ReturnType<typeof useGetHomeNewsItemsQuery>;
-export type GetHomeNewsItemsLazyQueryHookResult = ReturnType<typeof useGetHomeNewsItemsLazyQuery>;
-export type GetHomeNewsItemsQueryResult = Apollo.QueryResult<GetHomeNewsItemsQuery, GetHomeNewsItemsQueryVariables>;
 export const GetPoolDocument = gql`
     query GetPool($id: String!) {
         pool: poolGetPool(id: $id) {
@@ -8301,187 +7251,4 @@ export type SftmxGetStakingSnapshotsLazyQueryHookResult = ReturnType<typeof useS
 export type SftmxGetStakingSnapshotsQueryResult = Apollo.QueryResult<
     SftmxGetStakingSnapshotsQuery,
     SftmxGetStakingSnapshotsQueryVariables
->;
-export const GetTokenRelativePriceChartDataDocument = gql`
-    query GetTokenRelativePriceChartData($tokenIn: String!, $tokenOut: String!, $range: GqlTokenChartDataRange!) {
-        prices: tokenGetRelativePriceChartData(tokenIn: $tokenIn, tokenOut: $tokenOut, range: $range) {
-            id
-            price
-            timestamp
-        }
-    }
-`;
-
-/**
- * __useGetTokenRelativePriceChartDataQuery__
- *
- * To run a query within a React component, call `useGetTokenRelativePriceChartDataQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetTokenRelativePriceChartDataQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetTokenRelativePriceChartDataQuery({
- *   variables: {
- *      tokenIn: // value for 'tokenIn'
- *      tokenOut: // value for 'tokenOut'
- *      range: // value for 'range'
- *   },
- * });
- */
-export function useGetTokenRelativePriceChartDataQuery(
-    baseOptions: Apollo.QueryHookOptions<
-        GetTokenRelativePriceChartDataQuery,
-        GetTokenRelativePriceChartDataQueryVariables
-    >,
-) {
-    const options = { ...defaultOptions, ...baseOptions };
-    return Apollo.useQuery<GetTokenRelativePriceChartDataQuery, GetTokenRelativePriceChartDataQueryVariables>(
-        GetTokenRelativePriceChartDataDocument,
-        options,
-    );
-}
-export function useGetTokenRelativePriceChartDataLazyQuery(
-    baseOptions?: Apollo.LazyQueryHookOptions<
-        GetTokenRelativePriceChartDataQuery,
-        GetTokenRelativePriceChartDataQueryVariables
-    >,
-) {
-    const options = { ...defaultOptions, ...baseOptions };
-    return Apollo.useLazyQuery<GetTokenRelativePriceChartDataQuery, GetTokenRelativePriceChartDataQueryVariables>(
-        GetTokenRelativePriceChartDataDocument,
-        options,
-    );
-}
-export type GetTokenRelativePriceChartDataQueryHookResult = ReturnType<typeof useGetTokenRelativePriceChartDataQuery>;
-export type GetTokenRelativePriceChartDataLazyQueryHookResult = ReturnType<
-    typeof useGetTokenRelativePriceChartDataLazyQuery
->;
-export type GetTokenRelativePriceChartDataQueryResult = Apollo.QueryResult<
-    GetTokenRelativePriceChartDataQuery,
-    GetTokenRelativePriceChartDataQueryVariables
->;
-export const GetSorSwapsDocument = gql`
-    query GetSorSwaps(
-        $tokenIn: String!
-        $tokenOut: String!
-        $swapType: GqlSorSwapType!
-        $swapAmount: BigDecimal!
-        $swapOptions: GqlSorSwapOptionsInput!
-    ) {
-        swaps: sorGetSwaps(
-            tokenIn: $tokenIn
-            tokenOut: $tokenOut
-            swapType: $swapType
-            swapAmount: $swapAmount
-            swapOptions: $swapOptions
-        ) {
-            ...GqlSorGetSwapsResponse
-        }
-    }
-    ${GqlSorGetSwapsResponseFragmentDoc}
-`;
-
-/**
- * __useGetSorSwapsQuery__
- *
- * To run a query within a React component, call `useGetSorSwapsQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetSorSwapsQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetSorSwapsQuery({
- *   variables: {
- *      tokenIn: // value for 'tokenIn'
- *      tokenOut: // value for 'tokenOut'
- *      swapType: // value for 'swapType'
- *      swapAmount: // value for 'swapAmount'
- *      swapOptions: // value for 'swapOptions'
- *   },
- * });
- */
-export function useGetSorSwapsQuery(baseOptions: Apollo.QueryHookOptions<GetSorSwapsQuery, GetSorSwapsQueryVariables>) {
-    const options = { ...defaultOptions, ...baseOptions };
-    return Apollo.useQuery<GetSorSwapsQuery, GetSorSwapsQueryVariables>(GetSorSwapsDocument, options);
-}
-export function useGetSorSwapsLazyQuery(
-    baseOptions?: Apollo.LazyQueryHookOptions<GetSorSwapsQuery, GetSorSwapsQueryVariables>,
-) {
-    const options = { ...defaultOptions, ...baseOptions };
-    return Apollo.useLazyQuery<GetSorSwapsQuery, GetSorSwapsQueryVariables>(GetSorSwapsDocument, options);
-}
-export type GetSorSwapsQueryHookResult = ReturnType<typeof useGetSorSwapsQuery>;
-export type GetSorSwapsLazyQueryHookResult = ReturnType<typeof useGetSorSwapsLazyQuery>;
-export type GetSorSwapsQueryResult = Apollo.QueryResult<GetSorSwapsQuery, GetSorSwapsQueryVariables>;
-export const GetTradeSelectedTokenDataDocument = gql`
-    query GetTradeSelectedTokenData($tokenIn: String!, $tokenOut: String!) {
-        tokenInData: tokenGetTokenData(address: $tokenIn) {
-            id
-            tokenAddress
-            description
-            discordUrl
-            telegramUrl
-            twitterUsername
-        }
-        tokenOutData: tokenGetTokenData(address: $tokenOut) {
-            id
-            tokenAddress
-            description
-            discordUrl
-            telegramUrl
-            twitterUsername
-        }
-        tokenInDynamicData: tokenGetTokenDynamicData(address: $tokenIn) {
-            ...GqlTokenDynamicData
-        }
-        tokenOutDynamicData: tokenGetTokenDynamicData(address: $tokenOut) {
-            ...GqlTokenDynamicData
-        }
-    }
-    ${GqlTokenDynamicDataFragmentDoc}
-`;
-
-/**
- * __useGetTradeSelectedTokenDataQuery__
- *
- * To run a query within a React component, call `useGetTradeSelectedTokenDataQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetTradeSelectedTokenDataQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetTradeSelectedTokenDataQuery({
- *   variables: {
- *      tokenIn: // value for 'tokenIn'
- *      tokenOut: // value for 'tokenOut'
- *   },
- * });
- */
-export function useGetTradeSelectedTokenDataQuery(
-    baseOptions: Apollo.QueryHookOptions<GetTradeSelectedTokenDataQuery, GetTradeSelectedTokenDataQueryVariables>,
-) {
-    const options = { ...defaultOptions, ...baseOptions };
-    return Apollo.useQuery<GetTradeSelectedTokenDataQuery, GetTradeSelectedTokenDataQueryVariables>(
-        GetTradeSelectedTokenDataDocument,
-        options,
-    );
-}
-export function useGetTradeSelectedTokenDataLazyQuery(
-    baseOptions?: Apollo.LazyQueryHookOptions<GetTradeSelectedTokenDataQuery, GetTradeSelectedTokenDataQueryVariables>,
-) {
-    const options = { ...defaultOptions, ...baseOptions };
-    return Apollo.useLazyQuery<GetTradeSelectedTokenDataQuery, GetTradeSelectedTokenDataQueryVariables>(
-        GetTradeSelectedTokenDataDocument,
-        options,
-    );
-}
-export type GetTradeSelectedTokenDataQueryHookResult = ReturnType<typeof useGetTradeSelectedTokenDataQuery>;
-export type GetTradeSelectedTokenDataLazyQueryHookResult = ReturnType<typeof useGetTradeSelectedTokenDataLazyQuery>;
-export type GetTradeSelectedTokenDataQueryResult = Apollo.QueryResult<
-    GetTradeSelectedTokenDataQuery,
-    GetTradeSelectedTokenDataQueryVariables
 >;

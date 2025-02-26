@@ -40,16 +40,14 @@ export function Navbar({ scrollY }: Props) {
                     <motion.div style={{ opacity, position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}>
                         <Box width="full" height="full" bg="beets.base.800" shadow="lg" />
                     </motion.div>
-                    <Flex alignItems="center" mr="6" zIndex="2" cursor="pointer">
-                        <NextLink href="/" chakraProps={{ _focus: { boxShadow: 'none' } }}>
-                            {chainId === '10' ? (
-                                <BeetsBalLogo width="132px" />
-                            ) : (
-                                <Box mb="2">
-                                    <BeetsLogo width="132px" />
-                                </Box>
-                            )}
-                        </NextLink>
+                    <Flex alignItems="center" mr="6" zIndex="2">
+                        {chainId === '10' ? (
+                            <BeetsBalLogo width="132px" />
+                        ) : (
+                            <Box mb="2">
+                                <BeetsLogo width="132px" />
+                            </Box>
+                        )}
                     </Flex>
                     <Box flex="1" zIndex="2">
                         <Flex alignItems="center" display={{ base: 'none', md: 'flex' }}>
