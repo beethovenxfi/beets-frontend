@@ -195,7 +195,7 @@ enum GqlHookType {
     EXIT_FEE
     FEE_TAKING
     LOTTERY
-    MEV_CAPTURE
+    MEV_TAX
     NFTLIQUIDITY_POSITION
     STABLE_SURGE
     UNKNOWN
@@ -642,6 +642,11 @@ enum GqlPoolAprItemType {
     APR that pools earns when BPT is staked on AURA.
     """
     AURA
+
+    """
+    Dynamic swap fee APR based on data from the last 24h
+    """
+    DYNAMIC_SWAP_FEE_24H
 
     """
     Represents the yield from an IB (Interest-Bearing) asset APR in a pool.
@@ -3095,6 +3100,16 @@ type GqlStakedSonicData {
     exchangeRate: String!
 
     """
+    The total protocol fee collected in the last 24 hours.
+    """
+    protocolFee24h: String!
+
+    """
+    The total rewards claimed in the last 24 hours.
+    """
+    rewardsClaimed24h: String!
+
+    """
     The current rebasing APR for stS.
     """
     stakingApr: String!
@@ -3133,6 +3148,16 @@ type GqlStakedSonicSnapshot {
     """
     exchangeRate: String!
     id: ID!
+
+    """
+    The total protocol fee collected during that day.
+    """
+    protocolFee24h: String!
+
+    """
+    The total rewards claimed during that day.
+    """
+    rewardsClaimed24h: String!
 
     """
     The timestamp of the snapshot. Timestamp is end of day midnight.
@@ -3654,7 +3679,7 @@ type HookConfig {
     shouldCallComputeDynamicSwapFee: Boolean!
 }
 
-union HookParams = ExitFeeHookParams | FeeTakingHookParams | StableSurgeHookParams
+union HookParams = ExitFeeHookParams | FeeTakingHookParams | MevTaxHookParams | StableSurgeHookParams
 
 scalar JSON
 
@@ -3681,6 +3706,15 @@ type LiquidityManagement {
     Whether this pool support additional, custom remove liquditiy operations apart from proportional, unbalanced and single asset.
     """
     enableRemoveLiquidityCustom: Boolean
+}
+
+"""
+MevTax hook specific params. Percentage format is 0.01 -> 0.01%.
+"""
+type MevTaxHookParams {
+    maxMevSwapFeePercentage: String
+    mevTaxMultiplier: String
+    mevTaxThreshold: String
 }
 
 type Mutation {
@@ -4005,7 +4039,7 @@ type Query {
     """
     Returns all pools with veBAL gauges that can be voted on.
     """
-    veBalGetVotingList: [GqlVotingPool!]!
+    veBalGetVotingList(includeKilled: Boolean): [GqlVotingPool!]!
 }
 
 """
