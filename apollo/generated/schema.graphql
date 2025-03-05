@@ -195,7 +195,7 @@ enum GqlHookType {
     EXIT_FEE
     FEE_TAKING
     LOTTERY
-    MEV_CAPTURE
+    MEV_TAX
     NFTLIQUIDITY_POSITION
     STABLE_SURGE
     UNKNOWN
@@ -644,6 +644,11 @@ enum GqlPoolAprItemType {
     AURA
 
     """
+    Dynamic swap fee APR based on data from the last 24h
+    """
+    DYNAMIC_SWAP_FEE_24H
+
+    """
     Represents the yield from an IB (Interest-Bearing) asset APR in a pool.
     """
     IB_YIELD
@@ -1060,6 +1065,10 @@ type GqlPoolDynamicData {
     lifetimeSwapFees: BigDecimal!
     lifetimeVolume: BigDecimal!
     poolId: ID!
+    protocolFees24h: BigDecimal!
+    protocolFees48h: BigDecimal!
+    protocolYieldCapture24h: BigDecimal!
+    protocolYieldCapture48h: BigDecimal!
     sharePriceAth: BigDecimal!
     sharePriceAthTimestamp: Int!
     sharePriceAtl: BigDecimal!
@@ -3095,6 +3104,16 @@ type GqlStakedSonicData {
     exchangeRate: String!
 
     """
+    The total protocol fee collected in the last 24 hours.
+    """
+    protocolFee24h: String!
+
+    """
+    The total rewards claimed in the last 24 hours.
+    """
+    rewardsClaimed24h: String!
+
+    """
     The current rebasing APR for stS.
     """
     stakingApr: String!
@@ -3133,6 +3152,16 @@ type GqlStakedSonicSnapshot {
     """
     exchangeRate: String!
     id: ID!
+
+    """
+    The total protocol fee collected during that day.
+    """
+    protocolFee24h: String!
+
+    """
+    The total rewards claimed during that day.
+    """
+    rewardsClaimed24h: String!
 
     """
     The timestamp of the snapshot. Timestamp is end of day midnight.
@@ -3593,6 +3622,11 @@ type GqlVotingGaugeToken {
     symbol: String!
 
     """
+    Underlying token address
+    """
+    underlyingTokenAddress: String
+
+    """
     If it is a weighted pool, the weigh of the token is shown here in %. 0.5 = 50%.
     """
     weight: String
@@ -3621,6 +3655,7 @@ type GqlVotingPool {
     Pool ID
     """
     id: ID!
+    protocolVersion: Int!
 
     """
     The symbol of the pool.
@@ -3654,7 +3689,7 @@ type HookConfig {
     shouldCallComputeDynamicSwapFee: Boolean!
 }
 
-union HookParams = ExitFeeHookParams | FeeTakingHookParams | StableSurgeHookParams
+union HookParams = ExitFeeHookParams | FeeTakingHookParams | MevTaxHookParams | StableSurgeHookParams
 
 scalar JSON
 
@@ -3683,8 +3718,17 @@ type LiquidityManagement {
     enableRemoveLiquidityCustom: Boolean
 }
 
+"""
+MevTax hook specific params. Percentage format is 0.01 -> 0.01%.
+"""
+type MevTaxHookParams {
+    maxMevSwapFeePercentage: String
+    mevTaxMultiplier: String
+    mevTaxThreshold: String
+}
+
 type Mutation {
-    beetsPoolLoadReliquarySnapshotsForAllFarms: String!
+    beetsPoolLoadReliquarySnapshotsForAllFarms(chain: GqlChain!): String!
     beetsSyncFbeetsRatio: String!
     poolLoadOnChainDataForAllPools(chains: [GqlChain!]!): [GqlPoolMutationResult!]!
     poolLoadSnapshotsForPools(poolIds: [String!]!, reload: Boolean): String!
@@ -3736,7 +3780,11 @@ type Query {
         where: GqlAggregatorPoolFilter
     ): [GqlPoolAggregator!]!
     beetsGetFbeetsRatio: String!
-    beetsPoolGetReliquaryFarmSnapshots(id: String!, range: GqlPoolSnapshotDataRange!): [GqlReliquaryFarmSnapshot!]!
+    beetsPoolGetReliquaryFarmSnapshots(
+        chain: GqlChain
+        id: String!
+        range: GqlPoolSnapshotDataRange!
+    ): [GqlReliquaryFarmSnapshot!]!
     blocksGetAverageBlockTime: Float! @deprecated
     blocksGetBlocksPerDay: Float! @deprecated
     blocksGetBlocksPerSecond: Float! @deprecated
@@ -4005,7 +4053,7 @@ type Query {
     """
     Returns all pools with veBAL gauges that can be voted on.
     """
-    veBalGetVotingList: [GqlVotingPool!]!
+    veBalGetVotingList(includeKilled: Boolean): [GqlVotingPool!]!
 }
 
 """
