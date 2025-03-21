@@ -43,7 +43,7 @@ export default function ReliquaryHeroBanner() {
                             <li>Unlock maturity adjusted rewards</li>
                             <li>Access evolving Ludwig fNFTs</li>
                         </ul>
-                        <Link href="https://docs.beets.fi/beets/mabeets" target="_blank" mt="2">
+                        <Link href="https://docs.beets.fi/tokenomics/mabeets" target="_blank" mt="2">
                             <Flex alignItems="center">
                                 <Box>Learn more</Box>
                                 <Box ml="1">

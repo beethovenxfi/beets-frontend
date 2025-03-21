@@ -46,7 +46,6 @@ export function ReliquaryCurveChart() {
             type: 'category',
             splitLine: { show: false },
             axisTick: { show: false, alignWithLabel: true },
-            interval: 1,
             axisLabel: {
                 margin: 16,
             },
@@ -104,7 +103,7 @@ export function ReliquaryCurveChart() {
                     label="BEETronix"
                     infoText="This curve shows the maturity boost per level."
                 />
-                <Link href="https://docs.beets.fi/beets/mabeets" target="_blank">
+                <Link href="https://docs.beets.fi/tokenomics/mabeets" target="_blank">
                     <ExternalLink size="16" />
                 </Link>
             </HStack>
