@@ -1,10 +1,10 @@
 import { Box, HStack, Link } from '@chakra-ui/react';
 import { ToastType, useToast } from '~/components/toast/BeetsToast';
 import { useEffect } from 'react';
-import { PoolDetailWarning } from '~/lib/config/network-config-type';
+import { PoolDetailWarning as PoolDetailWarningType } from '~/lib/config/network-config-type';
 
 interface Props {
-    warning: PoolDetailWarning;
+    warning: PoolDetailWarningType;
 }
 
 export function PoolDetailWarning({ warning }: Props) {
