@@ -6,17 +6,14 @@ import { useUserAccount } from '~/lib/user/useUserAccount';
 export function PoolListTabs() {
     const { isConnected } = useUserAccount();
     const { state, refetch: refreshPoolList, setShowMyInvestments, showMyInvestments } = usePoolList();
-    const TABS = [{ id: 'incentivized' }, { id: 'community' }, { id: 'my-investments' }];
+    const TABS = [{ id: 'community' }, { id: 'my-investments' }];
 
     const handleTabChanged = (index: number) => {
         const tab = TABS[index];
-        const tagNotIn: any = [
-            ...DEFAULT_POOL_LIST_QUERY_VARS.where!.tagNotIn!,
-            tab.id === 'community' ? 'INCENTIVIZED' : null,
-        ].filter(Boolean);
-        const tagIn: any = tab.id === 'incentivized' ? ['INCENTIVIZED'] : null;
+        const tagNotIn: any = [...DEFAULT_POOL_LIST_QUERY_VARS.where!.tagNotIn!].filter(Boolean);
+        const tagIn: any = null;
 
-        if (['incentivized', 'community'].includes(tab.id)) {
+        if (['community'].includes(tab.id)) {
             setShowMyInvestments(false);
             refreshPoolList({
                 ...state,
@@ -41,12 +38,11 @@ export function PoolListTabs() {
             variant="soft-rounded"
             display="flex"
             onChange={handleTabChanged}
-            defaultIndex={showMyInvestments ? 2 : state.where?.tagIn?.includes('INCENTIVIZED') ? 0 : 1}
+            defaultIndex={showMyInvestments ? 1 : 0}
         >
             <TabList>
                 <HStack spacing="2">
-                    <BeetsTab key="incentivized">Incentivized pools</BeetsTab>
-                    <BeetsTab key="community">Community pools</BeetsTab>
+                    <BeetsTab key="community">All pools</BeetsTab>
                     {isConnected ? <BeetsTab key="my-investments">My investments</BeetsTab> : null}
                 </HStack>
             </TabList>
