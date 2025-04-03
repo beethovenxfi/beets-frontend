@@ -29,10 +29,7 @@ export function Pool() {
                             </Button>
                         </Link>
                     ) : (
-                        <>
-                            {!investDisabled[pool.id] && <PoolInvestModal />}
-                            <PoolWithdrawModal activatorProps={{ disabled: isFbeetsPool && total > 0 }} />
-                        </>
+                        <PoolWithdrawModal activatorProps={{ disabled: isFbeetsPool && total > 0 }} />
                     )}
                 </HStack>
                 <Grid gap="4" templateColumns={{ base: '1fr', lg: '300px 1fr' }} width="full">
