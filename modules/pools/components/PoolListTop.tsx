@@ -31,9 +31,6 @@ export function PoolListTop() {
                     </Box>
                     <PoolListSearch />
                 </HStack>
-                <Link href="/compose">
-                    <Button variant="primary">Create a pool</Button>
-                </Link>
             </HStack>
             <FadeInOutBox isVisible={showFilters}>
                 <Grid templateColumns={{ base: '1fr', md: '1fr 0px', lg: '1fr 1fr' }} gap="0" pb="4" pt="2">
