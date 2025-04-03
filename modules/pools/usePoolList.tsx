@@ -21,7 +21,7 @@ export const DEFAULT_POOL_LIST_QUERY_VARS: PoolsQueryVariables = {
     orderBy: 'totalLiquidity',
     orderDirection: 'desc',
     where: {
-        tagIn: ['INCENTIVIZED'],
+        tagIn: null,
         tagNotIn: ['BLACK_LISTED'],
         poolTypeIn: ['WEIGHTED', 'STABLE', 'COMPOSABLE_STABLE', 'META_STABLE', 'GYRO', 'GYRO3', 'GYROE'],
         chainIn: [networkConfig.chainName],

@@ -18,6 +18,11 @@ The review data for the ERC4626 token
 """
 type Erc4626ReviewData {
     """
+    If it is an ERC4626 token, this defines whether we can use wrap/unwrap through the buffer in swap paths for this token.
+    """
+    canUseBufferForSwaps: Boolean
+
+    """
     The filename of the review of the ERC4626
     """
     reviewFile: String!
@@ -26,6 +31,16 @@ type Erc4626ReviewData {
     A summary of the ERC4626 review, usually just says safe or unsafe
     """
     summary: String!
+
+    """
+    If it is an ERC4626 token, this defines whether we allow underlying tokens to be used for add/remove operations.
+    """
+    useUnderlyingForAddRemove: Boolean
+
+    """
+    If it is an ERC4626 token, this defines whether we allow the wrapped tokens to be used for add/remove operations.
+    """
+    useWrappedForAddRemove: Boolean
 
     """
     Warnings associated with the ERC4626
@@ -93,22 +108,6 @@ enum GqlChain {
     SEPOLIA
     SONIC
     ZKEVM
-}
-
-type GqlContentNewsItem {
-    discussionUrl: String
-    id: ID!
-    image: String
-    source: GqlContentNewsItemSource!
-    text: String!
-    timestamp: String!
-    url: String!
-}
-
-enum GqlContentNewsItemSource {
-    discord
-    medium
-    twitter
 }
 
 type GqlFeaturePoolGroupItemExternalLink {
@@ -508,6 +507,11 @@ type GqlPoolAggregator {
     The protocol version on which the pool is deployed, 1, 2 or 3
     """
     protocolVersion: Int!
+
+    """
+    QuantAmmWeighted specific fields
+    """
+    quantAmmWeightedParams: QuantAmmWeightedParams
 
     """
     Data specific to gyro pools
@@ -1065,6 +1069,10 @@ type GqlPoolDynamicData {
     lifetimeSwapFees: BigDecimal!
     lifetimeVolume: BigDecimal!
     poolId: ID!
+    protocolFees24h: BigDecimal!
+    protocolFees48h: BigDecimal!
+    protocolYieldCapture24h: BigDecimal!
+    protocolYieldCapture48h: BigDecimal!
     sharePriceAth: BigDecimal!
     sharePriceAthTimestamp: Int!
     sharePriceAtl: BigDecimal!
@@ -1798,6 +1806,63 @@ enum GqlPoolOrderDirection {
     desc
 }
 
+type GqlPoolQuantAmmWeighted implements GqlPoolBase {
+    address: Bytes!
+    allTokens: [GqlPoolTokenExpanded!]! @deprecated(reason: "Use poolTokens instead")
+    categories: [GqlPoolFilterCategory]
+    chain: GqlChain!
+    createTime: Int!
+    decimals: Int!
+    displayTokens: [GqlPoolTokenDisplay!]! @deprecated(reason: "Use poolTokens instead")
+    dynamicData: GqlPoolDynamicData!
+    factory: Bytes
+    hasAnyAllowedBuffer: Boolean!
+    hasErc4626: Boolean!
+    hasNestedErc4626: Boolean!
+    hook: GqlHook
+    id: ID!
+    investConfig: GqlPoolInvestConfig! @deprecated(reason: "Removed without replacement")
+    liquidityManagement: LiquidityManagement
+    name: String!
+    nestingType: GqlPoolNestingType! @deprecated(reason: "Removed without replacement")
+
+    """
+    The wallet address of the owner of the pool. Pool owners can set certain properties like swapFees or AMP.
+    """
+    owner: Bytes @deprecated(reason: "Use swapFeeManager instead")
+
+    """
+    Account empowered to pause/unpause the pool (or 0 to delegate to governance)
+    """
+    pauseManager: Bytes
+
+    """
+    Account empowered to set the pool creator fee percentage
+    """
+    poolCreator: Bytes
+    poolTokens: [GqlPoolTokenDetail!]!
+    protocolVersion: Int!
+    quantAmmWeightedParams: QuantAmmWeightedParams
+    staking: GqlPoolStaking
+
+    """
+    Account empowered to set static swap fees for a pool (when 0 on V2 swap fees are immutable, on V3 delegate to governance)
+    """
+    swapFeeManager: Bytes
+    symbol: String!
+    tags: [String]
+
+    """
+    All tokens of the pool. If it is a nested pool, the nested pool is expanded with its own tokens again.
+    """
+    tokens: [GqlPoolTokenUnion!]! @deprecated(reason: "Use poolTokens instead")
+    type: GqlPoolType!
+    userBalance: GqlPoolUserBalance
+    vaultVersion: Int! @deprecated(reason: "use protocolVersion instead")
+    version: Int!
+    withdrawConfig: GqlPoolWithdrawConfig! @deprecated(reason: "Removed without replacement")
+}
+
 type GqlPoolSnapshot {
     amounts: [String!]!
     chain: GqlChain!
@@ -2395,6 +2460,7 @@ enum GqlPoolType {
     LIQUIDITY_BOOTSTRAPPING
     META_STABLE
     PHANTOM_STABLE
+    QUANT_AMM_WEIGHTED
     STABLE
     UNKNOWN
     WEIGHTED
@@ -2407,6 +2473,7 @@ union GqlPoolUnion =
     | GqlPoolGyro
     | GqlPoolLiquidityBootstrapping
     | GqlPoolMetaStable
+    | GqlPoolQuantAmmWeighted
     | GqlPoolStable
     | GqlPoolWeighted
 
@@ -3311,6 +3378,7 @@ type GqlToken {
     The Twitter username of the token
     """
     twitterUsername: String
+    types: [GqlTokenType!]
 
     """
     The ERC4626 underlying token address, if applicable.
@@ -3444,6 +3512,11 @@ input GqlTokenFilter {
     Only return tokens with these addresses
     """
     tokensIn: [String!]
+
+    """
+    Filter by token type
+    """
+    typeIn: [GqlTokenType!]
 }
 
 """
@@ -3482,6 +3555,7 @@ type GqlTokenPriceChartDataItem {
 
 enum GqlTokenType {
     BPT
+    ERC4626
     PHANTOM_BPT
     WHITE_LISTED
 }
@@ -3618,6 +3692,11 @@ type GqlVotingGaugeToken {
     symbol: String!
 
     """
+    Underlying token address
+    """
+    underlyingTokenAddress: String
+
+    """
     If it is a weighted pool, the weigh of the token is shown here in %. 0.5 = 50%.
     """
     weight: String
@@ -3646,6 +3725,7 @@ type GqlVotingPool {
     Pool ID
     """
     id: ID!
+    protocolVersion: Int!
 
     """
     The symbol of the pool.
@@ -3718,7 +3798,7 @@ type MevTaxHookParams {
 }
 
 type Mutation {
-    beetsPoolLoadReliquarySnapshotsForAllFarms: String!
+    beetsPoolLoadReliquarySnapshotsForAllFarms(chain: GqlChain!): String!
     beetsSyncFbeetsRatio: String!
     poolLoadOnChainDataForAllPools(chains: [GqlChain!]!): [GqlPoolMutationResult!]!
     poolLoadSnapshotsForPools(poolIds: [String!]!, reload: Boolean): String!
@@ -3758,6 +3838,28 @@ type PoolForBatchSwap {
     type: GqlPoolType!
 }
 
+type QuantAMMWeightedDetail {
+    category: String!
+    name: String!
+    type: String!
+    value: String!
+}
+
+type QuantAmmWeightedParams {
+    absoluteWeightGuardRail: String!
+    details: [QuantAMMWeightedDetail!]!
+    epsilonMax: String!
+    lambda: [String!]!
+    lastInterpolationTimePossible: String!
+    lastUpdateIntervalTime: String!
+    maxTradeSizeRatio: String!
+    oracleStalenessThreshold: String!
+    poolRegistry: String!
+    updateInterval: String!
+    weightBlockMultipliers: [String!]!
+    weightsAtLastUpdateInterval: [String!]!
+}
+
 type Query {
     """
     Returns all pools for a given filter, specific for aggregators
@@ -3770,12 +3872,15 @@ type Query {
         where: GqlAggregatorPoolFilter
     ): [GqlPoolAggregator!]!
     beetsGetFbeetsRatio: String!
-    beetsPoolGetReliquaryFarmSnapshots(id: String!, range: GqlPoolSnapshotDataRange!): [GqlReliquaryFarmSnapshot!]!
+    beetsPoolGetReliquaryFarmSnapshots(
+        chain: GqlChain
+        id: String!
+        range: GqlPoolSnapshotDataRange!
+    ): [GqlReliquaryFarmSnapshot!]!
     blocksGetAverageBlockTime: Float! @deprecated
     blocksGetBlocksPerDay: Float! @deprecated
     blocksGetBlocksPerSecond: Float! @deprecated
     blocksGetBlocksPerYear: Float! @deprecated
-    contentGetNewsItems(chain: GqlChain): [GqlContentNewsItem!]!
     latestSyncedBlocks: GqlLatestSyncedBlocks!
 
     """
@@ -3810,12 +3915,6 @@ type Query {
         typeIn: [GqlPoolEventType!]!
         userAddress: String
     ): [GqlPoolEvent!]!
-
-    """
-    Will de deprecated in favor of poolGetFeaturedPools
-    """
-    poolGetFeaturedPoolGroups(chains: [GqlChain!]): [GqlPoolFeaturedPoolGroup!]!
-        @deprecated(reason: "Use poolGetFeaturedPools instead")
 
     """
     Returns the list of featured pools for chains
