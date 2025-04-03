@@ -2,7 +2,6 @@ import { Box, Grid, GridItem, HStack, VStack, Button } from '@chakra-ui/react';
 import PoolHeader from '~/modules/pool/detail/components/PoolHeader';
 import { PoolComposition } from '~/modules/pool/detail/components/composition/PoolComposition';
 import PoolStats from '~/modules/pool/detail/components/stats/PoolStats';
-import { PoolTransactions } from '~/modules/pool/detail/components/transactions/PoolTransactions';
 import { PoolDetailCharts } from '~/modules/pool/detail/components/PoolDetailCharts';
 import { NextLink } from '~/components/link/NextLink';
 import BeetsTooltip from '~/components/tooltip/BeetsTooltip';
@@ -29,10 +28,7 @@ export function ReliquaryPool() {
                         <PoolDetailCharts />
                     </GridItem>
                 </Grid>
-            </VStack>
-            <VStack spacing="8" width="full">
                 <PoolComposition />
-                <PoolTransactions />
             </VStack>
         </Box>
     );
