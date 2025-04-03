@@ -29,22 +29,11 @@ function PoolList() {
 
     const poolsToRender = showMyInvestments ? orderBy(pools, (pool) => usdBalanceForPool(pool.id), 'desc') : pools;
     const poolCount = count || 0;
-    const hasUnstakedBpt =
-        showMyInvestments &&
-        pools.filter((pool) => pool.dynamicData.apr.hasRewardApr && hasBptInWalletForPool(pool.id)).length > 0;
 
     return (
         <Box>
             <PoolListMobileHeader />
             <PoolListTop />
-
-            {hasUnstakedBpt && (
-                <Alert status="warning" mb="4">
-                    <AlertIcon />
-                    You have unstaked BPT in your wallet. Incentivized pools offer additional rewards that will
-                    accumulate over time when your BPT are staked.
-                </Alert>
-            )}
             <PaginatedTable
                 items={poolsToRender}
                 currentPage={state.skip / state.first + 1}
