@@ -18,6 +18,11 @@ The review data for the ERC4626 token
 """
 type Erc4626ReviewData {
     """
+    If it is an ERC4626 token, this defines whether we can use wrap/unwrap through the buffer in swap paths for this token.
+    """
+    canUseBufferForSwaps: Boolean
+
+    """
     The filename of the review of the ERC4626
     """
     reviewFile: String!
@@ -26,6 +31,16 @@ type Erc4626ReviewData {
     A summary of the ERC4626 review, usually just says safe or unsafe
     """
     summary: String!
+
+    """
+    If it is an ERC4626 token, this defines whether we allow underlying tokens to be used for add/remove operations.
+    """
+    useUnderlyingForAddRemove: Boolean
+
+    """
+    If it is an ERC4626 token, this defines whether we allow the wrapped tokens to be used for add/remove operations.
+    """
+    useWrappedForAddRemove: Boolean
 
     """
     Warnings associated with the ERC4626
@@ -93,22 +108,6 @@ enum GqlChain {
     SEPOLIA
     SONIC
     ZKEVM
-}
-
-type GqlContentNewsItem {
-    discussionUrl: String
-    id: ID!
-    image: String
-    source: GqlContentNewsItemSource!
-    text: String!
-    timestamp: String!
-    url: String!
-}
-
-enum GqlContentNewsItemSource {
-    discord
-    medium
-    twitter
 }
 
 type GqlFeaturePoolGroupItemExternalLink {
@@ -194,9 +193,11 @@ enum GqlHookType {
     DIRECTIONAL_FEE
     EXIT_FEE
     FEE_TAKING
+    LBP
     LOTTERY
     MEV_TAX
     NFTLIQUIDITY_POSITION
+    RECLAMM
     STABLE_SURGE
     UNKNOWN
     VEBAL_DISCOUNT
@@ -420,6 +421,11 @@ type GqlPoolAggregator {
     c: String
 
     """
+    ReClamm: The centeredness margin of the pool
+    """
+    centerednessMargin: BigDecimal
+
+    """
     The chain on which the pool is deployed
     """
     chain: GqlChain!
@@ -430,9 +436,19 @@ type GqlPoolAggregator {
     createTime: Int!
 
     """
+    ReClamm: The current fourth root price ratio, an interpolation of the price ratio state
+    """
+    currentFourthRootPriceRatio: BigDecimal
+
+    """
     Data specific to gyro pools
     """
     dSq: String
+
+    """
+    ReClamm: Represents how fast the pool can move the virtual balances per day
+    """
+    dailyPriceShiftBase: BigDecimal
 
     """
     The decimals of the BPT, usually 18
@@ -448,6 +464,11 @@ type GqlPoolAggregator {
     Dynamic data such as token balances, swap fees or volume
     """
     dynamicData: GqlPoolDynamicData!
+
+    """
+    ReClamm: The fourth root price ratio at the end of an update
+    """
+    endFourthRootPriceRatio: BigDecimal
 
     """
     Data specific to fx pools
@@ -473,6 +494,16 @@ type GqlPoolAggregator {
     Data specific to gyro/fx pools
     """
     lambda: String
+
+    """
+    The timestamp of the last user interaction
+    """
+    lastTimestamp: Int
+
+    """
+    ReClamm: The last virtual balances of the pool
+    """
+    lastVirtualBalances: [BigDecimal!]
 
     """
     Liquidity management settings for v3 pools.
@@ -505,9 +536,24 @@ type GqlPoolAggregator {
     poolTokens: [GqlPoolTokenDetail!]!
 
     """
+    ReClamm: The timestamp when the update ends
+    """
+    priceRatioUpdateEndTime: Int
+
+    """
+    ReClamm: The timestamp when the update begins
+    """
+    priceRatioUpdateStartTime: Int
+
+    """
     The protocol version on which the pool is deployed, 1, 2 or 3
     """
     protocolVersion: Int!
+
+    """
+    QuantAmmWeighted specific fields
+    """
+    quantAmmWeightedParams: QuantAmmWeightedParams
 
     """
     Data specific to gyro pools
@@ -528,6 +574,11 @@ type GqlPoolAggregator {
     Data specific to gyro pools
     """
     sqrtBeta: String
+
+    """
+    ReClamm: The fourth root price ratio at the start of an update
+    """
+    startFourthRootPriceRatio: BigDecimal
 
     """
     Account empowered to set static swap fees for a pool (when 0 on V2 swap fees are immutable, on V3 delegate to governance)
@@ -672,6 +723,11 @@ enum GqlPoolAprItemType {
     Represents if the APR items comes from a nested pool.
     """
     NESTED
+
+    """
+    APR calculated for QUANT-AMM pools based on performance measurements over a month
+    """
+    QUANT_AMM_UPLIFT
 
     """
     Staking reward APR in a pool from a reward token.
@@ -1501,6 +1557,7 @@ type GqlPoolLiquidityBootstrapping implements GqlPoolBase {
     decimals: Int!
     displayTokens: [GqlPoolTokenDisplay!]! @deprecated(reason: "Use poolTokens instead")
     dynamicData: GqlPoolDynamicData!
+    endTime: Int!
     factory: Bytes
     hasAnyAllowedBuffer: Boolean!
     hasErc4626: Boolean!
@@ -1508,6 +1565,8 @@ type GqlPoolLiquidityBootstrapping implements GqlPoolBase {
     hook: GqlHook
     id: ID!
     investConfig: GqlPoolInvestConfig! @deprecated(reason: "Removed without replacement")
+    isProjectTokenSwapInBlocked: Boolean!
+    lbpOwner: String!
     liquidityManagement: LiquidityManagement
     name: String!
     nestingType: GqlPoolNestingType! @deprecated(reason: "Removed without replacement")
@@ -1527,8 +1586,17 @@ type GqlPoolLiquidityBootstrapping implements GqlPoolBase {
     """
     poolCreator: Bytes
     poolTokens: [GqlPoolTokenDetail!]!
+    projectToken: String!
+    projectTokenEndWeight: Float!
+    projectTokenIndex: Int!
+    projectTokenStartWeight: Float!
     protocolVersion: Int!
+    reserveToken: String!
+    reserveTokenEndWeight: Float!
+    reserveTokenIndex: Int!
+    reserveTokenStartWeight: Float!
     staking: GqlPoolStaking
+    startTime: Int!
 
     """
     Account empowered to set static swap fees for a pool (when 0 on V2 swap fees are immutable, on V3 delegate to governance)
@@ -1800,6 +1868,165 @@ enum GqlPoolOrderBy {
 enum GqlPoolOrderDirection {
     asc
     desc
+}
+
+type GqlPoolQuantAmmWeighted implements GqlPoolBase {
+    address: Bytes!
+    allTokens: [GqlPoolTokenExpanded!]! @deprecated(reason: "Use poolTokens instead")
+    categories: [GqlPoolFilterCategory]
+    chain: GqlChain!
+    createTime: Int!
+    decimals: Int!
+    displayTokens: [GqlPoolTokenDisplay!]! @deprecated(reason: "Use poolTokens instead")
+    dynamicData: GqlPoolDynamicData!
+    factory: Bytes
+    hasAnyAllowedBuffer: Boolean!
+    hasErc4626: Boolean!
+    hasNestedErc4626: Boolean!
+    hook: GqlHook
+    id: ID!
+    investConfig: GqlPoolInvestConfig! @deprecated(reason: "Removed without replacement")
+    liquidityManagement: LiquidityManagement
+    name: String!
+    nestingType: GqlPoolNestingType! @deprecated(reason: "Removed without replacement")
+
+    """
+    The wallet address of the owner of the pool. Pool owners can set certain properties like swapFees or AMP.
+    """
+    owner: Bytes @deprecated(reason: "Use swapFeeManager instead")
+
+    """
+    Account empowered to pause/unpause the pool (or 0 to delegate to governance)
+    """
+    pauseManager: Bytes
+
+    """
+    Account empowered to set the pool creator fee percentage
+    """
+    poolCreator: Bytes
+    poolTokens: [GqlPoolTokenDetail!]!
+    protocolVersion: Int!
+    quantAmmWeightedParams: QuantAmmWeightedParams
+    staking: GqlPoolStaking
+
+    """
+    Account empowered to set static swap fees for a pool (when 0 on V2 swap fees are immutable, on V3 delegate to governance)
+    """
+    swapFeeManager: Bytes
+    symbol: String!
+    tags: [String]
+
+    """
+    All tokens of the pool. If it is a nested pool, the nested pool is expanded with its own tokens again.
+    """
+    tokens: [GqlPoolTokenUnion!]! @deprecated(reason: "Use poolTokens instead")
+    type: GqlPoolType!
+    userBalance: GqlPoolUserBalance
+    vaultVersion: Int! @deprecated(reason: "use protocolVersion instead")
+    version: Int!
+    weightSnapshots: [QuantAmmWeightSnapshot!]
+    withdrawConfig: GqlPoolWithdrawConfig! @deprecated(reason: "Removed without replacement")
+}
+
+type GqlPoolReClamm implements GqlPoolBase {
+    address: Bytes!
+    allTokens: [GqlPoolTokenExpanded!]! @deprecated(reason: "Use poolTokens instead")
+    categories: [GqlPoolFilterCategory]
+
+    """
+    The centeredness margin of the pool
+    """
+    centerednessMargin: BigDecimal!
+    chain: GqlChain!
+    createTime: Int!
+
+    """
+    The current fourth root price ratio, an interpolation of the price ratio state
+    """
+    currentFourthRootPriceRatio: BigDecimal!
+
+    """
+    Represents how fast the pool can move the virtual balances per day
+    """
+    dailyPriceShiftBase: BigDecimal!
+    decimals: Int!
+    displayTokens: [GqlPoolTokenDisplay!]! @deprecated(reason: "Use poolTokens instead")
+    dynamicData: GqlPoolDynamicData!
+
+    """
+    The fourth root price ratio at the end of an update
+    """
+    endFourthRootPriceRatio: BigDecimal!
+    factory: Bytes
+    hasAnyAllowedBuffer: Boolean!
+    hasErc4626: Boolean!
+    hasNestedErc4626: Boolean!
+    hook: GqlHook
+    id: ID!
+    investConfig: GqlPoolInvestConfig! @deprecated(reason: "Removed without replacement")
+
+    """
+    The timestamp of the last user interaction
+    """
+    lastTimestamp: Int!
+
+    """
+    The last virtual balances of the pool
+    """
+    lastVirtualBalances: [BigDecimal!]!
+    liquidityManagement: LiquidityManagement
+    name: String!
+    nestingType: GqlPoolNestingType! @deprecated(reason: "Removed without replacement")
+
+    """
+    The wallet address of the owner of the pool. Pool owners can set certain properties like swapFees or AMP.
+    """
+    owner: Bytes @deprecated(reason: "Use swapFeeManager instead")
+
+    """
+    Account empowered to pause/unpause the pool (or 0 to delegate to governance)
+    """
+    pauseManager: Bytes
+
+    """
+    Account empowered to set the pool creator fee percentage
+    """
+    poolCreator: Bytes
+    poolTokens: [GqlPoolTokenDetail!]!
+
+    """
+    The timestamp when the update ends
+    """
+    priceRatioUpdateEndTime: Int!
+
+    """
+    The timestamp when the update begins
+    """
+    priceRatioUpdateStartTime: Int!
+    protocolVersion: Int!
+    staking: GqlPoolStaking
+
+    """
+    The fourth root price ratio at the start of an update
+    """
+    startFourthRootPriceRatio: BigDecimal!
+
+    """
+    Account empowered to set static swap fees for a pool (when 0 on V2 swap fees are immutable, on V3 delegate to governance)
+    """
+    swapFeeManager: Bytes
+    symbol: String!
+    tags: [String]
+
+    """
+    All tokens of the pool. If it is a nested pool, the nested pool is expanded with its own tokens again.
+    """
+    tokens: [GqlPoolTokenUnion!]! @deprecated(reason: "Use poolTokens instead")
+    type: GqlPoolType!
+    userBalance: GqlPoolUserBalance
+    vaultVersion: Int! @deprecated(reason: "use protocolVersion instead")
+    version: Int!
+    withdrawConfig: GqlPoolWithdrawConfig! @deprecated(reason: "Removed without replacement")
 }
 
 type GqlPoolSnapshot {
@@ -2399,6 +2626,8 @@ enum GqlPoolType {
     LIQUIDITY_BOOTSTRAPPING
     META_STABLE
     PHANTOM_STABLE
+    QUANT_AMM_WEIGHTED
+    RECLAMM
     STABLE
     UNKNOWN
     WEIGHTED
@@ -2411,6 +2640,8 @@ union GqlPoolUnion =
     | GqlPoolGyro
     | GqlPoolLiquidityBootstrapping
     | GqlPoolMetaStable
+    | GqlPoolQuantAmmWeighted
+    | GqlPoolReClamm
     | GqlPoolStable
     | GqlPoolWeighted
 
@@ -2596,6 +2827,7 @@ type GqlProtocolMetricsAggregated {
     chains: [GqlProtocolMetricsChain!]!
     numLiquidityProviders: BigInt!
     poolCount: BigInt!
+    surplus24h: BigDecimal!
     swapFee24h: BigDecimal!
     swapVolume24h: BigDecimal!
     totalLiquidity: BigDecimal!
@@ -2608,6 +2840,7 @@ type GqlProtocolMetricsChain {
     chainId: String!
     numLiquidityProviders: BigInt!
     poolCount: BigInt!
+    surplus24h: BigDecimal!
     swapFee24h: BigDecimal!
     swapVolume24h: BigDecimal!
     totalLiquidity: BigDecimal!
@@ -3315,6 +3548,7 @@ type GqlToken {
     The Twitter username of the token
     """
     twitterUsername: String
+    types: [GqlTokenType!]
 
     """
     The ERC4626 underlying token address, if applicable.
@@ -3448,6 +3682,11 @@ input GqlTokenFilter {
     Only return tokens with these addresses
     """
     tokensIn: [String!]
+
+    """
+    Filter by token type
+    """
+    typeIn: [GqlTokenType!]
 }
 
 """
@@ -3486,6 +3725,7 @@ type GqlTokenPriceChartDataItem {
 
 enum GqlTokenType {
     BPT
+    ERC4626
     PHANTOM_BPT
     WHITE_LISTED
 }
@@ -3655,12 +3895,22 @@ type GqlVotingPool {
     Pool ID
     """
     id: ID!
+
+    """
+    Returns all pool tokens, including BPTs and nested pools if there are any. Only one nested level deep.
+    """
+    poolTokens: [GqlPoolTokenDetail!]!
     protocolVersion: Int!
 
     """
     The symbol of the pool.
     """
     symbol: String!
+
+    """
+    List of tags assigned by the team based on external factors
+    """
+    tags: [String]
 
     """
     The tokens inside the pool.
@@ -3768,6 +4018,33 @@ type PoolForBatchSwap {
     type: GqlPoolType!
 }
 
+type QuantAMMWeightedDetail {
+    category: String!
+    name: String!
+    type: String!
+    value: String!
+}
+
+type QuantAmmWeightSnapshot {
+    timestamp: Int!
+    weights: [Float!]
+}
+
+type QuantAmmWeightedParams {
+    absoluteWeightGuardRail: String!
+    details: [QuantAMMWeightedDetail!]!
+    epsilonMax: String!
+    lambda: [String!]!
+    lastInterpolationTimePossible: String!
+    lastUpdateIntervalTime: String!
+    maxTradeSizeRatio: String!
+    oracleStalenessThreshold: String!
+    poolRegistry: String!
+    updateInterval: String!
+    weightBlockMultipliers: [String!]!
+    weightsAtLastUpdateInterval: [String!]!
+}
+
 type Query {
     """
     Returns all pools for a given filter, specific for aggregators
@@ -3789,7 +4066,6 @@ type Query {
     blocksGetBlocksPerDay: Float! @deprecated
     blocksGetBlocksPerSecond: Float! @deprecated
     blocksGetBlocksPerYear: Float! @deprecated
-    contentGetNewsItems(chain: GqlChain): [GqlContentNewsItem!]!
     latestSyncedBlocks: GqlLatestSyncedBlocks!
 
     """
@@ -3824,12 +4100,6 @@ type Query {
         typeIn: [GqlPoolEventType!]!
         userAddress: String
     ): [GqlPoolEvent!]!
-
-    """
-    Will de deprecated in favor of poolGetFeaturedPools
-    """
-    poolGetFeaturedPoolGroups(chains: [GqlChain!]): [GqlPoolFeaturedPoolGroup!]!
-        @deprecated(reason: "Use poolGetFeaturedPools instead")
 
     """
     Returns the list of featured pools for chains

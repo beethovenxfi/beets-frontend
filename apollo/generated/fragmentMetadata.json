@@ -8,6 +8,8 @@
             "GqlPoolGyro",
             "GqlPoolLiquidityBootstrapping",
             "GqlPoolMetaStable",
+            "GqlPoolQuantAmmWeighted",
+            "GqlPoolReClamm",
             "GqlPoolStable",
             "GqlPoolWeighted"
         ],
@@ -24,6 +26,8 @@
             "GqlPoolGyro",
             "GqlPoolLiquidityBootstrapping",
             "GqlPoolMetaStable",
+            "GqlPoolQuantAmmWeighted",
+            "GqlPoolReClamm",
             "GqlPoolStable",
             "GqlPoolWeighted"
         ],
