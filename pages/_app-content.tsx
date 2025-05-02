@@ -14,7 +14,7 @@ export function AppContent({ Component, pageProps }: AppProps) {
     const ref = useRef(null);
     const { scrollY } = useElementScroll(ref);
     const theme = useTheme();
-    useGlobalWarnings();
+    //useGlobalWarnings();
 
     return (
         <Box
