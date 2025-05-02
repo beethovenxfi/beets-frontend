@@ -42,9 +42,12 @@ export function ReliquaryWithdrawPreview({ onWithdrawComplete, onClose }: Props)
             poolTotalShares: pool.dynamicData.totalShares,
             poolTokens: pool.tokens,
         });
-    const { data: batchRelayerHasApprovedForAll } = useBatchRelayerHasApprovedForAll();
+    const { data: batchRelayerHasApprovedForAll, isLoading: isLoadingBatchRelayerHasApprovedForAll } =
+        useBatchRelayerHasApprovedForAll();
     const { reliquaryZap, ...reliquaryZapQuery } = useReliquaryZap('WITHDRAW');
-    const { data: hasBatchRelayerApproval } = useHasBatchRelayerApproval();
+    const { data: hasBatchRelayerApproval, isLoading: isLoadingHasBatchRelayerApproval } = useHasBatchRelayerApproval();
+
+    console.log({ hasBatchRelayerApproval });
 
     const withdrawAmounts =
         selectedWithdrawType === 'SINGLE_ASSET' && singleAssetWithdraw
@@ -55,7 +58,16 @@ export function ReliquaryWithdrawPreview({ onWithdrawComplete, onClose }: Props)
 
     const totalWithdrawValue = sum(withdrawAmounts.map(priceForAmount));
 
+    const isLoading =
+        isLoadingHasBatchRelayerApproval ||
+        isLoadingBatchRelayerHasApprovedForAll ||
+        isLoadingReliquaryContractCallData;
+
     useEffect(() => {
+        if (isLoading) {
+            return;
+        }
+
         const steps: TransactionStep[] = [{ id: 'exit', tooltipText: '', type: 'other', buttonText: 'Withdraw' }];
 
         if (!batchRelayerHasApprovedForAll) {
@@ -77,7 +89,7 @@ export function ReliquaryWithdrawPreview({ onWithdrawComplete, onClose }: Props)
         }
 
         setSteps(steps);
-    }, []);
+    }, [hasBatchRelayerApproval, batchRelayerHasApprovedForAll, isLoading]);
 
     return (
         <CurrentStepProvider>
