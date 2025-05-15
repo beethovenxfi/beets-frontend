@@ -13,7 +13,6 @@ import {
 } from '@chakra-ui/react';
 import { usePoolList } from '~/modules/pools/usePoolList';
 import { TextButtonPopupMenu } from '~/components/popup-menu/TextButtonPopupMenu';
-import { PoolListTokenMultiSelect } from '~/modules/pools/components/PoolListTokenMultiSelect';
 import { PoolListSearch } from '~/modules/pools/components/PoolListSearch';
 
 export function PoolListMobileHeader() {
@@ -26,7 +25,7 @@ export function PoolListMobileHeader() {
         setShowMyInvestments,
         searchText,
     } = usePoolList();
-    const hasFiltersSelected = (state.where?.tokensIn || []).length > 0 || searchText !== '';
+    const hasFiltersSelected = searchText !== '';
 
     return (
         <Flex display={{ base: 'flex', lg: 'none' }} alignItems="center" mb="4">
@@ -35,34 +34,10 @@ export function PoolListMobileHeader() {
             </Box>
             <Box flex="1">
                 <TextButtonPopupMenu
-                    buttonText={
-                        showMyInvestments
-                            ? 'My investments'
-                            : state.where?.tagNotIn?.includes('INCENTIVIZED')
-                            ? 'Community'
-                            : 'Incentivized'
-                    }
+                    buttonText={showMyInvestments ? 'My investments' : 'All pools'}
                     items={[
                         {
-                            label: 'Incentivized pools',
-                            selected: !showMyInvestments && state.where?.tagIn?.includes('INCENTIVIZED'),
-                            onClick: () => {
-                                setShowMyInvestments(false);
-                                refreshPoolList({
-                                    ...state,
-                                    skip: 0,
-                                    first: 20,
-                                    where: {
-                                        ...state.where,
-                                        tagIn: ['INCENTIVIZED'],
-                                        tagNotIn: null,
-                                        idIn: undefined,
-                                    },
-                                });
-                            },
-                        },
-                        {
-                            label: 'Community pools',
+                            label: 'All pools',
                             selected: !showMyInvestments && state.where?.tagNotIn?.includes('INCENTIVIZED'),
                             onClick: () => {
                                 setShowMyInvestments(false);
@@ -110,7 +85,7 @@ export function PoolListMobileHeader() {
                 />
             </Box>
             <Link onClick={onOpen} fontSize="lg" color="beets.green" fontWeight="bold" position="relative">
-                <Box>Filter</Box>
+                <Box>Search</Box>
                 {hasFiltersSelected ? (
                     <Circle size="1.5" bg="red.500" opacity="0.85" position="absolute" top="4px" right="-6px" />
                 ) : null}
@@ -118,15 +93,10 @@ export function PoolListMobileHeader() {
             <Modal isOpen={isOpen} onClose={onClose} isCentered>
                 <ModalOverlay />
                 <ModalContent>
-                    <ModalHeader>Filters</ModalHeader>
+                    <ModalHeader>Search</ModalHeader>
                     <ModalCloseButton />
                     <ModalBody>
-                        <Box mb="6">
-                            <Box mb="1">Tokens:</Box>
-                            <PoolListTokenMultiSelect />
-                        </Box>
                         <Box mb="8">
-                            <Box mb="1">Search:</Box>
                             <PoolListSearch />
                         </Box>
                     </ModalBody>
