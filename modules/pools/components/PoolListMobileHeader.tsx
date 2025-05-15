@@ -34,34 +34,10 @@ export function PoolListMobileHeader() {
             </Box>
             <Box flex="1">
                 <TextButtonPopupMenu
-                    buttonText={
-                        showMyInvestments
-                            ? 'My investments'
-                            : state.where?.tagNotIn?.includes('INCENTIVIZED')
-                            ? 'Community'
-                            : 'Incentivized'
-                    }
+                    buttonText={showMyInvestments ? 'My investments' : 'All pools'}
                     items={[
                         {
-                            label: 'Incentivized pools',
-                            selected: !showMyInvestments && state.where?.tagIn?.includes('INCENTIVIZED'),
-                            onClick: () => {
-                                setShowMyInvestments(false);
-                                refreshPoolList({
-                                    ...state,
-                                    skip: 0,
-                                    first: 20,
-                                    where: {
-                                        ...state.where,
-                                        tagIn: ['INCENTIVIZED'],
-                                        tagNotIn: null,
-                                        idIn: undefined,
-                                    },
-                                });
-                            },
-                        },
-                        {
-                            label: 'Community pools',
+                            label: 'All pools',
                             selected: !showMyInvestments && state.where?.tagNotIn?.includes('INCENTIVIZED'),
                             onClick: () => {
                                 setShowMyInvestments(false);
