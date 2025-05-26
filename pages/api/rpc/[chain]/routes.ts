@@ -11,7 +11,7 @@ const chainToRpcMap: Record<GqlChain, string | undefined> = {
     BASE: `https://base-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY}`,
     POLYGON: `https://polygon-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY}`,
     AVALANCHE: `https://avax-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY}`,
-    FANTOM: `https://lb.drpc.org/ogrpc?network=fantom&dkey=${ALCHEMY_KEY}`,
+    FANTOM: `https://lb.drpc.org/ogrpc?network=fantom&dkey=${ALCHEMY_KEY}`, // TODO: rename key
     SEPOLIA: `https://eth-sepolia.g.alchemy.com/v2/${ALCHEMY_KEY}`,
     FRAXTAL: `https://frax-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY}`,
     GNOSIS: `https://gnosis-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY}`,
