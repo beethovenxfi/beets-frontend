@@ -32,7 +32,7 @@ export default function ReliquaryTokenBreakdown({ showTotal = false, ...rest }: 
     return (
         <VStack {...rest} width="full" divider={<StackDivider borderColor="whiteAlpha.200" />}>
             {relicTokenBalancesWithSymbol?.map((token) => (
-                <TokenRow key={token.address} address={token.address} amount={token.amount} />
+                <TokenRow key={token.address} address={token.address} amount={getAmount(token.amount)} />
             ))}
         </VStack>
     );
