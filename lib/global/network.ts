@@ -38,10 +38,10 @@ const response = configureChains(
             },
             rpcUrls: {
                 default: {
-                    http: [process.env.NEXT_PUBLIC_RPC_URL || networkConfig.rpcUrl],
+                    http: [rpcUrl],
                 },
                 public: {
-                    http: [process.env.NEXT_PUBLIC_RPC_URL || networkConfig.rpcUrl],
+                    http: [rpcUrl],
                 },
             },
             blockExplorers: {
@@ -59,7 +59,7 @@ const response = configureChains(
     ],
     [
         batchJsonRpcProvider({
-            rpc: () => ({ http: process.env.NEXT_PUBLIC_RPC_URL || networkConfig.rpcUrl }),
+            rpc: () => ({ http: rpcUrl }),
         }),
     ],
 );
