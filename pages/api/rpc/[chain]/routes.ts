@@ -33,6 +33,15 @@ function getRpcUrl(chain: string) {
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     const { chain } = req.query;
 
+    // Log request information including referer
+    const referer = req.headers.referer || 'unknown';
+    const userAgent = req.headers['user-agent'] || 'unknown';
+    const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress || 'unknown';
+
+    console.log(`[RPC Request] Chain: ${chain}, Referer: ${referer}, IP: ${ip}`);
+    console.log(`[RPC Request] User-Agent: ${userAgent}`);
+    console.log(`[RPC Request] Method: ${req.method}, Path: ${req.url}`);
+
     if (!chain) {
         res.status(400).json({ error: 'Chain is required' });
         return;
