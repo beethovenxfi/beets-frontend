@@ -10,6 +10,9 @@ import {
     Text,
     useDisclosure,
     VStack,
+    Grid,
+    GridItem,
+    Skeleton,
 } from '@chakra-ui/react';
 import numeral from 'numeral';
 import { useEffect, useState } from 'react';
@@ -202,57 +205,62 @@ export default function ReliquaryLanding() {
                         )}
                         {isConnected && (
                             <>
-                                <Flex width="full">
-                                    <HStack spacing="4" width="full" position="relative" flex="1">
-                                        <Flex>
-                                            <Heading
-                                                size="lg"
-                                                background="linear-gradient(90deg, #CCFFCC 0%, #05D690 100%)"
-                                                backgroundClip="text"
-                                            >
-                                                My relics
-                                            </Heading>
-                                            <Box flex="1" />
-                                        </Flex>
+                                <Grid
+                                    templateColumns={{ base: '1fr 1fr', lg: 'auto auto auto 1fr' }}
+                                    templateAreas={{
+                                        base: `"title create"
+                                               "vp delegate"`,
+                                        lg: `"title vp delegate create"`,
+                                    }}
+                                    w="full"
+                                    gap={{ base: '1', lg: '4' }}
+                                    alignItems="center"
+                                >
+                                    <GridItem area="title">
+                                        <Heading
+                                            size="lg"
+                                            background="linear-gradient(90deg, #CCFFCC 0%, #05D690 100%)"
+                                            backgroundClip="text"
+                                        >
+                                            My relics
+                                        </Heading>
+                                    </GridItem>
+                                    <GridItem area="vp" mt={{ base: '2', lg: '0' }}>
                                         <BeetsTooltip
                                             noImage
                                             label="This is your current maBEETS Voting Power. Depending on when you level up or invest/withdraw, it might be different to what is shown on the latest vote on Snapshot."
                                         >
-                                            <VStack pt="1" height="full">
-                                                <Box height="full">
-                                                    {!isLoading && (
-                                                        <Badge rounded="md" colorScheme="orange" p="2">
-                                                            <Heading
-                                                                textTransform="initial"
-                                                                textAlign="center"
-                                                                size="sm"
-                                                            >
-                                                                {numeral(totalMaBeetsVP).format('0.000a')} maBEETS VP
-                                                            </Heading>
-                                                        </Badge>
-                                                    )}
-                                                </Box>
-                                            </VStack>
+                                            {!isLoading ? (
+                                                <Badge rounded="md" colorScheme="orange" p="2">
+                                                    <Heading textTransform="initial" textAlign="center" size="sm">
+                                                        {numeral(totalMaBeetsVP).format('0.000a')} maBEETS VP
+                                                    </Heading>
+                                                </Badge>
+                                            ) : (
+                                                <Skeleton height="24px" />
+                                            )}
                                         </BeetsTooltip>
+                                    </GridItem>
+                                    <GridItem
+                                        area="delegate"
+                                        justifySelf={{ base: 'end', lg: 'start' }}
+                                        mt={{ base: '2', lg: '0' }}
+                                    >
                                         <BeetsTooltip
                                             noImage
                                             label="Delegate or undelegate your maBEETS VP to the Music Directors. This only affects the delegation for the Beets space on Snapshot."
                                         >
-                                            <Box height="full">
-                                                {isDelegatedToMDs ? <DelegateClearButton /> : <DelegateSetButton />}
-                                            </Box>
+                                            {isDelegatedToMDs ? <DelegateClearButton /> : <DelegateSetButton />}
                                         </BeetsTooltip>
-                                    </HStack>
-                                    <Box>
-                                        {hasRelics && (
-                                            <ReliquaryInvestModal
-                                                createRelic
-                                                activatorProps={{ size: 'md', width: '160px', mx: 'auto' }}
-                                                activatorLabel="Create new relic"
-                                            />
-                                        )}
-                                    </Box>
-                                </Flex>
+                                    </GridItem>
+                                    <GridItem area="create" justifySelf="end">
+                                        <ReliquaryInvestModal
+                                            createRelic
+                                            activatorProps={{ size: 'md', width: '160px', mx: 'auto' }}
+                                            activatorLabel="Create new relic"
+                                        />
+                                    </GridItem>
+                                </Grid>
                                 <Box width="full">
                                     <RelicCarousel />
                                 </Box>
