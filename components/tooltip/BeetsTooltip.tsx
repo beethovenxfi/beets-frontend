@@ -13,7 +13,7 @@ interface Props {
 
 function BeetsTooltipLabel({ label, noImage }: { label: ReactNode | ReactNode[]; noImage: boolean }) {
     return (
-        <HStack alignItems='flex-start'>
+        <HStack alignItems="flex-start">
             {!noImage && (
                 <Box>
                     <Image src={BeetsThinking} alt="thinking-emoji" />
@@ -28,15 +28,22 @@ export default function BeetsTooltip({ children, label, noImage, hasArrow = fals
     if (!label) return <>{children}</>;
 
     return (
-        <Tooltip
-            bg="beets.base.400"
-            shadow="2xl"
-            borderRadius="md"
-            p="2"
-            label={<BeetsTooltipLabel noImage={!!noImage} label={label} />}
-            hasArrow={hasArrow}
-        >
-            {children}
-        </Tooltip>
+        <Box display="inline-block" position="relative">
+            <Tooltip
+                bg="beets.base.400"
+                shadow="2xl"
+                borderRadius="md"
+                p="2"
+                placement="bottom"
+                label={<BeetsTooltipLabel noImage={!!noImage} label={label} />}
+                hasArrow={hasArrow}
+                shouldWrapChildren
+                offset={[0, 16]}
+            >
+                <Box display="inline-block" width="100%">
+                    {children}
+                </Box>
+            </Tooltip>
+        </Box>
     );
 }
